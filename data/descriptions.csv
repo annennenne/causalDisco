@@ -1,0 +1,25 @@
+ID,name,package,function,input,output,link_docu,link_article,link_develRepo,link_example,arguments,description,comments
+1,pcalg::pc,pcalg,pc,sufficient statistic,S4 object pcAlgo,,,NA,,NA,,
+2,pcalg::fci,pcalg,fci,sufficient statistic,S4 object fciAlgo,,,NA,,NA,,
+3,pcalg::rfci,pcalg,rfci,sufficient statistic,S4 object fciAlgo,,,NA,,NA,,
+4,pcalg::ges,pcalg,ges,R5 score object (which inputs data.frame),List with R5 object,,,NA,,NA,,
+5,pcalg::lingam,pcalg,lingam,data matrix,S3 object,,,NA,,NA,,
+6,pcalg::fciPlus,pcalg,fciPlus,sufficient statistic,S4 object fciAlgo,,,NA,,NA,,
+7,pgalg::ges as ARGES,pcalg,ges,R5 score object (which inputs data.frame),List with R5 object,,,NA,,"adaptive = … , fixedgaps = … ",,
+8,bnstruct::learn.network with sm,bnstruct,learn.network,BnDataset (S4),S4 object BN,,,https://github.com/sambofra/bnstruct,,algo  = sm,,
+9,bnstruct::learn.network with mmhc,bnstruct,learn.network,BnDataset (S4),S4 object BN,,,https://github.com/sambofra/bnstruct,,algo = mmhc,,
+10,bnstruct::learn.network with sem,bnstruct,learn.network,BnDataset (S4),S4 object BN,,,https://github.com/sambofra/bnstruct,,algo = sem,,
+11,bnlearn::gs,bnlearn,gs,data.frame,S3 object bn,,,NA,,NA,,
+12,bnlearn::iamb,bnlearn,iamb,data.frame,S3 object bn,,,NA,,NA,,
+13,bnlearn::fast.iamb,bnlearn,fast.iamb,data.frame,S3 object bn,,,NA,,NA,,
+14,bnlearn::inter.iamb,bnlearn,inter.iamb,data.frame,S3 object bn,,,NA,,NA,,
+15,bnlearn::hc,bnlearn,hc,data.frame,S3 object bn,,,NA,,NA,,
+16,bnlearn::pc.stable,bnlearn,pc.stable,data.frame,S3 object bn,,,NA,,NA,,
+17,bnlearn::si.hiton.pc,bnlearn,si.hiton.pc,data.frame,S3 object bn,,,NA,, undirected = FALSE,,
+18,bnlearn::tabu,bnlearn,tabu,data.frame,S3 object bn,,,NA,,NA,,
+19,bnlearn::mmhc,bnlearn,mmhc,data.frame,S3 object bn,,,NA,,NA,,
+20,bnlearn::rsmax2,bnlearn,rsmax2,data.frame,S3 object bn,,,NA,,NA,,
+21,catnet::cnFind on output from catnet::cnSearchSA,catnet,cnFind,data.frame,S4 object catNetwork,,,NA,,NA,,Missing information is handled by local complete case analysis on sets of variables. 
+22,stablespec::stableSpec,stablespec,stableSpec,data.frame,List including an S4 graphNEL object (from graph package),https://cran.r-project.org/web/packages/stablespec/stablespec.pdf,,https://github.com/rahmarid/stablespec,,longitudinal = FALSE,Score-based algorithm for structural equation models that uses stability selection for scoring,
+23,deal::autosearch,deal,autosearch,S3 object network,List including an S3 network object,https://cran.r-project.org/web/packages/deal/deal.pdf,https://www.jstatsoft.org/article/view/v008i20,NA,,NA,Baysian likelihood based scoring-method with a greedy search strategy,Bug for models with only numeric data. It is resolvable by inlcuding a trival categorical variable.
+34,deal::heuristic,deal,heuristic,S3 object network,List including an S3 network object,https://cran.r-project.org/web/packages/deal/deal.pdf,https://www.jstatsoft.org/article/view/v008i20,NA,,NA,Baysian likelihood based scoring-method with a greedy search strategy with restarts and random perturbations,Bug for models with only numeric data. It is resolvable by inlcuding a trival categorical variable.
