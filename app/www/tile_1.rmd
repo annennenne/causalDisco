@@ -16,6 +16,8 @@ Constraint-based learning using the PC algorithm
 -------------------- --------------------------------------------------------------------------
 
 
+**Note:**
+
 -  Defaults to the stable version of the algorithm (i.e. less order dependence).
 - User-supplied restrictions on edge orientation is only possible after the structure has been learned, and afterwards, the algorithmic edge orientation step may be repeated. 
 

@@ -16,6 +16,8 @@ Constraint-based learning  from data where the data generating mechanism may inc
 -------------------- --------------------------------------------------------------------------
 
 
+**Note:**
+
 -  Defaults to the stable version of the algorithm (i.e. less order dependence).
 
 

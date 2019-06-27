@@ -17,6 +17,8 @@ Baysian score-based learning with likelihood scoring and a greedy search strateg
 -------------------- -------------------------------------------------------
 
 
+**Note:**
+
 - Bug for models with only numeric data. It is resolvable by inlcuding a trival categorical variable.
 
 

@@ -41,6 +41,9 @@ for (i in 1:n) {
   writer(conn, thisInfo["description"])
   writer(conn, pandoc.table.return(thisTable,  
                                              justify = "ll"))
+  if (!is.na(thisInfo["comment1"]) | !is.na(thisInfo["comment2"])) {
+    writer(conn, "**Note:**", "\n")
+  }
   if (!is.na(thisInfo["comment1"])) {
     writer(conn, paste("-", thisInfo["comment1"]))
   }

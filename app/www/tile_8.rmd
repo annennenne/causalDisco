@@ -18,6 +18,8 @@ Scored-based learning using the Silander-Myllymaki algorithm
 ----------------------------- -------------------------------------------------------------------------
 
 
+**Note:**
+
 - Claims to handle missing information, however it is imputed prior to causal structure learning and thus is not part of the learning procedure.
 - Allows for the user to specify restrictions in edge orientation by specifying a hierarchy of the nodes, corresponding to a grouped causal ordering.
 

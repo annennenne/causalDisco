@@ -14,6 +14,8 @@ Score-based learning using maximum likelihood scoring and a Dynamic Programming 
 -------------------- ---------------------------------------------------------------------
 
 
+**Note:**
+
 - Missing information is handled by local complete case analysis on sets of variables. 
 
 
