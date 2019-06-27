@@ -1,0 +1,54 @@
+#pcalg::pc
+Constraint-based learning using the PC algorithm
+
+-------------------- --------------------------------------------------------------------------
+**Package:**         pcalg                                                                     
+
+**Function:**        pc                                                                        
+
+**Input:**           sufficient statistic                                                      
+
+**Output:**          S4 object pcAlgo                                                          
+
+**Documentation:**   https://cran.r-project.org/web/packages/pcalg/vignettes/vignette2018.pdf  
+
+**Article:**         https://www.jstatsoft.org/article/view/v047i11                            
+-------------------- --------------------------------------------------------------------------
+
+
+-  Defaults to the stable version of the algorithm (i.e. less order dependence).
+- User-supplied restrictions on edge orientation is only possible after the structure has been learned, and afterwards, the algorithmic edge orientation step may be repeated. 
+
+
+*Minimal code example:*
+
+```` {r, eval = FALSE}
+#Load numeric dataset numData
+load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+
+#Load package
+library(pcalg)
+
+#Prepare data for pc() call 
+##Note: this choice of sufficient statistics is valid for Gaussian data.
+pcalg_suffstat_numData <- list(C = cor(numData), n = nrow(numData))
+
+#Learn causal structure using pc()
+#Mandatory arguments: 
+##Sufficient statistic (pcalg_suffstat_numData).
+##Labels, i.e. names for variables. We use the names from the data.frame.
+##Independence test, which function to use for performing conditonal
+###independe tests. We use a test suited for Gaussian data
+##The significance level (alpha) for the independence tests. We use
+###a significance level of 1%.
+pcalg_pc_out <- pc(pcalg_suffstat_numData, labels = names(numData),
+                   indepTest = gaussCItest, alpha = 0.01)
+
+#Summary of output
+summary(pcalg_pc_out)
+
+#Plot output
+plot(pcalg_pc_out)
+
+
+```

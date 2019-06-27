@@ -1,0 +1,61 @@
+#stablespec::stableSpec
+Score-based algorithm for structural equation models that uses stability selection for scoring.
+
+----------------------------- ---------------------------------------------------------------------
+**Package:**                  stablespec                                                           
+
+**Function:**                 stableSpec                                                           
+
+**Input:**                    data.frame                                                           
+
+**Output:**                   List including an S4 graphNEL                                        
+                              object (from graph package)                                          
+
+**Documentation:**            https://cran.r-project.org/web/packages/stablespec/stablespec.pdf    
+
+**Article:**                  https://www.sciencedirect.com/science/article/pii/S0925231217317459  
+
+**Development repository:**   https://github.com/rahmarid/stablespec                               
+----------------------------- ---------------------------------------------------------------------
+
+
+
+
+*Minimal code example:*
+
+```` {r, eval = FALSE}
+#Load numeric dataset numData
+load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+
+#Load package
+library(stablespec)
+
+
+stablespec_out <- stableSpec(edata, longitudinal = FALSE)
+stablespec_out_graph <- stablespec_out$graph
+
+#look at incoming edges
+stablespec_out_graph@edgeL
+
+#Learn causal structure using stableSpec()
+#Mandatory arguments: 
+##A dataset
+##longitudinal: Specify whether the data are longitudinal (TRUE) or 
+###cross-sectional (FALSE). We choose FALSE. 
+stablespec_out <- stableSpec(numData, longitudinal = FALSE)
+
+
+#Look at outputted graph
+  #choose graph object
+  stablespec_out_graph <- stablespec_out$graph
+  
+  #Look at incoming edges (manually added variable names)
+  sapply(stablespec_out_graph@edgeL, 
+         function(x) names(numData)[x$edges]
+  )
+
+#No native plot method. But outputted object is compatible with Rgraphviz and
+#renderGraph() may be used:
+Rgraphviz::renderGraph(stablespec_out_graph)
+
+```

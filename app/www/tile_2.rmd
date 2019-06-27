@@ -1,0 +1,55 @@
+#pcalg::fci
+Constraint-based learning  from data where the data generating mechanism may include latent variables using the FCI algorithm
+
+-------------------- --------------------------------------------------------------------------
+**Package:**         pcalg                                                                     
+
+**Function:**        fci                                                                       
+
+**Input:**           sufficient statistic                                                      
+
+**Output:**          S4 object fciAlgo                                                         
+
+**Documentation:**   https://cran.r-project.org/web/packages/pcalg/vignettes/vignette2018.pdf  
+
+**Article:**         https://www.jstatsoft.org/article/view/v047i11                            
+-------------------- --------------------------------------------------------------------------
+
+
+-  Defaults to the stable version of the algorithm (i.e. less order dependence).
+
+
+*Minimal code example:*
+
+```` {r, eval = FALSE}
+#Load numeric dataset with latent confounding numData_latent
+load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData_latent.rda"))
+
+#Load package
+library(pcalg)
+
+#Prepare data for fci() call 
+##Note: this choice of sufficient statistics is valid for Gaussian data.
+pcalg_suffstat_numData_latent <- list(C = cor(numData_latent), 
+                                      n = nrow(numData_latent))
+
+#Learn causal structure using fci()
+#Mandatory arguments: 
+##Sufficient statistic (pcalg_suffstat_numData_latent).
+##Labels, i.e. names for variables. We use the names from the data.frame.
+##Independence test, which function to use for performing conditonal
+###independe tests. We use a test suited for Gaussian data
+##The significance level (alpha) for the independence tests. We use
+###a significance level of 1%.
+pcalg_fci_out <- fci(pcalg_suffstat_numData_latent, 
+                     labels = names(numData_latent),
+                     indepTest = gaussCItest, alpha = 0.01)
+
+#Summary of output
+summary(pcalg_fci_out)
+
+#Plot output
+plot(pcalg_fci_out)
+
+
+```
