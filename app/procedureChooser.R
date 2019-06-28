@@ -1,5 +1,5 @@
 #choose applicable procedures based on input from the 16 properties
-props <- read.csv("../data/properties.csv")
+props <- read.csv("properties.csv")
 
 #Length is ncol - 1 as there is an ID variable in props
 nProps <- ncol(props) - 1

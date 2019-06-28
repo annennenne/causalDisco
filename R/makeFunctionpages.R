@@ -10,7 +10,7 @@ writer <- function(outfile, x, ...) {
 
 
 #read description info. Only read actual rows (first 24)
-descData <- read.csv("../data/descriptions.csv", header = TRUE,
+descData <- read.csv("descriptions.csv", header = TRUE,
                      nrows = 24, stringsAsFactors = FALSE)
 
 
@@ -35,7 +35,7 @@ for (i in 1:n) {
   thisTable[,1] <- theseFeatures[areFilledOut]
   
   #open connection, write info
-  filePath <- paste("./www/tile_", thisInfo["ID"], ".rmd", sep = "")
+  filePath <- paste("../app/www/tile_", thisInfo["ID"], ".rmd", sep = "")
   conn <- file(filePath, "w")
   writer(conn, paste("#", thisInfo["name"], sep = ""))
   writer(conn, thisInfo["description"])

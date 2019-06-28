@@ -1,0 +1,17 @@
+assumption,label ,link
+faithfulness,Assume faithfulness?,NA
+unobsVars,Allow for unobserved variables?,NA
+exRest_presence ,Allow for external restrictions on edge presence?,NA
+exRest_absence,Allow for external restrictions on edge absence?,NA
+customIndepTest,Allow for custom independence tests?,NA
+exRest_dir,Allow for external restrictions on edge directions?,NA
+scoreBased,Score-based approach?,NA
+constraintBased,Constraint-based approach?,NA
+linearity,Assume linearity?,NA
+nongausErrors,Assume non-Gaussian errors?,NA
+estBased,Estimation-based approach (complete identification)?,NA
+missingInfo,Support missing information?,NA
+numData,Support numerical data?,NA
+catData,Support categorical data?,NA
+returnDAG,Return DAG (all edges directed)?,NA
+parallelComp,Support parallel computing?,NA
