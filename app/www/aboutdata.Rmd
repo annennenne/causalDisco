@@ -3,12 +3,12 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, error = FALSE)
 ```
 
 #
 
-The **causalDisco** causal discovery overview tool includes five simulated datasets that the code examples are run on. These five examples are:
+The **causalDisco** causal discovery web tool uses five simulated datasets. These are the data that the code examples are run on. These five datasets are:
 
 1. `numData`: A dataset of 5 numeric variables, `X1`, `X2`, `X3`, `Z` and `Y`.
 2. `catData`: A dataset of 5 categorical variables, `X1`, `X2`, `X3`, `Z` and `Y`, each taking the values `a`, `b`, `c`, `d`, `e`, `f`. 
@@ -17,6 +17,37 @@ The **causalDisco** causal discovery overview tool includes five simulated datas
 5. `numData_latent`: A modification of `numData` where the variable `Z` is not included and thus can be considered latent.
 
 The code for generating the datasets is included below. Please note that the datasets do not necessarily live up to all assumptions for the proceures presented here and is only intended as example data for the syntax of the functions -- not for measuring performance. 
+
+The causal model for the first four datasets are represented in Figure 1 below.
+
+```{r, echo = FALSE, fig.width = 8, fig.height = 2, fig.cap  ="*Figure 1: True DAG for the datasets numData, catData, mixData and catData_mcar.*"}
+library(lava)
+library(igraph)
+
+m <- lvm()
+regression(m) <- Y ~ X1 + X2 + X3 + Z
+regression(m) <- X1 ~ Z
+regression(m) <- X2 ~ X3
+
+
+#l <-  matrix(c(1, 0,  0, 0, 1, 1, 0, 1, 2, 0), 5, 2)
+#plot(m, layout = l, plot.engine = "igraph", main = "True DAG for numData, catData,  \n mixData and catData_mcar")
+plot(m)
+``` 
+
+
+In the last dataset, `numData_latent`, the variable `Z` is unobserved and thus it can represented by a MAG obtained by replacing `Z` with a double-headed arrow from `X1` to `Y`. We also provide this graph below in Figure 2. 
+ 
+```{r, echo = FALSE, fig.width = 6, fig.height = 3, fig.cap  ="*Figure 2: True DAG for the dataset numData_latent.*"}
+m2 <- lvm()
+regression(m2) <- Y ~ X1 + X2 + X3 
+regression(m2) <- X2 ~ X3
+covariance(m2) <- Y ~ X1
+
+plot(m2)
+``` 
+
+The simulated datasets were generated in R using the following code:
 
 ```{r, eval = FALSE}
 ############################################################################################
