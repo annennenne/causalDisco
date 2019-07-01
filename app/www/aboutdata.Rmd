@@ -22,7 +22,6 @@ The causal model for the first four datasets are represented in Figure 1 below.
 
 ```{r, echo = FALSE, fig.width = 8, fig.height = 2, fig.cap  ="*Figure 1: True DAG for the datasets numData, catData, mixData and catData_mcar.*"}
 library(lava)
-library(igraph)
 
 m <- lvm()
 regression(m) <- Y ~ X1 + X2 + X3 + Z
@@ -38,7 +37,7 @@ plot(m)
 
 In the last dataset, `numData_latent`, the variable `Z` is unobserved and thus it can represented by a MAG obtained by replacing `Z` with a double-headed arrow from `X1` to `Y`. We also provide this graph below in Figure 2. 
  
-```{r, echo = FALSE, fig.width = 6, fig.height = 3, fig.cap  ="*Figure 2: True DAG for the dataset numData_latent.*"}
+```{r, echo = FALSE, fig.width = 6, fig.height = 3, fig.cap  ="*Figure 2: True MAG for the dataset numData_latent.*"}
 m2 <- lvm()
 regression(m2) <- Y ~ X1 + X2 + X3 
 regression(m2) <- X2 ~ X3
