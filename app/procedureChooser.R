@@ -1,4 +1,4 @@
-#choose applicable procedures based on input from the 16 properties
+#read procedure classification
 props <- read.csv("properties.csv")
 
 #Length is ncol - 1 as there is an ID variable in props
@@ -7,11 +7,8 @@ nProps <- ncol(props) - 1
 #All possible procedures
 allProcedures <- props$ID
 
-#Function for performing identical logical comparisons
-#for each element in a vector 
-
+#choose applicable procedures based on input from the 16 properties
 procedureChooser <- function(inProps) {
-#  browser()
   procedures <- allProcedures 
   i <- 1
   while (length(procedures) > 0 && i <= nProps) {
