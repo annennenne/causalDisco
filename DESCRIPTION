@@ -1,0 +1,32 @@
+Package: causalDisco
+Title: Tools for Causal Discovery on Observational Data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Anne Helby",
+           family = "Petersen",
+           role = c("aut", "cre"),
+           email = "ahpe@sund.ku.dk")
+Description: What the package does (one paragraph).
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat
+Collate: 
+    'adjmatrix.R'
+    'assumption.R'
+    'axiom.R'
+    'charstack.R'
+    'dataproperty.R'
+    'dirformula.R'
+    'disco.R'
+    'scm.R'
+    'observations.R'
+    'set.R'
+    'theory.R'
+    'log.R'
+    'investigation.R'
+    'is.R'
+    'restriction.R'

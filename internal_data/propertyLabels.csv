@@ -1,0 +1,18 @@
+assumption,label ,link,dataprop
+faithfulness,Assume faithfulness?,NA,FALSE
+unobsVars,Allow for unobserved variables?,NA,FALSE
+exRest_presence ,Allow for external restrictions on edge presence?,NA,FALSE
+exRest_absence,Allow for external restrictions on edge absence?,NA,FALSE
+customIndepTest,Allow for custom independence tests?,NA,FALSE
+exRest_dir,Allow for external restrictions on edge directions?,NA,FALSE
+scoreBased,Score-based approach?,NA,FALSE
+constraintBased,Constraint-based approach?,NA,FALSE
+linearity,Assume linearity?,NA,FALSE
+nongausErrors,Assume non-Gaussian errors?,NA,FALSE
+estBased,Estimation-based approach (complete identification)?,NA,FALSE
+missingInfo,Support missing information?,NA,TRUE
+numData,Support numerical data?,NA,TRUE
+catData,Support categorical data?,NA,TRUE
+returnDAG,Return DAG (all edges directed)?,NA,FALSE
+parallelComp,Support parallel computing?,NA,TRUE
+implemented,Implemented in this package?,NA,FALSE
