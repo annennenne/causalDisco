@@ -11,22 +11,6 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Suggests: 
     testthat
-Collate: 
-    'adjmatrix.R'
-    'assumption.R'
-    'axiom.R'
-    'charstack.R'
-    'dataproperty.R'
-    'dirformula.R'
-    'disco.R'
-    'scm.R'
-    'observations.R'
-    'set.R'
-    'theory.R'
-    'log.R'
-    'investigation.R'
-    'is.R'
-    'restriction.R'
