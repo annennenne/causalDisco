@@ -4,23 +4,72 @@
 \alias{tpc}
 \title{Perform causal discovery using the temporal PC algorithm (TPC)}
 \usage{
-tpc(data, order, sparsity, test = NULL, ...)
+tpc(
+  data,
+  order,
+  sparsity = 10^{     -1 },
+  test = regTest,
+  suffStat = NULL,
+  output = "tpdag",
+  ...
+)
 }
 \arguments{
-\item{data}{A data.frame}
+\item{data}{A data.frame with data. All variables should be
+assigned to exactly one period by prefixing them with the period name
+(see example below).}
 
-\item{order}{A character vector...}
+\item{order}{A character vector with period-prefixes in their
+temporal order (see example below).}
 
-\item{sparsity}{A numeric vector...}
+\item{sparsity}{The sparsity level to be used for independence
+testing (i.e. significance level threshold to use for each test).}
 
-\item{test}{A procedure for testing conditional independence...}
+\item{test}{A procedure for testing conditional independence.
+The default, \code{regTest} uses a regression-based information
+loss test. Another available option is \code{corTest} which
+tests for vanishing partial correlations. User supplied functions
+may also be used, see details below about the required syntax.}
 
-\item{...}{Further optional arguments which will be passed to the
-testing procedure.}
+\item{output}{One of \code{"tpdag"} or \code{"tskeleton"}. If
+\code{"skeleon"}, a temporal skeleton is constructed and outputted,
+but the edges are not directed. If \code{"tpdag"} (the default), a
+the edges are directed, resulting in a temporal partially directed
+acyclic graph.}
+
+\item{...}{Further optional arguments which are currently not in use.}
 }
 \value{
-Value blablabla tpdag
+A tpdag or tskeleton object.
 }
 \description{
 More description here.
+}
+\details{
+Note that all independence test procedures implemented
+in the \code{pcalg} package may be used, see \code{\link{pcalg::pc}}.
+}
+\examples{
+#Simulate data
+set.seed(123)
+n <- 500
+child_x <- rnorm(n)^2
+child_y <- 0.5*child_x + rnorm(n)
+child_z <- sample(c(0,1), n, replace = TRUE,
+                  prob = c(0.3, 0.7))
+                  adult_x <- child_x + rnorm(n)
+                  adult_z <- as.numeric(child_z + rnorm(n) > 0)
+                  adult_w <- 2*adult_z + rnorm(n)
+                  adult_y <- 2*sqrt(child_x) + adult_w^2 + rnorm(n)
+
+                  simdata <- data.frame(child_x, child_y, child_z,
+                                        adult_x, adult_z, adult_w,
+                                        adult_y)
+
+#Define order
+simorder <- c("child", "adult")
+
+#Perform TPC with sparsity psi = 0.01
+results <- tpc(simdata, order = simorder, sparsity = 10^(-2))
+
 }

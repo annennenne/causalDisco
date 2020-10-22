@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 meta/
+slides/
+article/
+archive/
+.R
+.Rda
+.txt
