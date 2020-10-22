@@ -4,11 +4,14 @@
 \alias{plot.tpdag}
 \title{Plot temporal partially directed acyclic graph (TPDAG)}
 \usage{
-plot.tpdag(x, ...)
+\method{plot}{tpdag}(x, ...)
 }
 \arguments{
-\item{x}{tpdag object to be plotted (as outputted from \code{\link{tpc}}).}
+\item{x}{tpdag (temporal partially directed acyclic graph) object
+to be plotted (as outputted from \code{\link{tpc}}).}
+
+\item{...}{Further plotting arguments passed along to \code{\link{plotTempoMech}}.}
 }
 \description{
-blabla.
+Plot temporal partially directed acyclic graph (TPDAG)
 }

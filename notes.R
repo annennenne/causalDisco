@@ -1,7 +1,6 @@
 library(causalDisco)
 
 data("exampledata_numData")
-numData <- exampledata_numData
 View(numData)
 
 

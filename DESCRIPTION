@@ -1,16 +1,21 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
     person(given = "Anne Helby",
            family = "Petersen",
            role = c("aut", "cre"),
            email = "ahpe@sund.ku.dk")
-Description: What the package does (one paragraph).
+Description: Implementation of the temporal PC algorithm along with more tools 
+    for causal discovery on observational data with temporal information. 
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
-Suggests: 
-    testthat
+RoxygenNote: 7.1.1
+Imports:
+    pcalg,
+    igraph,
+    RColorBrewer,
+    dplyr,
+    gtools

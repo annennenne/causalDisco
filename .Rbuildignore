@@ -1,3 +1,9 @@
 ^causalDisco\.Rproj$
 ^\.Rproj\.user$
 .gitignore
+archive
+article
+data
+graphics
+meta
+slides
