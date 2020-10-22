@@ -207,7 +207,7 @@ tpdag <- function(skel, order) {
   #order restrict amat
   tempSkelAmat <- orderRestrictAmat(thisAmat, order = order)
 
-  addBgKnowledge(vOrientTemporal(tempSkelAmat, skel@sepset), checkInput = FALSE)
+  pcalg::addBgKnowledge(vOrientTemporal(tempSkelAmat, skel@sepset), checkInput = FALSE)
 }
 
 
