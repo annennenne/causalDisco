@@ -68,6 +68,13 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
 
   vnames <- colnames(amat)
 
+  #make sure varLabels is in the correct order
+  if (is.null(varLabels)) {
+    varLabels <- vnames
+  } else {
+    varLabels <- varLabels[vnames]
+  }
+
   thisGraph <- graph_from_adjacency_matrix(t(amat)) #igraph
 
   groups <- sapply(order, function(x) getvar(vnames, x), simplify = FALSE)
