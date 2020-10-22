@@ -7,7 +7,7 @@
 tpc(
   data,
   order,
-  sparsity = 10^{     -1 },
+  sparsity = 10^(-1),
   test = regTest,
   suffStat = NULL,
   output = "tpdag",
@@ -43,7 +43,7 @@ acyclic graph.}
 A tpdag or tskeleton object.
 }
 \description{
-More description here.
+Perform causal discovery using the temporal PC algorithm (TPC)
 }
 \details{
 Note that all independence test procedures implemented

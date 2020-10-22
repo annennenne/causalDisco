@@ -1,7 +1,5 @@
 #' Perform causal discovery using the temporal PC algorithm (TPC)
 #'
-#' More description here.
-#'
 #' @param data A data.frame with data. All variables should be
 #' assigned to exactly one period by prefixing them with the period name
 #' (see example below).
@@ -53,7 +51,7 @@
 #' @importFrom pcalg skeleton
 #'
 #' @export
-tpc <- function(data, order, sparsity = 10^{-1}, test = regTest,
+tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, output = "tpdag", ...) {
 
   #check arguments
