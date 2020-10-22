@@ -200,7 +200,7 @@ dirTest <- function(test, vnames, order) {
 }
 
 
-#note: vnames can be dropped
+#' @importFrom pcalg addBgKnowledge
 tpdag <- function(skel, order) {
   thisAmat <- amat(skel)
 
