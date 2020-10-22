@@ -94,5 +94,5 @@ regTestEachDir <- function(x, y, S, suffStat) {
   if (!m1$converged | !m2$converged) return(0)
 
   #test
-  anova.glm(m1, m2, test = "LRT")$`Pr(>Chi)`[2]
+  stats:::anova.glm(m1, m2, test = "LRT")$`Pr(>Chi)`[2]
 }
