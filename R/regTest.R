@@ -2,6 +2,7 @@
 #'
 #' @inheritParams corTest
 #'
+#' @export
 regTest <- function(x, y, S, suffStat) {
   p1 <- regTestEachDir(x, y, S, suffStat)
   p2 <- regTestEachDir(y, x, S, suffStat)
@@ -77,8 +78,8 @@ regTestEachDir <- function(x, y, S, suffStat) {
   }
 
   #make formulas
-  f1 <- as.formula(paste(y, "~", paste(S, collapse = " + ")))
-  f2 <- update(f1, as.formula(paste(". ~ . + ", x, sep = "")))
+  f1 <- stats::as.formula(paste(y, "~", paste(S, collapse = " + ")))
+  f2 <- stats::update(f1, stats::as.formula(paste(". ~ . + ", x, sep = "")))
 
   #troubleshooting
   # wp <- FALSE

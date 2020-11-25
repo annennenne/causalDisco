@@ -27,8 +27,6 @@ plot.tskeleton <- function(x, ...) {
 #' (as outputted from \code{\link{tamat}}).
 #' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
 #'
-#'
-#' @export plot.amat
 #' @export
 plot.tamat <- function(x, ...) {
   x$psi <- NA

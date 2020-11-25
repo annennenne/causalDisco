@@ -144,7 +144,7 @@ makeSuffStat <- function(data, type, ...) {
     suff <- list(data = data, binary = bin)
   #  if (!is.null(order)) suff$order <- order
   } else if (type == "corTest") {
-    suff <- list(C = cor(data), n = nrow(data))
+    suff <- list(C = stats::cor(data), n = nrow(data))
   } else {
     stop(paste(type, "is not a supported type for",
                "autogenerating a sufficient statistic"))
@@ -225,7 +225,9 @@ orderRestrictAmat <- function(amat, order) {
 
 
 
+#' 
 #' @importFrom gtools combinations
+#' 
 vOrientTemporal <- function(amat, sepsets) {
   vnames <- rownames(amat)
   nvar <- nrow(amat)
@@ -298,7 +300,7 @@ edgesFromAdjMat <- function(amat) {
 
 
 amat <- function(pcres) {
-  as(pcres, "amat")
+  methods::as(pcres, "amat")
 }
 
 

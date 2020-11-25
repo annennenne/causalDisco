@@ -156,10 +156,10 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
                       edge.lty = ltys,
                       vertex.label.family = "sans",
                       ...) #igraph
-  if (addTimeAxis) axis(1, seq(-1, 1, 2/(length(periodLabels)-1)), periodLabels, cex.axis = 1.5)
+  if (addTimeAxis) graphics::axis(1, seq(-1, 1, 2/(length(periodLabels)-1)), periodLabels, cex.axis = 1.5)
   if (!is.null(psi) & addPsi) {
     #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
-    mtext(bquote(psi == .(psi)), side = 3, line = 2)
+    graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }
 }
 

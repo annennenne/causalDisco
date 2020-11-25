@@ -8,6 +8,7 @@
 #'
 #' @importFrom pcalg gaussCItest
 #'
+#' @export
 corTest <- function(x, y, S, suffStat) {
   gaussCItest(x, y, S, suffStat)
 }
