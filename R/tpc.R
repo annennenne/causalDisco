@@ -119,22 +119,6 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
 
 
 
-#' @importFrom dplyr intersect
-makeBgKnowledge <- function(amat, data, order, sep = "_") {
-  # browser()
-  crossTimeWL <- orderedBL(data, order = rev(order), sep = sep)
-  edges <- edgesFromAdjMat(amat)
-  fromPrefixes <- sapply(strsplit(edges$from, split = sep), function(x) x[1])
-  toPrefixes <- sapply(strsplit(edges$to, split = sep), function(x) x[1])
-  crossTimeEdges <- edges[fromPrefixes != toPrefixes,]
-  #edgesOut <- rbind(edges[fromPrefixes == toPrefixes,],
-  #                  dplyr::intersect(crossTimeWL, crossTimeEdges))
-  #edgesOut
-  intersect(crossTimeWL, crossTimeEdges) #dplyr
-}
-
-
-####
 
 
 makeSuffStat <- function(data, type, ...) {
@@ -298,9 +282,27 @@ edgesFromAdjMat <- function(amat) {
 }
 
 
-
+#' @impotrFrom methods as
 amat <- function(pcres) {
-  methods::as(pcres, "amat")
+  as(pcres, "amat") #methods
 }
 
+
+## Old function that may be useful if we want to add bnlearn engine 
+## #' @importFrom dplyr intersect
+## makeBgKnowledge <- function(amat, data, order, sep = "_") {
+##  # browser()
+##  crossTimeWL <- orderedBL(data, order = rev(order), sep = sep)
+##  edges <- edgesFromAdjMat(amat)
+##  fromPrefixes <- sapply(strsplit(edges$from, split = sep), function(x) x[1])
+##  toPrefixes <- sapply(strsplit(edges$to, split = sep), function(x) x[1])
+##  crossTimeEdges <- edges[fromPrefixes != toPrefixes,]
+##  #edgesOut <- rbind(edges[fromPrefixes == toPrefixes,],
+## #                  dplyr::intersect(crossTimeWL, crossTimeEdges))
+##  #edgesOut
+##  intersect(crossTimeWL, crossTimeEdges) #dplyr
+##}
+
+
+####
 
