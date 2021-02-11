@@ -1,6 +1,6 @@
 # causalDisco <img src="graphics/hex.png" width="121px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
 
-`causalDisco` in an R package with tools for causal discovery on observational data.
+`causalDisco` is in an R package with tools for causal discovery on observational data.
 
 
 ## Installation
