@@ -87,7 +87,7 @@ plot(thistamat)
 
 ## Webtool
 
-The causalDisco webtool provides an overview of R procedures for working with causal discovery in R, including example code. The webtool can be accessed [here](https://shiny.sund.ku.dk/zms499/). Source code for the webtool is available in this repository. 
+The causalDisco webtool provides an overview of R procedures for working with causal discovery in R, including example code. The webtool can be accessed [here](https://shiny.sund.ku.dk/zms499/causalDisco). Source code for the webtool is available in this repository. 
 
 
 ## Bugs & requests
