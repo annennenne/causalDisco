@@ -13,7 +13,7 @@ shd(est_amat, true_amat)
 }
 \description{
 Computes the structural hamming distance between two adjacency matrices. This implementation
-is a modication of the \code{\link[pcalg]{shd}} function from the pcalg package, but here we
+is a modification of the \code{\link[pcalg]{shd}} function from the pcalg package, but here we
 avoid working on the heavy \code{graphNEL} objects for representing graphs that are used in the
 pcalg package.
 }

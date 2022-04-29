@@ -13,7 +13,7 @@ gausCorScore(cormat, n, p = NULL, lambda = NULL, ...)
 
 \item{p}{The number of variables. This is inferred from the cormat if not supplied.}
 
-\item{lambda}{Penalty to use for the score. If \code{NULL} (default), the BIC score penality is used. See
+\item{lambda}{Penalty to use for the score. If \code{NULL} (default), the BIC score penalty is used. See
 \code{\link[pcalg]{GaussL0penObsScore-class}} for further details.}
 
 \item{...}{Other arguments passed along to \code{\link[pcalg]{GaussL0penObsScore-class}}.}

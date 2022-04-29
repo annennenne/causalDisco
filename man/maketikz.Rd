@@ -2,7 +2,7 @@
 % Please edit documentation in R/maketikz.R
 \name{maketikz}
 \alias{maketikz}
-\title{Generate Latex tikz code for plotting a temporal DAG og PDAG.}
+\title{Generate Latex tikz code for plotting a temporal DAG or PDAG.}
 \usage{
 maketikz(
   model,
@@ -52,10 +52,10 @@ so it can easily be pasted into a Latex document.}
 
 \item{colorAnnotate}{Named list of colors to use to mark edge annotations instead of labels. This
 overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
-annotations as names and colors as entires, e.g. \code{list(h = "blue")}.}
+annotations as names and colors as entries, e.g. \code{list(h = "blue")}.}
 }
 \description{
-Generate Latex tikz code for plotting a temporal DAG og PDAG.
+Generate Latex tikz code for plotting a temporal DAG or PDAG.
 }
 \details{
 Note that it is necessary to read in relevant tikz libraries in the

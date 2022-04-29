@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 1.0
+Version: 0.9.0
 Authors@R: 
     person(given = "Anne Helby",
            family = "Petersen",
@@ -21,7 +21,6 @@ Imports:
     pcalg,
     igraph,
     RColorBrewer,
-    dplyr,
     gtools,
     clipr,
     methods,

@@ -9,4 +9,4 @@ slides
 notes
 webtool
 README.*
-
+^cran-comments\.md$

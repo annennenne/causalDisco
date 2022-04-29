@@ -9,7 +9,7 @@
 #' @param cormat A correlation matrix. Needs to be symmetric.  
 #' @param n The number of observations in the dataset that the correlation matrix was computed from.
 #' @param p The number of variables. This is inferred from the cormat if not supplied.
-#' @param lambda Penalty to use for the score. If \code{NULL} (default), the BIC score penality is used. See
+#' @param lambda Penalty to use for the score. If \code{NULL} (default), the BIC score penalty is used. See
 #' \code{\link[pcalg]{GaussL0penObsScore-class}} for further details. 
 #' @param ... Other arguments passed along to \code{\link[pcalg]{GaussL0penObsScore-class}}. 
 #' 

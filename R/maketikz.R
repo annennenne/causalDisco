@@ -1,4 +1,4 @@
-#' Generate Latex tikz code for plotting a temporal DAG og PDAG. 
+#' Generate Latex tikz code for plotting a temporal DAG or PDAG. 
 #'
 #' @details Note that it is necessary to read in relevant tikz libraries in the 
 #' Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
@@ -27,7 +27,7 @@
 #' so it can easily be pasted into a Latex document. 
 #' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This 
 #' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
-#' annotations as names and colors as entires, e.g. \code{list(h = "blue")}. 
+#' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. 
 #'
 #' @importFrom clipr write_clip
 #' @export
