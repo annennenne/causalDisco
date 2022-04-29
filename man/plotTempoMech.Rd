@@ -15,6 +15,8 @@ plotTempoMech(
 )
 }
 \arguments{
+\item{x}{The tpdag/tskeleton or tamat to plot.}
+
 \item{addTimeAxis}{Logical indicating whether a time axis should be
 added to the plot.}
 
@@ -27,6 +29,8 @@ added to the plot.}
 
 \item{colors}{A character vector with colors to use for marking periods.
 Should have at least as many elements as the numbers of periods.}
+
+\item{...}{Additional arguments passed to \code{\link[igraph]{plot.igraph}}.}
 }
 \description{
 Plots tpdag, tskeleton and tamat objects.

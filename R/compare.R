@@ -2,7 +2,7 @@
 #'
 #' Compare edges in two tpdag objects or two tskeleton objects.
 #' Note that they should be based on the same variables.
-#' Only edge absence/presence is compared, not directionality.
+#' Only edge absence/presence is compared, not edge orientation.
 #'
 #' @param x First object
 #' @param y Second object (optional)

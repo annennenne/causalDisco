@@ -19,7 +19,7 @@ regTest <- function(x, y, S, suffStat) {
 #note: x, y, S are indexes of vars
 
 #' @importFrom splines ns
-#' @importFrom stats glm
+#' @importFrom stats glm as.formula update anova
 regTestEachDir <- function(x, y, S, suffStat) {
 
   #args <- suffStat$otherArgs
@@ -78,8 +78,8 @@ regTestEachDir <- function(x, y, S, suffStat) {
   }
 
   #make formulas
-  f1 <- stats::as.formula(paste(y, "~", paste(S, collapse = " + ")))
-  f2 <- stats::update(f1, stats::as.formula(paste(". ~ . + ", x, sep = "")))
+  f1 <- as.formula(paste(y, "~", paste(S, collapse = " + ")))
+  f2 <- update(f1, as.formula(paste(". ~ . + ", x, sep = "")))
 
   #troubleshooting
   # wp <- FALSE
@@ -95,5 +95,8 @@ regTestEachDir <- function(x, y, S, suffStat) {
   if (!m1$converged | !m2$converged) return(0)
 
   #test
-  stats:::anova.glm(m1, m2, test = "LRT")$`Pr(>Chi)`[2]
+  anova(m1, m2, test = "LRT")$`Pr(>Chi)`[2]
+  
+  #not allowed on CRAN, but saves method look-up time
+  #stats:::anova.glm(m1, m2, test = "LRT")$`Pr(>Chi)`[2]
 }

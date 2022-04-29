@@ -2,6 +2,7 @@
 #'
 #' Plots tpdag, tskeleton and tamat objects.
 #'
+#' @param x The tpdag/tskeleton or tamat to plot. 
 #' @param addTimeAxis Logical indicating whether a time axis should be
 #' added to the plot.
 #' @param addPsi Logical indicating whether the sparsity level should be
@@ -10,6 +11,7 @@
 #' @param periodLabels A character vector with labels for periods.
 #' @param colors A character vector with colors to use for marking periods.
 #' Should have at least as many elements as the numbers of periods.
+#' @param ... Additional arguments passed to \code{\link[igraph]{plot.igraph}}. 
 #'
 #' @export
 plotTempoMech <- function(x, addTimeAxis = TRUE,
@@ -42,6 +44,8 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 
 
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom scales alpha
+#' @importFrom graphics axis mtext
 #' @import igraph
 plotOrderedAmat <- function(amat, order, psi = NULL,
                             addTimeAxis = TRUE,
@@ -82,7 +86,7 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
 
   #  browser()
   mat <- orderedLayout(vnames, order, sep = sep, jitter = jitter, space = space)
-  edges <- igraph::as_edgelist(thisGraph)
+  edges <- as_edgelist(thisGraph) #igraph
 
   #drop one copy of double edges
   makedouble <- NULL
@@ -105,18 +109,15 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
   }
   if (length(makedouble) > 0) {
     oldedges <- edges
-    thisGraph <- igraph::delete.edges(thisGraph, duplies)
-    edges <- igraph::as_edgelist(thisGraph)
+    thisGraph <- delete.edges(thisGraph, duplies) #igraph
+    edges <- as_edgelist(thisGraph) #igraph
     for (i in 1:length(makedouble)) {
-      # browser()
       thisEdge <- oldedges[makedouble[i],]
       for (j in 1:nrow(edges)) {
         if (identical(thisEdge,edges[j, ])) makedouble_new <- c(makedouble_new, j)
       }
     }
   }
-  #browser()
-  #groupnames <- colnames(groups)
   groupnames <- names(groups)
   nEdges <- nrow(edges) #recalc
   edgecolors <- rep("", nEdges)
@@ -138,7 +139,6 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
     }
   }
 
-  #browser()
 
   plot.igraph(thisGraph, mark.groups = groups,
                       edge.color = edgecolors,
@@ -148,7 +148,7 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
                       edge.width = edge.width,
                       edge.curved = edge.curved,
                       mark.border = mark.border,
-                      mark.col = scales::alpha(cols, alpha = 0.2),
+                      mark.col = alpha(cols, alpha = 0.2),
                       vertex.color = "grey",
                       vertex.frame.color = NA,
                       vertex.label.color = "black",
@@ -156,10 +156,10 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
                       edge.lty = ltys,
                       vertex.label.family = "sans",
                       ...) #igraph
-  if (addTimeAxis) graphics::axis(1, seq(-1, 1, 2/(length(periodLabels)-1)), periodLabels, cex.axis = 1.5)
+  if (addTimeAxis) axis(1, seq(-1, 1, 2/(length(periodLabels)-1)), periodLabels, cex.axis = 1.5)
   if (!is.null(psi) & addPsi) {
     #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
-    graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
+    mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }
 }
 

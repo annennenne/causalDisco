@@ -3,9 +3,10 @@
 .gitignore
 archive
 article
-data
 graphics
 meta
 slides
 notes
+webtool
+README.*
 

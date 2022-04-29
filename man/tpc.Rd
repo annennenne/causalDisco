@@ -31,8 +31,12 @@ loss test. Another available option is \code{corTest} which
 tests for vanishing partial correlations. User supplied functions
 may also be used, see details below about the required syntax.}
 
+\item{suffStat}{Sufficient statistic. If this argument is supplied, the
+sufficient statistic is not computed from the inputted data. The format and
+contents of the sufficient statistic depends on which test is being used.}
+
 \item{output}{One of \code{"tpdag"} or \code{"tskeleton"}. If
-\code{"skeleon"}, a temporal skeleton is constructed and outputted,
+\code{"skeleton"}, a temporal skeleton is constructed and outputted,
 but the edges are not directed. If \code{"tpdag"} (the default), a
 the edges are directed, resulting in a temporal partially directed
 acyclic graph.}
@@ -47,9 +51,24 @@ Perform causal discovery using the temporal PC algorithm (TPC)
 }
 \details{
 Note that all independence test procedures implemented
-in the \code{pcalg} package may be used, see \code{\link{pcalg::pc}}.
+in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
 }
 \examples{
+#TPC on included example data, use sparsity psi = 0.01, default test (regression-based
+#information loss):
+data(tpcExample)
+tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
+
+
+#TPC on included example data, use sparsity psi = 0.01, use test for vanishing partial
+# correlations:
+data(tpcExample)
+tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
+test = corTest)
+
+
+#TPC on another simulated data set
+
 #Simulate data
 set.seed(123)
 n <- 500
@@ -57,19 +76,20 @@ child_x <- rnorm(n)^2
 child_y <- 0.5*child_x + rnorm(n)
 child_z <- sample(c(0,1), n, replace = TRUE,
                   prob = c(0.3, 0.7))
-                  adult_x <- child_x + rnorm(n)
-                  adult_z <- as.numeric(child_z + rnorm(n) > 0)
-                  adult_w <- 2*adult_z + rnorm(n)
-                  adult_y <- 2*sqrt(child_x) + adult_w^2 + rnorm(n)
+         
+adult_x <- child_x + rnorm(n)
+adult_z <- as.numeric(child_z + rnorm(n) > 0)
+adult_w <- 2*adult_z + rnorm(n)
+adult_y <- 2*sqrt(child_x) + adult_w^2 + rnorm(n)
 
-                  simdata <- data.frame(child_x, child_y, child_z,
-                                        adult_x, adult_z, adult_w,
-                                        adult_y)
+simdata <- data.frame(child_x, child_y, child_z,
+                      adult_x, adult_z, adult_w,
+                      adult_y)
 
 #Define order
 simorder <- c("child", "adult")
 
-#Perform TPC with sparsity psi = 0.01
-results <- tpc(simdata, order = simorder, sparsity = 10^(-2))
+#Perform TPC with sparsity psi = 0.001
+results <- tpc(simdata, order = simorder, sparsity = 10^(-3))
 
 }
