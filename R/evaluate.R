@@ -28,9 +28,15 @@
 #' @param est Estimated adjacency matrix/matrices.
 #' @param true True adjacency matrix/matrices.
 #' @param metrics List of metrics, see details. 
-#' @param ... Further arguments that depend on input type.  Currently only \code{df.out} is allowed, which provides
-#' output as a data.frame for single matrix comparisons. 
-#'  
+#' @param ... Further arguments that depend on input type.  Currently only \code{list.out} is allowed, and
+#' only if the first argument is a matrix (see details under Value). 
+#' 
+#' @return A data.frame with one column for each computed metric and one row per evaluated
+#' matrix pair. Adjacency metrics are prefixed with "adj_", orientation metrics are prefixed
+#' with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list.out = TRUE}
+#' can be used to change the return object to a list instead. This list will contain three lists, where 
+#' adjacency, orientation and other metrics are reported, respectively. 
+#' 
 #' @export
 evaluate <- function(est, true, metrics, ...) {
   UseMethod("evaluate")
@@ -39,11 +45,11 @@ evaluate <- function(est, true, metrics, ...) {
 
 #' @inherit evaluate
 #' 
-#' @param  df.out If \code{TRUE} (default), output is returned as a data.frame, otherwise
+#' @param  list.out If \code{FALSE} (default), output is returned as a data.frame, otherwise
 #' it will be a list. 
 #' 
 #' @export
-evaluate.matrix <- function(est, true, metrics, df.out = TRUE, ...) {
+evaluate.matrix <- function(est, true, metrics, list.out = FALSE, ...) {
   #browser()
   adj <- metrics$adj
   dir <- metrics$dir
@@ -80,10 +86,10 @@ evaluate.matrix <- function(est, true, metrics, df.out = TRUE, ...) {
     }
     other_names <- other
   }
-  if (df.out) {
+  if (!list.out) {
     out <- unlist(c(adj_metrics, dir_metrics, other_metrics))
     names(out) <- c(adj_names, dir_names, other_names)
-    return(out)
+    return(as.data.frame(as.list(out))) #return(out)
   } else {
     names(adj_metrics) <- adj
     names(dir_metrics) <- dir
@@ -94,6 +100,15 @@ evaluate.matrix <- function(est, true, metrics, df.out = TRUE, ...) {
 
 
 #' @inherit evaluate
+#' 
+#' @export
+evaluate.tamat <- function(est, true, metrics, ...) {
+  evaluate.matrix(est, true, metrics, ...) 
+}
+
+
+#' @inherit evaluate
+#' 
 #' @export
 evaluate.array <- function(est, true, metrics, ...) {
   n <- dim(est)[1]
@@ -101,7 +116,7 @@ evaluate.array <- function(est, true, metrics, ...) {
   out <- matrix(NA, n, p)
   for (i in 1:n) {
     res <- evaluate.matrix(est = est[i, , ], true = true[i, , ], metrics = metrics)
-    out[i, ] <- res
+    out[i, ] <- unlist(res)
   }
   colnames(out) <- names(res)
   data.frame(out)

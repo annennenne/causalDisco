@@ -9,6 +9,9 @@ precision(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes precision (aka positive predictive value) from a confusion matrix,
 see \link{confusion}.

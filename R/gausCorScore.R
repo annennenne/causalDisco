@@ -13,6 +13,8 @@
 #' \code{\link[pcalg]{GaussL0penObsScore-class}} for further details. 
 #' @param ... Other arguments passed along to \code{\link[pcalg]{GaussL0penObsScore-class}}. 
 #' 
+#' @return A \code{Score} object (S4), see \code{\link[pcalg]{Score-class}}.
+#' 
 #' @importFrom methods new
 #' 
 #' @examples 

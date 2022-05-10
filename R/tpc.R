@@ -25,7 +25,12 @@
 #' @details Note that all independence test procedures implemented
 #' in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
 #'
-#' @return A tpdag or tskeleton object.
+#' @return A \code{tpdag} or \code{tskeleton} object. Both return types are
+#' S3 objects, i.e., lists with entries: \code{$amat} (the estimated adjacency 
+#' matrix), \code{$order} (character vector with the order, as inputted to
+#' this function), \code{$psi} (the significance level used for testing), and
+#' \code{$ntests} (the number of tests conducted). 
+#'
 #'
 #'
 #' @examples

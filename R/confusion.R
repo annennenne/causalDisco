@@ -14,7 +14,7 @@
 #' a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 #' and a true negative marks correct placement of a tail (0). 
 #' 
-#' @return List with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),
+#' @return A list with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),
 #'\code{$fp} (number of false positives), and  \code{$tp} (number of false negatives). 
 #' 
 #' @param est_amat The estimated adjacency matrix
@@ -24,6 +24,12 @@
 #' 
 #' @export
 confusion <- function(est_amat, true_amat, type = "adj") {
+  UseMethod("confusion")
+}
+
+
+#'@export
+confusion.default <- function(est_amat, true_amat, type = "adj") {
   if (type == "adj") {
     adj_confusion(est_amat, true_amat)
   } else if (type == "dir") {

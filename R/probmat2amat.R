@@ -26,6 +26,8 @@
 #' arrowheads for the given edge to zero). This only makes a difference if the graph may include undirected edges,
 #' which should be encoded as bidirected edges. 
 #' 
+#' @return A square matrix of probabilities (all entries in \[0,1\]). 
+#' 
 #' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using supervised machine learning." 
 #' arXiv preprint arXiv:2202.12813 (2022).
 #' 

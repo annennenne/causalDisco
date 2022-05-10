@@ -16,6 +16,10 @@ corTest(x, y, S, suffStat)
 \item{suffStat}{Sufficient statistic; list with data,
 binary variables and order.}
 }
+\value{
+A numeric, which is the p-value of the test.
+}
 \description{
-Test for vanishing partial correlations
+This function simply calls the \code{\link[pcalg]{gaussCItest}}
+function from the \code{pcalg} package.
 }

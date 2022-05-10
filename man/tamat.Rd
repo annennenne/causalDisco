@@ -15,6 +15,11 @@ period, e.g. "child_x" for variable "x" at period "child"}
 
 \item{order}{A character vector with the periods in their order.}
 }
+\value{
+A \code{tamat} object, which is a matrix with a "order"
+attribute(a character vector listing the temporal order of the variables
+in the adjacency matrix).
+}
 \description{
 Make a temporal adjacency matrix
 }

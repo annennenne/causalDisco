@@ -7,6 +7,14 @@
 #' @param x First object
 #' @param y Second object (optional)
 #'
+#' @return A list with entries: \code{$nedges1} (the number of 
+#' edges in the first object), \code{$nedges2} (the number of edges
+#' in the second object), \code{$psi1} (the test significance level
+#' of the first object), \code{$psi2} (the test significance level of
+#' the second object), \code{$nadded} (the number of additional edges in
+#' object 2, relative to object 1), and \code{nremoved} (the number of
+#' absent edges in object 2, relative to object 1).
+#'
 #' @export
 compare <- function(x, y = NULL) {
   if (is.null(y)) {

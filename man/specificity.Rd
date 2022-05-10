@@ -9,6 +9,9 @@ specificity(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes specificity from a confusion matrix, see \link{confusion}.
 Specificity is defined as TN/(TN + FP), where TN are true negatives and

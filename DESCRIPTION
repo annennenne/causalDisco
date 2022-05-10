@@ -1,14 +1,16 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.0
+Version: 0.9.1
 Authors@R: 
     person(given = "Anne Helby",
            family = "Petersen",
            role = c("aut", "cre"),
            email = "ahpe@sund.ku.dk")
-Description: Implementation of the temporal PC algorithm along with more tools 
-    for causal discovery on observational data, including plotting
-    and evaluation. 
+Description: Various tools for inferring causal models from observational data. The package 
+    includes an implementation of the temporal Peter-Clark (TPC) algorithm. Petersen, Osler 
+    and Ekstrøm (2021) <doi:10.1093/aje/kwab087>. It also includes general tools
+    for evaluating differences in adjacency matrices, which can be used for evaluating
+    performance of causal discovery procedures. 
 Depends: R (>= 3.5.0)
 License: GPL-2
 Encoding: UTF-8
@@ -25,3 +27,4 @@ Imports:
     clipr,
     methods,
     scales
+

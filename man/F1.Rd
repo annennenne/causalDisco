@@ -9,6 +9,9 @@ F1(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes F1 score from a confusion matrix, see \link{confusion}.
 The F1 score is defined as  \eqn{2 * TP/(2 * TP + FP + FN)}, where TP are true positives,

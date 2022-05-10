@@ -32,6 +32,9 @@ Should have at least as many elements as the numbers of periods.}
 
 \item{...}{Additional arguments passed to \code{\link[igraph]{plot.igraph}}.}
 }
+\value{
+No return value, the function is called for its side-effects (plotting).
+}
 \description{
 Plots tpdag, tskeleton and tamat objects.
 }

@@ -9,6 +9,9 @@ NPV(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes negative predictive value recall from a confusion matrix, see \link{confusion}.
 Negative predictive value is defined as TN/(TN + FN), where TN are true negatives and

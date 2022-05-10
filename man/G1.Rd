@@ -9,6 +9,9 @@ G1(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes G1 score from a confusion matrix, see \link{confusion}. G1 score is F1 score with
 reversed roles of 0/1 classifications, see Petersen et al. 2022.

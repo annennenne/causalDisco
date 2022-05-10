@@ -54,6 +54,12 @@ so it can easily be pasted into a Latex document.}
 overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
 annotations as names and colors as entries, e.g. \code{list(h = "blue")}.}
 }
+\value{
+Silently returns a character vector with lines of tikz code. The function
+furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz
+code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code is instead printed
+in the console.
+}
 \description{
 Generate Latex tikz code for plotting a temporal DAG or PDAG.
 }

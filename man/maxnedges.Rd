@@ -9,6 +9,10 @@ maxnedges(p)
 \arguments{
 \item{p}{The number of nodes in the graph}
 }
+\value{
+A numeric.
+}
 \description{
-Compute maximal number of edges for graph
+Computes the number of edges a graph with \code{p} nodes will have if its
+fully connected.
 }

@@ -9,6 +9,9 @@ is_cpdag(amat)
 \arguments{
 \item{amat}{An adjacency matrix}
 }
+\value{
+A logical.
+}
 \description{
 Check for CPDAG
 }

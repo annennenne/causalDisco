@@ -6,6 +6,8 @@
 #' 
 #' @param amat An adjacency matrix
 #' 
+#' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
+#' 
 #' @export
 as.graphNEL <- function(amat) {
   as(t(amat), "graphNEL")
@@ -18,6 +20,8 @@ as.graphNEL <- function(amat) {
 #' 
 #' @param amat An adjacency matrix
 #' 
+#' @return A logical.
+#' 
 #' @export
 is_pdag <- function(amat) {
   pcalg::isValidGraph(amat, "pdag")
@@ -29,6 +33,8 @@ is_pdag <- function(amat) {
 #' definition. 
 #' 
 #' @param amat An adjacency matrix
+#' 
+#' @return A logical.
 #' 
 #' @export
 is_cpdag <- function(amat) {
@@ -47,7 +53,12 @@ graph2amat <- function(graph) {
 
 #' Compute maximal number of edges for graph
 #' 
+#' Computes the number of edges a graph with \code{p} nodes will have if its 
+#' fully connected. 
+#' 
 #' @param p The number of nodes in the graph
+#' 
+#' @return A numeric. 
 #' 
 #' @export 
 maxnedges <- function(p) {
@@ -62,6 +73,8 @@ maxnedges <- function(p) {
 #' 
 #' @param essgraph An \code{EssGraph} object
 #' @param p The number of nodes in the graph
+#' 
+#' @return An adjacency matrix (square matrix with 0/1 entries).
 #' 
 #' @export 
 essgraph2amat <- function(essgraph, p = length(essgraph$field(".nodes"))) {
@@ -79,6 +92,8 @@ essgraph2amat <- function(essgraph, p = length(essgraph$field(".nodes"))) {
 #' 
 #' @param amat An adjacency matrix 
 #' 
+#' @return A numeric. 
+#' 
 #' @export
 average_degree <- function(amat) {
   p <- nrow(amat)
@@ -90,6 +105,8 @@ average_degree <- function(amat) {
 #' Counts the number of edges in an adjacency matrix.
 #' 
 #' @param amat An adjacency matrix 
+#' 
+#' @return A numeric (non-negative integer). 
 #' 
 #' @export
 nedges <- function(amat) {

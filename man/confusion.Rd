@@ -15,7 +15,7 @@ confusion(est_amat, true_amat, type = "adj")
 (\code{"adj"}, the default) or for (conditional) orientations (\code{dir}).}
 }
 \value{
-List with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),
+A list with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),
 \code{$fp} (number of false positives), and  \code{$tp} (number of false negatives).
 }
 \description{

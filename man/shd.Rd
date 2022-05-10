@@ -11,6 +11,9 @@ shd(est_amat, true_amat)
 
 \item{true_amat}{True adjacency matrix}
 }
+\value{
+A numeric (a non-negative integer).
+}
 \description{
 Computes the structural hamming distance between two adjacency matrices. This implementation
 is a modification of the \code{\link[pcalg]{shd}} function from the pcalg package, but here we

@@ -9,6 +9,9 @@ FDR(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes false discovery rate from a confusion matrix, see \link{confusion}.
 False discovery rate is defined as FP/(FP + TP), where FP are false positives and

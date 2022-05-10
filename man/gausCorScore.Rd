@@ -18,6 +18,9 @@ gausCorScore(cormat, n, p = NULL, lambda = NULL, ...)
 
 \item{...}{Other arguments passed along to \code{\link[pcalg]{GaussL0penObsScore-class}}.}
 }
+\value{
+A \code{Score} object (S4), see \code{\link[pcalg]{Score-class}}.
+}
 \description{
 The score is intended to be used with score-based causal discovery algorithms
 from the pcalg package. It is identical to the \code{\link[pcalg]{GaussL0penObsScore-class}},

@@ -9,6 +9,9 @@ is_pdag(amat)
 \arguments{
 \item{amat}{An adjacency matrix}
 }
+\value{
+A logical.
+}
 \description{
 Check for PDAG
 }

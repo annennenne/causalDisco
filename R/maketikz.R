@@ -28,6 +28,11 @@
 #' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This 
 #' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
 #' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. 
+#' 
+#' @return Silently returns a character vector with lines of tikz code. The function 
+#' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz 
+#' code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code is instead printed  
+#' in the console.
 #'
 #' @importFrom clipr write_clip
 #' @export
@@ -42,14 +47,15 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        colorAnnotate = NULL) {
   if ("tpdag" %in% class(model)) {
     tamat <- model$amat
+    order <- model$order
   } else if ("tamat" %in% class(model)) {
     tamat <- model
+    order <- attr(model, "order")
   } else {
     stop("Input model must be of class tpdag or tamat")
   }
   
   amat <- tamat$amat
-  order <- tamat$order
   
   if (!is.null(colorAnnotate) & is.null(annotateEdges)) {
     annotateEdges <- FALSE
@@ -193,4 +199,5 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   } else {
     cat(paste(out, collapse = "\n"))
   }
+  invisible(out)
 }

@@ -9,6 +9,9 @@ average_degree(amat)
 \arguments{
 \item{amat}{An adjacency matrix}
 }
+\value{
+A numeric.
+}
 \description{
 Computes the average degree, i.e. the number of edges divided
 by the number of nodes.

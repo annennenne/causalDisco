@@ -7,6 +7,8 @@
 #' 
 #' @param confusion Confusion matrix as obtained from \link{confusion}
 #' 
+#' @return A numeric in \[0,1\]. 
+#' 
 #' @export
 precision <- function(confusion) {
   tp <- confusion$tp
@@ -21,6 +23,8 @@ precision <- function(confusion) {
 #' FN are false negatives. If TP + FN = 0, 0 is returned. 
 #' 
 #' @inheritParams precision
+#' 
+#' @return A numeric in \[0,1\]. 
 #' 
 #' @export
 recall <- function(confusion) {
@@ -37,6 +41,8 @@ recall <- function(confusion) {
 #' 
 #' @inheritParams precision
 #' 
+#' @return A numeric in \[0,1\]. 
+#' 
 #' @export
 specificity <- function(confusion) {
   tn <- confusion$tn
@@ -51,6 +57,8 @@ specificity <- function(confusion) {
 #' TN are true negatives. If FN + TN = 0, 0 is returned. 
 #' 
 #' @inheritParams precision
+#' 
+#' @return A numeric in \[0,1\]. 
 #' 
 #' @export
 FOR <- function(confusion) {
@@ -67,6 +75,8 @@ FOR <- function(confusion) {
 #' 
 #' @inheritParams precision
 #' 
+#' @return A numeric in \[0,1\]. 
+#' 
 #' @export
 FDR <- function(confusion) {
   fp <- confusion$fp
@@ -82,6 +92,8 @@ FDR <- function(confusion) {
 #' 
 #' @inheritParams precision
 #' 
+#' @return A numeric in \[0,1\]. 
+#' 
 #' @export
 NPV <- function(confusion) {
   tn <- confusion$tn
@@ -96,6 +108,8 @@ NPV <- function(confusion) {
 #' FP are false positives, and FN are false negatives. If TP + FP + FN = 0, 1 is returned. 
 #' 
 #' @inheritParams precision
+#' 
+#' @return A numeric in \[0,1\]. 
 #' 
 #' @export
 F1 <- function(confusion) {
@@ -117,6 +131,8 @@ F1 <- function(confusion) {
 #' 
 #' @inheritParams precision
 #' 
+#' @return A numeric in \[0,1\]. 
+#' 
 #' @export
 G1 <- function(confusion) {
   tn <- confusion$tn
@@ -126,8 +142,7 @@ G1 <- function(confusion) {
 }
 
 
-#based on pcalg shd function but takes in amats (avoids costly conversion to
-#graphNEL)
+
 #' Structural hamming distance between adjacency matrices
 #' 
 #' Computes the structural hamming distance between two adjacency matrices. This implementation 
@@ -139,6 +154,8 @@ G1 <- function(confusion) {
 #' 
 #' @param est_amat Estimated adjacency matrix
 #' @param true_amat True adjacency matrix
+#' 
+#' @return A numeric (a non-negative integer).
 #' 
 #'@export
 shd <- function(est_amat, true_amat) {
@@ -159,3 +176,13 @@ shd <- function(est_amat, true_amat) {
   d <- abs(m1 - m2)
   shd + sum((d + t(d)) > 0)/2
 }
+
+
+# shd.tamat <- function(est_amat, true_amat) {
+#   shd.default(est_amat$amat, true_amat)
+# }
+# 
+# 
+# shd.tpdag <- function(est_amat, true_amat) {
+#   shd.default(est_amat$amat, true_amat)
+# }

@@ -9,6 +9,9 @@ as.graphNEL(amat)
 \arguments{
 \item{amat}{An adjacency matrix}
 }
+\value{
+A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
+}
 \description{
 Convert adjacency matrix to graphNEL object
 }

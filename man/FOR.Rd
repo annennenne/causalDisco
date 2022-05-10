@@ -9,6 +9,9 @@ FOR(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes false omission rate from a confusion matrix, see \link{confusion}.
 False omission rate is defined as FN/(FN + TN), where FN are false negatives and

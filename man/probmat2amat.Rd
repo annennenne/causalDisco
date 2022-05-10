@@ -34,6 +34,9 @@ of removing arrowheads (setting singular elements to 0), the procedure removes f
 arrowheads for the given edge to zero). This only makes a difference if the graph may include undirected edges,
 which should be encoded as bidirected edges.}
 }
+\value{
+A square matrix of probabilities (all entries in [0,1]).
+}
 \description{
 Convert a matrix of probabilities into an adjacency matrix
 }

@@ -13,8 +13,15 @@ evaluate(est, true, metrics, ...)
 
 \item{metrics}{List of metrics, see details.}
 
-\item{...}{Further arguments that depend on input type.  Currently only \code{df.out} is allowed, which provides
-output as a data.frame for single matrix comparisons.}
+\item{...}{Further arguments that depend on input type.  Currently only \code{list.out} is allowed, and
+only if the first argument is a matrix (see details under Value).}
+}
+\value{
+A data.frame with one column for each computed metric and one row per evaluated
+matrix pair. Adjacency metrics are prefixed with "adj_", orientation metrics are prefixed
+with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list.out = TRUE}
+can be used to change the return object to a list instead. This list will contain three lists, where
+adjacency, orientation and other metrics are reported, respectively.
 }
 \description{
 Applies several different metrics to evaluate difference between

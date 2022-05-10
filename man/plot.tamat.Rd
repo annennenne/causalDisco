@@ -12,6 +12,9 @@
 
 \item{...}{Further plotting arguments passed along to \code{\link{plotTempoMech}}.}
 }
+\value{
+No return value, the function is called for its side-effects (plotting).
+}
 \description{
 Plot adjacency matrix with order information
 }

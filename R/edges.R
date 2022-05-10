@@ -1,8 +1,9 @@
 #' List of edges in adjacency matrix
 #' 
-#' Produces a list of edges from an adjacency matrix. The output list consists
-#' of two lists itself, one for oriented edges (\code{$dir}), and one for 
-#' unoriented edges (\code{$undir}).
+#' Produces a list of edges from an adjacency matrix. 
+#' 
+#' @return A list consisting of two lists: One for oriented edges (\code{$dir}), 
+#' and one for unoriented edges (\code{$undir}).
 #' 
 #' @param amat An adjacency matrix. 
 #'

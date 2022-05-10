@@ -9,8 +9,10 @@ edges(amat)
 \arguments{
 \item{amat}{An adjacency matrix.}
 }
+\value{
+A list consisting of two lists: One for oriented edges (\code{$dir}),
+and one for unoriented edges (\code{$undir}).
+}
 \description{
-Produces a list of edges from an adjacency matrix. The output list consists
-of two lists itself, one for oriented edges (\code{$dir}), and one for
-unoriented edges (\code{$undir}).
+Produces a list of edges from an adjacency matrix.
 }

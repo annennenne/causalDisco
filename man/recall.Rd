@@ -9,6 +9,9 @@ recall(confusion)
 \arguments{
 \item{confusion}{Confusion matrix as obtained from \link{confusion}}
 }
+\value{
+A numeric in [0,1].
+}
 \description{
 Computes recall from a confusion matrix, see \link{confusion}.
 Recall is defined as TP/(TP + FN), where TP are true positives and

@@ -9,6 +9,9 @@ nedges(amat)
 \arguments{
 \item{amat}{An adjacency matrix}
 }
+\value{
+A numeric (non-negative integer).
+}
 \description{
 Counts the number of edges in an adjacency matrix.
 }

@@ -12,6 +12,8 @@
 #' @param colors A character vector with colors to use for marking periods.
 #' Should have at least as many elements as the numbers of periods.
 #' @param ... Additional arguments passed to \code{\link[igraph]{plot.igraph}}. 
+#' 
+#' @return No return value, the function is called for its side-effects (plotting). 
 #'
 #' @export
 plotTempoMech <- function(x, addTimeAxis = TRUE,
@@ -20,7 +22,11 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
                           periodLabels = NULL,
                           colors = NULL, ...) {
   x_amat <- x$amat
-  x_order <- x$order
+  if ("tamat" %in% class(x)) {
+    x_order <- attr(x, "order")
+  } else {
+    x_order <- x$order
+  }
   x_psi <- x$psi
 
   if (is.na(x_psi)) {

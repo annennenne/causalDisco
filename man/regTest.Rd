@@ -16,6 +16,22 @@ regTest(x, y, S, suffStat)
 \item{suffStat}{Sufficient statistic; list with data,
 binary variables and order.}
 }
+\value{
+A numeric, which is the p-value of the test.
+}
 \description{
-Regression-based information loss test
+We test whether \code{x} and \code{y} are associated, given
+\code{S} using a generalized linear model.
+}
+\details{
+All included variables should be either numeric or binary. If
+\code{y} is binary, a logistic regression model is fitted. If \code{y} is numeric,
+a linear regression model is fitted. \code{x} and \code{S} are included as
+explanatory variables. Any numeric variables among \code{x} and \code{S} are
+modeled with spline expansions (natural splines, 3 df). This model is tested
+against a numeric where \code{x} (including a possible spline expansion) has
+been left out using a likelihood ratio test.
+The model is fitted in both directions (interchanging the roles
+of \code{x} and \code{y}). The final p-value is the maximum of the two
+obtained p-values.
 }

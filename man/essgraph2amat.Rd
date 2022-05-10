@@ -11,6 +11,9 @@ essgraph2amat(essgraph, p = length(essgraph$field(".nodes")))
 
 \item{p}{The number of nodes in the graph}
 }
+\value{
+An adjacency matrix (square matrix with 0/1 entries).
+}
 \description{
 Extracts the adjacency matrix from an \code{\link[pcalg]{EssGraph-class}} object. This object is returned
 by score-based causal discovery algorithms in the pcalg package.

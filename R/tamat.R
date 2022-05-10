@@ -7,10 +7,17 @@
 #' period, e.g. "child_x" for variable "x" at period "child"
 #' @param order A character vector with the periods in their order.
 #'
+#' @return A \code{tamat} object, which is a matrix with a "order"
+#' attribute(a character vector listing the temporal order of the variables 
+#' in the adjacency matrix). 
 #'
 #' @export
 tamat <- function(amat, order) {
-  out <- list(amat = amat, order = order)
-  class(out) <- "tamat"
+#  out <- list(amat = amat, order = order)
+  out <- amat
+  attr(out, "order") <- order
+  class(out) <- c("tamat")
   out
 }
+
+

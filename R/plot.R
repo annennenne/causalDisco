@@ -4,6 +4,9 @@
 #'  to be plotted (as outputted from \code{\link{tpc}}).
 #' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
 #'
+#' @return No return value, the function is called for its side-effects (plotting). 
+#' 
+#'
 #' @export
 plot.tpdag <- function(x, ...) {
   plotTempoMech(x, ...)
@@ -16,6 +19,9 @@ plot.tpdag <- function(x, ...) {
 #' (as outputted from \code{\link{tpc}}).
 #' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
 #'
+#' @return No return value, the function is called for its side-effects (plotting). 
+#' 
+#'
 #' @export
 plot.tskeleton <- function(x, ...) {
   plotTempoMech(x, ...)
@@ -26,6 +32,9 @@ plot.tskeleton <- function(x, ...) {
 #' @param x tamat (temporal adjacency matrix) object to be plotted
 #' (as outputted from \code{\link{tamat}}).
 #' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
+#'
+#' @return No return value, the function is called for its side-effects (plotting). 
+#' 
 #'
 #' @export
 plot.tamat <- function(x, ...) {
