@@ -46,16 +46,14 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        clipboard = TRUE,
                        colorAnnotate = NULL) {
   if ("tpdag" %in% class(model)) {
-    tamat <- model$amat
+    amat <- model$amat
     order <- model$order
   } else if ("tamat" %in% class(model)) {
-    tamat <- model
+    amat <- model
     order <- attr(model, "order")
   } else {
     stop("Input model must be of class tpdag or tamat")
   }
-  
-  amat <- tamat$amat
   
   if (!is.null(colorAnnotate) & is.null(annotateEdges)) {
     annotateEdges <- FALSE
