@@ -1,7 +1,5 @@
 ## Changes
-* Updated documentation according to comments from first CRAN submission
-* Added three new functions: simDAG, simGausFromDAG, nDAGs
-* Changed structure of tamat objects so they inherit directly from matrix
+* Fixed major bug and added examples to maketikz() function. 
 
 ## Test environments
 * local R installation, R 4.0.3

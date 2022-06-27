@@ -33,7 +33,23 @@
 #' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz 
 #' code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code is instead printed  
 #' in the console.
-#'
+#' 
+#' @examples 
+#' 
+#' # Make tikz figure code from tpdag, print code to screen
+#' data(tpcExample)
+#' tpdag1 <- tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
+#'               test = corTest)
+#' maketikz(tpdag1, clipboard = FALSE)
+#' 
+#' # Make tikz figure code from tamat, copy code to clipboard
+#' thisdag <- simDAG(5)
+#' rownames(thisdag) <- colnames(thisdag) <- c("child_x", "child_y",
+#'                                             "child_z", "adult_x", 
+#'                                             "adult_y")
+#' thistamat <- tamat(thisdag, order = c("child", "adult"))        
+#' maketikz(thistamat)               
+#'               
 #' @importFrom clipr write_clip
 #' @export
 maketikz <- function(model, xjit = 2, yjit = 2,
