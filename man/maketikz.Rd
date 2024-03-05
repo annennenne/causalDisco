@@ -20,7 +20,7 @@ maketikz(
 )
 }
 \arguments{
-\item{model}{\code{tpdag} or \code{tamat} object to plot.}
+\item{model}{\code{tpdag}, \code{tskeleton} or \code{tamat} object to plot.}
 
 \item{xjit}{How much should nodes within a period be jittered horizontally.}
 
@@ -69,4 +69,23 @@ Latex preamble. The relevant lines of code are (depending a bit on parameter set
 \code{\\usepackage{tikz}} \cr
 \code{\\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri}} \cr
 \code{\\usepackage{pgfplots}}
+}
+\examples{
+
+# Make tikz figure code from tpdag, print code to screen
+data(tpcExample)
+tpdag1 <- tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
+              test = corTest)
+maketikz(tpdag1, clipboard = FALSE)
+
+# Make tikz figure code from tamat, copy code to clipboard
+thisdag <- simDAG(5)
+rownames(thisdag) <- colnames(thisdag) <- c("child_x", "child_y",
+                                            "child_z", "adult_x", 
+                                            "adult_y")
+thistamat <- tamat(thisdag, order = c("child", "adult"))        
+\dontrun{
+maketikz(thistamat)            
+}   
+              
 }

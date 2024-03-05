@@ -25,7 +25,7 @@ Score-based algorithm for structural equation models that uses stability selecti
 
 ```` {r, eval = FALSE}
 #Load numeric dataset numData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
 
 #Load package
 library(stablespec)

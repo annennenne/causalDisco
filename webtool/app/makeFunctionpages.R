@@ -1,4 +1,4 @@
-#Generate rmd pages (tiles) for each function avaiable in descriptions.R
+#Generate rmd pages (tiles) for each function available in descriptions.R
 library(pander)
 library(rmarkdown)
 
@@ -23,7 +23,7 @@ featureNames <- c("Package:", "Function:", "Input:", "Output:", "Documentation:"
 n <- nrow(descData)
 for (i in 1:n) {
   thisInfo <- descData[i, , drop = FALSE]
-  thisCodeExample <- readLines(paste("../examples/", 
+  thisCodeExample <- readLines(paste("../app/examples/", 
                                      thisInfo["link_example"],
                                      sep = ""))
   

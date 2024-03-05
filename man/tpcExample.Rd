@@ -27,7 +27,7 @@ prefixes defines with period they are related to ("child", "youth" or "oldage").
  
 }
 \references{
-Petersen, AH; Osler, M \& Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology,
+Petersen, AH; Osler, M and Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology,
 American Journal of Epidemiology.
 }
 \keyword{datasets}

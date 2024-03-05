@@ -22,8 +22,8 @@ compare <- function(x, y = NULL) {
     onlyone <- TRUE
   } else onlyone <- FALSE
   if("tpdag" %in% class(x) & "tpdag" %in% class(y)) {
-    amat1 <- x$amat
-    amat2 <- y$amat
+    amat1 <- x$tamat
+    amat2 <- y$tamat
     psi1 <- x$psi
     psi2 <- y$psi
 

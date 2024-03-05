@@ -15,12 +15,16 @@
 #' @param suffStat Sufficient statistic. If this argument is supplied, the
 #' sufficient statistic is not computed from the inputted data. The format and
 #' contents of the sufficient statistic depends on which test is being used. 
+#' @param method Which method to use for skeleton construction, must be 
+#' \code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).  
+#' See \code{\link[pcalg]{skeleton}} for details. 
 #' @param output One of \code{"tpdag"} or \code{"tskeleton"}. If
-#' \code{"skeleton"}, a temporal skeleton is constructed and outputted,
+#' \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 #' but the edges are not directed. If \code{"tpdag"} (the default), a
 #' the edges are directed, resulting in a temporal partially directed
 #' acyclic graph.
-#' @param ... Further optional arguments which are currently not in use.
+#' @param ... Further optional arguments which are passed to 
+#' \code{\link[pcalg]{skeleton}} for the skeleton constructing phase.
 #'
 #' @details Note that all independence test procedures implemented
 #' in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
@@ -76,7 +80,8 @@
 #'
 #' @export
 tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
-                suffStat = NULL, output = "tpdag", ...) {
+                suffStat = NULL, method = "stable.fast",
+                output = "tpdag", ...) {
 
   #check arguments
   if (!output %in% c("tpdag", "tskeleton")) {
@@ -111,12 +116,12 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
                    indepTest = thisDirTest,
                    alpha = sparsity,
                    labels = vnames,
-                   method = "stable.fast")
+                   method = method, ...)
   ntests <- sum(skel@n.edgetests)
 
 
   if (output == "tskeleton") {
-    out <- list(amat = skel@amat, order = order, psi = sparsity,
+    out <- list(tamat = tamat(amat = skel@amat, order = order), psi = sparsity,
                 ntest = ntests)
     class(out) <- "tskeleton"
   } else { #case: output == "tpdag"
@@ -125,7 +130,7 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
     res <- tpdag(skel, order = order)
 
     #Pack up output
-    out <- list(amat = amat(res), order = order, psi = sparsity,
+    out <- list(tamat = tamat(amat = amat(res), order = order), psi = sparsity,
                 ntests = ntests)
     class(out) <- "tpdag"
   }

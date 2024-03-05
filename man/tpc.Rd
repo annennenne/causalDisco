@@ -10,6 +10,7 @@ tpc(
   sparsity = 10^(-1),
   test = regTest,
   suffStat = NULL,
+  method = "stable.fast",
   output = "tpdag",
   ...
 )
@@ -35,13 +36,18 @@ may also be used, see details below about the required syntax.}
 sufficient statistic is not computed from the inputted data. The format and
 contents of the sufficient statistic depends on which test is being used.}
 
+\item{method}{Which method to use for skeleton construction, must be
+\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
+See \code{\link[pcalg]{skeleton}} for details.}
+
 \item{output}{One of \code{"tpdag"} or \code{"tskeleton"}. If
-\code{"skeleton"}, a temporal skeleton is constructed and outputted,
+\code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 but the edges are not directed. If \code{"tpdag"} (the default), a
 the edges are directed, resulting in a temporal partially directed
 acyclic graph.}
 
-\item{...}{Further optional arguments which are currently not in use.}
+\item{...}{Further optional arguments which are passed to
+\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
 }
 \value{
 A \code{tpdag} or \code{tskeleton} object. Both return types are

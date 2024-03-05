@@ -20,7 +20,7 @@ Constraint-based learning using the stable (i.e. less order dependent) version o
 
 ```` {r, eval = FALSE}
 #Load numerical dataset numData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
 
 #Load package
 library(bnlearn)

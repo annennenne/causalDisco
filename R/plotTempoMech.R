@@ -21,14 +21,19 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
                           varLabels = NULL,
                           periodLabels = NULL,
                           colors = NULL, ...) {
-  x_amat <- x$amat
+  
   if ("tamat" %in% class(x)) {
+    x_amat <- x
     x_order <- attr(x, "order")
+    x_psi <- NA
+  } else if ("tskeleton" %in% class(x) | "tpdag" %in% class(x)) {
+    x_amat <- x$tamat
+    x_order <- attr(x_amat, "order")
+    x_psi <- x$psi
   } else {
-    x_order <- x$order
+    stop("Input must by of type tamat, tpdag or tskeleton")
   }
-  x_psi <- x$psi
-
+  
   if (is.na(x_psi)) {
     addPsi <- FALSE
   }

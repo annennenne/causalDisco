@@ -6,7 +6,8 @@ propNames <- read.csv("propertyLabels.csv",
 ui <- fluidPage(
   
   # App title ----
-  fluidRow(titlePanel(img(src="www/logo.png", align = "left", width = "50%"),
+  fluidRow(titlePanel(img(src="https://github.com/annennenne/causalDisco/raw/master/webtool/app/www/logo.png", 
+                          align = "left", width = "50%"),
              windowTitle = "causalDisco")),
 
   # Sidebar layout with input and output definitions ----

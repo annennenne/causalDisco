@@ -23,7 +23,7 @@ Hybrid learning using constraint-based learning of a skeleton and scores-based l
 
 ```` {r, eval = FALSE}
 #Load numeric dataset numData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
 
 #Load package
 library(pcalg)

@@ -23,7 +23,7 @@ Constraint-based learning  from data where the data generating mechanism may inc
 
 ```` {r, eval = FALSE}
 #Load numeric dataset with latent confounding numData_latent
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData_latent.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData_latent.rda"))
 
 #Load package
 library(pcalg)

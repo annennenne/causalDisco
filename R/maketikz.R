@@ -6,7 +6,7 @@
 #' \code{\\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri}} \cr
 #' \code{\\usepackage{pgfplots}}
 #'
-#' @param model \code{tpdag} or \code{tamat} object to plot. 
+#' @param model \code{tpdag}, \code{tskeleton} or \code{tamat} object to plot. 
 #' @param xjit How much should nodes within a period be jittered horizontally.
 #' @param yjit Vertical distance between nodes within a period.
 #' @param markperiods If \code{TRUE}, gray boxes are drawn behind each period. 
@@ -48,7 +48,9 @@
 #'                                             "child_z", "adult_x", 
 #'                                             "adult_y")
 #' thistamat <- tamat(thisdag, order = c("child", "adult"))        
-#' maketikz(thistamat)               
+#' \dontrun{
+#' maketikz(thistamat)            
+#' }   
 #'               
 #' @importFrom clipr write_clip
 #' @export
@@ -61,14 +63,14 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        annotationLabels = NULL,
                        clipboard = TRUE,
                        colorAnnotate = NULL) {
-  if ("tpdag" %in% class(model)) {
-    amat <- model$amat
-    order <- model$order
+  if ("tpdag" %in% class(model) | "tskeleton" %in% class(model)) {
+    amat <- model$tamat
+    order <-  attr(amat, "order")
   } else if ("tamat" %in% class(model)) {
     amat <- model
     order <- attr(model, "order")
   } else {
-    stop("Input model must be of class tpdag or tamat")
+    stop("Input model must be of class tpdag, tskeleton or tamat")
   }
   
   if (!is.null(colorAnnotate) & is.null(annotateEdges)) {

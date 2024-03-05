@@ -1,5 +1,5 @@
 #Load categorical dataset catData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_catData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_catData.rda"))
 
 #Load package
 library(bnstruct)

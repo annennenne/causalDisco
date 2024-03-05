@@ -1,6 +1,7 @@
 ^causalDisco\.Rproj$
 ^\.Rproj\.user$
 .gitignore
+app
 archive
 article
 graphics

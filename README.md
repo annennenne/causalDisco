@@ -6,10 +6,10 @@
 ## Installation
 
 To install the development version of `causalDisco` run the following
-commands from within R (requires that the `devtools` package is already installed)
+commands from within R (requires that the `remotes` package is already installed)
 
 ```{r}
-devtools::install_github("annennenne/causalDisco")
+remotes::install_github("annennenne/causalDisco")
 ```
 
 Note that the package requires installation of the `pcalg` package as well, which depends on packages available only Bioconductor. There is an installation guide for `pcalg` [here](https://github.com/asreview/pcalg).  

@@ -1,5 +1,5 @@
 #Load mixed numerical and categorical dataset mixData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_mixData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_mixData.rda"))
 
 #Load package
 library(bnlearn)

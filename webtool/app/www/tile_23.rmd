@@ -26,7 +26,7 @@ Baysian score-based learning with likelihood scoring and a greedy search strateg
 
 ```` {r, eval = FALSE}
 #Load mixed numeric and categorical dataset mixData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_mixData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_mixData.rda"))
 
 #Load package
 library(deal)

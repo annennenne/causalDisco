@@ -1,5 +1,5 @@
 #Load categorical dataset catData with missing information
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_catData_mcar.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_catData_mcar.rda"))
 
 #Load package
 library(bnstruct)

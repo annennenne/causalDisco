@@ -26,7 +26,7 @@ Constraint-based learning using the PC algorithm
 
 ```` {r, eval = FALSE}
 #Load numeric dataset numData
-load(url("https://github.com/annennenne/causalDisco/raw/master/data/exampledata_numData.rda"))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
 
 #Load package
 library(pcalg)

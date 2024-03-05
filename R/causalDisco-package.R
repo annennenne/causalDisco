@@ -13,7 +13,7 @@
 #'  \item{oldage_x6}{Structural equation: \eqn{X6 := X4^3 + X4^2 + 2 * X5 + \epsilon6} with \eqn{\epsilon6  ~  N(0,1)}}
 #'  }
 #'  
-#' @references Petersen, AH; Osler, M \& Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology, 
+#' @references Petersen, AH; Osler, M and Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology, 
 #'  American Journal of Epidemiology. 
 #' @examples 
 #'  data(tpcExample)

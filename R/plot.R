@@ -38,7 +38,6 @@ plot.tskeleton <- function(x, ...) {
 #'
 #' @export
 plot.tamat <- function(x, ...) {
-  x$psi <- NA
   plotTempoMech(x, ...)
 }
 
