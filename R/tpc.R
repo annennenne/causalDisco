@@ -18,6 +18,11 @@
 #' @param method Which method to use for skeleton construction, must be 
 #' \code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).  
 #' See \code{\link[pcalg]{skeleton}} for details. 
+#' @param methodNA Method for handling missing information (\code{NA} values).
+#' Must be one of \code{"none"} (default, an error is thrown if \code{NA}s 
+#' are present), \code{"cc"} (complete case analysis, deletes all observations
+#' that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
+#' observations with missing information test-by-test) (further details below). 
 #' @param output One of \code{"tpdag"} or \code{"tskeleton"}. If
 #' \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 #' but the edges are not directed. If \code{"tpdag"} (the default), a
@@ -28,7 +33,15 @@
 #'
 #' @details Note that all independence test procedures implemented
 #' in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
-#'
+#' 
+#' The methods for handling missing information require that the \code{data},
+#' rather than the \code{suffStat} argument is used for inputting data; the latter
+#' assumes no missing information and hence always sets \code{methodNA = "none"}.
+#' If the test is \code{corTest}, test-wise deletion is performed when computing the 
+#' sufficient statistic (correlation matrix) (so for each pair of variables, only 
+#' complete cases are used). If the test is \code{regTest}, test-wise deletion 
+#' is performed for each conditional independence test instead. 
+#
 #' @return A \code{tpdag} or \code{tskeleton} object. Both return types are
 #' S3 objects, i.e., lists with entries: \code{$amat} (the estimated adjacency 
 #' matrix), \code{$order} (character vector with the order, as inputted to
@@ -81,11 +94,31 @@
 #' @export
 tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
+                methodNA = "none",
                 output = "tpdag", ...) {
 
   #check arguments
   if (!output %in% c("tpdag", "tskeleton")) {
     stop("Output must be tpdag or tskeleton.")
+  }
+  if (!methodNA %in% c("none", "cc", "twd")) {
+    stop("Invalid choice of method for handling NA values.")
+  }
+  
+  
+  # handle missing information
+  # note: twd is handled by the test: they have this as default, so the code here
+  # is used to ensure that missing info is only passed along if we in fact want to 
+  # use twd
+  if (any(is.na(data))) {
+    if (methodNA == "none") {
+      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
+    } else if (methodNA == "cc") {
+      data <- na.omit(data)
+      if (nrow(data) == 0) {
+        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
+      }  
+    }
   }
 
   #variable names
@@ -109,6 +142,7 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
     }
   } else {
     thisSuffStat <- suffStat
+    methodNA <- "none" #can't handle NA for user-supplied suff. stat./test
   }
 
   #Learn skeleton
@@ -153,11 +187,12 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
 makeSuffStat <- function(data, type, ...) {
   #browser()
   if (type == "regTest") {
-    bin <- unlist(sapply(data, function(x) length(unique(x)) == 2))
+    bin <- unlist(sapply(data, function(x) length(unique(na.omit(x))) == 2))
     suff <- list(data = data, binary = bin)
   #  if (!is.null(order)) suff$order <- order
   } else if (type == "corTest") {
-    suff <- list(C = stats::cor(data), n = nrow(data))
+    suff <- list(C = stats::cor(data, use = "pairwise.complete.obs"), 
+                 n = nrow(data))
   } else {
     stop(paste(type, "is not a supported type for",
                "autogenerating a sufficient statistic"))

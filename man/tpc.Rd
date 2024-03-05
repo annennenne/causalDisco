@@ -11,6 +11,7 @@ tpc(
   test = regTest,
   suffStat = NULL,
   method = "stable.fast",
+  methodNA = "none",
   output = "tpdag",
   ...
 )
@@ -40,6 +41,12 @@ contents of the sufficient statistic depends on which test is being used.}
 \code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
 See \code{\link[pcalg]{skeleton}} for details.}
 
+\item{methodNA}{Method for handling missing information (\code{NA} values).
+Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
+are present), \code{"cc"} (complete case analysis, deletes all observations
+that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
+observations with missing information test-by-test) (further details below).}
+
 \item{output}{One of \code{"tpdag"} or \code{"tskeleton"}. If
 \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 but the edges are not directed. If \code{"tpdag"} (the default), a
@@ -62,6 +69,14 @@ Perform causal discovery using the temporal PC algorithm (TPC)
 \details{
 Note that all independence test procedures implemented
 in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
+
+The methods for handling missing information require that the \code{data},
+rather than the \code{suffStat} argument is used for inputting data; the latter
+assumes no missing information and hence always sets \code{methodNA = "none"}.
+If the test is \code{corTest}, test-wise deletion is performed when computing the
+sufficient statistic (correlation matrix) (so for each pair of variables, only
+complete cases are used). If the test is \code{regTest}, test-wise deletion
+is performed for each conditional independence test instead.
 }
 \examples{
 #TPC on included example data, use sparsity psi = 0.01, default test (regression-based
