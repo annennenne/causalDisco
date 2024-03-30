@@ -3,7 +3,7 @@
 #' @details Note that it is necessary to read in relevant tikz libraries in the 
 #' Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
 #' \code{\\usepackage{tikz}} \cr
-#' \code{\\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri}} \cr
+#' \code{\\usetikzlibrary{arrows.meta,arrows,shapes,snakes,automata,backgrounds,petri}} \cr
 #' \code{\\usepackage{pgfplots}}
 #'
 #' @param model \code{tpdag}, \code{tskeleton} or \code{tamat} object to plot. 
@@ -63,7 +63,8 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        annotationLabels = NULL,
                        clipboard = TRUE,
                        colorAnnotate = NULL) {
-  if ("tpdag" %in% class(model) | "tskeleton" %in% class(model)) {
+  if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) | 
+      "tpag" %in% class(model)) {
     amat <- model$tamat
     order <-  attr(amat, "order")
   } else if ("tamat" %in% class(model)) {

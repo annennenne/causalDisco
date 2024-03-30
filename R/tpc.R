@@ -90,6 +90,7 @@
 #' results <- tpc(simdata, order = simorder, sparsity = 10^(-3))
 #'
 #' @importFrom pcalg skeleton
+#' @importFrom stats na.omit
 #'
 #' @export
 tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
@@ -155,7 +156,7 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
 
 
   if (output == "tskeleton") {
-    out <- list(tamat = tamat(amat = skel@amat, order = order), psi = sparsity,
+    out <- list(tamat = tamat(amat = graph2amat(skel), order = order), psi = sparsity,
                 ntest = ntests)
     class(out) <- "tskeleton"
   } else { #case: output == "tpdag"
@@ -183,7 +184,7 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
 
 
 
-
+#' @importFrom stats cor na.omit
 makeSuffStat <- function(data, type, ...) {
   #browser()
   if (type == "regTest") {
@@ -191,7 +192,7 @@ makeSuffStat <- function(data, type, ...) {
     suff <- list(data = data, binary = bin)
   #  if (!is.null(order)) suff$order <- order
   } else if (type == "corTest") {
-    suff <- list(C = stats::cor(data, use = "pairwise.complete.obs"), 
+    suff <- list(C = cor(data, use = "pairwise.complete.obs"), 
                  n = nrow(data))
   } else {
     stop(paste(type, "is not a supported type for",
@@ -251,14 +252,14 @@ tpdag <- function(skel, order) {
   thisAmat <- amat(skel)
 
   #order restrict amat
-  tempSkelAmat <- orderRestrictAmat(thisAmat, order = order)
+  tempSkelAmat <- orderRestrictAmat_cpdag(thisAmat, order = order)
 
   pcalg::addBgKnowledge(vOrientTemporal(tempSkelAmat, skel@sepset), checkInput = FALSE)
 }
 
 
 
-orderRestrictAmat <- function(amat, order) {
+orderRestrictAmat_cpdag <- function(amat, order) {
   p <- nrow(amat)
   vnames <- rownames(amat)
 

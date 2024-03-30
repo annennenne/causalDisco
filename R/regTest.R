@@ -35,7 +35,7 @@ regTest <- function(x, y, S, suffStat) {
 #note: x, y, S are indexes of vars
 
 #' @importFrom splines ns
-#' @importFrom stats glm as.formula update anova
+#' @importFrom stats glm as.formula update anova na.omit
 regTestEachDir <- function(x, y, S, suffStat) {
 
   #args <- suffStat$otherArgs
