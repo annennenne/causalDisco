@@ -101,7 +101,8 @@
 tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
                 methodNA = "none",
-                output = "tpdag", ...) {
+                output = "tpdag", 
+                varnames = NULL, ...) {
 
   #check arguments
   if (!output %in% c("tpdag", "tskeleton")) {

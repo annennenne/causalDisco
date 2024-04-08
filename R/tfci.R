@@ -1,16 +1,22 @@
 #' Perform causal discovery using the temporal FCI algorithm (TFCI)
 #'
 #' @inheritParams tpc
+#' @param output One of \code{"tpag"} or \code{"fciAlgo"}. If \code{"tpdag"} 
+#' a temporal partial ancestral graph (TPAG) object is outputted. 
+#' If \code{"fciAlgo"} the TPAG is outputted as the 
+#' object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is
+#' intended for compatability with tools from that package. 
 #'
 #' @include tpc.R
 #' 
 #' @importFrom pcalg pdsep skeleton
 #' @importFrom stats na.omit
 #' 
-tfci <- function(data, order, sparsity = 10^(-1), test = regTest,
+tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                  suffStat = NULL, method = "stable.fast",
                  methodNA = "none",
-                 output = "tpag", ...) {
+                 output = "tpag", 
+                 varnames = NULL, ...) {
   warning("TFCI is in alpha testing stage! Use at your own risk!")
   #check arguments
   #if (!output %in% c("tpag", "tskeleton")) {
@@ -18,6 +24,9 @@ tfci <- function(data, order, sparsity = 10^(-1), test = regTest,
   #}
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
+  }
+  if (is.null(data) & is.null(suffStat)) {
+    stop("Either data or sufficient statistic must be supplied.")
   }
   
   
@@ -37,7 +46,11 @@ tfci <- function(data, order, sparsity = 10^(-1), test = regTest,
   }
   
   #variable names
-  vnames <- names(data)
+  if (is.null(data)) {
+    vnames <- varnames
+  } else {
+    vnames <- names(data)
+  }
   
   #make testing procedure that does not condition on
   #the future
@@ -99,11 +112,14 @@ tfci <- function(data, order, sparsity = 10^(-1), test = regTest,
     
   #Pack up output
   # CHECK: Is ntests correct? Something should probably be added from
-  # pdsep step
-  out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
+  # pdsep ste
+  if (output == "tpag") {
+    out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
                 ntests = ntests)
-  class(out) <- "tpag"
-  
+    class(out) <- "tpag"
+  } else if (output == "fciAlgo") {
+    out <- res
+  }
   #}
   
   out
