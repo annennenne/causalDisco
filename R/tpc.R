@@ -105,8 +105,8 @@ tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                 varnames = NULL, ...) {
 
   #check arguments
-  if (!output %in% c("tpdag", "tskeleton")) {
-    stop("Output must be tpdag or tskeleton.")
+  if (!output %in% c("tpdag", "tskeleton", "pcAlgo")) {
+    stop("Output must be tpdag, tskeleton or pcAlgo.")
   }
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")

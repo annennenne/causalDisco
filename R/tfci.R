@@ -19,9 +19,9 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                  varnames = NULL, ...) {
   warning("TFCI is in alpha testing stage! Use at your own risk!")
   #check arguments
-  #if (!output %in% c("tpag", "tskeleton")) {
-  #  stop("Output must be tpag or tskeleton.")
-  #}
+  if (!output %in% c("tpag", "fciAlgo")) {
+    stop("Output must be tpag or fciAlgo.")
+  }
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
   }
