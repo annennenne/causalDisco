@@ -23,11 +23,16 @@
 #' are present), \code{"cc"} (complete case analysis, deletes all observations
 #' that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 #' observations with missing information test-by-test) (further details below). 
-#' @param output One of \code{"tpdag"} or \code{"tskeleton"}. If
+#' @param output One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
 #' \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 #' but the edges are not directed. If \code{"tpdag"} (the default), a
 #' the edges are directed, resulting in a temporal partially directed
-#' acyclic graph.
+#' acyclic graph (TPDAG). If \code{"pcAlgo"} the TPDAG is outputted as the 
+#' object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
+#' intended for compatability with tools from that package. 
+#'@param varnames A character vector of variable names. It only needs to be supplied
+#' if the \code{data} argument is not used, and data are hence passed exclusively
+#' through the \code{suffStat} argument.  
 #' @param ... Further optional arguments which are passed to 
 #' \code{\link[pcalg]{skeleton}} for the skeleton constructing phase.
 #'
@@ -93,7 +98,7 @@
 #' @importFrom stats na.omit
 #'
 #' @export
-tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
+tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
                 methodNA = "none",
                 output = "tpdag", ...) {
@@ -105,7 +110,9 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
   }
-  
+  if (is.null(data) & is.null(suffStat)) {
+    stop("Either data or sufficient statistic must be supplied.")
+  }
   
   # handle missing information
   # note: twd is handled by the test: they have this as default, so the code here
@@ -123,7 +130,11 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
   }
 
   #variable names
-  vnames <- names(data)
+  if (is.null(data)) {
+    vnames <- varnames
+  } else {
+    vnames <- names(data)
+  }
 
   #make testing procedure that does not condition on
   #the future
@@ -159,15 +170,19 @@ tpc <- function(data, order, sparsity = 10^(-1), test = regTest,
     out <- list(tamat = tamat(amat = graph2amat(skel), order = order), psi = sparsity,
                 ntest = ntests)
     class(out) <- "tskeleton"
-  } else { #case: output == "tpdag"
+  } else { #case: output == "tpdag" or "pcAlgo"
 
     #Direct edges
     res <- tpdag(skel, order = order)
 
     #Pack up output
-    out <- list(tamat = tamat(amat = amat(res), order = order), psi = sparsity,
+    if (output == "tpdag") {
+      out <- list(tamat = tamat(amat = amat(res), order = order), psi = sparsity,
                 ntests = ntests)
-    class(out) <- "tpdag"
+      class(out) <- "tpdag"
+    } else if (output == "pcAlgo") {
+      out <- res
+    }
   }
 
   out
