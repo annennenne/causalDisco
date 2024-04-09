@@ -1,7 +1,8 @@
 #' Simulate Gaussian data according to DAG
 #' 
 #' Simulates a jointly Gaussian dataset given a DAG 
-#' adjacency matrix. The data is simulated using linear structural
+#' adjacency matrix ("from-to" encoding, see \link{amat} for details). 
+#' The data is simulated using linear structural
 #' equations and the parameters (residual standard deviations and 
 #' regression coefficients) are sampled from chosen intervals. 
 #' 
@@ -24,6 +25,13 @@
 #' standard deviation. 
 #' 
 #' @return A data.frame of identically distributed simulated observations. 
+#' 
+#' @examples
+#' # Simulate DAG adjacency matrix with 6 nodes
+#' ex_dag <- simDAG(6) 
+#' 
+#' # Simulate Gaussian data (100 iid observations) 
+#' ex_data <- simGausFromDAG(ex_dag, n = 100)
 #' 
 #' @export
 simGausFromDAG <- function(amat, n, regparLim = c(0.5, 2), 

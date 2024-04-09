@@ -37,7 +37,8 @@ A data.frame of identically distributed simulated observations.
 }
 \description{
 Simulates a jointly Gaussian dataset given a DAG
-adjacency matrix. The data is simulated using linear structural
+adjacency matrix ("from-to" encoding, see \link{amat} for details).
+The data is simulated using linear structural
 equations and the parameters (residual standard deviations and
 regression coefficients) are sampled from chosen intervals.
 }
@@ -46,4 +47,12 @@ A variable \eqn{X_{i}} is simulated as \cr
 \eqn{X_{i} := \sum_{Z \in pa(X_{i})} \beta_{Z} * Z + e_{i}} \cr
 where \eqn{pa(X_{i})} are the parents of \eqn{X_{i}} in the DAG.
 The residual, \eqn{e_{i}}, is drawn from a normal distribution.
+}
+\examples{
+# Simulate DAG adjacency matrix with 6 nodes
+ex_dag <- simDAG(6) 
+
+# Simulate Gaussian data (100 iid observations) 
+ex_data <- simGausFromDAG(ex_dag, n = 100)
+
 }

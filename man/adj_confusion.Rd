@@ -23,7 +23,11 @@ Two adjacency matrices are compared either in terms of adjacencies
 }
 \details{
 In the former case, the confusion matrix is a cross-tabulation
-of adjacencies.
+of adjacencies. Hence, a true positive means that the two inputs agree on
+the presence of an adjacency. A true negative means that the two inputs agree
+on no adjacency. A false positive means that \code{est_amat} places an adjacency
+where there should be none. A false negative means that \code{est_amat} does
+not place an adjacency where there should have been one.
 
 In the latter case, the orientation confusion matrix is conditional on agreement on
 adjacency. This means that only adjacencies that are shared in both input matrices are
@@ -32,4 +36,43 @@ that occur in both matrices. A true positive is a correctly placed arrowhead (1)
 a false positive marks placement of arrowhead (1) where there should have been a tail (0),
 a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 and a true negative marks correct placement of a tail (0).
+}
+\examples{
+#############################################################################
+# Compare two adjacency matrices ############################################
+#############################################################################
+x1 <- matrix(c(0, 0, 0, 0,
+               1, 0, 1, 0,
+               1, 0, 0, 0, 
+               0, 0, 1, 0), 4, 4, byrow = TRUE)
+x2 <- matrix(c(0, 0, 1, 0,
+               1, 0, 0, 0,
+               0, 0, 0, 0, 
+               1, 0, 1, 0), 4, 4, byrow = TRUE)
+
+# confusion matrix for adjacencies
+confusion(x2, x1)
+
+# confusion matrix for conditional orientations
+confusion(x2, x1, type = "dir")
+
+#############################################################################
+# Compare estimated cpdag with true adjacency matrix ########################
+#############################################################################
+# simulate DAG adjacency matrix and Gaussian data
+set.seed(123)
+x3 <- matrix(c(0, 0, 0, 0,
+               1, 0, 1, 0,
+               0, 0, 0, 0, 
+               0, 0, 1, 0), 4, 4, byrow = TRUE)
+ex_data <- simGausFromDAG(x3, n = 50)
+pcres <- pc(ex_data, sparsity = 0.1, test = corTest)
+
+# compare adjacencies with true amat (x1)
+confusion(pcres, x3)
+
+# compare conditional orientations with true amat
+confusion(pcres, x1, type = "dir")
+
+
 }

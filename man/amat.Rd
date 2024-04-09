@@ -10,8 +10,9 @@ amat(x)
 \item{x}{\code{tpdag}/\code{cpdag} object as obtained from \link{tpc} or \link{pc}}
 }
 \description{
-The resulting adjacency matrix A is encoded as follows: A(i,j) = 1 and A(j,i) = 0
-means there is an edge j -> i. A(j,i) = 1 and A(i,j) = 0 means there is an edge i -> j.
+The resulting adjacency matrix A is "from-to", i.e. encoded as follows:
+A(i,j) = 1 and A(j,i) = 0 means there is an edge j -> i.
+A(j,i) = 1 and A(i,j) = 0 means there is an edge i -> j.
 A(i,j) = 1 and A(j,i) = 1 means there is an undirected edge between i and j, i - j.
 A(i,j) = 0 and A(j,i) = 0 means there is no edge between i and j.
 }
