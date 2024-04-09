@@ -61,6 +61,53 @@ through the \code{suffStat} argument.}
 \item{...}{Further optional arguments which are passed to
 \code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
 }
+\value{
+The default output is a \code{tpag} object. This is an
+S3 object, i.e., a list, with entries: \code{$tamat} (the estimated adjacency
+matrix), \code{$order} (character vector with the order, as inputted to
+this function), \code{$psi} (the significance level used for testing), and
+\code{$ntests} (the number of tests conducted).
+
+The adjacency matrix A has four possible entry values: 0 (no edge), 1 (circle),
+2 (arrowhead), 3 (tail). It is encoded as a "to-from" adjacency matrix, which means
+that e.g. A(i,j) = 1 places a circle in the directed from j to i. For example, if
+A(i,j) = 1 and A(j,i) = 2, we have that i o-> j. Similarly, A(i,j) = 2 and A(j,i) = 3
+mean that i <- j. Note that this is a transposed version of the adjacency
+matrix outputted for \code{fciAlgo} objects from the \code{pcalg} package, which
+is "to-from". But it is consistent with the "from-to" adjacency matrices used
+for \code{pcAlgo} objects from the same package.
+}
 \description{
-Perform causal discovery using the temporal FCI algorithm (TFCI)
+Use a modification of the FCI algorithm that makes use of background knowledge
+in the format of a partial ordering. This may for instance come about when
+variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
+}
+\details{
+The temporal/tiered background information enters several places in the TFCI
+algorithm: 1) In the skeleton construction phase, when looking for separating
+sets Z between two variables X and Y, Z is not allowed to contain variables that
+are strictly after both X and Y in the temporal order. 2) This also applies to
+the subsequent phase where the algorithm searched for possible D-SEP sets. 3)
+Prior to other orientation steps, any cross-tier edges get an arrowhead placed
+at their latest node.
+
+After this, the usual FCI orientation rules are applied, see \link[pcalg]{udag2pag}
+for details.
+}
+\examples{
+# simulate linear Gaussian data w unobserved variable L1
+n <- 100
+L1 <- rnorm(n) 
+X1 <- rnorm(n)
+X2 <- L1 + X1 + rnorm(n)
+X3 <- X1 + rnorm(n)
+X4 <- X3 + L1 + rnorm(n)
+d <- data.frame(p1_X1 = X1,
+                p1_X2 = X2,
+                p2_X3 = X3,
+                p2_X4 = X4)
+
+# use tfci algorithm to recover tpag
+tfci(d, test = corTest, order = c("p1", "p2"))
+
 }

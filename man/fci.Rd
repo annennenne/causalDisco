@@ -6,7 +6,6 @@
 \usage{
 fci(
   data = NULL,
-  order,
   sparsity = 10^(-1),
   test = regTest,
   suffStat = NULL,
@@ -21,9 +20,6 @@ fci(
 \item{data}{A data.frame with data. All variables should be
 assigned to exactly one period by prefixing them with the period name
 (see example below).}
-
-\item{order}{A character vector with period-prefixes in their
-temporal order (see example below).}
 
 \item{sparsity}{The sparsity level to be used for independence
 testing (i.e. significance level threshold to use for each test).}
@@ -64,5 +60,24 @@ through the \code{suffStat} argument.}
 \description{
 This is a wrapper function for the \code{\link[pcalg]{fci}} function as
 implemented in the pcalg package. All computations are carried out by the
-pcalg package.
+pcalg package. The default output object however matches that of \link{tfci}, see
+this function for details about how the adjacency matrix is encoded.
+}
+\examples{
+# simulate linear Gaussian data w unobserved variable L1
+n <- 100
+L1 <- rnorm(n) 
+X1 <- rnorm(n)
+X2 <- L1 + X1 + rnorm(n)
+X3 <- X1 + rnorm(n)
+X4 <- X3 + L1 + rnorm(n)
+d <- data.frame(p1_X1 = X1,
+                p1_X2 = X2,
+                p2_X3 = X3,
+                p2_X4 = X4)
+
+# use FCI algorithm to recover PAG                
+fci(d, test = corTest)
+
+
 }
