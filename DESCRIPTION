@@ -26,7 +26,9 @@ Imports:
     gtools,
     clipr,
     methods,
-    scales
+    scales,
+    Rgraphviz,
+    graph
 Collate: 
     'amat.R'
     'causalDisco-package.R'

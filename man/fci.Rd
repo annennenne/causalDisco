@@ -44,7 +44,7 @@ are present), \code{"cc"} (complete case analysis, deletes all observations
 that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
 
-\item{output}{One of \code{"pag"} or \code{"fciAlgo"}. If \code{"pdag"}
+\item{output}{One of \code{"pag"} or \code{"fciAlgo"}. If \code{"pag"}
 a partial ancestral graph (PAG) object is outputted.
 If \code{"fciAlgo"} the PAG is outputted as the
 object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is

@@ -33,11 +33,6 @@
 #' 
 #'
 #' @inheritParams tpc
-#' @param output One of \code{"tpag"} or \code{"fciAlgo"}. If \code{"tpdag"} 
-#' a temporal partial ancestral graph (TPAG) object is outputted. 
-#' If \code{"fciAlgo"} the TPAG is outputted as the 
-#' object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is
-#' intended for compatability with tools from that package. 
 #'
 #' @examples
 #' # simulate linear Gaussian data w unobserved variable L1
@@ -64,13 +59,12 @@
 tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                  suffStat = NULL, method = "stable.fast",
                  methodNA = "none",
-                 output = "tpag", 
                  varnames = NULL, ...) {
  # warning("TFCI is in alpha testing stage! Use at your own risk!")
   #check arguments
-  if (!output %in% c("tpag", "fciAlgo")) {
-    stop("Output must be tpag or fciAlgo.")
-  }
+  #if (!output %in% c("tpag", "fciAlgo")) {
+  #  stop("Output must be tpag or fciAlgo.")
+  #}
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
   }
@@ -162,13 +156,13 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
   #Pack up output
   # CHECK: Is ntests correct? Something should probably be added from
   # pdsep ste
-  if (output == "tpag") {
+  #if (output == "tpag") {
     out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
                 ntests = ntests)
     class(out) <- "tpag"
-  } else if (output == "fciAlgo") {
-    out <- res
-  }
+  #} #else if (output == "fciAlgo") {
+    #out <- res
+  #}
   #}
   
   out
@@ -203,7 +197,7 @@ tpag <- function(skel, order, cautious = TRUE) {
 
 
 
-#[i,j] is [from, to] for pag amats
+#[i,j] is [from, to] for pag amats from pcalg package
 # 0: no edge
 # 1: circle
 # 2: arrowhead ->

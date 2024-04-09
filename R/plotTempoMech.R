@@ -225,3 +225,19 @@ sciNotation <- function(x, digits = 1) {
   as.expression(substitute(base %*% 10^exponent,
                            list(base = base, exponent = exponent)))
 }
+
+
+
+# Builds on plot method from pcalg for fciAlgo objects
+
+#plotPAG <- function(x, ...) {
+#  if (any(c("tpdag", "pag") %in% class(x))) {
+#    thisamat <- amat(x)
+#  } else {
+#    thisamat <- x
+#  }
+#  
+#  Rgraphviz::renderGraph(Rgraphviz::layoutGraph(g))
+#  
+#  
+#}

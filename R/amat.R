@@ -12,11 +12,9 @@
 amat <- function(x) {
   x_class <- class(x) 
   
-  if ("tpdag" %in% class(x)) {
-    out <- x$tamat
-  }
-  
-  if ("cpdag" %in% class(x)) {
+  if (any(c("tpdag", "tpag") %in% x_class)) {
+      out <- x$tamat
+  } else if (any(c("cpdag", "pag") %in% x_class)) {
     out <- x$amat
   }
   

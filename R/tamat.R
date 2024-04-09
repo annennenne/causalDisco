@@ -16,7 +16,7 @@ tamat <- function(amat, order) {
 #  out <- list(amat = amat, order = order)
   out <- amat
   attr(out, "order") <- order
-  class(out) <- c("tamat")
+  class(out) <- c("tamat", "matrix")
   out
 }
 

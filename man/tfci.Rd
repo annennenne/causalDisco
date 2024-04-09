@@ -12,7 +12,6 @@ tfci(
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
-  output = "tpag",
   varnames = NULL,
   ...
 )
@@ -47,12 +46,6 @@ Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
 that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
-
-\item{output}{One of \code{"tpag"} or \code{"fciAlgo"}. If \code{"tpdag"}
-a temporal partial ancestral graph (TPAG) object is outputted.
-If \code{"fciAlgo"} the TPAG is outputted as the
-object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is
-intended for compatability with tools from that package.}
 
 \item{varnames}{A character vector of variable names. It only needs to be supplied
 if the \code{data} argument is not used, and data are hence passed exclusively

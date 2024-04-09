@@ -12,6 +12,10 @@
 #' 
 #' @export
 as.graphNEL <- function(amat) {
+  thisClass <- class(amat)
+  if ("tamat" %in% thisClass) {
+    class(amat) <- "matrix"
+  }
   as(t(amat), "graphNEL")
 }
 
@@ -137,6 +141,8 @@ nedges <- function(amat) {
 
 
 
+
+
 ###############################################################################################################
 # Not exported below###########################################################################################
 ###############################################################################################################
@@ -153,3 +159,15 @@ halfskel <- function(amat) {
   out <- amat + t(amat) != 0
   as.numeric(out[lower.tri(out)])
 }
+
+##' @importClassesFrom pcalg fciAlgo
+#amat2fciAlgo <- function(amat) {
+#  class(amat) <- c(class(amat), "matrix")
+#  new("fciAlgo", amat = amat, call = NA, n = NA,
+#      max.ord = NA,
+#      max.ordPDSEP = NA,
+#      n.edgetests = NA, n.edgetestsPDSEP = NA,
+#      sepset = NA, pMax = NA, allPdsep = NA)
+#  
+#}
+
