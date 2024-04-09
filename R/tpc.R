@@ -178,7 +178,7 @@ tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
 
     #Pack up output
     if (output == "tpdag") {
-      out <- list(tamat = tamat(amat = amat(res), order = order), psi = sparsity,
+      out <- list(tamat = tamat(amat = graph2amat(res, toFrom = FALSE), order = order), psi = sparsity,
                 ntests = ntests)
       class(out) <- "tpdag"
     } else if (output == "pcAlgo") {
@@ -265,7 +265,7 @@ dirTest <- function(test, vnames, order) {
 
 #' @importFrom pcalg addBgKnowledge
 tpdag <- function(skel, order) {
-  thisAmat <- amat(skel)
+  thisAmat <- graph2amat(skel)
 
   #order restrict amat
   tempSkelAmat <- orderRestrictAmat_cpdag(thisAmat, order = order)
@@ -363,10 +363,10 @@ edgesFromAdjMat <- function(amat) {
 }
 
 
-#' @importFrom methods as
-amat <- function(pcres) {
-  as(pcres, "amat") #methods
-}
+##' @importFrom methods as
+#amat <- function(pcres) {
+#  as(pcres, "amat") #methods
+#}
 
 
 ## Old function that may be useful if we want to add bnlearn engine 

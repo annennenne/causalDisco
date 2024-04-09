@@ -4,7 +4,11 @@
 #' (\code{type = "adj"}) or orientations (\code{type = "dir"}). 
 #' 
 #' In the former case, the confusion matrix is a cross-tabulation
-#' of adjacencies. 
+#' of adjacencies. Hence, a true positive means that the two inputs agree on
+#' the presence of an adjacency. A true negative means that the two inputs agree
+#' on no adjacency. A false positive means that \code{est_amat} places an adjacency
+#' where there should be none. A false negative means that \code{est_amat} does
+#' not place an adjacency where there should have been one. 
 #' 
 #' In the latter case, the orientation confusion matrix is conditional on agreement on 
 #' adjacency. This means that only adjacencies that are shared in both input matrices are 
@@ -17,19 +21,66 @@
 #' @return A list with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),
 #'\code{$fp} (number of false positives), and  \code{$tp} (number of false negatives). 
 #' 
-#' @param est_amat The estimated adjacency matrix
-#' @param true_amat The true adjacency matrix
+#' @param est_amat The estimated adjacency matrix, or \code{tpdag}/\code{cpdag} 
+#' object as obtained from \link{tpc} or \link{pc}
+#' @param true_amat The true adjacency matrix, or \code{tpdag}/\code{cpdag} 
+#' object as obtained from \link{tpc} or \link{pc}
 #' @param type String indicating whether the confusion matrix should be computed for adjacencies
 #' (\code{"adj"}, the default) or for (conditional) orientations (\code{dir}). 
 #' 
+#' @examples
+#' #############################################################################
+#' # Compare two adjacency matrices ############################################
+#' #############################################################################
+#' x1 <- matrix(c(0, 0, 0, 0,
+#'                1, 0, 1, 0,
+#'                1, 0, 0, 0, 
+#'                0, 0, 1, 0), 4, 4, byrow = TRUE)
+#' x2 <- matrix(c(0, 0, 1, 0,
+#'                1, 0, 0, 0,
+#'                0, 0, 0, 0, 
+#'                1, 0, 1, 0), 4, 4, byrow = TRUE)
+#' 
+#' # confusion matrix for adjacencies
+#' confusion(x2, x1)
+#' 
+#' # confusion matrix for conditional orientations
+#' confusion(x2, x1, type = "dir")
+#' 
+#' #############################################################################
+#' # Compare estimated cpdag with true adjacency matrix ########################
+#' #############################################################################
+#' # simulate DAG adjacency matrix and Gaussian data
+#' set.seed(123)
+#' x3 <- matrix(c(0, 0, 0, 0,
+#'                1, 0, 1, 0,
+#'                0, 0, 0, 0, 
+#'                0, 0, 1, 0), 4, 4, byrow = TRUE)
+#' ex_data <- simGausFromDAG(x3, n = 50)
+#' pcres <- pc(ex_data, sparsity = 0.1, test = corTest)
+#' 
+#' # compare adjacencies with true amat (x1)
+#' confusion(pcres, x3)
+#' 
+#' # compare conditional orientations with true amat
+#' confusion(pcres, x1, type = "dir")
+#' 
+#' 
 #' @export
 confusion <- function(est_amat, true_amat, type = "adj") {
-  UseMethod("confusion")
-}
-
-
-#'@export
-confusion.default <- function(est_amat, true_amat, type = "adj") {
+  #UseMethod("confusion")
+  
+  est_class <- class(est_amat)
+  true_class <- class(true_amat)
+  
+  if (any(est_class %in% c("tpdag", "cpdag"))) { 
+    est_amat <- amat(est_amat)
+  }
+  
+  if (any(true_class %in% c("tpdag", "cpdag"))) {
+    true_amat <- amat(true_amat)
+  }
+  
   if (type == "adj") {
     adj_confusion(est_amat, true_amat)
   } else if (type == "dir") {
@@ -38,6 +89,19 @@ confusion.default <- function(est_amat, true_amat, type = "adj") {
     stop("Type must be either adj or dir.")
   }
 }
+
+# Changed from generic function to allow for class matching for
+# both of the first two arguments (i.e. compare amat with tpdag)
+# #'@export
+#confusion.default <- function(est_amat, true_amat, type = "adj") {
+#  if (type == "adj") {
+#    adj_confusion(est_amat, true_amat)
+#  } else if (type == "dir") {
+#    dir_confusion(est_amat, true_amat)
+#  } else {
+#    stop("Type must be either adj or dir.")
+#  }
+#}
 
 
 #' @inherit confusion

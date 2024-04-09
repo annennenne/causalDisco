@@ -158,7 +158,7 @@ pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
     
     #Pack up output
     if (output == "cpdag") {
-      out <- list(amat = amat(res), psi = sparsity,
+      out <- list(amat = graph2amat(res, toFrom = FALSE), psi = sparsity,
                   ntests = ntests)
       class(out) <- "cpdag"
     } else if (output == "pcAlgo") {

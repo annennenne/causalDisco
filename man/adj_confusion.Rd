@@ -7,9 +7,11 @@
 adj_confusion(est_amat, true_amat)
 }
 \arguments{
-\item{est_amat}{The estimated adjacency matrix}
+\item{est_amat}{The estimated adjacency matrix, or \code{tpdag}/\code{cpdag}
+object as obtained from \link{tpc} or \link{pc}}
 
-\item{true_amat}{The true adjacency matrix}
+\item{true_amat}{The true adjacency matrix, or \code{tpdag}/\code{cpdag}
+object as obtained from \link{tpc} or \link{pc}}
 }
 \value{
 A list with entries \code{$tp} (number of true positives),  \code{$tn} (number of true negatives),

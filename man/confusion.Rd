@@ -7,9 +7,11 @@
 confusion(est_amat, true_amat, type = "adj")
 }
 \arguments{
-\item{est_amat}{The estimated adjacency matrix}
+\item{est_amat}{The estimated adjacency matrix, or \code{tpdag}/\code{cpdag}
+object as obtained from \link{tpc} or \link{pc}}
 
-\item{true_amat}{The true adjacency matrix}
+\item{true_amat}{The true adjacency matrix, or \code{tpdag}/\code{cpdag}
+object as obtained from \link{tpc} or \link{pc}}
 
 \item{type}{String indicating whether the confusion matrix should be computed for adjacencies
 (\code{"adj"}, the default) or for (conditional) orientations (\code{dir}).}

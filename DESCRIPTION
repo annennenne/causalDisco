@@ -28,6 +28,7 @@ Imports:
     methods,
     scales
 Collate: 
+    'amat.R'
     'causalDisco-package.R'
     'compare.R'
     'confusion.R'

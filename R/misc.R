@@ -8,6 +8,8 @@
 #' 
 #' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
 #' 
+#' @importFrom methods as
+#' 
 #' @export
 as.graphNEL <- function(amat) {
   as(t(amat), "graphNEL")
@@ -44,10 +46,30 @@ is_cpdag <- function(amat) {
 #' Convert graphNEL object to adjacency matrix
 #' 
 #' @param graph A graphNEL object. 
+#' @param toFrom Logical indicating whether the resulting adjancency
+#' matrix is "to-from" (default), or "from-to", see details. 
 #' 
+#' @details 
+#' A "to-from" adjacency matrix is encoded as follows: A(i,j) = 1 and A(j,i) = 0 
+#' means there is an edge i -> j. A(j,i) = 1 and A(i,j) = 0 means there is an edge j -> i. 
+#' A(i,j) = 1 and A(j,i) = 1 means there is an undirected edge between i and j, i - j. 
+#' A(i,j) = 0 and A(j,i) = 0 means there is no edge between i and j. 
+#' 
+#' A "from-to" adjacency matrix is the transpose of a "to-from" adjacency matrix. 
+#' A "from-to" adjacency matrix is hence encoded as follows: A(i,j) = 1 and A(j,i) = 0 
+#' means there is an edge j -> i. A(j,i) = 1 and A(i,j) = 0 means there is an edge i -> j. 
+#' A(i,j) = 1 and A(j,i) = 1 means there is an undirected edge between i and j, i - j. 
+#' A(i,j) = 0 and A(j,i) = 0 means there is no edge between i and j.  
+#' 
+#' @importFrom methods as
+#'  
 #' @export
-graph2amat <- function(graph) {
-  t(as(graph, "matrix"))
+graph2amat <- function(graph, toFrom = TRUE) {
+  res <- as(graph, "matrix")
+  
+  if (toFrom) res <- t(res)
+  
+  res
 }
 
 
