@@ -16,6 +16,8 @@
 #' After this, the usual FCI orientation rules are applied, see \link[pcalg]{udag2pag}
 #' for details. 
 #' 
+#' @author Anne Helby Petersen, Qixiang Chen, and Daniel Malinsky.
+#' 
 #' @return The default output is a \code{tpag} object. This is an
 #' S3 object, i.e., a list, with entries: \code{$tamat} (the estimated adjacency 
 #' matrix), \code{$order} (character vector with the order, as inputted to
@@ -155,7 +157,7 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
     
   #Pack up output
   # CHECK: Is ntests correct? Something should probably be added from
-  # pdsep ste
+  # pdsep step
   #if (output == "tpag") {
     out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
                 ntests = ntests)

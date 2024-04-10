@@ -31,8 +31,11 @@
 #'@param varnames A character vector of variable names. It only needs to be supplied
 #' if the \code{data} argument is not used, and data are hence passed exclusively
 #' through the \code{suffStat} argument.  
+#' @param conservative Logital, if \code{TRUE} the conservative version of PC is used
+#' (see \code{\link[pcalg]{pc}} for details).
 #' @param ... Further optional arguments which are passed to 
-#' \code{\link[pcalg]{skeleton}} for the skeleton constructing phase.
+#' \code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to 
+#' \code{\link[pcalg]{pc}} otherwise.
 #'
 #' @description This is a wrapper function for the \code{\link[pcalg]{pc}} function as
 #' implemented in the pcalg package. All computations are carried out by the 
@@ -81,7 +84,8 @@ pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
                 methodNA = "none",
                 output = "cpdag", 
-                varnames = NULL, ...) {
+                varnames = NULL, 
+                conservative = TRUE, ...) {
   
   #check arguments
   if (!output %in% c("cpdag", "skeleton", "pcAlgo")) {
@@ -153,7 +157,8 @@ pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                      indepTest = test,
                      alpha = sparsity,
                      labels = vnames,
-                     skel.method = method, ...)
+                     skel.method = method, 
+                     conservative = TRUE, ...)
     ntests <- sum(res@n.edgetests)
     
     #Pack up output

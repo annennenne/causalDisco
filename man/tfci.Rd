@@ -104,3 +104,6 @@ d <- data.frame(p1_X1 = X1,
 tfci(d, test = corTest, order = c("p1", "p2"))
 
 }
+\author{
+Anne Helby Petersen, Qixiang Chen, and Daniel Malinsky.
+}

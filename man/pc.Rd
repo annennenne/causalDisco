@@ -13,6 +13,7 @@ pc(
   methodNA = "none",
   output = "cpdag",
   varnames = NULL,
+  conservative = TRUE,
   ...
 )
 }
@@ -56,8 +57,12 @@ intended for compatability with tools from that package.}
 if the \code{data} argument is not used, and data are hence passed exclusively
 through the \code{suffStat} argument.}
 
+\item{conservative}{Logital, if \code{TRUE} the conservative version of PC is used
+(see \code{\link[pcalg]{pc}} for details).}
+
 \item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
+\code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to
+\code{\link[pcalg]{pc}} otherwise.}
 }
 \value{
 A \code{tpdag} or \code{tskeleton} object. Both return types are
