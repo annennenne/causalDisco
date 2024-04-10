@@ -12,6 +12,7 @@ tfci(
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
+  methodOri = "conservative",
   varnames = NULL,
   ...
 )
@@ -46,6 +47,10 @@ Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
 that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
+
+\item{methodOri}{Method for handling conflicting separating sets when orienting
+edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
+\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
 
 \item{varnames}{A character vector of variable names. It only needs to be supplied
 if the \code{data} argument is not used, and data are hence passed exclusively
@@ -100,8 +105,11 @@ d <- data.frame(p1_X1 = X1,
                 p2_X3 = X3,
                 p2_X4 = X4)
 
-# use tfci algorithm to recover tpag
+# use tfci algorithm to recover tpag (conservative edge orientation)
 tfci(d, test = corTest, order = c("p1", "p2"))
+
+# use tfci with standard (non-conservative) method for edge orientation
+tfci(d, test = corTest, order = c("p1", "p2"), methodOri = "standard")
 
 }
 \author{

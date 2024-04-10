@@ -11,6 +11,7 @@ pc(
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
+  methodOri = "conservative",
   output = "cpdag",
   varnames = NULL,
   conservative = TRUE,
@@ -44,6 +45,10 @@ Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
 that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
+
+\item{methodOri}{Method for handling conflicting separating sets when orienting
+edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
+\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
 
 \item{output}{One of \code{"cpdag"}, \code{"skeleton"} or \code{"pcAlgo"}. If
 \code{"skeleton"}, a skeleton is constructed and outputted,

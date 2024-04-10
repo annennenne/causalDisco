@@ -38,6 +38,7 @@
 fci <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                  suffStat = NULL, method = "stable.fast",
                  methodNA = "none",
+                 methodOri = "conservative",
                  output = "pag", 
                  varnames = NULL, ...) {
   
@@ -51,7 +52,16 @@ fci <- function(data = NULL, sparsity = 10^(-1), test = regTest,
   if (is.null(data) & is.null(suffStat)) {
     stop("Either data or sufficient statistic must be supplied.")
   }
+  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
+    stop("Orientation method must be one of standard, conservative or maj.rule.")
+  }
   
+  
+  #handle orientation method argument
+  conservative <- FALSE
+  maj.rule <- FALSE
+  if (methodOri == "conservative") conservative <- TRUE
+  if (methodOri == "maj.rule") maj.rule <- TRUE
   
   # handle missing information
   # note: twd is handled by the test: they have this as default, so the code here
@@ -98,6 +108,8 @@ fci <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                     alpha = sparsity,
                     labels = vnames,
                     skel.method = method,
+                    conservative = conservative,
+                    maj.rule = maj.rule,
                     ...)
   
   

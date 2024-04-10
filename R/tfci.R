@@ -16,6 +16,10 @@
 #' After this, the usual FCI orientation rules are applied, see \link[pcalg]{udag2pag}
 #' for details. 
 #' 
+#' @param methodOri Method for handling conflicting separating sets when orienting
+#' edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or 
+#' \code{"maj.rule"}. See \link[pcalg]{pc} for further details. 
+#' 
 #' @author Anne Helby Petersen, Qixiang Chen, and Daniel Malinsky.
 #' 
 #' @return The default output is a \code{tpag} object. This is an
@@ -49,29 +53,38 @@
 #'                 p2_X3 = X3,
 #'                 p2_X4 = X4)
 #' 
-#' # use tfci algorithm to recover tpag
+#' # use tfci algorithm to recover tpag (conservative edge orientation)
 #' tfci(d, test = corTest, order = c("p1", "p2"))
+#' 
+#' # use tfci with standard (non-conservative) method for edge orientation
+#' tfci(d, test = corTest, order = c("p1", "p2"), methodOri = "standard")
 #' 
 #' @include tpc.R
 #' 
-#' @importFrom pcalg pdsep skeleton
+#' @importFrom pcalg pdsep skeleton pc.cons.intern
 #' @importFrom stats na.omit
+#' @importClassesFrom pcalg pcAlgo
 #' 
 #' @export
 tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                  suffStat = NULL, method = "stable.fast",
                  methodNA = "none",
+                 methodOri = "conservative",
                  varnames = NULL, ...) {
  # warning("TFCI is in alpha testing stage! Use at your own risk!")
   #check arguments
   #if (!output %in% c("tpag", "fciAlgo")) {
   #  stop("Output must be tpag or fciAlgo.")
   #}
-  if (!methodNA %in% c("none", "cc", "twd")) {
+  if (!(methodNA %in% c("none", "cc", "twd"))) {
     stop("Invalid choice of method for handling NA values.")
   }
   if (is.null(data) & is.null(suffStat)) {
     stop("Either data or sufficient statistic must be supplied.")
+  }
+  
+  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
+    stop("Orientation method must be one of standard, conservative or maj.rule.")
   }
   
   
@@ -89,6 +102,12 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
       }  
     }
   }
+  
+  #handle orientation method argument
+  conservative <- FALSE
+  maj.rule <- FALSE
+  if (methodOri == "conservative") conservative <- TRUE
+  if (methodOri == "maj.rule") maj.rule <- TRUE
   
   #variable names
   if (is.null(data)) {
@@ -137,7 +156,31 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                     p = nvar,
                     sepset = skel@sepset,
                     pMax = skel@pMax,
+                    unfVect = c(), 
                     alpha = sparsity)
+  
+  nextratests <- fci_skel$n.edgetests
+  ntests <- ntests + nextratests
+  
+  unfVect <- NULL
+  #browser()
+  #if conservative or majority rule used for orientation
+  if (conservative || maj.rule) {
+    tmp <- new("pcAlgo", graph = as.graphNEL(t(fci_skel$G)),
+               call = skel@call,
+               n = integer(0), max.ord = as.integer(fci_skel$max.ord),
+               n.edgetests = nextratests,
+               sepset = fci_skel$sepset,
+               pMax = fci_skel$pMax, 
+               zMin = matrix(NA, 1, 1))
+    tmpres <- pc.cons.intern(tmp, suffStat = thisSuffStat, 
+                          indepTest = thisDirTest, 
+                          alpha = sparsity,
+                          version.unf = c(1, 1),
+                          maj.rule = maj.rule)
+    unfVect <- tmpres$unfTripl
+    fci_skel$sepset <- tmpres$sk@sepset
+  }
   
   
   # Case: Output tskeleton. Note: fci_skel adjmat is boolean, add 0 to 
@@ -151,13 +194,10 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
 #    class(out) <- "tskeleton"
 #  } else { #case: output == "tpag"
     
-  
   #Direct edges
-  res <- tpag(fci_skel, order = order)
+  res <- tpag(fci_skel, order = order, unfVect = unfVect)
     
   #Pack up output
-  # CHECK: Is ntests correct? Something should probably be added from
-  # pdsep step
   #if (output == "tpag") {
     out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
                 ntests = ntests)
@@ -180,7 +220,7 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
 # ordering? Do not think so; such a sepset shouldn't be able to 
 # come from dirTesting. Would have to enter in a different way
 #' @importFrom pcalg udag2pag
-tpag <- function(skel, order, cautious = TRUE) {
+tpag <- function(skel, order, unfVect, cautious = TRUE) {
   #boolean amat -> add 0 converts to numeric
   amat <- orderRestrictPAGSkel(skel$G + 0, order = order)
   sepsets <-  skel$sepset 
@@ -194,7 +234,8 @@ tpag <- function(skel, order, cautious = TRUE) {
                                                rownames(skel$G))
   
   #CHECK: Any rules need to be modifed or skipped?
-  udag2pag(amat, sepset = sepsets, rules = userules)
+  udag2pag(amat, sepset = sepsets, rules = userules,
+           unfVect = unfVect)
 }
 
 

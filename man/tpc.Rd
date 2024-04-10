@@ -12,6 +12,7 @@ tpc(
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
+  methodOri = "conservative",
   output = "tpdag",
   varnames = NULL,
   ...
@@ -47,6 +48,9 @@ Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
 that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
+
+\item{methodOri}{Method for handling conflicting separating sets when orienting
+edges. Currently only the conservative method is available.}
 
 \item{output}{One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
 \code{"tskeleton"}, a temporal skeleton is constructed and outputted,

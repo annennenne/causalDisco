@@ -23,6 +23,8 @@
 #' are present), \code{"cc"} (complete case analysis, deletes all observations
 #' that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 #' observations with missing information test-by-test) (further details below). 
+#' @param methodOri Method for handling conflicting separating sets when orienting
+#' edges. Currently only the conservative method is available.
 #' @param output One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
 #' \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
 #' but the edges are not directed. If \code{"tpdag"} (the default), a
@@ -101,6 +103,7 @@
 tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
                 methodNA = "none",
+                methodOri = "conservative",
                 output = "tpdag", 
                 varnames = NULL, ...) {
 

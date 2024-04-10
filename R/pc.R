@@ -21,6 +21,9 @@
 #' are present), \code{"cc"} (complete case analysis, deletes all observations
 #' that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
 #' observations with missing information test-by-test) (further details below). 
+#' @param methodOri Method for handling conflicting separating sets when orienting
+#' edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or 
+#' \code{"maj.rule"}. See \link[pcalg]{pc} for further details. 
 #' @param output One of \code{"cpdag"}, \code{"skeleton"} or \code{"pcAlgo"}. If
 #' \code{"skeleton"}, a skeleton is constructed and outputted,
 #' but the edges are not directed. If \code{"cpdag"} (the default), 
@@ -83,6 +86,7 @@
 pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                 suffStat = NULL, method = "stable.fast",
                 methodNA = "none",
+                methodOri = "conservative",
                 output = "cpdag", 
                 varnames = NULL, 
                 conservative = TRUE, ...) {
@@ -97,6 +101,17 @@ pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
   if (is.null(data) & is.null(suffStat)) {
     stop("Either data or sufficient statistic must be supplied.")
   }
+  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
+    stop("Orientation method must be one of standard, conservative or maj.rule.")
+  }
+  
+  
+  #handle orientation method argument
+  conservative <- FALSE
+  maj.rule <- FALSE
+  if (methodOri == "conservative") conservative <- TRUE
+  if (methodOri == "maj.rule") maj.rule <- TRUE
+  
   
   # handle missing information
   # note: twd is handled by the test: they have this as default, so the code here
@@ -158,7 +173,9 @@ pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
                      alpha = sparsity,
                      labels = vnames,
                      skel.method = method, 
-                     conservative = TRUE, ...)
+                     conservative = conservative,
+                     maj.rule = maj.rule, 
+                     ...)
     ntests <- sum(res@n.edgetests)
     
     #Pack up output
