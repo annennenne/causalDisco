@@ -117,8 +117,8 @@ fci <- function(data = NULL, sparsity = 10^(-1), test = regTest,
   
   #Pack up output
   if (output == "pag") {
-    out <- list(amat = graph2amat(res, type = "ag"), psi = sparsity,
-                ntests = ntests)
+    out <- list(amat = graph2amat(res, type = "ag"), psi = sparsity) #,
+#                ntests = ntests)
     class(out) <- "pag"
   } else if (output == "fciAlgo") {
     out <- res

@@ -119,7 +119,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     }
   }
   
-  pcounter <- 1
+  pcounters <- rep(1, nperiod)
   
   for (i in 1:nvar) {
     thisperiod <- periods[i]
@@ -129,22 +129,24 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     
     xpos <- (thispno-1)*xpgap + (thispno-1)*xjit + (i %% 2) * xjit
     ydist <- floor(maxypos / neachperiod[thispno])
-    ypos <- (maxypos - ((neachperiod[thispno] - 1) * ydist))/2 + ydist * (pcounter-1) 
+    ypos <- (maxypos - ((neachperiod[thispno] - 1) * ydist))/2 + 
+      ydist * (pcounters[thispno]-1) 
     
     out <- c(out, paste("\\node (", i, ") at (", xpos, ",", ypos, ") {", 
                         thisvname, "};", sep = ""))
     
-    if (addAxis & pcounter == 1) {
+    if (addAxis & pcounters[thispno] == 1) {
       out <- c(out, paste("\\node at (", (thispno-1)*xpgap + (thispno-1)*xjit  + xjit/2, 
                           ",", "-0.5", ") {", 
                           periodLabels[thispno], "};", sep = ""))
     }
     
-    if (pcounter == thisptotal) {
-      pcounter <- 1 
-    } else { 
-      pcounter <- pcounter + 1
-    }
+    #if (pcounter == thisptotal) {
+    #  pcounter <- 1 
+    #} else { 
+    #  pcounter <- pcounter + 1
+    #}
+    pcounters[thispno] <- pcounters[thispno] + 1
   }
   
   allundir <- list()

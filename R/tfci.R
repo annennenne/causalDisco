@@ -201,8 +201,8 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
   #Pack up output
   #if (output == "tpag") {
     out <- list(tamat = tamat(amat = t(res), order = order, type = "ag"), 
-                psi = sparsity,
-                ntests = ntests)
+                psi = sparsity) #,
+#                ntests = ntests)
     class(out) <- "tpag"
   #} #else if (output == "fciAlgo") {
     #out <- res
