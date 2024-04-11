@@ -42,6 +42,7 @@
 #'
 #' @examples
 #' # simulate linear Gaussian data w unobserved variable L1
+#' set.seed(123)
 #' n <- 100
 #' L1 <- rnorm(n) 
 #' X1 <- rnorm(n)
@@ -199,7 +200,8 @@ tfci <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
     
   #Pack up output
   #if (output == "tpag") {
-    out <- list(tamat = tamat(amat = t(res), order = order), psi = sparsity,
+    out <- list(tamat = tamat(amat = t(res), order = order, type = "ag"), 
+                psi = sparsity,
                 ntests = ntests)
     class(out) <- "tpag"
   #} #else if (output == "fciAlgo") {

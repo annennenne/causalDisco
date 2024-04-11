@@ -58,7 +58,8 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @importFrom scales alpha
 #' @importFrom graphics axis mtext
 #' @import igraph
-plotOrderedAmat <- function(amat, order, psi = NULL,
+plotOrderedAmat <- function(amat, order, 
+                            psi = NULL,
                             addTimeAxis = TRUE,
                             addPsi = TRUE,
                             CPDAG = TRUE,
@@ -106,6 +107,10 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
   nEdges <- nrow(edges)
   indexes <- 1:nEdges
   dontcheck <- NULL
+  
+#  if (type != "pdag") {
+ #  dontcheck <- indexes
+ # }  
   if (nEdges > 0) {
     for (i in indexes) {
       thisOne <- edges[i,]
@@ -133,6 +138,7 @@ plotOrderedAmat <- function(amat, order, psi = NULL,
   nEdges <- nrow(edges) #recalc
   edgecolors <- rep("", nEdges)
   arrowmodes <- rep(">", nEdges)
+  
   ltys <- rep(1, nEdges)
   if (nEdges > 0) {
     for (i in 1:nEdges) {

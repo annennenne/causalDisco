@@ -25,6 +25,7 @@
 #' and the entry is the label, e.g. \code{list(h = "High")}. 
 #' @param clipboard If \code{TRUE}, the tikz code is not printed, but instead copied to the clipboard,
 #' so it can easily be pasted into a Latex document. 
+#' @param rawout If \code{TRUE}, the tikz code is only returned as a character vector.  
 #' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This 
 #' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
 #' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. 
@@ -62,6 +63,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        periodLabels = NULL,
                        annotationLabels = NULL,
                        clipboard = TRUE,
+                       rawout = FALSE,
                        colorAnnotate = NULL) {
   if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) | 
       "tpag" %in% class(model)) {
@@ -74,7 +76,9 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     stop("Input model must be of class tpdag, tskeleton or tamat")
   }
   
-  if (!is.null(colorAnnotate) & is.null(annotateEdges)) {
+  istpag <- attr(amat, "tamat_type") == "ag"
+  
+  if (istpag | (!is.null(colorAnnotate) & is.null(annotateEdges))) {
     annotateEdges <- FALSE
   }
   
@@ -145,45 +149,64 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   
   allundir <- list()
   
-  for (i in 1:nvar) {
-    thesechildren <- which(amat[, i] != 0)
-    theseparents <- which(amat[i, ] != 0)
-    theseundir <- intersect(thesechildren, theseparents)
-    
-    thesetruechildren <- setdiff(thesechildren, theseundir) 
-    
-    theseundir <- theseundir[theseundir < i] #only store when smaller, avoids duplicates
-    if (length(theseundir) > 0 ) {
-      allundir[[i]] <- theseundir
-    }
-    if (length(thesetruechildren) > 0) {
-      if (!annotateEdges & is.null(colorAnnotate)) {
-        out <- c(out, paste("\\draw [->] (", i, ") edge (", thesetruechildren, ");", sep = ""))
-      } 
-      if (annotateEdges) {
-        #  browser()
-        out <- c(out, paste("\\draw [->] (", i, ") edge node [above,sloped] {", amat[thesetruechildren, i],
-                            "} (", thesetruechildren, ");", sep = ""))
+  if (!istpag) {
+    for (i in 1:nvar) {
+      thesechildren <- which(amat[, i] != 0)
+      theseparents <- which(amat[i, ] != 0)
+      theseundir <- intersect(thesechildren, theseparents)
+      
+      thesetruechildren <- setdiff(thesechildren, theseundir) 
+      
+      theseundir <- theseundir[theseundir < i] #only store when smaller, avoids duplicates
+      if (length(theseundir) > 0 ) {
+        allundir[[i]] <- theseundir
       }
-      if (!is.null(colorAnnotate)) {
-        out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]), 
-                            "] (", i, ") edge (", thesetruechildren, ");", sep = ""))
+      if (length(thesetruechildren) > 0) {
+        if (!annotateEdges & is.null(colorAnnotate)) {
+          out <- c(out, paste("\\draw [->] (", i, ") edge (", thesetruechildren, ");", sep = ""))
+        } 
+        if (annotateEdges) {
+          #  browser()
+          out <- c(out, paste("\\draw [->] (", i, ") edge node [above,sloped] {", amat[thesetruechildren, i],
+                              "} (", thesetruechildren, ");", sep = ""))
+        }
+        if (!is.null(colorAnnotate)) {
+          out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]), 
+                              "] (", i, ") edge (", thesetruechildren, ");", sep = ""))
+        }
+      }
+    }
+    
+    n_undir <- length(allundir)
+    if (n_undir > 0) {
+      for (i in 1:length(allundir)) {
+        theseneigh <- allundir[[i]]
+        if (length(theseneigh) > 0) {
+          if (!annotateEdges) {
+            out <- c(out, paste("\\draw [-] (", i, ") edge (", theseneigh, ");", sep = ""))
+          }
+          if (annotateEdges) {
+            out <- c(out, paste("\\draw [-] (", i, ") edge node [above,sloped] {", amat[theseneigh, i],
+                                "} (", theseneigh, ");", sep = ""))
+          }
+        }
       }
     }
   }
-  
-  n_undir <- length(allundir)
-  if (n_undir > 0) {
-    for (i in 1:length(allundir)) {
-      theseneigh <- allundir[[i]]
-      if (length(theseneigh) > 0) {
-        if (!annotateEdges) {
-          out <- c(out, paste("\\draw [-] (", i, ") edge (", theseneigh, ");", sep = ""))
-        }
-        if (annotateEdges) {
-          out <- c(out, paste("\\draw [-] (", i, ") edge node [above,sloped] {", amat[theseneigh, i],
-                              "} (", theseneigh, ");", sep = ""))
-        }
+  if (istpag) {
+    ahead_from <- c("{Circle[open]}", "<", "")
+    ahead_to <- c("{Circle[open]}", ">", "")
+    alledges <- edges_pag(amat)
+    
+    alledges$tikzedge <- paste(ahead_from[alledges$a1], ahead_to[alledges$a2], 
+                               sep = "-")
+    #return(alledges)
+    n_edges <- nrow(alledges)
+    if (n_edges > 0) {
+      for (i in 1:nrow(alledges)) {
+        out <- c(out, paste("\\draw [", alledges$tikzedge[i],
+                            "] (", alledges$n1[i], ") edge (", alledges$n2[i], ");", 
+                            sep = ""))
       }
     }
   }
@@ -211,10 +234,51 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   
   out <- c(out, "\\end{tikzpicture}")
   
+  if (rawout) return(out)
+  
   if (clipboard) {
     write_clip(out)
   } else {
     cat(paste(out, collapse = "\n"))
   }
+  
   invisible(out)
+}
+
+
+
+
+
+
+############################################################################
+## Not exported below ######################################################
+############################################################################
+
+  
+edges_pag <- function(amat, usevnames = FALSE) {
+  res <- data.frame(n1 = character(), a1 = character(), a2 = character(), 
+                    n2 = character())
+  p <- nrow(amat)
+  vnames <- colnames(amat)
+  useamat <- amat
+  
+  for (i in 1:p) {
+    outgoing <- which(useamat[, i] != 0)
+    nout <- length(outgoing)
+    if (nout > 0) {
+      for (j in outgoing) {
+        thisn1 <- i 
+        thisn2 <- j
+        thisa1 <- useamat[i,j]
+        thisa2 <- useamat[j,i]
+        useamat[i,j] <- 0
+        res <- rbind(res, data.frame(n1 = thisn1, a1 = thisa1, a2 = thisa2, n2 = thisn2)) 
+      }
+    }
+  }
+  if (usevnames) {
+    res$n1 <- vnames[res$n1]
+    res$n2 <- vnames[res$n2]
+  }
+  res
 }

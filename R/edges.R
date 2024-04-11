@@ -37,3 +37,7 @@ edges <- function(amat) {
   list(`dir` = oneway, `undir` = bothways)
 }
 
+
+
+##
+

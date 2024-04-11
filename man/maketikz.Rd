@@ -16,6 +16,7 @@ maketikz(
   periodLabels = NULL,
   annotationLabels = NULL,
   clipboard = TRUE,
+  rawout = FALSE,
   colorAnnotate = NULL
 )
 }
@@ -49,6 +50,8 @@ and the entry is the label, e.g. \code{list(h = "High")}.}
 
 \item{clipboard}{If \code{TRUE}, the tikz code is not printed, but instead copied to the clipboard,
 so it can easily be pasted into a Latex document.}
+
+\item{rawout}{If \code{TRUE}, the tikz code is also returned as a character vector.}
 
 \item{colorAnnotate}{Named list of colors to use to mark edge annotations instead of labels. This
 overrules \code{annotateEdges} and both are not available at the same time. The list should be given with

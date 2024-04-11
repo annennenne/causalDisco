@@ -94,6 +94,7 @@ for details.
 }
 \examples{
 # simulate linear Gaussian data w unobserved variable L1
+set.seed(123)
 n <- 100
 L1 <- rnorm(n) 
 X1 <- rnorm(n)

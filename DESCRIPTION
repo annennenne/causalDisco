@@ -28,7 +28,9 @@ Imports:
     methods,
     scales,
     Rgraphviz,
-    graph
+    graph,
+    magick,
+    rmarkdown
 Collate: 
     'amat.R'
     'causalDisco-package.R'
@@ -53,3 +55,4 @@ Collate:
     'simGausFromDAG.R'
     'tamat.R'
     'tfci.R'
+    'tplot.R'
