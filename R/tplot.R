@@ -18,12 +18,13 @@
 #' @param keepfiles If \code{FALSE} (default), temporary files used for making
 #' the plot are deleted, otherwise they are kept and will be placed in the 
 #' working directory. 
+#' @param ... Additional argument passed to \code{\link{maketikz}}.
 #' 
 #' @importFrom rmarkdown render
 #' @importFrom magick image_read_pdf image_browse
 #' @export 
 tplot <- function(x, filename = "causaldisco_tplot_temp",
-                  keepfiles = FALSE) {
+                  keepfiles = FALSE, ...) {
   headercode <- c("---",
                   "output: pdf_document",
                   "documentclass: standalone",
@@ -35,7 +36,7 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
                   " - \\pgfplotsset{compat=1.18}",
                   "---")
   
-  tcode <- maketikz(x, rawout = TRUE, clipboard = FALSE)
+  tcode <- maketikz(x, rawout = TRUE, ...)
   file <- paste(filename, ".rmd", sep = "")
   
   fileConn <- file(file, "w") 

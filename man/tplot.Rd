@@ -4,7 +4,7 @@
 \alias{tplot}
 \title{Plot temporal graph via Latex}
 \usage{
-tplot(x, filename = "causaldisco_tplot_temp", keepfiles = FALSE)
+tplot(x, filename = "causaldisco_tplot_temp", keepfiles = FALSE, ...)
 }
 \arguments{
 \item{x}{A tamat, tpdag, or tpag object as obtained from \code{\link{tamat}},
@@ -18,6 +18,8 @@ these files will automatically be deleted again.}
 \item{keepfiles}{If \code{FALSE} (default), temporary files used for making
 the plot are deleted, otherwise they are kept and will be placed in the
 working directory.}
+
+\item{...}{Additional argument passed to \code{\link{maketikz}}.}
 }
 \description{
 Generates a plot of a tamat, tpdag or tpag object by use of Latex tikz. Note
