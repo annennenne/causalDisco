@@ -35,7 +35,7 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
                   " - \\usepackage{tikz}",
                   " - \\usetikzlibrary{arrows.meta,arrows,shapes,decorations,automata,backgrounds,petri}",
                   " - \\usepackage{pgfplots}",
-                  " - \\pgfplotsset{compat=1.18}",
+          #        " - \\pgfplotsset{compat=1.18}",
                   "---")
   
   tcode <- maketikz(x, rawout = TRUE, bendedges = bendedges, ...)
