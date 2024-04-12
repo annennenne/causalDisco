@@ -39,8 +39,6 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
                   "---")
   
   
-  #hej christine! 
-  
   tcode <- maketikz(x, rawout = TRUE, bendedges = bendedges, ...)
   file <- paste(filename, ".rmd", sep = "")
   
@@ -58,9 +56,13 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
   flush(fileConn)
   close(fileConn)
   
-  render(file, quiet = TRUE)
+  try({
+    suppressWarnings(render(file, quiet = TRUE))
+  })
   
+  try({
   img <- image_read_pdf(paste(filename, ".pdf", sep = "")) 
+  })
   
   if (!keepfiles) {
     unlink(paste(filename, ".rmd", sep = ""))
