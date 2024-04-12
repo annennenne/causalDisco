@@ -85,7 +85,7 @@ The temporal/tiered background information enters several places in the TFCI
 algorithm: 1) In the skeleton construction phase, when looking for separating
 sets Z between two variables X and Y, Z is not allowed to contain variables that
 are strictly after both X and Y in the temporal order. 2) This also applies to
-the subsequent phase where the algorithm searched for possible D-SEP sets. 3)
+the subsequent phase where the algorithm searches for possible D-SEP sets. 3)
 Prior to other orientation steps, any cross-tier edges get an arrowhead placed
 at their latest node.
 

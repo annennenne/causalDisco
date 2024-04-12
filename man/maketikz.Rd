@@ -2,7 +2,7 @@
 % Please edit documentation in R/maketikz.R
 \name{maketikz}
 \alias{maketikz}
-\title{Generate Latex tikz code for plotting a temporal DAG or PDAG.}
+\title{Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.}
 \usage{
 maketikz(
   model,
@@ -17,11 +17,12 @@ maketikz(
   annotationLabels = NULL,
   clipboard = TRUE,
   rawout = FALSE,
-  colorAnnotate = NULL
+  colorAnnotate = NULL,
+  bendedges = FALSE
 )
 }
 \arguments{
-\item{model}{\code{tpdag}, \code{tskeleton} or \code{tamat} object to plot.}
+\item{model}{\code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot.}
 
 \item{xjit}{How much should nodes within a period be jittered horizontally.}
 
@@ -33,7 +34,8 @@ maketikz(
 
 \item{annotateEdges}{If \code{TRUE}, add a text annotation to edges. If \code{annotationlabels}
 are supplied, these labels will be used. Otherwise, the value in the inputted adjacency matrix corresponding
-to the edge will be used.}
+to the edge will be used. Cannot be used for \code{tpag}
+input objects (or \code{ag} amat types).}
 
 \item{addAxis}{If \code{TRUE}, a horizontal axis with period labels are added.}
 
@@ -55,7 +57,11 @@ so it can easily be pasted into a Latex document.}
 
 \item{colorAnnotate}{Named list of colors to use to mark edge annotations instead of labels. This
 overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
-annotations as names and colors as entries, e.g. \code{list(h = "blue")}.}
+annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
+input objects (or \code{ag} amat types).}
+
+\item{bendedges}{If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
+top of each other.}
 }
 \value{
 Silently returns a character vector with lines of tikz code. The function
@@ -64,7 +70,7 @@ code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code
 in the console.
 }
 \description{
-Generate Latex tikz code for plotting a temporal DAG or PDAG.
+Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
 }
 \details{
 Note that it is necessary to read in relevant tikz libraries in the

@@ -1,4 +1,4 @@
-#' Generate Latex tikz code for plotting a temporal DAG or PDAG. 
+#' Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG. 
 #'
 #' @details Note that it is necessary to read in relevant tikz libraries in the 
 #' Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
@@ -6,14 +6,15 @@
 #' \code{\\usetikzlibrary{arrows.meta,arrows,shapes,snakes,automata,backgrounds,petri}} \cr
 #' \code{\\usepackage{pgfplots}}
 #'
-#' @param model \code{tpdag}, \code{tskeleton} or \code{tamat} object to plot. 
+#' @param model \code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot. 
 #' @param xjit How much should nodes within a period be jittered horizontally.
 #' @param yjit Vertical distance between nodes within a period.
 #' @param markperiods If \code{TRUE}, gray boxes are drawn behind each period. 
 #' @param xpgap Horizontal gap between different periods. 
 #' @param annotateEdges If \code{TRUE}, add a text annotation to edges. If \code{annotationlabels}
 #' are supplied, these labels will be used. Otherwise, the value in the inputted adjacency matrix corresponding
-#' to the edge will be used. 
+#' to the edge will be used. Cannot be used for \code{tpag}
+#' input objects (or \code{ag} amat types).
 #' @param addAxis If \code{TRUE}, a horizontal axis with period labels are added. 
 #' @param varLabels Optional labels for nodes (variables). Should be given as a named list, where 
 #' the name is the variable name, and the entry is the label, e.g. \code{list(vname = "Label for vname")}. 
@@ -28,7 +29,10 @@
 #' @param rawout If \code{TRUE}, the tikz code is only returned as a character vector.  
 #' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This 
 #' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
-#' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. 
+#' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
+#' input objects (or \code{ag} amat types).
+#' @param bendedges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
+#' top of each other. 
 #' 
 #' @return Silently returns a character vector with lines of tikz code. The function 
 #' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz 
@@ -64,7 +68,8 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                        annotationLabels = NULL,
                        clipboard = TRUE,
                        rawout = FALSE,
-                       colorAnnotate = NULL) {
+                       colorAnnotate = NULL,
+                       bendedges = FALSE) {
   if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) | 
       "tpag" %in% class(model)) {
     amat <- model$tamat
@@ -84,7 +89,10 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   
   if (is.null(annotateEdges)) {
     annotateEdges <- !all(amat %in% c(0,1))
-  } 
+  }
+  
+  bendstr <- " "
+  if (bendedges) bendstr <- " [bend right=10] "
   
   vars <- colnames(amat)
   nvar <- length(vars)
@@ -165,16 +173,16 @@ maketikz <- function(model, xjit = 2, yjit = 2,
       }
       if (length(thesetruechildren) > 0) {
         if (!annotateEdges & is.null(colorAnnotate)) {
-          out <- c(out, paste("\\draw [->] (", i, ") edge (", thesetruechildren, ");", sep = ""))
+          out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         } 
         if (annotateEdges) {
           #  browser()
-          out <- c(out, paste("\\draw [->] (", i, ") edge node [above,sloped] {", amat[thesetruechildren, i],
+          out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "node [above,sloped] {", amat[thesetruechildren, i],
                               "} (", thesetruechildren, ");", sep = ""))
         }
         if (!is.null(colorAnnotate)) {
           out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]), 
-                              "] (", i, ") edge (", thesetruechildren, ");", sep = ""))
+                              "] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         }
       }
     }
@@ -185,10 +193,10 @@ maketikz <- function(model, xjit = 2, yjit = 2,
         theseneigh <- allundir[[i]]
         if (length(theseneigh) > 0) {
           if (!annotateEdges) {
-            out <- c(out, paste("\\draw [-] (", i, ") edge (", theseneigh, ");", sep = ""))
+            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "(", theseneigh, ");", sep = ""))
           }
           if (annotateEdges) {
-            out <- c(out, paste("\\draw [-] (", i, ") edge node [above,sloped] {", amat[theseneigh, i],
+            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "node [above,sloped] {", amat[theseneigh, i],
                                 "} (", theseneigh, ");", sep = ""))
           }
         }
@@ -202,12 +210,11 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     
     alledges$tikzedge <- paste(ahead_from[alledges$a1], ahead_to[alledges$a2], 
                                sep = "-")
-    #return(alledges)
     n_edges <- nrow(alledges)
     if (n_edges > 0) {
       for (i in 1:nrow(alledges)) {
         out <- c(out, paste("\\draw [", alledges$tikzedge[i],
-                            "] (", alledges$n1[i], ") edge (", alledges$n2[i], ");", 
+                            "] (", alledges$n1[i], ") edge", bendstr, "(", alledges$n2[i], ");", 
                             sep = ""))
       }
     }
