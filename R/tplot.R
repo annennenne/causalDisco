@@ -38,6 +38,9 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
           #        " - \\pgfplotsset{compat=1.18}",
                   "---")
   
+  
+  #hej christine! 
+  
   tcode <- maketikz(x, rawout = TRUE, bendedges = bendedges, ...)
   file <- paste(filename, ".rmd", sep = "")
   
