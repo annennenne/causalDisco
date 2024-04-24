@@ -76,7 +76,7 @@ Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
 Note that it is necessary to read in relevant tikz libraries in the
 Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
 \code{\\usepackage{tikz}} \cr
-\code{\\usetikzlibrary{arrows.meta,arrows,shapes,snakes,automata,backgrounds,petri}} \cr
+\code{\\usetikzlibrary{arrows.meta,arrows,shapes,decorations,automata,backgrounds,petri}} \cr
 \code{\\usepackage{pgfplots}}
 }
 \examples{

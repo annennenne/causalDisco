@@ -3,7 +3,7 @@
 #' @details Note that it is necessary to read in relevant tikz libraries in the 
 #' Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
 #' \code{\\usepackage{tikz}} \cr
-#' \code{\\usetikzlibrary{arrows.meta,arrows,shapes,snakes,automata,backgrounds,petri}} \cr
+#' \code{\\usetikzlibrary{arrows.meta,arrows,shapes,decorations,automata,backgrounds,petri}} \cr
 #' \code{\\usepackage{pgfplots}}
 #'
 #' @param model \code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot. 

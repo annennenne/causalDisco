@@ -55,4 +55,5 @@ Collate:
     'simGausFromDAG.R'
     'tamat.R'
     'tfci.R'
+    'tges.R'
     'tplot.R'
