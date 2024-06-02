@@ -25,14 +25,14 @@ Two adjacency matrices are compared either in terms of adjacencies
 (\code{type = "adj"}) or orientations (\code{type = "dir"}).
 }
 \details{
-In the former case, the confusion matrix is a cross-tabulation
+Adjacency comparison: The confusion matrix is a cross-tabulation
 of adjacencies. Hence, a true positive means that the two inputs agree on
 the presence of an adjacency. A true negative means that the two inputs agree
 on no adjacency. A false positive means that \code{est_amat} places an adjacency
 where there should be none. A false negative means that \code{est_amat} does
 not place an adjacency where there should have been one.
 
-In the latter case, the orientation confusion matrix is conditional on agreement on
+Orientation comparison: The orientation confusion matrix is conditional on agreement on
 adjacency. This means that only adjacencies that are shared in both input matrices are
 considered, and agreement wrt. orientation is then computed only among these edges
 that occur in both matrices. A true positive is a correctly placed arrowhead (1),

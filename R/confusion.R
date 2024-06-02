@@ -1,16 +1,16 @@
 #' Compute confusion matrix for comparing two adjacency matrices
 #' 
-#' Two adjacency matrices are compared either in terms of adjacencies 
+#' @description Two adjacency matrices are compared either in terms of adjacencies 
 #' (\code{type = "adj"}) or orientations (\code{type = "dir"}). 
 #' 
-#' In the former case, the confusion matrix is a cross-tabulation
+#' @details Adjacency comparison: The confusion matrix is a cross-tabulation
 #' of adjacencies. Hence, a true positive means that the two inputs agree on
 #' the presence of an adjacency. A true negative means that the two inputs agree
 #' on no adjacency. A false positive means that \code{est_amat} places an adjacency
 #' where there should be none. A false negative means that \code{est_amat} does
 #' not place an adjacency where there should have been one. 
 #' 
-#' In the latter case, the orientation confusion matrix is conditional on agreement on 
+#' Orientation comparison: The orientation confusion matrix is conditional on agreement on 
 #' adjacency. This means that only adjacencies that are shared in both input matrices are 
 #' considered, and agreement wrt. orientation is then computed only among these edges
 #' that occur in both matrices. A true positive is a correctly placed arrowhead (1), 
@@ -129,7 +129,78 @@ dir_confusion <- function(est_amat, true_amat) {
   
   true_dir <- true_edges$dir
   true_revdir <- lapply(true_dir, rev)
-  true_undir <- true_edges$undir
+  #true_undir <- true_edges$undir
+  true_undir <- c(true_edges$undir, lapply(true_edges$undir, rev))
+  
+  est_dir <- est_edges$dir
+  est_undir <- est_edges$undir
+  
+  dir_fp <- 0
+  dir_fn <- 0
+  dir_tp <- 0
+  dir_tn <- 0
+  
+  #count metrics for undirected edges
+  if (length(est_undir) > 0) {
+    for (i in 1:length(est_undir)) {
+      thisedge <- est_undir[i]
+      if (thisedge %in% true_adj) {
+        if (thisedge %in% true_undir) { #is correctly undirected
+          dir_tn <- dir_tn + 2
+        } else if (thisedge %in% c(true_dir, true_revdir)) { #is undirected, should be directed
+          dir_fn <- dir_fn + 1
+          dir_tn <- dir_tn + 1
+        }
+      }
+    }
+  }
+  
+  #count metrics for directed edges
+  if (length(est_dir) > 0) {
+    for (i in 1:length(est_dir)) {
+      thisedge <- est_dir[i]
+      if (thisedge %in% true_adj) {
+        if (thisedge %in% true_undir) { #is directed, should be undirected
+          dir_fp <- dir_fp + 1
+          dir_tn <- dir_tn + 1
+        } else if (thisedge %in% true_dir) { #is directed in correct direction
+          dir_tp <- dir_tp + 1
+          dir_tn <- dir_tn + 1
+        } 
+        if (thisedge %in% true_revdir) { #is directed in incorrect direction
+          dir_fp <- dir_fp + 1
+          dir_fn <- dir_fn + 1
+        }
+      }
+    }
+  }
+  list(tp = dir_tp, tn = dir_tn,
+       fp = dir_fp, fn = dir_fn)
+}
+
+
+
+#' @inherit confusion
+#' @details This is an old version of the function, included for possible 
+#' backwards compatibility. Edges are scored as follows: A correctly unoriented edge
+#' counts as a true negative (TN). An undirected edge that should have been directed 
+#' counts as a false negative (FN). A directed edge that should have been
+#' undirected counts as a false positive (FP). A directed edge oriented in the
+#' correct direction counts as a true positive (TP). A directed edge
+#' oriented in the incorrect direction counts as both a false positive (FP) 
+#' and a false negative (FN). 
+#' @export
+dir_confusion_original <- function(est_amat, true_amat) {
+  est_edges <- edges(est_amat)
+  true_edges <- edges(true_amat)
+  
+  true_adj <- c(true_edges$undir, true_edges$dir)
+  true_adj <- c(true_adj, lapply(true_adj, rev))
+  
+  true_dir <- true_edges$dir
+  true_revdir <- lapply(true_dir, rev)
+  #true_undir <- true_edges$undir
+  true_undir <- c(true_edges$undir, lapply(true_edges$undir, rev))
   
   est_dir <- est_edges$dir
   est_undir <- est_edges$undir
@@ -173,9 +244,6 @@ dir_confusion <- function(est_amat, true_amat) {
   list(tp = dir_tp, tn = dir_tn,
        fp = dir_fp, fn = dir_fn)
 }
-
-
-
 
 
 
