@@ -1,12 +1,4 @@
-# Source tetrad <-> R data conversion functions.
-# source("/home/fabben/BioStat/causalDisco/tetrad/tetrad_rdata.R")
-
-# Source R <-> Java helper functions.
-# source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
-
-# Source tetrad R6 class
-# source("/home/fabben/BioStat/causalDisco/tetrad/my_tetrad_search_r6_class.R")
-# source("R/tetrad/tetrad_search.R")
+# generate data
 set.seed(123)
 n <- 100
 p <- 5
