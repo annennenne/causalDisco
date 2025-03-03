@@ -11,7 +11,7 @@ library(rJava)
 if (!.jniInitialized) {
   .jinit(
     parameters = "-Xmx2g",
-    classpath = "/home/fabben/BioStat/py-tetrad/pytetrad/resources/tetrad-current.jar"
+    classpath = "/tetrad/tetrad-current.jar"
   )
 }
 
