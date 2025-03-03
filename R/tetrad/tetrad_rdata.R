@@ -1,5 +1,5 @@
 library(rJava)
-source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
+# source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
 if (!.jniInitialized) {
   jar_path <- "/home/fabben/BioStat/py-tetrad/pytetrad/resources/tetrad-current.jar"
   .jinit(parameters = "-Xmx2g", classpath = jar_path)
@@ -124,12 +124,11 @@ tetrad_data_to_rdata <- function(data) {
 
 ## Convert a Java Tetrad graph to an R matrix (data.frame) with endpoints.
 graph_to_matrix <- function(
-  g,
-  nullEpt = 0,
-  circleEpt = 1,
-  arrowEpt = 2,
-  tailEpt = 3
-) {
+    g,
+    nullEpt = 0,
+    circleEpt = 1,
+    arrowEpt = 2,
+    tailEpt = 3) {
   endpoint_map <- list(
     "NULL" = nullEpt,
     "CIRCLE" = circleEpt,
@@ -273,10 +272,10 @@ write_gdot <- function(g, gdot) {
     # Here we assume gdot has a method 'node' that accepts a name and additional attributes.
     gdot$node(
       name,
-      shape = 'circle',
-      fixedsize = 'true',
-      style = 'filled',
-      color = 'lightgray'
+      shape = "circle",
+      fixedsize = "true",
+      style = "filled",
+      color = "lightgray"
     )
   }
 
@@ -316,7 +315,7 @@ write_gdot <- function(g, gdot) {
       node2,
       arrowtail = arrowtail,
       arrowhead = arrowhead,
-      dir = 'both',
+      dir = "both",
       color = color
     )
   }

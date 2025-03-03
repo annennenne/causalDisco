@@ -2,10 +2,10 @@ library(R6)
 library(rJava)
 
 # Source tetrad <-> R data conversion functions.
-source("/home/fabben/BioStat/causalDisco/tetrad/tetrad_rdata.R")
+# source("/home/fabben/BioStat/causalDisco/tetrad/tetrad_rdata.R")
 
 # Source R <-> Java helper functions.
-source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
+# source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
 
 # Initialize the JVM if it isn’t already running.
 if (!.jniInitialized) {
@@ -51,11 +51,9 @@ TetradSearch <- R6Class(
     },
 
     # Scoring functions using the set_params helper.
-    use_sem_bic = function(
-      penalty_discount = 2,
-      structure_prior = 0,
-      sem_bic_rule = 1
-    ) {
+    use_sem_bic = function(penalty_discount = 2,
+                           structure_prior = 0,
+                           sem_bic_rule = 1) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
@@ -65,11 +63,9 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
       self$score <- cast_obj(self$score)
     },
-    use_ebic = function(
-      gamma = 0.8,
-      precompute_covariances = TRUE,
-      singularity_lambda = 0.0
-    ) {
+    use_ebic = function(gamma = 0.8,
+                        precompute_covariances = TRUE,
+                        singularity_lambda = 0.0) {
       set_params(
         self$params,
         EBIC_GAMMA = gamma,
@@ -89,11 +85,9 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
       self$score <- cast_obj(self$score)
     },
-    use_mixed_variable_polynomial = function(
-      structure_prior = 0,
-      f_degree = 0,
-      discretize = FALSE
-    ) {
+    use_mixed_variable_polynomial = function(structure_prior = 0,
+                                             f_degree = 0,
+                                             discretize = FALSE) {
       set_params(
         self$params,
         STRUCTURE_PRIOR = structure_prior,
@@ -110,10 +104,8 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
       self$score <- cast_obj(self$score)
     },
-    use_poisson_prior_score = function(
-      lambda_ = 2,
-      precompute_covariances = TRUE
-    ) {
+    use_poisson_prior_score = function(lambda_ = 2,
+                                       precompute_covariances = TRUE) {
       set_params(
         self$params,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -140,12 +132,10 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
       self$score <- cast_obj(self$score)
     },
-    use_conditional_gaussian_score = function(
-      penalty_discount = 1,
-      discretize = TRUE,
-      num_categories_to_discretize = 3,
-      structure_prior = 0
-    ) {
+    use_conditional_gaussian_score = function(penalty_discount = 1,
+                                              discretize = TRUE,
+                                              num_categories_to_discretize = 3,
+                                              structure_prior = 0) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
@@ -158,10 +148,8 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_degenerate_gaussian_score = function(
-      penalty_discount = 1,
-      structure_prior = 0
-    ) {
+    use_degenerate_gaussian_score = function(penalty_discount = 1,
+                                             structure_prior = 0) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
@@ -172,10 +160,8 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_bic = function(
-      truncation_limit = 3,
-      penalty_discount = 2
-    ) {
+    use_basis_function_bic = function(truncation_limit = 3,
+                                      penalty_discount = 2) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
@@ -186,10 +172,8 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_bic_fs = function(
-      truncation_limit = 3,
-      penalty_discount = 2
-    ) {
+    use_basis_function_bic_fs = function(truncation_limit = 3,
+                                         penalty_discount = 2) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
@@ -200,11 +184,9 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_lrt = function(
-      truncation_limit = 3,
-      alpha = 0.01,
-      use_for_mc = FALSE
-    ) {
+    use_basis_function_lrt = function(truncation_limit = 3,
+                                      alpha = 0.01,
+                                      use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -222,11 +204,9 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_basis_function_lrt_fs = function(
-      truncation_limit = 3,
-      alpha = 0.01,
-      use_for_mc = FALSE
-    ) {
+    use_basis_function_lrt_fs = function(truncation_limit = 3,
+                                         alpha = 0.01,
+                                         use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -256,12 +236,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_chi_square = function(
-      min_count = 1,
-      alpha = 0.01,
-      cell_table_type = 1,
-      use_for_mc = FALSE
-    ) {
+    use_chi_square = function(min_count = 1,
+                              alpha = 0.01,
+                              cell_table_type = 1,
+                              use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -280,12 +258,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_g_square = function(
-      min_count = 1,
-      alpha = 0.01,
-      cell_table_type = 1,
-      use_for_mc = FALSE
-    ) {
+    use_g_square = function(min_count = 1,
+                            alpha = 0.01,
+                            cell_table_type = 1,
+                            use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -302,12 +278,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_conditional_gaussian_test = function(
-      alpha = 0.01,
-      discretize = TRUE,
-      num_categories_to_discretize = 3,
-      use_for_mc = FALSE
-    ) {
+    use_conditional_gaussian_test = function(alpha = 0.01,
+                                             discretize = TRUE,
+                                             num_categories_to_discretize = 3,
+                                             use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -340,12 +314,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_probabilistic_test = function(
-      threshold = FALSE,
-      cutoff = 0.5,
-      prior_ess = 10,
-      use_for_mc = FALSE
-    ) {
+    use_probabilistic_test = function(threshold = FALSE,
+                                      cutoff = 0.5,
+                                      prior_ess = 10,
+                                      use_for_mc = FALSE) {
       # Note: Ensure the field names match exactly those in Tetrad.
       set_params(
         self$params,
@@ -365,18 +337,16 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_kci = function(
-      alpha = 0.01,
-      approximate = TRUE,
-      scalingfact_or = 1,
-      num_bootstraps = 5000,
-      threshold = 1e-3,
-      epsilon = 1e-3,
-      kernel_type = 1,
-      polyd = 5,
-      polyc = 1,
-      use_for_mc = FALSE
-    ) {
+    use_kci = function(alpha = 0.01,
+                       approximate = TRUE,
+                       scalingfact_or = 1,
+                       num_bootstraps = 5000,
+                       threshold = 1e-3,
+                       epsilon = 1e-3,
+                       kernel_type = 1,
+                       polyd = 5,
+                       polyc = 1,
+                       use_for_mc = FALSE) {
       set_params(
         self$params,
         KCI_USE_APPROXIMATION = approximate,
@@ -397,14 +367,12 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_cci = function(
-      alpha = 0.01,
-      scalingfact_or = 2,
-      num_basis_functions = 3,
-      basis_type = 4,
-      basis_scale = 0.0,
-      use_for_mc = FALSE
-    ) {
+    use_cci = function(alpha = 0.01,
+                       scalingfact_or = 2,
+                       num_basis_functions = 3,
+                       basis_type = 4,
+                       basis_scale = 0.0,
+                       use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -502,12 +470,10 @@ TetradSearch <- R6Class(
 
     # Algorithm methods rewritten in tidyverse style
 
-    run_fges = function(
-      symmetric_first_step = FALSE,
-      max_degree = -1,
-      parallelized = FALSE,
-      faithfulness_assumed = FALSE
-    ) {
+    run_fges = function(symmetric_first_step = FALSE,
+                        max_degree = -1,
+                        parallelized = FALSE,
+                        faithfulness_assumed = FALSE) {
       # Create the Fges algorithm instance using the current score.
       alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Fges",
@@ -536,13 +502,11 @@ TetradSearch <- R6Class(
       )
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_fges_mb = function(
-      targets = "",
-      max_degree = -1,
-      trimming_style = 3,
-      number_of_expansions = 2,
-      faithfulness_assumed = FALSE
-    ) {
+    run_fges_mb = function(targets = "",
+                           max_degree = -1,
+                           trimming_style = 3,
+                           number_of_expansions = 2,
+                           faithfulness_assumed = FALSE) {
       alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/FgesMb",
         self$score
@@ -561,13 +525,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_boss = function(
-      num_starts = 1,
-      use_bes = FALSE,
-      time_lag = 0,
-      use_data_order = TRUE,
-      output_cpdag = TRUE
-    ) {
+    run_boss = function(num_starts = 1,
+                        use_bes = FALSE,
+                        time_lag = 0,
+                        use_data_order = TRUE,
+                        output_cpdag = TRUE) {
       set_params(
         self$params,
         USE_BES = use_bes,
@@ -586,12 +548,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_restricted_boss = function(
-      targets = "",
-      use_bes = FALSE,
-      num_starts = 1,
-      allow_internal_randomness = TRUE
-    ) {
+    run_restricted_boss = function(targets = "",
+                                   use_bes = FALSE,
+                                   num_starts = 1,
+                                   allow_internal_randomness = TRUE) {
       set_params(
         self$params,
         TARGETS = targets,
@@ -613,17 +573,15 @@ TetradSearch <- R6Class(
       ) # alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_cstar = function(
-      targets = "",
-      file_out_path = "cstar-out",
-      selection_min_effect = 0.0,
-      num_subsamples = 50,
-      top_bracket = 10,
-      parallelized = FALSE,
-      cpdag_algorithm = 4,
-      remove_effect_nodes = TRUE,
-      sample_style = 1
-    ) {
+    run_cstar = function(targets = "",
+                         file_out_path = "cstar-out",
+                         selection_min_effect = 0.0,
+                         num_subsamples = 50,
+                         top_bracket = 10,
+                         parallelized = FALSE,
+                         cpdag_algorithm = 4,
+                         remove_effect_nodes = TRUE,
+                         sample_style = 1) {
       set_params(
         self$params,
         SELECTION_MIN_EFFECT = selection_min_effect,
@@ -654,15 +612,13 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_grasp = function(
-      covered_depth = 4,
-      singular_depth = 1,
-      nonsingular_depth = 1,
-      ordered_alg = FALSE,
-      raskutti_uhler = FALSE,
-      use_data_order = TRUE,
-      num_starts = 1
-    ) {
+    run_grasp = function(covered_depth = 4,
+                         singular_depth = 1,
+                         nonsingular_depth = 1,
+                         ordered_alg = FALSE,
+                         raskutti_uhler = FALSE,
+                         use_data_order = TRUE,
+                         num_starts = 1) {
       set_params(
         self$params,
         GRASP_DEPTH = covered_depth,
@@ -684,12 +640,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_pc = function(
-      conflict_rule = 1,
-      depth = -1,
-      stable_fas = TRUE,
-      guarantee_cpdag = FALSE
-    ) {
+    run_pc = function(conflict_rule = 1,
+                      depth = -1,
+                      stable_fas = TRUE,
+                      guarantee_cpdag = FALSE) {
       set_params(
         self$params,
         CONFLICT_RULE = conflict_rule,
@@ -707,12 +661,10 @@ TetradSearch <- R6Class(
       print(self$java)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_cpc = function(
-      conflict_rule = 1,
-      depth = -1,
-      stable_fas = TRUE,
-      guarantee_cpdag = TRUE
-    ) {
+    run_cpc = function(conflict_rule = 1,
+                       depth = -1,
+                       stable_fas = TRUE,
+                       guarantee_cpdag = TRUE) {
       set_params(
         self$params,
         CONFLICT_RULE = conflict_rule,
@@ -730,13 +682,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_pcmax = function(
-      conflict_rule = 1,
-      depth = -1,
-      use_heuristic = TRUE,
-      max_disc_path_length = -1,
-      stable_fas = TRUE
-    ) {
+    run_pcmax = function(conflict_rule = 1,
+                         depth = -1,
+                         use_heuristic = TRUE,
+                         max_disc_path_length = -1,
+                         stable_fas = TRUE) {
       set_params(
         self$params,
         CONFLICT_RULE = conflict_rule,
@@ -755,13 +705,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_fci = function(
-      depth = -1,
-      stable_fas = TRUE,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE,
-      guarantee_pag = FALSE
-    ) {
+    run_fci = function(depth = -1,
+                       stable_fas = TRUE,
+                       max_disc_path_length = -1,
+                       complete_rule_set_used = TRUE,
+                       guarantee_pag = FALSE) {
       set_params(
         self$params,
         DEPTH = depth,
@@ -780,12 +728,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_rfci = function(
-      depth = -1,
-      stable_fas = TRUE,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE
-    ) {
+    run_rfci = function(depth = -1,
+                        stable_fas = TRUE,
+                        max_disc_path_length = -1,
+                        complete_rule_set_used = TRUE) {
       set_params(
         self$params,
         DEPTH = depth,
@@ -803,11 +749,9 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_cfci = function(
-      depth = -1,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE
-    ) {
+    run_cfci = function(depth = -1,
+                        max_disc_path_length = -1,
+                        complete_rule_set_used = TRUE) {
       set_params(
         self$params,
         DEPTH = depth,
@@ -824,13 +768,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_gfci = function(
-      depth = -1,
-      max_degree = -1,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE,
-      guarantee_pag = FALSE
-    ) {
+    run_gfci = function(depth = -1,
+                        max_degree = -1,
+                        max_disc_path_length = -1,
+                        complete_rule_set_used = TRUE,
+                        guarantee_pag = FALSE) {
       set_params(
         self$params,
         DEPTH = depth,
@@ -850,12 +792,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_bfci = function(
-      depth = -1,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE,
-      guarantee_pag = FALSE
-    ) {
+    run_bfci = function(depth = -1,
+                        max_disc_path_length = -1,
+                        complete_rule_set_used = TRUE,
+                        guarantee_pag = FALSE) {
       set_params(
         self$params,
         DEPTH = depth,
@@ -874,13 +814,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_lv_lite = function(
-      num_starts = 1,
-      max_blocking_path_length = 5,
-      depth = 5,
-      max_disc_path_length = 5,
-      guarantee_pag = TRUE
-    ) {
+    run_lv_lite = function(num_starts = 1,
+                           max_blocking_path_length = 5,
+                           depth = 5,
+                           max_disc_path_length = 5,
+                           guarantee_pag = TRUE) {
       set_params(
         self$params,
         NUM_STARTS = num_starts,
@@ -900,20 +838,18 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_grasp_fci = function(
-      depth = -1,
-      stable_fas = TRUE,
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE,
-      covered_depth = 4,
-      singular_depth = 1,
-      nonsingular_depth = 1,
-      ordered_alg = FALSE,
-      raskutti_uhler = FALSE,
-      use_data_order = TRUE,
-      num_starts = 1,
-      guarantee_pag = FALSE
-    ) {
+    run_grasp_fci = function(depth = -1,
+                             stable_fas = TRUE,
+                             max_disc_path_length = -1,
+                             complete_rule_set_used = TRUE,
+                             covered_depth = 4,
+                             singular_depth = 1,
+                             nonsingular_depth = 1,
+                             ordered_alg = FALSE,
+                             raskutti_uhler = FALSE,
+                             use_data_order = TRUE,
+                             num_starts = 1,
+                             guarantee_pag = FALSE) {
       set_params(
         self$params,
         GRASP_DEPTH = covered_depth,
@@ -940,12 +876,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_spfci = function(
-      max_disc_path_length = -1,
-      complete_rule_set_used = TRUE,
-      depth = -1,
-      guarantee_pag = FALSE
-    ) {
+    run_spfci = function(max_disc_path_length = -1,
+                         complete_rule_set_used = TRUE,
+                         depth = -1,
+                         guarantee_pag = FALSE) {
       set_params(
         self$params,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -964,12 +898,10 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_ica_lingam = function(
-      ica_a = 1.1,
-      ica_max_iter = 5000,
-      ica_tolerance = 1e-8,
-      threshold_b = 0.1
-    ) {
+    run_ica_lingam = function(ica_a = 1.1,
+                              ica_max_iter = 5000,
+                              ica_tolerance = 1e-8,
+                              threshold_b = 0.1) {
       set_params(
         self$params,
         FAST_ICA_A = ica_a,
@@ -989,13 +921,11 @@ TetradSearch <- R6Class(
     get_bhat = function() {
       stop("get_bhat: Conversion function not implemented.")
     },
-    run_ica_lingd = function(
-      ica_a = 1.1,
-      ica_max_iter = 5000,
-      ica_tolerance = 1e-8,
-      threshold_b = 0.1,
-      threshold_w = 0.1
-    ) {
+    run_ica_lingd = function(ica_a = 1.1,
+                             ica_max_iter = 5000,
+                             ica_tolerance = 1e-8,
+                             threshold_b = 0.1,
+                             threshold_w = 0.1) {
       set_params(
         self$params,
         FAST_ICA_A = ica_a,
@@ -1042,13 +972,11 @@ TetradSearch <- R6Class(
       }
       list_of_matrices
     },
-    run_fask = function(
-      alpha = 0.05,
-      depth = -1,
-      fask_delta = -0.3,
-      left_right_rule = 1,
-      skew_edge_threshold = 0.3
-    ) {
+    run_fask = function(alpha = 0.05,
+                        depth = -1,
+                        fask_delta = -0.3,
+                        left_right_rule = 1,
+                        skew_edge_threshold = 0.3) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1066,13 +994,11 @@ TetradSearch <- R6Class(
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
-    run_fofc = function(
-      alpha = 0.001,
-      penalty_discount = 2.0,
-      tetrad_test = 1,
-      include_structure_model = TRUE,
-      precompute_covariances = TRUE
-    ) {
+    run_fofc = function(alpha = 0.001,
+                        penalty_discount = 2.0,
+                        tetrad_test = 1,
+                        include_structure_model = TRUE,
+                        precompute_covariances = TRUE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1198,14 +1124,12 @@ TetradSearch <- R6Class(
       gango_graph <- rskew$orient()
       return(gango_graph)
     },
-    set_bootstrapping = function(
-      number_resampling = 0,
-      percent_resample_size = 100,
-      add_original = TRUE,
-      with_replacement = TRUE,
-      resampling_ensemble = 1,
-      seed = -1
-    ) {
+    set_bootstrapping = function(number_resampling = 0,
+                                 percent_resample_size = 100,
+                                 add_original = TRUE,
+                                 with_replacement = TRUE,
+                                 resampling_ensemble = 1,
+                                 seed = -1) {
       set_params(
         self$params,
         NUMBER_RESAMPLING = number_resampling,
@@ -1314,13 +1238,11 @@ TetradSearch <- R6Class(
         ))
       }
     },
-    get_graph_to_matrix = function(
-      java_obj = NULL,
-      null_ept = 0,
-      circle_ept = 1,
-      arrow_ept = 2,
-      tail_ept = 3
-    ) {
+    get_graph_to_matrix = function(java_obj = NULL,
+                                   null_ept = 0,
+                                   circle_ept = 1,
+                                   arrow_ept = 2,
+                                   tail_ept = 3) {
       if (is.null(java_obj)) {
         return(.jcall(
           "pytetrad/tools/translate",
@@ -1533,18 +1455,16 @@ TetradSearch <- R6Class(
       }
       return(facts)
     },
-    markov_check = function(
-      graph,
-      percent_resample = 1,
-      condition_set_type = .jfield(
-        "edu/cmu/tetrad/search/utils/ConditioningSetType",
-        "S",
-        "ORDERED_LOCAL_MARKOV"
-      ),
-      remove_extraneous = FALSE,
-      parallelized = TRUE,
-      sample_size = -1
-    ) {
+    markov_check = function(graph,
+                            percent_resample = 1,
+                            condition_set_type = .jfield(
+                              "edu/cmu/tetrad/search/utils/ConditioningSetType",
+                              "S",
+                              "ORDERED_LOCAL_MARKOV"
+                            ),
+                            remove_extraneous = FALSE,
+                            parallelized = TRUE,
+                            sample_size = -1) {
       if (is.null(self$mc_test)) {
         stop(
           "A test for the Markov Checker has not been set. Please call a use_{test name} method with use_for_mc=TRUE."
@@ -1604,15 +1524,13 @@ TetradSearch <- R6Class(
       }
       return(pvalues)
     },
-    get_adjustment_sets = function(
-      graph,
-      source,
-      target,
-      max_num_sets = 10,
-      max_distance_from_point = 5,
-      near_which_endpoint = 1,
-      max_path_length = 20
-    ) {
+    get_adjustment_sets = function(graph,
+                                   source,
+                                   target,
+                                   max_num_sets = 10,
+                                   max_distance_from_point = 5,
+                                   near_which_endpoint = 1,
+                                   max_path_length = 20) {
       return(.jcall(graph, "Ljava/lang/Object;", "paths")$adjustmentSets(
         source,
         target,
@@ -1626,12 +1544,11 @@ TetradSearch <- R6Class(
 )
 
 mimbuild <- function(
-  clustering,
-  measure_names,
-  latent_names,
-  cov,
-  full_graph = FALSE
-) {
+    clustering,
+    measure_names,
+    latent_names,
+    cov,
+    full_graph = FALSE) {
   mb <- .jnew("edu/cmu/tetrad/search/cluster/Mimbuild")
   graph <- .jcall(
     mb,
