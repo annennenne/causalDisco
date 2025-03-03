@@ -6,56 +6,49 @@ if (!.jniInitialized) {
 }
 
 rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
-  # Divide into different types if useful for later.
-  # For now, we'll treat all non-numeric columns as discrete/categorical.
+  # Identify numeric (continuous) columns and discrete columns.
   numeric_cols <- sapply(df, is.numeric)
   integer_cols <- sapply(df, is.integer)
-  logical_cols <- sapply(df, is.logical) # Not used in this function as of now.
-  complex_cols <- sapply(df, is.complex) # Not used in this function as of now.
 
   # If int_as_cont is TRUE, treat integer columns as continuous.
   if (int_as_cont) {
     numeric_cols <- numeric_cols | integer_cols
-    integer_cols <- integer_cols & !integer_cols
   }
-  discrete_cols <- names(df)[!(numeric_cols)]
+  discrete_cols <- names(df)[!numeric_cols]
 
-  # For each discrete column, map its unique values to integer codes.
-  category_map <- lapply(discrete_cols, function(col) {
-    vals <- unique(df[[col]])
-    setNames(seq_along(vals) - 1, vals)
-  })
-
-  names(category_map) <- discrete_cols
-
-  df_conv <- df
-  # Convert discrete columns to integers.
-  for (col in discrete_cols) {
-    df_conv[[col]] <- as.integer(category_map[[col]][as.character(df[[col]])])
+  # Vectorized conversion of discrete columns to integer codes (starting at 0).
+  if (length(discrete_cols) > 0) {
+    df[discrete_cols] <- lapply(df[discrete_cols], function(col) {
+      as.integer(factor(col)) - 1
+    })
   }
 
-  values <- as.matrix(df_conv)
-  n <- nrow(df) |> as.integer()
-  p <- ncol(df) |> as.integer()
+  # Convert the data frame to a matrix.
+  values <- as.matrix(df)
+  n <- as.integer(nrow(df))
+  p <- as.integer(ncol(df))
 
-  # Java tetrad string
+  # Create Java variables list.
   tetrad_data_dir <- "edu/cmu/tetrad/data/"
-
   variables <- .jnew("java/util/ArrayList")
+
+  # For each column, create a Tetrad variable object.
   for (col in colnames(df)) {
     if (col %in% discrete_cols) {
+      # Get factor levels from the original column for consistent ordering.
+      levels_vec <- levels(factor(df[[col]]))
       categories <- .jnew("java/util/ArrayList")
-      for (category in names(category_map[[col]])) {
-        .jcall(categories, "V", "add", as.character(category))
+      for (level in levels_vec) {
+        .jcall(categories, "V", "add", as.character(level))
       }
       var <- .jnew(paste0(tetrad_data_dir, "DiscreteVariable"), col, categories)
     } else {
       var <- .jnew(paste0(tetrad_data_dir, "ContinuousVariable"), col)
     }
-    # Cast var to java/lang/Object so that the signature matches
     .jcall(variables, "Z", "add", .jcast(var, "java/lang/Object"))
   }
 
+  # Choose the appropriate DataBox type based on the data.
   if (length(discrete_cols) == p) {
     databox_type <- paste0(tetrad_data_dir, "IntDataBox")
     databox <- .jnew(databox_type, n, p)
@@ -67,29 +60,27 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
     databox <- .jnew(databox_type, variables, n)
   }
 
-  for (col in 1:p) {
-    for (row in 1:n) {
-      valueObj <- .jnew("java/lang/Double", as.double(values[[row, col]]))
+  # Populate the DataBox.
+  # (This nested loop is the current bottleneck.
+  #  Further improvements would be possible if a bulk data-transfer method
+  #  is implemented on the Java side.)
+  for (i in 1:n) {
+    for (j in 1:p) {
+      valueObj <- .jnew("java/lang/Double", as.double(values[i, j]))
       valueObj <- .jcast(valueObj, "java/lang/Number")
-      .jcall(
-        databox,
-        "V",
-        "set",
-        as.integer(row - 1),
-        as.integer(col - 1),
-        valueObj
-      )
+      .jcall(databox, "V", "set", as.integer(i - 1), as.integer(j - 1), valueObj)
     }
   }
 
-  # Ensure your variables list is cast to java.util.List
+  # Finalize the DataSet creation.
   variablesList <- .jcast(variables, "java/util/List")
-  # Also, cast databox to the DataBox interface.
   databox <- .jcast(databox, "edu/cmu/tetrad/data/DataBox")
   dataset <- .jnew("edu/cmu/tetrad/data/BoxDataSet", databox, variablesList)
   dataset <- cast_obj(dataset)
+
   return(dataset)
 }
+
 
 tetrad_data_to_rdata <- function(data) {
   namesList <- .jcall(data, "Ljava/util/List;", "getVariableNames")
