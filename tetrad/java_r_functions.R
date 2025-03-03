@@ -1,14 +1,30 @@
 library(rJava)
 
-# function that takes a java object and casts it to some superclass 
+# function that takes a java object and casts it to some superclass
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper
-  if (.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")){
+  if (.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")) {
     obj <- .jcast(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")
     return(obj)
-  # If the object is a data object, cast it to DataModel
+    # If the object is a data object, cast it to DataModel
   } else if (.jinstanceof(obj, "edu/cmu/tetrad/data/DataModel")) {
     obj <- .jcast(obj, "edu/cmu/tetrad/data/DataModel")
+    return(obj)
+    # If the object is a test, cast it to IndependenceWrapper
+  } else if (
+    .jinstanceof(
+      obj,
+      "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
+    )
+  ) {
+    obj <- .jcast(
+      obj,
+      "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
+    )
+    return(obj)
+    # If the object is an EdgeListGraph, cast it to Graph
+  } else if (.jinstanceof(obj, "edu/cmu/tetrad/graph/Graph")) {
+    obj <- .jcast(obj, "edu/cmu/tetrad/graph/Graph")
     return(obj)
   } else {
     # Cast error
@@ -23,7 +39,7 @@ set_params <- function(params, ...) {
     value <- arg_list[[param_name]]
     # Get the key (static field) from Params using the field name.
     key <- .jfield("edu/cmu/tetrad/util/Params", "S", param_name)
-    
+
     # Wrap the value based on its type.
     wrapped <- if (is.numeric(value)) {
       .jcast(.jnew("java/lang/Double", as.double(value)), "java/lang/Object")
@@ -34,10 +50,9 @@ set_params <- function(params, ...) {
     } else {
       .jcast(value, "java/lang/Object")
     }
-    
+
     # Set the parameter using the key and wrapped value.
     params$set(key, wrapped)
   }
   invisible(NULL)
 }
-
