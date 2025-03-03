@@ -645,7 +645,7 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Pc",
         self$test
       )
-      
+
       self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
