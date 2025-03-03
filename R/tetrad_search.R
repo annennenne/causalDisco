@@ -15,7 +15,8 @@ if (!.jniInitialized) {
   )
 }
 
-# Define the TetradSearch R6 class.
+#' Define the TetradSearch R6 class.
+#' @export TetradSearch
 TetradSearch <- R6Class(
   "TetradSearch",
   public = list(

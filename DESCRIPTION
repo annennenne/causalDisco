@@ -57,3 +57,7 @@ Collate:
     'tfci.R'
     'tges.R'
     'tplot.R'
+    'java_r_utils.R'
+    'tetrad_rdata_utils.R'
+    'tetrad_search.R'
+    
