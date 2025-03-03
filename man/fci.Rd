@@ -42,7 +42,7 @@ See \code{\link[pcalg]{skeleton}} for details.}
 \item{methodNA}{Method for handling missing information (\code{NA} values).
 Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
+that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
 
 \item{methodOri}{Method for handling conflicting separating sets when orienting

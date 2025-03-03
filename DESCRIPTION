@@ -20,7 +20,7 @@ LazyData: true
 URL: https://github.com/annennenne/causalDisco
 BugReports: https://github.com/annennenne/causalDisco/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
     pcalg,
     igraph,

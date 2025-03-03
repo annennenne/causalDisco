@@ -46,7 +46,7 @@ See \code{\link[pcalg]{skeleton}} for details.}
 \item{methodNA}{Method for handling missing information (\code{NA} values).
 Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
 are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any code{NA} values), or \code{"twd"} (test wise deletion, omits
+that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
 observations with missing information test-by-test) (further details below).}
 
 \item{methodOri}{Method for handling conflicting separating sets when orienting
@@ -112,7 +112,7 @@ child_x <- rnorm(n)^2
 child_y <- 0.5*child_x + rnorm(n)
 child_z <- sample(c(0,1), n, replace = TRUE,
                   prob = c(0.3, 0.7))
-         
+
 adult_x <- child_x + rnorm(n)
 adult_z <- as.numeric(child_z + rnorm(n) > 0)
 adult_w <- 2*adult_z + rnorm(n)
