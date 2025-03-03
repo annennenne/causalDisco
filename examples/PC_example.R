@@ -1,6 +1,6 @@
 # generate data
 set.seed(123)
-n <- 100
+n <- 10000
 p <- 5
 dag <- matrix(0, p, p)
 dag[1, 2] <- 1
