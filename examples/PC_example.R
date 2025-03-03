@@ -1,6 +1,7 @@
 # generate data
+devtools::load_all()
 set.seed(123)
-n <- 10000
+n <- 100000
 p <- 5
 dag <- matrix(0, p, p)
 dag[1, 2] <- 1

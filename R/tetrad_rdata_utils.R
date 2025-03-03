@@ -1,5 +1,5 @@
 library(rJava)
-# source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
+
 if (!.jniInitialized) {
   jar_path <- "tetrad/tetrad-current.jar"
   .jinit(parameters = "-Xmx2g", classpath = jar_path)
@@ -109,9 +109,6 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
 
   return(dataset)
 }
-
-
-
 
 tetrad_data_to_rdata <- function(data) {
   namesList <- .jcall(data, "Ljava/util/List;", "getVariableNames")
