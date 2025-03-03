@@ -494,13 +494,7 @@ TetradSearch <- R6Class(
       )
 
       # Execute the search algorithm and store the result graph
-      self$java <- .jcall(
-        alg,
-        "Ledu/cmu/tetrad/graph/Graph;",
-        "search",
-        self$data,
-        self$params
-      )
+      self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
     run_fges_mb = function(targets = "",
@@ -565,13 +559,7 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/RestrictedBoss",
         self$score
       )
-      self$java <- .jcall(
-        alg,
-        "Ledu/cmu/tetrad/graph/Graph;",
-        "search",
-        self$data,
-        self$params
-      ) # alg$search(self$data, self$params)
+      self$java <- alg$search(self$data, self$params)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
     run_cstar = function(targets = "",
@@ -657,9 +645,8 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Pc",
         self$test
       )
-      print(alg)
+      
       self$java <- alg$search(self$data, self$params)
-      print(self$java)
       self$bootstrap_graphs <- alg$getBootstrapGraphs()
     },
     run_cpc = function(conflict_rule = 1,
