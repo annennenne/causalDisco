@@ -101,7 +101,6 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
     databox <- .jnew(paste0(tetrad_data_dir, "MixedDataBox"), variables, as.integer(n), jContinuousMatrix, jDiscreteMatrix)
   }
 
-  # Finalize the DataSet creation.
   variablesList <- .jcast(variables, "java/util/List")
   databox <- .jcast(databox, "edu/cmu/tetrad/data/DataBox")
   dataset <- .jnew("edu/cmu/tetrad/data/BoxDataSet", databox, variablesList)
@@ -204,7 +203,6 @@ graph_to_matrix <- function(
   return(as.data.frame(A, col.names = colNames))
 }
 
-## Convert a Tetrad matrix (a Java array-like object) to an R numeric matrix.
 tetrad_matrix_to_matrix <- function(array) {
   nrows <- .jcall(array, "I", "getNumRows")
   ncols <- .jcall(array, "I", "getNumColumns")
@@ -223,7 +221,6 @@ tetrad_matrix_to_matrix <- function(array) {
   return(mat)
 }
 
-## Convert a Tetrad matrix to an R data.frame. 'variables' is assumed to be a Java List of variables.
 tetrad_matrix_to_rdata <- function(array, variables) {
   mat <- tetrad_matrix_to_matrix(array)
   ncols <- .jcall(array, "I", "getNumColumns")
@@ -241,8 +238,6 @@ tetrad_matrix_to_rdata <- function(array, variables) {
   return(df)
 }
 
-## Convert an R square integer matrix (with only 0's and 1's, where a[i,j]==1 means j -> i)
-## into a Tetrad Java graph object.
 adj_matrix_to_graph <- function(adjMatrix) {
   dims <- dim(adjMatrix)
   if (dims[1] != dims[2]) {
@@ -252,17 +247,14 @@ adj_matrix_to_graph <- function(adjMatrix) {
   variable_names <- paste0("X", 1:n)
   variables <- .jnew("java/util/ArrayList")
   for (i in 1:n) {
-    # Create a GraphNode (assumed to be the correct class in Tetrad)
     node <- .jnew("edu/cmu/tetrad/graph/GraphNode", variable_names[i])
     .jcall(variables, "V", "add", node)
   }
-  # Create an EdgeListGraph given the variables.
   graph <- .jnew("edu/cmu/tetrad/graph/EdgeListGraph", variables)
 
   for (i in 1:n) {
     for (j in 1:n) {
       if (adjMatrix[i, j] != 0) {
-        # Add a directed edge from variables[i] to variables[j].
         .jcall(
           graph,
           "V",
@@ -282,13 +274,11 @@ adj_matrix_to_graph <- function(adjMatrix) {
 write_gdot <- function(g, gdot) {
   endpoint_map <- list("TAIL" = "none", "ARROW" = "empty", "CIRCLE" = "odot")
 
-  # Add nodes: iterate over nodes of the Tetrad graph.
   nodes <- .jcall(g, "Ljava/util/List;", "getNodes")
   numNodes <- .jcall(g, "I", "getNumNodes")
   for (i in 0:(numNodes - 1)) {
     node <- .jcall(nodes, "Ljava/lang/Object;", "get", as.integer(i))
     name <- as.character(.jcall(node, "Ljava/lang/Object;", "getName"))
-    # Here we assume gdot has a method 'node' that accepts a name and additional attributes.
     gdot$node(
       name,
       shape = "circle",
@@ -328,7 +318,6 @@ write_gdot <- function(g, gdot) {
     color <- "blue"
     if (arrowtail == "empty" && arrowhead == "empty") color <- "red"
 
-    # Assuming gdot has an 'edge' method.
     gdot$edge(
       node1,
       node2,
