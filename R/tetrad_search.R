@@ -127,87 +127,217 @@ TetradSearch <- R6Class(
       method <- tolower(method)
       switch(method,
         "fges" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
           private$set_fges(...)
         },
         "fges_mb" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
           private$set_fges_mb(...)
         },
         "boss" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
           private$set_boss(...)
         },
         "restricted_boss" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_restricted_boss(...)
         },
         "cstar" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_cstar(...)
         },
         "sp" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
           private$set_sp(...)
         },
         "grasp" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_grasp(...)
         },
         "pc" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_pc(...)
         },
         "cpc" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_cpc(...)
         },
         "pcmax" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_pcmax(...)
         },
         "fci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_fci(...)
         },
         "rfci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_rfci(...)
         },
         "cfci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_cfci(...)
         },
         "gfci" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_gfci(...)
         },
         "bfci" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_bfci(...)
         },
         "lv_lite" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_lv_lite(...)
         },
         "grasp_fci" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_grasp_fci(...)
         },
         "spfci" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
           private$set_spfci(...)
         },
         "ica_lingam" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_ica_lingam(...)
         },
         "ica_lingd" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_ica_lingd(...)
         },
         "fask" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
           private$set_fask(...)
         },
         "fofc" = {
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_fofc(...)
         },
         "ccd" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_ccd(...)
         },
         "svar_fci" = {
           private$set_svar_fci(...)
         },
         "direct_lingam" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.")
+          }
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_direct_lingam(...)
         },
         "dagma" = {
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_dagma(...)
         },
         "pc_lingam" = {
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_pc_lingam(...)
         },
         "svar_gfci" = {
+          if (!is.null(self$knowledge)) {
+            warning("Background knowledge is set.
+                    This algorithm does not use background knowledge.")
+          }
           private$set_svar_gfci(...)
         },
         {
@@ -1241,6 +1371,7 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Pc",
         self$test
       )
+      self$alg$setKnowledge(self$knowledge)
     },
     set_cpc = function(conflict_rule = 1,
                        depth = -1,
@@ -1465,9 +1596,6 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingam",
         self$score
       )
-      self$java <- self$alg$search(self$data, self$params)
-      self$bhat <- self$alg$getBHat()
-      self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
     },
     set_ica_lingd = function(ica_a = 1.1,
                              ica_max_iter = 5000,
@@ -1487,10 +1615,6 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingD",
         self$score
       )
-      self$java <- self$alg$search(self$data, self$params)
-      self$unstable_bhats <- self$alg$getUnstableBHats()
-      self$stable_bhats <- self$alg$getStableBHats()
-      self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
     },
     set_fask = function(alpha = 0.05,
                         depth = -1,
