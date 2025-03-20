@@ -8,6 +8,7 @@ library(rJava)
 # source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
 
 # Initialize the JVM if it isn’t already running.
+# todo : how many gb?
 if (!.jniInitialized) {
   .jinit(
     parameters = "-Xmx2g",
@@ -21,6 +22,7 @@ TetradSearch <- R6Class(
   "TetradSearch",
   public = list(
     data = NULL,
+    rdata = NULL,
     score = NULL,
     test = NULL,
     alg = NULL,
@@ -46,34 +48,34 @@ TetradSearch <- R6Class(
       method <- tolower(method)
       switch(method,
         "chi_square" = {
-          private$use_chi_square(..., mc = mc)
+          private$use_chi_square(..., use_for_mc = mc)
         },
         "fisher_z" = {
-          private$use_fisher_z(..., mc = mc)
+          private$use_fisher_z(..., use_for_mc = mc)
         },
         "cci" = {
-          private$use_cci(..., mc = mc)
+          private$use_cci(..., use_for_mc = mc)
         },
         "basis_function_lrt" = {
-          private$use_basis_function_lrt(..., mc = mc)
+          private$use_basis_function_lrt(..., use_for_mc = mc)
         },
         "basis_function_lrt_fs" = {
-          private$use_basis_function_lrt_fs(..., mc = mc)
+          private$use_basis_function_lrt_fs(..., use_for_mc = mc)
         },
         "conditional_gaussian" = {
-          private$use_conditional_gaussian_test(..., mc = mc)
+          private$use_conditional_gaussian_test(..., use_for_mc = mc)
         },
         "degenerate_gaussian" = {
-          private$use_degenerate_gaussian_test(..., mc = mc)
+          private$use_degenerate_gaussian_test(..., use_for_mc = mc)
         },
         "g_square" = {
-          private$use_g_square(..., mc = mc)
+          private$use_g_square(..., use_for_mc = mc)
         },
         "kci" = {
-          private$use_kci(..., mc = mc)
+          private$use_kci(..., use_for_mc = mc)
         },
         "probabilistic" = {
-          private$use_probabilistic_test(..., mc = mc)
+          private$use_probabilistic_test(..., use_for_mc = mc)
         },
         {
           stop("Unknown test type: ", method)
@@ -341,7 +343,7 @@ TetradSearch <- R6Class(
           private$set_svar_gfci(...)
         },
         {
-          stop("Unknown method type: ", method)
+          stop("Unknown method type using tetrad engine: ", method)
         }
       )
       invisible(self)
@@ -384,6 +386,9 @@ TetradSearch <- R6Class(
       )
     },
     set_knowledge = function(knowledge) {
+      if (!is.null(self$alg)) {
+        self.alg$setKnowledge(knowledge)
+      }
       self$knowledge <- knowledge
     },
     clear_knowledge = function() {
@@ -421,7 +426,13 @@ TetradSearch <- R6Class(
     print_knowledge = function() {
       print(self$knowledge$toString())
     },
-    run_search = function(bootstrap = FALSE, bhat = FALSE, unstable_bhat = FALSE, stable_bhat = FALSE) {
+    run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE, unstable_bhat = FALSE, stable_bhat = FALSE) {
+      if (!is.null(data)) {
+        self$set_data(data)
+      }
+      if (is.null(self$data)) {
+        stop("No data is set. Use set_data() first or input data directly into run_search().")
+      }
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.")
       }
@@ -430,7 +441,7 @@ TetradSearch <- R6Class(
         self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
       }
       if (bhat) {
-        self.bhat <- self$alg$getBhat()
+        self$bhat <- self$alg$getBhat()
       }
       if (unstable_bhat) {
         self$unstable_bhats <- self$alg$getUnstableBhats()
@@ -467,7 +478,13 @@ TetradSearch <- R6Class(
       )
     },
     set_data = function(data) {
-      self$data <- rdata_to_tetrad(data)
+      # Only load the data if we haven't already
+      # or if the data is different from already loaded data.
+      if (is.null(self$data) || is.null(self$rdata) ||
+        !isTRUE(all.equal(self$rdata, data))) {
+        self$rdata <- data
+        self$data <- rdata_to_tetrad(data)
+      }
     },
     set_verbose = function(verbose) {
       .jcall(
@@ -570,24 +587,15 @@ TetradSearch <- R6Class(
                                    arrow_ept = 2,
                                    tail_ept = 3) {
       if (is.null(java_obj)) {
-        return(.jcall(
-          "pytetrad/tools/translate",
-          "Ljava/lang/Object;",
-          "graph_to_matrix",
-          self$java,
-          null_ept,
-          circle_ept,
-          arrow_ept,
-          tail_ept
-        ))
-      } else {
-        return(.jcall(
-          "pytetrad/tools/translate",
-          "Ljava/lang/Object;",
-          "graph_to_matrix",
-          java_obj
-        ))
+        java_obj <- self$java
       }
+      graph_to_matrix(
+        g = java_obj,
+        null_ept = null_ept,
+        circle_ept = circle_ept,
+        arrow_ept = arrow_ept,
+        tail_ept = tail_ept
+      )
     },
     get_dot = function(java_obj = NULL) {
       if (is.null(java_obj)) {
@@ -631,14 +639,14 @@ TetradSearch <- R6Class(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToLavaan",
-          self$java
+          cast_obj(self$java)
         ))
       } else {
         return(.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToLavaan",
-          java_obj
+          cast_obj(java_obj)
         ))
       }
     },

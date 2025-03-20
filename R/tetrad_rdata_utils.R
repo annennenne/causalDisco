@@ -143,15 +143,15 @@ tetrad_data_to_rdata <- function(data) {
 ## Convert a Java Tetrad graph to an R matrix (data.frame) with endpoints.
 graph_to_matrix <- function(
     g,
-    nullEpt = 0,
-    circleEpt = 1,
-    arrowEpt = 2,
-    tailEpt = 3) {
+    null_ept = 0,
+    circle_ept = 1,
+    arrow_ept = 2,
+    tail_ept = 3) {
   endpoint_map <- list(
-    "NULL" = nullEpt,
-    "CIRCLE" = circleEpt,
-    "ARROW" = arrowEpt,
-    "TAIL" = tailEpt
+    "NULL" = null_ept,
+    "CIRCLE" = circle_ept,
+    "ARROW" = arrow_ept,
+    "TAIL" = tail_ept
   )
 
   # Get nodes and number of nodes.
