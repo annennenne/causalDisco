@@ -19,15 +19,22 @@ pcalgSearch <- R6Class(
       self$knowledge <- NULL
       self$params <- NULL
     },
+    set_params = function(params) {
+      self$params <- params
+    },
     set_data = function(data) {
       self$data <- data
-      self$set_suff_stat(data)
+      self$set_suff_stat()
     },
     set_suff_stat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.")
       }
-      if (is.numeric(self$data)) {
+      if (is.null(self$test)) {
+        stop("Test must be set before sufficient statistic.")
+      }
+      # to do: check if data is continuous or discrete
+      if (TRUE) {
         if (is.matrix(self$data) || is.data.frame(self$data)) {
           self$suff_stat <- list(C = cor(self$data), n = nrow(self$data))
         } else {
@@ -44,34 +51,26 @@ pcalgSearch <- R6Class(
     set_test = function(method,
                         alpha = NULL,
                         ...) {
-      method <- match.arg(method)
       if (!is.null(alpha)) {
-        self$alpha <- alpha
+        self$params$alpha <- alpha
       }
-      
+
       switch(method,
         "fisher_z" = {
-          if (is.null(self$suff_stat)) {
-            stop("Sufficient statistic must be set before test.")
-          }
-          if (is.null(self$alpha)) {
+          if (is.null(self$params$alpha)) {
             stop("Alpha must be set before test.")
           }
           self$test <- pcalg::gaussCItest
         },
         "g_square" = {
-          if (is.null(self$suff_stat)) {
-            stop("Sufficient statistic must be set before test.")
+          if (is.null(self$alpha)) {
+            stop("Alpha must be set before test.")
+          }
+          # test if data is binary
+          if (!all(as.logical(self$suff_stat$dm) == self$suff_stat$dm)) {
+            self$test <- pcalg::disCItest
           } else {
-            if (is.null(self$alpha)) {
-              stop("Alpha must be set before test.")
-            }
-            # test if data is binary
-            if (!all(as.logical(self$suff_stat$dm) == self$suff_stat$dm)) {
-              self$test <- pcalg::disCItest
-            } else {
-              self$test <- pcalg::binCItest
-            }
+            self$test <- pcalg::binCItest
           }
         }
       )
@@ -81,16 +80,22 @@ pcalgSearch <- R6Class(
     },
     set_alg = function(method, ...) {
       method <- tolower(method)
-
       switch(method,
         "pc" = {
-          self$alg <- "pc" # todo: partial application?
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.")
+          }
+          self$alg <- purrr::partial(
+            pcalg::pc,
+            indepTest = self$test,
+            !!!self$params
+          )
         },
         "fci" = {
-          self$alg <- "fci"
+          self$alg <- "fci" # to do
         },
         "ges" = {
-          self$alg <- "ges"
+          self$alg <- "ges" # to do
         },
         stop("Unknown method type using pcalg engine: ", method)
       )
@@ -100,52 +105,16 @@ pcalgSearch <- R6Class(
       if (!is.null(data)) {
         self$set_data(data)
       }
+      if (is.null(self$suff_stat)) {
+        stop("No sufficient statistic is set. Use set_data() first.")
+      }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().")
       }
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.")
       }
-
-        if (self$alg == "pc") {
-          cat("Running PC algorithm with alpha =", self$alpha, "\n")
-          result <- pc(
-            suffStat = self$suff_stat,
-            indepTest = self$test,
-            alpha = self$alpha,
-          )
-          return(result)
-        } else if (self$alg == "fci") {
-          cat("Running FCI algorithm with alpha =", self$alpha, "\n")
-          result <- fci(
-            suffStat = self$suff_stat,
-            indepTest = self$test,
-            alpha = self$alpha,
-            labels = labels,
-            skel.method = self$params$skel.method %||% "stable",
-            # etc.
-          )
-          return(result)
-        }
-      }
-
-      if (self$alg == "ges") {
-        # Score-based approach
-        cat("Running GES (score-based) ... \n")
-        if (is.null(self$score)) {
-          stop("For GES, please set_score() first to define a pcalg score object.")
-        }
-        result <- ges(
-          score = self$score,
-          # Possibly pass self$params for extra arguments:
-          fixedGaps = self$params$fixedGaps %||% NULL,
-          fixedEdges = self$params$fixedEdges %||% NULL
-          # ...
-        )
-        return(result)
-      }
-
-      stop("Unknown algorithm or not yet implemented.")
+      result <- self$alg(suffStat = self$suff_stat, labels = colnames(self$data))
     }
   )
 )
