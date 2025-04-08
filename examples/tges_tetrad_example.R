@@ -28,7 +28,17 @@ knowledge <- knowledge_tetrad(
 
 # initialize tges in tetrad
 # available scores:
-#
+# "sem_bic",
+# "ebic",
+# "bdeu",
+# "basis_function_bic",
+# "basis_function_bic_fs",
+# "conditional_gaussian",
+# "degenerate_gaussian",
+# "gic",
+# "mixed_variable_polynomial",
+# "poisson_prior",
+# "zhang_shen_bound"
 my_tges <- ges(engine = "tetrad", score = "sem_bic")
 
 # call disco with background knowledge
