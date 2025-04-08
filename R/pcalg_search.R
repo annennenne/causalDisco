@@ -26,6 +26,8 @@ pcalgSearch <- R6Class(
     set_data = function(data) {
       self$data <- data
       self$set_suff_stat()
+      # Reset uniques, used to determine binary (or not) G square test
+      private$uniques <- c()
     },
     set_suff_stat = function() {
       if (is.null(self$data)) {
