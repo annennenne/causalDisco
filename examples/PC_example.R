@@ -1,4 +1,3 @@
-# generate data
 devtools::load_all()
 set.seed(123)
 

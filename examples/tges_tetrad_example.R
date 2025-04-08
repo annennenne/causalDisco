@@ -26,8 +26,10 @@ knowledge <- knowledge_tetrad(
 )
 
 
-# initialize ges algorithm as usual
-my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+# initialize tges in tetrad
+# available scores:
+#
+my_tges <- ges(engine = "tetrad", score = "sem_bic")
 
 # call disco with background knowledge
-disco(df, method = my_pc, knowledge = knowledge) |> cat()
+disco(df, method = my_tges, knowledge = knowledge) |> cat()
