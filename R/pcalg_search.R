@@ -12,6 +12,7 @@ pcalgSearch <- R6Class(
     knowledge = NULL,
     params = NULL,
     suff_stat = NULL,
+    continuous = NULL,
     initialize = function() {
       self$data <- NULL
       self$score <- NULL
@@ -33,8 +34,13 @@ pcalgSearch <- R6Class(
       if (is.null(self$test)) {
         stop("Test must be set before sufficient statistic.")
       }
-      # to do: check if data is continuous or discrete
-      if (TRUE) {
+      if (is.null(self$continuous)) {
+        stop("The pcalgSearch class does not have knowledge on whether the
+             sufficient statistic is for a continuous or discrete test.
+             Please set test using set_test() or set continuous directly
+             by self$continuous <- TRUE/FALSE.")
+      }
+      if (self$continuous) {
         if (is.matrix(self$data) || is.data.frame(self$data)) {
           self$suff_stat <- list(C = cor(self$data), n = nrow(self$data))
         } else {
@@ -55,24 +61,24 @@ pcalgSearch <- R6Class(
         self$params$alpha <- alpha
       }
 
+      method <- tolower(method)
+
       switch(method,
         "fisher_z" = {
           if (is.null(self$params$alpha)) {
             stop("Alpha must be set before test.")
           }
           self$test <- pcalg::gaussCItest
+          self$continuous <- TRUE
         },
         "g_square" = {
-          if (is.null(self$alpha)) {
+          if (is.null(self$params$alpha)) {
             stop("Alpha must be set before test.")
           }
-          # test if data is binary
-          if (!all(as.logical(self$suff_stat$dm) == self$suff_stat$dm)) {
-            self$test <- pcalg::disCItest
-          } else {
-            self$test <- pcalg::binCItest
-          }
-        }
+          self$test <- private$use_g_square()
+          self$continuous <- FALSE
+        },
+        stop("Unknown test type using pcalg engine: ", method)
       )
     },
     set_score = function(...) {
@@ -80,6 +86,8 @@ pcalgSearch <- R6Class(
     },
     set_alg = function(method, ...) {
       method <- tolower(method)
+      # to do: add them, don't replace them (or remove??)
+      # self$params <- list(...) # store extra parameters for the chosen alg
       switch(method,
         "pc" = {
           if (is.null(self$test)) {
@@ -99,7 +107,6 @@ pcalgSearch <- R6Class(
         },
         stop("Unknown method type using pcalg engine: ", method)
       )
-      self$params <- list(...) # store extra parameters for the chosen alg
     },
     run_search = function(data) {
       if (!is.null(data)) {
@@ -116,5 +123,32 @@ pcalgSearch <- R6Class(
       }
       result <- self$alg(suffStat = self$suff_stat, labels = colnames(self$data))
     }
+  ),
+  private = list(
+    use_g_square = function() {
+      # Finds out whether to use binary or non-binary test (based on suff_stat).
+      # Then, sets the test to the found test, and evaluates in this test.
+      return(
+        function(x, y, S, suffStat) {
+          # Check if the number of unqiue values has been found yet
+          # to do: this can probably be done in a faster way
+          if (length(private$uniques) == 0) {
+            private$uniques <- self$suff_stat$dm |>
+              c() |> # turn to vector such that unique works on value level
+              unique() |>
+              sort()
+          }
+          if (length(private$uniques) < 2) {
+            stop("The data contains less than 2 unique values. If this is the case, there is nothing to discover.")
+          }
+          if (length(private$uniques) == 2) {
+            return(pcalg::binCItest(x, y, S, suffStat))
+          } else {
+            return(pcalg::disCItest(x, y, S, suffStat))
+          }
+        }
+      ) # end return
+    },
+    uniques = c()
   )
 )
