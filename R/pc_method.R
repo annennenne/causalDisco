@@ -14,16 +14,17 @@ attr(pc, "engines") <- c("tetrad", "pcalg")
 
 pc_tetrad <- function(test, alpha, ...) {
   # to do: fix arguments passing correctly
-  ts <- TetradSearch$new()
-  ts$set_test(test, alpha, ...)
-  ts$set_alg("pc")
+  search <- TetradSearch$new()
+  # to do: set_params(args_to_pass)
+  search$set_test(test, alpha, ...)
+  search$set_alg("pc")
   runner <- list(
     set_knowledge = function(knowledge) {
-      ts$set_knowledge(knowledge)
+      search$set_knowledge(knowledge)
     },
     run = function(data) {
-      ts$run_search(data)
-      ts$get_dot() # todo: change to igraph later
+      search$run_search(data)
+      search$get_dot() # todo: change to igraph later
     }
   )
   return(runner)
