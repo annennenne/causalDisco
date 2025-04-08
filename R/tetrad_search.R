@@ -78,7 +78,7 @@ TetradSearch <- R6Class(
           private$use_probabilistic_test(..., use_for_mc = mc)
         },
         {
-          stop("Unknown test type: ", method)
+          stop("Unknown test type using tetrad engine: ", method)
         }
       )
       invisible(self)
@@ -120,7 +120,7 @@ TetradSearch <- R6Class(
           private$use_zhang_shen_bound(...)
         },
         {
-          stop("Unknown score type: ", method)
+          stop("Unknown score type using tetrad engine: ", method)
         }
       )
       invisible(self)
@@ -317,28 +317,28 @@ TetradSearch <- R6Class(
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
-                    This algorithm does not use background knowledge.")
+                    This algorithm, direct_lingam, does not use background knowledge.")
           }
           private$set_direct_lingam(...)
         },
         "dagma" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
-                    This algorithm does not use background knowledge.")
+                    This algorithm, dagma, does not use background knowledge.")
           }
           private$set_dagma(...)
         },
         "pc_lingam" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
-                    This algorithm does not use background knowledge.")
+                    This algorithm, pc_lingam, does not use background knowledge.")
           }
           private$set_pc_lingam(...)
         },
         "svar_gfci" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
-                    This algorithm does not use background knowledge.")
+                    This algorithm, svar_gfci, does not use background knowledge.")
           }
           private$set_svar_gfci(...)
         },
@@ -387,7 +387,7 @@ TetradSearch <- R6Class(
     },
     set_knowledge = function(knowledge) {
       if (!is.null(self$alg)) {
-        self.alg$setKnowledge(knowledge)
+        self$alg$setKnowledge(knowledge)
       }
       self$knowledge <- knowledge
     },
