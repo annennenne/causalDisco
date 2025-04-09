@@ -168,6 +168,7 @@ pcalgSearch <- R6Class(
           }
         }
         return(list(fixedGaps = fixedGaps, fixedEdges = fixedEdges))
+        invisible(self)
       }
 
       # Due to the nature of pcalg, we cannot set knowledge before

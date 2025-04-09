@@ -90,7 +90,7 @@ check_args_and_return_passable_args <- function(args, engine) {
   }
 
   if (engine == "tetrad") {
-    # to do
+    # todo
     warning("Args check needs to be implemented for tetrad")
   }
 }

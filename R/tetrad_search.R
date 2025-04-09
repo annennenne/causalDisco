@@ -1,12 +1,6 @@
 library(R6)
 library(rJava)
 
-# Source tetrad <-> R data conversion functions.
-# source("/home/fabben/BioStat/causalDisco/tetrad/tetrad_rdata.R")
-
-# Source R <-> Java helper functions.
-# source("/home/fabben/BioStat/causalDisco/tetrad/java_r_functions.R")
-
 # Initialize the JVM if it isn’t already running.
 # todo : how many gb?
 if (!.jniInitialized) {
@@ -886,12 +880,14 @@ TetradSearch <- R6Class(
   private = list(
     use_sem_bic = function(penalty_discount = 2,
                            structure_prior = 0,
-                           sem_bic_rule = 1) {
+                           sem_bic_rule = 1,
+                           singularity_lambda = 0.0) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
         SEM_BIC_STRUCTURE_PRIOR = structure_prior,
-        SEM_BIC_RULE = sem_bic_rule
+        SEM_BIC_RULE = sem_bic_rule,
+        SINGULARITY_LAMBDA = singularity_lambda
       )
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
       self$score <- cast_obj(self$score)
@@ -937,20 +933,25 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
       self$score <- cast_obj(self$score)
     },
-    use_poisson_prior_score = function(lambda_ = 2,
-                                       precompute_covariances = TRUE) {
+    use_poisson_prior_score = function(poission_lambda = 2,
+                                       precompute_covariances = TRUE,
+                                       singularity_lambda = 0.0) {
       set_params(
         self$params,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
-        POISSON_LAMBDA = lambda_
+        POISSON_LAMBDA = poission_lambda,
+        SINGULARITY_LAMBDA = singularity_lambda
       )
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/PoissonPriorScore"
       )
       self$score <- cast_obj(self$score)
     },
-    use_zhang_shen_bound = function(risk_bound = 0.2) {
-      set_params(self$params, ZS_RISK_BOUND = risk_bound)
+    use_zhang_shen_bound = function(risk_bound = 0.2, singularity_lambda = 0.0) {
+      set_params(self$params,
+        ZS_RISK_BOUND = risk_bound,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/ZhangShenBoundScore"
       )
@@ -982,11 +983,13 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_degenerate_gaussian_score = function(penalty_discount = 1,
-                                             structure_prior = 0) {
+                                             structure_prior = 0,
+                                             singularity_lambda = 0.0) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
-        STRUCTURE_PRIOR = structure_prior
+        STRUCTURE_PRIOR = structure_prior,
+        SINGULARITY_LAMBDA = singularity_lambda
       )
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/DegenerateGaussianBicScore"
@@ -994,11 +997,15 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_basis_function_bic = function(truncation_limit = 3,
-                                      penalty_discount = 2) {
+                                      penalty_discount = 2,
+                                      singularity_lambda = 0.0,
+                                      do_one_equation_only = FALSE) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
-        PENALTY_DISCOUNT = penalty_discount
+        PENALTY_DISCOUNT = penalty_discount,
+        SINGULARITY_LAMBDA = singularity_lambda,
+        DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScore"
@@ -1006,24 +1013,33 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_basis_function_bic_fs = function(truncation_limit = 3,
-                                         penalty_discount = 2) {
+                                         penalty_discount = 2,
+                                         singularity_lambda = 0.0,
+                                         do_one_equation_only = FALSE) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
-        PENALTY_DISCOUNT = penalty_discount
+        PENALTY_DISCOUNT = penalty_discount,
+        SINGULARITY_LAMBDA = singularity_lambda,
+        DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScoreFullSample"
       )
       self$score <- cast_obj(self$score)
     },
+    # Tests
     use_basis_function_lrt = function(truncation_limit = 3,
                                       alpha = 0.01,
+                                      singularity_lambda = 0.0,
+                                      do_one_equation_only = FALSE,
                                       use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
-        TRUNCATION_LIMIT = truncation_limit
+        TRUNCATION_LIMIT = truncation_limit,
+        SINGULARITY_LAMBDA = singularity_lambda,
+        DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
@@ -1057,8 +1073,14 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_fisher_z = function(alpha = 0.01, use_for_mc = FALSE) {
-      set_params(self$params, ALPHA = alpha)
+    use_fisher_z = function(alpha = 0.01,
+                            singularity_lambda = 0.0,
+                            use_for_mc = FALSE) {
+      set_params(
+        self$params,
+        ALPHA = alpha,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
       if (use_for_mc) {
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/FisherZ"
@@ -1133,8 +1155,14 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_degenerate_gaussian_test = function(alpha = 0.01, use_for_mc = FALSE) {
-      set_params(self$params, ALPHA = alpha)
+    use_degenerate_gaussian_test = function(alpha = 0.01,
+                                            singularity_lambda = 0.0,
+                                            use_for_mc = FALSE) {
+      set_params(
+        self$params,
+        ALPHA = alpha,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
       if (use_for_mc) {
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
