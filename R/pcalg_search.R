@@ -61,8 +61,7 @@ pcalgSearch <- R6Class(
       }
     },
     set_test = function(method,
-                        alpha = NULL,
-                        ...) {
+                        alpha = NULL) {
       if (!is.null(alpha)) {
         self$params$alpha <- alpha
       }
@@ -90,7 +89,7 @@ pcalgSearch <- R6Class(
     set_score = function(...) {
       message("set_score() is not yet implemented.")
     },
-    set_alg = function(method, ...) {
+    set_alg = function(method) {
       method <- tolower(method)
       # to do: add them, don't replace them (or remove??)
       # self$params <- list(...) # store extra parameters for the chosen alg
@@ -106,10 +105,10 @@ pcalgSearch <- R6Class(
           )
         },
         "fci" = {
-          self$alg <- "fci" # to do
+          self$alg <- "fci" # todo
         },
         "ges" = {
-          self$alg <- "ges" # to do
+          self$alg <- "ges" # todo
         },
         stop("Unknown method type using pcalg engine: ", method)
       )
