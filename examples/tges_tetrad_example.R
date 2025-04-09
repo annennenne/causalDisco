@@ -15,31 +15,20 @@ V6 <- rnorm(n, 0, 1) + 0.7 * V5
 df <- data.frame(V1, V2, V3, V4, V5, V6)
 
 # create a knowledge object
-knowledge <- knowledge_tetrad(
+kn <- knowledge(
   tier(
     1, c("V1", "V2", "V3"),
     2, c("V4", "V5", "V6")
   ),
   forbidden("V1", "V6"), # forbidden and required can be called like this
   forbidden(c("V2", "V6")), # or like this
-  required(c("V1", "V2"), c("V2", "V3")) # or like this
+  required(
+    c("V1", "V2"),
+    c("V2", "V3")
+  ) # or like this
 )
 
-
-# initialize tges in tetrad
-# available scores:
-# "sem_bic",
-# "ebic",
-# "bdeu",
-# "basis_function_bic",
-# "basis_function_bic_fs",
-# "conditional_gaussian",
-# "degenerate_gaussian",
-# "gic",
-# "mixed_variable_polynomial",
-# "poisson_prior",
-# "zhang_shen_bound"
 my_tges <- ges(engine = "tetrad", score = "sem_bic")
 
 # call disco with background knowledge
-disco(df, method = my_tges, knowledge = knowledge) |> cat()
+disco(df, method = my_tges, knowledge = kn) |> cat()

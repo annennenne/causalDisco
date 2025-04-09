@@ -15,7 +15,7 @@ V6 <- rnorm(n, 0, 1) + 0.7 * V5
 df <- data.frame(V1, V2, V3, V4, V5, V6)
 
 # create a knowledge object
-knowledge <- knowledge_tetrad(
+kn <- knowledge(
   tier(
     1, c("V1", "V2", "V3"),
     2, c("V4", "V5", "V6")
@@ -27,7 +27,9 @@ knowledge <- knowledge_tetrad(
 
 
 # initialize ges algorithm as usual
-my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+my_pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+my_pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 
 # call disco with background knowledge
-disco(df, method = my_pc, knowledge = knowledge) |> cat()
+disco(df, method = my_pc_tetrad, knowledge = kn) |> cat()
+disco(df, method = my_pc_pcalg, knowledge = kn)
