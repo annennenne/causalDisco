@@ -385,11 +385,16 @@ TetradSearch <- R6Class(
         .jnew("java/lang/String", var_name_2)
       )
     },
-    set_knowledge = function(knowledge) {
+    set_knowledge = function(knowledge_obj) {
+      # Check if knowledge_obj is from KnowledgeObj class
+      check_knowledge_obj(knowledge_obj)
+      knowledge_tetrad <- knowledge_obj$get_tetrad_knowledge()
+      self$knowledge <- knowledge_tetrad
+
+      # Set knowledge to algorithm
       if (!is.null(self$alg)) {
-        self$alg$setKnowledge(knowledge)
+        self$alg$setKnowledge(self$knowledge)
       }
-      self$knowledge <- knowledge
     },
     clear_knowledge = function() {
       .jcall(self$knowledge, "V", "clear")

@@ -9,10 +9,10 @@ pcalgSearch <- R6Class(
     score = NULL,
     test = NULL,
     alg = NULL,
-    knowledge = NULL,
     params = NULL,
     suff_stat = NULL,
     continuous = NULL,
+    knowledge = NULL,
     initialize = function() {
       self$data <- NULL
       self$score <- NULL
@@ -28,6 +28,10 @@ pcalgSearch <- R6Class(
       self$set_suff_stat()
       # Reset uniques, used to determine binary (or not) G square test
       private$uniques <- c()
+
+      # todo: Should it be changed or not?
+      # Reset knowledge function
+      # private$knowledge_function <- NULL
     },
     set_suff_stat = function() {
       if (is.null(self$data)) {
@@ -110,6 +114,63 @@ pcalgSearch <- R6Class(
         stop("Unknown method type using pcalg engine: ", method)
       )
     },
+    set_knowledge = function(knowledge_obj) {
+      check_knowledge_obj(knowledge_obj)
+
+      if (!is.null(knowledge_obj$tiers)) {
+        warning("Tiered background knowledge cannot be utilized by the pcalg engine.")
+      }
+
+      # Function that will be used to build the fixed constraints
+      # but it can first be done, when data is provided.
+      return_pcalg_background_knowledge <- function(labels) {
+        p <- length(labels)
+
+        fixedGaps <- matrix(FALSE, nrow = p, ncol = p, dimnames = list(labels, labels))
+        fixedEdges <- matrix(FALSE, nrow = p, ncol = p, dimnames = list(labels, labels))
+
+        # Create a named vector to map variable names to indices.
+        label_to_index <- setNames(seq_along(labels), labels)
+
+        if (length(knowledge_obj$forbidden) > 0) {
+          for (edge in knowledge_obj$forbidden) {
+            if (length(edge) < 2) {
+              stop("Forbidden edge must have at least two elements.")
+            }
+            if (!(edge[1] %in% labels && edge[2] %in% labels)) {
+              stop("Forbidden edge not found in labels: ", paste(edge, collapse = " - "))
+            }
+            i <- label_to_index[[edge[1]]]
+            j <- label_to_index[[edge[2]]]
+            fixedGaps[i, j] <- TRUE
+            fixedGaps[j, i] <- TRUE
+          }
+        }
+
+        # Process required edges, which become fixed edges.
+        if (length(knowledge_obj$required) > 0) {
+          for (edge in knowledge_obj$required) {
+            if (length(edge) < 2) {
+              stop("Required edge must have at least two elements.")
+            }
+            if (!(edge[1] %in% labels && edge[2] %in% labels)) {
+              stop("Required edge not found in labels: ", paste(edge, collapse = " - "))
+            }
+            i <- label_to_index[[edge[1]]]
+            j <- label_to_index[[edge[2]]]
+            fixedEdges[i, j] <- TRUE
+            fixedEdges[j, i] <- TRUE
+          }
+        }
+        return(list(fixedGaps = fixedGaps, fixedEdges = fixedEdges))
+      }
+
+      # Due to the nature of pcalg, we cannot set knowledge before
+      # we run it on data. So we set the function that will be
+      # used to build the fixed constraints, but it can first be
+      # done when data is provided.
+      private$knowledge_function <- return_pcalg_background_knowledge
+    },
     run_search = function(data) {
       if (!is.null(data)) {
         self$set_data(data)
@@ -123,7 +184,23 @@ pcalgSearch <- R6Class(
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.")
       }
-      result <- self$alg(suffStat = self$suff_stat, labels = colnames(self$data))
+      if (!is.null(private$knowledge_function)) {
+        # If knowledge is set, we now need to call the function
+        # to get the fixed constraints.
+        self$knowledge <- private$knowledge_function(colnames(self$data))
+        result <- self$alg(
+          suffStat = self$suff_stat,
+          labels = colnames(self$data),
+          fixedGaps = self$knowledge$fixedGaps,
+          fixedEdges = self$knowledge$fixedEdges
+        )
+      } else {
+        result <- self$alg(
+          suffStat = self$suff_stat,
+          labels = colnames(self$data)
+        )
+      }
+      return(result)
     }
   ),
   private = list(
@@ -151,6 +228,7 @@ pcalgSearch <- R6Class(
         }
       ) # end return
     },
-    uniques = c()
+    uniques = c(),
+    knowledge_function = NULL
   )
 )
