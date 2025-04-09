@@ -116,8 +116,7 @@ pcalgSearch <- R6Class(
     },
     set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
-
-      if (!is.null(knowledge_obj$tiers)) {
+      if (!!length(knowledge_obj$tiers)) {
         warning("Tiered background knowledge cannot be utilized by the pcalg engine.")
       }
 
