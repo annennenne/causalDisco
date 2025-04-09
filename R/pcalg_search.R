@@ -26,6 +26,7 @@ pcalgSearch <- R6Class(
     set_data = function(data) {
       self$data <- data
       self$set_suff_stat()
+
       # Reset uniques, used to determine binary (or not) G square test
       private$uniques <- c()
 
@@ -67,7 +68,6 @@ pcalgSearch <- R6Class(
       }
 
       method <- tolower(method)
-
       switch(method,
         "fisher_z" = {
           if (is.null(self$params$alpha)) {
@@ -91,8 +91,6 @@ pcalgSearch <- R6Class(
     },
     set_alg = function(method) {
       method <- tolower(method)
-      # to do: add them, don't replace them (or remove??)
-      # self$params <- list(...) # store extra parameters for the chosen alg
       switch(method,
         "pc" = {
           if (is.null(self$test)) {
@@ -124,12 +122,21 @@ pcalgSearch <- R6Class(
       return_pcalg_background_knowledge <- function(labels) {
         p <- length(labels)
 
-        fixedGaps <- matrix(FALSE, nrow = p, ncol = p, dimnames = list(labels, labels))
-        fixedEdges <- matrix(FALSE, nrow = p, ncol = p, dimnames = list(labels, labels))
+        fixedGaps <- matrix(FALSE,
+          nrow = p,
+          ncol = p,
+          dimnames = list(labels, labels)
+        )
+        fixedEdges <- matrix(FALSE,
+          nrow = p,
+          ncol = p,
+          dimnames = list(labels, labels)
+        )
 
         # Create a named vector to map variable names to indices.
         label_to_index <- setNames(seq_along(labels), labels)
 
+        # Process forbidden edges
         if (length(knowledge_obj$forbidden) > 0) {
           for (edge in knowledge_obj$forbidden) {
             if (length(edge) < 2) {
@@ -145,7 +152,7 @@ pcalgSearch <- R6Class(
           }
         }
 
-        # Process required edges, which become fixed edges.
+        # Process required edges
         if (length(knowledge_obj$required) > 0) {
           for (edge in knowledge_obj$required) {
             if (length(edge) < 2) {
