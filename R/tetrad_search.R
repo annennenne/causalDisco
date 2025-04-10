@@ -362,6 +362,36 @@ TetradSearch <- R6Class(
         self$alg$setKnowledge(self$knowledge)
       }
     },
+    get_parameters_for_function = function(fn_pattern) {
+      # Helper function that matches private methods
+      # (private methods contain all calls to tests, scores, and algs)
+      is_private_method <- function(name) {
+        is.function(get(name, envir = as.environment(private))) &&
+          grepl(sprintf("^(set_|use_)%s$", fn_pattern), name)
+      }
+
+      # List all symbols in private environment
+      private_names <- ls(envir = as.environment(private))
+
+      # Filter to actual functions that match the function pattern
+      matched_function <- base::Filter(is_private_method, private_names)
+
+      # Check if there are several or no matches and throw error
+      if (length(matched_function) != 1) {
+        if (length(matched_function > 1)) {
+          error_message_suffix <- paste0("\n  Matches: ", paste(match, collapse = ", "))
+        } else {
+          error_message_suffix <- ""
+        }
+        stop(paste0(
+          "There is ", length(matched_function), " matches to the function pattern: ",
+          fn_pattern, "\n  There should be a single match.", error_message_suffix
+        ))
+      }
+
+      # Get input parameters to matched function and return
+      return(names(formals(matched_function, envir = as.environment(private))))
+    },
     run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE, unstable_bhat = FALSE, stable_bhat = FALSE) {
       if (!is.null(data)) {
         self$set_data(data)
