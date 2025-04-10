@@ -31,5 +31,5 @@ my_pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
 my_pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 
 # call disco with background knowledge
-disco(df, method = my_pc_tetrad, knowledge = kn) |> cat()
+disco(df, method = my_pc_tetrad, knowledge = kn)
 disco(df, method = my_pc_pcalg, knowledge = kn)
