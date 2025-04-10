@@ -342,16 +342,6 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
-    # Knowledge management methods.
-    add_to_tier = function(tier, var_name) {
-      .jcall(
-        self$knowledge,
-        "V",
-        "addToTier",
-        .jnew("java/lang/Integer", tier),
-        .jnew("java/lang/String", var_name)
-      )
-    },
     set_tier_forbidden_within = function(tier, forbiddenWithin = TRUE) {
       .jcall(
         self$knowledge,
@@ -359,24 +349,6 @@ TetradSearch <- R6Class(
         "setTierForbiddenWithin",
         .jnew("java/lang/Integer", tier),
         forbiddenWithin
-      )
-    },
-    set_forbidden = function(var_name_1, var_name_2) {
-      .jcall(
-        self$knowledge,
-        "V",
-        "setForbidden",
-        .jnew("java/lang/String", var_name_1),
-        .jnew("java/lang/String", var_name_2)
-      )
-    },
-    set_required = function(var_name_1, var_name_2) {
-      .jcall(
-        self$knowledge,
-        "V",
-        "setRequired",
-        .jnew("java/lang/String", var_name_1),
-        .jnew("java/lang/String", var_name_2)
       )
     },
     set_knowledge = function(knowledge_obj) {
@@ -389,41 +361,6 @@ TetradSearch <- R6Class(
       if (!is.null(self$alg)) {
         self$alg$setKnowledge(self$knowledge)
       }
-    },
-    clear_knowledge = function() {
-      .jcall(self$knowledge, "V", "clear")
-    },
-    load_knowledge = function(path) {
-      know_file <- .jnew("java/io/File", path)
-      know_delim <- .jfield(
-        "edu/cmu/tetrad/data/DelimiterType",
-        "S",
-        "WHITESPACE"
-      )
-      self$knowledge <- .jcall(
-        "edu/cmu/tetrad/data/SimpleDataLoader",
-        "Ledu/cmu/tetrad/data/Knowledge;",
-        "loadKnowledge",
-        know_file,
-        know_delim,
-        "//"
-      )
-    },
-    check_knowledge = function() {
-      xList <- .jcall(self$knowledge, "Ljava/util/List;", "getVariables")
-      yList <- .jcall(self$data, "Ljava/util/List;", "getVariableNames")
-      X <- sapply(
-        seq_len(.jcall(xList, "I", "size")),
-        function(i) .jcall(xList, "Ljava/lang/Object;", "get", i - 1)$toString()
-      )
-      Y <- sapply(
-        seq_len(.jcall(yList, "I", "size")),
-        function(i) .jcall(yList, "Ljava/lang/Object;", "get", i - 1)$toString()
-      )
-      setdiff(X, Y)
-    },
-    print_knowledge = function() {
-      print(self$knowledge$toString())
     },
     run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE, unstable_bhat = FALSE, stable_bhat = FALSE) {
       if (!is.null(data)) {
