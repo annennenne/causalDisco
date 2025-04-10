@@ -42,31 +42,31 @@ TetradSearch <- R6Class(
       method <- tolower(method)
       switch(method,
         "chi_square" = {
-          private$use_chi_square(..., use_for_mc = mc)
+          private$use_chi_square_test(..., use_for_mc = mc)
         },
         "fisher_z" = {
-          private$use_fisher_z(..., use_for_mc = mc)
+          private$use_fisher_z_test(..., use_for_mc = mc)
         },
         "cci" = {
-          private$use_cci(..., use_for_mc = mc)
+          private$use_cci_test(..., use_for_mc = mc)
         },
         "basis_function_lrt" = {
-          private$use_basis_function_lrt(..., use_for_mc = mc)
+          private$use_basis_function_lrt_test(..., use_for_mc = mc)
         },
         "basis_function_lrt_fs" = {
-          private$use_basis_function_lrt_fs(..., use_for_mc = mc)
+          private$use_basis_function_lrt_fs_test(..., use_for_mc = mc)
         },
-        "conditional_gaussian" = {
+        "conditional_gaussian_test" = {
           private$use_conditional_gaussian_test(..., use_for_mc = mc)
         },
-        "degenerate_gaussian" = {
+        "degenerate_gaussian_test" = {
           private$use_degenerate_gaussian_test(..., use_for_mc = mc)
         },
         "g_square" = {
-          private$use_g_square(..., use_for_mc = mc)
+          private$use_g_square_test(..., use_for_mc = mc)
         },
         "kci" = {
-          private$use_kci(..., use_for_mc = mc)
+          private$use_kci_test(..., use_for_mc = mc)
         },
         "probabilistic" = {
           private$use_probabilistic_test(..., use_for_mc = mc)
@@ -81,37 +81,37 @@ TetradSearch <- R6Class(
       method <- tolower(method)
       switch(method,
         "sem_bic" = {
-          private$use_sem_bic(...)
+          private$use_sem_bic_score(...)
         },
         "ebic" = {
-          private$use_ebic(...)
+          private$use_ebic_score(...)
         },
         "bdeu" = {
-          private$use_bdeu(...)
+          private$use_bdeu_score(...)
         },
         "basis_function_bic" = {
-          private$use_basis_function_bic(...)
+          private$use_basis_function_bic_score(...)
         },
         "basis_function_bic_fs" = {
-          private$use_basis_function_bic_fs(...)
+          private$use_basis_function_bic_fs_score(...)
         },
-        "conditional_gaussian" = {
+        "conditional_gaussian_score" = {
           private$use_conditional_gaussian_score(...)
         },
-        "degenerate_gaussian" = {
+        "degenerate_gaussian_score" = {
           private$use_degenerate_gaussian_score(...)
         },
         "gic" = {
           private$use_gic_score(...)
         },
         "mixed_variable_polynomial" = {
-          private$use_mixed_variable_polynomial(...)
+          private$use_mixed_variable_polynomial_score(...)
         },
         "poisson_prior" = {
           private$use_poisson_prior_score(...)
         },
         "zhang_shen_bound" = {
-          private$use_zhang_shen_bound(...)
+          private$use_zhang_shen_bound_score(...)
         },
         {
           stop("Unknown score type using tetrad engine: ", method)
@@ -367,7 +367,7 @@ TetradSearch <- R6Class(
       # (private methods contain all calls to tests, scores, and algs)
       is_private_method <- function(name) {
         is.function(get(name, envir = as.environment(private))) &&
-          grepl(sprintf("^(set_|use_)%s$", fn_pattern), name)
+          grepl(sprintf("^(set_|use_)%s(_score|_test)*$", fn_pattern), name)
       }
 
       # List all symbols in private environment
@@ -845,10 +845,11 @@ TetradSearch <- R6Class(
   # and should be called through
   # set_score and set_test.
   private = list(
-    use_sem_bic = function(penalty_discount = 2,
-                           structure_prior = 0,
-                           sem_bic_rule = 1,
-                           singularity_lambda = 0.0) {
+    # Scores
+    use_sem_bic_score = function(penalty_discount = 2,
+                                 structure_prior = 0,
+                                 sem_bic_rule = 1,
+                                 singularity_lambda = 0.0) {
       set_params(
         self$params,
         PENALTY_DISCOUNT = penalty_discount,
@@ -859,9 +860,9 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
       self$score <- cast_obj(self$score)
     },
-    use_ebic = function(gamma = 0.8,
-                        precompute_covariances = TRUE,
-                        singularity_lambda = 0.0) {
+    use_ebic_score = function(gamma = 0.8,
+                              precompute_covariances = TRUE,
+                              singularity_lambda = 0.0) {
       set_params(
         self$params,
         EBIC_GAMMA = gamma,
@@ -881,9 +882,9 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
       self$score <- cast_obj(self$score)
     },
-    use_mixed_variable_polynomial = function(structure_prior = 0,
-                                             f_degree = 0,
-                                             discretize = FALSE) {
+    use_mixed_variable_polynomial_score = function(structure_prior = 0,
+                                                   f_degree = 0,
+                                                   discretize = FALSE) {
       set_params(
         self$params,
         STRUCTURE_PRIOR = structure_prior,
@@ -914,7 +915,7 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_zhang_shen_bound = function(risk_bound = 0.2, singularity_lambda = 0.0) {
+    use_zhang_shen_bound_score = function(risk_bound = 0.2, singularity_lambda = 0.0) {
       set_params(self$params,
         ZS_RISK_BOUND = risk_bound,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -924,7 +925,7 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_bdeu = function(sample_prior = 10, structure_prior = 0) {
+    use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
       set_params(
         self$params,
         PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
@@ -963,10 +964,10 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_bic = function(truncation_limit = 3,
-                                      penalty_discount = 2,
-                                      singularity_lambda = 0.0,
-                                      do_one_equation_only = FALSE) {
+    use_basis_function_bic_score = function(truncation_limit = 3,
+                                            penalty_discount = 2,
+                                            singularity_lambda = 0.0,
+                                            do_one_equation_only = FALSE) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
@@ -979,10 +980,10 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_bic_fs = function(truncation_limit = 3,
-                                         penalty_discount = 2,
-                                         singularity_lambda = 0.0,
-                                         do_one_equation_only = FALSE) {
+    use_basis_function_bic_fs_score = function(truncation_limit = 3,
+                                               penalty_discount = 2,
+                                               singularity_lambda = 0.0,
+                                               do_one_equation_only = FALSE) {
       set_params(
         self$params,
         TRUNCATION_LIMIT = truncation_limit,
@@ -996,11 +997,11 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     # Tests
-    use_basis_function_lrt = function(truncation_limit = 3,
-                                      alpha = 0.01,
-                                      singularity_lambda = 0.0,
-                                      do_one_equation_only = FALSE,
-                                      use_for_mc = FALSE) {
+    use_basis_function_lrt_test = function(truncation_limit = 3,
+                                           alpha = 0.01,
+                                           singularity_lambda = 0.0,
+                                           do_one_equation_only = FALSE,
+                                           use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1020,9 +1021,9 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_basis_function_lrt_fs = function(truncation_limit = 3,
-                                         alpha = 0.01,
-                                         use_for_mc = FALSE) {
+    use_basis_function_lrt_fs_test = function(truncation_limit = 3,
+                                              alpha = 0.01,
+                                              use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1040,9 +1041,9 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_fisher_z = function(alpha = 0.01,
-                            singularity_lambda = 0.0,
-                            use_for_mc = FALSE) {
+    use_fisher_z_test = function(alpha = 0.01,
+                                 singularity_lambda = 0.0,
+                                 use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1058,10 +1059,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_chi_square = function(min_count = 1,
-                              alpha = 0.01,
-                              cell_table_type = 1,
-                              use_for_mc = FALSE) {
+    use_chi_square_test = function(min_count = 1,
+                                   alpha = 0.01,
+                                   cell_table_type = 1,
+                                   use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1080,10 +1081,10 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_g_square = function(min_count = 1,
-                            alpha = 0.01,
-                            cell_table_type = 1,
-                            use_for_mc = FALSE) {
+    use_g_square_test = function(min_count = 1,
+                                 alpha = 0.01,
+                                 cell_table_type = 1,
+                                 use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
@@ -1112,12 +1113,12 @@ TetradSearch <- R6Class(
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLRT"
+          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
         )
         self$mc_test <- cast_obj(self$test)
       } else {
         self$test <- .jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLRT"
+          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
         )
         self$test <- cast_obj(self$test)
       }
@@ -1165,16 +1166,16 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_kci = function(alpha = 0.01,
-                       approximate = TRUE,
-                       scalingfact_or = 1,
-                       num_bootstraps = 5000,
-                       threshold = 1e-3,
-                       epsilon = 1e-3,
-                       kernel_type = 1,
-                       polyd = 5,
-                       polyc = 1,
-                       use_for_mc = FALSE) {
+    use_kci_test = function(alpha = 0.01,
+                            approximate = TRUE,
+                            scalingfact_or = 1,
+                            num_bootstraps = 5000,
+                            threshold = 1e-3,
+                            epsilon = 1e-3,
+                            kernel_type = 1,
+                            polyd = 5,
+                            polyc = 1,
+                            use_for_mc = FALSE) {
       set_params(
         self$params,
         KCI_USE_APPROXIMATION = approximate,
@@ -1195,12 +1196,12 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    use_cci = function(alpha = 0.01,
-                       scalingfact_or = 2,
-                       num_basis_functions = 3,
-                       basis_type = 4,
-                       basis_scale = 0.0,
-                       use_for_mc = FALSE) {
+    use_cci_test = function(alpha = 0.01,
+                            scalingfact_or = 2,
+                            num_basis_functions = 3,
+                            basis_type = 4,
+                            basis_scale = 0.0,
+                            use_for_mc = FALSE) {
       set_params(
         self$params,
         ALPHA = alpha,
