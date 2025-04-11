@@ -46,7 +46,7 @@ set_params <- function(params, ...) {
     } else if (is.logical(value)) {
       .jcast(.jnew("java/lang/Boolean", as.logical(value)), "java/lang/Object")
     } else if (is.character(value)) {
-      .jcast(value, "java/lang/Object") # not used right now, but maybe later
+      .jcast(value, "java/lang/Object")
     } else {
       .jcast(value, "java/lang/Object")
     }
