@@ -78,7 +78,7 @@ check_args_and_return_passable_args <- function(args, engine, test = NULL, searc
     args_not_in_engine_args <- setdiff(names(args), engine_args)
     if (length(args_not_in_engine_args) > 0) {
       warning(
-        "The following arguments are not used in pcalg::pc: ",
+        paste0("The following arguments are not used in ", engine, "::pc : "),
         paste(args_not_in_engine_args, collapse = ", ")
       )
     }
