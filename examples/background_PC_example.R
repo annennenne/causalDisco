@@ -26,7 +26,7 @@ kn <- knowledge(
 )
 
 
-# initialize ges algorithm as usual
+# initialize pc algorithm as usual
 my_pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
 my_pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 
