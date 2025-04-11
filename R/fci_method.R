@@ -64,13 +64,8 @@ check_args_and_return_passable_args <- function(args, engine, test = NULL, searc
       paste(engine_registry, collapse = ", ")
     )
   }
-
-  if (engine %in% c("pcalg", "bnlearn")) {
-    if (engine == "pcalg") {
-      engine_args <- names(formals(pcalg::fci))
-    } else if (engine == "bnlearn") {
-      stop("bnlearn engine is not supported yet.")
-    }
+  if (engine == "pcalg") {
+    engine_args <- names(formals(pcalg::fci))
 
     # Filter out recognized arguments
     args_to_pass_to_engine <- args[names(args) %in% engine_args]
