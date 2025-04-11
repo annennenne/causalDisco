@@ -103,7 +103,11 @@ pcalgSearch <- R6Class(
           )
         },
         "fci" = {
-          self$alg <- "fci" # todo
+          self$alg <- purrr::partial(
+            pcalg::fci,
+            indepTest = self$test,
+            !!!self$params
+          )
         },
         "ges" = {
           self$alg <- "ges" # todo
