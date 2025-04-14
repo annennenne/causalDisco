@@ -9,6 +9,11 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
   # Identify numeric (continuous) columns and discrete columns.
   numeric_cols <- sapply(df, is.numeric)
   integer_cols <- sapply(df, is.integer)
+  numeric_cols <- !integer_cols & numeric_cols
+
+  if (!all(numeric_cols | integer_cols)) {
+    stop("Data frame contains non-numeric columns or something went wrong with the identification of discrete columns.")
+  }
 
   # If int_as_cont is TRUE, treat integer columns as continuous.
   if (int_as_cont) {
@@ -38,9 +43,12 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
       levs <- levels(factor(df[[col]]))
       categories <- .jnew("java/util/ArrayList")
       for (lev in levs) {
-        .jcall(categories, "V", "add", as.character(lev))
+        java_level <- .jnew("java/lang/String", as.character(lev))
+        java_level <- .jcast(java_level, "java/lang/Object", check = FALSE)
+        .jcall(categories, "Z", "add", java_level)
       }
-      var <- .jnew(paste0(tetrad_data_dir, "DiscreteVariable"), col, categories)
+      jList <- .jcast(categories, "java/util/List", check = FALSE)
+      var <- .jnew("edu/cmu/tetrad/data/DiscreteVariable", col, jList)
     } else {
       var <- .jnew(paste0(tetrad_data_dir, "ContinuousVariable"), col)
     }
@@ -69,14 +77,11 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
     # Mixed data: build separate arrays for continuous and discrete columns.
     continuous_list <- vector("list", p)
     discrete_list <- vector("list", p)
-
     for (j in 1:p) {
       if (colnames(df)[j] %in% discrete_cols) {
         discrete_list[[j]] <- as.integer(values[, j])
-        continuous_list[[j]] <- NULL
       } else {
         continuous_list[[j]] <- as.double(values[, j])
-        discrete_list[[j]] <- NULL
       }
     }
 
@@ -98,7 +103,14 @@ rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
     jContinuousMatrix <- .jarray(jContinuous, contents.class = "[D")
     jDiscreteMatrix <- .jarray(jDiscrete, contents.class = "[I")
 
-    databox <- .jnew(paste0(tetrad_data_dir, "MixedDataBox"), variables, as.integer(n), jContinuousMatrix, jDiscreteMatrix)
+    varList <- .jcast(variables, "java/util/List", check = FALSE)
+    databox <- .jnew(
+      paste0(tetrad_data_dir, "MixedDataBox"),
+      varList,
+      as.integer(n),
+      jContinuousMatrix,
+      jDiscreteMatrix
+    )
   }
 
   variablesList <- .jcast(variables, "java/util/List")
