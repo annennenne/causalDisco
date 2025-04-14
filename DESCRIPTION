@@ -18,7 +18,7 @@ LazyData: true
 URL: https://github.com/annennenne/causalDisco
 BugReports: https://github.com/annennenne/causalDisco/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
     pcalg,
     igraph,
@@ -33,20 +33,30 @@ Imports:
     rmarkdown
 Collate: 
     'amat.R'
+    'available_engines_tests_scores.R'
     'causalDisco-package.R'
+    'check_args.R'
     'compare.R'
     'confusion.R'
     'corTest.R'
+    'disco.R'
     'edges.R'
+    'engine_registry.R'
     'evaluate.R'
     'tpc.R'
     'fci.R'
+    'fci_method.R'
     'gausCorScore.R'
+    'ges_method.R'
+    'java_r_utils.R'
+    'knowledge.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'
     'nDAGs.R'
     'pc.R'
+    'pc_method.R'
+    'pcalg_search.R'
     'plot.R'
     'plotTempoMech.R'
     'probmat2amat.R'
@@ -54,10 +64,8 @@ Collate:
     'simDAG.R'
     'simGausFromDAG.R'
     'tamat.R'
+    'tetrad_rdata_utils.R'
+    'tetrad_search.R'
     'tfci.R'
     'tges.R'
     'tplot.R'
-    'java_r_utils.R'
-    'tetrad_rdata_utils.R'
-    'tetrad_search.R'
-    
