@@ -424,6 +424,9 @@ TetradSearch <- R6Class(
         self$alg$setKnowledge(self$knowledge)
       }
     },
+    ###### set_params ######
+    #' @description Sets parameters for the Tetrad search.
+    #' @param ... Named arguments for the parameters to set.
     set_params = function(...) {
       # Capture the named arguments as a list.
       arg_list <- list(...)
