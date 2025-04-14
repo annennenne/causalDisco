@@ -145,6 +145,9 @@ TetradSearch <- R6Class(
         "degenerate_gaussian_score" = {
           private$use_degenerate_gaussian_score(...)
         },
+        "discrete_bic" = {
+          private$use_discrete_bic_score(...)
+        },
         "gic" = {
           private$use_gic_score(...)
         },
@@ -1185,6 +1188,15 @@ TetradSearch <- R6Class(
       self$score <- .jnew(
         "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScoreFullSample"
       )
+      self$score <- cast_obj(self$score)
+    },
+    use_discrete_bic_score = function(penalty_discount = 2,
+                                      structure_prior = 0) {
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        STRUCTURE_PRIOR = structure_prior
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
       self$score <- cast_obj(self$score)
     },
     # Tests
