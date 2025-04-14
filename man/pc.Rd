@@ -4,33 +4,25 @@
 \alias{pc}
 \title{Perform causal discovery using the PC algorithm}
 \usage{
-pc(
-  data = NULL,
-  sparsity = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  output = "cpdag",
-  varnames = NULL,
-  conservative = TRUE,
-  ...
-)
+pc(engine = "tetrad", test, alpha = 0.05, ...)
 }
 \arguments{
+\item{test}{A procedure for testing conditional independence.
+The default, \code{regTest} uses a regression-based information
+loss test. Another available option is \code{corTest} which
+tests for vanishing partial correlations. User supplied functions
+may also be used, see details below about the required syntax.}
+
+\item{...}{Further optional arguments which are passed to
+\code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to
+\code{\link[pcalg]{pc}} otherwise.}
+
 \item{data}{A data.frame with data. All variables should be
 assigned to exactly one period by prefixing them with the period name
 (see example below).}
 
 \item{sparsity}{The sparsity level to be used for independence
 testing (i.e. significance level threshold to use for each test).}
-
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
 
 \item{suffStat}{Sufficient statistic. If this argument is supplied, the
 sufficient statistic is not computed from the inputted data. The format and
@@ -64,10 +56,6 @@ through the \code{suffStat} argument.}
 
 \item{conservative}{Logital, if \code{TRUE} the conservative version of PC is used
 (see \code{\link[pcalg]{pc}} for details).}
-
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to
-\code{\link[pcalg]{pc}} otherwise.}
 }
 \value{
 A \code{tpdag} or \code{tskeleton} object. Both return types are
