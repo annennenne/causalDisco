@@ -10,7 +10,34 @@ if (!.jniInitialized) {
   )
 }
 
-#' Define the TetradSearch R6 class.
+#' @title TetradSearch R6 Class
+#'
+#' @description
+#' The `TetradSearch` R6 class provides a high-level interface to the Tetrad
+#' Java library. It allows users to set up different independence tests and
+#' scoring functions, specify causal search algorithms, and run them on data.
+#'
+#' @section Fields:
+#' \describe{
+#'   \item{\code{data}}{(Java object) The Java object representing the loaded data.}
+#'   \item{\code{rdata}}{(data.frame) The original R data passed to the class.}
+#'   \item{\code{score}}{(Java object) The scoring function object.}
+#'   \item{\code{test}}{(Java object) The independence test object.}
+#'   \item{\code{alg}}{(Java object) The causal discovery algorithm object.}
+#'   \item{\code{mc_test}}{(Java object) The independence test object used for Markov checker.}
+#'   \item{\code{java}}{(Java object) The resulting graph or model object after running a search.}
+#'   \item{\code{knowledge}}{(Java object) The Tetrad \code{Knowledge} object storing background knowledge.}
+#'   \item{\code{params}}{(Java object) The Tetrad \code{Parameters} object with various configuration settings.}
+#'   \item{\code{bootstrap_graphs}}{(Java List) A list of bootstrapped graphs produced by Tetrad.}
+#'   \item{\code{mc_ind_results}}{(Java List) A list of results for independence tests from Markov checking.}
+#'   \item{\code{bhat}}{(Java object) BHat adjacency matrix from the Tetrad search, if requested.}
+#'   \item{\code{unstable_bhats}}{(Java object) A collection of BHat matrices from the Tetrad search, if requested.}
+#'   \item{\code{stable_bhats}}{(Java object) A collection of BHat matrices from the Tetrad search, if requested.}
+#' }
+#'
+#' @name TetradSearch
+#' @docType class
+#' @rdname TetradSearch
 #' @export TetradSearch
 TetradSearch <- R6Class(
   "TetradSearch",
@@ -29,6 +56,10 @@ TetradSearch <- R6Class(
     bhat = NULL,
     unstable_bhats = NULL,
     stable_bhats = NULL,
+
+    ###### initialize ######
+    #' @description Initializes the \code{TetradSearch} object, creating new Java objects for
+    #'   \code{knowledge} and \code{params}.
     initialize = function() {
       self$data <- NULL
       self$score <- NULL
@@ -38,6 +69,13 @@ TetradSearch <- R6Class(
       self$params <- .jnew("edu/cmu/tetrad/util/Parameters")
       self$bootstrap_graphs <- NULL
     },
+
+    ###### set_test ######
+    #' @description Sets the independence test to use in Tetrad.
+    #' @param method (character) Name of the test method (e.g., "chi_square", "fisher_z").
+    #' @param ... Additional arguments passed to the private test-setting methods.
+    #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
+    #' @return Invisibly returns \code{self}, for chaining.
     set_test = function(method, ..., mc = FALSE) {
       method <- tolower(method)
       switch(method,
@@ -77,6 +115,12 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
+
+    ###### set_score ######
+    #' @description Sets the scoring function to use in Tetrad.
+    #' @param method (character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
+    #' @param ... Additional arguments passed to the private score-setting methods.
+    #' @return Invisibly returns \code{self}.
     set_score = function(method, ...) {
       method <- tolower(method)
       switch(method,
@@ -119,8 +163,15 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
+
+    ###### set_alg ######
+    #' @description Sets the causal discovery algorithm to use in Tetrad.
+    #' @param method (character) Name of the algorithm (e.g., "fges", "pc", "fci", etc.).
+    #' @param ... Additional parameters passed to the private algorithm-setting methods.
+    #' @return Invisibly returns \code{self}.
     set_alg = function(method, ...) {
       method <- tolower(method)
+      self$set_verbose(FALSE)
       switch(method,
         "fges" = {
           if (is.null(self$score)) {
@@ -342,6 +393,11 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
+    ###### set_tier_forbidden_within ######
+    # NOT TESTED
+    #' @description Forbids or allows connections within a given tier of variables.
+    #' @param tier (numeric) The tier index.
+    #' @param forbiddenWithin (logical) If TRUE, variables in the same tier cannot connect to each other.
     set_tier_forbidden_within = function(tier, forbiddenWithin = TRUE) {
       .jcall(
         self$knowledge,
@@ -351,8 +407,11 @@ TetradSearch <- R6Class(
         forbiddenWithin
       )
     },
+
+    ###### set_knowledge ######
+    #' @description Sets the background knowledge object.
+    #' @param knowledge_obj An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).
     set_knowledge = function(knowledge_obj) {
-      # Check if knowledge_obj is from KnowledgeObj class
       check_knowledge_obj(knowledge_obj)
       knowledge_tetrad <- knowledge_obj$get_tetrad_knowledge()
       self$knowledge <- knowledge_tetrad
@@ -362,37 +421,68 @@ TetradSearch <- R6Class(
         self$alg$setKnowledge(self$knowledge)
       }
     },
+    set_params = function(...) {
+      # Capture the named arguments as a list.
+      arg_list <- list(...)
+      for (param_name in names(arg_list)) {
+        value <- arg_list[[param_name]]
+        # Get the key (static field) from Params using the field name.
+        key <- .jfield("edu/cmu/tetrad/util/Params", "S", param_name)
+
+        # Wrap the value based on its type.
+        wrapped <- if (is.numeric(value)) {
+          .jcast(.jnew("java/lang/Double", as.double(value)), "java/lang/Object")
+        } else if (is.logical(value)) {
+          .jcast(.jnew("java/lang/Boolean", as.logical(value)), "java/lang/Object")
+        } else if (is.character(value)) {
+          .jcast(value, "java/lang/Object")
+        } else {
+          .jcast(value, "java/lang/Object")
+        }
+
+        # Set the parameter using the key and wrapped value.
+        self$params$set(key, wrapped)
+      }
+      invisible(NULL)
+    },
+
+
+    ###### get_parameters_for_function ######
+    #' @description Retrieves the argument names of a matching private function.
+    #' @param fn_pattern (character) A pattern that should match a private method name.
+    #' @return (character) The names of the parameters.
     get_parameters_for_function = function(fn_pattern) {
-      # Helper function that matches private methods
-      # (private methods contain all calls to tests, scores, and algs)
       is_private_method <- function(name) {
         is.function(get(name, envir = as.environment(private))) &&
           grepl(sprintf("^(set_|use_)%s(_score|_test)*$", fn_pattern), name)
       }
-
-      # List all symbols in private environment
       private_names <- ls(envir = as.environment(private))
-
-      # Filter to actual functions that match the function pattern
       matched_function <- base::Filter(is_private_method, private_names)
-
-      # Check if there are several or no matches and throw error
       if (length(matched_function) != 1) {
         if (length(matched_function > 1)) {
-          error_message_suffix <- paste0("\n  Matches: ", paste(match, collapse = ", "))
+          error_message_suffix <- paste0("\n  Matches: ", paste(matched_function, collapse = ", "))
         } else {
           error_message_suffix <- ""
         }
         stop(paste0(
           "There is ", length(matched_function), " matches to the function pattern: ",
-          fn_pattern, "\n  There should be a single match.", error_message_suffix
+          fn_pattern, "\n  This is probably a misspecification of either a algorithm, test, or score.",
+          "\n  There should be (only) a single match.", error_message_suffix
         ))
       }
-
-      # Get input parameters to matched function and return
       return(names(formals(matched_function, envir = as.environment(private))))
     },
-    run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE, unstable_bhat = FALSE, stable_bhat = FALSE) {
+
+    ###### run_search ######
+    #' @description Runs the chosen Tetrad algorithm on the data.
+    #' @param data (optional) If provided, overrides the previously set data.
+    #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be generated.
+    #' @param bhat (logical) If TRUE, retrieve the BHat adjacency matrix.
+    #' @param unstable_bhat (logical) If TRUE, retrieve unstable BHats.
+    #' @param stable_bhat (logical) If TRUE, retrieve stable BHats.
+    #' @return Nothing, but populates \code{self$java} with the resulting graph.
+    run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE,
+                          unstable_bhat = FALSE, stable_bhat = FALSE) {
       if (!is.null(data)) {
         self$set_data(data)
       }
@@ -416,8 +506,14 @@ TetradSearch <- R6Class(
         self$stable_bhats <- self$alg$getStableBhats()
       }
     },
+
+    ###### run_gango ######
+    # NOT TESTED
+    #' @description Runs an alternative FGES search, then orients edges using RSkew.
+    #' @param score (Java object) The scoring object.
+    #' @param data (Java object) The dataset (Java) to be used.
+    #' @return (Java object) The resulting graph from RSkew orientation.
     run_gango = function(score, data) {
-      # This is a static-like method.
       fges_graph <- tetrad_search$public_methods$run_fges(score)
       datasets <- .jnew("java/util/ArrayList")
       datasets$add(data)
@@ -427,14 +523,23 @@ TetradSearch <- R6Class(
       gango_graph <- rskew$orient()
       return(gango_graph)
     },
+
+    ###### set_bootstrapping ######
+    # NOT TESTED
+    #' @description Configures bootstrapping parameters for the Tetrad search.
+    #' @param number_resampling (integer) Number of bootstrap samples.
+    #' @param percent_resample_size (numeric) Percentage of sample size for each bootstrap.
+    #' @param add_original (logical) If TRUE, add the original dataset to the bootstrap set.
+    #' @param with_replacement (logical) If TRUE, sampling is done with replacement.
+    #' @param resampling_ensemble (integer) How the resamples are used or aggregated.
+    #' @param seed (integer) Random seed, or -1 for none.
     set_bootstrapping = function(number_resampling = 0,
                                  percent_resample_size = 100,
                                  add_original = TRUE,
                                  with_replacement = TRUE,
                                  resampling_ensemble = 1,
                                  seed = -1) {
-      set_params(
-        self$params,
+      self$set_params(
         NUMBER_RESAMPLING = number_resampling,
         PERCENT_RESAMPLE_SIZE = percent_resample_size,
         ADD_ORIGINAL_DATASET = add_original,
@@ -443,24 +548,30 @@ TetradSearch <- R6Class(
         SEED = seed
       )
     },
+
+    ###### set_data ######
+    #' @description Sets or overrides the data used by Tetrad.
+    #' @param data (data.frame) The new data to load.
     set_data = function(data) {
-      # Only load the data if we haven't already
-      # or if the data is different from already loaded data.
       if (is.null(self$data) || is.null(self$rdata) ||
         !isTRUE(all.equal(self$rdata, data))) {
         self$rdata <- data
         self$data <- rdata_to_tetrad(data)
       }
     },
+
+    ###### set_verbose ######
+    #' @description Toggles the verbosity in Tetrad.
+    #' @param verbose (logical) TRUE to enable verbose logging, FALSE otherwise.
     set_verbose = function(verbose) {
-      .jcall(
-        self$params,
-        "V",
-        "set",
-        .jfield("edu/cmu/tetrad/util/Params", "S", "VERBOSE"),
-        verbose
+      self$set_params(
+        VERBOSE = verbose
       )
     },
+
+    ###### set_time_lag ######
+    #' @description Sets an integer time lag for time-series algorithms.
+    #' @param time_lag (integer) The time lag to set.
     set_time_lag = function(time_lag = 0) {
       .jcall(
         self$params,
@@ -470,9 +581,17 @@ TetradSearch <- R6Class(
         time_lag
       )
     },
+
+    ###### get_data ######
+    #' @description Retrieves the current Java data object.
+    #' @return (Java object) Tetrad dataset.
     get_data = function() {
       return(self$data)
     },
+
+    ###### get_verbose ######
+    #' @description Checks if verbose logging is enabled.
+    #' @return (logical) TRUE if verbose mode is on, FALSE otherwise.
     get_verbose = function() {
       return(.jcall(
         self$params,
@@ -481,12 +600,25 @@ TetradSearch <- R6Class(
         .jfield("edu/cmu/tetrad/util/Params", "S", "VERBOSE")
       ))
     },
+
+    ###### get_knowledge ######
+    #' @description Returns the background knowledge object.
+    #' @return (Java object) Tetrad Knowledge.
     get_knowledge = function() {
       return(self$knowledge)
     },
+
+    ###### get_java ######
+    #' @description Gets the main Java result object (usually a graph) from the last search.
+    #' @return (Java object) The Tetrad result graph or model.
     get_java = function() {
       return(self$java)
     },
+
+    ###### get_string ######
+    #' @description Returns the string representation of a given Java object or \code{self$java}.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
+    #' @return (character) The \code{toString()} of that Java object.
     get_string = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         return(.jcall(self$java, "S", "toString"))
@@ -494,6 +626,11 @@ TetradSearch <- R6Class(
         return(.jcall(java_obj, "S", "toString"))
       }
     },
+
+    ###### get_dag_string ######
+    #' @description Converts a CPDAG to a DAG and returns it as a string.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java} as the CPDAG.
+    #' @return (character) The DAG in string form.
     get_dag_string = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         dag <- .jcall(
@@ -513,6 +650,11 @@ TetradSearch <- R6Class(
         return(.jcall(dag, "S", "toString"))
       }
     },
+
+    ###### get_dag_java ######
+    #' @description Converts a CPDAG to a DAG and returns it as a Java object.
+    #' @param java_obj (Java object, optional) CPDAG object. If NULL, uses \code{self$java}.
+    #' @return (Java object) The resulting DAG.
     get_dag_java = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         return(.jcall(
@@ -530,6 +672,11 @@ TetradSearch <- R6Class(
         ))
       }
     },
+
+    ###### get_causal_learn ######
+    #' @description Translates a Tetrad graph into a \code{causal_learn} compatible structure.
+    #' @param java_obj (Java object, optional) A Tetrad graph. If NULL, uses \code{self$java}.
+    #' @return (Java object) The translated \code{causal_learn} object.
     get_causal_learn = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         return(.jcall(
@@ -547,6 +694,15 @@ TetradSearch <- R6Class(
         ))
       }
     },
+
+    ###### get_graph_to_matrix ######
+    #' @description Converts a Tetrad graph into a matrix representation with coded endpoints.
+    #' @param java_obj (Java object, optional) The graph to convert. If NULL, uses \code{self$java}.
+    #' @param null_ept (numeric) Code for a null endpoint.
+    #' @param circle_ept (numeric) Code for a circle endpoint.
+    #' @param arrow_ept (numeric) Code for an arrow endpoint.
+    #' @param tail_ept (numeric) Code for a tail endpoint.
+    #' @return (matrix) The adjacency matrix with these endpoint codes.
     get_graph_to_matrix = function(java_obj = NULL,
                                    null_ept = 0,
                                    circle_ept = 1,
@@ -563,6 +719,11 @@ TetradSearch <- R6Class(
         tail_ept = tail_ept
       )
     },
+
+    ###### get_dot ######
+    #' @description Produces a DOT (Graphviz) representation of the graph.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
+    #' @return (character) The DOT-format string.
     get_dot = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
@@ -582,6 +743,11 @@ TetradSearch <- R6Class(
         ))
       }
     },
+
+    ###### get_xml ######
+    #' @description Returns an XML representation of the graph.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
+    #' @return (character) The XML string.
     get_xml = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         return(.jcall(
@@ -599,6 +765,11 @@ TetradSearch <- R6Class(
         ))
       }
     },
+
+    ###### get_lavaan ######
+    #' @description Returns a lavaan syntax representation of the graph.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
+    #' @return (character) The model in lavaan syntax.
     get_lavaan = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         return(.jcall(
@@ -616,6 +787,11 @@ TetradSearch <- R6Class(
         ))
       }
     },
+
+    ###### bootstrap_graph ######
+    #' @description Retrieves a particular bootstrapped graph by index.
+    #' @param index (integer) Zero-based index of the graph in \code{bootstrap_graphs}.
+    #' @return (Java object) The requested bootstrapped graph.
     bootstrap_graph = function(index) {
       size <- .jcall(self$bootstrap_graphs, "I", "size")
       if (index < 0 || index >= size) {
@@ -628,6 +804,11 @@ TetradSearch <- R6Class(
         as.integer(index)
       ))
     },
+
+    ###### bootstrap_dot ######
+    #' @description Returns a DOT representation of a bootstrapped graph by index.
+    #' @param index (integer) Zero-based index of the graph in \code{bootstrap_graphs}.
+    #' @return (character) The graph in DOT format.
     bootstrap_dot = function(index) {
       size <- .jcall(self$bootstrap_graphs, "I", "size")
       if (index < 0 || index >= size) {
@@ -646,6 +827,12 @@ TetradSearch <- R6Class(
         java_obj
       ))
     },
+
+    ###### is_legal_pag ######
+    #' @description Checks if a graph is a valid Partial Ancestral Graph (PAG).
+    #' @param graph (Java object) The graph to check.
+    #' @return (logical) TRUE if valid, FALSE otherwise.
+
     is_legal_pag = function(graph) {
       return(.jcall(
         "edu/cmu/tetrad/search/utils/GraphSearchUtils",
@@ -654,6 +841,11 @@ TetradSearch <- R6Class(
         graph
       ))
     },
+
+    ###### is_legal_pag_reason ######
+    #' @description Prints the reason why a PAG is invalid, if it is.
+    #' @param graph (Java object) The PAG to check.
+    #' @return None (prints directly).
     is_legal_pag_reason = function(graph) {
       cat(
         .jcall(
@@ -666,6 +858,11 @@ TetradSearch <- R6Class(
         "\n"
       )
     },
+
+    ###### all_subsets_independencefact_s ######
+    #' @description Finds all local Markov independence facts in the given graph.
+    #' @param graph (Java object) The Tetrad graph to analyze.
+    #' @return (list) A list of vectors describing each independence fact.
     all_subsets_independencefact_s = function(graph) {
       msep <- .jcall(
         "edu/cmu/tetrad/search/MarkovCheck",
@@ -684,28 +881,21 @@ TetradSearch <- R6Class(
         ),
         "getAllSubsetsIndependenceFacts"
       )$getMsep()
+      # parse returned MSEP
       facts <- list()
       msep_size <- .jcall(msep, "I", "size")
       for (i in 0:(msep_size - 1)) {
         fact <- .jcall(msep, "Ljava/lang/Object;", "get", as.integer(i))
         x <- .jcall(fact, "S", "getX")
         y <- .jcall(fact, "S", "getY")
-        zlist <- .jnew(
-          "java/util/ArrayList",
-          .jcall(fact, "Ljava/util/List;", "getZ")
-        )
+        zlist <- .jnew("java/util/ArrayList", .jcall(fact, "Ljava/util/List;", "getZ"))
         fact_ <- c(x, y)
         z_size <- .jcall(zlist, "I", "size")
         if (z_size > 0) {
           for (j in 0:(z_size - 1)) {
             fact_ <- c(
               fact_,
-              .jcall(
-                zlist,
-                "Ljava/lang/Object;",
-                "get",
-                as.integer(j)
-              )$toString()
+              .jcall(zlist, "Ljava/lang/Object;", "get", as.integer(j))$toString()
             )
           }
         }
@@ -713,6 +903,11 @@ TetradSearch <- R6Class(
       }
       return(facts)
     },
+
+    ###### all_subsets_dependencefact_s ######
+    #' @description Finds all local Markov dependence facts in the given graph.
+    #' @param graph (Java object) The Tetrad graph to analyze.
+    #' @return (list) A list of vectors describing each dependence fact.
     all_subsets_dependencefact_s = function(graph) {
       mconn <- .jcall(
         "edu/cmu/tetrad/search/MarkovCheck",
@@ -732,22 +927,14 @@ TetradSearch <- R6Class(
         fact <- .jcall(mconn, "Ljava/lang/Object;", "get", as.integer(i))
         x <- .jcall(fact, "S", "getX")
         y <- .jcall(fact, "S", "getY")
-        zlist <- .jnew(
-          "java/util/ArrayList",
-          .jcall(fact, "Ljava/util/List;", "getZ")
-        )
+        zlist <- .jnew("java/util/ArrayList", .jcall(fact, "Ljava/util/List;", "getZ"))
         fact_ <- c(x, y)
         z_size <- .jcall(zlist, "I", "size")
         if (z_size > 0) {
           for (j in 0:(z_size - 1)) {
             fact_ <- c(
               fact_,
-              .jcall(
-                zlist,
-                "Ljava/lang/Object;",
-                "get",
-                as.integer(j)
-              )$toString()
+              .jcall(zlist, "Ljava/lang/Object;", "get", as.integer(j))$toString()
             )
           }
         }
@@ -755,6 +942,16 @@ TetradSearch <- R6Class(
       }
       return(facts)
     },
+
+    ###### markov_check ######
+    #' @description Performs a Markov check on the given graph using the \code{mc_test} if available.
+    #' @param graph (Java object) The graph to check.
+    #' @param percent_resample (numeric) Fraction of the data to resample each iteration.
+    #' @param condition_set_type (Java enum) E.g. \code{LOCAL_MARKOV}, \code{ORDERED_LOCAL_MARKOV}.
+    #' @param remove_extraneous (logical) If TRUE, tries removing extraneous variables in conditioning sets.
+    #' @param parallelized (logical) Whether to run Markov check in parallel.
+    #' @param sample_size (integer) If not -1, overrides the sample size used.
+    #' @return (list) A list of test statistics and p-values from Markov check.
     markov_check = function(graph,
                             percent_resample = 1,
                             condition_set_type = .jfield(
@@ -766,17 +963,10 @@ TetradSearch <- R6Class(
                             parallelized = TRUE,
                             sample_size = -1) {
       if (is.null(self$mc_test)) {
-        stop(
-          "A test for the Markov Checker has not been set. Please call a use_{test name} method with use_for_mc=TRUE."
-        )
+        stop("A test for the Markov Checker has not been set. Please call a use_{test name} method with use_for_mc=TRUE.")
       }
       test_obj <- self$mc_test$getTest(self$data, self$params)
-      mc <- .jnew(
-        "edu/cmu/tetrad/search/MarkovCheck",
-        graph,
-        test_obj,
-        condition_set_type
-      )
+      mc <- .jnew("edu/cmu/tetrad/search/MarkovCheck", graph, test_obj, condition_set_type)
       mc$setKnowledge(self$knowledge)
       mc$setPercentResample(percent_resample)
       mc$setFindSmallestSubset(remove_extraneous)
@@ -810,20 +1000,30 @@ TetradSearch <- R6Class(
         mc = mc
       ))
     },
+
+    ###### get_mc_ind_pvalues ######
+    #' @description Gets p-values for independence from the Markov check results.
+    #' @return (numeric) Vector of p-values.
     get_mc_ind_pvalues = function() {
       pvalues <- c()
       size <- .jcall(self$mc_ind_results, "I", "size")
       for (i in 0:(size - 1)) {
-        r <- .jcall(
-          self$mc_ind_results,
-          "Ljava/lang/Object;",
-          "get",
-          as.integer(i)
-        )
+        r <- .jcall(self$mc_ind_results, "Ljava/lang/Object;", "get", as.integer(i))
         pvalues <- c(pvalues, .jcall(r, "D", "getPValue"))
       }
       return(pvalues)
     },
+
+    ###### get_adjustment_sets ######
+    #' @description Retrieves a set of adjustment sets from a Tetrad graph, for a given source and target.
+    #' @param graph (Java object) Tetrad graph.
+    #' @param source (character) Name of the source variable.
+    #' @param target (character) Name of the target variable.
+    #' @param max_num_sets (integer) Maximum number of adjustment sets to return.
+    #' @param max_distance_from_point (integer) Restricts the search radius around endpoints.
+    #' @param near_which_endpoint (integer) Which endpoint to measure distance from.
+    #' @param max_path_length (integer) Maximum path length to consider.
+    #' @return (Java object) The Tetrad result of the \code{adjustmentSets} call.
     get_adjustment_sets = function(graph,
                                    source,
                                    target,
@@ -841,6 +1041,7 @@ TetradSearch <- R6Class(
       ))
     }
   ),
+
   # Scores and tests are private
   # and should be called through
   # set_score and set_test.
@@ -850,8 +1051,7 @@ TetradSearch <- R6Class(
                                  structure_prior = 0,
                                  sem_bic_rule = 1,
                                  singularity_lambda = 0.0) {
-      set_params(
-        self$params,
+      self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         SEM_BIC_STRUCTURE_PRIOR = structure_prior,
         SEM_BIC_RULE = sem_bic_rule,
@@ -863,8 +1063,7 @@ TetradSearch <- R6Class(
     use_ebic_score = function(gamma = 0.8,
                               precompute_covariances = TRUE,
                               singularity_lambda = 0.0) {
-      set_params(
-        self$params,
+      self$set_params(
         EBIC_GAMMA = gamma,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -874,8 +1073,7 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_gic_score = function(penalty_discount = 1, sem_gic_rule = 4) {
-      set_params(
-        self$params,
+      self$set_params(
         SEM_GIC_RULE = sem_gic_rule,
         PENALTY_DISCOUNT_ZS = penalty_discount
       )
@@ -885,8 +1083,7 @@ TetradSearch <- R6Class(
     use_mixed_variable_polynomial_score = function(structure_prior = 0,
                                                    f_degree = 0,
                                                    discretize = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         STRUCTURE_PRIOR = structure_prior,
         DISCRETIZE = discretize
       )
@@ -904,8 +1101,7 @@ TetradSearch <- R6Class(
     use_poisson_prior_score = function(poission_lambda = 2,
                                        precompute_covariances = TRUE,
                                        singularity_lambda = 0.0) {
-      set_params(
-        self$params,
+      self$set_params(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         POISSON_LAMBDA = poission_lambda,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -916,7 +1112,7 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_zhang_shen_bound_score = function(risk_bound = 0.2, singularity_lambda = 0.0) {
-      set_params(self$params,
+      self$set_params(self$params,
         ZS_RISK_BOUND = risk_bound,
         SINGULARITY_LAMBDA = singularity_lambda
       )
@@ -926,8 +1122,7 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
-      set_params(
-        self$params,
+      self$set_params(
         PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
         STRUCTURE_PRIOR = structure_prior
       )
@@ -938,8 +1133,7 @@ TetradSearch <- R6Class(
                                               discretize = TRUE,
                                               num_categories_to_discretize = 3,
                                               structure_prior = 0) {
-      set_params(
-        self$params,
+      self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
         DISCRETIZE = discretize,
@@ -953,8 +1147,7 @@ TetradSearch <- R6Class(
     use_degenerate_gaussian_score = function(penalty_discount = 1,
                                              structure_prior = 0,
                                              singularity_lambda = 0.0) {
-      set_params(
-        self$params,
+      self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -968,8 +1161,7 @@ TetradSearch <- R6Class(
                                             penalty_discount = 2,
                                             singularity_lambda = 0.0,
                                             do_one_equation_only = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         TRUNCATION_LIMIT = truncation_limit,
         PENALTY_DISCOUNT = penalty_discount,
         SINGULARITY_LAMBDA = singularity_lambda,
@@ -984,8 +1176,7 @@ TetradSearch <- R6Class(
                                                penalty_discount = 2,
                                                singularity_lambda = 0.0,
                                                do_one_equation_only = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         TRUNCATION_LIMIT = truncation_limit,
         PENALTY_DISCOUNT = penalty_discount,
         SINGULARITY_LAMBDA = singularity_lambda,
@@ -1002,8 +1193,7 @@ TetradSearch <- R6Class(
                                            singularity_lambda = 0.0,
                                            do_one_equation_only = FALSE,
                                            use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         TRUNCATION_LIMIT = truncation_limit,
         SINGULARITY_LAMBDA = singularity_lambda,
@@ -1024,8 +1214,7 @@ TetradSearch <- R6Class(
     use_basis_function_lrt_fs_test = function(truncation_limit = 3,
                                               alpha = 0.01,
                                               use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         TRUNCATION_LIMIT = truncation_limit
       )
@@ -1044,8 +1233,7 @@ TetradSearch <- R6Class(
     use_fisher_z_test = function(alpha = 0.01,
                                  singularity_lambda = 0.0,
                                  use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
       )
@@ -1063,8 +1251,7 @@ TetradSearch <- R6Class(
                                    alpha = 0.01,
                                    cell_table_type = 1,
                                    use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
         CELL_TABLE_TYPE = cell_table_type
@@ -1085,8 +1272,7 @@ TetradSearch <- R6Class(
                                  alpha = 0.01,
                                  cell_table_type = 1,
                                  use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
         CELL_TABLE_TYPE = cell_table_type
@@ -1105,8 +1291,7 @@ TetradSearch <- R6Class(
                                              discretize = TRUE,
                                              num_categories_to_discretize = 3,
                                              use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         DISCRETIZE = discretize,
         NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
@@ -1126,8 +1311,7 @@ TetradSearch <- R6Class(
     use_degenerate_gaussian_test = function(alpha = 0.01,
                                             singularity_lambda = 0.0,
                                             use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
       )
@@ -1148,8 +1332,7 @@ TetradSearch <- R6Class(
                                       prior_ess = 10,
                                       use_for_mc = FALSE) {
       # Note: Ensure the field names match exactly those in Tetrad.
-      set_params(
-        self$params,
+      self$set_params(
         NO_RANDOMLY_DETERMINED_INDEPENDENCE = threshold,
         CUTOFF_IND_TEST = cutoff, # adjust field name if necessary
         PRIOR_EQUIVALENT_SAMPLE_SIZE = prior_ess
@@ -1176,8 +1359,7 @@ TetradSearch <- R6Class(
                             polyd = 5,
                             polyc = 1,
                             use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         KCI_USE_APPROXIMATION = approximate,
         ALPHA = alpha,
         SCALING_FACTOR = scalingfact_or,
@@ -1202,8 +1384,7 @@ TetradSearch <- R6Class(
                             basis_type = 4,
                             basis_scale = 0.0,
                             use_for_mc = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         SCALING_FACTOR = scalingfact_or,
         NUM_BASIS_FUNCTIONS = num_basis_functions,
@@ -1225,8 +1406,7 @@ TetradSearch <- R6Class(
                         max_degree = -1,
                         parallelized = FALSE,
                         faithfulness_assumed = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         SYMMETRIC_FIRST_STEP = symmetric_first_step,
         MAX_DEGREE = max_degree,
         PARALLELIZED = parallelized,
@@ -1245,8 +1425,7 @@ TetradSearch <- R6Class(
                            trimming_style = 3,
                            number_of_expansions = 2,
                            faithfulness_assumed = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         TARGETS = targets,
         FAITHFULNESS_ASSUMED = faithfulness_assumed,
         MAX_DEGREE = max_degree,
@@ -1264,8 +1443,7 @@ TetradSearch <- R6Class(
                         time_lag = 0,
                         use_data_order = TRUE,
                         output_cpdag = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         USE_BES = use_bes,
         NUM_STARTS = num_starts,
         TIME_LAG = time_lag,
@@ -1283,8 +1461,7 @@ TetradSearch <- R6Class(
                                    use_bes = FALSE,
                                    num_starts = 1,
                                    allow_internal_randomness = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         TARGETS = targets,
         USE_BES = use_bes,
         NUM_STARTS = num_starts,
@@ -1305,8 +1482,7 @@ TetradSearch <- R6Class(
                          cpdag_algorithm = 4,
                          remove_effect_nodes = TRUE,
                          sample_style = 1) {
-      set_params(
-        self$params,
+      self$set_params(
         SELECTION_MIN_EFFECT = selection_min_effect,
         NUM_SUBSAMPLES = num_subsamples,
         TARGETS = targets,
@@ -1339,8 +1515,7 @@ TetradSearch <- R6Class(
                          raskutti_uhler = FALSE,
                          use_data_order = TRUE,
                          num_starts = 1) {
-      set_params(
-        self$params,
+      self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
         GRASP_NONSINGULAR_DEPTH = nonsingular_depth,
@@ -1368,8 +1543,7 @@ TetradSearch <- R6Class(
         is.logical(guarantee_cpdag), length(guarantee_cpdag) == 1
       )
 
-      set_params(
-        self$params,
+      self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1386,8 +1560,7 @@ TetradSearch <- R6Class(
                        depth = -1,
                        stable_fas = TRUE,
                        guarantee_cpdag = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1405,8 +1578,7 @@ TetradSearch <- R6Class(
                          use_heuristic = TRUE,
                          max_disc_path_length = -1,
                          stable_fas = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
         USE_MAX_P_ORIENTATION_HEURISTIC = use_heuristic,
@@ -1425,8 +1597,7 @@ TetradSearch <- R6Class(
                        max_disc_path_length = -1,
                        complete_rule_set_used = TRUE,
                        guarantee_pag = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -1444,8 +1615,7 @@ TetradSearch <- R6Class(
                         stable_fas = TRUE,
                         max_disc_path_length = -1,
                         complete_rule_set_used = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -1461,8 +1631,7 @@ TetradSearch <- R6Class(
     set_cfci = function(depth = -1,
                         max_disc_path_length = -1,
                         complete_rule_set_used = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         DEPTH = depth,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used
@@ -1479,8 +1648,7 @@ TetradSearch <- R6Class(
                         max_disc_path_length = -1,
                         complete_rule_set_used = TRUE,
                         guarantee_pag = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         DEPTH = depth,
         MAX_DEGREE = max_degree,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -1499,8 +1667,7 @@ TetradSearch <- R6Class(
                         max_disc_path_length = -1,
                         complete_rule_set_used = TRUE,
                         guarantee_pag = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         DEPTH = depth,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -1519,8 +1686,7 @@ TetradSearch <- R6Class(
                            depth = 5,
                            max_disc_path_length = 5,
                            guarantee_pag = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         NUM_STARTS = num_starts,
         MAX_BLOCKING_PATH_LENGTH = max_blocking_path_length,
         DEPTH = depth,
@@ -1547,8 +1713,7 @@ TetradSearch <- R6Class(
                              use_data_order = TRUE,
                              num_starts = 1,
                              guarantee_pag = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
         GRASP_NONSINGULAR_DEPTH = nonsingular_depth,
@@ -1574,8 +1739,7 @@ TetradSearch <- R6Class(
                          complete_rule_set_used = TRUE,
                          depth = -1,
                          guarantee_pag = FALSE) {
-      set_params(
-        self$params,
+      self$set_params(
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
         DEPTH = depth,
@@ -1593,8 +1757,7 @@ TetradSearch <- R6Class(
                               ica_max_iter = 5000,
                               ica_tolerance = 1e-8,
                               threshold_b = 0.1) {
-      set_params(
-        self$params,
+      self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
         FAST_ICA_TOLERANCE = ica_tolerance,
@@ -1611,8 +1774,7 @@ TetradSearch <- R6Class(
                              ica_tolerance = 1e-8,
                              threshold_b = 0.1,
                              threshold_w = 0.1) {
-      set_params(
-        self$params,
+      self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
         FAST_ICA_TOLERANCE = ica_tolerance,
@@ -1630,8 +1792,7 @@ TetradSearch <- R6Class(
                         fask_delta = -0.3,
                         left_right_rule = 1,
                         skew_edge_threshold = 0.3) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         DEPTH = depth,
         FASK_DELTA = fask_delta,
@@ -1650,8 +1811,7 @@ TetradSearch <- R6Class(
                         tetrad_test = 1,
                         include_structure_model = TRUE,
                         precompute_covariances = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         ALPHA = alpha,
         PENALTY_DISCOUNT = penalty_discount,
         TETRAD_TEST_FOFC = tetrad_test,
@@ -1666,7 +1826,7 @@ TetradSearch <- R6Class(
         cat("CCD does not use knowledge.\n")
         return()
       }
-      set_params(self$params, DEPTH = depth, APPLY_R1 = apply_r1)
+      self$set_params(self$params, DEPTH = depth, APPLY_R1 = apply_r1)
 
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Ccd",
@@ -1709,8 +1869,7 @@ TetradSearch <- R6Class(
       )
     },
     set_dagma = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
-      set_params(
-        self$params,
+      self$set_params(
         LAMBDA1 = lambda1,
         W_THRESHOLD = w_threshold,
         CPDAG = cpdag
@@ -1758,26 +1917,3 @@ TetradSearch <- R6Class(
     }
   )
 )
-
-mimbuild <- function(
-    clustering,
-    measure_names,
-    latent_names,
-    cov,
-    full_graph = FALSE) {
-  mb <- .jnew("edu/cmu/tetrad/search/cluster/Mimbuild")
-  graph <- .jcall(
-    mb,
-    "Ljava/lang/Object;",
-    "search",
-    clustering,
-    measure_names,
-    latent_names,
-    cov
-  )
-  if (full_graph) {
-    return(.jcall(mb, "Ljava/lang/Object;", "getFullGraph"))
-  } else {
-    return(graph)
-  }
-}
