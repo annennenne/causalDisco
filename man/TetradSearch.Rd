@@ -38,6 +38,7 @@ scoring functions, specify causal search algorithms, and run them on data.
 \item \href{#method-TetradSearch-set_alg}{\code{TetradSearch$set_alg()}}
 \item \href{#method-TetradSearch-set_tier_forbidden_within}{\code{TetradSearch$set_tier_forbidden_within()}}
 \item \href{#method-TetradSearch-set_knowledge}{\code{TetradSearch$set_knowledge()}}
+\item \href{#method-TetradSearch-set_params}{\code{TetradSearch$set_params()}}
 \item \href{#method-TetradSearch-get_parameters_for_function}{\code{TetradSearch$get_parameters_for_function()}}
 \item \href{#method-TetradSearch-run_search}{\code{TetradSearch$run_search()}}
 \item \href{#method-TetradSearch-run_gango}{\code{TetradSearch$run_gango()}}
@@ -180,6 +181,23 @@ Sets the background knowledge object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{knowledge_obj}}{An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TetradSearch-set_params"></a>}}
+\if{latex}{\out{\hypertarget{method-TetradSearch-set_params}{}}}
+\subsection{Method \code{set_params()}}{
+Sets parameters for the Tetrad search.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_params(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Named arguments for the parameters to set.}
 }
 \if{html}{\out{</div>}}
 }

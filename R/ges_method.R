@@ -12,7 +12,7 @@ ges <- function(engine = "tetrad", score, ...) {
 
 
 # Set available engines
-attr(pc, "engines") <- c("tetrad")
+attr(ges, "engines") <- c("tetrad")
 
 ges_tetrad <- function(score, ...) {
   # to do: fix arguments passing correctly

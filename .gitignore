@@ -1,4 +1,4 @@
-.Rproj.user
+﻿.Rproj.user
 .Rhistory
 .RData
 .Ruserdata
@@ -9,5 +9,5 @@ article/
 archive/
 notes/
 R/tetrad/jdk.tar.gz
-R/TESTING.R
+examples/TESTING.R
 

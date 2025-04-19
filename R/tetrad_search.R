@@ -1,6 +1,3 @@
-library(R6)
-library(rJava)
-
 # Initialize the JVM if it isn’t already running.
 # todo : how many gb?
 if (!.jniInitialized) {
