@@ -83,10 +83,10 @@ TetradSearch <- R6Class(
         "basis_function_lrt_fs" = {
           private$use_basis_function_lrt_fs_test(..., use_for_mc = mc)
         },
-        "conditional_gaussian_test" = {
+        "conditional_gaussian" = {
           private$use_conditional_gaussian_test(..., use_for_mc = mc)
         },
-        "degenerate_gaussian_test" = {
+        "degenerate_gaussian" = {
           private$use_degenerate_gaussian_test(..., use_for_mc = mc)
         },
         "g_square" = {
@@ -128,17 +128,23 @@ TetradSearch <- R6Class(
         "basis_function_bic_fs" = {
           private$use_basis_function_bic_fs_score(...)
         },
-        "conditional_gaussian_score" = {
+        "conditional_gaussian" = {
           private$use_conditional_gaussian_score(...)
         },
-        "degenerate_gaussian_score" = {
+        "degenerate_gaussian" = {
           private$use_degenerate_gaussian_score(...)
         },
         "discrete_bic" = {
           private$use_discrete_bic_score(...)
         },
+        "fisher_z" = {
+          private$use_fisher_z_score(...)
+        },
         "gic" = {
           private$use_gic_score(...)
+        },
+        "mag_degenerate_gaussian_bic" = {
+          private$use_mag_degenerate_gaussian_bic_score(...)
         },
         "mixed_variable_polynomial" = {
           private$use_mixed_variable_polynomial_score(...)
@@ -169,19 +175,19 @@ TetradSearch <- R6Class(
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.")
           }
-          private$set_fges(...)
+          private$set_fges_alg(...)
         },
         "fges_mb" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.")
           }
-          private$set_fges_mb(...)
+          private$set_fges_mb_alg(...)
         },
         "boss" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.")
           }
-          private$set_boss(...)
+          private$set_boss_alg(...)
         },
         "restricted_boss" = {
           if (is.null(self$score)) {
@@ -191,7 +197,7 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_restricted_boss(...)
+          private$set_restricted_boss_alg(...)
         },
         "cstar" = {
           if (is.null(self$score)) {
@@ -204,13 +210,13 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_cstar(...)
+          private$set_cstar_alg(...)
         },
         "sp" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.")
           }
-          private$set_sp(...)
+          private$set_sp_alg(...)
         },
         "grasp" = {
           if (is.null(self$score)) {
@@ -219,43 +225,43 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_grasp(...)
+          private$set_grasp_alg(...)
         },
         "pc" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_pc(...)
+          private$set_pc_alg(...)
         },
         "cpc" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_cpc(...)
+          private$set_cpc_alg(...)
         },
         "pcmax" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_pcmax(...)
+          private$set_pcmax_alg(...)
         },
         "fci" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_fci(...)
+          private$set_fci_alg(...)
         },
         "rfci" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_rfci(...)
+          private$set_rfci_alg(...)
         },
         "cfci" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_cfci(...)
+          private$set_cfci_alg(...)
         },
         "gfci" = {
           if (is.null(self$score)) {
@@ -264,7 +270,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_gfci(...)
+          private$set_gfci_alg(...)
         },
         "bfci" = {
           if (is.null(self$score)) {
@@ -273,7 +279,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_bfci(...)
+          private$set_bfci_alg(...)
         },
         "lv_lite" = {
           if (is.null(self$score)) {
@@ -282,7 +288,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_lv_lite(...)
+          private$set_lv_lite_alg(...)
         },
         "grasp_fci" = {
           if (is.null(self$score)) {
@@ -291,7 +297,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_grasp_fci(...)
+          private$set_grasp_fci_alg(...)
         },
         "spfci" = {
           if (is.null(self$score)) {
@@ -300,7 +306,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.")
           }
-          private$set_spfci(...)
+          private$set_spfci_alg(...)
         },
         "ica_lingam" = {
           if (is.null(self$score)) {
@@ -310,7 +316,7 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_ica_lingam(...)
+          private$set_ica_lingam_alg(...)
         },
         "ica_lingd" = {
           if (is.null(self$score)) {
@@ -320,20 +326,20 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_ica_lingd(...)
+          private$set_ica_lingd_alg(...)
         },
         "fask" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.")
           }
-          private$set_fask(...)
+          private$set_fask_alg(...)
         },
         "fofc" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_fofc(...)
+          private$set_fofc_alg(...)
         },
         "ccd" = {
           if (is.null(self$test)) {
@@ -343,10 +349,10 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm does not use background knowledge.")
           }
-          private$set_ccd(...)
+          private$set_ccd_alg(...)
         },
         "svar_fci" = {
-          private$set_svar_fci(...)
+          private$set_svar_fci_alg(...)
         },
         "direct_lingam" = {
           if (is.null(self$score)) {
@@ -356,28 +362,28 @@ TetradSearch <- R6Class(
             warning("Background knowledge is set.
                     This algorithm, direct_lingam, does not use background knowledge.")
           }
-          private$set_direct_lingam(...)
+          private$set_direct_lingam_alg(...)
         },
         "dagma" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
                     This algorithm, dagma, does not use background knowledge.")
           }
-          private$set_dagma(...)
+          private$set_dagma_alg(...)
         },
         "pc_lingam" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
                     This algorithm, pc_lingam, does not use background knowledge.")
           }
-          private$set_pc_lingam(...)
+          private$set_pc_lingam_alg(...)
         },
         "svar_gfci" = {
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.
                     This algorithm, svar_gfci, does not use background knowledge.")
           }
-          private$set_svar_gfci(...)
+          private$set_svar_gfci_alg(...)
         },
         {
           stop("Unknown method type using tetrad engine: ", method)
@@ -446,10 +452,26 @@ TetradSearch <- R6Class(
     #' @description Retrieves the argument names of a matching private function.
     #' @param fn_pattern (character) A pattern that should match a private method name.
     #' @return (character) The names of the parameters.
-    get_parameters_for_function = function(fn_pattern) {
+    get_parameters_for_function = function(fn_pattern, score = FALSE, test = FALSE, alg = FALSE) {
+      # Check if exclusively one of score, etst, or alg is TRUE
+      if (sum(c(score, test, alg)) != 1) {
+        stop(
+          "Score is: ", score, ", test is: ", test, ", and alg is: ", alg,
+          ". (Exclusively) one of them should be TRUE."
+        )
+      }
+      if (score) {
+        function_names <- sprintf("^(set_|use_)%s(_score)?$", fn_pattern)
+      } else if (test) {
+        function_names <- sprintf("^(set_|use_)%s(_test)?$", fn_pattern)
+      } else if (alg) {
+        function_names <- sprintf("^(set_|use_)%s(_alg)?$", fn_pattern)
+      } else {
+        stop("Either score or test should be TRUE.")
+      }
       is_private_method <- function(name) {
         is.function(get(name, envir = as.environment(private))) &&
-          grepl(sprintf("^(set_|use_)%s(_score|_test)*$", fn_pattern), name)
+          grepl(function_names, name)
       }
       private_names <- ls(envir = as.environment(private))
       matched_function <- base::Filter(is_private_method, private_names)
@@ -1191,6 +1213,24 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
       self$score <- cast_obj(self$score)
     },
+    use_mag_degenerate_gaussian_bic_score = function(penalty_discount = 1,
+                                                     structure_prior = 0,
+                                                     precompute_covariances = TRUE) {
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        STRUCTURE_PRIOR = structure_prior,
+        PRECOMPUTE_COVARIANCES = precompute_covariances
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_fisher_z_score = function(alpha = 0.01) {
+      self$set_params(
+        ALPHA = alpha
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/FisherZScore")
+      self$score <- cast_obj(self$score)
+    },
     # Tests
     use_basis_function_lrt_test = function(truncation_limit = 3,
                                            alpha = 0.01,
@@ -1406,10 +1446,10 @@ TetradSearch <- R6Class(
       }
     },
     # Algorithms
-    set_fges = function(symmetric_first_step = FALSE,
-                        max_degree = -1,
-                        parallelized = FALSE,
-                        faithfulness_assumed = FALSE) {
+    set_fges_alg = function(symmetric_first_step = FALSE,
+                            max_degree = -1,
+                            parallelized = FALSE,
+                            faithfulness_assumed = FALSE) {
       self$set_params(
         SYMMETRIC_FIRST_STEP = symmetric_first_step,
         MAX_DEGREE = max_degree,
@@ -1424,11 +1464,11 @@ TetradSearch <- R6Class(
       # Set the knowledge object
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fges_mb = function(targets = "",
-                           max_degree = -1,
-                           trimming_style = 3,
-                           number_of_expansions = 2,
-                           faithfulness_assumed = FALSE) {
+    set_fges_mb_alg = function(targets = "",
+                               max_degree = -1,
+                               trimming_style = 3,
+                               number_of_expansions = 2,
+                               faithfulness_assumed = FALSE) {
       self$set_params(
         TARGETS = targets,
         FAITHFULNESS_ASSUMED = faithfulness_assumed,
@@ -1442,11 +1482,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss = function(num_starts = 1,
-                        use_bes = FALSE,
-                        time_lag = 0,
-                        use_data_order = TRUE,
-                        output_cpdag = TRUE) {
+    set_boss_alg = function(num_starts = 1,
+                            use_bes = FALSE,
+                            time_lag = 0,
+                            use_data_order = TRUE,
+                            output_cpdag = TRUE) {
       self$set_params(
         USE_BES = use_bes,
         NUM_STARTS = num_starts,
@@ -1461,10 +1501,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_restricted_boss = function(targets = "",
-                                   use_bes = FALSE,
-                                   num_starts = 1,
-                                   allow_internal_randomness = TRUE) {
+    set_restricted_boss_alg = function(targets = "",
+                                       use_bes = FALSE,
+                                       num_starts = 1,
+                                       allow_internal_randomness = TRUE) {
       self$set_params(
         TARGETS = targets,
         USE_BES = use_bes,
@@ -1477,15 +1517,15 @@ TetradSearch <- R6Class(
         self$score
       )
     },
-    set_cstar = function(targets = "",
-                         file_out_path = "cstar-out",
-                         selection_min_effect = 0.0,
-                         num_subsamples = 50,
-                         top_bracket = 10,
-                         parallelized = FALSE,
-                         cpdag_algorithm = 4,
-                         remove_effect_nodes = TRUE,
-                         sample_style = 1) {
+    set_cstar_alg = function(targets = "",
+                             file_out_path = "cstar-out",
+                             selection_min_effect = 0.0,
+                             num_subsamples = 50,
+                             top_bracket = 10,
+                             parallelized = FALSE,
+                             cpdag_algorithm = 4,
+                             remove_effect_nodes = TRUE,
+                             sample_style = 1) {
       self$set_params(
         SELECTION_MIN_EFFECT = selection_min_effect,
         NUM_SUBSAMPLES = num_subsamples,
@@ -1505,20 +1545,20 @@ TetradSearch <- R6Class(
         self$score
       )
     },
-    set_sp = function() {
+    set_sp_alg = function() {
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Sp",
         self$score
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_grasp = function(covered_depth = 4,
-                         singular_depth = 1,
-                         nonsingular_depth = 1,
-                         ordered_alg = FALSE,
-                         raskutti_uhler = FALSE,
-                         use_data_order = TRUE,
-                         num_starts = 1) {
+    set_grasp_alg = function(covered_depth = 4,
+                             singular_depth = 1,
+                             nonsingular_depth = 1,
+                             ordered_alg = FALSE,
+                             raskutti_uhler = FALSE,
+                             use_data_order = TRUE,
+                             num_starts = 1) {
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -1536,10 +1576,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_pc = function(conflict_rule = 1,
-                      depth = -1,
-                      stable_fas = TRUE,
-                      guarantee_cpdag = FALSE) {
+    set_pc_alg = function(conflict_rule = 1,
+                          depth = -1,
+                          stable_fas = TRUE,
+                          guarantee_cpdag = FALSE) {
       stopifnot(
         is.numeric(conflict_rule), length(conflict_rule) == 1,
         is.numeric(depth), length(depth) == 1,
@@ -1560,10 +1600,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_cpc = function(conflict_rule = 1,
-                       depth = -1,
-                       stable_fas = TRUE,
-                       guarantee_cpdag = TRUE) {
+    set_cpc_alg = function(conflict_rule = 1,
+                           depth = -1,
+                           stable_fas = TRUE,
+                           guarantee_cpdag = TRUE) {
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -1577,11 +1617,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_pcmax = function(conflict_rule = 1,
-                         depth = -1,
-                         use_heuristic = TRUE,
-                         max_disc_path_length = -1,
-                         stable_fas = TRUE) {
+    set_pcmax_alg = function(conflict_rule = 1,
+                             depth = -1,
+                             use_heuristic = TRUE,
+                             max_disc_path_length = -1,
+                             stable_fas = TRUE) {
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -1596,11 +1636,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fci = function(depth = -1,
-                       stable_fas = TRUE,
-                       max_disc_path_length = -1,
-                       complete_rule_set_used = TRUE,
-                       guarantee_pag = FALSE) {
+    set_fci_alg = function(depth = -1,
+                           stable_fas = TRUE,
+                           max_disc_path_length = -1,
+                           complete_rule_set_used = TRUE,
+                           guarantee_pag = FALSE) {
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1615,10 +1655,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_rfci = function(depth = -1,
-                        stable_fas = TRUE,
-                        max_disc_path_length = -1,
-                        complete_rule_set_used = TRUE) {
+    set_rfci_alg = function(depth = -1,
+                            stable_fas = TRUE,
+                            max_disc_path_length = -1,
+                            complete_rule_set_used = TRUE) {
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1632,9 +1672,9 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_cfci = function(depth = -1,
-                        max_disc_path_length = -1,
-                        complete_rule_set_used = TRUE) {
+    set_cfci_alg = function(depth = -1,
+                            max_disc_path_length = -1,
+                            complete_rule_set_used = TRUE) {
       self$set_params(
         DEPTH = depth,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -1647,11 +1687,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_gfci = function(depth = -1,
-                        max_degree = -1,
-                        max_disc_path_length = -1,
-                        complete_rule_set_used = TRUE,
-                        guarantee_pag = FALSE) {
+    set_gfci_alg = function(depth = -1,
+                            max_degree = -1,
+                            max_disc_path_length = -1,
+                            complete_rule_set_used = TRUE,
+                            guarantee_pag = FALSE) {
       self$set_params(
         DEPTH = depth,
         MAX_DEGREE = max_degree,
@@ -1667,10 +1707,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_bfci = function(depth = -1,
-                        max_disc_path_length = -1,
-                        complete_rule_set_used = TRUE,
-                        guarantee_pag = FALSE) {
+    set_bfci_alg = function(depth = -1,
+                            max_disc_path_length = -1,
+                            complete_rule_set_used = TRUE,
+                            guarantee_pag = FALSE) {
       self$set_params(
         DEPTH = depth,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -1685,11 +1725,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_lv_lite = function(num_starts = 1,
-                           max_blocking_path_length = 5,
-                           depth = 5,
-                           max_disc_path_length = 5,
-                           guarantee_pag = TRUE) {
+    set_lv_lite_alg = function(num_starts = 1,
+                               max_blocking_path_length = 5,
+                               depth = 5,
+                               max_disc_path_length = 5,
+                               guarantee_pag = TRUE) {
       self$set_params(
         NUM_STARTS = num_starts,
         MAX_BLOCKING_PATH_LENGTH = max_blocking_path_length,
@@ -1705,18 +1745,18 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_grasp_fci = function(depth = -1,
-                             stable_fas = TRUE,
-                             max_disc_path_length = -1,
-                             complete_rule_set_used = TRUE,
-                             covered_depth = 4,
-                             singular_depth = 1,
-                             nonsingular_depth = 1,
-                             ordered_alg = FALSE,
-                             raskutti_uhler = FALSE,
-                             use_data_order = TRUE,
-                             num_starts = 1,
-                             guarantee_pag = FALSE) {
+    set_grasp_fci_alg = function(depth = -1,
+                                 stable_fas = TRUE,
+                                 max_disc_path_length = -1,
+                                 complete_rule_set_used = TRUE,
+                                 covered_depth = 4,
+                                 singular_depth = 1,
+                                 nonsingular_depth = 1,
+                                 ordered_alg = FALSE,
+                                 raskutti_uhler = FALSE,
+                                 use_data_order = TRUE,
+                                 num_starts = 1,
+                                 guarantee_pag = FALSE) {
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -1739,10 +1779,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_spfci = function(max_disc_path_length = -1,
-                         complete_rule_set_used = TRUE,
-                         depth = -1,
-                         guarantee_pag = FALSE) {
+    set_spfci_alg = function(max_disc_path_length = -1,
+                             complete_rule_set_used = TRUE,
+                             depth = -1,
+                             guarantee_pag = FALSE) {
       self$set_params(
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -1757,10 +1797,10 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_ica_lingam = function(ica_a = 1.1,
-                              ica_max_iter = 5000,
-                              ica_tolerance = 1e-8,
-                              threshold_b = 0.1) {
+    set_ica_lingam_alg = function(ica_a = 1.1,
+                                  ica_max_iter = 5000,
+                                  ica_tolerance = 1e-8,
+                                  threshold_b = 0.1) {
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -1773,11 +1813,11 @@ TetradSearch <- R6Class(
         self$score
       )
     },
-    set_ica_lingd = function(ica_a = 1.1,
-                             ica_max_iter = 5000,
-                             ica_tolerance = 1e-8,
-                             threshold_b = 0.1,
-                             threshold_w = 0.1) {
+    set_ica_lingd_alg = function(ica_a = 1.1,
+                                 ica_max_iter = 5000,
+                                 ica_tolerance = 1e-8,
+                                 threshold_b = 0.1,
+                                 threshold_w = 0.1) {
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -1791,11 +1831,11 @@ TetradSearch <- R6Class(
         self$score
       )
     },
-    set_fask = function(alpha = 0.05,
-                        depth = -1,
-                        fask_delta = -0.3,
-                        left_right_rule = 1,
-                        skew_edge_threshold = 0.3) {
+    set_fask_alg = function(alpha = 0.05,
+                            depth = -1,
+                            fask_delta = -0.3,
+                            left_right_rule = 1,
+                            skew_edge_threshold = 0.3) {
       self$set_params(
         ALPHA = alpha,
         DEPTH = depth,
@@ -1810,11 +1850,11 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fofc = function(alpha = 0.001,
-                        penalty_discount = 2.0,
-                        tetrad_test = 1,
-                        include_structure_model = TRUE,
-                        precompute_covariances = TRUE) {
+    set_fofc_alg = function(alpha = 0.001,
+                            penalty_discount = 2.0,
+                            tetrad_test = 1,
+                            include_structure_model = TRUE,
+                            precompute_covariances = TRUE) {
       self$set_params(
         ALPHA = alpha,
         PENALTY_DISCOUNT = penalty_discount,
@@ -1825,7 +1865,7 @@ TetradSearch <- R6Class(
 
       self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
     },
-    set_ccd = function(depth = -1, apply_r1 = TRUE) {
+    set_ccd_alg = function(depth = -1, apply_r1 = TRUE) {
       if (.jcall(self$knowledge, "Z", "isEmpty") == FALSE) {
         cat("CCD does not use knowledge.\n")
         return()
@@ -1837,7 +1877,7 @@ TetradSearch <- R6Class(
         self$test
       )
     },
-    set_svar_fci = function(penalty_discount = 2) {
+    set_svar_fci_alg = function(penalty_discount = 2) {
       num_lags <- 2
       # Create lagged data using Java method.
       lagged_data <- .jcall(
@@ -1866,13 +1906,13 @@ TetradSearch <- R6Class(
       svar_fci$setVerbose(TRUE)
       self$alg <- svar_fci
     },
-    set_direct_lingam = function() {
+    set_direct_lingam_alg = function() {
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/DirectLingam",
         self$score
       )
     },
-    set_dagma = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
+    set_dagma_alg = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
       self$set_params(
         LAMBDA1 = lambda1,
         W_THRESHOLD = w_threshold,
@@ -1882,12 +1922,12 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Dagma"
       )
     },
-    set_pc_lingam = function() {
+    set_pc_lingam_alg = function() {
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/PcLingam"
       )
     },
-    set_svar_gfci = function(penalty_discount = 2) {
+    set_svar_gfci_alg = function(penalty_discount = 2) {
       num_lags <- 2
       lagged_data <- .jcall(
         "edu/cmu/tetrad/search/utils/TsUtils",
