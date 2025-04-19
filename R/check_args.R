@@ -24,13 +24,13 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   engine_args_test <- c()
   engine_args_score <- c()
   if (!is.null(test)) {
-    engine_args_test <- search$get_parameters_for_function(test)
+    engine_args_test <- search$get_parameters_for_function(test, test = TRUE)
   }
   if (!is.null(score)) {
-    engine_args_score <- search$get_parameters_for_function(score)
+    engine_args_score <- search$get_parameters_for_function(score, score = TRUE)
   }
   engine_args_score_test <- c(engine_args_test, engine_args_score)
-  engine_args_alg <- search$get_parameters_for_function(alg)
+  engine_args_alg <- search$get_parameters_for_function(alg, alg = TRUE)
 
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
   args_to_pass_to_engine_score_test <- args[names(args) %in% engine_args_score_test]
