@@ -30,7 +30,7 @@ kn_obj
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{tiers}}{A named \code{list}.  Each name is a tier number (stored as a character
+\item{\code{tiers}}{A named \code{list}.  Each name is a tier integer (stored as a character
 string) and the value is a character vector of variable names assigned
 to that tier.}
 
