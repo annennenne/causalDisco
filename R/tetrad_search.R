@@ -35,6 +35,7 @@ if (!.jniInitialized) {
 #' @name TetradSearch
 #' @docType class
 #' @rdname TetradSearch
+#' @importFrom R6 R6Class
 #' @export TetradSearch
 TetradSearch <- R6Class(
   "TetradSearch",
