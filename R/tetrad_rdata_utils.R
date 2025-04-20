@@ -1,124 +1,73 @@
-library(rJava)
+#' @title Tetrad R Data Utilities
+#'
+#' @description \code{tetrad_rdata_utils} provides functions to convert between R data frames and Tetrad Java objects.
+#'
+#' @details This function is made to be used internally with the TetradSearch class.
+#' The function will copy the data into the Java heap, so be careful with larger data frames.
+#' This function was provided by Joseph Ramsey, and slightly modified by Frederik Fabricius-Bjerre.
+#'
+#' @param df A data frame to be converted to a Tetrad Java object.
+#' @return A Tetrad Java object representing the data frame.
+rdata_to_tetrad <- function(df) {
+  # Check if the input is a data frame
+  if (!is.data.frame(df)) {
+    stop("Input must be a data frame.")
+  }
+  nrows <- nrow(df)
+  ncols <- ncol(df)
 
-if (!.jniInitialized) {
-  jar_path <- "tetrad/tetrad-current.jar"
-  .jinit(parameters = "-Xmx2g", classpath = jar_path)
-}
+  # Create Java ArrayList<Node>
+  var_list <- .jnew("java/util/ArrayList")
 
-rdata_to_tetrad <- function(df, int_as_cont = FALSE) {
-  # Identify numeric (continuous) columns and discrete columns.
+  # Prepare empty double[][] and int[][] (as Java arrays)
+  cont_data <- vector("list", ncols)
+  disc_data <- vector("list", ncols)
+
+  # Sort numetric and integer columns
   numeric_cols <- sapply(df, is.numeric)
   integer_cols <- sapply(df, is.integer)
   numeric_cols <- !integer_cols & numeric_cols
-
   if (!all(numeric_cols | integer_cols)) {
     stop("Data frame contains non-numeric columns or something went wrong with the identification of discrete columns.")
   }
+  for (j in seq_len(ncols)) {
+    name <- colnames(df)[j]
+    col <- df[[j]]
 
-  # If int_as_cont is TRUE, treat integer columns as continuous.
-  if (int_as_cont) {
-    numeric_cols <- numeric_cols | integer_cols
-  }
-  discrete_cols <- names(df)[!numeric_cols]
-
-  # For discrete columns, perform a vectorized conversion using factor.
-  if (length(discrete_cols) > 0) {
-    df[discrete_cols] <- lapply(df[discrete_cols], function(col) {
-      as.integer(factor(col)) - 1
-    })
-  }
-
-  # Convert the data frame to a matrix.
-  values <- as.matrix(df)
-  n <- nrow(values)
-  p <- ncol(values)
-
-  # Build the Java variables list.
-  tetrad_data_dir <- "edu/cmu/tetrad/data/"
-  variables <- .jnew("java/util/ArrayList")
-
-  for (col in colnames(df)) {
-    if (col %in% discrete_cols) {
-      # Get factor levels to maintain consistent ordering.
-      levs <- levels(factor(df[[col]]))
-      categories <- .jnew("java/util/ArrayList")
-      for (lev in levs) {
-        java_level <- .jnew("java/lang/String", as.character(lev))
-        java_level <- .jcast(java_level, "java/lang/Object", check = FALSE)
-        .jcall(categories, "Z", "add", java_level)
-      }
-      jList <- .jcast(categories, "java/util/List", check = FALSE)
-      var <- .jnew("edu/cmu/tetrad/data/DiscreteVariable", col, jList)
+    if (numeric_cols[j]) {
+      variable <- .jnew("edu/cmu/tetrad/data/ContinuousVariable", name)
+      node <- .jcast(variable, "edu/cmu/tetrad/graph/Node")
+      .jcall(var_list, "Z", "add", .jcast(node, "java/lang/Object"))
+      cont_data[[j]] <- .jarray(as.numeric(col), dispatch = TRUE)
+      disc_data[[j]] <- .jnull("[I") # null int[] for discrete
+    } else if (integer_cols[j]) {
+      num_categories <- length(unique(na.omit(col)))
+      variable <- .jnew("edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories))
+      node <- .jcast(variable, "edu/cmu/tetrad/graph/Node")
+      .jcall(var_list, "Z", "add", .jcast(node, "java/lang/Object"))
+      cont_data[[j]] <- .jnull("[D") # null double[] for continuous
+      disc_data[[j]] <- .jarray(as.integer(col), dispatch = TRUE)
     } else {
-      var <- .jnew(paste0(tetrad_data_dir, "ContinuousVariable"), col)
+      stop(paste("Unsupported column:", name, "with type: ", class(col)))
     }
-    .jcall(variables, "Z", "add", .jcast(var, "java/lang/Object"))
   }
 
-  # Create the appropriate DataBox bulk constructor.
-  if (length(discrete_cols) == 0) {
-    # All continuous: build a double[][].
-    jRows <- lapply(1:n, function(i) {
-      # Create a Java double array from each row.
-      .jarray(as.double(values[i, ]), contents.class = "double")
-    })
-    # Create a Java array of double[] with proper type signature.
-    jMatrix <- .jarray(jRows, contents.class = "[D")
-    databox <- .jnew(paste0(tetrad_data_dir, "DoubleDataBox"), jMatrix)
-  } else if (length(discrete_cols) == p) {
-    # All discrete: build an int[][].
-    int_values <- matrix(as.integer(values), nrow = n, ncol = p)
-    jRows <- lapply(1:n, function(i) {
-      .jarray(int_values[i, ], contents.class = "int")
-    })
-    jMatrix <- .jarray(jRows, contents.class = "[I")
-    databox <- .jnew(paste0(tetrad_data_dir, "IntDataBox"), jMatrix)
-  } else {
-    # Mixed data: build separate arrays for continuous and discrete columns.
-    continuous_list <- vector("list", p)
-    discrete_list <- vector("list", p)
-    for (j in 1:p) {
-      if (colnames(df)[j] %in% discrete_cols) {
-        discrete_list[[j]] <- as.integer(values[, j])
-      } else {
-        continuous_list[[j]] <- as.double(values[, j])
-      }
-    }
+  # Convert R lists of arrays to Java double[][] and int[][]
+  j_cont_data <- .jarray(cont_data, dispatch = TRUE)
+  j_disc_data <- .jarray(disc_data, dispatch = TRUE)
 
-    # Build Java arrays for each column.
-    jContinuous <- vector("list", p)
-    jDiscrete <- vector("list", p)
-    for (j in 1:p) {
-      if (!is.null(continuous_list[[j]])) {
-        jContinuous[[j]] <- .jarray(continuous_list[[j]], contents.class = "double")
-      } else {
-        jContinuous[[j]] <- .jnull()
-      }
-      if (!is.null(discrete_list[[j]])) {
-        jDiscrete[[j]] <- .jarray(discrete_list[[j]], contents.class = "int")
-      } else {
-        jDiscrete[[j]] <- .jnull()
-      }
-    }
-    jContinuousMatrix <- .jarray(jContinuous, contents.class = "[D")
-    jDiscreteMatrix <- .jarray(jDiscrete, contents.class = "[I")
+  # Call static Java helper method
+  ds <- .jcall(
+    "edu.cmu.tetrad.util.DataSetHelper",
+    "Ledu/cmu/tetrad/data/DataSet;",
+    "fromR",
+    .jcast(var_list, "java.util.List"),
+    as.integer(nrows),
+    .jcast(j_cont_data, "[[D"),
+    .jcast(j_disc_data, "[[I")
+  )
 
-    varList <- .jcast(variables, "java/util/List", check = FALSE)
-    databox <- .jnew(
-      paste0(tetrad_data_dir, "MixedDataBox"),
-      varList,
-      as.integer(n),
-      jContinuousMatrix,
-      jDiscreteMatrix
-    )
-  }
-
-  variablesList <- .jcast(variables, "java/util/List")
-  databox <- .jcast(databox, "edu/cmu/tetrad/data/DataBox")
-  dataset <- .jnew("edu/cmu/tetrad/data/BoxDataSet", databox, variablesList)
-  dataset <- cast_obj(dataset)
-
-  return(dataset)
+  return(ds)
 }
 
 tetrad_data_to_rdata <- function(data) {
