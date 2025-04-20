@@ -14,7 +14,7 @@ ges <- function(engine = "tetrad", score, ...) {
 # Set available engines
 attr(ges, "engines") <- c("tetrad")
 
-pc_tetrad <- function(score, ...) {
+ges_tetrad <- function(score, ...) {
   search <- TetradSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "fges", score = score)
@@ -24,9 +24,9 @@ pc_tetrad <- function(score, ...) {
     search$set_score(score)
   }
   if (length(args_to_pass$alg_args) != 0) {
-    search$set_alg("ges", args_to_pass$alg_args)
+    search$set_alg("fges", args_to_pass$alg_args)
   } else {
-    search$set_alg("ges")
+    search$set_alg("fges")
   }
   runner <- list(
     set_knowledge = function(knowledge) {
