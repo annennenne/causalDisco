@@ -57,6 +57,7 @@ TetradSearch <- R6Class(
       self$knowledge <- .jnew("edu/cmu/tetrad/data/Knowledge")
       self$params <- .jnew("edu/cmu/tetrad/util/Parameters")
       self$bootstrap_graphs <- NULL
+      self$set_verbose(FALSE) # Set verbose to FALSE per default.
     },
 
     ###### set_test ######
@@ -169,7 +170,6 @@ TetradSearch <- R6Class(
     #' @return Invisibly returns \code{self}.
     set_alg = function(method, ...) {
       method <- tolower(method)
-      self$set_verbose(FALSE)
       switch(method,
         "fges" = {
           if (is.null(self$score)) {
@@ -581,6 +581,9 @@ TetradSearch <- R6Class(
     #' @description Toggles the verbosity in Tetrad.
     #' @param verbose (logical) TRUE to enable verbose logging, FALSE otherwise.
     set_verbose = function(verbose) {
+      stopifnot(
+        is.logical(verbose)
+      )
       self$set_params(
         VERBOSE = verbose
       )
@@ -590,6 +593,10 @@ TetradSearch <- R6Class(
     #' @description Sets an integer time lag for time-series algorithms.
     #' @param time_lag (integer) The time lag to set.
     set_time_lag = function(time_lag = 0) {
+      stopifnot(
+        is.numeric(time_lag),
+        floor(time_lag) == time_lag,
+      )
       self$set_params(
         TIME_LAG = time_lag
       )
