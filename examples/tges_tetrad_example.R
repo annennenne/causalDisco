@@ -28,7 +28,7 @@ kn <- knowledge(
   ) # or like this
 )
 
-my_tges <- ges(engine = "tetrad", score = "sem_bic")
+my_tges <- ges(engine = "tetrad", score = "fisher_z")
 
 # call disco with background knowledge
 disco(df, method = my_tges, knowledge = kn) |> cat()
