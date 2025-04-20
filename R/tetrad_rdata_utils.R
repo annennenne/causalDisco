@@ -70,6 +70,7 @@ rdata_to_tetrad <- function(df) {
   return(ds)
 }
 
+# Everything below does not work as of now.
 tetrad_data_to_rdata <- function(data) {
   namesList <- .jcall(data, "Ljava/util/List;", "getVariableNames")
   numVars <- .jcall(data, "I", "getNumColumns")
