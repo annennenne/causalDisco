@@ -15,7 +15,7 @@ attr(pc, "engines") <- c("tetrad", "pcalg")
 pc_tetrad <- function(test, alpha, ...) {
   search <- TetradSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test)
+  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
   if (length(args_to_pass$test_args) != 0) {
     search$set_test(test, alpha, args_to_pass$test_args)
   } else {
@@ -41,7 +41,7 @@ pc_tetrad <- function(test, alpha, ...) {
 pc_pcalg <- function(test, alpha, ...) {
   args <- list(...)
   search <- pcalgSearch$new()
-  args_to_pass <- check_args_and_return_passable_args(args, "pcalg", test, search)
+  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc", test = test)
   search$set_params(args_to_pass)
   search$set_test(test, alpha)
   search$set_alg("pc")

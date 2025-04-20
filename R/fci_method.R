@@ -15,7 +15,7 @@ attr(fci, "engines") <- c("tetrad", "pcalg")
 fci_tetrad <- function(test, alpha, ...) {
   search <- TetradSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_return_passable_args(args, "tetrad", test, search)
+  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "fci", test = test)
   if (length(args_to_pass$test_args) != 0) {
     search$set_test(test, alpha, args_to_pass$test_args)
   } else {
@@ -54,84 +54,4 @@ fci_pcalg <- function(test, alpha, ...) {
       search$run_search(data)
     }
   )
-}
-
-check_args_and_return_passable_args <- function(args, engine, test = NULL, search = NULL) {
-  # Check if the engine is supported
-  if (!(engine %in% engine_registry)) {
-    stop(
-      "Engine ", paste(engine), " is not supported. Supported engines are: ",
-      paste(engine_registry, collapse = ", ")
-    )
-  }
-  if (engine == "pcalg") {
-    engine_args <- names(formals(pcalg::fci))
-
-    # Filter out recognized arguments
-    args_to_pass_to_engine <- args[names(args) %in% engine_args]
-
-    # Identify unrecognized arguments
-    args_not_in_engine_args <- setdiff(names(args), engine_args)
-
-    if (length(args_not_in_engine_args) > 0) {
-      if ("..." %in% engine_args) {
-        warning(
-          paste0(
-            "The following arguments might not be used in ", engine, "::fci : ",
-            paste(args_not_in_engine_args, collapse = ", ")
-          )
-        )
-      } else {
-        stop(
-          paste0(
-            "The following arguments are not recognized by ", engine, "::fci : ",
-            paste(args_not_in_engine_args, collapse = ", ")
-          )
-        )
-      }
-    }
-
-    return(args_to_pass_to_engine)
-  } else if (engine == "tetrad") {
-    if (is.null(search)) {
-      stop("Search object must be provided for checks.")
-    }
-    if (is.null(test)) {
-      stop("Test must be provided for Tetrad engine checks.")
-    }
-
-    engine_args_alg <- search$get_parameters_for_function("fci")
-    engine_args_test <- search$get_parameters_for_function(test)
-
-    args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
-    args_to_pass_to_engine_test <- args[names(args) %in% engine_args_test]
-
-    valid_tetrad_args <- c(engine_args_alg, engine_args_test)
-    args_not_in_engine_args <- setdiff(names(args), valid_tetrad_args)
-
-    if (length(args_not_in_engine_args) > 0) {
-      if ("..." %in% valid_tetrad_args) {
-        warning(
-          paste0(
-            "The following arguments might not be used in ", engine, "::fci : ",
-            paste(args_not_in_engine_args, collapse = ", ")
-          )
-        )
-      } else {
-        stop(
-          paste0(
-            "The following arguments are not recognized by ", engine, "::fci : ",
-            paste(args_not_in_engine_args, collapse = ", ")
-          )
-        )
-      }
-    }
-
-    return(list(
-      alg_args = args_to_pass_to_engine_alg,
-      test_args = args_to_pass_to_engine_test
-    ))
-  } else {
-    stop("Unsupported engine: ", engine)
-  }
 }
