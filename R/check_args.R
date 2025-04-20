@@ -21,6 +21,13 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   if (is.null(test) && is.null(score)) {
     stop("Neither test or score is specified.")
   }
+
+  # Verbose will be passed directly to TetradSearch class.
+  if ("verbose" %in% names(args)) {
+    search$set_verbose(args[["verbose"]])
+    args$verbose <- NULL
+  }
+
   engine_args_test <- c()
   engine_args_score <- c()
   if (!is.null(test)) {
