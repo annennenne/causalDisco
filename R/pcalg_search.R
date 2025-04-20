@@ -117,6 +117,10 @@ pcalgSearch <- R6Class(
     },
     set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
+      warning(
+        "The pcalg engine does not support non-symmetric background",
+        "knowledge (required or fobidden edges). \n  The knowledge will be converted to symmetric."
+      )
       if (!!length(knowledge_obj$tiers)) {
         warning("Tiered background knowledge cannot be utilized by the pcalg engine.")
       }
