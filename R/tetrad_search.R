@@ -397,6 +397,11 @@ TetradSearch <- R6Class(
     #' @param tier (numeric) The tier index.
     #' @param forbiddenWithin (logical) If TRUE, variables in the same tier cannot connect to each other.
     set_tier_forbidden_within = function(tier, forbiddenWithin = TRUE) {
+      stopifnot(
+        is.numeric(tier),
+        floor(tier) == tier,
+        is.logical(forbiddenWithin)
+      )
       .jcall(
         self$knowledge,
         "V",
@@ -453,6 +458,10 @@ TetradSearch <- R6Class(
     #' @param fn_pattern (character) A pattern that should match a private method name.
     #' @return (character) The names of the parameters.
     get_parameters_for_function = function(fn_pattern, score = FALSE, test = FALSE, alg = FALSE) {
+      stopifnot(
+        is.character(fn_pattern),
+        is.logical(c(score, test, alg))
+      )
       # Check if exclusively one of score, etst, or alg is TRUE
       if (sum(c(score, test, alg)) != 1) {
         stop(
@@ -500,8 +509,21 @@ TetradSearch <- R6Class(
     #' @return Nothing, but populates \code{self$java} with the resulting graph.
     run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE,
                           unstable_bhat = FALSE, stable_bhat = FALSE) {
+      stopifnot(
+        is.logical(
+          c(
+            bootstrap,
+            bhat,
+            unstable_bhat,
+            stalbe_bhat
+          )
+        )
+      )
       if (!is.null(data)) {
         self$set_data(data)
+      }
+      if (!is.data.frame(data)) {
+        stop("Input data should be a data frame.")
       }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().")
