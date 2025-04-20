@@ -590,12 +590,8 @@ TetradSearch <- R6Class(
     #' @description Sets an integer time lag for time-series algorithms.
     #' @param time_lag (integer) The time lag to set.
     set_time_lag = function(time_lag = 0) {
-      .jcall(
-        self$params,
-        "V",
-        "set",
-        .jfield("edu/cmu/tetrad/util/Params", "S", "TIME_LAG"),
-        time_lag
+      self$set_params(
+        TIME_LAG = time_lag
       )
     },
 
