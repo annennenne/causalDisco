@@ -67,6 +67,10 @@ TetradSearch <- R6Class(
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
     set_test = function(method, ..., mc = FALSE) {
+      stopifnot(
+        is.logical(mc),
+        length(mc) == 1
+      )
       method <- tolower(method)
       switch(method,
         "chi_square" = {
@@ -137,9 +141,6 @@ TetradSearch <- R6Class(
         },
         "discrete_bic" = {
           private$use_discrete_bic_score(...)
-        },
-        "fisher_z" = {
-          private$use_fisher_z_score(...)
         },
         "gic" = {
           private$use_gic_score(...)
@@ -400,7 +401,8 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(tier),
         floor(tier) == tier,
-        is.logical(forbiddenWithin)
+        is.logical(forbiddenWithin),
+        length(forbiddenWithin) == 1
       )
       .jcall(
         self$knowledge,
@@ -460,7 +462,10 @@ TetradSearch <- R6Class(
     get_parameters_for_function = function(fn_pattern, score = FALSE, test = FALSE, alg = FALSE) {
       stopifnot(
         is.character(fn_pattern),
-        is.logical(c(score, test, alg))
+        is.logical(c(score, test, alg)),
+        length(score) == 1,
+        length(test) == 1,
+        length(alg) == 1
       )
       # Check if exclusively one of score, etst, or alg is TRUE
       if (sum(c(score, test, alg)) != 1) {
@@ -517,7 +522,11 @@ TetradSearch <- R6Class(
             unstable_bhat,
             stalbe_bhat
           )
-        )
+        ),
+        length(bootstrap) == 1,
+        length(bhat) == 1,
+        length(unstable_bhat) == 1,
+        length(stable_bhat) == 1
       )
       if (!is.null(data)) {
         self$set_data(data)
@@ -578,6 +587,20 @@ TetradSearch <- R6Class(
                                  with_replacement = TRUE,
                                  resampling_ensemble = 1,
                                  seed = -1) {
+      stopifnot(
+        is.numeric(number_resampling),
+        floor(number_resampling) == number_resampling,
+        number_resampling >= 0,
+        is.numeric(percent_resample_size),
+        percent_resample_size >= 0,
+        percent_resample_size <= 100,
+        is.logical(c(add_original, with_replacement)),
+        length(add_original) == 1,
+        length(with_replacement) == 1,
+        is.numeric(resampling_ensemble),
+        floor(resampling_ensemble) == resampling_ensemble,
+        is.numeric(seed)
+      )
       self$set_params(
         NUMBER_RESAMPLING = number_resampling,
         PERCENT_RESAMPLE_SIZE = percent_resample_size,
@@ -592,7 +615,11 @@ TetradSearch <- R6Class(
     #' @description Sets or overrides the data used by Tetrad.
     #' @param data (data.frame) The new data to load.
     set_data = function(data) {
-      if (is.null(self$data) || is.null(self$rdata) ||
+      stopifnot(
+        is.data.frame(data)
+      )
+      if (is.null(self$data) ||
+        is.null(self$rdata) ||
         !isTRUE(all.equal(self$rdata, data))) {
         self$rdata <- data
         self$data <- rdata_to_tetrad(data)
@@ -604,7 +631,8 @@ TetradSearch <- R6Class(
     #' @param verbose (logical) TRUE to enable verbose logging, FALSE otherwise.
     set_verbose = function(verbose) {
       stopifnot(
-        is.logical(verbose)
+        is.logical(verbose),
+        length(verbose) == 1
       )
       self$set_params(
         VERBOSE = verbose
@@ -750,6 +778,13 @@ TetradSearch <- R6Class(
                                    circle_ept = 1,
                                    arrow_ept = 2,
                                    tail_ept = 3) {
+      stopifnot(
+        is.numeric(c(null_ept, circle_ept, arrow_ept, tail_ept)),
+        floor(null_ept) == null_ept,
+        floor(circle_ept) == circle_ept,
+        floor(arrow_ept) == arrow_ept,
+        floor(tail_ept) == tail_ept
+      )
       if (is.null(java_obj)) {
         java_obj <- self$java
       }
@@ -1093,6 +1128,14 @@ TetradSearch <- R6Class(
                                  structure_prior = 0,
                                  sem_bic_rule = 1,
                                  singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(singularity_lambda),
+        singularity_lambda >= 0,
+        is.numeric(c(penalty_discount, structure_prior, sem_bic_rule)),
+        floor(penalty_discount) == penalty_discount,
+        floor(structure_prior) == structure_prior,
+        floor(sem_bic_rule) == sem_bic_rule,
+      )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         SEM_BIC_STRUCTURE_PRIOR = structure_prior,
@@ -1105,6 +1148,13 @@ TetradSearch <- R6Class(
     use_ebic_score = function(gamma = 0.8,
                               precompute_covariances = TRUE,
                               singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(gamma, singularity_lambda)),
+        gamma >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
       self$set_params(
         EBIC_GAMMA = gamma,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -1115,6 +1165,11 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_gic_score = function(penalty_discount = 1, sem_gic_rule = 4) {
+      stopifnot(
+        is.numeric(c(penalty_discount, sem_gic_rule)),
+        penalty_discount >= 0,
+        floor(sem_gic_rule) == sem_gic_rule
+      )
       self$set_params(
         SEM_GIC_RULE = sem_gic_rule,
         PENALTY_DISCOUNT_ZS = penalty_discount
@@ -1125,6 +1180,12 @@ TetradSearch <- R6Class(
     use_mixed_variable_polynomial_score = function(structure_prior = 0,
                                                    f_degree = 0,
                                                    discretize = FALSE) {
+      stopifnot(
+        is.numeric(c(structure_prior, f_degree)),
+        floor(f_degree) == f_degree,
+        is.logical(discretize),
+        length(discretize) == 1
+      )
       self$set_params(
         STRUCTURE_PRIOR = structure_prior,
         DISCRETIZE = discretize
@@ -1143,6 +1204,13 @@ TetradSearch <- R6Class(
     use_poisson_prior_score = function(poission_lambda = 2,
                                        precompute_covariances = TRUE,
                                        singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(poission_lambda, singularity_lambda)),
+        poission_lambda >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
       self$set_params(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         POISSON_LAMBDA = poission_lambda,
@@ -1154,6 +1222,11 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_zhang_shen_bound_score = function(risk_bound = 0.2, singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(risk_bound, singularity_lambda)),
+        risk_bound >= 0,
+        singularity_lambda >= 0
+      )
       self$set_params(self$params,
         ZS_RISK_BOUND = risk_bound,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -1164,6 +1237,9 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
+      stopifnot(
+        is.numeric(c(sample_prior, structure_prior))
+      )
       self$set_params(
         PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
         STRUCTURE_PRIOR = structure_prior
@@ -1175,6 +1251,14 @@ TetradSearch <- R6Class(
                                               discretize = TRUE,
                                               num_categories_to_discretize = 3,
                                               structure_prior = 0) {
+      stopifnot(
+        is.numeric(c(penalty_discount, num_categories_to_discretize)),
+        penalty_discount >= 0,
+        num_categories_to_discretize >= 0,
+        floor(num_categories_to_discretize) == num_categories_to_discretize,
+        is.logical(discretize),
+        length(discretize) == 1
+      )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1189,6 +1273,12 @@ TetradSearch <- R6Class(
     use_degenerate_gaussian_score = function(penalty_discount = 1,
                                              structure_prior = 0,
                                              singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
+        penalty_discount >= 0,
+        structure_prior >= 0,
+        singularity_lambda >= 0
+      )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1203,6 +1293,15 @@ TetradSearch <- R6Class(
                                             penalty_discount = 2,
                                             singularity_lambda = 0.0,
                                             do_one_equation_only = FALSE) {
+      stopifnot(
+        is.numeric(c(truncation_limit, penalty_discount, singularity_lambda)),
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        penalty_discount >= 0,
+        singularity_lambda >= 0,
+        is.logical(do_one_equation_only),
+        length(do_one_equation_only) == 1
+      )
       self$set_params(
         TRUNCATION_LIMIT = truncation_limit,
         PENALTY_DISCOUNT = penalty_discount,
@@ -1218,6 +1317,15 @@ TetradSearch <- R6Class(
                                                penalty_discount = 2,
                                                singularity_lambda = 0.0,
                                                do_one_equation_only = FALSE) {
+      stopifnot(
+        is.numeric(c(truncation_limit, penalty_discount, singularity_lambda)),
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        penalty_discount >= 0,
+        singularity_lambda >= 0,
+        is.logical(do_one_equation_only),
+        length(do_one_equation_only) == 1
+      )
       self$set_params(
         TRUNCATION_LIMIT = truncation_limit,
         PENALTY_DISCOUNT = penalty_discount,
@@ -1231,6 +1339,11 @@ TetradSearch <- R6Class(
     },
     use_discrete_bic_score = function(penalty_discount = 2,
                                       structure_prior = 0) {
+      stopifnot(
+        is.numeric(c(penalty_discount, structure_prior)),
+        penalty_discount >= 0,
+        structure_prior >= 0
+      )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior
@@ -1241,6 +1354,13 @@ TetradSearch <- R6Class(
     use_mag_degenerate_gaussian_bic_score = function(penalty_discount = 1,
                                                      structure_prior = 0,
                                                      precompute_covariances = TRUE) {
+      stopifnot(
+        is.numeric(c(penalty_discount, structure_prior)),
+        penalty_discount >= 0,
+        structure_prior >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1249,19 +1369,21 @@ TetradSearch <- R6Class(
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
       self$score <- cast_obj(self$score)
     },
-    use_fisher_z_score = function(alpha = 0.01) {
-      self$set_params(
-        ALPHA = alpha
-      )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/FisherZScore")
-      self$score <- cast_obj(self$score)
-    },
     # Tests
     use_basis_function_lrt_test = function(truncation_limit = 3,
                                            alpha = 0.01,
                                            singularity_lambda = 0.0,
                                            do_one_equation_only = FALSE,
                                            use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(truncation_limit, alpha, singularity_lambda)),
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        alpha >= 0,
+        singularity_lambda >= 0,
+        is.logical(do_one_equation_only),
+        length(do_one_equation_only) == 1
+      )
       self$set_params(
         ALPHA = alpha,
         TRUNCATION_LIMIT = truncation_limit,
@@ -1283,6 +1405,12 @@ TetradSearch <- R6Class(
     use_basis_function_lrt_fs_test = function(truncation_limit = 3,
                                               alpha = 0.01,
                                               use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(truncation_limit, alpha)),
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        alpha >= 0
+      )
       self$set_params(
         ALPHA = alpha,
         TRUNCATION_LIMIT = truncation_limit
@@ -1302,6 +1430,11 @@ TetradSearch <- R6Class(
     use_fisher_z_test = function(alpha = 0.01,
                                  singularity_lambda = 0.0,
                                  use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(alpha, singularity_lambda)),
+        alpha >= 0,
+        singularity_lambda >= 0
+      )
       self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -1320,6 +1453,13 @@ TetradSearch <- R6Class(
                                    alpha = 0.01,
                                    cell_table_type = 1,
                                    use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(min_count, alpha, cell_table_type)),
+        min_count >= 0,
+        alpha >= 0,
+        floor(min_count) == min_count,
+        floor(cell_table_type) == cell_table_type
+      )
       self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
@@ -1341,6 +1481,13 @@ TetradSearch <- R6Class(
                                  alpha = 0.01,
                                  cell_table_type = 1,
                                  use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(min_count, alpha, cell_table_type)),
+        min_count >= 0,
+        alpha >= 0,
+        floor(min_count) == min_count,
+        floor(cell_table_type) == cell_table_type
+      )
       self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
@@ -1360,7 +1507,16 @@ TetradSearch <- R6Class(
                                              discretize = TRUE,
                                              num_categories_to_discretize = 3,
                                              use_for_mc = FALSE) {
-      self$set_params(
+      stopifnot(
+        is.numeric(c(alpha, num_categories_to_discretize)),
+        alpha >= 0,
+        num_categories_to_discretize >= 0,
+        floor(num_categories_to_discretize) == num_categories_to_discretize,
+        is.logical(discretize),
+        length(discretize) == 1
+      )
+      self$set_p
+      arams(
         ALPHA = alpha,
         DISCRETIZE = discretize,
         NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
@@ -1380,6 +1536,11 @@ TetradSearch <- R6Class(
     use_degenerate_gaussian_test = function(alpha = 0.01,
                                             singularity_lambda = 0.0,
                                             use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(alpha, singularity_lambda)),
+        alpha >= 0,
+        singularity_lambda >= 0
+      )
       self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -1400,10 +1561,17 @@ TetradSearch <- R6Class(
                                       cutoff = 0.5,
                                       prior_ess = 10,
                                       use_for_mc = FALSE) {
-      # Note: Ensure the field names match exactly those in Tetrad.
+      stopifnot(
+        is.logical(c(threshold, use_for_mc)),
+        length(threshold) == 1,
+        length(use_for_mc) == 1,
+        is.numeric(c(cutoff, prior_ess)),
+        cutoff >= 0,
+        prior_ess >= 0
+      )
       self$set_params(
         NO_RANDOMLY_DETERMINED_INDEPENDENCE = threshold,
-        CUTOFF_IND_TEST = cutoff, # adjust field name if necessary
+        CUTOFF_IND_TEST = cutoff,
         PRIOR_EQUIVALENT_SAMPLE_SIZE = prior_ess
       )
       if (use_for_mc) {
@@ -1420,22 +1588,41 @@ TetradSearch <- R6Class(
     },
     use_kci_test = function(alpha = 0.01,
                             approximate = TRUE,
-                            scalingfact_or = 1,
+                            scaling_factor = 1,
                             num_bootstraps = 5000,
                             threshold = 1e-3,
-                            epsilon = 1e-3,
-                            kernel_type = 1,
+                            kernel_type = "gaussian",
                             polyd = 5,
                             polyc = 1,
                             use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(alpha, scaling_factor, num_bootstraps, threshold, epsilon)),
+        alpha >= 0,
+        scaling_factor >= 0,
+        num_bootstraps >= 0,
+        floor(num_bootstraps) == num_bootstraps,
+        threshold >= 0,
+        epsilon >= 0,
+        is.logical(c(approximate, use_for_mc)),
+        length(approximate) == 1,
+        length(use_for_mc) == 1,
+        kernel_type %in% c("gaussian", "linear", "polynomial"),
+        floor(polyd) == polyd,
+        polyd >= 1,
+      )
+
+      switch(kernel_type,
+        gaussian = self$set_params(KERNEL_TYPE = 1),
+        linear = self$set_params(KERNEL_TYPE = 2),
+        polynomial = self$set_params(KERNEL_TYPE = 3)
+      )
+
       self$set_params(
         KCI_USE_APPROXIMATION = approximate,
         ALPHA = alpha,
-        SCALING_FACTOR = scalingfact_or,
+        SCALING_FACTOR = scaling_factor,
         KCI_NUM_BOOTSTRAPS = num_bootstraps,
         THRESHOLD_FOR_NUM_EIGENVALUES = threshold,
-        KCI_EPSILON = epsilon,
-        KERNEL_TYPE = kernel_type,
         POLYNOMIAL_DEGREE = polyd,
         POLYNOMIAL_CONSTANT = polyc
       )
@@ -1448,17 +1635,28 @@ TetradSearch <- R6Class(
       }
     },
     use_cci_test = function(alpha = 0.01,
-                            scalingfact_or = 2,
-                            num_basis_functions = 3,
+                            scaling_factor = 2,
                             basis_type = 4,
                             basis_scale = 0.0,
+                            truncation_limit = 3,
                             use_for_mc = FALSE) {
+      stopifnot(
+        is.numeric(c(alpha, scaling_factor, truncation_limit)),
+        alpha >= 0,
+        scaling_factor >= 0,
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        is.logical(use_for_mc),
+        length(use_for_mc) == 1,
+        floor(basis_type) == basis_type,
+        basis_scale >= 0
+      )
       self$set_params(
         ALPHA = alpha,
-        SCALING_FACTOR = scalingfact_or,
-        NUM_BASIS_FUNCTIONS = num_basis_functions,
+        SCALING_FACTOR = scaling_factor,
         BASIS_TYPE = basis_type,
-        BASIS_SCALE = basis_scale
+        BASIS_SCALE = basis_scale,
+        TRUNCATION_LIMIT = truncation_limit
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
@@ -1475,6 +1673,15 @@ TetradSearch <- R6Class(
                             max_degree = -1,
                             parallelized = FALSE,
                             faithfulness_assumed = FALSE) {
+      stopifnot(
+        is.logical(symmetric_first_step),
+        length(symmetric_first_step) == 1,
+        is.numeric(max_degree),
+        is.logical(parallelized),
+        length(parallelized) == 1,
+        is.logical(faithfulness_assumed),
+        length(faithfulness_assumed) == 1
+      )
       self$set_params(
         SYMMETRIC_FIRST_STEP = symmetric_first_step,
         MAX_DEGREE = max_degree,
@@ -1494,6 +1701,19 @@ TetradSearch <- R6Class(
                                trimming_style = 3,
                                number_of_expansions = 2,
                                faithfulness_assumed = FALSE) {
+      stopifnot(
+        is.character(targets),
+        length(targets) == 1,
+        is.numeric(max_degree),
+        max_degree >= -1,
+        is.numeric(trimming_style),
+        floor(trimming_style) == trimming_style,
+        is.numeric(number_of_expansions),
+        floor(number_of_expansions) == number_of_expansions,
+        number_of_expansions >= 0,
+        is.logical(faithfulness_assumed),
+        length(faithfulness_assumed) == 1
+      )
       self$set_params(
         TARGETS = targets,
         FAITHFULNESS_ASSUMED = faithfulness_assumed,
@@ -1509,13 +1729,20 @@ TetradSearch <- R6Class(
     },
     set_boss_alg = function(num_starts = 1,
                             use_bes = FALSE,
-                            time_lag = 0,
                             use_data_order = TRUE,
                             output_cpdag = TRUE) {
+      stopifnot(
+        is.numeric(c(num_starts, time_lag)),
+        floor(num_starts) == num_starts,
+        num_starts >= 1,
+        is.logical(c(use_bes, use_data_order, output_cpdag)),
+        length(use_bes) == 1,
+        length(use_data_order) == 1,
+        length(output_cpdag) == 1
+      )
       self$set_params(
         USE_BES = use_bes,
         NUM_STARTS = num_starts,
-        TIME_LAG = time_lag,
         USE_DATA_ORDER = use_data_order,
         OUTPUT_CPDAG = output_cpdag
       )
@@ -1530,6 +1757,16 @@ TetradSearch <- R6Class(
                                        use_bes = FALSE,
                                        num_starts = 1,
                                        allow_internal_randomness = TRUE) {
+      stopifnot(
+        is.character(targets),
+        length(targets) == 1,
+        is.numeric(num_starts),
+        floor(num_starts) == num_starts,
+        num_starts >= 1,
+        is.logical(c(use_bes, allow_internal_randomness)),
+        length(use_bes) == 1,
+        length(allow_internal_randomness) == 1
+      )
       self$set_params(
         TARGETS = targets,
         USE_BES = use_bes,
@@ -1551,6 +1788,21 @@ TetradSearch <- R6Class(
                              cpdag_algorithm = 4,
                              remove_effect_nodes = TRUE,
                              sample_style = 1) {
+      stopifnot(
+        is.character(targets),
+        length(targets) == 1,
+        is.numeric(c(selection_min_effect, num_subsamples, top_bracket)),
+        selection_min_effect >= 0,
+        num_subsamples >= 1,
+        floor(num_subsamples) == num_subsamples,
+        top_bracket >= 1,
+        floor(top_bracket) == top_bracket,
+        is.logical(c(parallelized, remove_effect_nodes)),
+        length(parallelized) == 1,
+        length(remove_effect_nodes) == 1,
+        floor(cpdag_algorithm) == cpdag_algorithm,
+        floor(sample_style) == sample_style
+      )
       self$set_params(
         SELECTION_MIN_EFFECT = selection_min_effect,
         NUM_SUBSAMPLES = num_subsamples,
@@ -1563,7 +1815,6 @@ TetradSearch <- R6Class(
         SAMPLE_STYLE = sample_style
       )
 
-      # Note: For Cstar, we pass both a test and score to the constructor.
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Cstar",
         self$test,
@@ -1575,7 +1826,6 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Sp",
         self$score
       )
-      self$alg$setKnowledge(self$knowledge)
     },
     set_grasp_alg = function(covered_depth = 4,
                              singular_depth = 1,
@@ -1584,6 +1834,19 @@ TetradSearch <- R6Class(
                              raskutti_uhler = FALSE,
                              use_data_order = TRUE,
                              num_starts = 1) {
+      stopifnot(
+        is.numeric(c(covered_depth, singular_depth, nonsingular_depth)),
+        floor(covered_depth) == covered_depth,
+        floor(singular_depth) == singular_depth,
+        floor(nonsingular_depth) == nonsingular_depth,
+        is.logical(c(ordered_alg, raskutti_uhler, use_data_order)),
+        length(ordered_alg) == 1,
+        length(raskutti_uhler) == 1,
+        length(use_data_order) == 1,
+        is.numeric(num_starts),
+        floor(num_starts) == num_starts,
+        num_starts >= 1
+      )
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -1606,12 +1869,15 @@ TetradSearch <- R6Class(
                           stable_fas = TRUE,
                           guarantee_cpdag = FALSE) {
       stopifnot(
-        is.numeric(conflict_rule), length(conflict_rule) == 1,
-        is.numeric(depth), length(depth) == 1,
-        is.logical(stable_fas), length(stable_fas) == 1,
-        is.logical(guarantee_cpdag), length(guarantee_cpdag) == 1
+        is.numeric(conflict_rule),
+        length(conflict_rule) == 1,
+        is.numeric(depth),
+        length(depth) == 1,
+        is.logical(stable_fas),
+        length(stable_fas) == 1,
+        is.logical(guarantee_cpdag),
+        length(guarantee_cpdag) == 1
       )
-
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -1629,6 +1895,16 @@ TetradSearch <- R6Class(
                            depth = -1,
                            stable_fas = TRUE,
                            guarantee_cpdag = TRUE) {
+      stopifnot(
+        is.numeric(conflict_rule),
+        length(conflict_rule) == 1,
+        is.numeric(depth),
+        length(depth) == 1,
+        is.logical(stable_fas),
+        length(stable_fas) == 1,
+        is.logical(guarantee_cpdag),
+        length(guarantee_cpdag) == 1
+      )
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -1647,6 +1923,18 @@ TetradSearch <- R6Class(
                              use_heuristic = TRUE,
                              max_disc_path_length = -1,
                              stable_fas = TRUE) {
+      stopifnot(
+        is.numeric(conflict_rule),
+        length(conflict_rule) == 1,
+        is.numeric(depth),
+        length(depth) == 1,
+        is.logical(use_heuristic),
+        length(use_heuristic) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(stable_fas),
+        length(stable_fas) == 1
+      )
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -1666,6 +1954,18 @@ TetradSearch <- R6Class(
                            max_disc_path_length = -1,
                            complete_rule_set_used = TRUE,
                            guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(depth),
+        length(depth) == 1,
+        is.logical(stable_fas),
+        length(stable_fas) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1,
+        is.logical(guarantee_pag),
+        length(guarantee_pag) == 1
+      )
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1684,6 +1984,16 @@ TetradSearch <- R6Class(
                             stable_fas = TRUE,
                             max_disc_path_length = -1,
                             complete_rule_set_used = TRUE) {
+      stopifnot(
+        is.numeric(depth),
+        length(depth) == 1,
+        is.logical(stable_fas),
+        length(stable_fas) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1
+      )
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -1700,6 +2010,14 @@ TetradSearch <- R6Class(
     set_cfci_alg = function(depth = -1,
                             max_disc_path_length = -1,
                             complete_rule_set_used = TRUE) {
+      stopifnot(
+        is.numeric(depth),
+        length(depth) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1
+      )
       self$set_params(
         DEPTH = depth,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -1717,6 +2035,18 @@ TetradSearch <- R6Class(
                             max_disc_path_length = -1,
                             complete_rule_set_used = TRUE,
                             guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(depth),
+        length(depth) == 1,
+        is.numeric(max_degree),
+        length(max_degree) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1,
+        is.logical(guarantee_pag),
+        length(guarantee_pag) == 1
+      )
       self$set_params(
         DEPTH = depth,
         MAX_DEGREE = max_degree,
@@ -1736,6 +2066,16 @@ TetradSearch <- R6Class(
                             max_disc_path_length = -1,
                             complete_rule_set_used = TRUE,
                             guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(depth),
+        length(depth) == 1,
+        is.numeric(max_disc_path_length),
+        length(max_disc_path_length) == 1,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1,
+        is.logical(guarantee_pag),
+        length(guarantee_pag) == 1
+      )
       self$set_params(
         DEPTH = depth,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -1755,6 +2095,16 @@ TetradSearch <- R6Class(
                                depth = 5,
                                max_disc_path_length = 5,
                                guarantee_pag = TRUE) {
+      stopifnot(
+        is.numeric(c(num_starts, max_blocking_path_length, depth, max_disc_path_length)),
+        floor(num_starts) == num_starts,
+        num_starts >= 1,
+        max_blocking_path_length >= 0,
+        depth >= 0,
+        max_disc_path_length >= 0,
+        is.logical(guarantee_pag),
+        length(guarantee_pag) == 1
+      )
       self$set_params(
         NUM_STARTS = num_starts,
         MAX_BLOCKING_PATH_LENGTH = max_blocking_path_length,
@@ -1782,6 +2132,23 @@ TetradSearch <- R6Class(
                                  use_data_order = TRUE,
                                  num_starts = 1,
                                  guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(c(depth, max_disc_path_length, covered_depth, singular_depth, nonsingular_depth)),
+        floor(depth) == depth,
+        floor(max_disc_path_length) == max_disc_path_length,
+        floor(covered_depth) == covered_depth,
+        floor(singular_depth) == singular_depth,
+        floor(nonsingular_depth) == nonsingular_depth,
+        is.logical(c(stable_fas, ordered_alg, raskutti_uhler, use_data_order, guarantee_pag)),
+        length(stable_fas) == 1,
+        length(ordered_alg) == 1,
+        length(raskutti_uhler) == 1,
+        length(use_data_order) == 1,
+        length(guarantee_pag) == 1,
+        is.numeric(num_starts),
+        floor(num_starts) == num_starts,
+        num_starts >= 1
+      )
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -1808,6 +2175,15 @@ TetradSearch <- R6Class(
                              complete_rule_set_used = TRUE,
                              depth = -1,
                              guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(c(max_disc_path_length, depth)),
+        max_disc_path_length >= 0,
+        depth >= 0,
+        is.logical(complete_rule_set_used),
+        length(complete_rule_set_used) == 1,
+        is.logical(guarantee_pag),
+        length(guarantee_pag) == 1
+      )
       self$set_params(
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -1826,6 +2202,14 @@ TetradSearch <- R6Class(
                                   ica_max_iter = 5000,
                                   ica_tolerance = 1e-8,
                                   threshold_b = 0.1) {
+      stopifnot(
+        is.numeric(c(ica_a, ica_max_iter, ica_tolerance, threshold_b)),
+        ica_a >= 0,
+        ica_max_iter >= 0,
+        floor(ica_max_iter) == ica_max_iter,
+        ica_tolerance >= 0,
+        threshold_b >= 0
+      )
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -1843,6 +2227,15 @@ TetradSearch <- R6Class(
                                  ica_tolerance = 1e-8,
                                  threshold_b = 0.1,
                                  threshold_w = 0.1) {
+      stopifnot(
+        is.numeric(c(ica_a, ica_max_iter, ica_tolerance, threshold_b, threshold_w)),
+        ica_a >= 0,
+        ica_max_iter >= 0,
+        floor(ica_max_iter) == ica_max_iter,
+        ica_tolerance >= 0,
+        threshold_b >= 0,
+        threshold_w >= 0
+      )
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -1861,6 +2254,15 @@ TetradSearch <- R6Class(
                             fask_delta = -0.3,
                             left_right_rule = 1,
                             skew_edge_threshold = 0.3) {
+      stopifnot(
+        is.numeric(c(alpha, depth, fask_delta, skew_edge_threshold)),
+        alpha >= 0,
+        depth >= -1,
+        fask_delta >= -1,
+        skew_edge_threshold >= 0,
+        floor(depth) == depth,
+        floor(left_right_rule) == left_right_rule
+      )
       self$set_params(
         ALPHA = alpha,
         DEPTH = depth,
@@ -1880,6 +2282,15 @@ TetradSearch <- R6Class(
                             tetrad_test = 1,
                             include_structure_model = TRUE,
                             precompute_covariances = TRUE) {
+      stopifnot(
+        is.numeric(c(alpha, penalty_discount)),
+        alpha >= 0,
+        penalty_discount >= 0,
+        floor(tetrad_test) == tetrad_test,
+        is.logical(c(include_structure_model, precompute_covariances)),
+        length(include_structure_model) == 1,
+        length(precompute_covariances) == 1
+      )
       self$set_params(
         ALPHA = alpha,
         PENALTY_DISCOUNT = penalty_discount,
@@ -1891,11 +2302,23 @@ TetradSearch <- R6Class(
       self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
     },
     set_ccd_alg = function(depth = -1, apply_r1 = TRUE) {
-      if (.jcall(self$knowledge, "Z", "isEmpty") == FALSE) {
-        cat("CCD does not use knowledge.\n")
-        return()
-      }
-      self$set_params(self$params, DEPTH = depth, APPLY_R1 = apply_r1)
+      stopifnot(
+        is.numeric(c(depth)),
+        depth >= -1,
+        is.logical(apply_r1),
+        length(apply_r1) == 1
+      )
+      stopifnot(
+        is.numerical(depth),
+        depth >= -1,
+        floor(depth) == depth,
+        is.logical(apply_r1),
+        length(apply_r1) == 1
+      )
+      self$set_params(self$params,
+        DEPTH = depth,
+        APPLY_R1 = apply_r1
+      )
 
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Ccd",
@@ -1903,6 +2326,10 @@ TetradSearch <- R6Class(
       )
     },
     set_svar_fci_alg = function(penalty_discount = 2) {
+      stopifnot(
+        is.numeric(penalty_discount),
+        penalty_discount >= 0
+      )
       num_lags <- 2
       # Create lagged data using Java method.
       lagged_data <- .jcall(
@@ -1921,7 +2348,7 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/score/SemBicScore",
         lagged_data
       )
-      # Wrap penalty_discount and set it on ts_score.
+
       ts_score$setPenaltyDiscount(.jcast(
         .jnew("java/lang/Double", as.double(penalty_discount)),
         "java/lang/Object"
@@ -1938,6 +2365,13 @@ TetradSearch <- R6Class(
       )
     },
     set_dagma_alg = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
+      stopifnot(
+        is.numeric(c(lambda1, w_threshold)),
+        lambda1 >= 0,
+        w_threshold >= 0,
+        is.logical(cpdag),
+        length(cpdag) == 1
+      )
       self$set_params(
         LAMBDA1 = lambda1,
         W_THRESHOLD = w_threshold,
@@ -1953,6 +2387,10 @@ TetradSearch <- R6Class(
       )
     },
     set_svar_gfci_alg = function(penalty_discount = 2) {
+      stopifnot(
+        is.numeric(penalty_discount),
+        penalty_discount >= 0
+      )
       num_lags <- 2
       lagged_data <- .jcall(
         "edu/cmu/tetrad/search/utils/TsUtils",
@@ -1981,7 +2419,6 @@ TetradSearch <- R6Class(
         ts_score
       )
       svar_gfci$setKnowledge(lagged_data$getKnowledge())
-      svar_gfci$setVerbose(TRUE)
       self$alg <- svar_gfci
     }
   )
