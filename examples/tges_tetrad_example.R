@@ -27,8 +27,9 @@ kn <- knowledge(
     c("V2", "V3")
   ) # or like this
 )
-
-my_tges <- ges(engine = "tetrad", score = "fisher_z")
+my_tges_tetrad <- ges(engine = "tetrad", score = "sem_bic")
+my_ges_pcalg <- ges(engine = "pcalg", score = "sem_bic")
 
 # call disco with background knowledge
-disco(df, method = my_tges, knowledge = kn) |> cat()
+disco(df, method = my_tges_tetrad, knowledge = kn) |> cat()
+disco(df, method = my_tges_pcalg, knowledge = kn)

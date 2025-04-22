@@ -42,7 +42,7 @@ pc_pcalg <- function(test, alpha, ...) {
   args <- list(...)
   search <- pcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc", test = test)
-  search$set_params(args_to_pass)
+  search$set_params(args_to_pass$alg_args)
   search$set_test(test, alpha)
   search$set_alg("pc")
   runner <- list(

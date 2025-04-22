@@ -40,12 +40,12 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   engine_args_alg <- search$get_parameters_for_function(alg, alg = TRUE)
 
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
-  args_to_pass_to_engine_score_test <- args[names(args) %in% engine_args_score_test]
+  args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
+  args_to_pass_to_engine_test <- args[names(args) %in% engine_args_test]
 
-  # Check if any arguments are not in tetrad's pc or test
   args_not_in_engine_args <- setdiff(
     names(args),
-    c(engine_args_alg, engine_args_test)
+    c(engine_args_alg, engine_args_test, engine_args_score)
   )
   if (length(args_not_in_engine_args) > 0) {
     stop(
@@ -55,30 +55,46 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   }
   return(list(
     alg_args = args_to_pass_to_engine_alg,
-    test_args = args_to_pass_to_engine_score_test
+    test_args = args_to_pass_to_engine_test,
+    score_args = args_to_pass_to_engine_score
   ))
 }
 
 check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL, score = NULL) {
-  # todo: test
+  # Note that the pcalg package does not have args that are sent
+  # directly to the test itself, but it is rather sent to the algorithm.
   switch(alg,
-    pc = engine_args <- names(formals(pcalg::pc)),
-    fci = engine_args <- names(formals(pcalg::fci)),
-    ges = engine_args <- names(formals(pcalg::ges)),
+    pc  = engine_args_alg <- names(formals(pcalg::pc)),
+    fci = engine_args_alg <- names(formals(pcalg::fci)),
+    ges = engine_args_alg <- names(formals(pcalg::ges)),
     stop("Unsupported algorithm:", alg)
   )
 
-  args_to_pass_to_engine <- args[names(args) %in% engine_args]
-
+  args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
+  engine_args_score <- list()
+  if (!is.null(score)) {
+    engine_args_score <- methods::getRefClass("GaussL0penIntScore")$
+      methods("initialize") |>
+      formalArgs()
+    args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
+  } else {
+    args_to_pass_to_engine_score <- list()
+  }
   # Check if any arguments are not in pcalg::
-  args_not_in_engine_args <- setdiff(names(args), engine_args)
+  args_not_in_engine_args <- setdiff(
+    names(args),
+    c(engine_args_alg, engine_args_score)
+  )
   if (length(args_not_in_engine_args) > 0) {
     warning(
       paste0("The following arguments are not used in ", engine, "::", alg, ": "),
       paste(args_not_in_engine_args, collapse = ", ")
     )
   }
-  return(args_to_pass_to_engine)
+  return(list(
+    alg_args = args_to_pass_to_engine_alg,
+    score_args = args_to_pass_to_engine_score
+  ))
 }
 
 check_args_and_distribute_args_bnlearn <- function() {

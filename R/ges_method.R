@@ -1,5 +1,15 @@
 #' @export
 ges <- function(engine = "tetrad", score, ...) {
+  if (!is.character(engine)) {
+    stop(
+      "Please specify engine as a character string.",
+      "\nIf you want to use ges() from other packages",
+      " you should specify them with pkgname::ges()."
+    )
+  }
+  if (missing(score)) {
+    stop("Score is required.")
+  }
   engine <- tolower(engine)
 
   switch(engine,
@@ -41,8 +51,22 @@ ges_tetrad <- function(score, ...) {
 }
 
 ges_pcalg <- function(score, ...) {
-  stop("Not implemented yet.")
+  args <- list(...)
+  search <- pcalgSearch$new()
+  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "ges", score = score)
+  search$set_params(args_to_pass$alg_args)
+  search$set_score(score, args_to_pass$score_args)
+  search$set_alg("ges")
+  runner <- list(
+    set_knowledge = function(knowledge) {
+      search$set_knowledge(knowledge)
+    },
+    run = function(data) {
+      search$run_search(data, set_suff_stat = FALSE)
+    }
+  )
 }
+
 
 
 ges_bnlearn <- function(score, ...) {

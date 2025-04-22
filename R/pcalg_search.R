@@ -23,9 +23,11 @@ pcalgSearch <- R6Class(
     set_params = function(params) {
       self$params <- params
     },
-    set_data = function(data) {
+    set_data = function(data, set_suff_stat = TRUE) {
       self$data <- data
-      self$set_suff_stat()
+      if (set_suff_stat) {
+        self$set_suff_stat()
+      }
 
       # Reset uniques, used to determine binary (or not) G square test
       private$uniques <- c()
@@ -86,8 +88,37 @@ pcalgSearch <- R6Class(
         stop("Unknown test type using pcalg engine: ", method)
       )
     },
-    set_score = function(...) {
-      message("set_score() is not yet implemented.")
+    set_score = function(method, params = list()) {
+      method <- tolower(method)
+      # Function that will be used to build the score, when data is set
+      return_pcalg_score <- function() {
+        if (is.null(self$data)) {
+          stop("Data must be set before score.")
+        }
+        switch(method,
+          "sem_bic" = {
+            score <- rlang::exec(
+              "new",
+              Class = "GaussL0penObsScore",
+              data  = self$data,
+              !!!params # disappears cleanly when empty
+            )
+          },
+          # todo: find the equivalent in tetrad and make them have same name
+          # should this even be here?
+          "sem_bic_int" = {
+            score <- rlang::exec(
+              "new",
+              Class = "GaussL0penIntScore",
+              data  = self$data,
+              !!!params # disappears cleanly when empty
+            )
+          },
+          stop("Unknown score type using pcalg engine: ", method)
+        )
+        return(score)
+      }
+      private$score_function <- return_pcalg_score
     },
     set_alg = function(method) {
       method <- tolower(method)
@@ -110,7 +141,11 @@ pcalgSearch <- R6Class(
           )
         },
         "ges" = {
-          self$alg <- "ges" # todo
+          # Score will be set when we use run_search()
+          self$alg <- purrr::partial(
+            pcalg::ges,
+            !!!self$params
+          )
         },
         stop("Unknown method type using pcalg engine: ", method)
       )
@@ -127,7 +162,11 @@ pcalgSearch <- R6Class(
 
       # Function that will be used to build the fixed constraints
       # but it can first be done, when data is provided.
-      return_pcalg_background_knowledge <- function(labels) {
+      return_pcalg_background_knowledge <- function() {
+        if (is.null(self$data)) {
+          stop("Data must be set before knowledge.")
+        }
+        labels <- colnames(self$data)
         p <- length(labels)
 
         fixedGaps <- matrix(FALSE,
@@ -176,7 +215,6 @@ pcalgSearch <- R6Class(
           }
         }
         return(list(fixedGaps = fixedGaps, fixedEdges = fixedEdges))
-        invisible(self)
       }
 
       # Due to the nature of pcalg, we cannot set knowledge before
@@ -185,34 +223,61 @@ pcalgSearch <- R6Class(
       # done when data is provided.
       private$knowledge_function <- return_pcalg_background_knowledge
     },
-    run_search = function(data) {
+    run_search = function(data, set_suff_stat = TRUE) {
       if (!is.null(data)) {
-        self$set_data(data)
-      }
-      if (is.null(self$suff_stat)) {
-        stop("No sufficient statistic is set. Use set_data() first.")
+        self$set_data(data, set_suff_stat)
       }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().")
       }
+      if (is.null(self$suff_stat) && set_suff_stat) {
+        stop("No sufficient statistic is set. Use set_data() first.")
+      }
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.")
       }
-      if (!is.null(private$knowledge_function)) {
-        # If knowledge is set, we now need to call the function
-        # to get the fixed constraints.
-        self$knowledge <- private$knowledge_function(colnames(self$data))
-        result <- self$alg(
-          suffStat = self$suff_stat,
-          labels = colnames(self$data),
-          fixedGaps = self$knowledge$fixedGaps,
-          fixedEdges = self$knowledge$fixedEdges
-        )
+
+      # If score_function is NULL, then we are not using a score-based algorithm
+      if (is.null(private$score_function)) {
+        if (!is.null(private$knowledge_function)) {
+          # If knowledge is set, we now need to call the function
+          # to get the fixed constraints.
+          self$knowledge <- private$knowledge_function()
+          result <- self$alg(
+            suffStat = self$suff_stat,
+            labels = colnames(self$data),
+            fixedGaps = self$knowledge$fixedGaps,
+            fixedEdges = self$knowledge$fixedEdges
+          )
+        } else {
+          result <- self$alg(
+            suffStat = self$suff_stat,
+            labels = colnames(self$data)
+          )
+        }
+        # score_function is not null, so we are using a score-based algorithm
       } else {
-        result <- self$alg(
-          suffStat = self$suff_stat,
-          labels = colnames(self$data)
-        )
+        if (!is.null(private$knowledge_function)) {
+          # If knowledge is set, we now need to call the function
+          # to get the fixed constraints.
+          self$knowledge <- private$knowledge_function()
+          self$score <- private$score_function()
+          if (!is.null(self$knowledge$fixedEdges)) {
+            warning(
+              "pcalg::ges() does not take required edges as arguments.",
+              "\n  They will not be used here."
+            )
+          }
+          result <- self$alg(
+            self$score,
+            fixedGaps = self$knowledge$fixedGaps
+          )
+        } else {
+          self$score <- private$score_function()
+          result <- self$alg(
+            self$score
+          )
+        }
       }
       return(result)
     }
@@ -243,6 +308,7 @@ pcalgSearch <- R6Class(
       ) # end return
     },
     uniques = c(),
-    knowledge_function = NULL
+    knowledge_function = NULL,
+    score_function = NULL
   )
 )
