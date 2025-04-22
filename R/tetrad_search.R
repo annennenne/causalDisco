@@ -53,6 +53,7 @@ TetradSearch <- R6Class(
     initialize = function() {
       if (!.jniInitialized) {
         .jinit(
+          # todo: how many gb?
           parameters = "-Xmx2g",
           classpath = "tetrad/tetrad-current.jar"
         )
