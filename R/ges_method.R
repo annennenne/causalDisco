@@ -22,7 +22,7 @@ ges <- function(engine = "tetrad", score, ...) {
 
 
 # Set available engines
-attr(ges, "engines") <- c("tetrad")
+attr(ges, "engines") <- c("tetrad", "pcalg")
 
 ges_tetrad <- function(score, ...) {
   search <- TetradSearch$new()
