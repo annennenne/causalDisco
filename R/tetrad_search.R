@@ -26,6 +26,7 @@
 #' @name TetradSearch
 #' @docType class
 #' @rdname TetradSearch
+#' @importFrom rJava .jnew .jcall .jfield .jniInitialized .jinit
 #' @importFrom R6 R6Class
 #' @export TetradSearch
 TetradSearch <- R6Class(
@@ -50,6 +51,12 @@ TetradSearch <- R6Class(
     #' @description Initializes the \code{TetradSearch} object, creating new Java objects for
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
+      if (!.jniInitialized) {
+        .jinit(
+          parameters = "-Xmx2g",
+          classpath = "tetrad/tetrad-current.jar"
+        )
+      }
       self$data <- NULL
       self$score <- NULL
       self$test <- NULL
@@ -458,8 +465,14 @@ TetradSearch <- R6Class(
     ###### get_parameters_for_function ######
     #' @description Retrieves the argument names of a matching private function.
     #' @param fn_pattern (character) A pattern that should match a private method name.
+    #' @param score (logical) If TRUE, retrieves parameters for a scoring function.
+    #' @param test (logical) If TRUE, retrieves parameters for a test function.
+    #' @param alg (logical) If TRUE, retrieves parameters for an algorithm.
     #' @return (character) The names of the parameters.
-    get_parameters_for_function = function(fn_pattern, score = FALSE, test = FALSE, alg = FALSE) {
+    get_parameters_for_function = function(fn_pattern,
+                                           score = FALSE,
+                                           test = FALSE,
+                                           alg = FALSE) {
       stopifnot(
         is.character(fn_pattern),
         is.logical(c(score, test, alg)),
@@ -520,7 +533,7 @@ TetradSearch <- R6Class(
             bootstrap,
             bhat,
             unstable_bhat,
-            stalbe_bhat
+            stable_bhat
           )
         ),
         length(bootstrap) == 1,
@@ -1124,171 +1137,6 @@ TetradSearch <- R6Class(
   # set_score and set_test.
   private = list(
     # Scores
-    use_sem_bic_score = function(penalty_discount = 2,
-                                 structure_prior = 0,
-                                 sem_bic_rule = 1,
-                                 singularity_lambda = 0.0) {
-      stopifnot(
-        is.numeric(singularity_lambda),
-        singularity_lambda >= 0,
-        is.numeric(c(penalty_discount, structure_prior, sem_bic_rule)),
-        floor(penalty_discount) == penalty_discount,
-        floor(structure_prior) == structure_prior,
-        floor(sem_bic_rule) == sem_bic_rule,
-      )
-      self$set_params(
-        PENALTY_DISCOUNT = penalty_discount,
-        SEM_BIC_STRUCTURE_PRIOR = structure_prior,
-        SEM_BIC_RULE = sem_bic_rule,
-        SINGULARITY_LAMBDA = singularity_lambda
-      )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
-      self$score <- cast_obj(self$score)
-    },
-    use_ebic_score = function(gamma = 0.8,
-                              precompute_covariances = TRUE,
-                              singularity_lambda = 0.0) {
-      stopifnot(
-        is.numeric(c(gamma, singularity_lambda)),
-        gamma >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
-      self$set_params(
-        EBIC_GAMMA = gamma,
-        PRECOMPUTE_COVARIANCES = precompute_covariances,
-        SINGULARITY_LAMBDA = singularity_lambda
-      )
-
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/EbicScore")
-      self$score <- cast_obj(self$score)
-    },
-    use_gic_score = function(penalty_discount = 1, sem_gic_rule = 4) {
-      stopifnot(
-        is.numeric(c(penalty_discount, sem_gic_rule)),
-        penalty_discount >= 0,
-        floor(sem_gic_rule) == sem_gic_rule
-      )
-      self$set_params(
-        SEM_GIC_RULE = sem_gic_rule,
-        PENALTY_DISCOUNT_ZS = penalty_discount
-      )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
-      self$score <- cast_obj(self$score)
-    },
-    use_mixed_variable_polynomial_score = function(structure_prior = 0,
-                                                   f_degree = 0,
-                                                   discretize = FALSE) {
-      stopifnot(
-        is.numeric(c(structure_prior, f_degree)),
-        floor(f_degree) == f_degree,
-        is.logical(discretize),
-        length(discretize) == 1
-      )
-      self$set_params(
-        STRUCTURE_PRIOR = structure_prior,
-        DISCRETIZE = discretize
-      )
-      # f_degree is not a static field in Params so we set it manually.
-      self$params$set(
-        "fDegree",
-        .jcast(
-          .jnew("java/lang/Double", as.double(f_degree)),
-          "java/lang/Object"
-        )
-      )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
-      self$score <- cast_obj(self$score)
-    },
-    use_poisson_prior_score = function(poission_lambda = 2,
-                                       precompute_covariances = TRUE,
-                                       singularity_lambda = 0.0) {
-      stopifnot(
-        is.numeric(c(poission_lambda, singularity_lambda)),
-        poission_lambda >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
-      self$set_params(
-        PRECOMPUTE_COVARIANCES = precompute_covariances,
-        POISSON_LAMBDA = poission_lambda,
-        SINGULARITY_LAMBDA = singularity_lambda
-      )
-      self$score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/PoissonPriorScore"
-      )
-      self$score <- cast_obj(self$score)
-    },
-    use_zhang_shen_bound_score = function(risk_bound = 0.2, singularity_lambda = 0.0) {
-      stopifnot(
-        is.numeric(c(risk_bound, singularity_lambda)),
-        risk_bound >= 0,
-        singularity_lambda >= 0
-      )
-      self$set_params(self$params,
-        ZS_RISK_BOUND = risk_bound,
-        SINGULARITY_LAMBDA = singularity_lambda
-      )
-      self$score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/ZhangShenBoundScore"
-      )
-      self$score <- cast_obj(self$score)
-    },
-    use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
-      stopifnot(
-        is.numeric(c(sample_prior, structure_prior))
-      )
-      self$set_params(
-        PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
-        STRUCTURE_PRIOR = structure_prior
-      )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
-      self$score <- cast_obj(self$score)
-    },
-    use_conditional_gaussian_score = function(penalty_discount = 1,
-                                              discretize = TRUE,
-                                              num_categories_to_discretize = 3,
-                                              structure_prior = 0) {
-      stopifnot(
-        is.numeric(c(penalty_discount, num_categories_to_discretize)),
-        penalty_discount >= 0,
-        num_categories_to_discretize >= 0,
-        floor(num_categories_to_discretize) == num_categories_to_discretize,
-        is.logical(discretize),
-        length(discretize) == 1
-      )
-      self$set_params(
-        PENALTY_DISCOUNT = penalty_discount,
-        STRUCTURE_PRIOR = structure_prior,
-        DISCRETIZE = discretize,
-        NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
-      )
-      self$score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/ConditionalGaussianBicScore"
-      )
-      self$score <- cast_obj(self$score)
-    },
-    use_degenerate_gaussian_score = function(penalty_discount = 1,
-                                             structure_prior = 0,
-                                             singularity_lambda = 0.0) {
-      stopifnot(
-        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
-        penalty_discount >= 0,
-        structure_prior >= 0,
-        singularity_lambda >= 0
-      )
-      self$set_params(
-        PENALTY_DISCOUNT = penalty_discount,
-        STRUCTURE_PRIOR = structure_prior,
-        SINGULARITY_LAMBDA = singularity_lambda
-      )
-      self$score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/DegenerateGaussianBicScore"
-      )
-      self$score <- cast_obj(self$score)
-    },
     use_basis_function_bic_score = function(truncation_limit = 3,
                                             penalty_discount = 2,
                                             singularity_lambda = 0.0,
@@ -1337,6 +1185,63 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
+    use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
+      stopifnot(
+        is.numeric(c(sample_prior, structure_prior))
+      )
+      self$set_params(
+        PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
+        STRUCTURE_PRIOR = structure_prior
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_conditional_gaussian_score = function(penalty_discount = 1,
+                                              discretize = TRUE,
+                                              num_categories_to_discretize = 3,
+                                              structure_prior = 0) {
+      stopifnot(
+        is.numeric(c(penalty_discount, num_categories_to_discretize)),
+        penalty_discount >= 0,
+        num_categories_to_discretize >= 0,
+        floor(num_categories_to_discretize) == num_categories_to_discretize,
+        is.logical(discretize),
+        length(discretize) == 1
+      )
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        STRUCTURE_PRIOR = structure_prior,
+        DISCRETIZE = discretize,
+        NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
+      )
+      self$score <- .jnew(
+        "edu/cmu/tetrad/algcomparison/score/ConditionalGaussianBicScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
+    use_degenerate_gaussian_score = function(penalty_discount = 1,
+                                             structure_prior = 0,
+                                             singularity_lambda = 0.0,
+                                             precompute_covariances = TRUE) {
+      stopifnot(
+        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
+        penalty_discount >= 0,
+        structure_prior >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        STRUCTURE_PRIOR = structure_prior,
+        SINGULARITY_LAMBDA = singularity_lambda,
+        PRECOMPUTE_COVARIANCES = precompute_covariances
+      )
+      self$score <- .jnew(
+        "edu/cmu/tetrad/algcomparison/score/DegenerateGaussianBicScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
     use_discrete_bic_score = function(penalty_discount = 2,
                                       structure_prior = 0) {
       stopifnot(
@@ -1349,6 +1254,53 @@ TetradSearch <- R6Class(
         STRUCTURE_PRIOR = structure_prior
       )
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_ebic_score = function(gamma = 0.8,
+                              precompute_covariances = TRUE,
+                              singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(gamma, singularity_lambda)),
+        gamma >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        EBIC_GAMMA = gamma,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/EbicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_gic_score = function(penalty_discount = 1,
+                             sem_gic_rule = "bic",
+                             precompute_covariances = TRUE,
+                             singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(penalty_discount, singularity_lambda)),
+        penalty_discount >= 0,
+        singularity_lambda >= 0,
+        is.character(sem_gic_rule),
+      )
+      sem_gic_rule_int <- switch(sem_gic_rule,
+        "bic"  = 1L,
+        "gic2" = 2L,
+        "ric"  = 3L,
+        "ricc" = 4L,
+        "gic5" = 5L,
+        "gic6" = 6L,
+        stop("Unsupported gic rule:", sem_gic_rule)
+      )
+      self$set_params(
+        SEM_GIC_RULE = sem_gic_rule_int,
+        PENALTY_DISCOUNT_ZS = penalty_discount,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
       self$score <- cast_obj(self$score)
     },
     use_mag_degenerate_gaussian_bic_score = function(penalty_discount = 1,
@@ -1367,6 +1319,95 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
       self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_mixed_variable_polynomial_score = function(structure_prior = 0,
+                                                   f_degree = 0,
+                                                   discretize = FALSE) {
+      stopifnot(
+        is.numeric(c(structure_prior, f_degree)),
+        floor(f_degree) == f_degree,
+        is.logical(discretize),
+        length(discretize) == 1
+      )
+      self$set_params(
+        STRUCTURE_PRIOR = structure_prior,
+        DISCRETIZE = discretize
+      )
+      # f_degree is not a static field in Params so we set it manually.
+      self$params$set(
+        "fDegree",
+        .jcast(
+          .jnew("java/lang/Double", as.double(f_degree)),
+          "java/lang/Object"
+        )
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_poisson_prior_score = function(poission_lambda = 2,
+                                       precompute_covariances = TRUE,
+                                       singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(poission_lambda, singularity_lambda)),
+        poission_lambda >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        POISSON_LAMBDA = poission_lambda,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+      self$score <- .jnew(
+        "edu/cmu/tetrad/algcomparison/score/PoissonPriorScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
+    use_sem_bic_score = function(penalty_discount = 2,
+                                 structure_prior = 0,
+                                 sem_bic_rule = 1,
+                                 precompute_covariances = TRUE,
+                                 singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(singularity_lambda),
+        singularity_lambda >= 0,
+        is.numeric(c(penalty_discount, structure_prior)),
+        floor(penalty_discount) == penalty_discount,
+        floor(structure_prior) == structure_prior,
+        sem_bic_rule %in% c(1, 2),
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        SEM_BIC_STRUCTURE_PRIOR = structure_prior,
+        SEM_BIC_RULE = sem_bic_rule,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
+      self$score <- cast_obj(self$score)
+    },
+    use_zhang_shen_bound_score = function(risk_bound = 0.2,
+                                          precompute_covariances = TRUE,
+                                          singularity_lambda = 0.0) {
+      stopifnot(
+        is.numeric(c(risk_bound, singularity_lambda)),
+        risk_bound >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(self$params,
+        ZS_RISK_BOUND = risk_bound,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+      self$score <- .jnew(
+        "edu/cmu/tetrad/algcomparison/score/ZhangShenBoundScore"
+      )
       self$score <- cast_obj(self$score)
     },
     # Tests
