@@ -208,13 +208,24 @@ Sets parameters for the Tetrad search.
 \subsection{Method \code{get_parameters_for_function()}}{
 Retrieves the argument names of a matching private function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_parameters_for_function(fn_pattern)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_parameters_for_function(
+  fn_pattern,
+  score = FALSE,
+  test = FALSE,
+  alg = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{fn_pattern}}{(character) A pattern that should match a private method name.}
+
+\item{\code{score}}{(logical) If TRUE, retrieves parameters for a scoring function.}
+
+\item{\code{test}}{(logical) If TRUE, retrieves parameters for a test function.}
+
+\item{\code{alg}}{(logical) If TRUE, retrieves parameters for an algorithm.}
 }
 \if{html}{\out{</div>}}
 }
