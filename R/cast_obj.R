@@ -1,6 +1,4 @@
-#' @importFrom rJava .jcast .jinstanceof
-#' @param obj A Java object to be cast.
-#' @return A Java object castedd to some superclass that Tetrad takes as input.
+# function that takes a java object and casts it to some superclass
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper
   if (.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")) {

@@ -26,7 +26,7 @@
 #' @name TetradSearch
 #' @docType class
 #' @rdname TetradSearch
-#' @importFrom rJava .jnew .jcall .jfield .jniInitialized .jinit
+#' @importFrom rJava .jnew .jcall .jfield .jniInitialized .jinit .jcast
 #' @importFrom R6 R6Class
 #' @export TetradSearch
 TetradSearch <- R6Class(
@@ -55,7 +55,7 @@ TetradSearch <- R6Class(
         .jinit(
           # todo: how many gb?
           parameters = "-Xmx2g",
-          classpath = "tetrad/tetrad-current.jar"
+          classpath = "inst/java/tetrad-current.jar"
         )
       }
       self$data <- NULL

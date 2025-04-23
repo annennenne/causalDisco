@@ -5,7 +5,7 @@
 #' @details This function is made to be used internally with the TetradSearch class.
 #' The function will copy the data into the Java heap, so be careful with larger data frames.
 #' This function was provided by Joseph Ramsey, and slightly modified by Frederik Fabricius-Bjerre.
-#'
+#' @importFrom rJava .jnew .jcall .jarray .jnull .jcast
 #' @param df A data frame to be converted to a Tetrad Java object.
 #' @return A Tetrad Java object representing the data frame.
 rdata_to_tetrad <- function(df) {
