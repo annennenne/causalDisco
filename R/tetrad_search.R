@@ -93,9 +93,6 @@ TetradSearch <- R6Class(
         "basis_function_lrt" = {
           private$use_basis_function_lrt_test(..., use_for_mc = mc)
         },
-        "basis_function_lrt_fs" = {
-          private$use_basis_function_lrt_fs_test(..., use_for_mc = mc)
-        },
         "conditional_gaussian" = {
           private$use_conditional_gaussian_test(..., use_for_mc = mc)
         },
@@ -137,9 +134,6 @@ TetradSearch <- R6Class(
         },
         "basis_function_bic" = {
           private$use_basis_function_bic_score(...)
-        },
-        "basis_function_bic_fs" = {
-          private$use_basis_function_bic_fs_score(...)
         },
         "conditional_gaussian" = {
           private$use_conditional_gaussian_score(...)
@@ -1162,30 +1156,6 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_basis_function_bic_fs_score = function(truncation_limit = 3,
-                                               penalty_discount = 2,
-                                               singularity_lambda = 0.0,
-                                               do_one_equation_only = FALSE) {
-      stopifnot(
-        is.numeric(c(truncation_limit, penalty_discount, singularity_lambda)),
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        penalty_discount >= 0,
-        singularity_lambda >= 0,
-        is.logical(do_one_equation_only),
-        length(do_one_equation_only) == 1
-      )
-      self$set_params(
-        TRUNCATION_LIMIT = truncation_limit,
-        PENALTY_DISCOUNT = penalty_discount,
-        SINGULARITY_LAMBDA = singularity_lambda,
-        DO_ONE_EQUATION_ONLY = do_one_equation_only
-      )
-      self$score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScoreFullSample"
-      )
-      self$score <- cast_obj(self$score)
-    },
     use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
       stopifnot(
         is.numeric(c(sample_prior, structure_prior))
@@ -1440,31 +1410,6 @@ TetradSearch <- R6Class(
       } else {
         self$test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
-        )
-        self$test <- cast_obj(self$test)
-      }
-    },
-    use_basis_function_lrt_fs_test = function(truncation_limit = 3,
-                                              alpha = 0.01,
-                                              use_for_mc = FALSE) {
-      stopifnot(
-        is.numeric(c(truncation_limit, alpha)),
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        alpha >= 0
-      )
-      self$set_params(
-        ALPHA = alpha,
-        TRUNCATION_LIMIT = truncation_limit
-      )
-      if (use_for_mc) {
-        self$mc_test <- .jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrtFullSample"
-        )
-        self$mc_test <- cast_obj(self$test)
-      } else {
-        self$test <- .jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrtFullSample"
         )
         self$test <- cast_obj(self$test)
       }
