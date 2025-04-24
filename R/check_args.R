@@ -1,7 +1,4 @@
 check_args_and_distribute_args <- function(search, args, engine, alg, test = NULL, score = NULL) {
-  # This function will throw an error if arguments are given that are not in the underlying algorithm call.
-  # If '...' in given algorithm/test is an argument, it will throw a warning rather than an error.
-  # For tetrad, it will distribute arguments to test, score, and algorithm if needed.
   # Check if the engine is supported
   if (!(engine %in% engine_registry)) {
     stop(
@@ -49,7 +46,7 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   )
   if (length(args_not_in_engine_args) > 0) {
     stop(
-      "The following arguments are not used in Tetrad algorithm or test: ",
+      "The following arguments are not used in Tetrad algorithm, test, or score: ",
       paste(args_not_in_engine_args, collapse = ", ")
     )
   }
@@ -85,11 +82,19 @@ check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL,
     names(args),
     c(engine_args_alg, engine_args_score)
   )
+  # If '...' in given algorithm/test is an argument, it will throw a warning rather than an error.
   if (length(args_not_in_engine_args) > 0) {
-    warning(
-      paste0("The following arguments are not used in ", engine, "::", alg, ": "),
-      paste(args_not_in_engine_args, collapse = ", ")
-    )
+    if ("..." %in% names(c(engine_args_alg, engine_args_score))) {
+      warning(
+        paste0("The following arguments are not used in pcalg::", alg, ": "),
+        paste(args_not_in_engine_args, collapse = ", ")
+      )
+    } else {
+      stop(
+        paste0("The following arguments are not used in pcalg::", alg, " or in the given score:"),
+        paste(args_not_in_engine_args, collapse = ", ")
+      )
+    }
   }
   return(list(
     alg_args = args_to_pass_to_engine_alg,
