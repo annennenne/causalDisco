@@ -23,6 +23,12 @@ kn2 <-
 
 print(kn2)
 
+kn2.5 <- knowledge() |> add_tier(1, c(A, B))
+kn2.5 <- add_tier(kn, exposure, E1, after = 1)
+kn2.5 <- add_tier(kn, outcome, O1, after = "exposure")
+kn2.5 <- add_tier(kn, mediator, M1, before = outcome)
+print(kn2.5)
+
 # EXAMPLE 3 ── DSL + data-frame seeding ----------------------------------------
 df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
 
@@ -67,7 +73,7 @@ print(kn_select_helpers)
 # EXAMPLE 8 ── Custom tier naming ----------------------------------------------
 kn_custom_tier <-
   knowledge(
-    tier(baby ~ V1 + V2, old ~ V3),
+    tier(baby ~ V1 + V2, old ~ V3, adult ~ V4),
     required(V1 ~ V2)
   )
 print(kn_custom_tier)

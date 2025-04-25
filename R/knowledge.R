@@ -1,27 +1,7 @@
-# ---------------------------------------------------------------------------
-# knowledge.R
-#
-# Public API
-#   • knowledge()       – create an empty or seeded knowledge object.
-#                         Can also be used as a mini-DSL:
-#                         knowledge(data, tier(), forbidden(), required())
-#   • add_vars()        – register variables
-#   • add_tier()        – assign variables to tiers
-#   • forbid_edge()     – store forbidden edges
-#   • require_edge()    – store required edges
-#   • knowledge()       –
-#   • +.knowledge       – merge two knowledge objects
-#   • as_tetrad()       – convert to Tetrad Knowledge object
-#
-# Representation
-#   vars  : var, tier
-#   edges : status, edge_type, from, to, tier_from, tier_to
-# ---------------------------------------------------------------------------
-
-
-#' Create a `knowledge` object
+#' @title Create a `knowledge` object
 #'
 #' @param vars Character vector of variable names.  Defaults to empty.
+#' @param frozen Logical. If `TRUE`, no new variables can be added. Defaults to `FALSE`.
 #'
 #' @return An S3 object of class `"knowledge"`.
 #' @keywords internal
@@ -46,14 +26,15 @@
   )
 }
 
-#' Supported edge-type strings
+#' @title Supported edge-type strings
 #' @keywords internal
 .allowed_edge_types <- c("directed", "undirected", "bidirected", "o->", "o-o", "<-o")
 
-# ---------------------------------------------------------------------------
-# internal helpers -----------------------------------------------------------
-
-#' Resolve a tier label or number to an integer index (adds new labels)
+#' @title Resolve a tier label or number to an integer index
+#'
+#' @param .kn A `knowledge` object.
+#' @param tier A symbol or string, or an integer.
+#'
 #' @keywords internal
 .resolve_tier <- function(.kn, tier) {
   ## ---------------- integer supplied -------------------------------------
@@ -64,7 +45,7 @@
   ## ---------------- symbol / string supplied -----------------------------
   label <- rlang::as_string(tier)
   if (!nzchar(label)) {
-    cli::cli_abort("Tier labels must be a non-empty symbol or string.")
+    stop("Tier labels must be a non-empty symbol or string.", .call = FALSE)
   }
 
   if (label %in% names(.kn$tier_labels)) {
@@ -76,7 +57,10 @@
   list(idx = next_idx, kn = .kn)
 }
 
-#' Resolve a tidy-select or character spec to character names
+#' @title Resolve a tidy-select or character spec to character names
+#'
+#' @param .kn A `knowledge` object.
+#' @param spec A tidyselect specification (e.g. `everything()`, `starts_with("V")`) or a character vector.
 #' @keywords internal
 .resolved_vars <- function(.kn, spec) {
   lookup <- rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
@@ -96,7 +80,10 @@
   )
 }
 
-#' Extract variable names from the RHS of a `tier()` formula
+#' @title Extract variable names from the RHS of a `tier()` formula
+#'
+#' @param rhs A formula (e.g. `1 ~ V1 + V2`).
+#' @param .kn A `knowledge` object.
 #' @keywords internal
 .formula_vars <- function(rhs, .kn) {
   vars <- .resolved_vars(.kn, !!rhs)
@@ -106,7 +93,9 @@
   unique(all.vars(rhs)) # fallback to plain symbols
 }
 
-#' Validate that no edge runs from higher tier to lower tier
+#' @title Validate that no edge runs from higher tier to lower tier
+#'
+#' @param edges_df A data frame with columns `status`, `edge_type`, `from`, `to`, `tier_from`, and `tier_to`.
 #' @keywords internal
 .validate_tier_rule <- function(edges_df) {
   tier_violations <- dplyr::filter(
@@ -124,7 +113,9 @@
   invisible(TRUE)
 }
 
-#' Validate that an edge is not simultaneously forbidden *and* required
+#' @title Validate that an edge is not simultaneously forbidden *and* required
+#'
+#' @param edges_df A data frame with columns `status`, `edge_type`, `from`, `to`, `tier_from`, and `tier_to`.
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
   # look for groups where the same (from, to, edge_type) has both statuses
@@ -146,13 +137,13 @@
   invisible(TRUE)
 }
 
-#' Validate that merging two knowledge objects introduces no tier-label conflict
+#' @title Validate that merging two knowledge objects introduces no tier-label conflict
 #'
-#' A conflict occurs when **two or more different labels map to the same
+#' @description A conflict occurs when **two or more different labels map to the same
 #' numeric tier index** after the merge (e.g. "January → 1" and "Monday → 1").
-#' The function aborts with a clear message that lists every problematic
-#' tier together with the colliding labels.
 #'
+#' @param tiers_left A named integer vector of tier labels from the left-hand side.
+#' @param tiers_right A named integer vector of tier labels from the right-hand side.
 #' @keywords internal
 .validate_label_conflict <- function(tiers_left, tiers_right) {
   merged <- c(tiers_left, tiers_right)
@@ -192,7 +183,13 @@
 
 
 
-#' Add one or many edges to a knowledge object
+#' @title Add one or many edges to a knowledge object
+#'
+#' @param .kn A `knowledge` object.
+#' @param status A string, either "forbidden" or "required".
+#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o", "<-o".
+#' @param from A tidyselect specification or character vector of variable names.
+#' @param to A tidyselect specification or character vector of variable names.
 #' @keywords internal
 .add_edges <- function(.kn, status, edge_type, from, to) {
   # Reject unknown edge types
@@ -229,7 +226,14 @@
 # ---------------------------------------------------------------------------
 # public verbs ---------------------------------------------------------------
 
-#' Add variables
+#' @title Add variables to `knowledge` object
+#'
+#' @description Adds variables to the `knowledge` object. If the object is frozen, an error
+#' is thrown if any of the variables are not present in the data frame provided to the object.
+#'
+#' @param .kn A `knowledge` object.
+#' @param vars A character vector of variable names to add.
+#'
 #' @export
 add_vars <- function(.kn, vars) {
   stopifnot(inherits(.kn, "knowledge"), is.character(vars))
@@ -252,19 +256,192 @@ add_vars <- function(.kn, vars) {
 }
 
 
-#' Assign variables to a tier (numeric or symbolic label)
+#' @title Add variables to a tier (with positional control)
+#'
+#' @description
+#' Assign one or more variables to a tier (numeric or symbolic).  You can also
+#' specify that this tier should come `before` or `after` another tier (by label or index)
+#' or relative to existing variables (by name).
+#'
+#' @param .kn A `knowledge` object.
+#' @param tier A symbol (unquoted), string, or integer of length 1 specifying the tier label or index.
+#' @param vars A tidyselect specification or character vector of variable names to assign.
+#' @param before Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come before.
+#' @param after  Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come after.
+#'
+#' @return An updated `knowledge` object with the specified variables assigned to the new tier.
 #' @export
-add_tier <- function(.kn, tier, vars) {
-  stopifnot(inherits(.kn, "knowledge"), length(tier) == 1)
+add_tier <- function(.kn, tier, vars, before = NULL, after = NULL) {
+  # 1) sanity‐check
+  if (!inherits(.kn, "knowledge")) {
+    stop("`.kn` must be a knowledge object.", call. = FALSE)
+  }
 
-  res <- .resolve_tier(.kn, tier)
-  .kn <- res$kn
-  tier_idx <- res$idx
+  # 2) capture raw exprs
+  tier_expr <- rlang::enexpr(tier)
+  before_expr <- rlang::enexpr(before)
+  after_expr <- rlang::enexpr(after)
 
-  vars_chr <- .resolved_vars(.kn, {{ vars }})
-  .kn <- add_vars(.kn, vars_chr) # adds only truly new names
-  idx <- match(vars_chr, .kn$vars$var)
-  .kn$vars$tier[idx] <- tier_idx # overwrite NA or previous tier
+  # 3) classify tier into label vs numeric
+  if (is.symbol(tier_expr)) {
+    tier_label <- as.character(tier_expr)
+    numeric_tier <- NULL
+  } else if (is.atomic(tier_expr) && length(tier_expr) == 1L) {
+    # string or numeric literal
+    if (is.character(tier)) {
+      tier_label <- tier
+      numeric_tier <- NULL
+    } else if (is.numeric(tier) && tier >= 1) {
+      tier_label <- NULL
+      numeric_tier <- as.integer(tier)
+    } else {
+      stop("`tier` literal must be a single string or integer ≥ 1.", call. = FALSE)
+    }
+  } else {
+    stop("`tier` must be an unquoted name, a single string, or a single integer ≥ 1.",
+      call. = FALSE
+    )
+  }
+
+  # 4) helper: extract a list of raw before/after targets (symbols, strings, or numbers)
+  extract_targets <- function(expr) {
+    if (is.null(expr)) {
+      return(list())
+    }
+    if (is.symbol(expr)) {
+      return(list(as.character(expr)))
+    }
+    if (is.atomic(expr) && length(expr) == 1L) {
+      if (is.numeric(expr)) {
+        return(list(as.integer(expr)))
+      }
+      return(list(as.character(expr)))
+    }
+    if (is.call(expr) && expr[[1]] == as.name("c")) {
+      out <- list()
+      for (elt in as.list(expr[-1])) {
+        if (is.symbol(elt)) {
+          out <- c(out, list(as.character(elt)))
+        } else if (is.atomic(elt) && length(elt) == 1L) {
+          if (is.numeric(elt)) {
+            out <- c(out, list(as.integer(elt)))
+          } else {
+            out <- c(out, list(as.character(elt)))
+          }
+        } else {
+          stop("`before`/`after` must be symbols or single string/numeric literals.",
+            call. = FALSE
+          )
+        }
+      }
+      return(out)
+    }
+    stop("`before`/`after` must be a symbol, literal, or c(...) of them.", call. = FALSE)
+  }
+
+  before_targets <- extract_targets(before_expr)
+  after_targets <- extract_targets(after_expr)
+
+  # 5) enforce: if tier is a label, you must choose before or after
+  if (!is.null(tier_label) && is.null(numeric_tier) &&
+    length(before_targets) == 0L && length(after_targets) == 0L) {
+    stop(
+      "When `tier` is a label (e.g. `Monday`), you must specify either ",
+      "`before =` or `after =` to place it relative to existing tiers.",
+      call. = FALSE
+    )
+  }
+
+  # 6) can’t have both before and after
+  if (length(before_targets) && length(after_targets)) {
+    stop("Specify only one of `before` or `after`.", call. = FALSE)
+  }
+
+  # 7) turn each target into an integer index
+  resolve_point <- function(x) {
+    if (is.numeric(x) && length(x) == 1L) {
+      return(as.integer(x))
+    }
+    if (is.character(x) && x %in% names(.kn$tier_labels)) {
+      return(.resolve_tier(.kn, x)$idx)
+    }
+    if (is.character(x) && x %in% .kn$vars$var) {
+      t <- .kn$vars$tier[.kn$vars$var == x]
+      if (is.na(t)) {
+        stop(sprintf("Variable `%s` has no tier; can’t use in before/after.", x),
+          call. = FALSE
+        )
+      }
+      return(t)
+    }
+    stop(sprintf("`%s` is not a tier label, number, or known variable.", x),
+      call. = FALSE
+    )
+  }
+
+  # 8) compute insertion index
+  if (length(before_targets)) {
+    pts <- vapply(before_targets, resolve_point, integer(1))
+    insert_idx <- min(pts)
+  } else if (length(after_targets)) {
+    pts <- vapply(after_targets, resolve_point, integer(1))
+    insert_idx <- max(pts) + 1L
+  } else {
+    # only numeric tiers fall through here
+    insert_idx <- if (length(.kn$tier_labels)) {
+      max(.kn$tier_labels) + 1L
+    } else {
+      1L
+    }
+  }
+
+  # 9) if brand-new label, bump existing tiers & labels ≥ insert_idx
+  if (!is.null(tier_label) && !(tier_label %in% names(.kn$tier_labels))) {
+    # 9a) bump variable tiers
+    to_bump_vars <- which(!is.na(.kn$vars$tier) & .kn$vars$tier >= insert_idx)
+    if (length(to_bump_vars)) {
+      .kn$vars$tier[to_bump_vars] <- .kn$vars$tier[to_bump_vars] + 1L
+    }
+    # 9b) bump label→index map
+    bump_lbls <- .kn$tier_labels >= insert_idx
+    if (any(bump_lbls)) {
+      .kn$tier_labels[bump_lbls] <- .kn$tier_labels[bump_lbls] + 1L
+    }
+    # 9c) insert & sort
+    .kn$tier_labels[[tier_label]] <- insert_idx
+    .kn$tier_labels <- .kn$tier_labels[order(.kn$tier_labels)]
+    tier_idx <- insert_idx
+
+    # 10) else if a numeric literal
+  } else if (!is.null(numeric_tier)) {
+    tier_idx <- numeric_tier
+
+    # 11) else must be an existing label
+  } else {
+    res <- .resolve_tier(.kn, tier_label)
+    .kn <- res$kn
+    tier_idx <- res$idx
+  }
+
+  # 12) finally: capture & add your vars
+  vars_expr <- substitute(vars)
+  if (is.call(vars_expr)) {
+    syms <- all.vars(vars_expr)
+    vars_chr <- setdiff(syms, as.character(vars_expr[[1]]))
+  } else if (is.symbol(vars_expr)) {
+    vars_chr <- as.character(vars_expr)
+  } else if (is.character(vars) && length(vars) > 0L) {
+    vars_chr <- vars
+  } else {
+    vars_chr <- character()
+  }
+
+  .kn <- add_vars(.kn, vars_chr)
+  idxs <- match(vars_chr, .kn$vars$var)
+  .kn$vars$tier[idxs] <- tier_idx
+
+  # 13) sort the variables by tier, then alphabetically
+  .kn$vars <- dplyr::arrange(.kn$vars, tier)
   .kn
 }
 
@@ -359,7 +536,7 @@ knowledge <- function(...) {
   if (!length(dots)) {
     return(.new_knowledge())
   }
-  # optional first arg = data frame -----------------------------------------
+
   df <- NULL
   if (length(dots) && !is.call(dots[[1]])) {
     first <- eval(dots[[1]], parent.frame())
@@ -371,26 +548,57 @@ knowledge <- function(...) {
   kn <- if (is.null(df)) .new_knowledge() else .new_knowledge(names(df), frozen = TRUE)
 
   # helper: tier -------------------------------------------------------------
+  # Replacement for the internal `tier()` helper in your `knowledge()` constructor:
   tier <- function(...) {
     specs <- rlang::list2(...)
     if (!length(specs)) {
-      cli::cli_abort("tier() needs at least one two-sided formula.")
+      stop("tier() needs at least one two-sided formula.", call. = FALSE)
     }
 
     for (fml in specs) {
       if (!rlang::is_formula(fml, lhs = TRUE)) {
-        cli::cli_abort("Each tier() argument must be a two-sided formula.")
+        stop("Each tier() argument must be a two-sided formula.", call. = FALSE)
       }
-      lhs <- rlang::f_lhs(fml)
 
-      vars <- .formula_vars(rlang::f_rhs(fml), kn)
+      # LHS expression (could be a bare number or a name) and RHS vars
+      lhs_expr <- rlang::f_lhs(fml)
+      rhs_expr <- rlang::f_rhs(fml)
+      vars <- .formula_vars(rhs_expr, kn)
       if (!is.character(vars) || !length(vars)) {
         cli::cli_abort("Tier specification {.code {fml}} matched no variables.")
       }
 
-      kn <<- add_tier(kn, lhs, vars) # lhs may be label *or* number
+      # Try to eval the LHS; if it's a single number, we'll treat it as a numeric tier
+      lhs_val <- tryCatch(
+        rlang::eval_tidy(lhs_expr, env = environment()),
+        error = function(e) NULL
+      )
+
+      if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
+        # ── Numeric tier: pass an atomic integer literal
+        args <- list(
+          .kn  = kn,
+          tier = as.integer(lhs_val),
+          vars = vars
+        )
+      } else {
+        # ── Labeled tier: auto‐append after the current last tier
+        tier_label <- rlang::as_string(lhs_expr)
+        last_idx <- if (length(kn$tier_labels)) max(kn$tier_labels) else 0L
+
+        args <- list(
+          .kn   = kn,
+          tier  = tier_label,
+          vars  = vars,
+          after = last_idx
+        )
+      }
+
+      kn <<- do.call(add_tier, args)
     }
   }
+
+
 
   # helper: edge helpers -----------------------------------------------------
   edge_helper <- function(status, ..., edge_type = "directed") {
@@ -401,7 +609,7 @@ knowledge <- function(...) {
 
     for (fml in specs) {
       if (!rlang::is_formula(fml, lhs = TRUE)) {
-        cli::cli_abort("Arguments must be two-sided formulas.")
+        stop("Arguments must be two-sided formulas.", .call = FALSE)
       }
 
       # resolve *expressions* on both sides
@@ -425,7 +633,7 @@ knowledge <- function(...) {
   allowed <- c("tier", "forbidden", "required")
   for (expr in dots) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
-      cli::cli_abort("Only tier(), forbidden(), required() calls are allowed.")
+      stop("Only tier(), forbidden(), required() calls are allowed.", .call = FALSE)
     }
     eval(expr, envir = environment())
   }
@@ -460,8 +668,6 @@ as_tetrad_knowledge <- function(.kn) {
   j
 }
 
-# ---------------------------------------------------------------------------
-# pcalg conversion -----------------------------------------------------------
 
 #' Convert to a pair of (fixedGaps, fixedEdges) matrices for the **pcalg** package
 #'
@@ -497,7 +703,7 @@ as_pcalg_constraints <- function(.kn, labels) {
       i <- idx[[forb$from[k]]]
       j <- idx[[forb$to[k]]]
       if (is.na(i) || is.na(j)) {
-        cli::cli_abort("Forbidden edge refers to unknown variable(s).")
+        stop("Forbidden edge refers to unknown variable(s).", .call = FALSE)
       }
       fixedGaps[i, j] <- TRUE
       fixedGaps[j, i] <- TRUE
@@ -511,7 +717,7 @@ as_pcalg_constraints <- function(.kn, labels) {
       i <- idx[[req$from[k]]]
       j <- idx[[req$to[k]]]
       if (is.na(i) || is.na(j)) {
-        cli::cli_abort("Required edge refers to unknown variable(s).")
+        stop("Required edge refers to unknown variable(s).", .call = FALSE)
       }
       fixedEdges[i, j] <- TRUE
       fixedEdges[j, i] <- TRUE
