@@ -53,6 +53,7 @@ Collate:
     'ges_method.R'
     'java_r_utils.R'
     'knowledge.R'
+    'knowledge_testing.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'

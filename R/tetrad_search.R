@@ -400,7 +400,7 @@ TetradSearch <- R6Class(
     #' @param knowledge_obj An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).
     set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
-      knowledge_tetrad <- knowledge_obj$get_tetrad_knowledge()
+      knowledge_tetrad <- as_tetrad_knowledge(knowledge_obj)
       self$knowledge <- knowledge_tetrad
 
       # Set knowledge to algorithm

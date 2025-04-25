@@ -209,7 +209,7 @@ KnowledgeObj <- R6Class("KnowledgeObj",
 #'   )
 #' )
 #'
-#' @export
+#'
 knowledge <- function(...) {
   knowledge_obj <- KnowledgeObj$new()
 
@@ -293,7 +293,7 @@ knowledge <- function(...) {
 #' }
 #' @keywords internal
 check_knowledge_obj <- function(x) {
-  if (!inherits(x, "KnowledgeObj")) {
+  if (!inherits(x, "knowledge")) {
     stop("Input must be a KnowledgeObj instance.")
   }
   TRUE

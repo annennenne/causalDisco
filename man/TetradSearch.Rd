@@ -36,37 +36,20 @@ scoring functions, specify causal search algorithms, and run them on data.
 \item \href{#method-TetradSearch-set_test}{\code{TetradSearch$set_test()}}
 \item \href{#method-TetradSearch-set_score}{\code{TetradSearch$set_score()}}
 \item \href{#method-TetradSearch-set_alg}{\code{TetradSearch$set_alg()}}
-\item \href{#method-TetradSearch-set_tier_forbidden_within}{\code{TetradSearch$set_tier_forbidden_within()}}
 \item \href{#method-TetradSearch-set_knowledge}{\code{TetradSearch$set_knowledge()}}
 \item \href{#method-TetradSearch-set_params}{\code{TetradSearch$set_params()}}
 \item \href{#method-TetradSearch-get_parameters_for_function}{\code{TetradSearch$get_parameters_for_function()}}
 \item \href{#method-TetradSearch-run_search}{\code{TetradSearch$run_search()}}
-\item \href{#method-TetradSearch-run_gango}{\code{TetradSearch$run_gango()}}
 \item \href{#method-TetradSearch-set_bootstrapping}{\code{TetradSearch$set_bootstrapping()}}
 \item \href{#method-TetradSearch-set_data}{\code{TetradSearch$set_data()}}
 \item \href{#method-TetradSearch-set_verbose}{\code{TetradSearch$set_verbose()}}
 \item \href{#method-TetradSearch-set_time_lag}{\code{TetradSearch$set_time_lag()}}
 \item \href{#method-TetradSearch-get_data}{\code{TetradSearch$get_data()}}
-\item \href{#method-TetradSearch-get_verbose}{\code{TetradSearch$get_verbose()}}
 \item \href{#method-TetradSearch-get_knowledge}{\code{TetradSearch$get_knowledge()}}
 \item \href{#method-TetradSearch-get_java}{\code{TetradSearch$get_java()}}
 \item \href{#method-TetradSearch-get_string}{\code{TetradSearch$get_string()}}
-\item \href{#method-TetradSearch-get_dag_string}{\code{TetradSearch$get_dag_string()}}
-\item \href{#method-TetradSearch-get_dag_java}{\code{TetradSearch$get_dag_java()}}
-\item \href{#method-TetradSearch-get_causal_learn}{\code{TetradSearch$get_causal_learn()}}
 \item \href{#method-TetradSearch-get_graph_to_matrix}{\code{TetradSearch$get_graph_to_matrix()}}
 \item \href{#method-TetradSearch-get_dot}{\code{TetradSearch$get_dot()}}
-\item \href{#method-TetradSearch-get_xml}{\code{TetradSearch$get_xml()}}
-\item \href{#method-TetradSearch-get_lavaan}{\code{TetradSearch$get_lavaan()}}
-\item \href{#method-TetradSearch-bootstrap_graph}{\code{TetradSearch$bootstrap_graph()}}
-\item \href{#method-TetradSearch-bootstrap_dot}{\code{TetradSearch$bootstrap_dot()}}
-\item \href{#method-TetradSearch-is_legal_pag}{\code{TetradSearch$is_legal_pag()}}
-\item \href{#method-TetradSearch-is_legal_pag_reason}{\code{TetradSearch$is_legal_pag_reason()}}
-\item \href{#method-TetradSearch-all_subsets_independencefact_s}{\code{TetradSearch$all_subsets_independencefact_s()}}
-\item \href{#method-TetradSearch-all_subsets_dependencefact_s}{\code{TetradSearch$all_subsets_dependencefact_s()}}
-\item \href{#method-TetradSearch-markov_check}{\code{TetradSearch$markov_check()}}
-\item \href{#method-TetradSearch-get_mc_ind_pvalues}{\code{TetradSearch$get_mc_ind_pvalues()}}
-\item \href{#method-TetradSearch-get_adjustment_sets}{\code{TetradSearch$get_adjustment_sets()}}
 \item \href{#method-TetradSearch-clone}{\code{TetradSearch$clone()}}
 }
 }
@@ -147,25 +130,6 @@ Sets the causal discovery algorithm to use in Tetrad.
 }
 \subsection{Returns}{
 Invisibly returns \code{self}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-set_tier_forbidden_within"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-set_tier_forbidden_within}{}}}
-\subsection{Method \code{set_tier_forbidden_within()}}{
-Forbids or allows connections within a given tier of variables.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_tier_forbidden_within(tier, forbiddenWithin = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{tier}}{(numeric) The tier index.}
-
-\item{\code{forbiddenWithin}}{(logical) If TRUE, variables in the same tier cannot connect to each other.}
-}
-\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -268,28 +232,6 @@ Nothing, but populates \code{self$java} with the resulting graph.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-run_gango"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-run_gango}{}}}
-\subsection{Method \code{run_gango()}}{
-Runs an alternative FGES search, then orients edges using RSkew.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_gango(score, data)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{score}}{(Java object) The scoring object.}
-
-\item{\code{data}}{(Java object) The dataset (Java) to be used.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(Java object) The resulting graph from RSkew orientation.
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_bootstrapping"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_bootstrapping}{}}}
 \subsection{Method \code{set_bootstrapping()}}{
@@ -388,19 +330,6 @@ Retrieves the current Java data object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_verbose"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_verbose}{}}}
-\subsection{Method \code{get_verbose()}}{
-Checks if verbose logging is enabled.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_verbose()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(logical) TRUE if verbose mode is on, FALSE otherwise.
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_knowledge}{}}}
 \subsection{Method \code{get_knowledge()}}{
@@ -444,66 +373,6 @@ Returns the string representation of a given Java object or \code{self$java}.
 }
 \subsection{Returns}{
 (character) The \code{toString()} of that Java object.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_dag_string"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_dag_string}{}}}
-\subsection{Method \code{get_dag_string()}}{
-Converts a CPDAG to a DAG and returns it as a string.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_dag_string(java_obj = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java} as the CPDAG.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The DAG in string form.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_dag_java"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_dag_java}{}}}
-\subsection{Method \code{get_dag_java()}}{
-Converts a CPDAG to a DAG and returns it as a Java object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_dag_java(java_obj = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) CPDAG object. If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(Java object) The resulting DAG.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_causal_learn"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_causal_learn}{}}}
-\subsection{Method \code{get_causal_learn()}}{
-Translates a Tetrad graph into a \code{causal_learn} compatible structure.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_causal_learn(java_obj = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) A Tetrad graph. If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(Java object) The translated \code{causal_learn} object.
 }
 }
 \if{html}{\out{<hr>}}
@@ -558,257 +427,6 @@ Produces a DOT (Graphviz) representation of the graph.
 }
 \subsection{Returns}{
 (character) The DOT-format string.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_xml"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_xml}{}}}
-\subsection{Method \code{get_xml()}}{
-Returns an XML representation of the graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_xml(java_obj = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The XML string.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_lavaan"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_lavaan}{}}}
-\subsection{Method \code{get_lavaan()}}{
-Returns a lavaan syntax representation of the graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_lavaan(java_obj = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The model in lavaan syntax.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-bootstrap_graph"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-bootstrap_graph}{}}}
-\subsection{Method \code{bootstrap_graph()}}{
-Retrieves a particular bootstrapped graph by index.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$bootstrap_graph(index)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{index}}{(integer) Zero-based index of the graph in \code{bootstrap_graphs}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(Java object) The requested bootstrapped graph.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-bootstrap_dot"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-bootstrap_dot}{}}}
-\subsection{Method \code{bootstrap_dot()}}{
-Returns a DOT representation of a bootstrapped graph by index.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$bootstrap_dot(index)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{index}}{(integer) Zero-based index of the graph in \code{bootstrap_graphs}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The graph in DOT format.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-is_legal_pag"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-is_legal_pag}{}}}
-\subsection{Method \code{is_legal_pag()}}{
-Checks if a graph is a valid Partial Ancestral Graph (PAG).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$is_legal_pag(graph)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) The graph to check.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(logical) TRUE if valid, FALSE otherwise.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-is_legal_pag_reason"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-is_legal_pag_reason}{}}}
-\subsection{Method \code{is_legal_pag_reason()}}{
-Prints the reason why a PAG is invalid, if it is.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$is_legal_pag_reason(graph)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) The PAG to check.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-None (prints directly).
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-all_subsets_independencefact_s"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-all_subsets_independencefact_s}{}}}
-\subsection{Method \code{all_subsets_independencefact_s()}}{
-Finds all local Markov independence facts in the given graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$all_subsets_independencefact_s(graph)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) The Tetrad graph to analyze.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(list) A list of vectors describing each independence fact.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-all_subsets_dependencefact_s"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-all_subsets_dependencefact_s}{}}}
-\subsection{Method \code{all_subsets_dependencefact_s()}}{
-Finds all local Markov dependence facts in the given graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$all_subsets_dependencefact_s(graph)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) The Tetrad graph to analyze.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(list) A list of vectors describing each dependence fact.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-markov_check"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-markov_check}{}}}
-\subsection{Method \code{markov_check()}}{
-Performs a Markov check on the given graph using the \code{mc_test} if available.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$markov_check(
-  graph,
-  percent_resample = 1,
-  condition_set_type = .jfield("edu/cmu/tetrad/search/utils/ConditioningSetType", "S",
-    "ORDERED_LOCAL_MARKOV"),
-  remove_extraneous = FALSE,
-  parallelized = TRUE,
-  sample_size = -1
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) The graph to check.}
-
-\item{\code{percent_resample}}{(numeric) Fraction of the data to resample each iteration.}
-
-\item{\code{condition_set_type}}{(Java enum) E.g. \code{LOCAL_MARKOV}, \code{ORDERED_LOCAL_MARKOV}.}
-
-\item{\code{remove_extraneous}}{(logical) If TRUE, tries removing extraneous variables in conditioning sets.}
-
-\item{\code{parallelized}}{(logical) Whether to run Markov check in parallel.}
-
-\item{\code{sample_size}}{(integer) If not -1, overrides the sample size used.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(list) A list of test statistics and p-values from Markov check.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_mc_ind_pvalues"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_mc_ind_pvalues}{}}}
-\subsection{Method \code{get_mc_ind_pvalues()}}{
-Gets p-values for independence from the Markov check results.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_mc_ind_pvalues()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(numeric) Vector of p-values.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_adjustment_sets"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_adjustment_sets}{}}}
-\subsection{Method \code{get_adjustment_sets()}}{
-Retrieves a set of adjustment sets from a Tetrad graph, for a given source and target.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_adjustment_sets(
-  graph,
-  source,
-  target,
-  max_num_sets = 10,
-  max_distance_from_point = 5,
-  near_which_endpoint = 1,
-  max_path_length = 20
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{graph}}{(Java object) Tetrad graph.}
-
-\item{\code{source}}{(character) Name of the source variable.}
-
-\item{\code{target}}{(character) Name of the target variable.}
-
-\item{\code{max_num_sets}}{(integer) Maximum number of adjustment sets to return.}
-
-\item{\code{max_distance_from_point}}{(integer) Restricts the search radius around endpoints.}
-
-\item{\code{near_which_endpoint}}{(integer) Which endpoint to measure distance from.}
-
-\item{\code{max_path_length}}{(integer) Maximum path length to consider.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(Java object) The Tetrad result of the \code{adjustmentSets} call.
 }
 }
 \if{html}{\out{<hr>}}

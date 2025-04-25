@@ -152,76 +152,37 @@ pcalgSearch <- R6Class(
     },
     set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
-      warning(
-        "The pcalg engine does not support non-symmetric background",
-        "knowledge (required or fobidden edges). \n  The knowledge will be converted to symmetric."
-      )
-      if (!!length(knowledge_obj$tiers)) {
-        warning("Tiered background knowledge cannot be utilized by the pcalg engine.")
-      }
-
-      # Function that will be used to build the fixed constraints
-      # but it can first be done, when data is provided.
-      return_pcalg_background_knowledge <- function() {
-        if (is.null(self$data)) {
-          stop("Data must be set before knowledge.")
-        }
-        labels <- colnames(self$data)
-        p <- length(labels)
-
-        fixedGaps <- matrix(FALSE,
-          nrow = p,
-          ncol = p,
-          dimnames = list(labels, labels)
-        )
-        fixedEdges <- matrix(FALSE,
-          nrow = p,
-          ncol = p,
-          dimnames = list(labels, labels)
-        )
-
-        # Create a named vector to map variable names to indices.
-        label_to_index <- setNames(seq_along(labels), labels)
-
-        # Process forbidden edges
-        if (length(knowledge_obj$forbidden) > 0) {
-          for (edge in knowledge_obj$forbidden) {
-            if (length(edge) < 2) {
-              stop("Forbidden edge must have at least two elements.")
-            }
-            if (!(edge[1] %in% labels && edge[2] %in% labels)) {
-              stop("Forbidden edge not found in labels: ", paste(edge, collapse = " - "))
-            }
-            i <- label_to_index[[edge[1]]]
-            j <- label_to_index[[edge[2]]]
-            fixedGaps[i, j] <- TRUE
-            fixedGaps[j, i] <- TRUE
-          }
-        }
-
-        # Process required edges
-        if (length(knowledge_obj$required) > 0) {
-          for (edge in knowledge_obj$required) {
-            if (length(edge) < 2) {
-              stop("Required edge must have at least two elements.")
-            }
-            if (!(edge[1] %in% labels && edge[2] %in% labels)) {
-              stop("Required edge not found in labels: ", paste(edge, collapse = " - "))
-            }
-            i <- label_to_index[[edge[1]]]
-            j <- label_to_index[[edge[2]]]
-            fixedEdges[i, j] <- TRUE
-            fixedEdges[j, i] <- TRUE
-          }
-        }
-        return(list(fixedGaps = fixedGaps, fixedEdges = fixedEdges))
-      }
 
       # Due to the nature of pcalg, we cannot set knowledge before
       # we run it on data. So we set the function that will be
       # used to build the fixed constraints, but it can first be
       # done when data is provided.
-      private$knowledge_function <- return_pcalg_background_knowledge
+      private$knowledge_function <- function() {
+        if (is.null(self$data)) {
+          stop("Data must be set before knowledge.", call. = FALSE)
+        }
+        labels <- colnames(self$data)
+
+        bad_edges <- knowledge_obj$edges |>
+          filter(edge_type != "undirected") |>
+          mutate(
+            ## render each edge as "from EDGE_TYPE to"
+            desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
+          ) |>
+          pull(desc)
+
+        if (length(bad_edges)) {
+          stop(
+            "pcalg does not support asymmetric edges.\n",
+            "The following edges are not undirected:\n",
+            paste0("  * ", bad_edges, collapse = "\n"),
+            call. = FALSE
+          )
+          as_pcalg_constraints(knowledge_obj, labels)
+        }
+
+        invisible(self)
+      }
     },
     run_search = function(data, set_suff_stat = TRUE) {
       if (!is.null(data)) {
