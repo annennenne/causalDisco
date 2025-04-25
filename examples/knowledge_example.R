@@ -52,7 +52,7 @@ print(kn_combined)
 # EXAMPLE 6 ── Convert to Tetrad Java object -----------------------------------
 if (requireNamespace("rJava", quietly = TRUE)) {
   jk <- as_tetrad_knowledge(kn1)
-  print(jk) # Java reference; prints class name & pointer
+  print(jk)
 }
 
 # EXAMPLE 7 ── Using tidyselect helpers ----------------------------------------
@@ -116,3 +116,11 @@ kn9 <- knowledge(
 )
 
 kn8 + kn9 |> try()
+
+# make name error
+df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+knowledge(
+  df,
+  tier(baby ~ V1 + V2, old ~ V3),
+  required(V1 ~ V4)
+) |> try()

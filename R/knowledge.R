@@ -25,7 +25,7 @@
 #'
 #' @return An S3 object of class `"knowledge"`.
 #' @keywords internal
-.new_knowledge <- function(vars = character()) {
+.new_knowledge <- function(vars = character(), frozen = FALSE) {
   stopifnot(is.character(vars), !anyDuplicated(vars))
 
   structure(
@@ -39,7 +39,8 @@
         tier_from  = integer(),
         tier_to    = integer()
       ),
-      tier_labels = integer() # named int vector, e.g. c(Monday = 1L)
+      tier_labels = integer(), # named int vector, e.g. c(Monday = 1L)
+      frozen = frozen # TRUE means no new vars allowed
     ),
     class = "knowledge"
   )
@@ -233,13 +234,23 @@
 add_vars <- function(.kn, vars) {
   stopifnot(inherits(.kn, "knowledge"), is.character(vars))
 
-  new_rows <- tibble::tibble(
-    var  = setdiff(vars, .kn$vars$var),
-    tier = NA_integer_
-  )
-  .kn$vars <- dplyr::bind_rows(.kn$vars, new_rows)
+  missing <- setdiff(vars, .kn$vars$var)
+
+  if (.kn$frozen && length(missing)) {
+    stop(
+      "Unknown variable(s): ", paste(missing, collapse = ", "),
+      "\nThey are not present in the data frame was provided to this knowledge object.",
+      call. = FALSE
+    )
+  }
+
+  if (length(missing)) {
+    new_rows <- tibble::tibble(var = missing, tier = NA_integer_)
+    .kn$vars <- dplyr::bind_rows(.kn$vars, new_rows)
+  }
   .kn
 }
+
 
 #' Assign variables to a tier (numeric or symbolic label)
 #' @export
@@ -357,7 +368,7 @@ knowledge <- function(...) {
       dots <- dots[-1]
     }
   }
-  kn <- if (is.null(df)) .new_knowledge() else .new_knowledge(names(df))
+  kn <- if (is.null(df)) .new_knowledge() else .new_knowledge(names(df), frozen = TRUE)
 
   # helper: tier -------------------------------------------------------------
   tier <- function(...) {
