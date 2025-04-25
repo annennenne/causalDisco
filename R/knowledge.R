@@ -1,300 +1,532 @@
-#' @title KnowledgeObj R6 Class – Container for Background Knowledge
+# ---------------------------------------------------------------------------
+# knowledge.R
+#
+# Public API
+#   • knowledge()       – create an empty or seeded knowledge object.
+#                         Can also be used as a mini-DSL:
+#                         knowledge(data, tier(), forbidden(), required())
+#   • add_vars()        – register variables
+#   • add_tier()        – assign variables to tiers
+#   • forbid_edge()     – store forbidden edges
+#   • require_edge()    – store required edges
+#   • knowledge()       –
+#   • +.knowledge       – merge two knowledge objects
+#   • as_tetrad()       – convert to Tetrad Knowledge object
+#
+# Representation
+#   vars  : var, tier
+#   edges : status, edge_type, from, to, tier_from, tier_to
+# ---------------------------------------------------------------------------
+
+
+#' Create a `knowledge` object
 #'
-#' @description
-#' A lightweight R6 wrapper that stores user‑supplied background knowledge
-#' (tiers of variables, *forbidden* edges and *required* edges) for use by
-#' causal‑discovery algorithms.
+#' @param vars Character vector of variable names.  Defaults to empty.
 #'
-#' @details
-#' A `KnowledgeObj` starts empty and is filled incrementally with helper
-#' methods.  All mutators return the object invisibly, so calls may be
-#' chained.  The class is designed to be used indirectly through the
-#' higher‑level \code{\link{knowledge}()} helper, but it can be manipulated
-#' directly if finer control is needed.
-#'
-#' @docType class
-#' @format An \link[R6]{R6Class} generator object.
-#' @name KnowledgeObj
-#'
-#' @examples
-#' kn_obj <- KnowledgeObj$new()
-#' kn_obj$add_to_tier(1, c("V1", "V2"))$
-#'   add_forbidden("V1", "V3")$
-#'   add_required("V2", "V3")
-#' kn_obj
-#'
-#' @importFrom R6 R6Class
-KnowledgeObj <- R6Class("KnowledgeObj",
-  public = list(
+#' @return An S3 object of class `"knowledge"`.
+#' @keywords internal
+.new_knowledge <- function(vars = character()) {
+  stopifnot(is.character(vars), !anyDuplicated(vars))
 
-    #' @field tiers
-    #' A named \code{list}.  Each name is a tier integer (stored as a character
-    #' string) and the value is a character vector of variable names assigned
-    #' to that tier.
-    tiers = NULL,
-
-    #' @field forbidden
-    #' A \code{list}.  Each element is a character vector of length 2
-    #' \code{c(source, target)} representing a **forbidden** directed edge.
-    forbidden = NULL,
-
-    #' @field required
-    #' A \code{list}.  Each element is a character vector of length 2
-    #' \code{c(source, target)} representing a **required** directed edge
-    #' (source → target).
-    required = NULL,
-
-    #' @description
-    #' Create a new, empty \code{KnowledgeObj}.
-    #' @return A new \code{KnowledgeObj} instance.
-    initialize = function() {
-      self$tiers <- list()
-      self$forbidden <- list()
-      self$required <- list()
-    },
-
-    #' @description
-    #' Add one or more variables to a tier. If the tier does not yet exist it
-    #' is created; duplicates are removed.
-    #'
-    #' @param tier `integer` | `numeric` | `character`
-    #'   Tier number (will be coerced to character).
-    #' @param vars `character`
-    #'   Vector of variable names to add.
-    #' @return The modified object (invisibly), so the method can be chained.
-    add_to_tier = function(tier, vars) {
-      tier <- as.character(tier) # Use the tier number as a character key
-      vars <- as.character(vars)
-      if (is.null(self$tiers[[tier]])) {
-        self$tiers[[tier]] <- vars
-      } else {
-        self$tiers[[tier]] <- unique(c(self$tiers[[tier]], vars))
-      }
-      invisible(self)
-    },
-
-    #' @description
-    #' Register a **forbidden** edge \code{source → target}.
-    #'
-    #' @param source `character`
-    #'   Source variable name.
-    #' @param target `character`
-    #'   Target variable name.
-    #' @return The modified object (invisibly).
-    add_forbidden = function(source, target) {
-      forbidden_edge <- c(as.character(source), as.character(target))
-      self$forbidden[[length(self$forbidden) + 1]] <- forbidden_edge
-      invisible(self)
-    },
-
-    #' @description
-    #' Register a **required** edge \code{source → target}.
-    #'
-    #' @param source `character`
-    #'   Source variable name.
-    #' @param target `character`
-    #'   Target variable name.
-    #' @return The modified object (invisibly).
-    add_required = function(source, target) {
-      required_edge <- c(as.character(source), as.character(target))
-      self$required[[length(self$required) + 1]] <- required_edge
-      invisible(self)
-    },
-
-    #' @description
-    #' Convert the internal R representation to a Java
-    #' \code{edu.cmu.tetrad.data.Knowledge} object for use with Tetrad.
-    #'
-    #' @return A Java \code{Knowledge} object.
-    get_tetrad_knowledge = function() {
-      tetrad_knowledge <- .jnew("edu/cmu/tetrad/data/Knowledge")
-
-      if (length(self$tiers) > 0) {
-        for (tier_key in names(self$tiers)) {
-          tier_val <- as.integer(tier_key)
-          vars <- self$tiers[[tier_key]]
-          for (v in vars) {
-            tetrad_knowledge$addToTier(tier_val, v)
-          }
-        }
-      }
-
-      if (length(self$forbidden) > 0) {
-        for (edge in self$forbidden) {
-          tetrad_knowledge$setForbidden(edge[1], edge[2])
-        }
-      }
-
-      if (length(self$required) > 0) {
-        for (edge in self$required) {
-          tetrad_knowledge$setRequired(edge[1], edge[2])
-        }
-      }
-      tetrad_knowledge
-    },
-
-    #' @description
-    #' Pretty‑print the contents of the object.
-    #'
-    #' @param ... Ignored; included for compatibility.
-    #' @return The object (invisibly).
-    print = function(...) {
-      cat("Background Knowledge Object:\n")
-      cat("Tiers:\n")
-      print(self$tiers)
-      cat("Forbidden Edges:\n")
-      print(self$forbidden)
-      cat("Required Edges:\n")
-      print(self$required)
-      invisible(self)
-    }
+  structure(
+    list(
+      vars = tibble::tibble(var = vars, tier = NA_integer_),
+      edges = tibble::tibble(
+        status     = character(),
+        edge_type  = character(),
+        from       = character(),
+        to         = character(),
+        tier_from  = integer(),
+        tier_to    = integer()
+      ),
+      tier_labels = integer() # named int vector, e.g. c(Monday = 1L)
+    ),
+    class = "knowledge"
   )
-)
-
-#' @title Construct a \code{KnowledgeObj} with a Mini‑DSL
-#'
-#' @description
-#' \code{knowledge()} is a user‑friendly wrapper that builds a
-#' \link{KnowledgeObj} by evaluating a sequence of
-#' calls to the helper functions \code{tier()}, \code{forbidden()}, and
-#' \code{required()}.
-#' Each helper adds information to the underlying R6 object, which is then
-#' returned for further use in causal‑discovery algorithms.
-#'
-#' @param ... One or more calls to \code{tier()}, \code{forbidden()}, or
-#'   \code{required()}.  Any other call or a non‑call argument triggers an
-#'   error.
-#'
-#' @details
-#' \subsection{Helper functions}{
-#'   \itemize{
-#'     \item \strong{tier(tier, vars)} — Pairs a tier number with a character
-#'       vector of variable names.  May be repeated.
-#'     \item \strong{forbidden(source, target)} — Registers a forbidden edge
-#'       \code{source → target}.  Accepts multiple pairs, either as separate
-#'       arguments or as a single character vector of length 2 × n.
-#'     \item \strong{required(source, target)} — Registers a required edge
-#'       \code{source → target}.  Same calling conventions as
-#'       \code{forbidden()}.
-#'   }
-#' }
-#'
-#' @return A populated \link{KnowledgeObj}.
-#'
-#' @examples
-#' # number of samples
-#' n <- 10**4
-
-#' # continuous data example
-#' V1 <- rnorm(n, 0, 1)
-#' V2 <- 0.5 * V1 + rnorm(n, 0, 0.5)
-#' V3 <- V2 + rnorm(n, 0, 0.1)
-#' V4 <- V3 + rnorm(n, 0, 1)
-#' V5 <- rnorm(n, 0, 1)
-#' V6 <- rnorm(n, 0, 1) + 0.7 * V5
-#'
-#' df <- data.frame(V1, V2, V3, V4, V5, V6)
-#'
-#' # set knowledge
-#' my_knowledge <- knowledge(
-#'   tier(
-#'     1, c("V1", "V2", "V3"),
-#'     2, c("V4", "V5", "V6")
-#'   ),
-#'   forbidden("V1", "V6"), # single pair
-#'   forbidden(c("V2", "V6")), # can be given as vector as well
-#'   required(
-#'     c("V1", "V2"), # two pairs can be given like this as well
-#'     c("V2", "V3")
-#'   )
-#' )
-#'
-#'
-knowledge <- function(...) {
-  knowledge_obj <- KnowledgeObj$new()
-
-  # Helper functions are defined locally. They are not callable outside.
-  tier <- function(...) {
-    args <- list(...)
-    if (length(args) %% 2 != 0) {
-      stop("The tier function requires an even number of arguments: each tier number must be paired with its variable(s).")
-    }
-    for (i in seq(1, length(args), by = 2)) {
-      tier_val <- as.integer(args[[i]])
-      vars <- as.character(args[[i + 1]])
-      for (v in vars) {
-        knowledge_obj$add_to_tier(tier_val, v)
-      }
-    }
-  }
-
-  forbidden <- function(...) {
-    args <- unlist(list(...))
-    if (length(args) %% 2 != 0) {
-      stop("The 'forbidden' function requires an even number of strings to form pairs (source and target).")
-    }
-    for (i in seq(1, length(args), by = 2)) {
-      knowledge_obj$add_forbidden(args[i], args[i + 1])
-    }
-  }
-
-  required <- function(...) {
-    args <- unlist(list(...))
-    if (length(args) %% 2 != 0) {
-      stop("The 'required' function requires an even number of strings to form pairs (source and target).")
-    }
-    for (i in seq(1, length(args), by = 2)) {
-      knowledge_obj$add_required(args[i], args[i + 1])
-    }
-  }
-
-  # Create a local environment that binds "knowledge" and helper functions.
-  local_env <- new.env(parent = parent.frame())
-  local_env$knowledge_obj <- knowledge_obj
-  local_env$tier <- tier
-  local_env$forbidden <- forbidden
-  local_env$required <- required
-
-  # Process the expressions passed to knowledge_tetrad.
-  exprs <- as.list(substitute(list(...)))[-1]
-  allowed_fns <- c("tier", "forbidden", "required")
-  for (expr in exprs) {
-    if (!is.call(expr)) {
-      stop("All arguments to knowledge() must be calls to tier, forbidden, or required.")
-    }
-    fn_name <- as.character(expr[[1]])
-    if (!(fn_name %in% allowed_fns)) {
-      stop("Only calls to tier(), forbidden(), and required() are permitted in knowledge().")
-    }
-  }
-
-  for (expr in exprs) {
-    eval(expr, envir = local_env)
-  }
-  return(knowledge_obj)
 }
 
-#' @title Verify That an Object Is a \code{KnowledgeObj}
+#' Supported edge-type strings
+#' @keywords internal
+.allowed_edge_types <- c("directed", "undirected", "bidirected", "o->", "o-o", "<-o")
+
+# ---------------------------------------------------------------------------
+# internal helpers -----------------------------------------------------------
+
+#' Resolve a tier label or number to an integer index (adds new labels)
+#' @keywords internal
+.resolve_tier <- function(.kn, tier) {
+  ## ---------------- integer supplied -------------------------------------
+  if (rlang::is_integerish(tier) && length(tier) == 1 && tier >= 1) {
+    return(list(idx = as.integer(tier), kn = .kn))
+  }
+
+  ## ---------------- symbol / string supplied -----------------------------
+  label <- rlang::as_string(tier)
+  if (!nzchar(label)) {
+    cli::cli_abort("Tier labels must be a non-empty symbol or string.")
+  }
+
+  if (label %in% names(.kn$tier_labels)) {
+    return(list(idx = .kn$tier_labels[[label]], kn = .kn))
+  }
+
+  next_idx <- if (length(.kn$tier_labels)) max(.kn$tier_labels) + 1L else 1L
+  .kn$tier_labels[[label]] <- next_idx
+  list(idx = next_idx, kn = .kn)
+}
+
+#' Resolve a tidy-select or character spec to character names
+#' @keywords internal
+.resolved_vars <- function(.kn, spec) {
+  lookup <- rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
+
+  tryCatch(
+    names(tidyselect::eval_select(rlang::enquo(spec), lookup)),
+    error = function(e) {
+      out <- tryCatch(
+        rlang::eval_tidy(rlang::enquo(spec)),
+        error = function(...) NULL
+      )
+      if (is.character(out)) {
+        return(out)
+      }
+      character(0)
+    }
+  )
+}
+
+#' Extract variable names from the RHS of a `tier()` formula
+#' @keywords internal
+.formula_vars <- function(rhs, .kn) {
+  vars <- .resolved_vars(.kn, !!rhs)
+  if (length(vars)) {
+    return(vars)
+  } # tidy-select succeeded
+  unique(all.vars(rhs)) # fallback to plain symbols
+}
+
+#' Validate that no edge runs from higher tier to lower tier
+#' @keywords internal
+.validate_tier_rule <- function(edges_df) {
+  tier_violations <- dplyr::filter(
+    edges_df,
+    !is.na(tier_from),
+    !is.na(tier_to),
+    tier_from > tier_to
+  )
+  if (nrow(tier_violations)) {
+    stop("Edge(s) violate tier ordering: ",
+      paste(tier_violations$from, "-->", tier_violations$to, collapse = ", "),
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}
+
+#' Validate that an edge is not simultaneously forbidden *and* required
+#' @keywords internal
+.validate_forbidden_required <- function(edges_df) {
+  # look for groups where the same (from, to, edge_type) has both statuses
+  clashes <- edges_df |>
+    dplyr::group_by(edge_type, from, to) |>
+    dplyr::filter(all(c("forbidden", "required") %in% status)) |>
+    dplyr::ungroup() |>
+    dplyr::distinct(edge_type, from, to) # one row per conflicting edge
+  if (nrow(clashes)) {
+    stop(
+      "Edge(s) appear as both forbidden and required: ",
+      paste0(clashes$from, " → ", clashes$to,
+        " [", clashes$edge_type, "]",
+        collapse = ", "
+      ),
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}
+
+#' Validate that merging two knowledge objects introduces no tier-label conflict
+#'
+#' A conflict occurs when **two or more different labels map to the same
+#' numeric tier index** after the merge (e.g. "January → 1" and "Monday → 1").
+#' The function aborts with a clear message that lists every problematic
+#' tier together with the colliding labels.
+#'
+#' @keywords internal
+.validate_label_conflict <- function(tiers_left, tiers_right) {
+  merged <- c(tiers_left, tiers_right)
+
+  # If no labels are present, or if all labels are unique, return TRUE
+  if (length(merged) < 2L) {
+    return(invisible(TRUE))
+  }
+
+  conflicts <- Filter(
+    function(lbl) length(unique(lbl)) > 1,
+    split(names(merged), merged) # labels grouped by numeric tier
+  )
+  if (length(conflicts)) {
+    lines <- mapply(
+      function(lbls, tier_idx) {
+        sprintf(
+          "tier %s: %s",
+          tier_idx,
+          paste(unique(lbls), collapse = ", ")
+        )
+      },
+      conflicts,
+      names(conflicts),
+      SIMPLIFY = TRUE,
+      USE.NAMES = FALSE
+    )
+
+    stop(
+      "Conflicting tier labels detected:\n",
+      paste0("  * ", lines, collapse = "\n"),
+      call. = FALSE
+    )
+  }
+}
+
+
+
+
+#' Add one or many edges to a knowledge object
+#' @keywords internal
+.add_edges <- function(.kn, status, edge_type, from, to) {
+  # Reject unknown edge types
+  if (!(edge_type %in% .allowed_edge_types)) {
+    cli::cli_abort("edge_type must be one of {.val {paste(.allowed_edge_types, collapse = ', ')}}.")
+  }
+
+  # Resolve `from` / `to` specs into character vectors of variable names
+  from_chr <- .resolved_vars(.kn, {{ from }})
+  to_chr <- .resolved_vars(.kn, {{ to }})
+
+  # Ensure all endpoint variables exist in `.kn$vars`
+  .kn <- add_vars(.kn, unique(c(from_chr, to_chr)))
+
+  # Cartesian product → one row per directed edge, then annotate
+  block <- tidyr::crossing(from = from_chr, to = to_chr) |>
+    dplyr::mutate(
+      status    = status,
+      edge_type = edge_type,
+      tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
+      tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
+    )
+
+  # Abort if any new edge violates the tier rule
+  .validate_tier_rule(block)
+  .validate_forbidden_required(block)
+
+  # Merge into edge table, dropping duplicates, and return updated object
+  .kn$edges <- dplyr::distinct(dplyr::bind_rows(.kn$edges, block))
+  .validate_forbidden_required(.kn$edges)
+  .kn
+}
+
+# ---------------------------------------------------------------------------
+# public verbs ---------------------------------------------------------------
+
+#' Add variables
+#' @export
+add_vars <- function(.kn, vars) {
+  stopifnot(inherits(.kn, "knowledge"), is.character(vars))
+
+  new_rows <- tibble::tibble(
+    var  = setdiff(vars, .kn$vars$var),
+    tier = NA_integer_
+  )
+  .kn$vars <- dplyr::bind_rows(.kn$vars, new_rows)
+  .kn
+}
+
+#' Assign variables to a tier (numeric or symbolic label)
+#' @export
+add_tier <- function(.kn, tier, vars) {
+  stopifnot(inherits(.kn, "knowledge"), length(tier) == 1)
+
+  res <- .resolve_tier(.kn, tier)
+  .kn <- res$kn
+  tier_idx <- res$idx
+
+  vars_chr <- .resolved_vars(.kn, {{ vars }})
+  .kn <- add_vars(.kn, vars_chr) # adds only truly new names
+  idx <- match(vars_chr, .kn$vars$var)
+  .kn$vars$tier[idx] <- tier_idx # overwrite NA or previous tier
+  .kn
+}
+
+#' Register forbidden / required edges
+#' @export
+forbid_edge <- function(.kn, from, to, edge_type = "directed") {
+  .add_edges(.kn, "forbidden", edge_type, {{ from }}, {{ to }})
+}
+
+#' @rdname forbid_edge
+#' @export
+require_edge <- function(.kn, from, to, edge_type = "directed") {
+  .add_edges(.kn, "required", edge_type, {{ from }}, {{ to }})
+}
+
+# ---------------------------------------------------------------------------
+# printing -------------------------------------------------------------------
+
+#' @exportS3Method print knowledge
+print.knowledge <- function(x, ...) {
+  cli::cat_rule("Knowledge object")
+  if (length(x$tier_labels)) {
+    cli::cat_line(
+      "Tier labels: ",
+      paste(names(x$tier_labels), "\u2192", x$tier_labels, collapse = ", ")
+    )
+  }
+  cli::cat_line(cli::style_bold("Variables:"), nrow(x$vars))
+  if (nrow(x$vars)) print(x$vars, n = Inf)
+  cli::cat_line(cli::style_bold("Edges:"), nrow(x$edges))
+  if (nrow(x$edges)) print(x$edges, n = 10)
+  invisible(x)
+}
+
+# ---------------------------------------------------------------------------
+# arithmetic -----------------------------------------------------------------
+
+# internal helper: recompute tier columns ------------------------------------
+#' @keywords internal
+.update_edge_tiers <- function(.kn) {
+  .kn$edges <- dplyr::mutate(
+    .kn$edges,
+    tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
+    tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
+  )
+  .kn
+}
+
+#' @exportS3Method "+" knowledge
+`+.knowledge` <- function(e1, e2) {
+  stopifnot(inherits(e1, "knowledge"), inherits(e2, "knowledge"))
+  .validate_label_conflict(e1$tier_labels, e2$tier_labels)
+
+  vars <- unique(c(e1$vars$var, e2$vars$var))
+  out <- .new_knowledge(vars)
+
+  tiers <- dplyr::bind_rows(e2$vars, e1$vars) |>
+    dplyr::group_by(var) |>
+    dplyr::slice(1) |>
+    dplyr::ungroup()
+  out$vars$tier <- tiers$tier[match(out$vars$var, tiers$var)]
+
+  out$tier_labels <- c(
+    e1$tier_labels,
+    e2$tier_labels[setdiff(names(e2$tier_labels), names(e1$tier_labels))]
+  )
+
+  out$edges <- dplyr::distinct(dplyr::bind_rows(e1$edges, e2$edges))
+  out <- .update_edge_tiers(out)
+
+  .validate_tier_rule(out$edges)
+  .validate_forbidden_required(out$edges)
+  out
+}
+
+# ---------------------------------------------------------------------------
+# DSL wrapper ----------------------------------------------------------------
+
+#' Mini-DSL constructor (`tier()`, `forbidden()`, `required()`)
 #'
 #' @description
-#' A small utility that throws an error if the supplied object is
-#' not an instance of class \code{KnowledgeObj}.  Intended for internal use.
+#' Accepts an optional data frame followed by calls built from **formulas**:
 #'
-#' @param x Any R object.
+#' * `tier( 1 ~ V1 + V2, exposure ~ E )`
+#' * `forbidden( V1 ~ V4, V2 ~ V4, edge_type = "undirected" )`
+#' * `required ( V1 ~ V2 )`
 #'
-#' @return \code{TRUE} (invisibly) if \code{x} inherits from
-#'   \code{"KnowledgeObj"}; otherwise an error is raised.
+#' @return A populated `knowledge` object.
+#' @export
+knowledge <- function(...) {
+  dots <- as.list(substitute(list(...)))[-1]
+  if (!length(dots)) {
+    return(.new_knowledge())
+  }
+  # optional first arg = data frame -----------------------------------------
+  df <- NULL
+  if (length(dots) && !is.call(dots[[1]])) {
+    first <- eval(dots[[1]], parent.frame())
+    if (is.data.frame(first)) {
+      df <- first
+      dots <- dots[-1]
+    }
+  }
+  kn <- if (is.null(df)) .new_knowledge() else .new_knowledge(names(df))
+
+  # helper: tier -------------------------------------------------------------
+  tier <- function(...) {
+    specs <- rlang::list2(...)
+    if (!length(specs)) {
+      cli::cli_abort("tier() needs at least one two-sided formula.")
+    }
+
+    for (fml in specs) {
+      if (!rlang::is_formula(fml, lhs = TRUE)) {
+        cli::cli_abort("Each tier() argument must be a two-sided formula.")
+      }
+      lhs <- rlang::f_lhs(fml)
+
+      vars <- .formula_vars(rlang::f_rhs(fml), kn)
+      if (!is.character(vars) || !length(vars)) {
+        cli::cli_abort("Tier specification {.code {fml}} matched no variables.")
+      }
+
+      kn <<- add_tier(kn, lhs, vars) # lhs may be label *or* number
+    }
+  }
+
+  # helper: edge helpers -----------------------------------------------------
+  edge_helper <- function(status, ..., edge_type = "directed") {
+    specs <- rlang::list2(...)
+    if (!length(specs)) {
+      cli::cli_abort("{.fun {status}}() needs at least one two-sided formula.")
+    }
+
+    for (fml in specs) {
+      if (!rlang::is_formula(fml, lhs = TRUE)) {
+        cli::cli_abort("Arguments must be two-sided formulas.")
+      }
+
+      # resolve *expressions* on both sides
+      from_vars <- .formula_vars(rlang::f_lhs(fml), kn)
+      to_vars <- .formula_vars(rlang::f_rhs(fml), kn)
+      if (!is.character(from_vars) || !length(from_vars)) {
+        cli::cli_abort("Edge selection {.code {fml}} matched no *from* vars.")
+      }
+      if (!is.character(to_vars) || !length(to_vars)) {
+        cli::cli_abort("Edge selection {.code {fml}} matched no *to* vars.")
+      }
+
+      # insert every combination of from × to
+      kn <<- .add_edges(kn, status, edge_type, from_vars, to_vars)
+    }
+  }
+  forbidden <- function(..., edge_type = "directed") edge_helper("forbidden", ..., edge_type = edge_type)
+  required <- function(..., edge_type = "directed") edge_helper("required", ..., edge_type = edge_type)
+
+  # evaluate the call list ---------------------------------------------------
+  allowed <- c("tier", "forbidden", "required")
+  for (expr in dots) {
+    if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
+      cli::cli_abort("Only tier(), forbidden(), required() calls are allowed.")
+    }
+    eval(expr, envir = environment())
+  }
+  kn
+}
+
+# ---------------------------------------------------------------------------
+# Java conversion ------------------------------------------------------------
+
+#' Convert to Tetrad `edu.cmu.tetrad.data.Knowledge`
+#' @export
+as_tetrad_knowledge <- function(.kn) {
+  if (!requireNamespace("rJava", quietly = TRUE)) {
+    stop("Package 'rJava' is required for as_tetrad().")
+  }
+
+  j <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
+
+  purrr::pwalk(
+    list(.kn$vars$var, .kn$vars$tier),
+    function(v, t) if (!is.na(t)) j$addToTier(t, v)
+  )
+  purrr::pwalk(
+    .kn$edges,
+    function(status, edge_type, from, to, ...) {
+      switch(status,
+        forbidden = j$setForbidden(from, to),
+        required  = j$setRequired(from, to)
+      )
+    }
+  )
+  j
+}
+
+# ---------------------------------------------------------------------------
+# pcalg conversion -----------------------------------------------------------
+
+#' Convert to a pair of (fixedGaps, fixedEdges) matrices for the **pcalg** package
 #'
-#' @examples
-#' kg <- KnowledgeObj$new()
-#' check_knowledge_obj(kg) # returns TRUE
-#' \dontrun{
-#' check_knowledge_obj(list()) # errors
-#' }
+#' pcalg supports *symmetric* background knowledge only:
+#'   • **fixedGaps**  – edges that must be **absent** (undirected)
+#'   • **fixedEdges** – edges that must be **present** (undirected)
+#'
+#' We therefore throw an error if any edges are not undirected.
+#'
+#' @param .kn A `knowledge` object.
+#' @param labels Character vector of variable names in the *exact* order of
+#'               your data matrix / data frame.
+#' @return A list with elements `fixedGaps` and `fixedEdges`.
+#' @export
+as_pcalg_constraints <- function(.kn, labels) {
+  check_knowledge_obj(.kn)
+
+  if (any(!is.na(.kn$vars$tier))) {
+    cli::cli_warn("Tiered background knowledge cannot be utilised by the pcalg engine.")
+  }
+
+  p <- length(labels)
+  fixedGaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+  fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+
+  ## helper: map variable → index once --------------------------------------
+  idx <- setNames(seq_along(labels), labels)
+
+  ## ---- forbidden ---------------------------------------------------------
+  forb <- dplyr::filter(.kn$edges, status == "forbidden")
+  if (nrow(forb)) {
+    for (k in seq_len(nrow(forb))) {
+      i <- idx[[forb$from[k]]]
+      j <- idx[[forb$to[k]]]
+      if (is.na(i) || is.na(j)) {
+        cli::cli_abort("Forbidden edge refers to unknown variable(s).")
+      }
+      fixedGaps[i, j] <- TRUE
+      fixedGaps[j, i] <- TRUE
+    }
+  }
+
+  ## ---- required ----------------------------------------------------------
+  req <- dplyr::filter(.kn$edges, status == "required")
+  if (nrow(req)) {
+    for (k in seq_len(nrow(req))) {
+      i <- idx[[req$from[k]]]
+      j <- idx[[req$to[k]]]
+      if (is.na(i) || is.na(j)) {
+        cli::cli_abort("Required edge refers to unknown variable(s).")
+      }
+      fixedEdges[i, j] <- TRUE
+      fixedEdges[j, i] <- TRUE
+    }
+  }
+
+  list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
+}
+
+
+#' Verify that an object is a knowledge
+#'
 #' @keywords internal
 check_knowledge_obj <- function(x) {
   if (!inherits(x, "knowledge")) {
-    stop("Input must be a KnowledgeObj instance.")
+    stop("Input must be a knowledge instance.", .call = FALSE)
   }
   TRUE
 }
+# ---------------------------------------------------------------------------
+# Imports (roxygen tags only) ------------------------------------------------
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate
+#' @importFrom tidyselect eval_select everything starts_with ends_with
+#' @importFrom rlang enquo eval_tidy set_names is_formula f_lhs f_rhs as_name !!
+#' @importFrom rlang is_integerish as_string
+#' @importFrom purrr pwalk
+#' @importFrom cli cat_rule cat_line style_bold cli_abort
+NULL

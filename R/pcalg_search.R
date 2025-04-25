@@ -166,7 +166,7 @@ pcalgSearch <- R6Class(
         bad_edges <- knowledge_obj$edges |>
           filter(edge_type != "undirected") |>
           mutate(
-            ## render each edge as "from EDGE_TYPE to"
+            # Create descriptive string of edges
             desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
           ) |>
           pull(desc)

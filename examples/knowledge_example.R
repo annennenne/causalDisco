@@ -51,7 +51,7 @@ print(kn_combined)
 
 # EXAMPLE 6 ── Convert to Tetrad Java object -----------------------------------
 if (requireNamespace("rJava", quietly = TRUE)) {
-  jk <- as_tetrad(kn1)
+  jk <- as_tetrad_knowledge(kn1)
   print(jk) # Java reference; prints class name & pointer
 }
 
