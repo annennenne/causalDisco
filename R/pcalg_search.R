@@ -38,29 +38,39 @@ pcalgSearch <- R6Class(
     },
     set_suff_stat = function() {
       if (is.null(self$data)) {
-        stop("Data must be set before sufficient statistic.")
+        stop("Data must be set before sufficient statistic.",
+          .call = FALSE
+        )
       }
       if (is.null(self$test)) {
-        stop("Test must be set before sufficient statistic.")
+        stop("Test must be set before sufficient statistic.",
+          .call = FALSE
+        )
       }
       if (is.null(self$continuous)) {
         stop("The pcalgSearch class does not have knowledge on whether the
              sufficient statistic is for a continuous or discrete test.
              Please set test using set_test() or set continuous directly
-             by self$continuous <- TRUE/FALSE.")
+             by self$continuous <- TRUE/FALSE.",
+          .call = FALSE
+        )
       }
       if (self$continuous) {
         if (is.matrix(self$data) || is.data.frame(self$data)) {
           self$suff_stat <- list(C = cor(self$data), n = nrow(self$data))
         } else {
-          stop("Data must be a matrix or data frame if numeric.")
+          stop("Data must be a matrix or data frame if numeric.",
+            .call = FALSE
+          )
         }
       } else if (is.data.frame(self$data)) {
         self$suff_stat <- list(dm = data.matrix(self$data), adaptDF = FALSE)
       } else {
         stop("Unrecognized data format.
              The data should be either continouos or discrete,
-             and the data should be in a data.frame.")
+             and the data should be in a data.frame.",
+          .call = FALSE
+        )
       }
     },
     set_test = function(method,
@@ -73,19 +83,25 @@ pcalgSearch <- R6Class(
       switch(method,
         "fisher_z" = {
           if (is.null(self$params$alpha)) {
-            stop("Alpha must be set before test.")
+            stop("Alpha must be set before test.",
+              .call = FALSE
+            )
           }
           self$test <- pcalg::gaussCItest
           self$continuous <- TRUE
         },
         "g_square" = {
           if (is.null(self$params$alpha)) {
-            stop("Alpha must be set before test.")
+            stop("Alpha must be set before test.",
+              .call = FALSE
+            )
           }
           self$test <- private$use_g_square()
           self$continuous <- FALSE
         },
-        stop("Unknown test type using pcalg engine: ", method)
+        stop("Unknown test type using pcalg engine: ", method,
+          .call = FALSE
+        )
       )
     },
     set_score = function(method, params = list()) {
@@ -93,7 +109,9 @@ pcalgSearch <- R6Class(
       # Function that will be used to build the score, when data is set
       return_pcalg_score <- function() {
         if (is.null(self$data)) {
-          stop("Data must be set before score.")
+          stop("Data must be set before score.",
+            .call = FALSE
+          )
         }
         switch(method,
           "sem_bic" = {
@@ -114,7 +132,9 @@ pcalgSearch <- R6Class(
               !!!params # disappears cleanly when empty
             )
           },
-          stop("Unknown score type using pcalg engine: ", method)
+          stop("Unknown score type using pcalg engine: ", method,
+            .call = FALSE
+          )
         )
         return(score)
       }
@@ -125,7 +145,9 @@ pcalgSearch <- R6Class(
       switch(method,
         "pc" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.")
+            stop("No test is set. Use set_test() first.",
+              .call = FALSE
+            )
           }
           self$alg <- purrr::partial(
             pcalg::pc,
@@ -147,7 +169,9 @@ pcalgSearch <- R6Class(
             !!!self$params
           )
         },
-        stop("Unknown method type using pcalg engine: ", method)
+        stop("Unknown method type using pcalg engine: ", method,
+          .call = FALSE
+        )
       )
     },
     set_knowledge = function(knowledge_obj) {
@@ -171,13 +195,19 @@ pcalgSearch <- R6Class(
         self$set_data(data, set_suff_stat)
       }
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or input data directly into run_search().")
+        stop("No data is set. Use set_data() first or input data directly into run_search().",
+          .call = FALSE
+        )
       }
       if (is.null(self$suff_stat) && set_suff_stat) {
-        stop("No sufficient statistic is set. Use set_data() first.")
+        stop("No sufficient statistic is set. Use set_data() first.",
+          .call = FALSE
+        )
       }
       if (is.null(self$alg)) {
-        stop("No algorithm is set. Use set_alg() first.")
+        stop("No algorithm is set. Use set_alg() first.",
+          .call = FALSE
+        )
       }
 
       # If score_function is NULL, then we are not using a score-based algorithm
@@ -208,7 +238,8 @@ pcalgSearch <- R6Class(
           if (!is.null(self$knowledge$fixedEdges)) {
             warning(
               "pcalg::ges() does not take required edges as arguments.",
-              "\n  They will not be used here."
+              "\n  They will not be used here.",
+              .call = FALSE
             )
           }
           result <- self$alg(
@@ -240,7 +271,10 @@ pcalgSearch <- R6Class(
               sort()
           }
           if (length(private$uniques) < 2) {
-            stop("The data contains less than 2 unique values. If this is the case, there is nothing to discover.")
+            stop("The data contains less than 2 unique values.",
+              " If this is the case, there is nothing to discover.",
+              .call = FALSE
+            )
           }
           if (length(private$uniques) == 2) {
             return(pcalg::binCItest(x, y, S, suffStat))

@@ -1045,14 +1045,13 @@ seq_tiers <- function(tiers,
       pat <- if (grepl("{i}", suffix, fixed = TRUE)) {
         gsub("{i}", i, suffix, fixed = TRUE)
       } else {
-        paste0(i, suffix)
+        paste0(suffix, i) # append number
       }
       rhs <- rlang::expr(ends_with(!!pat))
     } else {
       pat <- gsub("{i}", i, pattern, fixed = TRUE)
       rhs <- rlang::expr(all_of(!!pat))
     }
-
     rlang::new_formula(i, rhs, env = rlang::empty_env())
   }
 

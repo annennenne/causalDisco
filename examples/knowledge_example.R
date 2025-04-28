@@ -5,7 +5,10 @@ devtools::load_all()
 # EXAMPLE 1 ── Pure DSL (numeric tiers) ----------------------------------------
 kn1 <-
   knowledge(
-    tier(1 ~ V1 + V2, 2 ~ V3),
+    tier(
+      1 ~ V1 + V2,
+      2 ~ V3
+    ),
     forbidden(V1 ~ V3, edge_type = "undirected"),
     required(V1 ~ V2, V2 ~ V3)
   )
