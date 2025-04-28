@@ -207,3 +207,10 @@ knowledge(
   tier(baby ~ V1 + V2, old ~ V3),
   required(V1 ~ V4)
 ) |> try()
+
+# Tier conflict
+try(
+  knowledge(
+    tier(baby ~ V1 + V2, old ~ V3)
+  ) |> add_to_tier(old ~ V4, after = old)
+)

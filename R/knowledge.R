@@ -238,7 +238,7 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
     )
   }
 
-  ## ---- 1. validate before/after combination --------------------------------
+  # Validate before/after arguments
   if (!missing(before) && !missing(after)) {
     stop(
       "Specify only one of `before` or `after`.",
@@ -252,7 +252,7 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
     )
   }
 
-  ## ---- 2. resolve anchor tiers once  -------------------------------------
+  # Resolve anchor index
   anchor_idx <- if (!missing(before)) {
     .tiers_from_spec(.kn, rlang::enexpr(before))
   } else if (!missing(after)) {
@@ -260,7 +260,8 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
   } else {
     integer(0)
   }
-
+  
+  # Decide where to insert the new tier
   insert_idx <- if (!length(anchor_idx)) {
     NA_integer_
   } else if (!missing(before)) {
@@ -269,8 +270,7 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
     max(anchor_idx) + 1L
   }
 
-  # -------------------------------------------------------------------------
-  # walk over each formula ---------------------------------------------------
+  # Walk over each formula 
   for (k in seq_along(specs)) {
     fml <- specs[[k]]
     if (!rlang::is_formula(fml, lhs = TRUE)) {
@@ -291,10 +291,11 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
         call. = FALSE
       )
     }
-    # --- numeric LHS --------------------------------------------------------
+    
     lhs_val <- tryCatch(rlang::eval_tidy(lhs, env = parent.frame()),
       error = function(...) NULL
     )
+    # Numeric LHS
     if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
       tier_idx <- as.integer(lhs_val)
       tier_label <- NULL
@@ -302,20 +303,33 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
         cli::cli_warn("Ignoring `before/after`: numeric tier is absolute.")
       }
     } else {
-      # --- symbol / string LHS ---------------------------------------------
+      # Symbolic / string LHS
       tier_label <- rlang::as_string(lhs)
       parsed <- .parse_tier(.kn, lhs) # resolves existing label
       tier_idx <- parsed$idx
       .kn <- parsed$kn
       is_new_label <- is.na(tier_idx)
-
-      # decide final index ---------------------------------------------------
+      
+      # Check if the label is already used
+      if (!is.na(insert_idx) && !is_new_label) {
+        same_tier <- anchor_idx == tier_idx
+        if ( (!missing(before) && any(same_tier)) ||
+             (!missing(after)  && any(same_tier)) ) {
+          stop(
+            "Cannot position a tier relative to itself (before/after the same tier).",
+            call. = FALSE
+          )
+        }
+      }
+      # Decide the final index
       if (!is.na(insert_idx) && k == 1L) {
-        # user gave before/after → use it (even for existing label, we move it)
+        # User gave before/after, so use it 
         if (is_new_label) {
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
           .kn$tier_labels[[tier_label]] <- insert_idx
         } else {
+          # Check if before/after is in the same tier
+          # Insert code here
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
         }
         tier_idx <- insert_idx
