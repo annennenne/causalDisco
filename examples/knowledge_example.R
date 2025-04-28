@@ -92,6 +92,17 @@ print("kn_freezed$frozen:")
 print(kn_freezed$frozen)
 kn_freezed |> add_to_tier(3 ~ V4)
 
+# EXAMPLE 10 ── seq_tiers ------------------------------------------------------
+# This example shows how to use seq_tiers to create a sequence of tiers.
+# This can be used if you have many variables that follow a pattern.
+df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+kn_seq_tiers <- knowledge(
+  df,
+  tier(seq_tiers(1:3, pattern = "{.i}")),
+  required(X1 ~ X2)
+)
+print(kn_seq_tiers)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Make error happen ───────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────

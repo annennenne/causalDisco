@@ -70,6 +70,10 @@ knowledge <- function(...) {
     }
 
     for (fml in specs) {
+      if (inherits(fml, "tier_bundle")) {
+        for (g in fml) tier(g) # recurse on each generated formula
+        next
+      }
       if (!rlang::is_formula(fml, lhs = TRUE)) {
         stop("Each tier() argument must be a two-sided formula.", .call = FALSE)
       }
@@ -85,7 +89,7 @@ knowledge <- function(...) {
         stop(
           sprintf(
             "Tier specification %s matched no variables.",
-            rlang::expr_deparse(fml)
+            paste(deparse(fml), collapse = "")
           ),
           call. = FALSE
         )
@@ -995,6 +999,70 @@ as_pcalg_constraints <- function(.kn, labels) {
     return(vars)
   } # tidy-select succeeded
   unique(all.vars(rhs)) # fallback to plain symbols
+}
+
+#' Quickly create many tier–variable formulas
+#'
+#' @description
+#' `seq_tiers()` builds a list of two-sided formulas like
+#' `i ~ ends_with("_tier<i>")` or `i ~ starts_with("tier<i>_")`
+#' and tags it with the special class `"tier_bundle"`.
+#' The `tier()` helper inside `knowledge()` recognises the bundle and
+#' expands it internally, so you can write
+#'
+#' ```r
+#' knowledge(
+#'   tier(seq_tiers(1:10,  "_tier{.i}")),        # suffix
+#'   tier(seq_tiers(1:5,   "tier{.i}_")),        # prefix
+#'   tier(seq_tiers(1:3,   "tier{.i}_X{.i}")),   # prefix + suffix
+#'   ...
+#' )
+#' ```
+#'
+#' @param tiers   Integer vector of tier indices (e.g. `1:10`).
+#' @param pattern A single character string that contains the token `{.i}`.
+#'   * If the full pattern is `{.i}`, the RHS is `ends_with(<string>)`
+#'   * If `{.i}` is __at the start__: the RHS is `starts_with(<string>)`
+#'   * If `{.i}` is __at the end__: the RHS is `ends_with(<string>)`
+#'   * Otherwise: the RHS is `matches(<string>)`
+#'
+#'   Anything before the token acts as a *prefix*, anything after it as a
+#'   *suffix*, so you can write for example
+#'   `seq_tiers(1:3, "tier{.i}_")`   or   `seq_tiers(c(2,4,6), "_tier{.i}")`.
+#'
+#' @return An object of class `"tier_bundle"` (a list of formulas) that
+#'   `tier()` will explode automatically.
+#' @export
+seq_tiers <- function(tiers, pattern = "{.i}") {
+  stopifnot(
+    is.numeric(tiers), all(tiers >= 1),
+    is.character(pattern), length(pattern) == 1,
+    grepl("{.i}", pattern, fixed = TRUE) # token must be present
+  )
+
+  build_formula <- function(i) {
+    pat <- gsub("{.i}", i, pattern, fixed = TRUE) # substitute once
+
+    # If the pattern is exactly "{.i}", we treat it as suffix
+    if (startsWith(pattern, "{.i}") && endsWith(pattern, "{.i}")) {
+      rhs <- rlang::expr(ends_with(!!pat))
+    } else {
+      rhs <- if (startsWith(pattern, "{.i}")) {
+        # Prefix match and no suffix match
+        rlang::expr(starts_with(!!pat))
+      } else if (endsWith(pattern, "{.i}")) {
+        # Suffix match
+        rlang::expr(ends_with(!!pat))
+      } else {
+        # Full regex match
+        rlang::expr(matches(!!pat))
+      }
+    }
+
+    rlang::new_formula(i, rhs)
+  }
+
+  structure(lapply(tiers, build_formula), class = "tier_bundle")
 }
 
 
