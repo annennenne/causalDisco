@@ -24,9 +24,9 @@ kn2 <-
 print(kn2)
 
 kn2.5 <- knowledge() |> add_to_tier(1 ~ A + B)
-kn2.5 <- add_to_tier(kn, exposure ~ E1, after = 1)
-kn2.5 <- add_to_tier(kn, outcome ~ O1, after = "exposure")
-kn2.5 <- add_to_tier(kn, mediator ~ M1, before = outcome)
+kn2.5 <- add_to_tier(kn2.5, exposure ~ E1, after = 1)
+kn2.5 <- add_to_tier(kn2.5, outcome ~ O1, after = exposure)
+kn2.5 <- add_to_tier(kn2.5, mediator ~ M1, before = outcome)
 print(kn2.5)
 
 # EXAMPLE 3 ── DSL + data-frame seeding ----------------------------------------
@@ -77,6 +77,20 @@ kn_custom_tier <-
     required(V1 ~ V2)
   )
 print(kn_custom_tier)
+
+# EXAMPLE 9 ── Unfreezing ------------------------------------------------------
+df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+kn_freezed <- knowledge(
+  df,
+  tier(1 ~ X1, 2 ~ X2 + X3),
+  required(X1 ~ X2)
+)
+print("kn_freezed$frozen:")
+print(kn_freezed$frozen)
+kn_freezed <- unfreeze(kn_freezed)
+print("kn_freezed$frozen:")
+print(kn_freezed$frozen)
+kn_freezed |> add_to_tier(3 ~ V4)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Make error happen ───────────────────────────────

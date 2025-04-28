@@ -384,7 +384,7 @@ require_edge <- function(.kn, ..., edge_type = "directed") {
 #'
 #' @param .kn A `knowledge` object.
 #' @return The same `knowledge` object with the `frozen` attribute set to `FALSE`.
-unfreeze.knowledge <- function(.kn) {
+unfreeze <- function(.kn) {
   check_knowledge_obj(.kn)
   .kn$frozen <- FALSE
   .kn
