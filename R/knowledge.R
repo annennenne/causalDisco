@@ -103,7 +103,7 @@ knowledge <- function(...) {
       if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
         # numeric tier  →  keep index exactly as given
         new_fml <- rlang::new_formula(lhs_val, rhs_expr, env = rlang::empty_env())
-        kn <<- add_tier(kn, new_fml) # plain call, no positioning
+        kn <<- add_to_tier(kn, new_fml) # plain call, no positioning
       } else {
         # labelled tier → append (or position) -------------------------
         tier_label <- rlang::as_string(lhs_expr)
@@ -114,7 +114,7 @@ knowledge <- function(...) {
 
         new_fml <- rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
         kn <<- rlang::inject(
-          add_tier(kn, !!new_fml, after = !!last_idx)
+          add_to_tier(kn, !!new_fml, after = !!last_idx)
         )
       }
     }
@@ -207,12 +207,12 @@ add_vars <- function(.kn, vars) {
 #'
 #' @return An updated `knowledge` object with the specified variables assigned to the new tier.
 #' @export
-add_tier <- function(.kn, ..., before = NULL, after = NULL) {
+add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
   check_knowledge_obj(.kn)
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
-    cli::cli_abort("add_tier() needs at least one two-sided formula.")
+    cli::cli_abort("add_to_tier() needs at least one two-sided formula.")
   }
 
   ## ---- 1. validate before/after combination ------------------------------
@@ -622,7 +622,7 @@ as_pcalg_constraints <- function(.kn, labels) {
 #' Resolve a tier specification to an index or (new) label
 #'
 #' @description
-#' Turns the user-supplied `tier` argument of **`add_tier()`** into a
+#' Turns the user-supplied `tier` argument of **`add_to_tier()`** into a
 #'   deterministic result:
 #'
 #' * **Numeric literal** (`1`, `3L`)   →  returns that number.
@@ -660,7 +660,7 @@ as_pcalg_constraints <- function(.kn, labels) {
 #' Translate a *before/after* position specifcation into tier indices
 #'
 #' @description
-#' Helper for **`add_tier()`** that converts the unevaluated expression given
+#' Helper for **`add_to_tier()`** that converts the unevaluated expression given
 #'   to `before =` / `after =` into a vector of tier indices:
 #'
 #' * Single symbol or string         →  tier label *or* variable name
