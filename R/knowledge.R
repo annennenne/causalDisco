@@ -1051,14 +1051,14 @@ seq_tiers <- function(tiers, vars) {
   
   vars_expr <- rlang::enexpr(vars)
   
-  # ── guard: placeholder must be present -----------------------------------
+  # Guard: placeholder must be present 
   if (!rlang::is_call(vars_expr) &&
       !identical(vars_expr, quote(i)) &&
       !grepl("{i}", deparse(vars_expr), fixed = TRUE)) {
     stop("`vars` must contain the placeholder `i`.", call. = FALSE)
   }
   
-  # helper: recursively substitute `i` or "{i}" -----------------------------
+  # Recursively substitute `i` or "{i}" helper
   replace_i <- function(expr, i_chr) {
     switch(typeof(expr),
            "language"  = as.call(lapply(as.list(expr), replace_i, i_chr)),
@@ -1068,11 +1068,12 @@ seq_tiers <- function(tiers, vars) {
     )
   }
   
+  # Build the formulas helper
   build_formula <- function(i) {
     rhs <- replace_i(vars_expr, as.character(i))
     rlang::new_formula(i, rhs, env = rlang::empty_env())
   }
-  
+  # Create the formulas
   structure(lapply(tiers, build_formula), class = "tier_bundle")
 }
 
