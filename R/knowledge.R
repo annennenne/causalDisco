@@ -328,12 +328,11 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
           .kn$tier_labels[[tier_label]] <- insert_idx
         } else {
-          # Check if before/after is in the same tier
-          # Insert code here
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
         }
         tier_idx <- insert_idx
       } else if (is_new_label) {
+        # User gave a new label, give correct index
         current <- c(.kn$tier_labels, .kn$vars$tier)
         current <- current[!is.na(current)]
         tier_idx <- if (length(current)) max(current) + 1L else 1L
@@ -341,12 +340,13 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
         .kn$tier_labels[[tier_label]] <- tier_idx
       }
     }
-
-    # register variables -----------------------------------------------------
+    
+    # Add variables
     .kn <- add_vars(.kn, vars)
     .kn$vars$tier[match(vars, .kn$vars$var)] <- tier_idx
   }
 
+  # Sort the tiers and return
   .kn$vars <- dplyr::arrange(.kn$vars, tier, var)
   .kn
 }
