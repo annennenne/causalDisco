@@ -1,6 +1,5 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Public API  ──────────────────────────────────────────────────────────────────
-# (Exported functions and methods)
+# ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
 #' Knowledge Mini-DSL constructor (`tier()`, `forbidden()`, `required()`)
@@ -162,6 +161,8 @@ knowledge <- function(...) {
   kn
 }
 
+# ────────────────────────────────── Verbs ─────────────────────────────────────
+
 #' @title Add variables to `knowledge` object
 #'
 #' @description Adds variables to the `knowledge` object. If the object is
@@ -271,19 +272,19 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
       parsed <- .parse_tier(.kn, lhs) # resolves existing label
       tier_idx <- parsed$idx
       .kn <- parsed$kn
-      new_lbl <- is.na(tier_idx)
+      is_new_label <- is.na(tier_idx)
 
       # decide final index ---------------------------------------------------
       if (!is.na(insert_idx) && k == 1L) {
         # user gave before/after → use it (even for existing label, we move it)
-        if (new_lbl) {
+        if (is_new_label) {
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
           .kn$tier_labels[[tier_label]] <- insert_idx
         } else {
           .kn <- .bump_tiers_up_from(.kn, insert_idx)
         }
         tier_idx <- insert_idx
-      } else if (new_lbl) {
+      } else if (is_new_label) {
         current <- c(.kn$tier_labels, .kn$vars$tier)
         current <- current[!is.na(current)]
         tier_idx <- if (length(current)) max(current) + 1L else 1L
@@ -343,6 +344,8 @@ require_edge <- function(.kn, ..., edge_type = "directed") {
   }
 }
 
+# ────────────────────────────────── Print ─────────────────────────────────────
+
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
@@ -359,6 +362,8 @@ print.knowledge <- function(x, ...) {
   if (nrow(x$edges)) print(x$edges, n = 10)
   invisible(x)
 }
+
+# ────────────────────────────────── Merge ─────────────────────────────────────
 
 #' @title Merge two `knowledge` objects
 #' @exportS3Method "+" knowledge
@@ -388,8 +393,14 @@ print.knowledge <- function(x, ...) {
   out
 }
 
-#' Verify that an object is a knowledge
+# ────────────────────────────────── Check ─────────────────────────────────────
+
+#' @title Verify that an object is a knowledge
 #'
+#' @description Check that the object is a `knowledge` object. Mostly
+#' for internal use in causalDisco.
+#'
+#' @param x Object to check.
 #' @keywords internal
 check_knowledge_obj <- function(x) {
   if (!inherits(x, "knowledge")) {
@@ -399,7 +410,7 @@ check_knowledge_obj <- function(x) {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Conversion to Tetrad, pcalg, bnlearn  ────────────────────────────────────────
+# ────────────────── Conversion to Tetrad, pcalg, bnlearn  ─────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -487,10 +498,10 @@ as_pcalg_constraints <- function(.kn, labels) {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Internal helpers  ────────────────────────────────────────────────────────────
+# ─────────────────────────── Internal helpers  ────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-# ─────────────────────────── New knowledge  ───────────────────────────────────
+# ────────────────────────────── New knowledge  ────────────────────────────────
 #' @title Create a `knowledge` object
 #'
 #' @param vars Character vector of variable names.  Defaults to empty.
@@ -519,7 +530,7 @@ as_pcalg_constraints <- function(.kn, labels) {
   )
 }
 
-# ─────────────────────────── Allowed edges  ───────────────────────────────────
+# ────────────────────────────── Allowed edges  ────────────────────────────────
 
 #' @title Supported edge-type strings
 #' @keywords internal
@@ -590,17 +601,18 @@ as_pcalg_constraints <- function(.kn, labels) {
     return(invisible(TRUE))
   }
 
+  # Check for conflicts: split by numeric tier and filter for >1 unique label
   conflicts <- Filter(
-    function(lbl) length(unique(lbl)) > 1,
+    function(label) length(unique(label)) > 1,
     split(names(merged), merged) # labels grouped by numeric tier
   )
   if (length(conflicts)) {
     lines <- mapply(
-      function(lbls, tier_idx) {
+      function(labels, tier_idx) {
         sprintf(
           "tier %s: %s",
           tier_idx,
-          paste(unique(lbls), collapse = ", ")
+          paste(unique(labels), collapse = ", ")
         )
       },
       conflicts,
@@ -617,7 +629,7 @@ as_pcalg_constraints <- function(.kn, labels) {
   }
 }
 
-# ─────────────────────────── Tier helpers  ────────────────────────────────────
+# ───────────────────────────── Tier helpers  ──────────────────────────────────
 
 #' Resolve a tier specification to an index or (new) label
 #'
@@ -625,12 +637,12 @@ as_pcalg_constraints <- function(.kn, labels) {
 #' Turns the user-supplied `tier` argument of **`add_to_tier()`** into a
 #'   deterministic result:
 #'
-#' * **Numeric literal** (`1`, `3L`)   →  returns that number.
-#' * **Existing label**  (`exposure`)  →  returns its mapped index.
-#' * **Brand-new label** (any other symbol/character) →  marks it for creation
+#' * __Numeric literal__ (`1`, `3L`): returns that number.
+#' * __Existing label__  (`Monday`): returns its mapped index.
+#' * __Brand-new label__ (any other symbol/character) →  marks it for creation
 #'   by returning `NA` together with the textual label.
 #'
-#' @param .kn  A [`knowledge`] object (needed for the current label ↔︎ index map).
+#' @param .kn A `knowledge` object.
 #' @param tier A symbol, character string, or single positive integer.
 #'
 #' @return A named list with components
@@ -653,25 +665,25 @@ as_pcalg_constraints <- function(.kn, labels) {
     return(list(idx = .kn$tier_labels[[label]], label = label, kn = .kn))
   }
 
-  list(idx = NA_integer_, label = label, kn = .kn) # <- brand-new label
+  list(idx = NA_integer_, label = label, kn = .kn)
 }
 
 
-#' Translate a *before/after* position specifcation into tier indices
+#' @title Translate a *before/after* position specifcation into tier indices
 #'
 #' @description
 #' Helper for **`add_to_tier()`** that converts the unevaluated expression given
 #'   to `before =` / `after =` into a vector of tier indices:
 #'
-#' * Single symbol or string         →  tier label *or* variable name
-#' * Numeric literal                 →  numeric tier index
-#' * `c(...)` mix (any of the above) →  flattened, combined result
+#' * Single symbol or string: tier label or variable name
+#' * Numeric literal: numeric tier index
+#' * `c(...)` mix (any of the above): flattened, combined result
 #'
 #' Errors if a referenced variable has no tier or if an element cannot be
 #'   matched to either a tier label, tier index, or variable.
 #'
-#' @param .kn A [`knowledge`] object.
-#' @param x   Unevaluated expression captured from the user (e.g. `quote(c(A,2))`).
+#' @param .kn A `knowledge` object.
+#' @param x Unevaluated expression captured from the user (e.g. `quote(c(A,2))`).
 #'
 #' @return An integer vector of tier indices (possibly empty).
 #' @keywords internal
@@ -680,53 +692,76 @@ as_pcalg_constraints <- function(.kn, labels) {
     return(integer())
   }
 
-  # ── capture & unquote exactly once ────────────────────────────────────────
-  parts <- rlang::exprs(!!x) # <- `exprs()` is a quoting helper
+  # Extract the unevaluated expression(s)
+  parts <- rlang::exprs(!!x)
 
-  # if the user wrote `c(A, B, 2)` split the call apart
+  # If the user wrote `c(A, B, 2)` split the call apart
   if (length(parts) == 1 && rlang::is_call(parts[[1]], "c")) {
     parts <- rlang::call_args(parts[[1]])
   }
 
-  unlist(lapply(parts, function(el) {
-    if (rlang::is_integerish(el)) {
-      return(as.integer(el))
-    }
-
-    if (rlang::is_symbol(el) || is.character(el)) {
-      lbl <- rlang::as_string(el)
-
-      if (lbl %in% names(.kn$tier_labels)) {
-        return(.kn$tier_labels[[lbl]])
+  # Walk over every element and turn it into a tier index
+  unlist(lapply(
+    parts,
+    # Function that resolves element to a tier index
+    function(elm) {
+      # Numeric literal
+      if (rlang::is_integerish(elm)) {
+        return(as.integer(elm))
       }
+      # Symbol or string
+      if (rlang::is_symbol(elm) || is.character(elm)) {
+        label <- rlang::as_string(elm)
 
-      if (lbl %in% .kn$vars$var) {
-        t <- .kn$vars$tier[.kn$vars$var == lbl]
-        if (is.na(t)) {
-          cli::cli_abort("Variable {.val {lbl}} has no tier; cannot use in `before/after`.")
+        # Matches a tier label
+        if (label %in% names(.kn$tier_labels)) {
+          return(.kn$tier_labels[[label]])
         }
-        return(t)
-      }
-    }
 
-    cli::cli_abort("{.val {rlang::as_label(el)}} is not a tier label, index, or variable.")
-  }))
+        # Matches a variable name
+        if (label %in% .kn$vars$var) {
+          # Look up its tier
+          t <- .kn$vars$tier[.kn$vars$var == label]
+
+          # Variable exists but has not tier assigned
+          if (is.na(t)) {
+            stop(
+              sprintf(
+                "Variable `%s` has no tier; cannot use in `before/after`.",
+                label
+              ),
+              call. = FALSE
+            )
+          }
+          return(t)
+        }
+      }
+
+      # Invalid specification, throw error
+      stop(
+        sprintf(
+          "`%s` is not a tier label, index, or variable.",
+          rlang::as_label(el)
+        ),
+        call. = FALSE
+      )
+    }
+  ))
 }
 
 
-#' Shift all tiers **≥** a position *up* by one
+#' @title Shift all tiers **≥** a position *up* by one
 #'
 #' @description
 #' When inserting a brand-new tier in the middle of the existing ordering
 #' we need to “open a slot”.
 #' This helper increments
-#'
 #' * the `tier` column of every affected variable, and
 #' * each value in `.kn$tier_labels`
 #'
 #' that is **greater than or equal to** `insert_idx`.
 #'
-#' @param .kn         A [`knowledge`] object.
+#' @param .kn A `knowledge` object.
 #' @param insert_idx  Integer index at which the new tier will be inserted.
 #'
 #' @return The modified `knowledge` object with bumped indices.
@@ -742,6 +777,8 @@ as_pcalg_constraints <- function(.kn, labels) {
 }
 
 #' @title Recompute the `tier_from` and `tier_to` columns of the edges dataframe
+#'
+#' @description Used internally in `+.knowledge`.
 #' @keywords internal
 .update_edge_tiers <- function(.kn) {
   .kn$edges <- dplyr::mutate(
@@ -751,7 +788,8 @@ as_pcalg_constraints <- function(.kn, labels) {
   )
   .kn
 }
-# ─────────────────────────── Edge helpers  ────────────────────────────────────
+
+# ───────────────────────────── Edge helpers  ──────────────────────────────────
 #' @title Add one or many edges to a knowledge object
 #'
 #' @param .kn A `knowledge` object.
@@ -763,7 +801,13 @@ as_pcalg_constraints <- function(.kn, labels) {
 .add_edges <- function(.kn, status, edge_type, from, to) {
   # Reject unknown edge types
   if (!(edge_type %in% .allowed_edge_types)) {
-    cli::cli_abort("edge_type must be one of {.val {paste(.allowed_edge_types, collapse = ', ')}}.")
+    stop(
+      sprintf(
+        "edge_type must be one of %s.",
+        paste(.allowed_edge_types, collapse = ", ")
+      ),
+      call. = FALSE
+    )
   }
 
   # Resolve `from` / `to` specs into character vectors of variable names
@@ -784,10 +828,14 @@ as_pcalg_constraints <- function(.kn, labels) {
 
   # Abort if any new edge violates the tier rule
   .validate_tier_rule(block)
+
+  # Abort if any new edge violates the forbidden/required rule
   .validate_forbidden_required(block)
 
   # Merge into edge table, dropping duplicates, and return updated object
   .kn$edges <- dplyr::distinct(dplyr::bind_rows(.kn$edges, block))
+
+  # Validate again for safety
   .validate_forbidden_required(.kn$edges)
   .kn
 }
@@ -807,20 +855,24 @@ as_pcalg_constraints <- function(.kn, labels) {
 .edge_verb <- function(.kn, status,
                        from_quo, to_quo = NULL,
                        edge_type = "directed") {
-  # ── 1. Formula branch ----------------------------------------------------
+  # Check if `from_quo` is a formula
   if (rlang::quo_is_call(from_quo, "~") && is.null(to_quo)) {
     fml <- rlang::get_expr(from_quo)
     from_vars <- .formula_vars(.kn, rlang::f_lhs(fml))
     to_vars <- .formula_vars(.kn, rlang::f_rhs(fml))
   } else {
-    # ── 2. Old interface ---------------------------------------------------
+    # from_quo is not a formula
+    # Use .vars_from_spec to resolve the specification
     from_vars <- .vars_from_spec(.kn, !!from_quo)
     to_vars <- .vars_from_spec(.kn, !!to_quo)
 
     if (!length(from_vars) || !length(to_vars)) {
-      cli::cli_abort(
-        "{.fun forbid_edge()/require_edge()} needs either a two-sided ",
-        "formula `A ~ B` or both `from` and `to`."
+      stop(
+        paste0(
+          "forbid_edge()/require_edge() need either a two-sided ",
+          "formula `A ~ B` or both `from` and `to`."
+        ),
+        call. = FALSE
       )
     }
   }
@@ -829,7 +881,7 @@ as_pcalg_constraints <- function(.kn, labels) {
 
 
 
-# ─────────────────────────── Misc helpers  ────────────────────────────────────
+# ───────────────────────────── Misc helpers  ──────────────────────────────────
 #' @title Resolve a tidy-select or character spec to character names
 #'
 #' @param .kn A `knowledge` object.
@@ -840,15 +892,21 @@ as_pcalg_constraints <- function(.kn, labels) {
   lookup <- rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
 
   tryCatch(
+    # If possible, use tidyselect to resolve the specifation to variable names
+    # (e.g. `starts_with("V")` → `c("V1", "V2", ...)`)
+    # This will throw an error if the spec is not valid
     names(tidyselect::eval_select(rlang::enquo(spec), lookup)),
     error = function(e) {
       out <- tryCatch(
+        # If not, try to evaluate the expression directly
         rlang::eval_tidy(rlang::enquo(spec)),
         error = function(...) NULL
       )
+      # If the result is a character vector, return it
       if (is.character(out)) {
         return(out)
       }
+      # Otherwise, return an empty character vector
       character(0)
     }
   )
@@ -869,7 +927,7 @@ as_pcalg_constraints <- function(.kn, labels) {
 
 
 
-# ─────────────────────────── Imports  ─────────────────────────────────────────
+# ──────────────────────────────── Imports ─────────────────────────────────────
 
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate
