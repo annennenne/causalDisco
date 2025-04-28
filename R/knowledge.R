@@ -125,7 +125,10 @@ knowledge <- function(...) {
   edge_helper <- function(status, ..., edge_type = "directed") {
     specs <- rlang::list2(...)
     if (!length(specs)) {
-      cli::cli_abort("{.fun {status}}() needs at least one two-sided formula.")
+      stop(
+        sprintf("%s() needs at least one two-sided formula.", status),
+        call. = FALSE
+      )
     }
 
     for (fml in specs) {
@@ -137,10 +140,23 @@ knowledge <- function(...) {
       from_vars <- .formula_vars(kn, rlang::f_lhs(fml))
       to_vars <- .formula_vars(kn, rlang::f_rhs(fml))
       if (!is.character(from_vars) || !length(from_vars)) {
-        cli::cli_abort("Edge selection {.code {fml}} matched no *from* vars.")
+        stop(
+          sprintf(
+            "Edge selection `%s` matched no *from* vars.",
+            rlang::expr_deparse(fml)
+          ),
+          call. = FALSE
+        )
       }
+
       if (!is.character(to_vars) || !length(to_vars)) {
-        cli::cli_abort("Edge selection {.code {fml}} matched no *to* vars.")
+        stop(
+          sprintf(
+            "Edge selection `%s` matched no *to* vars.",
+            rlang::expr_deparse(fml)
+          ),
+          call. = FALSE
+        )
       }
 
       # insert every combination of from × to
@@ -213,15 +229,24 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
-    cli::cli_abort("add_to_tier() needs at least one two-sided formula.")
+    stop(
+      "add_tier() needs at least one two-sided formula.",
+      call. = FALSE
+    )
   }
 
-  ## ---- 1. validate before/after combination ------------------------------
+  ## ---- 1. validate before/after combination --------------------------------
   if (!missing(before) && !missing(after)) {
-    cli::cli_abort("Specify only one of `before` or `after`.")
+    stop(
+      "Specify only one of `before` or `after`.",
+      call. = FALSE
+    )
   }
   if (length(specs) > 1L && (!missing(before) || !missing(after))) {
-    cli::cli_abort("`before` / `after` can position only one tier at a time.")
+    stop(
+      "`before` / `after` can position only one tier at a time.",
+      call. = FALSE
+    )
   }
 
   ## ---- 2. resolve anchor tiers once  -------------------------------------
@@ -246,16 +271,23 @@ add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
   for (k in seq_along(specs)) {
     fml <- specs[[k]]
     if (!rlang::is_formula(fml, lhs = TRUE)) {
-      cli::cli_abort("Each argument must be a two-sided formula.")
+      stop(
+        "Each argument must be a two-sided formula.",
+        call. = FALSE
+      )
     }
-
     lhs <- rlang::f_lhs(fml)
     rhs <- rlang::f_rhs(fml)
     vars <- .formula_vars(.kn, rhs)
     if (!length(vars)) {
-      cli::cli_abort("Tier specification {.code {fml}} matched no variables.")
+      stop(
+        sprintf(
+          "Tier specification `%s` matched no variables.",
+          rlang::expr_deparse(fml)
+        ),
+        call. = FALSE
+      )
     }
-
     # --- numeric LHS --------------------------------------------------------
     lhs_val <- tryCatch(rlang::eval_tidy(lhs, env = parent.frame()),
       error = function(...) NULL
@@ -321,7 +353,7 @@ forbid_edge <- function(.kn, ..., edge_type = "directed") {
   } else if (length(dots) == 2) {
     .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]], edge_type)
   } else {
-    cli::cli_abort("forbid_edge() takes either 1 or 2 edge specifications.")
+    stop("forbid_edge() takes either 1 or 2 edge specifications.", .call = FALSE)
   }
 }
 
@@ -340,8 +372,22 @@ require_edge <- function(.kn, ..., edge_type = "directed") {
   } else if (length(dots) == 2) {
     .edge_verb(.kn, "required", dots[[1]], dots[[2]], edge_type)
   } else {
-    cli::cli_abort("require_edge() takes either 1 or 2 edge specifications.")
+    stop("require_edge() takes either 1 or 2 edge specifications.", .call = FALSE)
   }
+}
+
+#' @title Unfreeze a `knowledge` object.
+#'
+#' @description This allows you to add new variables to the `knowledge` object,
+#' even though it was frozen earlier by adding a data frame to the knowledge
+#' constructor `knowledge()`.
+#'
+#' @param .kn A `knowledge` object.
+#' @return The same `knowledge` object with the `frozen` attribute set to `FALSE`.
+unfreeze.knowledge <- function(.kn) {
+  check_knowledge_obj(.kn)
+  .kn$frozen <- FALSE
+  .kn
 }
 
 # ────────────────────────────────── Print ─────────────────────────────────────
@@ -961,5 +1007,5 @@ as_pcalg_constraints <- function(.kn, labels) {
 #' @importFrom rlang enquo eval_tidy set_names is_formula f_lhs f_rhs as_name !!
 #' @importFrom rlang is_integerish as_string
 #' @importFrom purrr pwalk
-#' @importFrom cli cat_rule cat_line style_bold cli_abort
+#' @importFrom cli cat_rule cat_line style_bold
 NULL
