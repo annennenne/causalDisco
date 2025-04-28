@@ -8,7 +8,7 @@ disco <- function(data, method, knowledge = NULL) {
     if (!is.null(method$set_knowledge)) {
       method$set_knowledge(knowledge)
     } else {
-      warning("Method", method, "does not support knowledge.")
+      stop("Method", method, "does not support knowledge.", .call = FALSE)
     }
   }
 
