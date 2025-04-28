@@ -90,7 +90,7 @@ print(kn_freezed$frozen)
 kn_freezed <- unfreeze(kn_freezed)
 print("kn_freezed$frozen:")
 print(kn_freezed$frozen)
-kn_freezed |> add_to_tier(3 ~ V4)
+kn_freezed |> add_to_tier(3 ~ V4) # does not throw error
 
 # EXAMPLE 10 ── seq_tiers ------------------------------------------------------
 # This example shows how to use seq_tiers to create a sequence of tiers.
