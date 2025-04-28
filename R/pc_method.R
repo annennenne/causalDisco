@@ -6,7 +6,7 @@ pc <- function(engine = "tetrad", test, alpha = 0.05, ...) {
     tetrad = pc_tetrad(test, alpha, ...),
     pcalg = pc_pcalg(test, alpha, ...),
     bnlearn = pc_bnlearn(test, alpha, ...),
-    stop("Unsupported engine: ", engine)
+    stop("Unsupported engine: ", engine, .call = FALSE)
   )
 }
 # Set available engines

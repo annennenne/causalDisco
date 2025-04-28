@@ -2,17 +2,23 @@
 available_engines <- function(method) {
   available <- attr(method, "engines")
   if (is.null(available)) {
-    stop("No engine information available.")
+    stop("No engine information available.", .call = FALSE)
   }
   method_name <- deparse(substitute(method))
   numbered_engines <- paste0(seq_along(available), ". ", available)
-  cat(cat("Available engines for ", method_name, ":", sep = ""), paste(numbered_engines, collapse = "\n"), sep = "\n")
+  cat(cat("Available engines for ", method_name, ":", sep = ""),
+    paste(numbered_engines, collapse = "\n"),
+    sep = "\n"
+  )
 }
 
 available_tests <- function(engine) {
   engine <- tolower(engine)
   if (!engine %in% engine_registry) {
-    stop("Unknown engine: ", engine, "\nThe engines available are: ", paste(engine_registry, collapse = ", "))
+    stop("Unknown engine: ", engine, "\nThe engines available are: ",
+      paste(engine_registry, collapse = ", "),
+      .call = FALSE
+    )
   }
   if (engine == "tetrad") {
     tests <- c(
@@ -36,7 +42,7 @@ available_tests <- function(engine) {
       "g_square"
     )
   } else {
-    stop("Test registry not made for: ", engine)
+    stop("Test registry not made for: ", engine, .call = FALSE)
   }
   numbered_tests <- paste0(seq_along(tests), ". ", tests)
   cat(cat("Available tests for ", engine, ":", sep = ""), paste(numbered_tests, collapse = "\n"), sep = "\n")
@@ -62,7 +68,7 @@ available_scores <- function(engine) {
       "zhang_shen_bound"
     )
   } else if (engine == "bnlearn") {
-    stop("bnlearn is not supported yet.")
+    stop("bnlearn is not supported yet.", .call = FALSE)
     scores <- c()
   } else if (engine == "pcalg") {
     scores <- c(
@@ -70,8 +76,11 @@ available_scores <- function(engine) {
       "bdeu"
     )
   } else {
-    stop("Score registry not made for: ", engine)
+    stop("Score registry not made for: ", engine, .call = FALSE)
   }
   numbered_scores <- paste0(seq_along(scores), ". ", scores)
-  cat(cat("Available scores for ", engine, ":", sep = ""), paste(numbered_scores, collapse = "\n"), sep = "\n")
+  cat(cat("Available scores for ", engine, ":", sep = ""),
+    paste(numbered_scores, collapse = "\n"),
+    sep = "\n"
+  )
 }

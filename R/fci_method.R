@@ -6,7 +6,7 @@ fci <- function(engine = "tetrad", test, alpha = 0.05, ...) {
     tetrad = fci_tetrad(test, alpha, ...),
     pcalg = fci_pcalg(test, alpha, ...),
     bnlearn = fci_bnlearn(test, alpha, ...),
-    stop("Unsupported engine: ", engine)
+    stop("Unsupported engine: ", engine, .call = FALSE)
   )
 }
 # Set available engines

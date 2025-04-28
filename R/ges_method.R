@@ -16,7 +16,7 @@ ges <- function(engine = "tetrad", score, ...) {
     tetrad = ges_tetrad(score, ...),
     pcalg = ges_pcalg(score, ...),
     bnlearn = ges_bnlearn(score, ...),
-    stop("Unsupported engine: ", engine)
+    stop("Unsupported engine: ", engine, .call = FALSE)
   )
 }
 
