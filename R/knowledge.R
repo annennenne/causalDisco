@@ -81,9 +81,7 @@ knowledge <- function(...) {
       lhs_expr <- rlang::f_lhs(fml)
       rhs_expr <- rlang::f_rhs(fml)
 
-      ## --------------------------------------------------------------- ##
-      ## 1. Collect the RHS variables once ----------------------------- ##
-      ## --------------------------------------------------------------- ##
+      # Extract formula names
       vars <- .formula_vars(kn, rhs_expr)
       if (!length(vars)) {
         stop(
@@ -95,20 +93,19 @@ knowledge <- function(...) {
         )
       }
 
-      ## --------------------------------------------------------------- ##
-      ## 2. Decide what the LHS means ---------------------------------- ##
-      ## --------------------------------------------------------------- ##
+      
+      # Decide what lhs means
       lhs_val <- tryCatch(
         rlang::eval_tidy(lhs_expr, env = parent.frame()),
         error = function(...) NULL
       )
 
       if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
-        # numeric tier  →  keep index exactly as given
+        # numeric tier:  keep index exactly as given
         new_fml <- rlang::new_formula(lhs_val, rhs_expr, env = rlang::empty_env())
         kn <<- add_to_tier(kn, new_fml) # plain call, no positioning
       } else {
-        # labelled tier → append (or position) -------------------------
+        # labelled tier: append (or position)
         tier_label <- rlang::as_string(lhs_expr)
 
         current_idx <- c(kn$tier_labels, kn$vars$tier)
@@ -116,6 +113,8 @@ knowledge <- function(...) {
         last_idx <- if (length(current_idx)) max(current_idx) else 0L
 
         new_fml <- rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
+        
+        # Use inject to create formulas programmatically
         kn <<- rlang::inject(
           add_to_tier(kn, !!new_fml, after = !!last_idx)
         )
