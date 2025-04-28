@@ -16,17 +16,17 @@ print(kn1)
 kn2 <-
   knowledge() |>
   add_vars(c("A", "B", "C", "D")) |>
-  add_tier(1, c("A", "B")) |>
-  add_tier(2, "C") |>
+  add_tier(1 ~ A + B) |>
+  add_tier(2 ~ C) |>
   forbid_edge(A, C, edge_type = "undirected") |>
   require_edge(A, B)
 
 print(kn2)
 
-kn2.5 <- knowledge() |> add_tier(1, c(A, B))
-kn2.5 <- add_tier(kn, exposure, E1, after = 1)
-kn2.5 <- add_tier(kn, outcome, O1, after = "exposure")
-kn2.5 <- add_tier(kn, mediator, M1, before = outcome)
+kn2.5 <- knowledge() |> add_tier(1 ~ A + B)
+kn2.5 <- add_tier(kn, exposure ~ E1, after = 1)
+kn2.5 <- add_tier(kn, outcome ~ O1, after = "exposure")
+kn2.5 <- add_tier(kn, mediator ~ M1, before = outcome)
 print(kn2.5)
 
 # EXAMPLE 3 ── DSL + data-frame seeding ----------------------------------------
@@ -47,7 +47,7 @@ kn4 <-
     tier(1 ~ V5, 2 ~ V6),
     forbidden(V5 ~ V6)
   ) |>
-  add_tier(3, V7) # add third tier later
+  add_tier(3 ~ V7) # add third tier later
 
 print(kn4)
 
@@ -79,8 +79,9 @@ kn_custom_tier <-
 print(kn_custom_tier)
 
 # ──────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────── Make error happen ───────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
-# Make errors happen -----------------------------------------------------------
 # tier violation
 knowledge(
   tier(1 ~ V1 + V2, 2 ~ V3),
@@ -91,7 +92,7 @@ knowledge(
 knowledge(
   tier(1 ~ V1 + V2, 2 ~ V3),
   required(V3 ~ V1, edge_type = "undirected")
-) |> try()
+)
 
 # require edge
 kn5 <- knowledge(

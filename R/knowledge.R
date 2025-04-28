@@ -58,58 +58,65 @@ knowledge <- function(...) {
       dots <- dots[-1]
     }
   }
-  kn <- if (is.null(df)) .new_knowledge() else .new_knowledge(names(df), frozen = TRUE)
+  kn <- if (is.null(df)) {
+    .new_knowledge()
+  } else {
+    .new_knowledge(names(df), frozen = TRUE)
+  }
 
-  # helper: tier -------------------------------------------------------------
-  # Replacement for the internal `tier()` helper in your `knowledge()` constructor:
   tier <- function(...) {
     specs <- rlang::list2(...)
     if (!length(specs)) {
-      stop("tier() needs at least one two-sided formula.", call. = FALSE)
+      stop("tier() needs at least one two-sided formula.", .call = FALSE)
     }
 
     for (fml in specs) {
       if (!rlang::is_formula(fml, lhs = TRUE)) {
-        stop("Each tier() argument must be a two-sided formula.", call. = FALSE)
+        stop("Each tier() argument must be a two-sided formula.", .call = FALSE)
       }
 
-      # LHS expression (could be a bare number or a name) and RHS vars
       lhs_expr <- rlang::f_lhs(fml)
       rhs_expr <- rlang::f_rhs(fml)
-      vars <- .formula_vars(rhs_expr, kn)
-      if (!is.character(vars) || !length(vars)) {
-        cli::cli_abort("Tier specification {.code {fml}} matched no variables.")
+
+      ## --------------------------------------------------------------- ##
+      ## 1. Collect the RHS variables once ----------------------------- ##
+      ## --------------------------------------------------------------- ##
+      vars <- .formula_vars(kn, rhs_expr)
+      if (!length(vars)) {
+        stop(
+          sprintf(
+            "Tier specification %s matched no variables.",
+            rlang::expr_deparse(fml)
+          ),
+          call. = FALSE
+        )
       }
 
-      # Try to eval the LHS; if it's a single number, we'll treat it as a numeric tier
+      ## --------------------------------------------------------------- ##
+      ## 2. Decide what the LHS means ---------------------------------- ##
+      ## --------------------------------------------------------------- ##
       lhs_val <- tryCatch(
-        rlang::eval_tidy(lhs_expr, env = environment()),
-        error = function(e) NULL
+        rlang::eval_tidy(lhs_expr, env = parent.frame()),
+        error = function(...) NULL
       )
 
       if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
-        # ── Numeric tier: pass an atomic integer literal
-        args <- list(
-          .kn  = kn,
-          tier = as.integer(lhs_val),
-          vars = vars
-        )
+        # numeric tier  →  keep index exactly as given
+        new_fml <- rlang::new_formula(lhs_val, rhs_expr, env = rlang::empty_env())
+        kn <<- add_tier(kn, new_fml) # plain call, no positioning
       } else {
-        # ── Labeled tier: auto‐append after the current last tier
+        # labelled tier → append (or position) -------------------------
         tier_label <- rlang::as_string(lhs_expr)
+
         current_idx <- c(kn$tier_labels, kn$vars$tier)
         current_idx <- current_idx[!is.na(current_idx)]
         last_idx <- if (length(current_idx)) max(current_idx) else 0L
 
-        args <- list(
-          .kn   = kn,
-          tier  = tier_label,
-          vars  = vars,
-          after = last_idx
+        new_fml <- rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
+        kn <<- rlang::inject(
+          add_tier(kn, !!new_fml, after = !!last_idx)
         )
       }
-
-      kn <<- do.call(add_tier, args)
     }
   }
 
@@ -128,8 +135,8 @@ knowledge <- function(...) {
       }
 
       # resolve *expressions* on both sides
-      from_vars <- .formula_vars(rlang::f_lhs(fml), kn)
-      to_vars <- .formula_vars(rlang::f_rhs(fml), kn)
+      from_vars <- .formula_vars(kn, rlang::f_lhs(fml))
+      to_vars <- .formula_vars(kn, rlang::f_rhs(fml))
       if (!is.character(from_vars) || !length(from_vars)) {
         cli::cli_abort("Edge selection {.code {fml}} matched no *from* vars.")
       }
@@ -193,88 +200,108 @@ add_vars <- function(.kn, vars) {
 #' or relative to existing variables (by name).
 #'
 #' @param .kn A `knowledge` object.
-#' @param tier A symbol (unquoted), string, or integer of length 1 specifying the tier label or index.
-#' @param vars A tidyselect specification or character vector of variable names to assign.
+#' @param ... One or more two-sided formulas, where the left-hand side is the
+#' tier and the right-hand side is the variable(s) to assign to that tier.
 #' @param before Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come before.
 #' @param after  Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come after.
 #'
 #' @return An updated `knowledge` object with the specified variables assigned to the new tier.
 #' @export
-add_tier <- function(.kn, tier, vars, before = NULL, after = NULL) {
+add_tier <- function(.kn, ..., before = NULL, after = NULL) {
   check_knowledge_obj(.kn)
 
-  # Parse the tier label or index
-  parsed <- .parse_tier(.kn, substitute(tier))
+  specs <- rlang::list2(...)
+  if (!length(specs)) {
+    cli::cli_abort("add_tier() needs at least one two-sided formula.")
+  }
 
-  # Extract the tier index and label
-  tier_idx <- parsed$idx
-  tier_label <- parsed$label
-  .kn <- parsed$kn
-
-  # Check if the tier label is new
-  is_new_label <- is.na(tier_idx)
-
+  ## ---- 1. validate before/after combination ------------------------------
   if (!missing(before) && !missing(after)) {
-    stop("Specify only one of `before` or `after`.", .call = FALSE)
+    cli::cli_abort("Specify only one of `before` or `after`.")
   }
-  if (is_new_label && missing(before) && missing(after)) {
-    stop("A brand-new tier label needs either `before` or `after`.", .call = FALSE)
+  if (length(specs) > 1L && (!missing(before) || !missing(after))) {
+    cli::cli_abort("`before` / `after` can position only one tier at a time.")
   }
 
-  # Resolve `before` / `after` to numeric tier indices
-  before_expr <- rlang::enexpr(before)
-  after_expr <- rlang::enexpr(after)
-
-  # Get the target tier indices
-  # If `before` is specified, use the minimum index of the target variables
-  # If `after` is specified, use the maximum index of the target variables
-  # Can also be a tier label or index
-  anchor_idx <- if (!rlang::is_null(before_expr)) {
-    .tiers_from_spec(.kn, before_expr)
+  ## ---- 2. resolve anchor tiers once  -------------------------------------
+  anchor_idx <- if (!missing(before)) {
+    .tiers_from_spec(.kn, rlang::enexpr(before))
+  } else if (!missing(after)) {
+    .tiers_from_spec(.kn, rlang::enexpr(after))
   } else {
-    .tiers_from_spec(.kn, after_expr)
+    integer(0)
   }
 
-  # Determine the insertion index
   insert_idx <- if (!length(anchor_idx)) {
-    if (!is.na(tier_idx)) tier_idx else max(c(.kn$tier_labels, 0L)) + 1L
-  } else if (!rlang::is_null(before_expr)) {
+    NA_integer_
+  } else if (!missing(before)) {
     min(anchor_idx)
   } else {
     max(anchor_idx) + 1L
   }
 
-  # If the tier label is new and the insertion index is not already occupied,
-  if (is_new_label) {
-    .kn <- .bump_tiers_up_from(.kn, insert_idx)
-    .kn$tier_labels[[tier_label]] <- insert_idx
-    tier_idx <- insert_idx
+  # -------------------------------------------------------------------------
+  # walk over each formula ---------------------------------------------------
+  for (k in seq_along(specs)) {
+    fml <- specs[[k]]
+    if (!rlang::is_formula(fml, lhs = TRUE)) {
+      cli::cli_abort("Each argument must be a two-sided formula.")
+    }
+
+    lhs <- rlang::f_lhs(fml)
+    rhs <- rlang::f_rhs(fml)
+    vars <- .formula_vars(.kn, rhs)
+    if (!length(vars)) {
+      cli::cli_abort("Tier specification {.code {fml}} matched no variables.")
+    }
+
+    # --- numeric LHS --------------------------------------------------------
+    lhs_val <- tryCatch(rlang::eval_tidy(lhs, env = parent.frame()),
+      error = function(...) NULL
+    )
+    if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
+      tier_idx <- as.integer(lhs_val)
+      tier_label <- NULL
+      if (k == 1L && !is.na(insert_idx)) {
+        cli::cli_warn("Ignoring `before/after`: numeric tier is absolute.")
+      }
+    } else {
+      # --- symbol / string LHS ---------------------------------------------
+      tier_label <- rlang::as_string(lhs)
+      parsed <- .parse_tier(.kn, lhs) # resolves existing label
+      tier_idx <- parsed$idx
+      .kn <- parsed$kn
+      new_lbl <- is.na(tier_idx)
+
+      # decide final index ---------------------------------------------------
+      if (!is.na(insert_idx) && k == 1L) {
+        # user gave before/after → use it (even for existing label, we move it)
+        if (new_lbl) {
+          .kn <- .bump_tiers_up_from(.kn, insert_idx)
+          .kn$tier_labels[[tier_label]] <- insert_idx
+        } else {
+          .kn <- .bump_tiers_up_from(.kn, insert_idx)
+        }
+        tier_idx <- insert_idx
+      } else if (new_lbl) {
+        current <- c(.kn$tier_labels, .kn$vars$tier)
+        current <- current[!is.na(current)]
+        tier_idx <- if (length(current)) max(current) + 1L else 1L
+        .kn <- .bump_tiers_up_from(.kn, tier_idx)
+        .kn$tier_labels[[tier_label]] <- tier_idx
+      }
+    }
+
+    # register variables -----------------------------------------------------
+    .kn <- add_vars(.kn, vars)
+    .kn$vars$tier[match(vars, .kn$vars$var)] <- tier_idx
   }
 
-  # Add the new tier to the knowledge object
-  variable_names <- .vars_from_spec(.kn, {{ vars }})
-  .kn <- add_vars(.kn, variable_names)
-  .kn$vars$tier[match(variable_names, .kn$vars$var)] <- tier_idx
   .kn$vars <- dplyr::arrange(.kn$vars, tier, var)
-
   .kn
 }
 
 
-#' @title Add a forbidden edge to a knowledge object
-#'
-#' @description These edges are not allowed to be present in the final graph.
-#' You can specify these edges as directed, undirected, or bidirected. The default is
-#' directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
-#'
-#' @param .kn A `knowledge` object.
-#' @param from A tidyselect specification or character vector of variable names.
-#' @param to A tidyselect specification or character vector of variable names.
-#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
-#' @export
-forbid_edge <- function(.kn, from, to, edge_type = "directed") {
-  .add_edges(.kn, "forbidden", edge_type, {{ from }}, {{ to }})
-}
 
 #' @title Add a forbidden edge to a knowledge object
 #'
@@ -283,12 +310,37 @@ forbid_edge <- function(.kn, from, to, edge_type = "directed") {
 #' directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
 #'
 #' @param .kn A `knowledge` object.
-#' @param from A tidyselect specification or character vector of variable names.
-#' @param to A tidyselect specification or character vector of variable names.
+#' @param ... Either a two-sided formula (`A ~ C`) *or* `from`, `to`.
 #' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
 #' @export
-require_edge <- function(.kn, from, to, edge_type = "directed") {
-  .add_edges(.kn, "required", edge_type, {{ from }}, {{ to }})
+forbid_edge <- function(.kn, ..., edge_type = "directed") {
+  dots <- rlang::enquos(...)
+  if (length(dots) == 1) {
+    .edge_verb(.kn, "forbidden", dots[[1]], NULL, edge_type)
+  } else if (length(dots) == 2) {
+    .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]], edge_type)
+  } else {
+    cli::cli_abort("forbid_edge() takes either 1 or 2 edge specifications.")
+  }
+}
+
+#' @title Add a forbidden edge to a knowledge object
+#'
+#' @description These edges are not allowed to be present in the final graph.
+#' You can specify these edges as directed, undirected, or bidirected. The default is
+#' directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
+#'
+#' @inheritParams forbid_edge
+#' @export
+require_edge <- function(.kn, ..., edge_type = "directed") {
+  dots <- rlang::enquos(...)
+  if (length(dots) == 1) {
+    .edge_verb(.kn, "required", dots[[1]], NULL, edge_type)
+  } else if (length(dots) == 2) {
+    .edge_verb(.kn, "required", dots[[1]], dots[[2]], edge_type)
+  } else {
+    cli::cli_abort("require_edge() takes either 1 or 2 edge specifications.")
+  }
 }
 
 #' @title Print a `knowledge` object
@@ -375,7 +427,6 @@ as_tetrad_knowledge <- function(.kn) {
   )
   j
 }
-
 
 #' Convert to a pair of (fixedGaps, fixedEdges) matrices for the **pcalg** package
 #'
@@ -741,6 +792,42 @@ as_pcalg_constraints <- function(.kn, labels) {
   .kn
 }
 
+#' @title Handle `forbid_edge()` and `require_edge()` verbs
+#'
+#' @description Help `forbid_edge()` and `require_edge()` to handle both
+#' tidyselect and formula inputs as well as standard `to`, `from` arguments.
+#' Passes arguments correctly to `.add_edges()`.
+#'
+#' @param .kn A `knowledge` object.
+#' @param status A string, either "forbidden" or "required".
+#' @param from A tidyselect specification or a variable name string or symbol.
+#' @param to A tidyselect specification or a variable name string or symbol.
+#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
+#' @keywords internal
+.edge_verb <- function(.kn, status,
+                       from_quo, to_quo = NULL,
+                       edge_type = "directed") {
+  # ── 1. Formula branch ----------------------------------------------------
+  if (rlang::quo_is_call(from_quo, "~") && is.null(to_quo)) {
+    fml <- rlang::get_expr(from_quo)
+    from_vars <- .formula_vars(.kn, rlang::f_lhs(fml))
+    to_vars <- .formula_vars(.kn, rlang::f_rhs(fml))
+  } else {
+    # ── 2. Old interface ---------------------------------------------------
+    from_vars <- .vars_from_spec(.kn, !!from_quo)
+    to_vars <- .vars_from_spec(.kn, !!to_quo)
+
+    if (!length(from_vars) || !length(to_vars)) {
+      cli::cli_abort(
+        "{.fun forbid_edge()/require_edge()} needs either a two-sided ",
+        "formula `A ~ B` or both `from` and `to`."
+      )
+    }
+  }
+  .add_edges(.kn, status, edge_type, from_vars, to_vars)
+}
+
+
 
 # ─────────────────────────── Misc helpers  ────────────────────────────────────
 #' @title Resolve a tidy-select or character spec to character names
@@ -769,10 +856,10 @@ as_pcalg_constraints <- function(.kn, labels) {
 
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'
-#' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #' @param .kn A `knowledge` object.
+#' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #' @keywords internal
-.formula_vars <- function(rhs, .kn) {
+.formula_vars <- function(.kn, rhs) {
   vars <- .vars_from_spec(.kn, !!rhs)
   if (length(vars)) {
     return(vars)
