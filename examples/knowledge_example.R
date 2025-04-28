@@ -62,6 +62,8 @@ if (requireNamespace("rJava", quietly = TRUE)) {
 }
 
 # EXAMPLE 7 ── Using tidyselect helpers ----------------------------------------
+df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+
 kn_select_helpers <-
   knowledge(
     df,
@@ -80,6 +82,7 @@ print(kn_custom_tier)
 
 # EXAMPLE 9 ── Unfreezing ------------------------------------------------------
 df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+
 kn_freezed <- knowledge(
   df,
   tier(1 ~ X1, 2 ~ X2 + X3),
@@ -87,22 +90,45 @@ kn_freezed <- knowledge(
 )
 print("kn_freezed$frozen:")
 print(kn_freezed$frozen)
+
 kn_freezed <- unfreeze(kn_freezed)
+
 print("kn_freezed$frozen:")
 print(kn_freezed$frozen)
+
 kn_freezed |> add_to_tier(3 ~ V4) # does not throw error
+print(kn_freezed)
 
 # EXAMPLE 10 ── seq_tiers ------------------------------------------------------
 # This example shows how to use seq_tiers to create a sequence of tiers.
 # This can be used if you have many variables that follow a pattern.
 df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+
 kn_seq_tiers <- knowledge(
   df,
-  tier(seq_tiers(1:3, pattern = "{.i}")),
+  tier(seq_tiers(1:3, suffix = "{i}")),
   required(X1 ~ X2)
 )
 print(kn_seq_tiers)
 
+df <- data.frame(
+  X_1 = 1,
+  X_2 = 2,
+  tier3_A = 3,
+  Y5_ok = 4,
+  check.names = FALSE
+)
+
+kn_seq_tiers2 <- knowledge(
+  df,
+  tier(
+    seq_tiers(1:2, suffix = "_{i}"), # X_1, X_2
+    seq_tiers(3, prefix = "tier{i}"), # tier3_…
+    seq_tiers(5, pattern = "Y{i}_ok") # exact match
+  )
+)
+
+print(kn_seq_tiers2)
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Make error happen ───────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
@@ -158,6 +184,7 @@ try(kn8 + kn9)
 
 # make name error
 df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+
 knowledge(
   df,
   tier(baby ~ V1 + V2, old ~ V3),

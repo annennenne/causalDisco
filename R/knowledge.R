@@ -1001,65 +1001,59 @@ as_pcalg_constraints <- function(.kn, labels) {
   unique(all.vars(rhs)) # fallback to plain symbols
 }
 
-#' Quickly create many tier–variable formulas
+#' Generate multiple tier–variable formulas in one call
 #'
-#' @description
-#' `seq_tiers()` builds a list of two-sided formulas like
-#' `i ~ ends_with("_tier<i>")` or `i ~ starts_with("tier<i>_")`
-#' and tags it with the special class `"tier_bundle"`.
-#' The `tier()` helper inside `knowledge()` recognises the bundle and
-#' expands it internally, so you can write
+#' @param tiers     Positive integers – the tier indices to create.
+#' @param prefix    Constant string that *precedes* the tier number
+#'                  (e.g. `"tier"` for names like `"tier3_X"`).
+#' @param suffix    Constant string that *follows* the tier number
+#'                  (e.g. `"_"`     for names like `"X_3"`).
+#' @param pattern  General pattern containing the token `{i}` that will be
+#'                  replaced by the current tier number.  The resulting string
+#'                  must match the variable **exactly**.
 #'
-#' ```r
-#' knowledge(
-#'   tier(seq_tiers(1:10,  "_tier{.i}")),        # suffix
-#'   tier(seq_tiers(1:5,   "tier{.i}_")),        # prefix
-#'   tier(seq_tiers(1:3,   "tier{.i}_X{.i}")),   # prefix + suffix
-#'   ...
-#' )
-#' ```
+#' Exactly **one** of `prefix`, `suffix`, or `pattern` must be supplied.
 #'
-#' @param tiers   Integer vector of tier indices (e.g. `1:10`).
-#' @param pattern A single character string that contains the token `{.i}`.
-#'   * If the full pattern is `{.i}`, the RHS is `ends_with(<string>)`
-#'   * If `{.i}` is __at the start__: the RHS is `starts_with(<string>)`
-#'   * If `{.i}` is __at the end__: the RHS is `ends_with(<string>)`
-#'   * Otherwise: the RHS is `matches(<string>)`
-#'
-#'   Anything before the token acts as a *prefix*, anything after it as a
-#'   *suffix*, so you can write for example
-#'   `seq_tiers(1:3, "tier{.i}_")`   or   `seq_tiers(c(2,4,6), "_tier{.i}")`.
-#'
-#' @return An object of class `"tier_bundle"` (a list of formulas) that
-#'   `tier()` will explode automatically.
-#' @export
-seq_tiers <- function(tiers, pattern = "{.i}") {
+#' @return An object of class `"tier_bundle"` that `tier()` expands
+#'         automatically.
+#' @examples
+#' tier(seq_tiers(1:3, suffix = "_{i}")) # X_1, X_2, X_3
+#' tier(seq_tiers(1:2, prefix = "tier")) # tier1_Y, tier2_Y
+#' tier(seq_tiers(c(4, 6), pattern = "Z{i}_exact")) # Z4_exact, Z6_exact
+seq_tiers <- function(tiers,
+                      prefix = NULL,
+                      suffix = NULL,
+                      pattern = NULL) {
   stopifnot(
     is.numeric(tiers), all(tiers >= 1),
-    is.character(pattern), length(pattern) == 1,
-    grepl("{.i}", pattern, fixed = TRUE) # token must be present
+    xor(!is.null(prefix), xor(!is.null(suffix), !is.null(pattern)))
   )
 
-  build_formula <- function(i) {
-    pat <- gsub("{.i}", i, pattern, fixed = TRUE) # substitute once
+  if (!is.null(pattern) && !grepl("{i}", pattern, fixed = TRUE)) {
+    stop("`pattern` must contain the token \"{i}\".", call. = FALSE)
+  }
 
-    # If the pattern is exactly "{.i}", we treat it as suffix
-    if (startsWith(pattern, "{.i}") && endsWith(pattern, "{.i}")) {
+  build_formula <- function(i) {
+    if (!is.null(prefix)) {
+      pat <- if (grepl("{i}", prefix, fixed = TRUE)) {
+        gsub("{i}", i, prefix, fixed = TRUE) # token already inside
+      } else {
+        paste0(prefix, i) # append number
+      }
+      rhs <- rlang::expr(starts_with(!!pat))
+    } else if (!is.null(suffix)) {
+      pat <- if (grepl("{i}", suffix, fixed = TRUE)) {
+        gsub("{i}", i, suffix, fixed = TRUE)
+      } else {
+        paste0(i, suffix)
+      }
       rhs <- rlang::expr(ends_with(!!pat))
     } else {
-      rhs <- if (startsWith(pattern, "{.i}")) {
-        # Prefix match and no suffix match
-        rlang::expr(starts_with(!!pat))
-      } else if (endsWith(pattern, "{.i}")) {
-        # Suffix match
-        rlang::expr(ends_with(!!pat))
-      } else {
-        # Full regex match
-        rlang::expr(matches(!!pat))
-      }
+      pat <- gsub("{i}", i, pattern, fixed = TRUE)
+      rhs <- rlang::expr(all_of(!!pat))
     }
 
-    rlang::new_formula(i, rhs)
+    rlang::new_formula(i, rhs, env = rlang::empty_env())
   }
 
   structure(lapply(tiers, build_formula), class = "tier_bundle")
