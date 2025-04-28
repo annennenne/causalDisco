@@ -87,6 +87,12 @@ knowledge(
   required(V3 ~ V1)
 ) |> try()
 
+# this is allowed
+knowledge(
+  tier(1 ~ V1 + V2, 2 ~ V3),
+  required(V3 ~ V1, edge_type = "undirected")
+) |> try()
+
 # require edge
 kn5 <- knowledge(
   required(V3 ~ V1)
@@ -98,7 +104,7 @@ kn6 <- knowledge(
 )
 
 # tier + knowledge violation
-kn5 + kn6 |> try()
+try(kn5 + kn6)
 
 # set required and forbidden for same edge
 knowledge(
@@ -110,7 +116,8 @@ knowledge(
 kn7 <- knowledge(
   forbidden(V3 ~ V1)
 )
-kn5 + kn7 |> try()
+
+try(kn5 + kn7)
 
 # make tier names conflict
 kn8 <- knowledge(
@@ -121,7 +128,7 @@ kn9 <- knowledge(
   tier(baby ~ V1 + V2, young ~ V4, old ~ V3)
 )
 
-kn8 + kn9 |> try()
+try(kn8 + kn9)
 
 # make name error
 df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
