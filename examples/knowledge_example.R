@@ -19,7 +19,7 @@ kn2 <-
   add_to_tier(1 ~ A + B) |>
   add_to_tier(2 ~ C) |>
   forbid_edge(A, C, edge_type = "undirected") |>
-  require_edge(A, B)
+  require_edge(A ~ B, edge_type = "directed")
 
 print(kn2)
 
