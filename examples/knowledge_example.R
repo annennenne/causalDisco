@@ -105,19 +105,28 @@ print(kn_freezed)
 # EXAMPLE 10 ── seq_tiers ------------------------------------------------------
 # This example shows how to use seq_tiers to create a sequence of tiers.
 # This can be used if you have many variables that follow a pattern.
-df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
+
+df <- as.data.frame(
+  matrix(runif(100), # 100 × n_rows random numbers in (0,1)
+    nrow = 1,
+    ncol = 100,
+    byrow = TRUE
+  )
+)
+
+names(df) <- paste0("X_", 1:100) # label the columns X_1 … X_100
 
 kn_seq_tiers <- knowledge(
   df,
   tier(
     seq_tiers(
-      1:3,
+      1:100,
       ends_with({
         i
       })
     )
   ),
-  required(X1 ~ X2)
+  required(X_1 ~ X_2)
 )
 print(kn_seq_tiers)
 

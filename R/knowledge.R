@@ -397,18 +397,25 @@ unfreeze <- function(.kn) {
 
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
+#' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
   cli::cat_rule("Knowledge object")
+  
   if (length(x$tier_labels)) {
-    cli::cat_line(
-      "Tier labels: ",
-      paste(names(x$tier_labels), "\u2192", x$tier_labels, collapse = ", ")
-    )
+    ord  <- order(unname(x$tier_labels))          
+    labs <- names(x$tier_labels)[ord]
+    idx  <- unname(x$tier_labels)[ord]
+    
+    cli::cat_line("Tier labels:")
+    cli::cat_line(paste0("  * ", labs, " -> ", idx, collapse = "\n"))
   }
+  
   cli::cat_line(cli::style_bold("Variables:"), nrow(x$vars))
   if (nrow(x$vars)) print(x$vars, n = Inf)
+  
   cli::cat_line(cli::style_bold("Edges:"), nrow(x$edges))
   if (nrow(x$edges)) print(x$edges, n = 10)
+  
   invisible(x)
 }
 
