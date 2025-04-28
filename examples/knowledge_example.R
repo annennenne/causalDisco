@@ -107,7 +107,7 @@ print(kn_freezed)
 # This can be used if you have many variables that follow a pattern.
 
 df <- as.data.frame(
-  matrix(runif(100), # 100 × n_rows random numbers in (0,1)
+  matrix(runif(100), # 100 random numbers in (0,1)
     nrow = 1,
     ncol = 100,
     byrow = TRUE
@@ -121,9 +121,7 @@ kn_seq_tiers <- knowledge(
   tier(
     seq_tiers(
       1:100,
-      ends_with({
-        i
-      })
+      ends_with("_{i}")
     )
   ),
   required(X_1 ~ X_2)
