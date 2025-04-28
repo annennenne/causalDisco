@@ -162,25 +162,7 @@ pcalgSearch <- R6Class(
           stop("Data must be set before knowledge.", call. = FALSE)
         }
         labels <- colnames(self$data)
-
-        bad_edges <- knowledge_obj$edges |>
-          filter(edge_type != "undirected") |>
-          mutate(
-            # Create descriptive string of edges
-            desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
-          ) |>
-          pull(desc)
-
-        if (length(bad_edges)) {
-          stop(
-            "pcalg does not support asymmetric edges.\n",
-            "The following edges are not undirected:\n",
-            paste0("  * ", bad_edges, collapse = "\n"),
-            call. = FALSE
-          )
-          as_pcalg_constraints(knowledge_obj, labels)
-        }
-
+        as_pcalg_constraints(knowledge_obj, labels)
         invisible(self)
       }
     },

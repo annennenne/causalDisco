@@ -456,17 +456,40 @@ as_pcalg_constraints <- function(.kn, labels) {
   check_knowledge_obj(.kn)
 
   if (any(!is.na(.kn$vars$tier))) {
-    cli::cli_warn("Tiered background knowledge cannot be utilised by the pcalg engine.")
+    warning(
+      "Tiered background knowledge cannot be utilised by the pcalg engine.",
+      "\n  This cannot be resolved by setting forbidden edges as pcalg",
+      " does not support directed fobidden edges."
+    )
   }
 
+  # Initialize
   p <- length(labels)
   fixedGaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
   fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
 
-  ## helper: map variable → index once --------------------------------------
+  # Create a named index for the labels
   idx <- setNames(seq_along(labels), labels)
 
-  ## ---- forbidden ---------------------------------------------------------
+  # Find out if there are any non-undirected edges.
+  bad_edges <- .kn$edges |>
+    filter(edge_type != "undirected") |>
+    mutate(
+      # Create descriptive string of edges
+      desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
+    ) |>
+    pull(desc)
+
+  if (length(bad_edges)) {
+    stop(
+      "pcalg does not support asymmetric edges.\n",
+      "The following edges are not undirected:\n",
+      paste0("  * ", bad_edges, collapse = "\n"),
+      call. = FALSE
+    )
+  }
+
+  # Forbidden edges
   forb <- dplyr::filter(.kn$edges, status == "forbidden")
   if (nrow(forb)) {
     for (k in seq_len(nrow(forb))) {
@@ -475,12 +498,13 @@ as_pcalg_constraints <- function(.kn, labels) {
       if (is.na(i) || is.na(j)) {
         stop("Forbidden edge refers to unknown variable(s).", .call = FALSE)
       }
+      # pcalg does not support directed edges
       fixedGaps[i, j] <- TRUE
       fixedGaps[j, i] <- TRUE
     }
   }
 
-  ## ---- required ----------------------------------------------------------
+  # Required edges
   req <- dplyr::filter(.kn$edges, status == "required")
   if (nrow(req)) {
     for (k in seq_len(nrow(req))) {
@@ -489,6 +513,7 @@ as_pcalg_constraints <- function(.kn, labels) {
       if (is.na(i) || is.na(j)) {
         stop("Required edge refers to unknown variable(s).", .call = FALSE)
       }
+      # pcalg does not support directed edges
       fixedEdges[i, j] <- TRUE
       fixedEdges[j, i] <- TRUE
     }
@@ -606,6 +631,7 @@ as_pcalg_constraints <- function(.kn, labels) {
     function(label) length(unique(label)) > 1,
     split(names(merged), merged) # labels grouped by numeric tier
   )
+  # Print conflict message if any exist
   if (length(conflicts)) {
     lines <- mapply(
       function(labels, tier_idx) {
@@ -658,7 +684,7 @@ as_pcalg_constraints <- function(.kn, labels) {
 
   label <- rlang::as_string(tier)
   if (!nzchar(label)) {
-    stop("`tier` must be a number ≥1 or a non-empty label.", .call = FALSE)
+    stop("`tier` must be a number ≥ 1 or a non-empty label.", .call = FALSE)
   }
 
   if (label %in% names(.kn$tier_labels)) {
