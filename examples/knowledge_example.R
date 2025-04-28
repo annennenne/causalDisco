@@ -109,7 +109,14 @@ df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
 
 kn_seq_tiers <- knowledge(
   df,
-  tier(seq_tiers(1:3, suffix = "{i}")),
+  tier(
+    seq_tiers(
+      1:3,
+      ends_with({
+        i
+      })
+    )
+  ),
   required(X1 ~ X2)
 )
 print(kn_seq_tiers)
@@ -125,9 +132,9 @@ df <- data.frame(
 kn_seq_tiers2 <- knowledge(
   df,
   tier(
-    seq_tiers(1:2, suffix = "_{i}"), # X_1, X_2
-    seq_tiers(3, prefix = "tier{i}"), # tier3_…
-    seq_tiers(5, pattern = "Y{i}_ok") # exact match
+    seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
+    seq_tiers(3, starts_with("tier{i}")), # tier3_…
+    seq_tiers(5, matches("Y{i}_ok")) # exact match
   )
 )
 

@@ -1020,41 +1020,59 @@ as_pcalg_constraints <- function(.kn, labels) {
 #' tier(seq_tiers(1:3, suffix = "_{i}")) # X_1, X_2, X_3
 #' tier(seq_tiers(1:2, prefix = "tier")) # tier1_Y, tier2_Y
 #' tier(seq_tiers(c(4, 6), pattern = "Z{i}_exact")) # Z4_exact, Z6_exact
-seq_tiers <- function(tiers,
-                      prefix = NULL,
-                      suffix = NULL,
-                      pattern = NULL) {
-  stopifnot(
-    is.numeric(tiers), all(tiers >= 1),
-    xor(!is.null(prefix), xor(!is.null(suffix), !is.null(pattern)))
-  )
-
-  if (!is.null(pattern) && !grepl("{i}", pattern, fixed = TRUE)) {
-    stop("`pattern` must contain the token \"{i}\".", call. = FALSE)
+#' Build repetitive tier formulas with a tidy-select template
+#'
+#' @description
+#' Quickly generate a list of `tier()` formulas when the variables that belong
+#' to each tier follow a simple pattern.  
+#'
+#' ```r
+#' seq_tiers(1:3, vars = ends_with({i}))
+#' ## ⇒ 1 ~ ends_with("1"), 2 ~ ends_with("2"), 3 ~ ends_with("3")
+#'
+#' seq_tiers(1:4, vars = matches("X{i}$"))
+#' ## ⇒ 1 ~ matches("X1$"), …, 4 ~ matches("X4$")
+#' ```
+#'
+#' The placeholder **`i`** (written exactly like that — unquoted) is replaced
+#' with each tier number (as a character string) everywhere it appears in the
+#' template.
+#'
+#' @param tiers `integer` vector of tier indices (≥ 1).
+#' @param vars  A *tidy-select template* (unevaluated).  
+#'              Must reference the placeholder **`i`** either as a symbol  
+#'              (`ends_with({i})`) *or* inside a character string
+#'              (`matches("X{i}$")`).
+#'
+#' @return A list of two-sided formulas (class `"tier_bundle"`).
+#' @export
+seq_tiers <- function(tiers, vars) {
+  stopifnot(is.numeric(tiers), all(tiers >= 1L))
+  
+  vars_expr <- rlang::enexpr(vars)
+  
+  # ── guard: placeholder must be present -----------------------------------
+  if (!rlang::is_call(vars_expr) &&
+      !identical(vars_expr, quote(i)) &&
+      !grepl("{i}", deparse(vars_expr), fixed = TRUE)) {
+    stop("`vars` must contain the placeholder `i`.", call. = FALSE)
   }
-
+  
+  # helper: recursively substitute `i` or "{i}" -----------------------------
+  replace_i <- function(expr, i_chr) {
+    switch(typeof(expr),
+           "language"  = as.call(lapply(as.list(expr), replace_i, i_chr)),
+           "symbol"    = if (identical(expr, quote(i))) rlang::expr(!!i_chr) else expr,
+           "character" = rlang::expr(!!gsub("{i}", i_chr, expr, fixed = TRUE)),
+           expr
+    )
+  }
+  
   build_formula <- function(i) {
-    if (!is.null(prefix)) {
-      pat <- if (grepl("{i}", prefix, fixed = TRUE)) {
-        gsub("{i}", i, prefix, fixed = TRUE) # token already inside
-      } else {
-        paste0(prefix, i) # append number
-      }
-      rhs <- rlang::expr(starts_with(!!pat))
-    } else if (!is.null(suffix)) {
-      pat <- if (grepl("{i}", suffix, fixed = TRUE)) {
-        gsub("{i}", i, suffix, fixed = TRUE)
-      } else {
-        paste0(suffix, i) # append number
-      }
-      rhs <- rlang::expr(ends_with(!!pat))
-    } else {
-      pat <- gsub("{i}", i, pattern, fixed = TRUE)
-      rhs <- rlang::expr(all_of(!!pat))
-    }
+    rhs <- replace_i(vars_expr, as.character(i))
     rlang::new_formula(i, rhs, env = rlang::empty_env())
   }
-
+  
   structure(lapply(tiers, build_formula), class = "tier_bundle")
 }
 
