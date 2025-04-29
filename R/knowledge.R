@@ -539,16 +539,16 @@ as_pcalg_constraints <- function(.kn, labels) {
   fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
 
   # Create a named index for the labels
-  idx <- setNames(seq_along(labels), labels)
+  idx <- stats::setNames(seq_along(labels), labels)
 
   # Find out if there are any non-undirected edges.
   bad_edges <- .kn$edges |>
-    filter(edge_type != "undirected") |>
-    mutate(
+    dplyr::filter(edge_type != "undirected") |>
+    dplyr::mutate(
       # Create descriptive string of edges
       desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
     ) |>
-    pull(desc)
+    dplyr::pull(desc)
 
   if (length(bad_edges)) {
     stop(
@@ -1101,11 +1101,12 @@ seq_tiers <- function(tiers, vars) {
 
 # ──────────────────────────────── Imports ─────────────────────────────────────
 
+#' @importFrom stats setNames
 #' @importFrom tibble tibble
-#' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate
+#' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate pull
 #' @importFrom tidyselect eval_select everything starts_with ends_with
 #' @importFrom rlang enquo eval_tidy set_names is_formula f_lhs f_rhs as_name !!
-#' @importFrom rlang is_integerish as_string
+#' @importFrom rlang is_integerish as_string list2 inject new_formula empty_env
 #' @importFrom purrr pwalk
 #' @importFrom cli cat_rule cat_line style_bold
 NULL

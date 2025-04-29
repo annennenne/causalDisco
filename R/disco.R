@@ -4,14 +4,19 @@
 #' @param knowledge a knowledge object
 #' @export
 disco <- function(data, method, knowledge = NULL) {
-  if (!is.null(knowledge)) {
-    if (!is.null(method$set_knowledge)) {
-      method$set_knowledge(knowledge)
-    } else {
-      stop("Method", method, "does not support knowledge.", .call = FALSE)
-    }
+  if (!inherits(method, "disco_method")) {
+    stop("The method must be a disco method object.", call. = FALSE)
   }
-
-  result <- method$run(data)
-  return(result)
+  # inject knowledge via S3 generic
+  if (!is.null(knowledge)) {
+    tryCatch(
+      {
+        method <- set_knowledge(method, knowledge)
+      },
+      error = function(e) {
+        stop("Error in setting knowledge: ", e$message, .call = FALSE)
+      }
+    )
+  }
+  method(data)
 }

@@ -1,51 +1,90 @@
+#' @title The Peter-Clark (PC) algorithm for causal discovery
+#'
+#' @description
+#' Run the PC algorithm for causal discovery using one of several engines.
+#'
+#' @inheritParams disco_method
+#' @param engine Character; which engine to use. Must be one of:
+#'   \describe{
+#'     \item{\code{"tetrad"}}{Tetrad Java library.}
+#'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
+#'     \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
+#'   }
+#' @param test Character; name of the conditional‐independence test.
+#' @param alpha Numeric; significance level for the CI tests.
+#' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
+#'
+#' @return
+#' A function of class \code{"pc"} that takes a single argument \code{data}
+#' (a data frame) and returns an igraph_party object.
+#'
 #' @export
-pc <- function(engine = "tetrad", test, alpha = 0.05, ...) {
-  engine <- tolower(engine)
+pc <- function(
+    engine = c("tetrad", "pcalg", "bnlearn"),
+    test,
+    alpha = 0.05,
+    ...) {
+  engine <- match.arg(engine)
+  args <- list(...)
 
-  switch(engine,
-    tetrad = pc_tetrad(test, alpha, ...),
-    pcalg = pc_pcalg(test, alpha, ...),
-    bnlearn = pc_bnlearn(test, alpha, ...),
-    stop("Unsupported engine: ", engine, .call = FALSE)
-  )
+  # build a “runner builder” that knows how to make a runner given knowledge
+  builder <- function(knowledge = NULL) {
+    runner <- switch(engine,
+      tetrad  = pc_tetrad_runner(test, alpha, args),
+      pcalg   = pc_pcalg_runner(test, alpha, args),
+      bnlearn = pc_bnlearn_runner(test, alpha, args)
+    )
+    if (!is.null(knowledge)) {
+      runner$set_knowledge(knowledge)
+    }
+    runner
+  }
+
+  disco_method(builder, "pc")
 }
-# Set available engines
-attr(pc, "engines") <- c("tetrad", "pcalg")
 
-pc_tetrad <- function(test, alpha, ...) {
+#' @keywords internal
+pc_tetrad_runner <- function(test, alpha, ...) {
   search <- TetradSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
-  if (length(args_to_pass$test_args) != 0) {
+
+  if (length(args_to_pass$test_args) > 0) {
     search$set_test(test, alpha, args_to_pass$test_args)
   } else {
     search$set_test(test, alpha)
   }
-  if (length(args_to_pass$alg_args) != 0) {
+
+  if (length(args_to_pass$alg_args) > 0) {
     search$set_alg("pc", args_to_pass$alg_args)
   } else {
     search$set_alg("pc")
   }
-  runner <- list(
+
+  # Returns runner
+  list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
     },
     run = function(data) {
       search$run_search(data)
-      search$get_dot() # todo: change to igraph later
+      search$get_dot()
     }
   )
-  return(runner)
 }
 
-pc_pcalg <- function(test, alpha, ...) {
-  args <- list(...)
+#' @keywords internal
+pc_pcalg_runner <- function(test, alpha, ...) {
   search <- pcalgSearch$new()
+  args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc", test = test)
+
   search$set_params(args_to_pass$alg_args)
   search$set_test(test, alpha)
   search$set_alg("pc")
-  runner <- list(
+
+  # Returns runner
+  list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
     },
@@ -53,4 +92,9 @@ pc_pcalg <- function(test, alpha, ...) {
       search$run_search(data)
     }
   )
+}
+
+#' @keywords internal
+pc_bnlearn_runner <- function(test, alpha, ...) {
+  stop("Not implemented yet.")
 }
