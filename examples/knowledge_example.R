@@ -7,7 +7,8 @@ kn1 <-
   knowledge(
     tier(
       1 ~ V1 + V2,
-      2 ~ V3
+      2 ~ V3,
+      3 ~ c(V4, V5)
     ),
     forbidden(V1 ~ V3, edge_type = "undirected"),
     required(V1 ~ V2, V2 ~ V3)
@@ -146,6 +147,27 @@ kn_seq_tiers2 <- knowledge(
 )
 
 print(kn_seq_tiers2)
+
+# EXAMPLE 11 ── Giving tiers with a numeric vector -----------------------------
+df <- as.data.frame(
+  matrix(runif(100), # 100 random numbers in (0,1)
+    nrow = 1,
+    ncol = 100,
+    byrow = TRUE
+  )
+)
+
+names(df) <- paste0("X_", 1:100) # label the columns X_1 … X_100
+
+kn_numeric_tiers <-
+  knowledge(
+    df,
+    tier(
+      1:100
+    )
+  )
+print(kn_numeric_tiers)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Make error happen ───────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
@@ -214,3 +236,11 @@ try(
     tier(baby ~ V1 + V2, old ~ V3)
   ) |> add_to_tier(old ~ V4, after = old)
 )
+
+# Provide tiers with numeric vector without having variables
+knowledge(
+  tier(
+    1:5
+  ),
+  required(V1 ~ V2)
+) |> try()

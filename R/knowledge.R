@@ -65,6 +65,48 @@ knowledge <- function(...) {
 
   tier <- function(...) {
     specs <- rlang::list2(...)
+    
+    # This is a special case for numeric tiers given in the form
+    # of a vector, e.g. tier(c(1,1,2,3)) or tier(1:4)
+    if (length(specs) == 1L &&
+         is.atomic(specs[[1]]) &&
+         (is.numeric(specs[[1]]) )) {
+      
+      vec  <- specs[[1]]
+      vars <- kn$vars$var
+      if (length(vars) == 0) {
+        stop("No variables in the knowledge object. This is needed if you want",
+        " to provide tiers with a numeric vector.", call. = FALSE)
+      }
+      if (length(vec) != length(vars)) {
+        stop(
+          sprintf(
+            "Length of tier vector, %d, must equal number of variables, %d.",
+            length(vec),
+            length(vars)
+          ),
+          call. = FALSE
+        )
+      }
+      
+      # for each unique tier level (in order of appearance) build a 2‐sided formula
+      specs <- lapply(unique(vec), function(lvl) {
+        vars_at <- vars[vec == lvl]
+        
+        lhs_expr <- if (is.numeric(lvl)) {
+          # numeric literal: exact index
+          rlang::expr(!!lvl)
+        } else {
+          stop("Only numeric tiers are supported in this form.", .call = FALSE)
+        }
+        
+        # RHS: c("V1","V2",…)
+        rhs_expr <- rlang::expr(c(!!!rlang::syms(vars_at)))
+        
+        rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
+      })
+    } # end of special case
+    
     if (!length(specs)) {
       stop("tier() needs at least one two-sided formula.", .call = FALSE)
     }
