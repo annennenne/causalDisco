@@ -634,6 +634,40 @@ as_pcalg_constraints <- function(.kn, labels) {
   list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
 }
 
+#' @title Forbid all “uphill” edges implied by tiers
+#' @description
+#' Given a `knowledge` object with variables already assigned to tiers,  
+#' forbids every directed edge that runs from a higher-numbered tier down  
+#' into a lower-numbered tier.  
+#' @param .kn A `knowledge` object.
+#' @return The same `knowledge` object with new forbidden edges added.
+#' @export
+forbid_tier_violations <- function(.kn) {
+  check_knowledge_obj(.kn)
+  
+  # Rename so we can cross without duplicate names
+  from <- .kn$vars %>% 
+    dplyr::rename(var_from = var, tier_from = tier)
+  to   <- .kn$vars %>% 
+    dplyr::rename(var_to   = var, tier_to   = tier)
+  
+  # Every possible (from, to) pair
+  bad <- tidyr::crossing(from, to) %>%
+    # Filer tier violations
+    dplyr::filter(tier_from > tier_to)
+  
+  if (nrow(bad)) {
+    .kn <- .add_edges(
+      .kn,
+      status    = "forbidden",
+      edge_type = "directed",
+      from      = bad$var_from,
+      to        = bad$var_to
+    )
+  }
+  .kn
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ─────────────────────────── Internal helpers  ────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
@@ -685,6 +719,7 @@ as_pcalg_constraints <- function(.kn, labels) {
     !is.na(tier_from),
     !is.na(tier_to),
     edge_type %in% c("directed", "bidirected"),
+    status != "forbidden", # forbidden can violate tiers
     tier_from > tier_to
   )
   if (nrow(tier_violations)) {
