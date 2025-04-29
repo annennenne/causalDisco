@@ -17,14 +17,14 @@ df <- data.frame(V1, V2, V3, V4, V5, V6)
 # create a knowledge object
 kn <- knowledge(
   tier(
-    1, c("V1", "V2", "V3"),
-    2, c("V4", "V5", "V6")
+    baby ~ V1 + V2,
+    child ~ V3,
+    adult ~ V4,
+    old ~ V5 + V6
   ),
-  forbidden("V1", "V6"), # forbidden and required can be called like this
-  forbidden(c("V2", "V6")), # or like this
-  required(c("V1", "V2"), c("V2", "V3")) # or like this
+  forbidden(V1 ~ V3, edge_type = "undirected"),
+  required(V1 ~ V2, V2 ~ V3, edge_type = "undirected")
 )
-
 
 # initialize fci algorithm
 my_fci_tetrad <- fci(engine = "tetrad", test = "fisher_z", alpha = 0.05) # pass whatever extra argument you want to here

@@ -30,6 +30,19 @@ kn <- knowledge(
 my_pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
 my_pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 
+# can be called like this
+my_pc_tetrad(df)
+new_pc_tetrad <- my_pc_tetrad |>
+  set_knowledge(kn)
+new_pc_tetrad(df)
+
+# with pcalg
+my_pc_pcalg(df)
+new_pc_pcalg <- my_pc_pcalg |>
+  set_knowledge(kn)
+new_pc_pcalg(df)
+
+# or with disco
 # call disco with background knowledge
 disco(df, method = my_pc_tetrad, knowledge = kn)
 disco(df, method = my_pc_pcalg, knowledge = kn)
