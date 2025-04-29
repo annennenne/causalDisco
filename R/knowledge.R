@@ -134,7 +134,20 @@ knowledge <- function(...) {
           call. = FALSE
         )
       }
-
+      
+      # Abort if any of these vars already has a tier
+      already_in_a_tier <- kn$vars$tier[match(vars, kn$vars$var)]
+      if (any(!is.na(already_in_a_tier))) {
+          stop(
+              sprintf(
+                  "Tier specification %s tries to re-assign variable(s) [%s], which are already in tier %s.",
+                  paste0(deparse(fml), collapse = ""),
+                  paste(vars[!is.na(already_in_a_tier)], collapse = ", "),
+                  paste(already_in_a_tier[!is.na(already_in_a_tier)], collapse = ", ")
+                ),
+              call. = FALSE
+            )
+        }
       
       # Decide what lhs means
       lhs_val <- tryCatch(
