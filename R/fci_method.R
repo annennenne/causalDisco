@@ -59,6 +59,7 @@ fci_tetrad_runner <- function(test, alpha, ...) {
   } else {
     search$set_alg("fci")
   }
+
   runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
@@ -68,7 +69,7 @@ fci_tetrad_runner <- function(test, alpha, ...) {
       search$get_dot() # todo: change to igraph later
     }
   )
-  return(runner)
+  runner
 }
 
 fci_pcalg_runner <- function(test, alpha, ...) {
@@ -78,7 +79,7 @@ fci_pcalg_runner <- function(test, alpha, ...) {
   search$set_params(args_to_pass$alg_args)
   search$set_test(test, alpha)
   search$set_alg("fci")
-  print(search)
+
   runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
@@ -87,6 +88,7 @@ fci_pcalg_runner <- function(test, alpha, ...) {
       search$run_search(data)
     }
   )
+  runner
 }
 
 fci_bnlearn_runner <- function(test, alpha, ...) {

@@ -61,8 +61,7 @@ pc_tetrad_runner <- function(test, alpha, ...) {
     search$set_alg("pc")
   }
 
-  # Returns runner
-  list(
+  runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
     },
@@ -71,6 +70,7 @@ pc_tetrad_runner <- function(test, alpha, ...) {
       search$get_dot()
     }
   )
+  runner
 }
 
 #' @keywords internal
@@ -83,8 +83,7 @@ pc_pcalg_runner <- function(test, alpha, ...) {
   search$set_test(test, alpha)
   search$set_alg("pc")
 
-  # Returns runner
-  list(
+  runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
     },
@@ -92,6 +91,7 @@ pc_pcalg_runner <- function(test, alpha, ...) {
       search$run_search(data)
     }
   )
+  runner
 }
 
 #' @keywords internal

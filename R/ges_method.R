@@ -58,6 +58,7 @@ ges_tetrad_runner <- function(score, ...) {
   } else {
     search$set_alg("fges")
   }
+
   runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
@@ -67,7 +68,7 @@ ges_tetrad_runner <- function(score, ...) {
       search$get_dot() # todo: change to igraph later
     }
   )
-  return(runner)
+  runner
 }
 
 #' @keywords internal
@@ -78,6 +79,7 @@ ges_pcalg_runner <- function(score, ...) {
   search$set_params(args_to_pass$alg_args)
   search$set_score(score, args_to_pass$score_args)
   search$set_alg("ges")
+
   runner <- list(
     set_knowledge = function(knowledge) {
       search$set_knowledge(knowledge)
@@ -86,6 +88,7 @@ ges_pcalg_runner <- function(score, ...) {
       search$run_search(data, set_suff_stat = FALSE)
     }
   )
+  runner
 }
 
 
