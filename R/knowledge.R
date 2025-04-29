@@ -539,7 +539,7 @@ as_pcalg_constraints <- function(.kn, labels) {
   fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
 
   # Create a named index for the labels
-  idx <- stats::setNames(seq_along(labels), labels)
+  idx <- rlang::set_names(seq_along(labels), labels)
 
   # Find out if there are any non-undirected edges.
   bad_edges <- .kn$edges |>
@@ -1101,7 +1101,6 @@ seq_tiers <- function(tiers, vars) {
 
 # ──────────────────────────────── Imports ─────────────────────────────────────
 
-#' @importFrom stats setNames
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate pull
 #' @importFrom tidyselect eval_select everything starts_with ends_with
