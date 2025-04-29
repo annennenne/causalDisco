@@ -43,6 +43,7 @@ Collate:
     'confusion.R'
     'corTest.R'
     'disco.R'
+    'disco_method.R'
     'edges.R'
     'engine_registry.R'
     'evaluate.R'
