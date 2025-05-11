@@ -168,6 +168,26 @@ kn_numeric_tiers <-
   )
 print(kn_numeric_tiers)
 
+# EXAMPLE 12 ── Forbid tier violations ----------------------
+df <- as.data.frame(
+  matrix(runif(10), # 100 random numbers in (0,1)
+    nrow = 1,
+    ncol = 10,
+    byrow = TRUE
+  )
+)
+
+names(df) <- paste0("X_", 1:10) # label the columns X_1 … X_100
+
+kn <-
+  knowledge(
+    df,
+    tier(
+      1:10
+    )
+  )
+forbid_tier_violations(kn)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Make error happen ───────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────

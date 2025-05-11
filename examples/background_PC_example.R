@@ -6,11 +6,11 @@ n <- 10**4
 
 # continuous data example
 V1 <- rnorm(n, 0, 1)
-V2 <- 0.5 * V1 + rnorm(n, 0, 0.5)
-V3 <- V2 + rnorm(n, 0, 0.1)
+V3 <- rnorm(n, 0, 0.1)
+V2 <- 0.5 * V1 + 0.5 * V3
 V4 <- V3 + rnorm(n, 0, 1)
-V5 <- rnorm(n, 0, 1)
-V6 <- rnorm(n, 0, 1) + 0.7 * V5
+V5 <- V3 + rnorm(n, 0, 1)
+V6 <- rnorm(n, 0, 0.1) + 0.7 * V5
 
 df <- data.frame(V1, V2, V3, V4, V5, V6)
 
@@ -21,9 +21,7 @@ kn <- knowledge(
     child ~ V3,
     adult ~ V4,
     old ~ V5 + V6
-  ),
-  forbidden(V1 ~ V3, edge_type = "undirected"),
-  required(V1 ~ V2, V2 ~ V3, edge_type = "undirected")
+  )
 )
 
 # initialize pc algorithm as usual
