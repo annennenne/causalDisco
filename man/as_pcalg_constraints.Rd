@@ -4,7 +4,7 @@
 \alias{as_pcalg_constraints}
 \title{Convert to a pair of (fixedGaps, fixedEdges) matrices for the \strong{pcalg} package}
 \usage{
-as_pcalg_constraints(.kn, labels)
+as_pcalg_constraints(.kn, labels, directed_as_undirected = FALSE)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
@@ -17,9 +17,9 @@ A list with elements \code{fixedGaps} and \code{fixedEdges}.
 }
 \description{
 pcalg supports \emph{symmetric} background knowledge only:
-• \strong{fixedGaps}  – \strong{forbidden} edges (undirected)
-• \strong{fixedEdges} – \strong{required} edges (undirected)
+• \strong{fixedGaps}  – \strong{forbidden} edges (should be going both ways))
+• \strong{fixedEdges} – \strong{required} edges (should be going both ways))
 }
 \details{
-We therefore throw an error if any edges are not undirected.
+We therefore throw an error if any edges relations are not symmetrical.
 }

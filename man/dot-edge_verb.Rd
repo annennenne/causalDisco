@@ -4,14 +4,12 @@
 \alias{.edge_verb}
 \title{Handle \code{forbid_edge()} and \code{require_edge()} verbs}
 \usage{
-.edge_verb(.kn, status, from_quo, to_quo = NULL, edge_type = "directed")
+.edge_verb(.kn, status, from_quo, to_quo = NULL)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
 \item{status}{A string, either "forbidden" or "required".}
-
-\item{edge_type}{A string, one of "directed", "undirected", "bidirected", "o->", "o-o"}
 
 \item{from}{A tidyselect specification or a variable name string or symbol.}
 

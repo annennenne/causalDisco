@@ -13,7 +13,7 @@ A populated \code{knowledge} object.
 Accepts an optional data frame followed by calls built from \strong{formulas}:
 \itemize{
 \item \code{tier( 1 ~ V1 + V2, exposure ~ E )}
-\item \code{forbidden( V1 ~ V4, V2 ~ V4, edge_type = "undirected" )}
+\item \code{forbidden( V1 ~ V4, V2 ~ V4)}
 \item \code{required ( V1 ~ V2 )}
 }
 }
@@ -40,10 +40,9 @@ specify the variables. For example, \code{tier(1 ~ starts_with("V"))} will assig
 all variables starting with "V" to tier 1.
 
 The \code{forbidden()} and \code{required()} functions add edges to the knowledge
-object. The edges are added as directed edges by default, but you can specify
-the \code{edge_type} argument to use undirected or bidirected edges. There is
-currently also support for PAG-type edges, but these are generally not
-supported in other packages. These functions also take formulas as input.
+object. The edges are added as directed edges by default, currently there is
+no theoretical support for other edge types than these.
+These functions also take formulas as input.
 The left-hand side of the formula is the \emph{from} variable, and the right-hand
 side is the \emph{to} variable.
 }

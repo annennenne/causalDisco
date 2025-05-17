@@ -8,7 +8,7 @@
 #' Accepts an optional data frame followed by calls built from **formulas**:
 #'
 #' * `tier( 1 ~ V1 + V2, exposure ~ E )`
-#' * `forbidden( V1 ~ V4, V2 ~ V4, edge_type = "undirected" )`
+#' * `forbidden( V1 ~ V4, V2 ~ V4)`
 #' * `required ( V1 ~ V2 )`
 #'
 #' @details
@@ -34,10 +34,9 @@
 #' all variables starting with "V" to tier 1.
 #'
 #' The `forbidden()` and `required()` functions add edges to the knowledge
-#' object. The edges are added as directed edges by default, but you can specify
-#' the `edge_type` argument to use undirected or bidirected edges. There is
-#' currently also support for PAG-type edges, but these are generally not
-#' supported in other packages. These functions also take formulas as input.
+#' object. The edges are added as directed edges by default, currently there is
+#' no theoretical support for other edge types than these.
+#' These functions also take formulas as input.
 #' The left-hand side of the formula is the *from* variable, and the right-hand
 #' side is the *to* variable.
 #'
@@ -220,7 +219,7 @@ knowledge <- function(...) {
     }
   }
 
-  edge_helper <- function(status, ..., edge_type = "directed") {
+  edge_helper <- function(status, ...) {
     specs <- rlang::list2(...)
     if (!length(specs)) {
       stop(
@@ -258,11 +257,11 @@ knowledge <- function(...) {
       }
 
       # insert every combination of from × to
-      kn <<- .add_edges(kn, status, edge_type, from_vars, to_vars)
+      kn <<- .add_edges(kn, status, from_vars, to_vars)
     }
   }
-  forbidden <- function(..., edge_type = "directed") edge_helper("forbidden", ..., edge_type = edge_type)
-  required <- function(..., edge_type = "directed") edge_helper("required", ..., edge_type = edge_type)
+  forbidden <- function(...) edge_helper("forbidden", ...)
+  required <- function(...) edge_helper("required", ...)
 
   # evaluate the call list
   allowed <- c("tier", "forbidden", "required")
@@ -313,7 +312,7 @@ add_vars <- function(.kn, vars) {
 #' @param tier    Bare symbol / character (label) **or** numeric literal.
 #' @param before,after  Optional anchor relative to an existing tier label,
 #'                tier index, or variable.  Once the knowledge object already
-#'                has ≥ 1 tier, you must supply **exactly one** of these.
+#'                has >= 1 tier, you must supply **exactly one** of these.
 #'
 #' @return Updated `knowledge` object.
 #' @export
@@ -328,7 +327,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
     idx <- as.integer(tier_expr)
 
     if (idx < 1) {
-      stop("Numeric tier must be ≥ 1.", call. = FALSE)
+      stop("Numeric tier must be >= 1.", call. = FALSE)
     }
 
     # duplicate?
@@ -450,19 +449,16 @@ add_to_tier <- function(.kn, ...) {
 #' @title Add a forbidden edge to a knowledge object
 #'
 #' @description These edges are not allowed to be present in the final graph.
-#' You can specify these edges as directed, undirected, or bidirected. The default is
-#' directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
 #'
 #' @param .kn A `knowledge` object.
 #' @param ... Either a two-sided formula (`A ~ C`) *or* `from`, `to`.
-#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
 #' @export
-forbid_edge <- function(.kn, ..., edge_type = "directed") {
+forbid_edge <- function(.kn, ...) {
   dots <- rlang::enquos(...)
   if (length(dots) == 1) {
-    .edge_verb(.kn, "forbidden", dots[[1]], NULL, edge_type)
+    .edge_verb(.kn, "forbidden", dots[[1]], NULL)
   } else if (length(dots) == 2) {
-    .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]], edge_type)
+    .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]])
   } else {
     stop("forbid_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
   }
@@ -471,17 +467,15 @@ forbid_edge <- function(.kn, ..., edge_type = "directed") {
 #' @title Add a forbidden edge to a knowledge object
 #'
 #' @description These edges are not allowed to be present in the final graph.
-#' You can specify these edges as directed, undirected, or bidirected. The default is
-#' directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
 #'
 #' @inheritParams forbid_edge
 #' @export
-require_edge <- function(.kn, ..., edge_type = "directed") {
+require_edge <- function(.kn, ...) {
   dots <- rlang::enquos(...)
   if (length(dots) == 1) {
-    .edge_verb(.kn, "required", dots[[1]], NULL, edge_type)
+    .edge_verb(.kn, "required", dots[[1]], NULL)
   } else if (length(dots) == 2) {
-    .edge_verb(.kn, "required", dots[[1]], dots[[2]], edge_type)
+    .edge_verb(.kn, "required", dots[[1]], dots[[2]])
   } else {
     stop("require_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
   }
@@ -648,7 +642,7 @@ as_tetrad_knowledge <- function(.kn) {
   )
   purrr::pwalk(
     .kn$edges,
-    function(status, edge_type, from, to, ...) {
+    function(status, from, to, ...) {
       switch(status,
         forbidden = j$setForbidden(from, to),
         required  = j$setRequired(from, to)
@@ -661,21 +655,21 @@ as_tetrad_knowledge <- function(.kn) {
 #' Convert to a pair of (fixedGaps, fixedEdges) matrices for the **pcalg** package
 #'
 #' pcalg supports *symmetric* background knowledge only:
-#'   • **fixedGaps**  – **forbidden** edges (undirected)
-#'   • **fixedEdges** – **required** edges (undirected)
+#'   • **fixedGaps**  – **forbidden** edges (should be going both ways))
+#'   • **fixedEdges** – **required** edges (should be going both ways))
 #'
-#' We therefore throw an error if any edges are not undirected.
+#' We therefore throw an error if any edges relations are not symmetrical.
 #'
 #' @param .kn A `knowledge` object.
 #' @param labels Character vector of variable names in the *exact* order of
 #'               your data matrix / data frame.
 #' @return A list with elements `fixedGaps` and `fixedEdges`.
 #' @export
-as_pcalg_constraints <- function(.kn, labels) {
+as_pcalg_constraints <- function(.kn, labels, directed_as_undirected = FALSE) {
   check_knowledge_obj(.kn)
 
   if (any(!is.na(.kn$vars$tier))) {
-    warning(
+    stop(
       "Tiered background knowledge cannot be utilised by the pcalg engine.",
       "\n  This cannot be resolved by setting forbidden edges as pcalg",
       " does not support directed fobidden edges."
@@ -690,22 +684,27 @@ as_pcalg_constraints <- function(.kn, labels) {
   # Create a named index for the labels
   idx <- rlang::set_names(seq_along(labels), labels)
 
-  # Find out if there are any non-undirected edges.
-  bad_edges <- .kn$edges |>
-    dplyr::filter(edge_type != "undirected") |>
-    dplyr::mutate(
-      # Create descriptive string of edges
-      desc = paste0("From ", from, " to ", to, " with edge type: ", edge_type)
-    ) |>
-    dplyr::pull(desc)
+  # find the relations that are non-symmetric
+  if (!directed_as_undirected) {
+    bad_edges <- .kn$edges |>
+      # keep only those edges for which the reversed pair is NOT present
+      dplyr::anti_join(
+        .kn$edges,
+        by = c("from" = "to", "to" = "from")
+      ) |>
+      dplyr::mutate(
+        desc = paste0(from, " --> ", to)
+      ) |>
+      dplyr::pull(desc)
 
-  if (length(bad_edges)) {
-    stop(
-      "pcalg does not support asymmetric edges.\n",
-      "The following edges are not undirected:\n",
-      paste0("  * ", bad_edges, collapse = "\n"),
-      call. = FALSE
-    )
+    if (length(bad_edges)) {
+      stop(
+        "pcalg does not support asymmetric edges.\n",
+        "The following do not have a symmetrical counterpart:\n",
+        paste0("  * ", bad_edges, collapse = "\n"),
+        call. = FALSE
+      )
+    }
   }
 
   # Forbidden edges
@@ -717,9 +716,10 @@ as_pcalg_constraints <- function(.kn, labels) {
       if (is.na(i) || is.na(j)) {
         stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
       }
-      # pcalg does not support directed edges
+      if (directed_as_undirected) {
+        fixedGaps[j, i] <- TRUE
+      }
       fixedGaps[i, j] <- TRUE
-      fixedGaps[j, i] <- TRUE
     }
   }
 
@@ -732,9 +732,10 @@ as_pcalg_constraints <- function(.kn, labels) {
       if (is.na(i) || is.na(j)) {
         stop("Required edge refers to unknown variable(s).", call. = FALSE)
       }
-      # pcalg does not support directed edges
+      if (directed_as_undirected) {
+        fixedEdges[j, i] <- TRUE
+      }
       fixedEdges[i, j] <- TRUE
-      fixedEdges[j, i] <- TRUE
     }
   }
 
@@ -767,7 +768,6 @@ forbid_tier_violations <- function(.kn) {
     .kn <- .add_edges(
       .kn,
       status    = "forbidden",
-      edge_type = "directed",
       from      = bad$var_from,
       to        = bad$var_to
     )
@@ -874,7 +874,6 @@ seq_tiers <- function(tiers, vars) {
       ),
       edges = tibble::tibble(
         status     = character(),
-        edge_type  = character(), # todo
         from       = character(),
         to         = character(),
         tier_from  = integer(),
@@ -887,16 +886,10 @@ seq_tiers <- function(tiers, vars) {
   )
 }
 
-# ────────────────────────────── Allowed edges  ────────────────────────────────
-
-#' @title Supported edge-type strings
-#' @keywords internal
-.allowed_edge_types <- c("directed", "undirected", "bidirected", "o->", "o-o")
-
 # ─────────────────────────── Validation helpers  ──────────────────────────────
 #' @title Validate that no edge runs from higher tier to lower tier
 #'
-#' @param edges_df A data frame with columns `status`, `edge_type`, `from`,
+#' @param edges_df A data frame with columns `status`, `from`,
 #' `to`, `tier_from`, and `tier_to`.
 #' @keywords internal
 .validate_tier_rule <- function(edges_df) {
@@ -904,8 +897,7 @@ seq_tiers <- function(tiers, vars) {
     edges_df,
     !is.na(tier_from),
     !is.na(tier_to),
-    edge_type %in% c("directed", "bidirected"),
-    status != "forbidden", # forbidden can violate tiers
+    status != "forbidden", # forbidden can't violate tiers
     tier_from > tier_to
   )
   if (nrow(tier_violations)) {
@@ -920,21 +912,20 @@ seq_tiers <- function(tiers, vars) {
 
 #' @title Validate that an edge is not simultaneously forbidden *and* required
 #'
-#' @param edges_df A data frame with columns `status`, `edge_type`, `from`,
+#' @param edges_df A data frame with columns `status`, `from`,
 #' `to`, `tier_from`, and `tier_to`.
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
-  # look for groups where the same (from, to, edge_type) has both statuses
+  # look for groups where the same (from, to) has both statuses
   clashes <- edges_df |>
-    dplyr::group_by(edge_type, from, to) |>
+    dplyr::group_by(from, to) |>
     dplyr::filter(all(c("forbidden", "required") %in% status)) |>
     dplyr::ungroup() |>
-    dplyr::distinct(edge_type, from, to) # one row per conflicting edge
+    dplyr::distinct(from, to) # one row per conflicting edge
   if (nrow(clashes)) {
     stop(
       "Edge(s) appear as both forbidden and required: ",
-      paste0(clashes$from, " -> ", clashes$to,
-        " [", clashes$edge_type, "]",
+      paste0(clashes$from, " --> ", clashes$to,
         collapse = ", "
       ),
       call. = FALSE
@@ -1023,7 +1014,7 @@ seq_tiers <- function(tiers, vars) {
   # symbol / character
   tier_label <- rlang::as_string(tier)
   if (!nzchar(tier_label)) {
-    stop("`tier` must be a number ≥ 1 or a non-empty label.", call. = FALSE)
+    stop("`tier` must be a number >= 1 or a non-empty label.", call. = FALSE)
   }
 
   row <- dplyr::filter(.kn$tiers, .data$label == tier_label)
@@ -1107,7 +1098,7 @@ seq_tiers <- function(tiers, vars) {
 
 
 
-#' @title Shift all tiers **≥** a position *up* by one
+#' @title Shift all tiers **>=** a position *up* by one
 #'
 #' @description
 #' When inserting a brand-new tier in the middle of the existing ordering
@@ -1191,22 +1182,10 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param .kn A `knowledge` object.
 #' @param status A string, either "forbidden" or "required".
-#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
 #' @param from A tidyselect specification or character vector of variable names.
 #' @param to A tidyselect specification or character vector of variable names.
 #' @keywords internal
-.add_edges <- function(.kn, status, edge_type, from, to) {
-  # Reject unknown edge types
-  if (!(edge_type %in% .allowed_edge_types)) {
-    stop(
-      sprintf(
-        "edge_type must be one of %s.",
-        paste(.allowed_edge_types, collapse = ", ")
-      ),
-      call. = FALSE
-    )
-  }
-
+.add_edges <- function(.kn, status, from, to) {
   # Resolve `from` / `to` specs into character vectors of variable names
   from_chr <- .vars_from_spec(.kn, {{ from }})
   to_chr <- .vars_from_spec(.kn, {{ to }})
@@ -1218,7 +1197,6 @@ seq_tiers <- function(tiers, vars) {
   block <- tidyr::crossing(from = from_chr, to = to_chr) |>
     dplyr::mutate(
       status    = status,
-      edge_type = edge_type,
       tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
       tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
     )
@@ -1247,11 +1225,9 @@ seq_tiers <- function(tiers, vars) {
 #' @param status A string, either "forbidden" or "required".
 #' @param from A tidyselect specification or a variable name string or symbol.
 #' @param to A tidyselect specification or a variable name string or symbol.
-#' @param edge_type A string, one of "directed", "undirected", "bidirected", "o->", "o-o"
 #' @keywords internal
 .edge_verb <- function(.kn, status,
-                       from_quo, to_quo = NULL,
-                       edge_type = "directed") {
+                       from_quo, to_quo = NULL) {
   # Check if `from_quo` is a formula
   if (rlang::quo_is_call(from_quo, "~") && is.null(to_quo)) {
     fml <- rlang::get_expr(from_quo)
@@ -1273,7 +1249,7 @@ seq_tiers <- function(tiers, vars) {
       )
     }
   }
-  .add_edges(.kn, status, edge_type, from_vars, to_vars)
+  .add_edges(.kn, status, from_vars, to_vars)
 }
 
 

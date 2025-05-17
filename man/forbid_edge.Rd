@@ -4,17 +4,13 @@
 \alias{forbid_edge}
 \title{Add a forbidden edge to a knowledge object}
 \usage{
-forbid_edge(.kn, ..., edge_type = "directed")
+forbid_edge(.kn, ...)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
 \item{...}{Either a two-sided formula (\code{A ~ C}) \emph{or} \code{from}, \code{to}.}
-
-\item{edge_type}{A string, one of "directed", "undirected", "bidirected", "o->", "o-o"}
 }
 \description{
 These edges are not allowed to be present in the final graph.
-You can specify these edges as directed, undirected, or bidirected. The default is
-directed. You can also specify the edge type as "o->" or "o-o" for PAG-type edges.
 }

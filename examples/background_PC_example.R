@@ -17,10 +17,15 @@ df <- data.frame(V1, V2, V3, V4, V5, V6)
 # create a knowledge object
 kn <- knowledge(
   tier(
-    baby ~ V1 + V2,
-    child ~ V3,
+    baby ~ V1 + V2 + V3,
     adult ~ V4,
     old ~ V5 + V6
+  ),
+  required(
+    V1 ~ V2,
+    V2 ~ V1,
+    V2 ~ V3,
+    V3 ~ V2
   )
 )
 

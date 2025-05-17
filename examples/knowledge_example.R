@@ -10,7 +10,7 @@ kn1 <-
       2 ~ V3,
       3 ~ c(V4, V5)
     ),
-    forbidden(V1 ~ V3, edge_type = "undirected"),
+    forbidden(V1 ~ V3),
     required(V1 ~ V2, V2 ~ V3)
   )
 
@@ -24,8 +24,8 @@ kn2 <-
   add_to_tier(1 ~ A + B) |>
   add_tier(2) |>
   add_to_tier(2 ~ C) |>
-  forbid_edge(A, C, edge_type = "undirected") |>
-  require_edge(A ~ B, edge_type = "directed")
+  forbid_edge(A, C) |>
+  require_edge(A ~ B)
 
 print(kn2)
 
@@ -201,15 +201,11 @@ forbid_tier_violations(kn)
 # ──────────────────────────────────────────────────────────────────────────────
 
 # tier violation
-knowledge(
-  tier(1 ~ V1 + V2, 2 ~ V3),
-  required(V3 ~ V1)
-) |> try()
-
-# this is allowed
-knowledge(
-  tier(1 ~ V1 + V2, 2 ~ V3),
-  required(V3 ~ V1, edge_type = "undirected")
+try(
+  knowledge(
+    tier(1 ~ V1 + V2, 2 ~ V3),
+    required(V3 ~ V1)
+  )
 )
 
 # require edge

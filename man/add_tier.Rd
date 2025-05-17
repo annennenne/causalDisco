@@ -13,7 +13,7 @@ add_tier(.kn, tier, before = NULL, after = NULL)
 
 \item{before, after}{Optional anchor relative to an existing tier label,
 tier index, or variable.  Once the knowledge object already
-has ≥ 1 tier, you must supply \strong{exactly one} of these.}
+has >= 1 tier, you must supply \strong{exactly one} of these.}
 }
 \value{
 Updated \code{knowledge} object.

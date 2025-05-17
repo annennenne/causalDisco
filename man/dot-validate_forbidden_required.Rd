@@ -7,7 +7,7 @@
 .validate_forbidden_required(edges_df)
 }
 \arguments{
-\item{edges_df}{A data frame with columns \code{status}, \code{edge_type}, \code{from},
+\item{edges_df}{A data frame with columns \code{status}, \code{from},
 \code{to}, \code{tier_from}, and \code{tier_to}.}
 }
 \description{

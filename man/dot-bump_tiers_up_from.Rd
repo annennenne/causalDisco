@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge.R
 \name{.bump_tiers_up_from}
 \alias{.bump_tiers_up_from}
-\title{Shift all tiers \strong{≥} a position \emph{up} by one}
+\title{Shift all tiers \strong{>=} a position \emph{up} by one}
 \usage{
 .bump_tiers_up_from(.kn, insert_idx)
 }
