@@ -13,6 +13,6 @@
 }
 \description{
 A conflict occurs when \strong{two or more different labels map to the same
-numeric tier index} after the merge (e.g. "January → 1" and "Monday → 1").
+numeric tier index} after the merge (e.g. "January -> 1" and "Monday -> 1").
 }
 \keyword{internal}

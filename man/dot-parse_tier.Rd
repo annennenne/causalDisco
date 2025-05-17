@@ -16,7 +16,6 @@ A named list with components
 \itemize{
 \item \code{idx}   \code{integer(1)} — resolved tier index (or \code{NA} if the label is new)
 \item \code{label} \code{character(1)}|\code{NULL} — the label if one was supplied
-\item \code{kn}    the (unchanged) \code{knowledge} object
 }
 }
 \description{
@@ -25,7 +24,7 @@ deterministic result:
 \itemize{
 \item \strong{Numeric literal} (\code{1}, \code{3L}): returns that number.
 \item \strong{Existing label}  (\code{Monday}): returns its mapped index.
-\item \strong{Brand-new label} (any other symbol/character) →  marks it for creation
+\item \strong{Brand-new label} (any other symbol/character) ->  marks it for creation
 by returning \code{NA} together with the textual label.
 }
 }

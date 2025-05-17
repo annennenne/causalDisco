@@ -2,55 +2,47 @@
 % Please edit documentation in R/knowledge.R
 \name{seq_tiers}
 \alias{seq_tiers}
-\title{Generate multiple tier–variable formulas in one call}
+\title{Generate a Bundle of Tier–Variable Formulas}
 \usage{
 seq_tiers(tiers, vars)
 }
 \arguments{
-\item{tiers}{\code{integer} vector of tier indices (≥ 1).}
+\item{tiers}{An integer vector of tier indices (each >= 1). These will appear as the
+left‐hand sides of the generated formulas.}
 
-\item{vars}{A \emph{tidy-select template} (unevaluated).
-Must reference the placeholder \strong{\code{i}} either as a symbol
-(\code{ends_with({i})}) \emph{or} inside a character string
-(\code{matches("X{i}$")}).}
-
-\item{prefix}{Constant string that \emph{precedes} the tier number
-(e.g. \code{"tier"} for names like \code{"tier3_X"}).}
-
-\item{suffix}{Constant string that \emph{follows} the tier number
-(e.g. \code{"_"}     for names like \code{"X_3"}).}
-
-\item{pattern}{General pattern containing the token \code{{i}} that will be
-replaced by the current tier number.  The resulting string
-must match the variable \strong{exactly}.
-
-Exactly \strong{one} of \code{prefix}, \code{suffix}, or \code{pattern} must be supplied.}
+\item{vars}{A tidyselect specification (unevaluated) that \emph{must} contain the special
+placeholder \code{i}, either as the symbol \code{i} or inside a string
+like \code{"…{i}…"}.  For each value of \code{i} in \code{tiers}, that
+placeholder will be substituted and the resulting call used as the
+right‐hand side of a formula.}
 }
 \value{
-An object of class \code{"tier_bundle"} that \code{tier()} expands
-automatically.
-
-A list of two-sided formulas (class \code{"tier_bundle"}).
+A list of two‐sided formulas, each of class \code{"tier_bundle"}.
+You can pass this list directly to \code{tier()} (which will expand it
+automatically).
 }
 \description{
-Quickly generate a list of \code{tier()} formulas when the variables that belong
-to each tier follow a simple pattern.
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{seq_tiers(1:3, vars = ends_with(\{i\}))
-## ⇒ 1 ~ ends_with("1"), 2 ~ ends_with("2"), 3 ~ ends_with("3")
-
-seq_tiers(1:4, vars = matches("X\{i\}$"))
-## ⇒ 1 ~ matches("X1$"), …, 4 ~ matches("X4$")
-}\if{html}{\out{</div>}}
-
-The placeholder \strong{\code{i}} (written exactly like that — unquoted) is replaced
-with each tier number (as a character string) everywhere it appears in the
-template.
+Quickly create a series of two‐sided formulas for use with \code{tier()},
+where each formula maps a numeric tier index to a tidyselect specification
+that contains the placeholder \code{i}.  The placeholder \code{i} is replaced
+by each element of \code{tiers} in turn, allowing you to write a single
+template rather than many nearly identical formulas.
 }
 \examples{
-tier(seq_tiers(1:3, suffix = "_{i}")) # X_1, X_2, X_3
-tier(seq_tiers(1:2, prefix = "tier")) # tier1_Y, tier2_Y
-tier(seq_tiers(c(4, 6), pattern = "Z{i}_exact")) # Z4_exact, Z6_exact
-Build repetitive tier formulas with a tidy-select template
+# Suppose your data frame has columns X_1, X_2, X_3, X_4
+# Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
+formulas <- seq_tiers(1:4, ends_with("_{i}"))
+tier(
+  # this expands into 1 ~ ends_with("_1"), 2 ~ ends_with("_2"), …
+  formulas
+)
 
+# You can also use matches() with a custom pattern
+tier(
+  seq_tiers(4:9, matches("Var{i}th$"))
+)
+
+}
+\seealso{
+\code{\link{tier}}, for turning these formulas into actual tiers.
 }

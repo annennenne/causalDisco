@@ -2,25 +2,15 @@
 % Please edit documentation in R/knowledge.R
 \name{add_to_tier}
 \alias{add_to_tier}
-\title{Add variables to a tier (with positional control)}
+\title{Add variables to an existing tier}
 \usage{
-add_to_tier(.kn, ..., before = NULL, after = NULL)
+add_to_tier(.kn, ...)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
-\item{...}{One or more two-sided formulas, where the left-hand side is the
-tier and the right-hand side is the variable(s) to assign to that tier.}
-
-\item{before}{Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come before.}
-
-\item{after}{Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come after.}
-}
-\value{
-An updated \code{knowledge} object with the specified variables assigned to the new tier.
+\item{...}{One or more two-sided formulas \code{tier ~ vars}.}
 }
 \description{
-Assign one or more variables to a tier (numeric or symbolic).  You can also
-specify that this tier should come \code{before} or \code{after} another tier (by label or index)
-or relative to existing variables (by name).
+Add variables to an existing tier
 }

@@ -65,121 +65,161 @@ knowledge <- function(...) {
 
   tier <- function(...) {
     specs <- rlang::list2(...)
-    
-    # This is a special case for numeric tiers given in the form
-    # of a vector, e.g. tier(c(1,1,2,3)) or tier(1:4)
+
+    # numeric-vector shortcut
     if (length(specs) == 1L &&
-         is.atomic(specs[[1]]) &&
-         (is.numeric(specs[[1]]) )) {
-      
-      vec  <- specs[[1]]
+      is.numeric(specs[[1]]) &&
+      is.atomic(specs[[1]])) {
+      vec <- specs[[1]]
       vars <- kn$vars$var
-      if (length(vars) == 0) {
-        stop("No variables in the knowledge object. This is needed if you want",
-        " to provide tiers with a numeric vector.", call. = FALSE)
-      }
-      if (length(vec) != length(vars)) {
-        stop(
-          sprintf(
-            "Length of tier vector, %d, must equal number of variables, %d.",
-            length(vec),
-            length(vars)
-          ),
+
+      if (!length(vars)) {
+        stop("tier(<numeric vector>) needs the data-frame columns first.",
           call. = FALSE
         )
       }
-      
-      # for each unique tier level (in order of appearance) build a 2‐sided formula
-      specs <- lapply(unique(vec), function(lvl) {
-        vars_at <- vars[vec == lvl]
-        
-        lhs_expr <- if (is.numeric(lvl)) {
-          # numeric literal: exact index
-          rlang::expr(!!lvl)
-        } else {
-          stop("Only numeric tiers are supported in this form.", .call = FALSE)
-        }
-        
-        # RHS: c("V1","V2",…)
-        rhs_expr <- rlang::expr(c(!!!rlang::syms(vars_at)))
-        
-        rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
-      })
-    } # end of special case
-    
-    if (!length(specs)) {
-      stop("tier() needs at least one two-sided formula.", .call = FALSE)
+      if (length(vec) != length(vars)) {
+        stop("Tier vector length (", length(vec),
+          ") must equal number of variables (", length(vars), ").",
+          call. = FALSE
+        )
+      }
+
+      # check for duplicates in the tier catalog
+      dup <- intersect(vec, kn$tiers$idx)
+      if (length(dup)) {
+        stop("Tier index(es) ", paste(dup, collapse = ", "),
+          " already exist.",
+          call. = FALSE
+        )
+      }
+
+      # add numeric-only rows
+      new_tiers <- tibble::tibble(
+        idx   = vec,
+        label = NA_character_
+      )
+      kn$tiers <<- dplyr::arrange(
+        dplyr::bind_rows(kn$tiers, new_tiers),
+        idx, label
+      )
+
+      # assign tiers to variables
+      kn$vars <<- dplyr::mutate(
+        kn$vars,
+        tier = vec
+      )
+
+      return(kn)
     }
 
+    if (!length(specs)) {
+      stop("tier() needs at least one two-sided formula.", call. = FALSE)
+    }
+
+    # loop over each formula
     for (fml in specs) {
+      # tier bundle created by seq_tier
       if (inherits(fml, "tier_bundle")) {
-        for (g in fml) tier(g) # recurse on each generated formula
-        next
+        tier_vec <- integer(length(kn$vars$var))
+
+        # fill the tier vector with the bundle index
+        for (g in fml) {
+          idx <- as.integer(rlang::f_lhs(g)) # 1, 2, …
+          rhs <- rlang::f_rhs(g) # ends_with("_{i}") etc.
+
+          pos <- tidyselect::eval_select(rhs, setNames(seq_len(length(kn$vars$var)), kn$vars$var))
+          if (length(pos) == 0) {
+            stop("Pattern ", deparse(rhs), " matched no variables.",
+              call. = FALSE
+            )
+          }
+
+          if (any(tier_vec[pos] != 0L)) {
+            stop("Some variables matched by two patterns: ",
+              paste(col_names[pos[tier_vec[pos] != 0L]], collapse = ", "),
+              call. = FALSE
+            )
+          }
+
+          tier_vec[pos] <- idx
+        }
+
+        # insert new indexes
+        missing_idx <- setdiff(unique(tier_vec), kn$tiers$idx)
+        if (length(missing_idx)) {
+          kn$tiers <<- dplyr::arrange(
+            dplyr::bind_rows(
+              kn$tiers,
+              tibble::tibble(idx = sort(missing_idx), label = NA_character_)
+            ),
+            idx, label
+          )
+        }
+
+        # do not assign to zero indexes
+        mask <- tier_vec > 0L
+
+        # assign
+        kn$vars$tier[mask] <<- tier_vec[mask]
+        next # bundle handled, so skip to next fml in main loop
       }
       if (!rlang::is_formula(fml, lhs = TRUE)) {
-        stop("Each tier() argument must be a two-sided formula.", .call = FALSE)
+        stop("Each tier() argument must be a two-sided formula.", call. = FALSE)
       }
 
       lhs_expr <- rlang::f_lhs(fml)
       rhs_expr <- rlang::f_rhs(fml)
 
-      # Extract formula names
       vars <- .formula_vars(kn, rhs_expr)
       if (!length(vars)) {
-        stop(
-          sprintf(
-            "Tier specification %s matched no variables.",
-            paste(deparse(fml), collapse = "")
-          ),
-          call. = FALSE
-        )
+        stop(sprintf(
+          "Tier specification %s matched no variables.",
+          paste(deparse(fml), collapse = "")
+        ), call. = FALSE)
       }
-      
-      # Abort if any of these vars already has a tier
-      already_in_a_tier <- kn$vars$tier[match(vars, kn$vars$var)]
-      if (any(!is.na(already_in_a_tier))) {
-          stop(
-              sprintf(
-                  "Tier specification %s tries to re-assign variable(s) [%s], which are already in tier %s.",
-                  paste0(deparse(fml), collapse = ""),
-                  paste(vars[!is.na(already_in_a_tier)], collapse = ", "),
-                  paste(already_in_a_tier[!is.na(already_in_a_tier)], collapse = ", ")
-                ),
-              call. = FALSE
-            )
-        }
-      
-      # Decide what lhs means
-      lhs_val <- tryCatch(
-        rlang::eval_tidy(lhs_expr, env = parent.frame()),
-        error = function(...) NULL
-      )
 
-      if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
-        # numeric tier:  keep index exactly as given
-        new_fml <- rlang::new_formula(lhs_val, rhs_expr, env = rlang::empty_env())
-        kn <<- add_to_tier(kn, new_fml) # plain call, no positioning
+      if (any(!is.na(kn$vars$tier[match(vars, kn$vars$var)]))) {
+        stop(sprintf(
+          "Tier specification %s tries to re-assign variable(s) [%s].",
+          paste(deparse(fml), collapse = ""),
+          paste(vars[!is.na(kn$vars$tier[match(vars, kn$vars$var)])],
+            collapse = ", "
+          )
+        ), call. = FALSE)
+      }
+
+      # what is on LHS?
+      tier <- .parse_tier(kn, lhs_expr)
+
+      has_idx <- !is.na(tier$idx) &&
+        any(tier$idx == kn$tiers$idx)
+
+      has_lbl <- !is.null(tier$label) &&
+        !is.na(tier$label) &&
+        any(tier$label == kn$tiers$label)
+
+      tier_exists <- has_idx || has_lbl
+
+      # tier already there -> just attach variables
+      if (tier_exists) {
+        kn <<- add_to_tier(kn, fml)
+        next
+      }
+
+      # create new tier, then attach
+      after_anchor <- if (.has_any_tier(kn)) max(kn$tiers$idx) else NULL
+
+      if (is.null(after_anchor)) {
+        kn <<- add_tier(kn, !!lhs_expr)
       } else {
-        # labelled tier: append (or position)
-        tier_label <- rlang::as_string(lhs_expr)
-
-        current_idx <- c(kn$tier_labels, kn$vars$tier)
-        current_idx <- current_idx[!is.na(current_idx)]
-        last_idx <- if (length(current_idx)) max(current_idx) else 0L
-
-        new_fml <- rlang::new_formula(lhs_expr, rhs_expr, env = rlang::empty_env())
-        
-        # Use inject to create formulas programmatically
-        kn <<- rlang::inject(
-          add_to_tier(kn, !!new_fml, after = !!last_idx)
-        )
+        kn <<- rlang::inject(add_tier(kn, !!lhs_expr, after = !!after_anchor))
       }
+
+      kn <<- add_to_tier(kn, fml)
     }
   }
 
-
-
-  # helper: edge helpers -----------------------------------------------------
   edge_helper <- function(status, ..., edge_type = "directed") {
     specs <- rlang::list2(...)
     if (!length(specs)) {
@@ -191,10 +231,10 @@ knowledge <- function(...) {
 
     for (fml in specs) {
       if (!rlang::is_formula(fml, lhs = TRUE)) {
-        stop("Arguments must be two-sided formulas.", .call = FALSE)
+        stop("Arguments must be two-sided formulas.", call. = FALSE)
       }
 
-      # resolve *expressions* on both sides
+      # resolve expressions on both sides
       from_vars <- .formula_vars(kn, rlang::f_lhs(fml))
       to_vars <- .formula_vars(kn, rlang::f_rhs(fml))
       if (!is.character(from_vars) || !length(from_vars)) {
@@ -224,11 +264,11 @@ knowledge <- function(...) {
   forbidden <- function(..., edge_type = "directed") edge_helper("forbidden", ..., edge_type = edge_type)
   required <- function(..., edge_type = "directed") edge_helper("required", ..., edge_type = edge_type)
 
-  # evaluate the call list ---------------------------------------------------
+  # evaluate the call list
   allowed <- c("tier", "forbidden", "required")
   for (expr in dots) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
-      stop("Only tier(), forbidden(), required() calls are allowed.", .call = FALSE)
+      stop("Only tier(), forbidden(), required() calls are allowed.", call. = FALSE)
     }
     eval(expr, envir = environment())
   }
@@ -267,141 +307,140 @@ add_vars <- function(.kn, vars) {
   .kn
 }
 
-#' @title Add variables to a tier (with positional control)
+#' @title Add (and position) a tier
 #'
-#' @description
-#' Assign one or more variables to a tier (numeric or symbolic).  You can also
-#' specify that this tier should come `before` or `after` another tier (by label or index)
-#' or relative to existing variables (by name).
+#' @param .kn     A `knowledge` object.
+#' @param tier    Bare symbol / character (label) **or** numeric literal.
+#' @param before,after  Optional anchor relative to an existing tier label,
+#'                tier index, or variable.  Once the knowledge object already
+#'                has ≥ 1 tier, you must supply **exactly one** of these.
 #'
-#' @param .kn A `knowledge` object.
-#' @param ... One or more two-sided formulas, where the left-hand side is the
-#' tier and the right-hand side is the variable(s) to assign to that tier.
-#' @param before Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come before.
-#' @param after  Optional character or integer vector of tier labels, tier indices, or variable names that this new tier should come after.
-#'
-#' @return An updated `knowledge` object with the specified variables assigned to the new tier.
+#' @return Updated `knowledge` object.
 #' @export
-add_to_tier <- function(.kn, ..., before = NULL, after = NULL) {
+add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   check_knowledge_obj(.kn)
 
+  tier_expr <- rlang::enexpr(tier) # keep symbols unevaluated
+  is_num <- rlang::is_integerish(tier_expr) && length(tier_expr) == 1L
+
+  # numeric tiers
+  if (is_num) {
+    idx <- as.integer(tier_expr)
+
+    if (idx < 1) {
+      stop("Numeric tier must be ≥ 1.", call. = FALSE)
+    }
+
+    # duplicate?
+    if (idx %in% .kn$tiers$idx) {
+      stop(sprintf("Tier index %d already exists.", idx), call. = FALSE)
+    }
+
+    # append numeric-only row (no bumping)
+    .kn$tiers <- dplyr::bind_rows(
+      .kn$tiers,
+      tibble::tibble(idx = idx, label = NA_character_)
+    ) |>
+      dplyr::arrange(idx, label)
+
+    return(.kn)
+  }
+
+  # labelled tier
+  label_chr <- rlang::as_string(tier_expr)
+  if (!nzchar(label_chr)) {
+    stop("`tier` must be a numeric literal or a non-empty label.",
+      call. = FALSE
+    )
+  }
+
+  # duplicate label?
+  if (label_chr %in% .kn$tiers$label) {
+    stop(sprintf("Tier label `%s` already exists.", label_chr),
+      call. = FALSE
+    )
+  }
+
+  tiers_exist <- nrow(.kn$tiers) > 0L
+  before_sup <- !missing(before)
+  after_sup <- !missing(after)
+
+  if (tiers_exist && (before_sup + after_sup != 1L)) {
+    stop("Once tiers exist, supply exactly one of `before` or `after`.",
+      call. = FALSE
+    )
+  }
+
+  # resolve anchor -> idx
+  anchor_idx <- integer(0)
+  if (before_sup) {
+    anchor_idx <- .tiers_from_spec(.kn, rlang::enexpr(before))
+  }
+  if (after_sup) {
+    anchor_idx <- .tiers_from_spec(.kn, rlang::enexpr(after))
+  }
+
+  if (tiers_exist && !length(anchor_idx)) {
+    stop("`before` / `after` did not resolve to an existing tier/variable.",
+      call. = FALSE
+    )
+  }
+
+  insert_idx <- if (!tiers_exist) 1L else if (before_sup) min(anchor_idx) else max(anchor_idx) + 1L
+
+  .kn <- .bump_tiers_up_from(.kn, insert_idx)
+
+  # register new tier
+  .kn$tiers <- dplyr::bind_rows(
+    .kn$tiers,
+    tibble::tibble(idx = insert_idx, label = label_chr)
+  ) |>
+    dplyr::arrange(idx, label)
+
+  .kn
+}
+
+#' @title Add variables to an existing tier
+#'
+#' @inheritParams add_tier
+#' @param ...  One or more two-sided formulas `tier ~ vars`.
+#'
+#' @export
+add_to_tier <- function(.kn, ...) {
+  check_knowledge_obj(.kn)
   specs <- rlang::list2(...)
   if (!length(specs)) {
-    stop(
-      "add_tier() needs at least one two-sided formula.",
-      call. = FALSE
-    )
+    abort("add_to_tier() needs at least one two-sided formula.")
   }
 
-  # Validate before/after arguments
-  if (!missing(before) && !missing(after)) {
-    stop(
-      "Specify only one of `before` or `after`.",
-      call. = FALSE
-    )
-  }
-  if (length(specs) > 1L && (!missing(before) || !missing(after))) {
-    stop(
-      "`before` / `after` can position only one tier at a time.",
-      call. = FALSE
-    )
-  }
-
-  # Resolve anchor index
-  anchor_idx <- if (!missing(before)) {
-    .tiers_from_spec(.kn, rlang::enexpr(before))
-  } else if (!missing(after)) {
-    .tiers_from_spec(.kn, rlang::enexpr(after))
-  } else {
-    integer(0)
-  }
-  
-  # Decide where to insert the new tier
-  insert_idx <- if (!length(anchor_idx)) {
-    NA_integer_
-  } else if (!missing(before)) {
-    min(anchor_idx)
-  } else {
-    max(anchor_idx) + 1L
-  }
-
-  # Walk over each formula 
-  for (k in seq_along(specs)) {
-    fml <- specs[[k]]
+  for (fml in specs) {
     if (!rlang::is_formula(fml, lhs = TRUE)) {
-      stop(
-        "Each argument must be a two-sided formula.",
-        call. = FALSE
-      )
+      abort("Each argument must be a two-sided formula.")
     }
+
     lhs <- rlang::f_lhs(fml)
     rhs <- rlang::f_rhs(fml)
+    tier <- .parse_tier(.kn, lhs)
+
+    # check if tier exists
+    tier_exists <- (!is.na(tier$idx) && tier$idx %in% .kn$tiers$idx) ||
+      (!is.null(tier$label) && tier$label %in% .kn$tiers$label)
+    if (!tier_exists) {
+      stop(sprintf(
+        "Tier `%s` does not exist. Create it first with add_tier().",
+        rlang::as_label(lhs)
+      ), call. = FALSE)
+    }
+
     vars <- .formula_vars(.kn, rhs)
     if (!length(vars)) {
-      stop(
-        sprintf(
-          "Tier specification `%s` matched no variables.",
-          rlang::expr_deparse(fml)
-        ),
-        call. = FALSE
-      )
+      abort(glue::glue("Specification `{deparse(rhs)}` matched no variables."))
     }
-    
-    lhs_val <- tryCatch(rlang::eval_tidy(lhs, env = parent.frame()),
-      error = function(...) NULL
-    )
-    # Numeric LHS
-    if (is.numeric(lhs_val) && length(lhs_val) == 1 && !is.na(lhs_val)) {
-      tier_idx <- as.integer(lhs_val)
-      tier_label <- NULL
-      if (k == 1L && !is.na(insert_idx)) {
-        cli::cli_warn("Ignoring `before/after`: numeric tier is absolute.")
-      }
-    } else {
-      # Symbolic / string LHS
-      tier_label <- rlang::as_string(lhs)
-      parsed <- .parse_tier(.kn, lhs) # resolves existing label
-      tier_idx <- parsed$idx
-      .kn <- parsed$kn
-      is_new_label <- is.na(tier_idx)
-      
-      # Check if the label is already used
-      if (!is.na(insert_idx) && !is_new_label) {
-        same_tier <- anchor_idx == tier_idx
-        if ( (!missing(before) && any(same_tier)) ||
-             (!missing(after)  && any(same_tier)) ) {
-          stop(
-            "Cannot position a tier relative to itself (before/after the same tier).",
-            call. = FALSE
-          )
-        }
-      }
-      # Decide the final index
-      if (!is.na(insert_idx) && k == 1L) {
-        # User gave before/after, so use it 
-        if (is_new_label) {
-          .kn <- .bump_tiers_up_from(.kn, insert_idx)
-          .kn$tier_labels[[tier_label]] <- insert_idx
-        } else {
-          .kn <- .bump_tiers_up_from(.kn, insert_idx)
-        }
-        tier_idx <- insert_idx
-      } else if (is_new_label) {
-        # User gave a new label, give correct index
-        current <- c(.kn$tier_labels, .kn$vars$tier)
-        current <- current[!is.na(current)]
-        tier_idx <- if (length(current)) max(current) + 1L else 1L
-        .kn <- .bump_tiers_up_from(.kn, tier_idx)
-        .kn$tier_labels[[tier_label]] <- tier_idx
-      }
-    }
-    
-    # Add variables
+
     .kn <- add_vars(.kn, vars)
-    .kn$vars$tier[match(vars, .kn$vars$var)] <- tier_idx
+    .kn$vars$tier[match(vars, .kn$vars$var)] <- tier$idx
   }
 
-  # Sort the tiers and return
   .kn$vars <- dplyr::arrange(.kn$vars, tier, var)
   .kn
 }
@@ -425,7 +464,7 @@ forbid_edge <- function(.kn, ..., edge_type = "directed") {
   } else if (length(dots) == 2) {
     .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]], edge_type)
   } else {
-    stop("forbid_edge() takes either 1 or 2 edge specifications.", .call = FALSE)
+    stop("forbid_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
   }
 }
 
@@ -444,7 +483,7 @@ require_edge <- function(.kn, ..., edge_type = "directed") {
   } else if (length(dots) == 2) {
     .edge_verb(.kn, "required", dots[[1]], dots[[2]], edge_type)
   } else {
-    stop("require_edge() takes either 1 or 2 edge specifications.", .call = FALSE)
+    stop("require_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
   }
 }
 
@@ -466,55 +505,110 @@ unfreeze <- function(.kn) {
 
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
-#' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
   cli::cat_rule("Knowledge object")
-  
+
   if (length(x$tier_labels)) {
-    ord  <- order(unname(x$tier_labels))          
+    ord <- order(unname(x$tier_labels))
     labs <- names(x$tier_labels)[ord]
-    idx  <- unname(x$tier_labels)[ord]
-    
+    idx <- unname(x$tier_labels)[ord]
+
     cli::cat_line("Tier labels:")
     cli::cat_line(paste0("  * ", labs, " -> ", idx, collapse = "\n"))
   }
-  
+
   cli::cat_line(cli::style_bold("Variables:"), nrow(x$vars))
   if (nrow(x$vars)) print(x$vars, n = Inf)
-  
+
   cli::cat_line(cli::style_bold("Edges:"), nrow(x$edges))
   if (nrow(x$edges)) print(x$edges, n = 10)
-  
+
   invisible(x)
 }
 
-# ────────────────────────────────── Merge ─────────────────────────────────────
+# ────────────────────────────── Manipulation ──────────────────────────────────
 
 #' @title Merge two `knowledge` objects
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(e1, e2) {
   stopifnot(inherits(e1, "knowledge"), inherits(e2, "knowledge"))
-  .validate_label_conflict(e1$tier_labels, e2$tier_labels)
 
-  vars <- unique(c(e1$vars$var, e2$vars$var))
-  out <- .new_knowledge(vars)
+  vars_all <- unique(c(e1$vars$var, e2$vars$var))
+  out <- .new_knowledge(vars_all)
 
-  tiers <- dplyr::bind_rows(e2$vars, e1$vars) |>
+  vtiers <- dplyr::bind_rows(e2$vars, e1$vars) |>
     dplyr::group_by(var) |>
     dplyr::slice(1) |>
     dplyr::ungroup()
-  out$vars$tier <- tiers$tier[match(out$vars$var, tiers$var)]
 
-  out$tier_labels <- c(
-    e1$tier_labels,
-    e2$tier_labels[setdiff(names(e2$tier_labels), names(e1$tier_labels))]
+  out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
+
+  tier_tbl <- dplyr::bind_rows(
+    e1$tiers,
+    e2$tiers
+  ) |>
+    dplyr::distinct(idx, label, .keep_all = TRUE) |>
+    dplyr::arrange(idx, label)
+
+  # detect: same idx -> different labels
+  same_idx_diff_labels <- tier_tbl |>
+    dplyr::filter(!is.na(label)) |>
+    dplyr::group_by(idx) |>
+    dplyr::filter(dplyr::n_distinct(label) > 1) |>
+    dplyr::pull(idx) |>
+    unique()
+
+  # detect: same label -> different idx
+  same_label_diff_idxs <- tier_tbl |>
+    dplyr::filter(!is.na(label)) |>
+    dplyr::group_by(label) |>
+    dplyr::filter(dplyr::n_distinct(idx) > 1) |>
+    dplyr::pull(label) |>
+    unique()
+
+  if (length(same_idx_diff_labels) || length(same_label_diff_idxs)) {
+    msg <- c(
+      if (length(same_idx_diff_labels)) {
+        sprintf(
+          "idx %s has conflicting labels",
+          paste(same_idx_diff_labels, collapse = ", ")
+        )
+      },
+      if (length(same_label_diff_idxs)) {
+        sprintf(
+          "label(s) %s map to different indices",
+          paste(same_label_diff_idxs, collapse = ", ")
+        )
+      }
+    )
+    stop("Cannot merge knowledge objects:\n  * ",
+      paste(msg, collapse = "\n  * "),
+      call. = FALSE
+    )
+  }
+
+  # ensure numeric-only tiers present for all idx referenced by vars
+  missing_idx <- setdiff(
+    na.omit(unique(out$vars$tier)),
+    tier_tbl$idx
   )
+  if (length(missing_idx)) {
+    tier_tbl <- dplyr::bind_rows(
+      tier_tbl,
+      tibble::tibble(idx = missing_idx, label = NA_character_)
+    )
+  }
+  # sort tiers
+  out$tiers <- dplyr::arrange(tier_tbl, idx, label)
 
+  # ensure all tiers are present in the knowledge object
   out$edges <- dplyr::distinct(dplyr::bind_rows(e1$edges, e2$edges))
   out <- .update_edge_tiers(out)
 
+  # validate
   .validate_tier_rule(out$edges)
   .validate_forbidden_required(out$edges)
+
   out
 }
 
@@ -529,7 +623,7 @@ print.knowledge <- function(x, ...) {
 #' @keywords internal
 check_knowledge_obj <- function(x) {
   if (!inherits(x, "knowledge")) {
-    stop("Input must be a knowledge instance.", .call = FALSE)
+    stop("Input must be a knowledge instance.", call. = FALSE)
   }
   TRUE
 }
@@ -621,7 +715,7 @@ as_pcalg_constraints <- function(.kn, labels) {
       i <- idx[[forb$from[k]]]
       j <- idx[[forb$to[k]]]
       if (is.na(i) || is.na(j)) {
-        stop("Forbidden edge refers to unknown variable(s).", .call = FALSE)
+        stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
       }
       # pcalg does not support directed edges
       fixedGaps[i, j] <- TRUE
@@ -636,7 +730,7 @@ as_pcalg_constraints <- function(.kn, labels) {
       i <- idx[[req$from[k]]]
       j <- idx[[req$to[k]]]
       if (is.na(i) || is.na(j)) {
-        stop("Required edge refers to unknown variable(s).", .call = FALSE)
+        stop("Required edge refers to unknown variable(s).", call. = FALSE)
       }
       # pcalg does not support directed edges
       fixedEdges[i, j] <- TRUE
@@ -649,26 +743,26 @@ as_pcalg_constraints <- function(.kn, labels) {
 
 #' @title Forbid all “uphill” edges implied by tiers
 #' @description
-#' Given a `knowledge` object with variables already assigned to tiers,  
-#' forbids every directed edge that runs from a higher-numbered tier down  
-#' into a lower-numbered tier.  
+#' Given a `knowledge` object with variables already assigned to tiers,
+#' forbids every directed edge that runs from a higher-numbered tier down
+#' into a lower-numbered tier.
 #' @param .kn A `knowledge` object.
 #' @return The same `knowledge` object with new forbidden edges added.
 #' @export
 forbid_tier_violations <- function(.kn) {
   check_knowledge_obj(.kn)
-  
+
   # Rename so we can cross without duplicate names
-  from <- .kn$vars %>% 
+  from <- .kn$vars %>%
     dplyr::rename(var_from = var, tier_from = tier)
-  to   <- .kn$vars %>% 
-    dplyr::rename(var_to   = var, tier_to   = tier)
-  
+  to <- .kn$vars %>%
+    dplyr::rename(var_to = var, tier_to = tier)
+
   # Every possible (from, to) pair
   bad <- tidyr::crossing(from, to) %>%
     # Filer tier violations
     dplyr::filter(tier_from > tier_to)
-  
+
   if (nrow(bad)) {
     .kn <- .add_edges(
       .kn,
@@ -679,6 +773,81 @@ forbid_tier_violations <- function(.kn) {
     )
   }
   .kn
+}
+
+
+#' @title Generate a Bundle of Tier–Variable Formulas
+#'
+#' @description
+#' Quickly create a series of two‐sided formulas for use with \code{tier()},
+#' where each formula maps a numeric tier index to a tidyselect specification
+#' that contains the placeholder \code{i}.  The placeholder \code{i} is replaced
+#' by each element of \code{tiers} in turn, allowing you to write a single
+#' template rather than many nearly identical formulas.
+#'
+#' @param tiers
+#'   An integer vector of tier indices (each >= 1). These will appear as the
+#'   left‐hand sides of the generated formulas.
+#'
+#' @param vars
+#'   A tidyselect specification (unevaluated) that *must* contain the special
+#'   placeholder \code{i}, either as the symbol \code{i} or inside a string
+#'   like \code{"…{i}…"}.  For each value of \code{i} in \code{tiers}, that
+#'   placeholder will be substituted and the resulting call used as the
+#'   right‐hand side of a formula.
+#'
+#' @return
+#'   A list of two‐sided formulas, each of class \code{"tier_bundle"}.
+#'   You can pass this list directly to \code{tier()} (which will expand it
+#'   automatically).
+#'
+#' @examples
+#' # Suppose your data frame has columns X_1, X_2, X_3, X_4
+#' # Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
+#' formulas <- seq_tiers(1:4, ends_with("_{i}"))
+#' tier(
+#'   # this expands into 1 ~ ends_with("_1"), 2 ~ ends_with("_2"), …
+#'   formulas
+#' )
+#'
+#' # You can also use matches() with a custom pattern
+#' tier(
+#'   seq_tiers(4:9, matches("Var{i}th$"))
+#' )
+#'
+#' @seealso
+#' \code{\link{tier}}, for turning these formulas into actual tiers.
+#'
+#' @export
+seq_tiers <- function(tiers, vars) {
+  stopifnot(is.numeric(tiers), all(tiers >= 1L))
+
+  vars_expr <- rlang::enexpr(vars)
+
+  # guard: placeholder must be present
+  if (!rlang::is_call(vars_expr) &&
+    !identical(vars_expr, quote(i)) &&
+    !grepl("{i}", deparse(vars_expr), fixed = TRUE)) {
+    stop("`vars` must contain the placeholder `i`.", call. = FALSE)
+  }
+
+  # recursively substitute `i` or "{i}" helper
+  replace_i <- function(expr, i_chr) {
+    switch(typeof(expr),
+      "language"  = as.call(lapply(as.list(expr), replace_i, i_chr)),
+      "symbol"    = if (identical(expr, quote(i))) rlang::expr(!!i_chr) else expr,
+      "character" = rlang::expr(!!gsub("{i}", i_chr, expr, fixed = TRUE)),
+      expr
+    )
+  }
+
+  # build formulas helper
+  build_formula <- function(i) {
+    rhs <- replace_i(vars_expr, as.character(i))
+    rlang::new_formula(i, rhs, env = rlang::empty_env())
+  }
+  # create the formulas
+  structure(lapply(tiers, build_formula), class = "tier_bundle")
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -699,9 +868,13 @@ forbid_tier_violations <- function(.kn) {
   structure(
     list(
       vars = tibble::tibble(var = vars, tier = NA_integer_),
+      tiers = tibble::tibble(
+        idx   = integer(),
+        label = character()
+      ),
       edges = tibble::tibble(
         status     = character(),
-        edge_type  = character(),
+        edge_type  = character(), # todo
         from       = character(),
         to         = character(),
         tier_from  = integer(),
@@ -760,7 +933,7 @@ forbid_tier_violations <- function(.kn) {
   if (nrow(clashes)) {
     stop(
       "Edge(s) appear as both forbidden and required: ",
-      paste0(clashes$from, " → ", clashes$to,
+      paste0(clashes$from, " -> ", clashes$to,
         " [", clashes$edge_type, "]",
         collapse = ", "
       ),
@@ -773,7 +946,7 @@ forbid_tier_violations <- function(.kn) {
 #' @title Validate that merging two knowledge objects introduces no tier-label conflict
 #'
 #' @description A conflict occurs when **two or more different labels map to the same
-#' numeric tier index** after the merge (e.g. "January → 1" and "Monday → 1").
+#' numeric tier index** after the merge (e.g. "January -> 1" and "Monday -> 1").
 #'
 #' @param tiers_left A named integer vector of tier labels from the left-hand side.
 #' @param tiers_right A named integer vector of tier labels from the right-hand side.
@@ -825,7 +998,7 @@ forbid_tier_violations <- function(.kn) {
 #'
 #' * __Numeric literal__ (`1`, `3L`): returns that number.
 #' * __Existing label__  (`Monday`): returns its mapped index.
-#' * __Brand-new label__ (any other symbol/character) →  marks it for creation
+#' * __Brand-new label__ (any other symbol/character) ->  marks it for creation
 #'   by returning `NA` together with the textual label.
 #'
 #' @param .kn A `knowledge` object.
@@ -834,24 +1007,31 @@ forbid_tier_violations <- function(.kn) {
 #' @return A named list with components
 #'   * `idx`   `integer(1)` — resolved tier index (or `NA` if the label is new)
 #'   * `label` `character(1)`|`NULL` — the label if one was supplied
-#'   * `kn`    the (unchanged) `knowledge` object
 #'
 #' @keywords internal
 .parse_tier <- function(.kn, tier) {
+  # numeric literal
   if (rlang::is_integerish(tier) && length(tier) == 1 && tier >= 1) {
-    return(list(idx = as.integer(tier), label = NULL, kn = .kn))
+    tier_idx <- as.integer(tier)
+    # does that index already have a label?
+    lbl <- dplyr::filter(.kn$tiers, .data$idx == tier_idx)$label
+    lbl <- if (length(lbl)) lbl else NULL
+
+    return(list(idx = tier_idx, label = lbl, kn = .kn))
   }
 
-  label <- rlang::as_string(tier)
-  if (!nzchar(label)) {
-    stop("`tier` must be a number ≥ 1 or a non-empty label.", .call = FALSE)
+  # symbol / character
+  tier_label <- rlang::as_string(tier)
+  if (!nzchar(tier_label)) {
+    stop("`tier` must be a number ≥ 1 or a non-empty label.", call. = FALSE)
   }
 
-  if (label %in% names(.kn$tier_labels)) {
-    return(list(idx = .kn$tier_labels[[label]], label = label, kn = .kn))
-  }
+  row <- dplyr::filter(.kn$tiers, .data$label == tier_label)
 
-  list(idx = NA_integer_, label = label, kn = .kn)
+  list(
+    idx   = if (nrow(row)) row$idx else NA_integer_,
+    label = tier_label
+  )
 }
 
 
@@ -878,62 +1058,53 @@ forbid_tier_violations <- function(.kn) {
     return(integer())
   }
 
-  # Extract the unevaluated expression(s)
+  # explode the expression into individual parts
   parts <- rlang::exprs(!!x)
 
-  # If the user wrote `c(A, B, 2)` split the call apart
-  if (length(parts) == 1 && rlang::is_call(parts[[1]], "c")) {
+  # unwrap a lone c(...) call
+  if (length(parts) == 1L && rlang::is_call(parts[[1]], "c")) {
     parts <- rlang::call_args(parts[[1]])
   }
 
-  # Walk over every element and turn it into a tier index
-  unlist(lapply(
-    parts,
-    # Function that resolves element to a tier index
-    function(elm) {
-      # Numeric literal
-      if (rlang::is_integerish(elm)) {
-        return(as.integer(elm))
-      }
-      # Symbol or string
-      if (rlang::is_symbol(elm) || is.character(elm)) {
-        label <- rlang::as_string(elm)
-
-        # Matches a tier label
-        if (label %in% names(.kn$tier_labels)) {
-          return(.kn$tier_labels[[label]])
-        }
-
-        # Matches a variable name
-        if (label %in% .kn$vars$var) {
-          # Look up its tier
-          t <- .kn$vars$tier[.kn$vars$var == label]
-
-          # Variable exists but has not tier assigned
-          if (is.na(t)) {
-            stop(
-              sprintf(
-                "Variable `%s` has no tier; cannot use in `before/after`.",
-                label
-              ),
-              call. = FALSE
-            )
-          }
-          return(t)
-        }
-      }
-
-      # Invalid specification, throw error
-      stop(
-        sprintf(
-          "`%s` is not a tier label, index, or variable.",
-          rlang::as_label(el)
-        ),
-        call. = FALSE
-      )
+  # map each part -> integer tier index
+  as.integer(unlist(lapply(parts, function(elm) {
+    # numeric literal
+    if (rlang::is_integerish(elm)) {
+      return(as.integer(elm))
     }
-  ))
+
+
+    # symbol / character
+    if (rlang::is_symbol(elm) || is.character(elm)) {
+      token <- rlang::as_string(elm)
+
+      # token is a tier label
+      hit <- which(!is.na(.kn$tiers$label) & .kn$tiers$label == token)
+      if (length(hit)) {
+        return(.kn$tiers$idx[hit])
+      }
+
+      # token is a variable name
+      if (token %in% .kn$vars$var) {
+        idx <- .kn$vars$tier[.kn$vars$var == token]
+        if (is.na(idx)) {
+          stop(sprintf(
+            "Variable `%s` has no tier; cannot use in `before/after`.",
+            token
+          ), call. = FALSE)
+        }
+        return(idx)
+      }
+    }
+
+    # otherwise
+    stop(sprintf(
+      "`%s` is not a tier label, index, or variable.",
+      rlang::as_label(elm)
+    ), call. = FALSE)
+  })))
 }
+
 
 
 #' @title Shift all tiers **≥** a position *up* by one
@@ -953,12 +1124,32 @@ forbid_tier_violations <- function(.kn) {
 #' @return The modified `knowledge` object with bumped indices.
 #' @keywords internal
 .bump_tiers_up_from <- function(.kn, insert_idx) {
-  .kn$vars$tier <- ifelse(!is.na(.kn$vars$tier) & .kn$vars$tier >= insert_idx,
+  # 0. is there a locked numeric tier *at* the insertion point?
+  locked_here <- with(.kn$tiers, idx == insert_idx & is.na(label))
+  if (any(locked_here)) {
+    stop(
+      sprintf(
+        "Cannot insert before numeric-only tier %d (locked).",
+        insert_idx
+      ),
+      call. = FALSE
+    )
+  }
+
+  # bump variables
+  .kn$vars$tier <- ifelse(
+    !is.na(.kn$vars$tier) & .kn$vars$tier >= insert_idx,
     .kn$vars$tier + 1L,
     .kn$vars$tier
   )
-  to_bump <- .kn$tier_labels >= insert_idx
-  .kn$tier_labels[to_bump] <- .kn$tier_labels[to_bump] + 1L
+
+  # bump only labelled tiers
+  bump_row <- .kn$tiers$idx >= insert_idx & !is.na(.kn$tiers$label)
+  .kn$tiers$idx[bump_row] <- .kn$tiers$idx[bump_row] + 1L
+  .kn$tiers <- dplyr::arrange(.kn$tiers, idx, label)
+
+  # refresh edge annotation
+  .kn <- .update_edge_tiers(.kn)
   .kn
 }
 
@@ -974,6 +1165,26 @@ forbid_tier_violations <- function(.kn) {
   )
   .kn
 }
+
+#' @title Find row in the tiers dataframe matching a given index or label
+#'
+#' @param .kn A `knowledge` object.
+#' @param idx A numeric index or `NULL`.
+#' @param label A character label or `NULL`.
+#'
+.tier_row <- function(.kn, idx = NULL, label = NULL) {
+  dplyr::filter(
+    .kn$tiers,
+    (is.null(idx) || idx == .data$idx) &
+      (is.null(label) || label == .data$label)
+  )
+}
+
+#' @title Check if knowledge object has a tier
+#'
+#' @description Used internally in `add_tier()`
+#' @keywords internal
+.has_any_tier <- function(.kn) nrow(.kn$tiers) > 0L
 
 # ───────────────────────────── Edge helpers  ──────────────────────────────────
 #' @title Add one or many edges to a knowledge object
@@ -1003,7 +1214,7 @@ forbid_tier_violations <- function(.kn) {
   # Ensure all endpoint variables exist in `.kn$vars`
   .kn <- add_vars(.kn, unique(c(from_chr, to_chr)))
 
-  # Cartesian product → one row per directed edge, then annotate
+  # Cartesian product -> one row per directed edge, then annotate
   block <- tidyr::crossing(from = from_chr, to = to_chr) |>
     dplyr::mutate(
       status    = status,
@@ -1079,7 +1290,7 @@ forbid_tier_violations <- function(.kn) {
 
   tryCatch(
     # If possible, use tidyselect to resolve the specifation to variable names
-    # (e.g. `starts_with("V")` → `c("V1", "V2", ...)`)
+    # (e.g. `starts_with("V")` -> `c("V1", "V2", ...)`)
     # This will throw an error if the spec is not valid
     names(tidyselect::eval_select(rlang::enquo(spec), lookup)),
     error = function(e) {
@@ -1110,84 +1321,6 @@ forbid_tier_violations <- function(.kn) {
   } # tidy-select succeeded
   unique(all.vars(rhs)) # fallback to plain symbols
 }
-
-#' Generate multiple tier–variable formulas in one call
-#'
-#' @param tiers     Positive integers – the tier indices to create.
-#' @param prefix    Constant string that *precedes* the tier number
-#'                  (e.g. `"tier"` for names like `"tier3_X"`).
-#' @param suffix    Constant string that *follows* the tier number
-#'                  (e.g. `"_"`     for names like `"X_3"`).
-#' @param pattern  General pattern containing the token `{i}` that will be
-#'                  replaced by the current tier number.  The resulting string
-#'                  must match the variable **exactly**.
-#'
-#' Exactly **one** of `prefix`, `suffix`, or `pattern` must be supplied.
-#'
-#' @return An object of class `"tier_bundle"` that `tier()` expands
-#'         automatically.
-#' @examples
-#' tier(seq_tiers(1:3, suffix = "_{i}")) # X_1, X_2, X_3
-#' tier(seq_tiers(1:2, prefix = "tier")) # tier1_Y, tier2_Y
-#' tier(seq_tiers(c(4, 6), pattern = "Z{i}_exact")) # Z4_exact, Z6_exact
-#' Build repetitive tier formulas with a tidy-select template
-#'
-#' @description
-#' Quickly generate a list of `tier()` formulas when the variables that belong
-#' to each tier follow a simple pattern.  
-#'
-#' ```r
-#' seq_tiers(1:3, vars = ends_with({i}))
-#' ## ⇒ 1 ~ ends_with("1"), 2 ~ ends_with("2"), 3 ~ ends_with("3")
-#'
-#' seq_tiers(1:4, vars = matches("X{i}$"))
-#' ## ⇒ 1 ~ matches("X1$"), …, 4 ~ matches("X4$")
-#' ```
-#'
-#' The placeholder **`i`** (written exactly like that — unquoted) is replaced
-#' with each tier number (as a character string) everywhere it appears in the
-#' template.
-#'
-#' @param tiers `integer` vector of tier indices (≥ 1).
-#' @param vars  A *tidy-select template* (unevaluated).  
-#'              Must reference the placeholder **`i`** either as a symbol  
-#'              (`ends_with({i})`) *or* inside a character string
-#'              (`matches("X{i}$")`).
-#'
-#' @return A list of two-sided formulas (class `"tier_bundle"`).
-#' @export
-seq_tiers <- function(tiers, vars) {
-  stopifnot(is.numeric(tiers), all(tiers >= 1L))
-  
-  vars_expr <- rlang::enexpr(vars)
-  
-  # Guard: placeholder must be present 
-  if (!rlang::is_call(vars_expr) &&
-      !identical(vars_expr, quote(i)) &&
-      !grepl("{i}", deparse(vars_expr), fixed = TRUE)) {
-    stop("`vars` must contain the placeholder `i`.", call. = FALSE)
-  }
-  
-  # Recursively substitute `i` or "{i}" helper
-  replace_i <- function(expr, i_chr) {
-    switch(typeof(expr),
-           "language"  = as.call(lapply(as.list(expr), replace_i, i_chr)),
-           "symbol"    = if (identical(expr, quote(i))) rlang::expr(!!i_chr) else expr,
-           "character" = rlang::expr(!!gsub("{i}", i_chr, expr, fixed = TRUE)),
-           expr
-    )
-  }
-  
-  # Build the formulas helper
-  build_formula <- function(i) {
-    rhs <- replace_i(vars_expr, as.character(i))
-    rlang::new_formula(i, rhs, env = rlang::empty_env())
-  }
-  # Create the formulas
-  structure(lapply(tiers, build_formula), class = "tier_bundle")
-}
-
-
 
 # ──────────────────────────────── Imports ─────────────────────────────────────
 

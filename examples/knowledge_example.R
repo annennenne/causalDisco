@@ -20,17 +20,22 @@ print(kn1)
 kn2 <-
   knowledge() |>
   add_vars(c("A", "B", "C", "D")) |>
+  add_tier(1) |>
   add_to_tier(1 ~ A + B) |>
+  add_tier(2) |>
   add_to_tier(2 ~ C) |>
   forbid_edge(A, C, edge_type = "undirected") |>
   require_edge(A ~ B, edge_type = "directed")
 
 print(kn2)
 
-kn2.5 <- knowledge() |> add_to_tier(1 ~ A + B)
-kn2.5 <- add_to_tier(kn2.5, exposure ~ E1, after = 1)
-kn2.5 <- add_to_tier(kn2.5, outcome ~ O1, after = exposure)
-kn2.5 <- add_to_tier(kn2.5, mediator ~ M1, before = outcome)
+kn2.5 <- knowledge() |>
+  add_tier(1) |>
+  add_to_tier(1 ~ A + B)
+kn2.5 <- add_tier(kn2.5, exposure, after = 1) |> add_to_tier(exposure ~ E1)
+kn2.5 <- add_tier(kn2.5, outcome, after = exposure)
+kn2.5 <- add_to_tier(kn2.5, outcome ~ O1)
+kn2.5 <- add_tier(kn2.5, mediator, before = outcome) |> add_to_tier(mediator ~ M1)
 print(kn2.5)
 
 # EXAMPLE 3 ── DSL + data-frame seeding ----------------------------------------
@@ -51,6 +56,7 @@ kn4 <-
     tier(1 ~ V5, 2 ~ V6),
     forbidden(V5 ~ V6)
   ) |>
+  add_tier(3) |>
   add_to_tier(3 ~ V7) # add third tier later
 
 print(kn4)
@@ -100,7 +106,9 @@ kn_freezed <- unfreeze(kn_freezed)
 print("kn_freezed$frozen:")
 print(kn_freezed$frozen)
 
-kn_freezed |> add_to_tier(3 ~ V4) # does not throw error
+kn_freezed <- kn_freezed |>
+  add_tier(3) |>
+  add_to_tier(3 ~ V4) # does not throw error
 print(kn_freezed)
 
 # EXAMPLE 10 ── seq_tiers ------------------------------------------------------
