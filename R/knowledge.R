@@ -73,7 +73,7 @@ knowledge <- function(...) {
       vars <- kn$vars$var
 
       if (!length(vars)) {
-        stop("tier(<numeric vector>) needs the data-frame columns first.",
+        stop("Using tier(<numeric vector>) needs the data-frame columns first.",
           call. = FALSE
         )
       }
@@ -136,7 +136,7 @@ knowledge <- function(...) {
 
           if (any(tier_vec[pos] != 0L)) {
             stop("Some variables matched by two patterns: ",
-              paste(col_names[pos[tier_vec[pos] != 0L]], collapse = ", "),
+              paste(kn$vars$var[pos[tier_vec[pos] != 0L]], collapse = ", "),
               call. = FALSE
             )
           }
@@ -145,7 +145,7 @@ knowledge <- function(...) {
         }
 
         # insert new indexes
-        missing_idx <- setdiff(unique(tier_vec), kn$tiers$idx)
+        missing_idx <- setdiff(unique(tier_vec[tier_vec > 0L]), kn$tiers$idx)
         if (length(missing_idx)) {
           kn$tiers <<- dplyr::arrange(
             dplyr::bind_rows(
@@ -174,9 +174,10 @@ knowledge <- function(...) {
       if (!length(vars)) {
         stop(sprintf(
           "Tier specification %s matched no variables.",
-          paste(deparse(fml), collapse = "")
+          deparse(fml)
         ), call. = FALSE)
       }
+      kn <<- add_vars(kn, vars)
 
       if (any(!is.na(kn$vars$tier[match(vars, kn$vars$var)]))) {
         stop(sprintf(
@@ -191,12 +192,13 @@ knowledge <- function(...) {
       # what is on LHS?
       tier <- .parse_tier(kn, lhs_expr)
 
+      # check if tier exists
       has_idx <- !is.na(tier$idx) &&
-        any(tier$idx == kn$tiers$idx)
+        tier$idx %in% kn$tiers$idx
 
       has_lbl <- !is.null(tier$label) &&
         !is.na(tier$label) &&
-        any(tier$label == kn$tiers$label)
+        tier$label %in% kn$tiers$label
 
       tier_exists <- has_idx || has_lbl
 
@@ -239,8 +241,8 @@ knowledge <- function(...) {
       if (!is.character(from_vars) || !length(from_vars)) {
         stop(
           sprintf(
-            "Edge selection `%s` matched no *from* vars.",
-            rlang::expr_deparse(fml)
+            "Edge selection `%s` matched no variables on the left-hand side of the formula.",
+            paste(deparse(fml), collapse = "")
           ),
           call. = FALSE
         )
@@ -249,8 +251,8 @@ knowledge <- function(...) {
       if (!is.character(to_vars) || !length(to_vars)) {
         stop(
           sprintf(
-            "Edge selection `%s` matched no *to* vars.",
-            rlang::expr_deparse(fml)
+            "Edge selection `%s` matched no variables on the right-hand side of the formula.",
+            paste(deparse(fml), collapse = "")
           ),
           call. = FALSE
         )
@@ -308,23 +310,52 @@ add_vars <- function(.kn, vars) {
 
 #' @title Add (and position) a tier
 #'
-#' @param .kn     A `knowledge` object.
+#' @param .kn     A knowledge object.
 #' @param tier    Bare symbol / character (label) **or** numeric literal.
 #' @param before,after  Optional anchor relative to an existing tier label,
 #'                tier index, or variable.  Once the knowledge object already
 #'                has >= 1 tier, you must supply **exactly one** of these.
 #'
-#' @return Updated `knowledge` object.
+#' @return Updated knowledge object.
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   check_knowledge_obj(.kn)
-
+  if (!missing(before) && !missing(after)) {
+    stop("Cannot supply both `before` and `after`.", call. = FALSE)
+  }
+  # initalize tier expr and evaluate it
   tier_expr <- rlang::enexpr(tier) # keep symbols unevaluated
-  is_num <- rlang::is_integerish(tier_expr) && length(tier_expr) == 1L
+  tier_val <- tryCatch(
+    rlang::eval_tidy(tier, env = parent.frame()),
+    error = function(...) NULL
+  )
+
+  # check if tiers exist
+  tiers_exist <- nrow(.kn$tiers) > 0L
+  before_sup <- !missing(before)
+  after_sup <- !missing(after)
+
+  # resolve before/after
+  before_expr <- rlang::enexpr(before)
+  before_val <- tryCatch(
+    rlang::eval_tidy(before_expr, env = parent.frame()),
+    error = function(...) NULL
+  )
+  after_expr <- rlang::enexpr(after)
+  after_val <- tryCatch(
+    rlang::eval_tidy(after_expr, env = parent.frame()),
+    error = function(...) NULL
+  )
+
+  # helper function to check if tier is numeric
+  is_num <- function(expr, val) {
+    is_num <- rlang::is_integerish(expr) && length(expr) == 1L
+    is_num <- is_num || (rlang::is_integerish(val) && length(val) == 1L)
+  }
 
   # numeric tiers
-  if (is_num) {
-    idx <- as.integer(tier_expr)
+  if (is_num(tier_expr, tier_val)) {
+    idx <- as.integer(tier_val)
 
     if (idx < 1) {
       stop("Numeric tier must be >= 1.", call. = FALSE)
@@ -332,7 +363,56 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
     # duplicate?
     if (idx %in% .kn$tiers$idx) {
-      stop(sprintf("Tier index %d already exists.", idx), call. = FALSE)
+      if (!missing(before) && !missing(after)) {
+        stop("Numeric tier index %d already exists.", idx, call. = FALSE)
+      }
+      # bump up all tiers >= idx
+      .kn <- .bump_tiers_up_from(.kn, idx)
+    } else if (before_sup || after_sup) {
+      if (before_sup + after_sup > 1L) {
+        stop("Once tiers exist, supply exactly one of `before` or `after.`",
+          call. = FALSE
+        )
+      } else if (before_sup) {
+        # bump up all tiers >= idx
+        if (is_num(before_expr, before_val)) {
+          anchor_idx <- as.integer(before_val)
+          if (anchor_idx < idx) {
+            stop("`before` must be <= `tier`.", call. = FALSE)
+          }
+        } else {
+          anchor_idx <- .tiers_from_spec(.kn, before_expr)
+        }
+        if (!anchor_idx %in% .kn$tiers$idx) {
+          stop(
+            sprintf(
+              "`before` = %d does not refer to an existing tier.",
+              anchor_idx
+            ),
+            call. = FALSE
+          )
+        }
+        .kn <- .bump_tiers_up_from(.kn, anchor_idx)
+      } else if (after_sup) {
+        if (is_num(after_expr, after_val)) {
+          anchor_idx <- as.integer(after_val)
+          if (anchor_idx > idx) {
+            stop("`after` must be >= `tier`.", call. = FALSE)
+          }
+        } else {
+          anchor_idx <- .tiers_from_spec(.kn, after_expr)
+        }
+        if (!anchor_idx %in% .kn$tiers$idx) {
+          stop(
+            sprintf(
+              "`after` = %d does not refer to an existing tier.",
+              anchor_idx
+            ),
+            call. = FALSE
+          )
+        }
+        .kn <- .bump_tiers_up_from(.kn, anchor_idx + 1L)
+      }
     }
 
     # append numeric-only row (no bumping)
@@ -348,24 +428,20 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   # labelled tier
   label_chr <- rlang::as_string(tier_expr)
   if (!nzchar(label_chr)) {
-    stop("`tier` must be a numeric literal or a non-empty label.",
+    stop("tier must be a numeric literal or a non-empty label.",
       call. = FALSE
     )
   }
 
   # duplicate label?
   if (label_chr %in% .kn$tiers$label) {
-    stop(sprintf("Tier label `%s` already exists.", label_chr),
+    stop(sprintf("Tier label %s already exists.", label_chr),
       call. = FALSE
     )
   }
 
-  tiers_exist <- nrow(.kn$tiers) > 0L
-  before_sup <- !missing(before)
-  after_sup <- !missing(after)
-
   if (tiers_exist && (before_sup + after_sup != 1L)) {
-    stop("Once tiers exist, supply exactly one of `before` or `after`.",
+    stop("Once tiers exist, supply exactly one of `before` or `after.`",
       call. = FALSE
     )
   }
@@ -384,6 +460,25 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
       call. = FALSE
     )
   }
+  if (length(anchor_idx) && !anchor_idx %in% .kn$tiers$idx) {
+    if (before_sup) {
+      stop(
+        sprintf(
+          "`before` = %d does not refer to an existing tier.",
+          anchor_idx
+        ),
+        call. = FALSE
+      )
+    } else {
+      stop(
+        sprintf(
+          "`after` = %d does not refer to an existing tier.",
+          anchor_idx
+        ),
+        call. = FALSE
+      )
+    }
+  }
 
   insert_idx <- if (!tiers_exist) 1L else if (before_sup) min(anchor_idx) else max(anchor_idx) + 1L
 
@@ -398,6 +493,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
   .kn
 }
+
 
 #' @title Add variables to an existing tier
 #'
@@ -1001,8 +1097,16 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @keywords internal
 .parse_tier <- function(.kn, tier) {
-  # numeric literal
-  if (rlang::is_integerish(tier) && length(tier) == 1 && tier >= 1) {
+  # if tier is a symbol, evaluate it in the parent frame
+  tier_val <- tryCatch(
+    rlang::eval_tidy(tier, env = parent.frame()),
+    error = function(...) NULL
+  )
+  if (!is.null(tier_val)) tier <- tier_val
+  if (rlang::is_integerish(tier) && length(tier) == 1) {
+    if (tier < 1) {
+      stop("Numeric tier must be >= 1.", call. = FALSE)
+    }
     tier_idx <- as.integer(tier)
     # does that index already have a label?
     lbl <- dplyr::filter(.kn$tiers, .data$idx == tier_idx)$label
@@ -1268,7 +1372,7 @@ seq_tiers <- function(tiers, vars) {
     # If possible, use tidyselect to resolve the specifation to variable names
     # (e.g. `starts_with("V")` -> `c("V1", "V2", ...)`)
     # This will throw an error if the spec is not valid
-    names(tidyselect::eval_select(rlang::enquo(spec), lookup)),
+    names(tidyselect::eval_select(rlang::enquo(all_of(spec)), lookup)),
     error = function(e) {
       out <- tryCatch(
         # If not, try to evaluate the expression directly
