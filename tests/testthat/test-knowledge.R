@@ -232,7 +232,7 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
       Three ~ V2
     )
   ) |>
-    add_tier(2, before = Three) |>
+    add_tier(2) |>
     add_to_tier(2 ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
@@ -686,14 +686,14 @@ test_that("add_tier() errors when either `before` or `after` is less than or lar
     knowledge() |>
       add_tier(2) |>
       add_tier(1, after = 2),
-    "`after` must be >= `tier`.",
+    "`after` must be <= `tier`.",
     fixed = TRUE
   )
   expect_error(
     knowledge() |>
       add_tier(1) |>
       add_tier(2, before = 1),
-    "`before` must be <= `tier`.",
+    "`before` must be >= `tier`.",
     fixed = TRUE
   )
 })
@@ -701,10 +701,52 @@ test_that("add_tier() errors when either `before` or `after` is less than or lar
 test_that("add_tier() errors when either `before` or `after` is given but is not in kn$tiers", {
   expect_error(
     knowledge() |>
-      add_tier(1, before = 2),
-    "`before` = 2 does not refer to an existing tier.",
+      add_tier(One, before = Two),
+    "`Two` is not a tier label, index, or variable.",
     fixed = TRUE
   )
+})
+
+test_that("add_to_tier() errors when tier input is bad", {
+  expect_error(
+    knowledge() |>
+      add_tier(NA),
+    "`tier` must be a numeric literal or a non-empty label.",
+    fixed = TRUE
+  )
+  expect_error(
+    knowledge() |>
+      add_tier(NULL),
+    "`tier` must be a numeric literal or a non-empty label.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_tier() errors when no before or after is provided", {
+  expect_error(
+    knowledge() |>
+      add_tier(1) |>
+      add_tier(Two),
+    "Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
+    fixed = TRUE
+  )
+  expect_error(
+    knowledge() |>
+      add_tier(1) |>
+      add_tier(Two, after = 1) |>
+      add_tier("Three"),
+    "Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
+    fixed = TRUE
+  )
+})
+
+test_that("", {
+  # what should happen here?
+  kn <- knowledge() |>
+    add_tier(1) |>
+    add_tier(3) |>
+    add_tier(Two, after = 1) |>
+    add_tier(Two_and_a_Half, after = Two)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────

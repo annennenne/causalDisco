@@ -378,7 +378,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
         if (is_num(before_expr, before_val)) {
           anchor_idx <- as.integer(before_val)
           if (anchor_idx < idx) {
-            stop("`before` must be <= `tier`.", call. = FALSE)
+            stop("`before` must be >= `tier`.", call. = FALSE)
           }
         } else {
           anchor_idx <- .tiers_from_spec(.kn, before_expr)
@@ -397,7 +397,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
         if (is_num(after_expr, after_val)) {
           anchor_idx <- as.integer(after_val)
           if (anchor_idx > idx) {
-            stop("`after` must be >= `tier`.", call. = FALSE)
+            stop("`after` must be <= `tier`.", call. = FALSE)
           }
         } else {
           anchor_idx <- .tiers_from_spec(.kn, after_expr)
@@ -426,12 +426,13 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   }
 
   # labelled tier
-  label_chr <- rlang::as_string(tier_expr)
-  if (!nzchar(label_chr)) {
-    stop("tier must be a numeric literal or a non-empty label.",
-      call. = FALSE
-    )
-  }
+  label_chr <- tryCatch(rlang::as_string(tier_expr),
+    error = function(...) {
+      stop("`tier` must be a numeric literal or a non-empty label.",
+        call. = FALSE
+      )
+    }
+  )
 
   # duplicate label?
   if (label_chr %in% .kn$tiers$label) {
@@ -441,7 +442,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   }
 
   if (tiers_exist && (before_sup + after_sup != 1L)) {
-    stop("Once tiers exist, supply exactly one of `before` or `after.`",
+    stop("Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
       call. = FALSE
     )
   }
@@ -1219,18 +1220,6 @@ seq_tiers <- function(tiers, vars) {
 #' @return The modified `knowledge` object with bumped indices.
 #' @keywords internal
 .bump_tiers_up_from <- function(.kn, insert_idx) {
-  # 0. is there a locked numeric tier *at* the insertion point?
-  locked_here <- with(.kn$tiers, idx == insert_idx & is.na(label))
-  if (any(locked_here)) {
-    stop(
-      sprintf(
-        "Cannot insert before numeric-only tier %d (locked).",
-        insert_idx
-      ),
-      call. = FALSE
-    )
-  }
-
   # bump variables
   .kn$vars$tier <- ifelse(
     !is.na(.kn$vars$tier) & .kn$vars$tier >= insert_idx,
