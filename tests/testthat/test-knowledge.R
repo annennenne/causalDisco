@@ -367,6 +367,95 @@ testthat::test_that("tier generation using 1:n", {
   ))
 })
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Add to tier verb
+# ──────────────────────────────────────────────────────────────────────────────
+
+testthat::test_that("add_to_tier() works as expected", {
+  kn <- knowledge() |>
+    add_tier(One) |>
+    add_to_tier(One ~ V1 + V2)
+  testthat::expect_equal(kn$tiers, tibble(
+    idx = c(1),
+    label = c("One")
+  ))
+  testthat::expect_equal(kn$vars, tibble(
+    var = c("V1", "V2"),
+    tier = c(1, 1)
+  ))
+  kn <- knowledge() |>
+    add_tier(One) |>
+    add_to_tier(1 ~ V1 + V2)
+  testthat::expect_equal(kn$tiers, tibble(
+    idx = c(1),
+    label = c("One")
+  ))
+  testthat::expect_equal(kn$vars, tibble(
+    var = c("V1", "V2"),
+    tier = c(1, 1)
+  ))
+  kn <- knowledge() |>
+    add_tier("One") |>
+    add_to_tier(1 ~ V1 + V2)
+  testthat::expect_equal(kn$tiers, tibble(
+    idx = c(1),
+    label = c("One")
+  ))
+  testthat::expect_equal(kn$vars, tibble(
+    var = c("V1", "V2"),
+    tier = c(1, 1)
+  ))
+})
+
+testthat::test_that("add_to_tier() works as expected with mini-DSL", {
+  kn <- knowledge(
+    tier(
+      One ~ V1 + V2,
+      2 ~ V3 + V4,
+      "Three" ~ V5
+    )
+  ) |>
+    add_to_tier(One ~ V6)
+  testthat::expect_equal(kn$tiers, tibble(
+    idx = c(1, 2, 3),
+    label = c("One", NA_character_, "Three")
+  ))
+  testthat::expect_equal(kn$vars, tibble(
+    var = c("V1", "V2", "V6", "V3", "V4", "V5"),
+    tier = c(1, 1, 1, 2, 2, 3)
+  ))
+})
+
+testthat::test_that("add_to_tier() errors when adding existing variable to another tier", {
+  testthat::expect_error(
+    knowledge(
+      tier(
+        One ~ V1 + V2,
+        2 ~ V3 + V4,
+        "Three" ~ V5
+      )
+    ) |>
+      add_to_tier(One ~ V3 + V4),
+    "Cannot reassign variable(s) [V3, V4] to tier 1 (with tier label `One`) using add_to_tier().
+Please remove them first with remove_vars() and try again.",
+    fixed = TRUE
+  )
+  testthat::expect_error(
+    knowledge(
+      tier(
+        One ~ V1 + V2,
+        2 ~ V3 + V4,
+        "Three" ~ V5
+      )
+    ) |>
+      add_to_tier(2 ~ V3 + V1),
+    "Cannot reassign variable(s) [V1] to tier 2 (with tier label `NA`) using add_to_tier().
+Please remove them first with remove_vars() and try again.",
+    fixed = TRUE
+  )
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Edge errors
 # ──────────────────────────────────────────────────────────────────────────────

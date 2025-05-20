@@ -532,7 +532,22 @@ add_to_tier <- function(.kn, ...) {
     if (!length(vars)) {
       abort(glue::glue("Specification `{deparse(rhs)}` matched no variables."))
     }
+    # check if vars already exists in another tier
+    mask <- !is.na(.kn$vars$tier[match(vars, .kn$vars$var)])
 
+    # remove the mask if the vars are already in the same tier
+    mask <- mask & (.kn$vars$tier[match(vars, .kn$vars$var)] != tier$idx)
+    if (any(mask)) {
+      print(mask)
+      print(vars)
+      bad_vars <- vars[mask]
+      stop(sprintf(
+        "Cannot reassign variable(s) [%s] to tier %s (with tier label `%s`) using add_to_tier().\nPlease remove them first with remove_vars() and try again.",
+        paste(bad_vars, collapse = ", "),
+        tier$idx,
+        tier$label
+      ), call. = FALSE)
+    }
     .kn <- add_vars(.kn, vars)
     .kn$vars$tier[match(vars, .kn$vars$var)] <- tier$idx
   }
