@@ -16,20 +16,18 @@ testthat::test_that("knowledge object is created correctly using mini-DSL", {
     )
   testthat::expect_equal(kn$vars, tibble(
     var = c("V1", "V2", "V3", "V4", "V5"),
-    tier = c(1, 1, 2, 3, 3)
+    tier = c("1", "1", "2", "3", "3")
   ))
-  testthat::expect_equal(kn$tier_labels, integer(0))
   testthat::expect_equal(kn$frozen, FALSE)
   testthat::expect_equal(kn$edges, tibble(
     status = c("forbidden", "required", "required"),
     from = c("V1", "V1", "V2"),
     to = c("V3", "V2", "V3"),
-    tier_from = c(1, 1, 1),
-    tier_to = c(2, 1, 2)
+    tier_from = c("1", "1", "1"),
+    tier_to = c("2", "1", "2")
   ))
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c(NA_character_, NA_character_, NA_character_)
+    label = c("1", "2", "3")
   ))
 })
 
@@ -45,7 +43,7 @@ testthat::test_that("seeding knowledge object with a df", {
   testthat::expect_equal(kn$frozen, TRUE)
   testthat::expect_equal(kn$vars, tibble(
     var = c("X1", "X2", "X3", "X4"),
-    tier = c(1, 2, 2, NA)
+    tier = c("1", "2", "2", NA_character_)
   ))
 })
 
@@ -64,7 +62,6 @@ testthat::test_that("tier generation with named tiers using character names", {
     required(V1 ~ V2, V2 ~ V3)
   )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -80,7 +77,6 @@ testthat::test_that("tier generation with named tiers using symbols/expression",
     required(V1 ~ V2, V2 ~ V3)
   )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -98,9 +94,20 @@ testthat::test_that("tier generation with named tiers using mix of integers, cha
     required(V1 ~ V2, V2 ~ V3)
   )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3, 4, 5),
-    label = c(NA_character_, "Two", NA_character_, "Four", "Five")
+    label = c("1", "Two", "3", "Four", "Five")
   ))
+})
+
+testthat::test_that("tier generation with negative numeric tiers errors", {
+  testthat::expect_error(
+    knowledge(
+      tier(
+        -1 ~ V1 + V2,
+      )
+    ),
+    "`tier` must be a single non-empty label or a non-negative numeric literal.",
+    fixed = TRUE
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -110,13 +117,12 @@ testthat::test_that("tier generation with named tiers using mix of integers, cha
 testthat::test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(1) |>
-    add_tier(2) |>
-    add_tier(3) |>
+    add_tier(2, after = 1) |>
+    add_tier(3, after = 2) |>
     add_to_tier(2 ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c(NA_character_, NA_character_, NA_character_)
+    label = c("1", "2", "3")
   ))
 })
 
@@ -128,7 +134,6 @@ testthat::test_that("tier generation using verbs only", {
     add_to_tier(Two ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -141,7 +146,6 @@ testthat::test_that("tier generation using verbs only", {
     add_to_tier(Two ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -149,13 +153,24 @@ testthat::test_that("tier generation using verbs only", {
 testthat::test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(One) |>
-    add_tier(2) |>
+    add_tier(2, after = One) |>
     add_tier(Three, after = 2) |>
-    add_to_tier(3 ~ V3)
+    add_to_tier(Three ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c("One", NA_character_, "Three")
+    label = c("One", "2", "Three")
+  ))
+})
+
+test_that("tier generation with verbs works", {
+  kn <- knowledge() |>
+    add_tier(1) |>
+    add_tier(3, after = 1) |>
+    add_tier(Two, before = 3) |>
+    add_tier(Two_and_a_Half, after = Two) |>
+    add_tier(2.75, before = 3)
+  testthat::expect_equal(kn$tiers, tibble(
+    label = c("1", "Two", "Two_and_a_Half", "2.75", "3")
   ))
 })
 
@@ -170,14 +185,14 @@ testthat::test_that("tier generation with mixing DSL and verbs", {
       2 ~ V2
     )
   ) |>
-    add_tier(3) |>
+    add_tier(3, after = 2) |>
     add_to_tier(3 ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c(NA_character_, NA_character_, NA_character_)
+    label = c("1", "2", "3")
   ))
 })
+
 testthat::test_that("tier generation with mixing DSL and verbs with symbols", {
   kn <- knowledge(
     tier(
@@ -189,10 +204,10 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols", {
     add_to_tier(Three ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c(NA_character_, NA_character_, "Three")
+    label = c("1", "2", "Three")
   ))
 })
+
 testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   kn <- knowledge(
     tier(
@@ -204,7 +219,6 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_to_tier("Two" ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -220,8 +234,7 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_to_tier(2 ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c("One", NA_character_, "Three")
+    label = c("One", "2", "Three")
   ))
 })
 
@@ -232,28 +245,11 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
       Three ~ V2
     )
   ) |>
-    add_tier(2) |>
+    add_tier(2, after = One) |>
     add_to_tier(2 ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c("One", NA_character_, "Three")
-  ))
-})
-
-testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
-  kn <- knowledge(
-    tier(
-      "One" ~ V1,
-      Three ~ V2
-    )
-  ) |>
-    add_tier(Two, after = 1) |>
-    add_to_tier(Two ~ V3)
-
-  testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c("One", "Two", "Three")
+    label = c("One", "2", "Three")
   ))
 })
 
@@ -265,10 +261,9 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     )
   ) |>
     add_tier(Two, before = Three) |>
-    add_to_tier(2 ~ V3)
+    add_to_tier(Two ~ V3)
 
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
     label = c("One", "Two", "Three")
   ))
 })
@@ -299,12 +294,11 @@ testthat::test_that("tier generation using seq_tiers", {
     required(X_1 ~ X_2)
   )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = 1:10,
-    label = rep(NA_character_, 10)
+    label = 1:10 |> as.character()
   ))
   testthat::expect_equal(kn$vars, tibble(
     var = paste0("X_", 1:10),
-    tier = 1:10
+    tier = 1:10 |> as.character()
   ))
 })
 
@@ -326,12 +320,11 @@ testthat::test_that("tier generation using seq_tiers with labels", {
     )
   )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3, 5),
-    label = c(NA_character_, NA_character_, NA_character_, NA_character_)
+    label = c("1", "2", "3", "5")
   ))
   testthat::expect_equal(kn$vars, tibble(
     var = c("X_1", "X_2", "tier3_A", "Y5_ok"),
-    tier = c(1, 2, 3, 5)
+    tier = c(1, 2, 3, 5) |> as.character()
   ))
 })
 
@@ -358,12 +351,11 @@ testthat::test_that("tier generation using 1:n", {
       )
     )
   testthat::expect_equal(kn$tiers, tibble(
-    idx = 1:10,
-    label = rep(NA_character_, 10)
+    label = 1:10 |> as.character()
   ))
   testthat::expect_equal(kn$vars, tibble(
     var = paste0("X_", 1:10),
-    tier = 1:10
+    tier = 1:10 |> as.character()
   ))
 })
 
@@ -377,34 +369,11 @@ testthat::test_that("add_to_tier() works as expected", {
     add_tier(One) |>
     add_to_tier(One ~ V1 + V2)
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1),
     label = c("One")
   ))
   testthat::expect_equal(kn$vars, tibble(
     var = c("V1", "V2"),
-    tier = c(1, 1)
-  ))
-  kn <- knowledge() |>
-    add_tier(One) |>
-    add_to_tier(1 ~ V1 + V2)
-  testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1),
-    label = c("One")
-  ))
-  testthat::expect_equal(kn$vars, tibble(
-    var = c("V1", "V2"),
-    tier = c(1, 1)
-  ))
-  kn <- knowledge() |>
-    add_tier("One") |>
-    add_to_tier(1 ~ V1 + V2)
-  testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1),
-    label = c("One")
-  ))
-  testthat::expect_equal(kn$vars, tibble(
-    var = c("V1", "V2"),
-    tier = c(1, 1)
+    tier = c("One", "One")
   ))
 })
 
@@ -418,12 +387,11 @@ testthat::test_that("add_to_tier() works as expected with mini-DSL", {
   ) |>
     add_to_tier(One ~ V6)
   testthat::expect_equal(kn$tiers, tibble(
-    idx = c(1, 2, 3),
-    label = c("One", NA_character_, "Three")
+    label = c("One", "2", "Three")
   ))
   testthat::expect_equal(kn$vars, tibble(
     var = c("V1", "V2", "V6", "V3", "V4", "V5"),
-    tier = c(1, 1, 1, 2, 2, 3)
+    tier = c("One", "One", "One", "2", "2", "Three")
   ))
 })
 
@@ -437,7 +405,7 @@ testthat::test_that("add_to_tier() errors when adding existing variable to anoth
       )
     ) |>
       add_to_tier(One ~ V3 + V4),
-    "Cannot reassign variable(s) [V3, V4] to tier 1 (with tier label `One`) using add_to_tier().
+    "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().
 Please remove them first with remove_vars() and try again.",
     fixed = TRUE
   )
@@ -450,7 +418,7 @@ Please remove them first with remove_vars() and try again.",
       )
     ) |>
       add_to_tier(2 ~ V3 + V1),
-    "Cannot reassign variable(s) [V1] to tier 2 (with tier label `NA`) using add_to_tier().
+    "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().
 Please remove them first with remove_vars() and try again.",
     fixed = TRUE
   )
@@ -549,7 +517,7 @@ testthat::test_that("tier throws error for one variable in two tiers", {
         Two ~ V1,
       )
     ),
-    "Tier specification Two ~ V1 tries to re-assign variable(s) [V1].",
+    "Tier specification Two ~ V1 tries to re-assign variable(s) [V1] to a new tier.",
     fixed = TRUE
   )
 })
@@ -610,7 +578,8 @@ test_that("tier() throws error when mispecifying tier", {
       df,
       tier(2 ~ X)
     ),
-    "Unknown variable(s): X\nThey are not present in the data frame was provided to this knowledge object.",
+    "Unknown variable(s): X
+They are not present in the data frame provided to this knowledge object.",
     fixed = TRUE
   )
   V2 <- 1
@@ -701,56 +670,6 @@ test_that("tier() errors when two seq_tiers patterns overlap", {
   )
 })
 
-test_that("tier() errors when index is less than 1", {
-  expect_error(
-    knowledge(
-      tier(
-        0 ~ V1
-      )
-    ),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-  expect_error(
-    knowledge(
-      tier(
-        -1 ~ V1
-      )
-    ),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-  expect_error(
-    knowledge(
-      tier(
-        -100 ~ V1
-      )
-    ),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-})
-
-test_that("add_tier() errors when index is less than 1", {
-  expect_error(
-    knowledge() |>
-      add_tier(0),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-  expect_error(
-    knowledge() |>
-      add_tier(-1),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-  expect_error(
-    knowledge() |>
-      add_tier(-100),
-    "Numeric tier must be >= 1.",
-    fixed = TRUE
-  )
-})
 test_that("add_tier() errors when both `before` and `after` are supplied", {
   expect_error(
     knowledge() |>
@@ -770,28 +689,11 @@ test_that("add_tier() errors when both `before` and `after` are supplied for a l
   )
 })
 
-test_that("add_tier() errors when either `before` or `after` is less than or larger than the tier, respectively", {
-  expect_error(
-    knowledge() |>
-      add_tier(2) |>
-      add_tier(1, after = 2),
-    "`after` must be <= `tier`.",
-    fixed = TRUE
-  )
-  expect_error(
-    knowledge() |>
-      add_tier(1) |>
-      add_tier(2, before = 1),
-    "`before` must be >= `tier`.",
-    fixed = TRUE
-  )
-})
-
 test_that("add_tier() errors when either `before` or `after` is given but is not in kn$tiers", {
   expect_error(
     knowledge() |>
       add_tier(One, before = Two),
-    "`Two` is not a tier label, index, or variable.",
+    "`before`/`after` cannot be used when there are no existing tiers.",
     fixed = TRUE
   )
 })
@@ -800,13 +702,13 @@ test_that("add_to_tier() errors when tier input is bad", {
   expect_error(
     knowledge() |>
       add_tier(NA),
-    "`tier` must be a numeric literal or a non-empty label.",
+    "`tier` must be a single non-empty label or a non-negative numeric literal.",
     fixed = TRUE
   )
   expect_error(
     knowledge() |>
       add_tier(NULL),
-    "`tier` must be a numeric literal or a non-empty label.",
+    "`tier` must be a single non-empty label or a non-negative numeric literal.",
     fixed = TRUE
   )
 })
@@ -827,15 +729,6 @@ test_that("add_tier() errors when no before or after is provided", {
     "Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
     fixed = TRUE
   )
-})
-
-test_that("", {
-  # what should happen here?
-  kn <- knowledge() |>
-    add_tier(1) |>
-    add_tier(3) |>
-    add_tier(Two, after = 1) |>
-    add_tier(Two_and_a_Half, after = Two)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
