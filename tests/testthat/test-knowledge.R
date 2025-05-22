@@ -730,9 +730,9 @@ test_that("add_tier() errors when no before or after is provided", {
 })
 
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # reorder_tiers()
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 # helper to avoid repetition
 tiers_tbl <- function(...) tibble::tibble(label = c(...))
@@ -779,9 +779,9 @@ test_that("reorder_tiers() errors on incomplete or duplicated permutations", {
   )
 })
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # reposition_tier()
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("reposition_tier() moves a tier before/after another", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
@@ -847,9 +847,9 @@ testthat::test_that("reposition_tier() errors when no before or after is provide
   )
 })
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # Tier violations
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("reordering respects tier-violation rules", {
   # only forbidden edge → any reorder is fine
@@ -915,9 +915,9 @@ test_that("knowledge() throws error when using another function than tier(), for
   )
 })
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # + operator
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("merge of numeric-looking tiers preserves left order", {
   kn1 <- knowledge(tier(`1` ~ V1, `3` ~ V3))
@@ -982,9 +982,9 @@ test_that("merge errors if required and forbidden edges overlap", {
   )
 })
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # add_vars()
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("add_vars adds new vars and ignores existing ones (unfrozen)", {
   kn <- knowledge()
@@ -1014,9 +1014,9 @@ test_that("add_vars validates input types", {
   expect_error(add_vars(knowledge(), X))
 })
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # forbidden and required
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 test_that("forbid_edge() and require_edge() add single edges", {
   kn <- knowledge()
   kn_f <- forbid_edge(kn, V1 ~ V2)
@@ -1132,4 +1132,58 @@ test_that("knowledge() rejects unknown top-level calls", {
     "Only tier(), forbidden(), required() calls are allowed",
     fixed = TRUE
   )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+#   forbid_tier_violations()
+# ──────────────────────────────────────────────────────────────────────────────
+test_that("forbid_tier_violations() adds exactly the uphill edges", {
+  kn <- knowledge(
+    tier(
+      1 ~ V1 + V2,
+      2 ~ V3,
+      3 ~ V4 + V5
+    )
+  )
+
+  expect_equal(nrow(kn$edges), 0) # sanity: no edges yet
+
+  kn2 <- forbid_tier_violations(kn)
+
+  edges <- dplyr::filter(kn2$edges, status == "forbidden")
+
+  # 8 total
+  expect_equal(nrow(edges), 8)
+
+  # every forbidden edge must go *downhill*
+  expect_true(all(edges$tier_from > edges$tier_to))
+
+  # spot–check one edge from each block
+  expect_true(any(edges$from == "V4" & edges$to == "V1"))
+  expect_true(any(edges$from == "V3" & edges$to == "V1"))
+})
+
+test_that("calling it again is a no-op (no duplicate edges)", {
+  kn <- knowledge(tier(1 ~ V1, 2 ~ V2))
+  kn1 <- forbid_tier_violations(kn)
+  kn2 <- forbid_tier_violations(kn1)
+
+  expect_equal(nrow(kn1$edges), nrow(kn2$edges))
+})
+
+test_that("single-tier or untiered variables add no edges", {
+  # single tier -------------------------------------------------------
+  kn_single <- knowledge(tier(1 ~ V1 + V2 + V3))
+  kn_single <- forbid_tier_violations(kn_single)
+  expect_equal(nrow(kn_single$edges), 0)
+
+  # untiered variables ------------------------------------------------
+  df <- data.frame(V1 = 1, V2 = 1, V3 = 1)
+  kn_mixed <- knowledge(df, tier(1 ~ V1 + V2)) # V3 has tier NA
+  kn_mixed <- forbid_tier_violations(kn_mixed)
+  expect_equal(nrow(kn_mixed$edges), 0) # NA tiers ignored
+})
+
+test_that("function errors on non-knowledge objects", {
+  expect_error(forbid_tier_violations(list()), "knowledge")
 })
