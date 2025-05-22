@@ -276,7 +276,6 @@ knowledge <- function(...) {
 }
 
 # ────────────────────────────────── Verbs ─────────────────────────────────────
-
 #' @title Add variables to `knowledge` object
 #'
 #' @description Adds variables to the `knowledge` object. If the object is
@@ -543,7 +542,6 @@ require_edge <- function(.kn, ...) {
   .kn
 }
 
-
 #' @title Unfreeze a `knowledge` object.
 #'
 #' @description This allows you to add new variables to the `knowledge` object,
@@ -559,7 +557,6 @@ unfreeze <- function(.kn) {
 }
 
 # ────────────────────────────────── Print ─────────────────────────────────────
-
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
@@ -584,7 +581,6 @@ print.knowledge <- function(x, ...) {
 }
 
 # ────────────────────────────── Manipulation ──────────────────────────────────
-
 #' @title Merge two `knowledge` objects
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(kn1, kn2) {
@@ -694,7 +690,6 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
   .kn
 }
 
-
 #' @title Move one tier before / after another
 #'
 #' @inheritParams reorder_tiers
@@ -758,7 +753,6 @@ reposition_tier <- function(.kn, tier, before = NULL, after = NULL, by_index = F
 }
 
 # ────────────────────────────────── Check ─────────────────────────────────────
-
 #' @title Verify that an object is a knowledge
 #'
 #' @description Check that the object is a `knowledge` object. Mostly
@@ -913,28 +907,29 @@ as_pcalg_constraints <- function(.kn, labels, directed_as_undirected = FALSE) {
 forbid_tier_violations <- function(.kn) {
   check_knowledge_obj(.kn)
 
-  # Rename so we can cross without duplicate names
+  # rename so we can cross without duplicate names
   from <- .kn$vars %>%
     dplyr::rename(var_from = var, tier_from = tier)
   to <- .kn$vars %>%
     dplyr::rename(var_to = var, tier_to = tier)
 
-  # Every possible (from, to) pair
+  # every possible (from, to) pair
   bad <- tidyr::crossing(from, to) %>%
-    # Filer tier violations
+    # filter tier violations
     dplyr::filter(tier_from > tier_to)
 
   if (nrow(bad)) {
     .kn <- .add_edges(
       .kn,
-      status    = "forbidden",
-      from      = bad$var_from,
-      to        = bad$var_to
+      status = "forbidden",
+      from = bad$var_from,
+      to = bad$var_to,
+      # remove self-loops as these are not technically tier violations
+      remove_self_loops = TRUE
     )
   }
   .kn
 }
-
 
 #' @title Generate a Bundle of Tier–Variable Formulas
 #'
@@ -1042,7 +1037,6 @@ seq_tiers <- function(tiers, vars) {
   )
 }
 
-
 # ─────────────────────────── Validation helpers  ──────────────────────────────
 #' @title Validate that no edge runs from higher tier to lower tier
 #'
@@ -1115,136 +1109,6 @@ seq_tiers <- function(tiers, vars) {
   invisible(TRUE)
 }
 
-#' @title Validate that merging two knowledge objects introduces no tier-label conflict
-#'
-#' @description A conflict occurs when **two or more different labels map to the same
-#' numeric tier index** after the merge (e.g. "January -> 1" and "Monday -> 1").
-#'
-#' @param tiers_left A named integer vector of tier labels from the left-hand side.
-#' @param tiers_right A named integer vector of tier labels from the right-hand side.
-#' @keywords internal
-.validate_label_conflict <- function(tiers_left, tiers_right) {
-  merged <- c(tiers_left, tiers_right)
-
-  # If no labels are present, or if all labels are unique, return TRUE
-  if (length(merged) < 2L) {
-    return(invisible(TRUE))
-  }
-
-  # Check for conflicts: split by numeric tier and filter for >1 unique label
-  conflicts <- Filter(
-    function(label) length(unique(label)) > 1,
-    split(names(merged), merged) # labels grouped by numeric tier
-  )
-  # Print conflict message if any exist
-  if (length(conflicts)) {
-    lines <- mapply(
-      function(labels, tier_idx) {
-        sprintf(
-          "tier %s: %s",
-          tier_idx,
-          paste(unique(labels), collapse = ", ")
-        )
-      },
-      conflicts,
-      names(conflicts),
-      SIMPLIFY = TRUE,
-      USE.NAMES = FALSE
-    )
-
-    stop(
-      "Conflicting tier labels detected:\n",
-      paste0("  * ", lines, collapse = "\n"),
-      call. = FALSE
-    )
-  }
-}
-
-# ───────────────────────────── Tier helpers  ──────────────────────────────────
-
-#' Resolve a tier specification to an index or (new) label
-#'
-#' @description
-#' Turns the user-supplied `tier` argument of **`add_to_tier()`** into a
-#'   deterministic result:
-#'
-#' * __Numeric literal__ (`1`, `3L`): returns that number.
-#' * __Existing label__  (`Monday`): returns its mapped index.
-#' * __Brand-new label__ (any other symbol/character) ->  marks it for creation
-#'   by returning `NA` together with the textual label.
-#'
-#' @param .kn A `knowledge` object.
-#' @param tier A symbol, character string, or single positive integer.
-#'
-#' @return A named list with components
-#'   * `idx`   `integer(1)` — resolved tier index (or `NA` if the label is new)
-#'   * `label` `character(1)`|`NULL` — the label if one was supplied
-#'
-#' @keywords internal
-.parse_tier <- function(.kn, tier) {
-  label <- as.character(tier)
-
-  if (!nzchar(label)) {
-    stop("`tier` must be a non-empty label.", call. = FALSE)
-  }
-
-  list(
-    idx   = match(label, .kn$tiers$label), # NA if new
-    label = label
-  )
-}
-
-
-#' @title Translate a *before/after* position specifcation into tier indices
-#'
-#' @description
-#' Helper for **`add_to_tier()`** that converts the unevaluated expression given
-#'   to `before =` / `after =` into a vector of tier indices:
-#'
-#' * Single symbol or string: tier label or variable name
-#' * Numeric literal: numeric tier index
-#' * `c(...)` mix (any of the above): flattened, combined result
-#'
-#' Errors if a referenced variable has no tier or if an element cannot be
-#'   matched to either a tier label, tier index, or variable.
-#'
-#' @param .kn A `knowledge` object.
-#' @param x Unevaluated expression captured from the user (e.g. `quote(c(A,2))`).
-#'
-#' @return An integer vector of tier indices (possibly empty).
-#' @keywords internal
-.tiers_from_spec <- function(.kn, x) {
-  if (rlang::is_null(x)) {
-    return(character())
-  }
-
-  parts <- rlang::exprs(!!x)
-  if (length(parts) == 1L && rlang::is_call(parts[[1]], "c")) {
-    parts <- rlang::call_args(parts[[1]])
-  }
-
-  vapply(parts, function(elm) {
-    token <- as.character(elm)
-    if (token %in% .kn$tiers$label) {
-      return(token)
-    }
-    if (token %in% .kn$vars$var) {
-      lbl <- .kn$vars$tier[.kn$vars$var == token]
-      if (is.na(lbl)) {
-        stop(sprintf("Variable `%s` has no tier.", token), call. = FALSE)
-      }
-      return(lbl)
-    }
-    stop(sprintf("`%s` is not a tier label or variable.", token), call. = FALSE)
-  }, character(1))
-}
-
-#' @title Check if knowledge object has a tier
-#'
-#' @description Used internally in `add_tier()`
-#' @keywords internal
-.has_any_tier <- function(.kn) nrow(.kn$tiers) > 0L
-
 # ───────────────────────────── Edge helpers  ──────────────────────────────────
 #' @title Add one or many edges to a knowledge object
 #'
@@ -1252,16 +1116,19 @@ seq_tiers <- function(tiers, vars) {
 #' @param status A string, either "forbidden" or "required".
 #' @param from A tidyselect specification or character vector of variable names.
 #' @param to A tidyselect specification or character vector of variable names.
+#' @param remove_self_loops Logical. If `TRUE`, self-loops are removed.
+#' Defaults to `FALSE`.
 #' @keywords internal
-.add_edges <- function(.kn, status, from, to) {
-  # Resolve `from` / `to` specs into character vectors of variable names
+.add_edges <- function(.kn, status, from, to, remove_self_loops = FALSE) {
+  # resolve `from` / `to` specs into character vectors of variable names
   from_chr <- .vars_from_spec(.kn, {{ from }})
   to_chr <- .vars_from_spec(.kn, {{ to }})
 
-  # Ensure all endpoint variables exist in `.kn$vars`
+  # ensure all endpoint variables exist in `.kn$vars`
   .kn <- add_vars(.kn, unique(c(from_chr, to_chr)))
 
-  # Cartesian product -> one row per directed edge, then annotate
+  # cartesian product
+  # one row per directed edge, then annotate
   block <- tidyr::crossing(from = from_chr, to = to_chr) |>
     dplyr::mutate(
       status    = status,
@@ -1275,15 +1142,19 @@ seq_tiers <- function(tiers, vars) {
   # stop if any new edge violates the forbidden/required rule
   .validate_forbidden_required(block)
 
-  # Merge into edge table, dropping duplicates, and return updated object
+  # merge into edge table, dropping duplicates, and return updated object
   .kn$edges <- dplyr::distinct(dplyr::bind_rows(.kn$edges, block))
 
-  # Validate again for safety
+  if (remove_self_loops) {
+    .kn$edges <- dplyr::filter(.kn$edges, from != to)
+  }
+
+  # validate again for safety
   .validate_forbidden_required(.kn$edges)
   .kn
 }
 
-#' Handle forbid_edge() / require_edge() calls
+#' @title Handle forbid_edge() / require_edge() calls
 #'
 #' @description
 #' Internal helper that turns each **two-sided formula** supplied by
@@ -1317,8 +1188,6 @@ seq_tiers <- function(tiers, vars) {
   .kn <- .add_edges(.kn, status, from_vars, to_vars)
   .kn
 }
-
-
 
 # ───────────────────────────── Misc helpers  ──────────────────────────────────
 #' @title Resolve a tidy-select or character spec to character names
@@ -1381,8 +1250,6 @@ seq_tiers <- function(tiers, vars) {
   character(0)
 }
 
-
-
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'
 #' @param .kn A `knowledge` object.
@@ -1397,7 +1264,6 @@ seq_tiers <- function(tiers, vars) {
 }
 
 # ──────────────────────────────── Imports ─────────────────────────────────────
-
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows distinct group_by slice ungroup filter mutate pull
 #' @importFrom tidyselect eval_select everything starts_with ends_with
