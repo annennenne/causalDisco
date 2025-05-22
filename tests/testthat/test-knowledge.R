@@ -405,8 +405,7 @@ testthat::test_that("add_to_tier() errors when adding existing variable to anoth
       )
     ) |>
       add_to_tier(One ~ V3 + V4),
-    "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().
-Please remove them first with remove_vars() and try again.",
+    "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().",
     fixed = TRUE
   )
   testthat::expect_error(
@@ -418,8 +417,7 @@ Please remove them first with remove_vars() and try again.",
       )
     ) |>
       add_to_tier(2 ~ V3 + V1),
-    "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().
-Please remove them first with remove_vars() and try again.",
+    "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().",
     fixed = TRUE
   )
 })
@@ -731,6 +729,169 @@ test_that("add_tier() errors when no before or after is provided", {
   )
 })
 
+
+# ────────────────────────────────────────────────────────────────────────────
+# reorder_tiers()
+# ────────────────────────────────────────────────────────────────────────────
+
+# helper to avoid repetition
+tiers_tbl <- function(...) tibble::tibble(label = c(...))
+
+test_that("reorder_tiers() works with complete permutations", {
+  kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
+
+  # by label, character
+  expect_equal(
+    reorder_tiers(kn, c("One", "Three", "Two"))$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+
+  # by label, bare symbols
+  expect_equal(
+    reorder_tiers(kn, c(One, Three, Two))$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+
+  # by index
+  expect_equal(
+    reorder_tiers(kn, c(1, 3, 2), by_index = TRUE)$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+})
+
+test_that("reorder_tiers() errors on incomplete or duplicated permutations", {
+  kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
+
+  expect_error(
+    reorder_tiers(kn, c("One", "Two")),
+    "`order` must list every existing tier exactly once",
+    fixed = TRUE
+  )
+  expect_error(
+    reorder_tiers(kn, c("One", "One", "Two")),
+    "`order` must list every existing tier exactly once",
+    fixed = TRUE
+  )
+  expect_error(
+    reorder_tiers(kn, c(1, 1, 2), by_index = TRUE),
+    "`order` must be a permutation of 1:3 when `by_index = TRUE`.",
+    fixed = TRUE
+  )
+})
+
+# ────────────────────────────────────────────────────────────────────────────
+# reposition_tier()
+# ────────────────────────────────────────────────────────────────────────────
+
+test_that("reposition_tier() moves a tier before/after another", {
+  kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
+
+  expect_equal(
+    reposition_tier(kn, Three, before = Two)$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+  expect_equal(
+    reposition_tier(kn, "Three", before = "Two")$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+  expect_equal(
+    reposition_tier(kn, Three, after = One)$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+  expect_equal(
+    reposition_tier(kn, "Three", after = "One")$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+
+  # by index
+  expect_equal(
+    reposition_tier(kn, 3, before = 2, by_index = TRUE)$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+  expect_equal(
+    reposition_tier(kn, 3, after = 1, by_index = TRUE)$tiers,
+    tiers_tbl("One", "Three", "Two")
+  )
+})
+
+test_that("reposition_tier() validates inputs", {
+  kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
+
+  # both before and after supplied
+  expect_error(
+    reposition_tier(kn, Three, before = One, after = Two),
+    "exactly one of",
+    fixed = TRUE
+  )
+
+  # unknown tier
+  expect_error(
+    reposition_tier(kn, Four, before = One),
+    "does not exist",
+    fixed = TRUE
+  )
+
+  # unknown anchor
+  expect_error(
+    reposition_tier(kn, Three, before = Four),
+    "does not exist",
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("reposition_tier() errors when no before or after is provided", {
+  expect_error(
+    reposition_tier(kn, One),
+    "Supply exactly one of `before` or `after`.",
+    fixed = TRUE
+  )
+})
+
+# ────────────────────────────────────────────────────────────────────────────
+# Tier violations
+# ────────────────────────────────────────────────────────────────────────────
+
+test_that("reordering respects tier-violation rules", {
+  # only forbidden edge → any reorder is fine
+  kn <- knowledge(
+    tier(One ~ V1, Two ~ V2, Three ~ V3),
+    forbidden(V2 ~ V3)
+  )
+  expect_silent(reorder_tiers(kn, c("Three", "One", "Two")))
+  expect_silent(reposition_tier(kn, Three, before = One))
+
+  # required edge → illegal uphill move must error
+  kn2 <- knowledge(
+    tier(One ~ V1, Two ~ V2, Three ~ V3),
+    required(V2 ~ V3) # V2 must stay *before* V1
+  )
+
+  expect_error(reposition_tier(kn2, Three, after = One),
+    "Edge(s) violate tier ordering: V2 --> V3",
+    fixed = TRUE
+  )
+
+  expect_error(
+    reorder_tiers(kn2, c("One", "Three", "Two")),
+    "Edge(s) violate tier ordering: V2 --> V3",
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("adding tier after required edge is provided will trigger tier violation error", {
+  expect_error(
+    knowledge(
+      required(V2 ~ V1)
+    ) |>
+      add_tier(1) |>
+      add_tier(2, after = 1) |>
+      add_to_tier(2 ~ V2) |>
+      add_to_tier(1 ~ V1),
+    "Edge(s) violate tier ordering: V2 --> V1",
+    fixed = TRUE
+  )
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Misc errors
 # ──────────────────────────────────────────────────────────────────────────────
@@ -751,5 +912,180 @@ test_that("knowledge() throws error when using another function than tier(), for
     ),
     "Only tier(), forbidden(), required() calls are allowed.",
     fixed = TRUE
+  )
+})
+
+# ────────────────────────────────────────────────────────────────────────────
+# + operator
+# ────────────────────────────────────────────────────────────────────────────
+
+test_that("merge of numeric-looking tiers preserves left order", {
+  kn1 <- knowledge(tier(`1` ~ V1, `3` ~ V3))
+  kn2 <- knowledge(tier(`1` ~ V4, `2` ~ V2, `3` ~ V5))
+
+  kn12 <- kn1 + kn2
+
+  expect_equal(
+    kn12$tiers,
+    tiers_tbl("1", "3", "2") # order: left first, new labels appended
+  )
+
+  ## duplicated variable: e1 wins because it’s listed first
+  kn1a <- knowledge(tier(`1` ~ V1))
+  kn2a <- knowledge(tier(`1` ~ V1_new))
+  expect_equal(
+    (kn1a + kn2a)$vars$var[1],
+    "V1" # takes first definition from kn1a
+  )
+})
+
+test_that("merge of arbitrary labels concatenates e1 order then new from e2", {
+  kn1 <- knowledge(tier(A ~ V1, AA ~ V3))
+  kn2 <- knowledge(tier(A ~ V4, B ~ V2))
+
+  kn12 <- kn1 + kn2
+
+  expect_equal(
+    kn12$tiers,
+    tiers_tbl("A", "AA", "B") # “B” appended after all of kn1’s labels
+  )
+})
+
+test_that("merge errors if resulting tiers violate required-edge order", {
+  kn_left <- knowledge(tier(One ~ V1))
+  kn_right <- knowledge(
+    tier(Two ~ V2),
+    required(V2 ~ V1)
+  )
+
+  expect_error(
+    kn_left + kn_right,
+    "Edge(s) violate tier ordering",
+    fixed = TRUE
+  )
+})
+
+test_that("merge errors if required and forbidden edges overlap", {
+  kn1 <- knowledge(
+    forbidden(V1 ~ V2),
+    forbidden(V2 ~ V3)
+  )
+  kn2 <- knowledge(
+    required(V1 ~ V2),
+    required(V2 ~ V3)
+  )
+
+  expect_error(
+    kn1 + kn2,
+    "Edge(s) appear as both forbidden and required: V1 --> V2, V2 --> V3",
+    fixed = TRUE
+  )
+})
+
+# ────────────────────────────────────────────────────────────────────────────
+# add_vars()
+# ────────────────────────────────────────────────────────────────────────────
+
+test_that("add_vars adds new vars and ignores existing ones (unfrozen)", {
+  kn <- knowledge()
+  kn <- add_vars(kn, c("A", "B"))
+  expect_equal(
+    kn$vars,
+    tibble(var = c("A", "B"), tier = NA_character_)
+  )
+
+  kn2 <- add_vars(kn, c("A", "B")) # duplicates supplied again
+  expect_equal(nrow(kn2$vars), 2L)
+})
+
+test_that("add_vars respects frozen knowledge objects", {
+  kn_frozen <- knowledge(data.frame(A = 1, B = 2, check.names = FALSE))
+
+  expect_silent(add_vars(kn_frozen, c("A"))) # existing var is OK
+  expect_error(
+    add_vars(kn_frozen, c("A", "C")), # new var should fail
+    "Unknown variable\\(s\\): C",
+    fixed = FALSE
+  )
+})
+
+test_that("add_vars validates input types", {
+  expect_error(add_vars("not_kn", c("X")), "knowledge")
+  expect_error(add_vars(knowledge(), X))
+})
+
+# ────────────────────────────────────────────────────────────────────────────
+# forbidden and required
+# ────────────────────────────────────────────────────────────────────────────
+
+test_that("forbid_edge() and require_edge() add edges correctly", {
+  kn <- knowledge()
+
+  kn1 <- forbid_edge(kn, V1 ~ V2)
+  expect_equal(kn1$edges$status, "forbidden")
+  expect_equal(kn1$edges$from, "V1")
+  expect_equal(kn1$edges$to, "V2")
+
+  kn2 <- require_edge(kn, V1, V2)
+  expect_equal(kn2$edges$status, "required")
+  expect_equal(kn2$edges$from, "V1")
+  expect_equal(kn2$edges$to, "V2")
+})
+
+test_that("forbid_edge() and require_edge() validate argument count", {
+  kn <- knowledge()
+
+  expect_error(forbid_edge(kn), "takes either 1 or 2")
+  expect_error(forbid_edge(kn, V1), "need either a two-sided formula")
+  expect_error(require_edge(kn, V1, V2, V3), "takes either 1 or 2")
+})
+
+test_that("forbid_edge() and require_edge() validate variable selection", {
+  kn <- knowledge()
+  expect_error(
+    forbid_edge(kn, tidyselect::starts_with("Z"), V1),
+    "matched no variables",
+    fixed = TRUE
+  )
+  expect_error(
+    require_edge(kn, tidyselect::starts_with("Z") ~ V1),
+    "matched no variables on the left-hand side",
+    fixed = TRUE
+  )
+})
+
+test_that("required() and forbidden() inside knowledge() create edges", {
+  kn <- knowledge(
+    tier(A ~ V1, B ~ V2),
+    forbidden(V1 ~ V2),
+    required(V1 ~ V1) # self-edge just to have both kinds
+  )
+  expect_equal(sort(kn$edges$status), c("forbidden", "required"))
+})
+
+test_that("knowledge() errors on forbidden + required clash", {
+  expect_error(
+    knowledge(
+      forbidden(V1 ~ V2),
+      required(V1 ~ V2)
+    ),
+    "Edge\\(s\\) appear as both forbidden and required",
+    fixed = FALSE
+  )
+})
+
+test_that("knowledge() errors when required edges are bidirectional", {
+  expect_error(
+    knowledge(required(V1 ~ V2, V2 ~ V1)),
+    "Edge\\(s\\) required in both directions",
+    fixed = FALSE
+  )
+})
+
+test_that("knowledge() rejects unknown top-level calls", {
+  expect_error(
+    knowledge(foo(V1)),
+    "Only tier\\(\\), forbidden\\(\\), required\\(\\) calls are allowed",
+    fixed = FALSE
   )
 })

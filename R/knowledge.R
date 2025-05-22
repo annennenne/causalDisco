@@ -362,7 +362,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
   tiers_exist <- nrow(.kn$tiers) > 0L
 
-  # ── Case 1: no tiers yet ────────────────────────────────────────────────────
+  # no tiers yet
   if (!tiers_exist) {
     if (before_sup || after_sup) {
       stop(
@@ -374,7 +374,8 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
     return(.kn)
   }
 
-  # ── Case 2: tiers exist ─────────────────────────────────────────────────────
+  # tiers exist
+
   # must supply exactly one of before/after
   if ((before_sup + after_sup) != 1L) {
     stop(
@@ -428,12 +429,12 @@ add_to_tier <- function(.kn, ...) {
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
-    abort("add_to_tier() needs at least one two-sided formula.")
+    stop("add_to_tier() needs at least one two-sided formula.")
   }
 
   for (fml in specs) {
     if (!rlang::is_formula(fml, lhs = TRUE)) {
-      abort("Each argument must be a two-sided formula.")
+      stop("Each argument must be a two-sided formula.")
     }
 
     lhs_expr <- rlang::f_lhs(fml)
@@ -454,7 +455,7 @@ add_to_tier <- function(.kn, ...) {
     # resolve variables on the RHS
     vars <- .formula_vars(.kn, rhs_expr)
     if (!length(vars)) {
-      abort(glue::glue("Specification `{deparse(rhs_expr)}` matched no variables."))
+      stop(glue::glue("Specification `{deparse(rhs_expr)}` matched no variables."))
     }
 
     # detect variables already assigned to a different tier
@@ -467,7 +468,6 @@ add_to_tier <- function(.kn, ...) {
           "Cannot reassign variable(s) [%s] to tier `%s` using add_to_tier().\n",
           paste(bad, collapse = ", "), tier_label
         ),
-        "Please remove them first with remove_vars() and try again.",
         call. = FALSE
       )
     }
@@ -475,6 +475,18 @@ add_to_tier <- function(.kn, ...) {
     # register variables and attach the tier label
     .kn <- add_vars(.kn, vars)
     .kn$vars$tier[match(vars, .kn$vars$var)] <- tier_label
+  }
+
+  # update tier_from and tier_to in edges
+  if (nrow(.kn$edges)) {
+    idx_from <- match(.kn$edges$from, .kn$vars$var)
+    idx_to <- match(.kn$edges$to, .kn$vars$var)
+
+    .kn$edges$tier_from <- .kn$vars$tier[idx_from]
+    .kn$edges$tier_to <- .kn$vars$tier[idx_to]
+
+    # check if we violate tier order
+    .validate_tier_rule(.kn$edges, .kn$tiers)
   }
 
   # tidy variable table: order by tier rank, then name
@@ -506,6 +518,8 @@ forbid_edge <- function(.kn, ...) {
 #' @title Add a forbidden edge to a knowledge object
 #'
 #' @description These edges are not allowed to be present in the final graph.
+#' Required edges can only be in one direction. That is, you cannot both require
+#' V1 --> V2 and V2 --> V1.
 #'
 #' @inheritParams forbid_edge
 #' @export
@@ -563,86 +577,174 @@ print.knowledge <- function(x, ...) {
 
 #' @title Merge two `knowledge` objects
 #' @exportS3Method "+" knowledge
-`+.knowledge` <- function(e1, e2) {
-  stopifnot(inherits(e1, "knowledge"), inherits(e2, "knowledge"))
+`+.knowledge` <- function(kn1, kn2) {
+  stopifnot(inherits(kn1, "knowledge"), inherits(kn2, "knowledge"))
 
-  vars_all <- unique(c(e1$vars$var, e2$vars$var))
+  # combine
+  vars_all <- unique(c(kn1$vars$var, kn2$vars$var))
   out <- .new_knowledge(vars_all)
 
-  vtiers <- dplyr::bind_rows(e2$vars, e1$vars) |>
+  # var tiers
+  vtiers <- dplyr::bind_rows(kn1$vars, kn2$vars) |>
     dplyr::group_by(var) |>
-    dplyr::slice(1) |>
+    dplyr::slice(1L) |>
     dplyr::ungroup()
 
+  # merge vars
   out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
 
-  tier_tbl <- dplyr::bind_rows(
-    e1$tiers,
-    e2$tiers
-  ) |>
-    dplyr::distinct(idx, label, .keep_all = TRUE) |>
-    dplyr::arrange(idx, label)
+  # merge tier labels, preserving kn1 order then any new from kn2
+  all_labels <- unique(c(kn1$tiers$label, kn2$tiers$label))
+  out$tiers <- tibble::tibble(label = all_labels)
 
-  # detect: same idx -> different labels
-  same_idx_diff_labels <- tier_tbl |>
-    dplyr::filter(!is.na(label)) |>
-    dplyr::group_by(idx) |>
-    dplyr::filter(dplyr::n_distinct(label) > 1) |>
-    dplyr::pull(idx) |>
-    unique()
-
-  # detect: same label -> different idx
-  same_label_diff_idxs <- tier_tbl |>
-    dplyr::filter(!is.na(label)) |>
-    dplyr::group_by(label) |>
-    dplyr::filter(dplyr::n_distinct(idx) > 1) |>
-    dplyr::pull(label) |>
-    unique()
-
-  if (length(same_idx_diff_labels) || length(same_label_diff_idxs)) {
-    msg <- c(
-      if (length(same_idx_diff_labels)) {
-        sprintf(
-          "idx %s has conflicting labels",
-          paste(same_idx_diff_labels, collapse = ", ")
-        )
-      },
-      if (length(same_label_diff_idxs)) {
-        sprintf(
-          "label(s) %s map to different indices",
-          paste(same_label_diff_idxs, collapse = ", ")
-        )
-      }
+  # merge edges (status, from, to, tier_from, tier_to are all character)
+  out$edges <- dplyr::distinct(dplyr::bind_rows(kn1$edges, kn2$edges)) |>
+    dplyr::mutate(
+      tier_from = out$vars$tier[match(from, out$vars$var)],
+      tier_to   = out$vars$tier[match(to, out$vars$var)]
     )
-    stop("Cannot merge knowledge objects:\n  * ",
-      paste(msg, collapse = "\n  * "),
+
+  # validate
+  .validate_forbidden_required(out$edges)
+  .validate_tier_rule(out$edges, out$tiers)
+
+  out
+}
+
+#' @title Reorder all tiers at once
+#'
+#' @param .kn      A `knowledge` object.
+#' @param order    A vector that lists *every* tier exactly once, either by
+#'                 label (default) or by numeric index (`by_index = TRUE`).
+#'                 Be careful if you have numeric tier labels.
+#' @param by_index If `TRUE`, treat `order` as the positions instead of
+#'                 labels. Defaults to `FALSE`.
+#'
+#' @return The same `knowledge` object with tiers rearranged.
+#' @export
+reorder_tiers <- function(.kn, order, by_index = FALSE) {
+  check_knowledge_obj(.kn)
+
+  current <- .kn$tiers$label
+  n <- length(current)
+
+  # helper function to convert a label expression to a string
+  as_label1 <- function(expr) {
+    if (rlang::is_symbol(expr)) {
+      return(as.character(expr))
+    }
+    if (rlang::is_character(expr)) {
+      return(rlang::as_string(expr))
+    }
+    if (rlang::is_atomic(expr) && length(expr) == 1L) {
+      val <- rlang::eval_tidy(expr, env = parent.frame())
+      if (is.numeric(val)) {
+        return(as.character(val))
+      }
+      if (is.character(val) && nzchar(val)) {
+        return(val)
+      }
+    }
+    stop("`order` contains an unsupported element: ", rlang::expr_text(expr),
       call. = FALSE
     )
   }
 
-  # ensure numeric-only tiers present for all idx referenced by vars
-  missing_idx <- setdiff(
-    na.omit(unique(out$vars$tier)),
-    tier_tbl$idx
-  )
-  if (length(missing_idx)) {
-    tier_tbl <- dplyr::bind_rows(
-      tier_tbl,
-      tibble::tibble(idx = missing_idx, label = NA_character_)
-    )
-  }
-  # sort tiers
-  out$tiers <- dplyr::arrange(tier_tbl, idx, label)
+  # turn input into character label
+  if (by_index) {
+    idx <- rlang::eval_tidy(rlang::enexpr(order), env = parent.frame())
+    if (!is.numeric(idx) || length(idx) != n || !setequal(idx, seq_len(n))) {
+      stop("`order` must be a permutation of 1:", n, " when `by_index = TRUE`.",
+        call. = FALSE
+      )
+    }
+    labels <- current[idx]
+  } else {
+    expr <- rlang::enexpr(order)
 
-  # ensure all tiers are present in the knowledge object
-  out$edges <- dplyr::distinct(dplyr::bind_rows(e1$edges, e2$edges))
-  out <- .update_edge_tiers(out)
+    # unwrap literal c(...) call, and get a list of expressions
+    parts <- if (rlang::is_call(expr, "c")) rlang::call_args(expr) else list(expr)
+
+    labels <- vapply(parts, as_label1, character(1))
+    labels <- unname(labels)
+
+    if (length(labels) != n || !setequal(labels, current)) {
+      stop("`order` must list every existing tier exactly once.", call. = FALSE)
+    }
+  }
+
+  # apply new order
+  .kn$tiers <- tibble::tibble(label = labels)
 
   # validate
-  .validate_tier_rule(out$edges)
-  .validate_forbidden_required(out$edges)
+  .validate_tier_rule(.kn$edges, .kn$tiers)
+  .validate_forbidden_required(.kn$edges)
 
-  out
+  # return
+  .kn
+}
+
+
+#' @title Move one tier before / after another
+#'
+#' @inheritParams reorder_tiers
+#' @param tier   The tier to move (label or index, honouring `by_index`).
+#' @param before,after Exactly one of these must be supplied and must identify
+#'                     another existing tier.
+#'
+#' @return The updated `knowledge` object.
+#' @export
+reposition_tier <- function(.kn, tier, before = NULL, after = NULL, by_index = FALSE) {
+  check_knowledge_obj(.kn)
+  if (!xor(missing(before), missing(after))) {
+    stop("Supply exactly one of `before` or `after`.", call. = FALSE)
+  }
+
+  current <- .kn$tiers$label
+
+  resolve_label <- function(expr) {
+    if (by_index) {
+      idx <- rlang::eval_tidy(expr, env = parent.frame())
+      if (!is.numeric(idx) || length(idx) != 1L) {
+        stop("When `by_index = TRUE`, tier references must be length-1 numeric.")
+      }
+      return(current[idx])
+    }
+
+    val <- tryCatch(rlang::eval_tidy(expr, env = parent.frame()),
+      error = function(e) NULL
+    )
+
+    if (is.character(val) && length(val) == 1L && nzchar(val)) {
+      return(val)
+    }
+    if (is.numeric(val) && length(val) == 1L) {
+      return(as.character(val))
+    }
+    if (rlang::is_symbol(expr)) {
+      return(as.character(expr))
+    }
+    stop("Tier reference ", rlang::expr_text(expr), " is invalid.")
+  }
+
+  tier_lbl <- resolve_label(rlang::enexpr(tier))
+  anchor_lbl <- resolve_label(if (missing(before)) {
+    rlang::enexpr(after)
+  } else {
+    rlang::enexpr(before)
+  })
+
+  if (!tier_lbl %in% current) stop("Tier `", tier_lbl, "` does not exist.")
+  if (!anchor_lbl %in% current) stop("Anchor tier `", anchor_lbl, "` does not exist.")
+  if (tier_lbl == anchor_lbl) {
+    return(.kn)
+  } # nothing to do
+
+  new_order <- setdiff(current, tier_lbl) # drop, then re-insert
+  pos <- match(anchor_lbl, new_order)
+  insert_at <- if (missing(before)) pos + 1L else pos
+  new_order <- append(new_order, tier_lbl, after = insert_at - 1L)
+  reorder_tiers(.kn, c(!!!new_order))
 }
 
 # ────────────────────────────────── Check ─────────────────────────────────────
@@ -955,28 +1057,51 @@ seq_tiers <- function(tiers, vars) {
   invisible(TRUE)
 }
 
-
-#' @title Validate that an edge is not simultaneously forbidden *and* required
+#' @title Detect inconsistent edge declarations
 #'
-#' @param edges_df A data frame with columns `status`, `from`,
-#' `to`, `tier_from`, and `tier_to`.
+#' @description Throws an error if any edges are declared as both
+#' `forbidden` and `required`, or if a required edge is declared in both
+#' directions.
+#'
+#' @param edges_df Data frame with columns `status`, `from`, `to`,
+#'   `tier_from`, and `tier_to`.
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
-  # look for groups where the same (from, to) has both statuses
-  clashes <- edges_df |>
+  # same ordered edge both forbidden and required
+  clash_fr <- edges_df |>
     dplyr::group_by(from, to) |>
     dplyr::filter(all(c("forbidden", "required") %in% status)) |>
     dplyr::ungroup() |>
-    dplyr::distinct(from, to) # one row per conflicting edge
-  if (nrow(clashes)) {
+    dplyr::distinct(from, to)
+
+  if (nrow(clash_fr)) {
     stop(
       "Edge(s) appear as both forbidden and required: ",
-      paste0(clashes$from, " --> ", clashes$to,
-        collapse = ", "
-      ),
+      paste0(clash_fr$from, " --> ", clash_fr$to, collapse = ", "),
       call. = FALSE
     )
   }
+
+  # required edge in both directions
+  req <- dplyr::filter(edges_df, status == "required")
+
+  if (nrow(req) > 1) {
+    # normalise each pair to an unordered signature "A||B"
+    sig <- paste(pmin(req$from, req$to), pmax(req$from, req$to), sep = "||")
+    dup <- sig[duplicated(sig)]
+
+    if (length(dup)) {
+      offending <- unique(dup)
+      pretty <- gsub("\\|\\|", " <-> ", offending) # A <-> B
+      stop(
+        "Edge(s) required in both directions: ",
+        paste(pretty, collapse = ", "),
+        call. = FALSE
+      )
+    }
+  }
+
+  # no problems
   invisible(TRUE)
 }
 
@@ -1104,69 +1229,6 @@ seq_tiers <- function(tiers, vars) {
   }, character(1))
 }
 
-
-
-#' @title Shift all tiers **>=** a position *up* by one
-#'
-#' @description
-#' When inserting a brand-new tier in the middle of the existing ordering
-#' we need to “open a slot”.
-#' This helper increments
-#' * the `tier` column of every affected variable, and
-#' * each value in `.kn$tier_labels`
-#'
-#' that is **greater than or equal to** `insert_idx`.
-#'
-#' @param .kn A `knowledge` object.
-#' @param insert_idx  Integer index at which the new tier will be inserted.
-#'
-#' @return The modified `knowledge` object with bumped indices.
-#' @keywords internal
-.bump_tiers_up_from <- function(.kn, insert_idx) {
-  # bump variables
-  .kn$vars$tier <- ifelse(
-    !is.na(.kn$vars$tier) & .kn$vars$tier >= insert_idx,
-    .kn$vars$tier + 1L,
-    .kn$vars$tier
-  )
-
-  # bump only labelled tiers
-  bump_row <- .kn$tiers$idx >= insert_idx & !is.na(.kn$tiers$label)
-  .kn$tiers$idx[bump_row] <- .kn$tiers$idx[bump_row] + 1L
-  .kn$tiers <- dplyr::arrange(.kn$tiers, idx, label)
-
-  # refresh edge annotation
-  .kn <- .update_edge_tiers(.kn)
-  .kn
-}
-
-#' @title Recompute the `tier_from` and `tier_to` columns of the edges dataframe
-#'
-#' @description Used internally in `+.knowledge`.
-#' @keywords internal
-.update_edge_tiers <- function(.kn) {
-  .kn$edges <- dplyr::mutate(
-    .kn$edges,
-    tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
-    tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
-  )
-  .kn
-}
-
-#' @title Find row in the tiers dataframe matching a given index or label
-#'
-#' @param .kn A `knowledge` object.
-#' @param idx A numeric index or `NULL`.
-#' @param label A character label or `NULL`.
-#'
-.tier_row <- function(.kn, idx = NULL, label = NULL) {
-  dplyr::filter(
-    .kn$tiers,
-    (is.null(idx) || idx == .data$idx) &
-      (is.null(label) || label == .data$label)
-  )
-}
-
 #' @title Check if knowledge object has a tier
 #'
 #' @description Used internally in `add_tier()`
@@ -1197,10 +1259,10 @@ seq_tiers <- function(tiers, vars) {
       tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
     )
 
-  # Abort if any new edge violates the tier rule
+  # stop if any new edge violates the tier rule
   .validate_tier_rule(block, .kn$tiers)
 
-  # Abort if any new edge violates the forbidden/required rule
+  # stop if any new edge violates the forbidden/required rule
   .validate_forbidden_required(block)
 
   # Merge into edge table, dropping duplicates, and return updated object
@@ -1219,7 +1281,7 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param .kn A `knowledge` object.
 #' @param status A string, either "forbidden" or "required".
-#' @param from A tidyselect specification or a variable name string or symbol.
+#' @param from A tidyselect specification or a variable name string or symbol or formula.
 #' @param to A tidyselect specification or a variable name string or symbol.
 #' @keywords internal
 .edge_verb <- function(.kn, status,
@@ -1233,8 +1295,15 @@ seq_tiers <- function(tiers, vars) {
     # from_quo is not a formula
     # Use .vars_from_spec to resolve the specification
     from_vars <- .vars_from_spec(.kn, !!from_quo)
+    if (!length(from_vars) && rlang::is_symbol(from_quo)) {
+      from_vars <- as.character(from_quo)
+    }
+    print(from_vars)
     to_vars <- .vars_from_spec(.kn, !!to_quo)
-
+    if (!length(to_vars) && rlang::is_symbol(to_quo)) {
+      to_vars <- as.character(to_quo)
+    }
+    print(to_vars)
     if (!length(from_vars) || !length(to_vars)) {
       stop(
         paste0(
