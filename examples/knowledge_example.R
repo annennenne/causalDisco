@@ -77,8 +77,7 @@ df <- data.frame(X1 = 1, X2 = 2, X3 = 3, check.names = FALSE)
 kn_select_helpers <-
   knowledge(
     df,
-    tier(1 ~ matches("^X[12]$"), 2 ~ ends_with("3")),
-    required(X2 ~ X3)
+    tier(1 ~ starts_with("X1"), 2 ~ ends_with("3"))
   )
 print(kn_select_helpers)
 

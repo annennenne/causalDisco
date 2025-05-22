@@ -496,43 +496,53 @@ add_to_tier <- function(.kn, ...) {
   .kn
 }
 
-
-#' @title Add a forbidden edge to a knowledge object
+#' Add forbidden edges
 #'
-#' @description These edges are not allowed to be present in the final graph.
+#' @description
+#' Forbid one or more directed edges.
+#' Each argument **must** be a two–sided formula, e.g. `X ~ Y`.
+#' Formulas can use tidy-select on either side, so
+#' `forbid_edge(kn, starts_with("X") ~ Y)` forbids every `X_i --> Y`.
 #'
-#' @param .kn A `knowledge` object.
-#' @param ... Either a two-sided formula (`A ~ C`) *or* `from`, `to`.
+#' @param .kn  A `knowledge` object.
+#' @param ...  One or more two-sided formulas.
+#'
+#' @return The updated `knowledge` object.
 #' @export
 forbid_edge <- function(.kn, ...) {
   dots <- rlang::enquos(...)
-  if (length(dots) == 1) {
-    .edge_verb(.kn, "forbidden", dots[[1]], NULL)
-  } else if (length(dots) == 2) {
-    .edge_verb(.kn, "forbidden", dots[[1]], dots[[2]])
-  } else {
-    stop("forbid_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
+  if (!length(dots)) {
+    stop("forbid_edge() needs at least one two-sided formula.", call. = FALSE)
   }
+
+  for (formula in dots) {
+    .kn <- .edge_verb(.kn, "forbidden", formula)
+  }
+  .kn
 }
 
-#' @title Add a forbidden edge to a knowledge object
+#' Add required edges
 #'
-#' @description These edges are not allowed to be present in the final graph.
-#' Required edges can only be in one direction. That is, you cannot both require
-#' V1 --> V2 and V2 --> V1.
+#' @description
+#' Require one or more directed edges.
+#' Arguments follow the same rules as **`forbid_edge()`** but a required edge
+#' may only be given in *one* direction (`X ~ Y` **or** `Y ~ X`, not both).
 #'
 #' @inheritParams forbid_edge
+#' @return The updated `knowledge` object.
 #' @export
 require_edge <- function(.kn, ...) {
   dots <- rlang::enquos(...)
-  if (length(dots) == 1) {
-    .edge_verb(.kn, "required", dots[[1]], NULL)
-  } else if (length(dots) == 2) {
-    .edge_verb(.kn, "required", dots[[1]], dots[[2]])
-  } else {
-    stop("require_edge() takes either 1 or 2 edge specifications.", call. = FALSE)
+  if (!length(dots)) {
+    stop("require_edge() needs at least one two-sided formula.", call. = FALSE)
   }
+
+  for (formula in dots) {
+    .kn <- .edge_verb(.kn, "required", formula)
+  }
+  .kn
 }
+
 
 #' @title Unfreeze a `knowledge` object.
 #'
@@ -1273,48 +1283,39 @@ seq_tiers <- function(tiers, vars) {
   .kn
 }
 
-#' @title Handle `forbid_edge()` and `require_edge()` verbs
+#' Handle forbid_edge() / require_edge() calls
 #'
-#' @description Help `forbid_edge()` and `require_edge()` to handle both
-#' tidyselect and formula inputs as well as standard `to`, `from` arguments.
-#' Passes arguments correctly to `.add_edges()`.
+#' @description
+#' Internal helper that turns each **two-sided formula** supplied by
+#' `forbid_edge()` or `require_edge()` into concrete variable names, then passes
+#' the cross-product to `.add_edges()`.
 #'
 #' @param .kn A `knowledge` object.
-#' @param status A string, either "forbidden" or "required".
-#' @param from A tidyselect specification or a variable name string or symbol or formula.
-#' @param to A tidyselect specification or a variable name string or symbol.
+#' @param status Either `"forbidden"` or `"required"`.
+#' @param fml A quosure that must wrap a two-sided formula.
+#'
 #' @keywords internal
-.edge_verb <- function(.kn, status,
-                       from_quo, to_quo = NULL) {
-  # Check if `from_quo` is a formula
-  if (rlang::quo_is_call(from_quo, "~") && is.null(to_quo)) {
-    fml <- rlang::get_expr(from_quo)
-    from_vars <- .formula_vars(.kn, rlang::f_lhs(fml))
-    to_vars <- .formula_vars(.kn, rlang::f_rhs(fml))
-  } else {
-    # from_quo is not a formula
-    # Use .vars_from_spec to resolve the specification
-    from_vars <- .vars_from_spec(.kn, !!from_quo)
-    if (!length(from_vars) && rlang::is_symbol(from_quo)) {
-      from_vars <- as.character(from_quo)
-    }
-    print(from_vars)
-    to_vars <- .vars_from_spec(.kn, !!to_quo)
-    if (!length(to_vars) && rlang::is_symbol(to_quo)) {
-      to_vars <- as.character(to_quo)
-    }
-    print(to_vars)
-    if (!length(from_vars) || !length(to_vars)) {
-      stop(
-        paste0(
-          "forbid_edge()/require_edge() need either a two-sided ",
-          "formula `A ~ B` or both `from` and `to`."
-        ),
-        call. = FALSE
-      )
-    }
+.edge_verb <- function(.kn, status, fml) {
+  if (!rlang::quo_is_call(fml, "~")) {
+    stop(
+      "Edge specification must be a two-sided formula like `A ~ B`.",
+      call. = FALSE
+    )
   }
-  .add_edges(.kn, status, from_vars, to_vars)
+
+  expr <- rlang::get_expr(fml)
+
+  from_vars <- .formula_vars(.kn, rlang::f_lhs(expr))
+  to_vars <- .formula_vars(.kn, rlang::f_rhs(expr))
+
+  if (!length(from_vars) || !length(to_vars)) {
+    stop(
+      sprintf("Formula `%s` matched no variables.", deparse(expr)),
+      call. = FALSE
+    )
+  }
+  .kn <- .add_edges(.kn, status, from_vars, to_vars)
+  .kn
 }
 
 
@@ -1327,28 +1328,60 @@ seq_tiers <- function(tiers, vars) {
 #' `starts_with("V")`) or a character vector.
 #' @keywords internal
 .vars_from_spec <- function(.kn, spec) {
+  # scalars can't be variable names
+  if (is.atomic(spec) && length(spec) == 1L && !is.character(spec)) {
+    return(character(0)) # number, TRUE/FALSE, NULL, etc.
+  }
+
+  # bare symbol
+  if (rlang::is_symbol(spec)) {
+    # try to evaluate it as a regular R expression first
+    out <- tryCatch(rlang::eval_tidy(spec, env = parent.frame()),
+      error = function(...) NULL
+    )
+
+    if (is.character(out)) {
+      return(out) # a user-supplied character vector
+    }
+
+    name <- rlang::as_string(spec)
+    if (name %in% .kn$vars$var) {
+      return(name) # treat the symbol as a column name
+    }
+
+    return(character(0)) # nothing matched
+  }
+
+  # go through tidy-select
   lookup <- rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
 
-  tryCatch(
-    # If possible, use tidyselect to resolve the specifation to variable names
-    # (e.g. `starts_with("V")` -> `c("V1", "V2", ...)`)
-    # This will throw an error if the spec is not valid
-    names(tidyselect::eval_select(rlang::enquo(all_of(spec)), lookup)),
-    error = function(e) {
-      out <- tryCatch(
-        # If not, try to evaluate the expression directly
-        rlang::eval_tidy(rlang::enquo(spec)),
-        error = function(...) NULL
-      )
-      # If the result is a character vector, return it
-      if (is.character(out)) {
-        return(out)
-      }
-      # Otherwise, return an empty character vector
-      character(0)
-    }
+  q <- if (is.character(spec)) {
+    rlang::quo(all_of(spec))
+  } else {
+    rlang::as_quosure(spec, env = parent.frame())
+  }
+
+  vars <- tryCatch(
+    names(tidyselect::eval_select(q, lookup)),
+    error = function(e) character(0)
   )
+  if (length(vars)) {
+    return(vars)
+  }
+
+  # fallback: plain expression
+  out <- tryCatch(rlang::eval_tidy(spec, env = parent.frame()),
+    error = function(...) NULL
+  )
+  if (is.character(out)) {
+    return(out)
+  }
+
+  # failed: return empty
+  character(0)
 }
+
+
 
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'
@@ -1356,7 +1389,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #' @keywords internal
 .formula_vars <- function(.kn, rhs) {
-  vars <- .vars_from_spec(.kn, !!rhs)
+  vars <- .vars_from_spec(.kn, rhs)
   if (length(vars)) {
     return(vars)
   } # tidy-select succeeded

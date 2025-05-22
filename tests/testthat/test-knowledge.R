@@ -1017,50 +1017,94 @@ test_that("add_vars validates input types", {
 # ────────────────────────────────────────────────────────────────────────────
 # forbidden and required
 # ────────────────────────────────────────────────────────────────────────────
-
-test_that("forbid_edge() and require_edge() add edges correctly", {
+test_that("forbid_edge() and require_edge() add single edges", {
   kn <- knowledge()
+  kn_f <- forbid_edge(kn, V1 ~ V2)
+  expect_equal(kn_f$edges, tibble(
+    status    = "forbidden",
+    from      = "V1",
+    to        = "V2",
+    tier_from = NA_character_,
+    tier_to   = NA_character_
+  ))
 
-  kn1 <- forbid_edge(kn, V1 ~ V2)
-  expect_equal(kn1$edges$status, "forbidden")
-  expect_equal(kn1$edges$from, "V1")
-  expect_equal(kn1$edges$to, "V2")
-
-  kn2 <- require_edge(kn, V1, V2)
-  expect_equal(kn2$edges$status, "required")
-  expect_equal(kn2$edges$from, "V1")
-  expect_equal(kn2$edges$to, "V2")
+  kn_r <- require_edge(kn, V1 ~ V2)
+  expect_equal(kn_r$edges$status, "required")
+  expect_equal(kn_r$edges$from, "V1")
+  expect_equal(kn_r$edges$to, "V2")
 })
 
-test_that("forbid_edge() and require_edge() validate argument count", {
+test_that("forbid_edge() and require_edge() need two-sided formulas", {
   kn <- knowledge()
-
-  expect_error(forbid_edge(kn), "takes either 1 or 2")
-  expect_error(forbid_edge(kn, V1), "need either a two-sided formula")
-  expect_error(require_edge(kn, V1, V2, V3), "takes either 1 or 2")
+  expect_error(forbid_edge(kn), "needs at least one")
+  expect_error(forbid_edge(kn, V1), "two-sided formula")
+  expect_error(require_edge(kn, 1), "two-sided formula")
 })
 
-test_that("forbid_edge() and require_edge() validate variable selection", {
-  kn <- knowledge()
-  expect_error(
-    forbid_edge(kn, tidyselect::starts_with("Z"), V1),
-    "matched no variables",
-    fixed = TRUE
-  )
-  expect_error(
-    require_edge(kn, tidyselect::starts_with("Z") ~ V1),
-    "matched no variables on the left-hand side",
-    fixed = TRUE
-  )
-})
-
-test_that("required() and forbidden() inside knowledge() create edges", {
+test_that("forbid_edge()/require_edge() respect tidy-select on either side", {
   kn <- knowledge(
-    tier(A ~ V1, B ~ V2),
-    forbidden(V1 ~ V2),
-    required(V1 ~ V1) # self-edge just to have both kinds
+    tier(
+      T1 ~ Y,
+      T2 ~ X1 + X2
+    )
   )
-  expect_equal(sort(kn$edges$status), c("forbidden", "required"))
+  kn <- forbid_edge(
+    kn,
+    starts_with("X") ~ Y # X1 → Y, X2 → Y
+  )
+  expect_equal(
+    dplyr::arrange(kn$edges, from)$from,
+    c("X1", "X2")
+  )
+  expect_true(all(kn$edges$to == "Y"))
+
+  kn2 <- require_edge(kn, Y ~ matches("^X[12]$"))
+  expect_equal(sort(kn2$edges$status), c("forbidden", "forbidden", "required", "required"))
+})
+
+test_that("forbidden() and required() inside knowledge() create edges", {
+  kn <- knowledge(
+    tier(
+      A ~ V1,
+      B ~ V2,
+      C ~ Y
+    ),
+    forbidden(starts_with("V") ~ Y),
+    required(V1 ~ V2)
+  )
+  expect_equal(
+    kn$edges$status,
+    c("forbidden", "forbidden", "required")
+  )
+  expect_equal(
+    kn$edges$from,
+    c("V1", "V2", "V1")
+  )
+  expect_equal(
+    kn$edges$to,
+    c("Y", "Y", "V2")
+  )
+  kn <- knowledge(
+    tier(
+      A ~ V1,
+      B ~ V2,
+      C ~ V3
+    ),
+    forbidden(starts_with("V") ~ V3), # will forbid self loop
+    required(V1 ~ V2)
+  )
+  expect_equal(
+    kn$edges$status,
+    c("forbidden", "forbidden", "forbidden", "required")
+  )
+  expect_equal(
+    kn$edges$from,
+    c("V1", "V2", "V3", "V1")
+  )
+  expect_equal(
+    kn$edges$to,
+    c("V3", "V3", "V3", "V2")
+  )
 })
 
 test_that("knowledge() errors on forbidden + required clash", {
@@ -1069,23 +1113,23 @@ test_that("knowledge() errors on forbidden + required clash", {
       forbidden(V1 ~ V2),
       required(V1 ~ V2)
     ),
-    "Edge\\(s\\) appear as both forbidden and required",
-    fixed = FALSE
+    "appear as both forbidden and required",
+    fixed = TRUE
   )
 })
 
 test_that("knowledge() errors when required edges are bidirectional", {
   expect_error(
     knowledge(required(V1 ~ V2, V2 ~ V1)),
-    "Edge\\(s\\) required in both directions",
-    fixed = FALSE
+    "required in both directions",
+    fixed = TRUE
   )
 })
 
 test_that("knowledge() rejects unknown top-level calls", {
   expect_error(
     knowledge(foo(V1)),
-    "Only tier\\(\\), forbidden\\(\\), required\\(\\) calls are allowed",
-    fixed = FALSE
+    "Only tier(), forbidden(), required() calls are allowed",
+    fixed = TRUE
   )
 })
