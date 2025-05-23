@@ -806,91 +806,125 @@ as_tetrad_knowledge <- function(.kn) {
   j
 }
 
-#' Convert to a pair of (fixedGaps, fixedEdges) matrices for the **pcalg** package
+#' Convert background knowledge to pcalg constraint matrices
 #'
-#' pcalg supports *symmetric* background knowledge only:
-#'   • **fixedGaps**  – **forbidden** edges (should be going both ways))
-#'   • **fixedEdges** – **required** edges (should be going both ways))
+#' pcalg only supports _undirected_ (symmetric) background constraints:
+#' * **fixedGaps**  — forbidding edges (zeros enforced)
+#' * **fixedEdges** — requiring edges (ones enforced)
 #'
-#' We therefore throw an error if any edges relations are not symmetrical.
+#' This function takes a \code{knowledge} object (with only forbidden/required
+#' edges, no tiers) and returns the two logical matrices in the exact
+#' variable order you supply.
 #'
-#' @param .kn A `knowledge` object.
-#' @param labels Character vector of variable names in the *exact* order of
-#'               your data matrix / data frame.
-#' @return A list with elements `fixedGaps` and `fixedEdges`.
+#' @param .kn A \code{knowledge} object.  Must have no tier information.
+#' @param labels Character vector of all variable names, in the exact order
+#'   of your data columns.  Every variable referenced by an edge in \code{.kn}
+#'   must appear here.
+#' @param directed_as_undirected Logical (default \code{FALSE}).  If
+#'   \code{FALSE}, we require that every edge in \code{.kn} has its
+#'   mirror-image present as well, and will error if any are missing.  If
+#'   \code{TRUE}, we automatically mirror every directed edge into
+#'   an undirected constraint.
+#'
+#' @return A list with two elements, each an \code{n × n} logical matrix
+#' corresponding to `pcalg`'s `fixedGaps` and `fixedEdges` arguments.
+#'
+#' @section Errors:
+#' * If the knowledge object contains tiered knowledge.
+#' * If \code{directed_as_undirected = FALSE} and any edge lacks its
+#'   symmetrical counterpart. This can only hold for forbidden edges.
+#'
 #' @export
-as_pcalg_constraints <- function(.kn, labels, directed_as_undirected = FALSE) {
+as_pcalg_constraints <- function(.kn,
+                                 labels = .kn$vars$var,
+                                 directed_as_undirected = FALSE) {
   check_knowledge_obj(.kn)
 
   if (any(!is.na(.kn$vars$tier))) {
     stop(
-      "Tiered background knowledge cannot be utilised by the pcalg engine.",
-      "\n  This cannot be resolved by setting forbidden edges as pcalg",
-      " does not support directed fobidden edges."
+      "Tiered background knowledge cannot be utilised by the pcalg engine.\n",
+      "pcalg does not support directed tier constraints."
     )
   }
-
-  # Initialize
-  p <- length(labels)
-  fixedGaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
-  fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
-
-  # Create a named index for the labels
-  idx <- rlang::set_names(seq_along(labels), labels)
-
-  # find the relations that are non-symmetric
-  if (!directed_as_undirected) {
-    bad_edges <- .kn$edges |>
-      # keep only those edges for which the reversed pair is NOT present
-      dplyr::anti_join(
-        .kn$edges,
-        by = c("from" = "to", "to" = "from")
-      ) |>
-      dplyr::mutate(
-        desc = paste0(from, " --> ", to)
-      ) |>
-      dplyr::pull(desc)
-
-    if (length(bad_edges)) {
-      stop(
-        "pcalg does not support asymmetric edges.\n",
-        "The following do not have a symmetrical counterpart:\n",
-        paste0("  * ", bad_edges, collapse = "\n"),
+  if (!is.character(labels) || length(labels) == 0L) {
+    stop("`labels` must be a non-empty character vector.", call. = FALSE)
+  }
+  if (length(labels) != length(unique(labels))) {
+    stop("`labels` must be unique.", call. = FALSE)
+  }
+  # check that labels and knowledge object are aligned
+  if (!setequal(labels, .kn$vars$var)) {
+    # all labels that aren't in knowledge
+    bad_vars <- setdiff(labels, kn$vars$var)
+    if (length(bad_vars)) {
+      stop("`labels` contained variables that were not in the knowledge object: [",
+        paste(bad_vars, collapse = ", "), "]",
+        call. = FALSE
+      )
+    }
+    # all vars that aren't in labels
+    missing_vars <- setdiff(.kn$vars$var, labels)
+    if (length(missing_vars)) {
+      stop("`labels` must contain all variables in the knowledge object: [",
+        paste(missing_vars, collapse = ", "),
+        "]\nYou can add variables to your knowledge object with add_vars().",
+        call. = FALSE
+      )
+    } else {
+      # can this even happen?
+      # just for good measure
+      stop("`labels` must contain all variables in the knowledge object.",
         call. = FALSE
       )
     }
   }
 
-  # Forbidden edges
-  forb <- dplyr::filter(.kn$edges, status == "forbidden")
-  if (nrow(forb)) {
-    for (k in seq_len(nrow(forb))) {
-      i <- idx[[forb$from[k]]]
-      j <- idx[[forb$to[k]]]
-      if (is.na(i) || is.na(j)) {
-        stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
-      }
-      if (directed_as_undirected) {
-        fixedGaps[j, i] <- TRUE
-      }
-      fixedGaps[i, j] <- TRUE
+  p <- length(labels)
+  fixedGaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+  fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+  idx <- rlang::set_names(seq_along(labels), labels)
+
+  if (!directed_as_undirected) {
+    bad <- .kn$edges |>
+      dplyr::anti_join(.kn$edges,
+        by = c("from" = "to", "to" = "from")
+      ) |>
+      dplyr::mutate(desc = paste0(from, " → ", to)) |>
+      dplyr::pull(desc)
+    if (length(bad)) {
+      stop(
+        "pcalg does not support asymmetric edges.\n",
+        "The following have no symmetrical counterpart:\n  * ",
+        paste(bad, collapse = "\n  * "),
+        call. = FALSE
+      )
     }
   }
 
-  # Required edges
-  req <- dplyr::filter(.kn$edges, status == "required")
-  if (nrow(req)) {
-    for (k in seq_len(nrow(req))) {
-      i <- idx[[req$from[k]]]
-      j <- idx[[req$to[k]]]
-      if (is.na(i) || is.na(j)) {
-        stop("Required edge refers to unknown variable(s).", call. = FALSE)
-      }
-      if (directed_as_undirected) {
-        fixedEdges[j, i] <- TRUE
-      }
-      fixedEdges[i, j] <- TRUE
+  # fill forbidden
+  forb <- dplyr::filter(.kn$edges, status == "forbidden")
+  for (k in seq_len(nrow(forb))) {
+    i <- match(forb$from[k], labels, nomatch = NA_integer_)
+    j <- match(forb$to[k], labels, nomatch = NA_integer_)
+    # extra security measure
+    if (is.na(i) || is.na(j)) {
+      stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
     }
+    fixedGaps[i, j] <- TRUE
+    if (directed_as_undirected) fixedGaps[j, i] <- TRUE
+  }
+
+  # fill required
+  req <- dplyr::filter(.kn$edges, status == "required")
+  for (k in seq_len(nrow(req))) {
+    i <- match(req$from[k], labels, nomatch = NA_integer_)
+    j <- match(req$to[k], labels, nomatch = NA_integer_)
+    # extra security measure
+    if (is.na(i) || is.na(j)) {
+      stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
+    }
+    fixedEdges[i, j] <- TRUE
+    if (directed_as_undirected) fixedEdges[j, i] <- TRUE
   }
 
   list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
