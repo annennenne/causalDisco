@@ -3,6 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # Knowledge generation using mini-dsl
 # ──────────────────────────────────────────────────────────────────────────────
+
 testthat::test_that("knowledge object is created correctly using mini-DSL", {
   kn <-
     knowledge(
@@ -395,36 +396,10 @@ testthat::test_that("add_to_tier() works as expected with mini-DSL", {
   ))
 })
 
-testthat::test_that("add_to_tier() errors when adding existing variable to another tier", {
-  testthat::expect_error(
-    knowledge(
-      tier(
-        One ~ V1 + V2,
-        2 ~ V3 + V4,
-        "Three" ~ V5
-      )
-    ) |>
-      add_to_tier(One ~ V3 + V4),
-    "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().",
-    fixed = TRUE
-  )
-  testthat::expect_error(
-    knowledge(
-      tier(
-        One ~ V1 + V2,
-        2 ~ V3 + V4,
-        "Three" ~ V5
-      )
-    ) |>
-      add_to_tier(2 ~ V3 + V1),
-    "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().",
-    fixed = TRUE
-  )
-})
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Edge errors
 # ──────────────────────────────────────────────────────────────────────────────
+
 test_that("forbidden() errors when called without any formulas", {
   expect_error(
     knowledge(
@@ -506,6 +481,33 @@ test_that("forbidden() and required() errors when no to vars matched", {
 # ──────────────────────────────────────────────────────────────────────────────
 # Tier errors
 # ──────────────────────────────────────────────────────────────────────────────
+
+testthat::test_that("add_to_tier() errors when adding existing variable to another tier", {
+  testthat::expect_error(
+    knowledge(
+      tier(
+        One ~ V1 + V2,
+        2 ~ V3 + V4,
+        "Three" ~ V5
+      )
+    ) |>
+      add_to_tier(One ~ V3 + V4),
+    "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().",
+    fixed = TRUE
+  )
+  testthat::expect_error(
+    knowledge(
+      tier(
+        One ~ V1 + V2,
+        2 ~ V3 + V4,
+        "Three" ~ V5
+      )
+    ) |>
+      add_to_tier(2 ~ V3 + V1),
+    "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().",
+    fixed = TRUE
+  )
+})
 
 testthat::test_that("tier throws error for one variable in two tiers", {
   testthat::expect_error(
@@ -1017,6 +1019,7 @@ test_that("add_vars validates input types", {
 # ──────────────────────────────────────────────────────────────────────────────
 # forbidden and required
 # ──────────────────────────────────────────────────────────────────────────────
+
 test_that("forbid_edge() and require_edge() add single edges", {
   kn <- knowledge()
   kn_f <- forbid_edge(kn, V1 ~ V2)
@@ -1137,6 +1140,7 @@ test_that("knowledge() rejects unknown top-level calls", {
 # ──────────────────────────────────────────────────────────────────────────────
 #   forbid_tier_violations()
 # ──────────────────────────────────────────────────────────────────────────────
+
 test_that("forbid_tier_violations() adds exactly the uphill edges", {
   kn <- knowledge(
     tier(
@@ -1172,12 +1176,12 @@ test_that("calling it again is a no-op (no duplicate edges)", {
 })
 
 test_that("single-tier or untiered variables add no edges", {
-  # single tier -------------------------------------------------------
+  # single tier
   kn_single <- knowledge(tier(1 ~ V1 + V2 + V3))
   kn_single <- forbid_tier_violations(kn_single)
   expect_equal(nrow(kn_single$edges), 0)
 
-  # untiered variables ------------------------------------------------
+  # untiered variables
   df <- data.frame(V1 = 1, V2 = 1, V3 = 1)
   kn_mixed <- knowledge(df, tier(1 ~ V1 + V2)) # V3 has tier NA
   kn_mixed <- forbid_tier_violations(kn_mixed)
@@ -1186,4 +1190,124 @@ test_that("single-tier or untiered variables add no edges", {
 
 test_that("function errors on non-knowledge objects", {
   expect_error(forbid_tier_violations(list()), "knowledge")
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# as_pcalg_constraints()
+# ──────────────────────────────────────────────────────────────────────────────
+
+test_that("errors if any tiers are present", {
+  kn <- knowledge(tier(1 ~ X1 + X2))
+  expect_error(
+    as_pcalg_constraints(kn, labels = c("X1", "X2")),
+    "Tiered background knowledge cannot be utilised"
+  )
+})
+
+test_that("errors on asymmetric edges when directed_as_undirected = FALSE", {
+  kn <- knowledge(
+    data.frame(X1 = 1, X2 = 2),
+    forbidden(X1 ~ X2) # only one direction
+  )
+  expect_error(
+    as_pcalg_constraints(kn, labels = c("X1", "X2")),
+    "no symmetrical counterpart"
+  )
+})
+
+test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
+  kn <- knowledge(
+    data.frame(X1 = 1, X2 = 2, Y = 3),
+    forbidden(X1 ~ X2),
+    required(Y ~ X1)
+  )
+  cons <- as_pcalg_constraints(
+    kn,
+    labels = c("X1", "X2", "Y"),
+    directed_as_undirected = TRUE
+  )
+  # forbidden should be symmetric
+  expect_true(cons$fixedGaps["X1", "X2"])
+  expect_true(cons$fixedGaps["X2", "X1"])
+  # required should be symmetric
+  expect_true(cons$fixedEdges["Y", "X1"])
+  expect_true(cons$fixedEdges["X1", "Y"])
+})
+
+test_that("works when forbidden edges are fully symmetric via DSL", {
+  kn <- knowledge(
+    data.frame(X1 = 1, X2 = 2, Y = 3),
+    forbidden(X1 ~ X2, X2 ~ X1)
+  )
+
+  cons <- as_pcalg_constraints(
+    kn,
+    labels = c("X1", "X2", "Y")
+  )
+
+  # fixedGaps should have exactly the two symmetric entries
+  expect_true(cons$fixedGaps["X1", "X2"])
+  expect_true(cons$fixedGaps["X2", "X1"])
+  # no other forbidden pairs
+  expect_equal(sum(cons$fixedGaps), 2)
+
+  # fixedEdges should be entirely FALSE
+  expect_false(any(cons$fixedEdges))
+})
+
+test_that("result has correct dimnames and dimensions", {
+  labels <- c("A", "B", "C", "D")
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3, D = 4),
+    forbidden(A ~ B),
+    required(C ~ D)
+  )
+  cons <- as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE)
+  expect_equal(dim(cons$fixedGaps), c(4L, 4L))
+  expect_equal(dimnames(cons$fixedGaps), list(labels, labels))
+  expect_equal(dim(cons$fixedEdges), c(4L, 4L))
+  expect_equal(dimnames(cons$fixedEdges), list(labels, labels))
+})
+test_that("create pcalg cons without providing labels", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3, D = 4),
+    forbidden(A ~ B),
+    required(C ~ D)
+  )
+  labels <- kn$vars$var
+  expect_equal(
+    as_pcalg_constraints(kn, directed_as_undirected = TRUE),
+    as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE)
+  )
+})
+
+test_that("labels errors are thrown for pcalg constraints conversion", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3, D = 4),
+    forbidden(A ~ B),
+    required(C ~ D)
+  )
+  labels <- NULL
+  expect_error(
+    as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
+    "`labels` must be a non-empty character vector."
+  )
+  labels <- c("A", "A", "A", "A")
+  expect_error(
+    as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
+    "labels` must be unique."
+  )
+  labels <- c("A", "B")
+  expect_error(
+    as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
+    "`labels` must contain all variables in the knowledge object: [C, D]
+You can add variables to your knowledge object with add_vars().",
+    fixed = TRUE
+  )
+  labels <- c("A", "B", "C", "D", "E")
+  expect_error(
+    as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
+    "`labels` contained variables that were not in the knowledge object: [E]",
+    fixed = TRUE
+  )
 })
