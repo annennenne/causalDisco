@@ -1,9 +1,6 @@
 devtools::load_all()
 set.seed(123)
 
-# available engines for pc
-available_engines(pc)
-
 # number of samples
 n <- 10**4
 
