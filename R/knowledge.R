@@ -673,7 +673,7 @@ print.knowledge <- function(x, ...) {
       )
     }
   }
-
+  cat("\n")
   invisible(x)
 }
 
