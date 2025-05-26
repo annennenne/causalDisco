@@ -4,20 +4,20 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
     stop(
       "Engine ", paste(engine), "is not supported. Supported engines are: ",
       paste(engine_registry, collapse = ", "),
-      .call = FALSE
+      call. = FALSE
     )
   }
   switch(engine,
     tetrad = check_args_and_distribute_args_tetrad(search, args, alg, test, score),
     pcalg = check_args_and_distribute_args_pcalg(search, args, alg, test, score),
     bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg, test, score),
-    stop("Unsupported engine: ", engine, .call = FALSE)
+    stop("Unsupported engine: ", engine, call. = FALSE)
   )
 }
 
 check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL, score = NULL) {
   if (is.null(test) && is.null(score)) {
-    stop("Neither test or score is specified.", .call = FALSE)
+    stop("Neither test or score is specified.", call. = FALSE)
   }
 
   # Verbose will be passed directly to TetradSearch class.
@@ -49,7 +49,7 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
     stop(
       "The following arguments are not used in Tetrad algorithm, test, or score: ",
       paste(args_not_in_engine_args, collapse = ", "),
-      .call = FALSE
+      call. = FALSE
     )
   }
   return(list(
@@ -66,7 +66,7 @@ check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL,
     pc = engine_args_alg <- names(formals(pcalg::pc)),
     fci = engine_args_alg <- names(formals(pcalg::fci)),
     ges = engine_args_alg <- names(formals(pcalg::ges)),
-    stop("Unsupported algorithm:", alg, .call = FALSE)
+    stop("Unsupported algorithm:", alg, call. = FALSE)
   )
 
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
@@ -90,13 +90,13 @@ check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL,
       warning(
         paste0("The following arguments are not used in pcalg::", alg, ": "),
         paste(args_not_in_engine_args, collapse = ", "),
-        .call = FALSE
+        call. = FALSE
       )
     } else {
       stop(
         paste0("The following arguments are not used in pcalg::", alg, " or in the given score:"),
         paste(args_not_in_engine_args, collapse = ", "),
-        .call = FALSE
+        call. = FALSE
       )
     }
   }
@@ -107,5 +107,5 @@ check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL,
 }
 
 check_args_and_distribute_args_bnlearn <- function() {
-  stop("Not implemented yet for bnlearn", .call = FALSE)
+  stop("Not implemented yet for bnlearn", call. = FALSE)
 }
