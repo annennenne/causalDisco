@@ -617,9 +617,9 @@ unfreeze <- function(.kn) {
 print.knowledge <- function(x, ...) {
   cli::cli_h1("Knowledge object")
 
-  cat("\n")
-  cli::cli_h2("Tiers")
   if (nrow(x$tiers)) {
+    cat("\n")
+    cli::cli_h2("Tiers")
     # print tibble without column and tibble info
     print_this <- format(tibble::as_tibble(x$tiers))[-1L][-2L]
 
@@ -634,9 +634,10 @@ print.knowledge <- function(x, ...) {
 
     cat(print_this, sep = "\n")
   }
-  cat("\n")
-  cli::cli_h2("Variables")
+
   if (nrow(x$vars)) {
+    cat("\n")
+    cli::cli_h2("Variables")
     # print tibble without column and tibble info
     print_this <- format(tibble::as_tibble(x$vars))[-1L][-2L]
     # format header
@@ -653,9 +654,10 @@ print.knowledge <- function(x, ...) {
     )
     cat(print_this, sep = "\n")
   }
-  cat("\n")
-  cli::cli_h2("Edges")
+
   if (nrow(x$edges)) {
+    cat("\n")
+    cli::cli_h2("Edges")
     sym_arrow <- cli::symbol$arrow_right
     for (i in seq_len(nrow(x$edges))) {
       st <- x$edges$status[i]
