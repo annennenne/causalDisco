@@ -1097,6 +1097,13 @@ as_tetrad_knowledge <- function(.kn) {
   if (!requireNamespace("rJava", quietly = TRUE)) {
     stop("Package 'rJava' is required for as_tetrad_knowledge().")
   }
+  if (!.jniInitialized) {
+    .jinit(
+      # todo: how many gb?
+      parameters = "-Xmx2g",
+      classpath = "inst/java/tetrad-current.jar"
+    )
+  }
 
   j <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
 
