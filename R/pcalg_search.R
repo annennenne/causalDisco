@@ -174,7 +174,7 @@ pcalgSearch <- R6Class(
         )
       )
     },
-    set_knowledge = function(knowledge_obj) {
+    set_knowledge = function(knowledge_obj, directed_as_undirected = FALSE) {
       check_knowledge_obj(knowledge_obj)
 
       # Due to the nature of pcalg, we cannot set knowledge before
@@ -186,7 +186,10 @@ pcalgSearch <- R6Class(
           stop("Data must be set before knowledge.", call. = FALSE)
         }
         labels <- colnames(self$data)
-        as_pcalg_constraints(knowledge_obj, labels)
+        as_pcalg_constraints(knowledge_obj,
+          labels,
+          directed_as_undirected = directed_as_undirected
+        )
         invisible(self)
       }
     },

@@ -24,14 +24,14 @@ ges <- function(
     alpha = 0.05,
     ...) {
   engine <- match.arg(engine)
-  args <- list(...)
 
-  # build a “runner builder” that knows how to make a runner given knowledge
+  args <- rlang::list2(...)
+
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
-      tetrad  = ges_tetrad_runner(score, args),
-      pcalg   = ges_pcalg_runner(score, args),
-      bnlearn = ges_bnlearn_runner(score, args)
+      tetrad = rlang::exec(ges_tetrad_runner, score, alpha, !!!args),
+      pcalg = rlang::exec(ges_pcalg_runner, score, alpha, !!!args),
+      bnlearn = rlang::exec(ges_bnlearn_runner, score, alpha, !!!args)
     )
     if (!is.null(knowledge)) {
       runner$set_knowledge(knowledge)
@@ -72,7 +72,7 @@ ges_tetrad_runner <- function(score, ...) {
 }
 
 #' @keywords internal
-ges_pcalg_runner <- function(score, ...) {
+ges_pcalg_runner <- function(score, ..., directed_as_undirected_knowledge = FALSE) {
   args <- list(...)
   search <- pcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "ges", score = score)
@@ -82,7 +82,9 @@ ges_pcalg_runner <- function(score, ...) {
 
   runner <- list(
     set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
+      search$set_knowledge(knowledge,
+        directed_as_undirected = directed_as_undirected_knowledge
+      )
     },
     run = function(data) {
       search$run_search(data, set_suff_stat = FALSE)

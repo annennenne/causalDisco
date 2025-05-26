@@ -25,21 +25,19 @@ fci <- function(
     alpha = 0.05,
     ...) {
   engine <- match.arg(engine)
-  args <- list(...)
+  args <- rlang::list2(...)
 
-  # build a “runner builder” that knows how to make a runner given knowledge
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
-      tetrad  = fci_tetrad_runner(test, alpha, args),
-      pcalg   = fci_pcalg_runner(test, alpha, args),
-      bnlearn = fci_bnlearn_runner(test, alpha, args)
+      tetrad  = rlang::exec(fci_tetrad_runner, test, alpha, !!!args),
+      pcalg   = rlang::exec(fci_pcalg_runner, test, alpha, !!!args),
+      bnlearn = rlang::exec(fci_bnlearn_runner, test, alpha, !!!args)
     )
     if (!is.null(knowledge)) {
       runner$set_knowledge(knowledge)
     }
     runner
   }
-
   disco_method(builder, "fci")
 }
 # Set available engines
@@ -72,7 +70,7 @@ fci_tetrad_runner <- function(test, alpha, ...) {
   runner
 }
 
-fci_pcalg_runner <- function(test, alpha, ...) {
+fci_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge = FALSE) {
   args <- list(...)
   search <- pcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "fci", test = test)
@@ -82,7 +80,9 @@ fci_pcalg_runner <- function(test, alpha, ...) {
 
   runner <- list(
     set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
+      search$set_knowledge(knowledge,
+        directed_as_undirected = directed_as_undirected_knowledge
+      )
     },
     run = function(data) {
       search$run_search(data)
