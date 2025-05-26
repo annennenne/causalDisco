@@ -954,7 +954,7 @@ as_pcalg_constraints <- function(.kn,
   # check that labels and knowledge object are aligned
   if (!setequal(labels, .kn$vars$var)) {
     # all labels that aren't in knowledge
-    bad_vars <- setdiff(labels, kn$vars$var)
+    bad_vars <- setdiff(labels, .kn$vars$var)
     if (length(bad_vars)) {
       stop("`labels` contained variables that were not in the knowledge object: [",
         paste(bad_vars, collapse = ", "), "]",
@@ -1329,59 +1329,86 @@ seq_tiers <- function(tiers, vars) {
 #' @param spec A tidyselect specification (e.g. `everything()`,
 #' `starts_with("V")`) or a character vector.
 #' @keywords internal
+#' @title Resolve a tidy-select or character spec to character names
+#'
+#' @param .kn A `knowledge` object.
+#' @param spec A tidyselect specification (e.g. `everything()`,
+#'             `starts_with("V")`), a bare symbol, a character vector,
+#'             *or* a literal c(V1, V2, "V3") call.
+#' @keywords internal
 .vars_from_spec <- function(.kn, spec) {
-  # scalars can't be variable names
+  #  scalars can't be variable names
   if (is.atomic(spec) && length(spec) == 1L && !is.character(spec)) {
-    return(character(0)) # number, TRUE/FALSE, NULL, etc.
+    return(character(0))
   }
 
-  # bare symbol
+  # literal c(...) of names --> turn into a plain character vector
+  if (rlang::is_call(spec, "c")) {
+    args <- as.list(spec)[-1]
+    out <- purrr::map_chr(args, function(arg) {
+      # if they wrote c(V4), arg is a symbol
+      if (rlang::is_symbol(arg)) {
+        return(rlang::as_string(arg))
+      }
+      # if they wrote c("V4"), arg is a literal string
+      if (is.character(arg) && length(arg) == 1L) {
+        return(arg)
+      }
+      stop(
+        "Unsupported argument in c(): ",
+        deparse(arg),
+        call. = FALSE
+      )
+    })
+    return(out)
+  }
+
+  # bare symbol --> maybe a user-supplied character, or a var name
   if (rlang::is_symbol(spec)) {
-    # try to evaluate it as a regular R expression first
-    out <- tryCatch(rlang::eval_tidy(spec, env = parent.frame()),
-      error = function(...) NULL
+    out <- tryCatch(
+      rlang::eval_tidy(spec, env = parent.frame()),
+      error = function(e) NULL
     )
-
     if (is.character(out)) {
-      return(out) # a user-supplied character vector
+      return(out)
     }
-
-    name <- rlang::as_string(spec)
-    if (name %in% .kn$vars$var) {
-      return(name) # treat the symbol as a column name
+    nm <- rlang::as_string(spec)
+    if (nm %in% .kn$vars$var) {
+      return(nm)
     }
-
-    return(character(0)) # nothing matched
+    return(character(0))
   }
 
-  # go through tidy-select
-  lookup <- rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
-
-  q <- if (is.character(spec)) {
-    rlang::quo(all_of(spec))
+  # character vector --> wrap in all_of()
+  if (is.character(spec)) {
+    q <- rlang::quo(all_of(spec))
   } else {
-    rlang::as_quosure(spec, env = parent.frame())
+    # 5) otherwise, a tidy-select expression → leave it as a quosure
+    q <- rlang::as_quosure(spec, env = parent.frame())
   }
 
+  # fall back to tidyselect
   vars <- tryCatch(
-    names(tidyselect::eval_select(q, lookup)),
+    names(tidyselect::eval_select(q, set_names(seq_along(.kn$vars$var), .kn$vars$var))),
     error = function(e) character(0)
   )
   if (length(vars)) {
     return(vars)
   }
 
-  # fallback: plain expression
-  out <- tryCatch(rlang::eval_tidy(spec, env = parent.frame()),
-    error = function(...) NULL
+  # final fallback: evaluate as plain R
+  out2 <- tryCatch(
+    rlang::eval_tidy(spec, env = parent.frame()),
+    error = function(e) NULL
   )
-  if (is.character(out)) {
-    return(out)
+  if (is.character(out2)) {
+    return(out2)
   }
 
-  # failed: return empty
+  # nothing matched
   character(0)
 }
+
 
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'

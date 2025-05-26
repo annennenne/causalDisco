@@ -582,12 +582,13 @@ testthat::test_that("tier() throws error when mispecifying tier", {
 They are not present in the data frame provided to this knowledge object.",
     fixed = TRUE
   )
-  V2 <- 1
+
   expect_error(
     knowledge(
+      data.frame(V1 = 1, V2 = 2, check.names = FALSE),
       tier(
         1 ~ V1,
-        V2
+        "V2"
       )
     ),
     "Each tier() argument must be a two-sided formula.",
@@ -842,6 +843,7 @@ testthat::test_that("reposition_tier() validates inputs", {
 })
 
 testthat::test_that("reposition_tier() errors when no before or after is provided", {
+  kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
   expect_error(
     reposition_tier(kn, One),
     "Supply exactly one of `before` or `after`.",
