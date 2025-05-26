@@ -612,26 +612,72 @@ unfreeze <- function(.kn) {
 # ────────────────────────────────── Print ─────────────────────────────────────
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
+# ’ @title Print a `knowledge` object
+# ’ @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
-  cli::cat_rule("Knowledge object")
+  cli::cli_h1("Knowledge object")
 
-  if (length(x$tier_labels)) {
-    ord <- order(unname(x$tier_labels))
-    labs <- names(x$tier_labels)[ord]
-    idx <- unname(x$tier_labels)[ord]
+  cat("\n")
+  cli::cli_h2("Tiers")
+  if (nrow(x$tiers)) {
+    # print tibble without column and tibble info
+    print_this <- format(tibble::as_tibble(x$tiers))[-1L][-2L]
 
-    cli::cat_line("Tier labels:")
-    cli::cat_line(paste0("  * ", labs, " -> ", idx, collapse = "\n"))
+    hdr <- print_this[1]
+    pad <- sub("label.*", "", hdr)
+    tail <- sub(".*label", "", hdr)
+    print_this[1] <- paste0(
+      pad,
+      "\u001b[1mlabel\u001b[22m",
+      tail
+    )
+
+    cat(print_this, sep = "\n")
   }
+  cat("\n")
+  cli::cli_h2("Variables")
+  if (nrow(x$vars)) {
+    # print tibble without column and tibble info
+    print_this <- format(tibble::as_tibble(x$vars))[-1L][-2L]
+    # format header
+    hdr <- print_this[1]
+    pad <- sub("var.*", "", hdr) # "  "
+    mid <- sub(".*var(.*)tier.*", "\\1", hdr) # "   "
+    tail <- sub(".*tier", "", hdr) # " "
+    print_this[1] <- paste0(
+      pad,
+      "\u001b[1mvar\u001b[22m",
+      mid,
+      "\u001b[1mtier\u001b[22m",
+      tail
+    )
+    cat(print_this, sep = "\n")
+  }
+  cat("\n")
+  cli::cli_h2("Edges")
+  if (nrow(x$edges)) {
+    sym_arrow <- cli::symbol$arrow_right
+    for (i in seq_len(nrow(x$edges))) {
+      st <- x$edges$status[i]
+      from <- x$edges$from[i]
+      to <- x$edges$to[i]
 
-  cli::cat_line(cli::style_bold("Variables:"), nrow(x$vars))
-  if (nrow(x$vars)) print(x$vars, n = Inf)
+      bullet <- switch(st,
+        forbidden = cli::col_red(cli::symbol$cross),
+        required  = cli::col_green(cli::symbol$tick),
+        cli::symbol$bullet
+      )
 
-  cli::cat_line(cli::style_bold("Edges:"), nrow(x$edges))
-  if (nrow(x$edges)) print(x$edges, n = 10)
+      cli::cat_line(
+        " ", bullet, "  ", from, " ", sym_arrow, " ", to
+      )
+    }
+  }
 
   invisible(x)
 }
+
+
 
 # ────────────────────────────── Manipulation ──────────────────────────────────
 #' @title Merge two `knowledge` objects
@@ -1357,5 +1403,5 @@ seq_tiers <- function(tiers, vars) {
 #' @importFrom rlang enquo eval_tidy set_names is_formula f_lhs f_rhs as_name !!
 #' @importFrom rlang is_integerish as_string list2 inject new_formula empty_env
 #' @importFrom purrr pwalk
-#' @importFrom cli cat_rule cat_line style_bold
+#' @importFrom cli cli_h1 cli_h2 cli_symbol
 NULL
