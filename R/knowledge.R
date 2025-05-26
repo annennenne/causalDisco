@@ -261,11 +261,37 @@ knowledge <- function(...) {
       kn <<- .add_edges(kn, status, from_vars, to_vars)
     }
   }
+
   forbidden <- function(...) edge_helper("forbidden", ...)
   required <- function(...) edge_helper("required", ...)
 
+  exogenous <- function(...) {
+    # capture the raw expressions the user typed
+    specs <- rlang::enexprs(...)
+
+    if (length(specs) == 0L) {
+      stop("exogenous() needs at least one variable specification.", call. = FALSE)
+    }
+
+    # if they passed >1 selector, splice them into a single c(...) call
+    vars_expr <- if (length(specs) == 1L) {
+      specs[[1]]
+    } else {
+      rlang::expr(c(!!!specs))
+    }
+
+    # inject that call straight into add_exogenous()
+    kn <<- add_exogenous(
+      kn,
+      !!vars_expr
+    )
+  }
+  # synonyms for exogenous
+  exo <- exogenous
+  root <- exogenous
+
   # evaluate the call list
-  allowed <- c("tier", "forbidden", "required")
+  allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
   for (expr in dots) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
       stop("Only tier(), forbidden(), required() calls are allowed.", call. = FALSE)
@@ -293,8 +319,8 @@ add_vars <- function(.kn, vars) {
 
   if (.kn$frozen && length(missing)) {
     stop(
-      "Unknown variable(s): ", paste(missing, collapse = ", "),
-      "\nThey are not present in the data frame provided to this knowledge object.",
+      "Unknown variable(s): [", paste(missing, collapse = ", "),
+      "]\nThey are not present in the data frame provided to this knowledge object.",
       call. = FALSE
     )
   }
@@ -541,6 +567,33 @@ require_edge <- function(.kn, ...) {
   }
   .kn
 }
+
+#' @title Add exogenous variables
+#'
+#' @description
+#' Adds variables that cannot have incoming edges (root/exogenous nodes).
+#' Every possible incoming edge to these nodes is automatically forbidden.
+#' This is equivalent to writing `forbidden(everything() ~ vars)`.
+#'
+#' @param .kn A knowledge object.
+#' @param vars Tidyselect specification or character vector of variables.
+#'
+#' @return Updated knowledge object.
+#' @export
+add_exogenous <- function(.kn, vars) {
+  check_knowledge_obj(.kn)
+  .kn <- forbid_edge(.kn, everything() ~ {{ vars }})
+  .kn
+}
+
+#' @rdname add_exogenous
+#' @export
+add_exo <- add_exogenous
+
+#' @rdname add_exogenous
+#' @export
+add_root <- add_exogenous
+
 
 #' @title Unfreeze a `knowledge` object.
 #'
@@ -1153,7 +1206,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param remove_self_loops Logical. If `TRUE`, self-loops are removed.
 #' Defaults to `FALSE`.
 #' @keywords internal
-.add_edges <- function(.kn, status, from, to, remove_self_loops = FALSE) {
+.add_edges <- function(.kn, status, from, to, remove_self_loops = TRUE) {
   # resolve `from` / `to` specs into character vectors of variable names
   from_chr <- .vars_from_spec(.kn, {{ from }})
   to_chr <- .vars_from_spec(.kn, {{ to }})
