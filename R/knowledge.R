@@ -1031,7 +1031,8 @@ as_pcalg_constraints <- function(.kn,
   list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
 }
 
-#' @title Forbid all “uphill” edges implied by tiers
+#' @title Forbid all tier violations
+#'
 #' @description
 #' Given a `knowledge` object with variables already assigned to tiers,
 #' forbids every directed edge that runs from a higher-numbered tier down
@@ -1042,24 +1043,31 @@ as_pcalg_constraints <- function(.kn,
 forbid_tier_violations <- function(.kn) {
   check_knowledge_obj(.kn)
 
-  # rename so we can cross without duplicate names
-  from <- .kn$vars %>%
-    dplyr::rename(var_from = var, tier_from = tier)
-  to <- .kn$vars %>%
-    dplyr::rename(var_to = var, tier_to = tier)
+  # build a named vector of tier rank
+  tier_ranks <- set_names(
+    seq_along(.kn$tiers$label),
+    .kn$tiers$label
+  )
 
-  # every possible (from, to) pair
-  bad <- tidyr::crossing(from, to) %>%
-    # filter tier violations
-    dplyr::filter(tier_from > tier_to)
+  # annotate each var with its numeric rank
+  vars <- .kn$vars |>
+    dplyr::mutate(rank = tier_ranks[tier])
 
+  # select & rename for "from" vs "to"
+  vf <- vars |> dplyr::select(var_from = var, rank_from = rank)
+  vt <- vars |> dplyr::select(var_to = var, rank_to = rank)
+
+  # true cartesian crossing of those two tibbles
+  bad <- tidyr::crossing(vf, vt) |>
+    dplyr::filter(rank_from > rank_to) # now these columns actually exist!
+
+  # add all those forbidden edges, dropping self-loops
   if (nrow(bad)) {
     .kn <- .add_edges(
       .kn,
-      status = "forbidden",
-      from = bad$var_from,
-      to = bad$var_to,
-      # remove self-loops as these are not technically tier violations
+      status            = "forbidden",
+      from              = bad$var_from,
+      to                = bad$var_to,
       remove_self_loops = TRUE
     )
   }
