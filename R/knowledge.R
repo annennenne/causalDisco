@@ -868,6 +868,224 @@ check_knowledge_obj <- function(x) {
   TRUE
 }
 
+# ───────────────────────────────── Remove ─────────────────────────────────────
+
+#' @title Remove variables (and their edges) from a knowledge object
+#'
+#' @description
+#' Drops the given variables from `kn$vars`, and automatically removes
+#' any edges that mention them.
+#'
+#' @param .kn   A `knowledge` object.
+#' @param ...   Unquoted variable names or tidy‐select helpers.
+#'
+#' @return An updated `knowledge` object.
+#' @export
+remove_vars <- function(.kn, ...) {
+  check_knowledge_obj(.kn)
+  specs <- rlang::enquos(..., .ignore_empty = "all")
+
+  # resolve each quosure to a character vector of names
+  vars_list <- purrr::map(specs, function(q) {
+    .vars_from_spec(.kn, rlang::get_expr(q))
+  })
+  vars <- unique(unlist(vars_list, use.names = FALSE))
+
+  if (length(vars) == 0L) {
+    stop("remove_vars() matched no variables.", call. = FALSE)
+  }
+
+  # drop them from the var table
+  .kn$vars <- dplyr::filter(.kn$vars, !var %in% vars)
+
+  # drop any edges that mention them
+  .kn$edges <- dplyr::filter(
+    .kn$edges,
+    !from %in% vars,
+    !to %in% vars
+  )
+
+  .kn
+}
+#' @title Remove edges from a knowledge object
+#' @description
+#' Drop any directed edge(s) matching the two‐sided formulas you supply.
+#' Errors if no edges matched.
+#' @param .kn   A `knowledge` object.
+#' @param ...   One or more two‐sided formulas, e.g. `A ~ B` or `starts_with("X") ~ Y`.
+#' @return The updated `knowledge` object.
+#' @export
+remove_edges <- function(.kn, ...) {
+  check_knowledge_obj(.kn)
+  specs <- rlang::enquos(..., .ignore_empty = "all")
+  if (length(specs) == 0L) {
+    stop("remove_edges() needs at least one two-sided formula.", call. = FALSE)
+  }
+
+  # build a little tibble of all (from,to) pairs the user wants to drop
+  drop_tbl <- purrr::map_dfr(specs, function(fq) {
+    expr <- rlang::get_expr(fq)
+    from_ <- .formula_vars(.kn, rlang::f_lhs(expr))
+    to_ <- .formula_vars(.kn, rlang::f_rhs(expr))
+    tidyr::crossing(from = from_, to = to_)
+  })
+
+  # did any of those actually exist in kn$edges?
+  matched <- dplyr::inner_join(
+    drop_tbl,
+    dplyr::select(.kn$edges, from, to),
+    by = c("from", "to")
+  )
+  if (nrow(matched) == 0L) {
+    stop("remove_edges() matched no edges.", call. = FALSE)
+  }
+
+  # drop them
+  .kn$edges <- dplyr::anti_join(.kn$edges, drop_tbl, by = c("from", "to"))
+  .kn
+}
+
+
+#' @title Remove entire tiers from a knowledge object
+#'
+#' @description
+#' Drops tier definitions (and un‐tiers any vars assigned to them).
+#'
+#' @param .kn   A `knowledge` object.
+#' @param ...   Tier labels (unquoted or character) or numeric indices.
+#'
+#' @return An updated `knowledge` object.
+#' @export
+remove_tiers <- function(.kn, ...) {
+  check_knowledge_obj(.kn)
+  specs <- rlang::enquos(..., .ignore_empty = "all")
+  keep <- .kn$tiers$label
+  to_drop <- purrr::map_chr(specs, function(q) {
+    val <- rlang::eval_tidy(q, .kn$tiers, env = parent.frame())
+    if (is.numeric(val)) {
+      return(.kn$tiers$label[val])
+    }
+    as.character(val)
+  })
+
+  to_drop <- intersect(to_drop, keep)
+  if (!length(to_drop)) {
+    return(.kn)
+  }
+
+  # drop the tier rows
+  .kn$tiers <- dplyr::filter(.kn$tiers, !label %in% to_drop)
+
+  # reset any vars that were in those tiers
+  .kn$vars$tier[.kn$vars$tier %in% to_drop] <- NA_character_
+
+  .kn
+}
+
+
+
+# ───────────────────────────────── Deparse ────────────────────────────────────
+#' @title Deparse a knowledge object to knowledge() mini-DSL code
+#'
+#' @description
+#' Given a `knowledge` object, return a single string containing
+#' the R code (using `knowledge()`, `tier()`, `forbidden()`, `required()`)
+#' that would rebuild that same object.
+#'
+#' @param .kn A `knowledge` object.
+#' @param df_name Optional name of the data frame you used
+#'   (used as the first argument to `knowledge()`).  If `NULL`,
+#'   `knowledge()` is called with no data frame.
+#'
+#' @return A single string (with newlines) of R code.
+#' @export
+deparse_knowledge <- function(kn, df_name = NULL) {
+  check_knowledge_obj(kn)
+
+  fmt_fml <- function(lhs, rhs_vars) {
+    paste0(
+      as.character(lhs),
+      " ~ ",
+      paste(as.character(rhs_vars), collapse = " + ")
+    )
+  }
+
+  out <- character()
+
+  # ---- header ----
+  if (is.null(df_name)) {
+    out <- c(out, "knowledge(")
+  } else {
+    out <- c(out, paste0("knowledge(", df_name, ","))
+  }
+
+  # ---- tiers ----
+  if (nrow(kn$tiers)) {
+    tier_labels <- kn$tiers$label
+    tier_fmls <- vapply(
+      tier_labels,
+      function(lbl) {
+        vars <- kn$vars$var[kn$vars$tier == lbl]
+        fmt_fml(lbl, vars)
+      },
+      character(1)
+    )
+
+    out <- c(
+      out,
+      "  tier(",
+      paste0("    ", tier_fmls, collapse = ",\n"),
+      "  ),"
+    )
+  }
+
+  # ---- forbidden edges ----
+  forb <- dplyr::filter(kn$edges, status == "forbidden")
+  if (nrow(forb)) {
+    # group by 'from'
+    f_grouped <- split(forb$to, forb$from)
+    forb_fmls <- vapply(
+      names(f_grouped),
+      function(fm) fmt_fml(fm, f_grouped[[fm]]),
+      character(1)
+    )
+
+    out <- c(
+      out,
+      "  forbidden(",
+      paste0("    ", forb_fmls, collapse = ",\n"),
+      "  ),"
+    )
+  }
+
+  # ---- required edges ----
+  req <- dplyr::filter(kn$edges, status == "required")
+  if (nrow(req)) {
+    r_grouped <- split(req$to, req$from)
+    req_fmls <- vapply(
+      names(r_grouped),
+      function(fm) fmt_fml(fm, r_grouped[[fm]]),
+      character(1)
+    )
+
+    out <- c(
+      out,
+      "  required(",
+      paste0("    ", req_fmls, collapse = ",\n"),
+      "  ),"
+    )
+  }
+
+  # ---- footer ----
+  # drop trailing comma on the last line
+  last <- length(out)
+  out[last] <- sub(",$", "", out[last])
+  out <- c(out, ")")
+
+  # combine
+  paste(out, collapse = "\n")
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # ────────────────── Conversion to Tetrad, pcalg, bnlearn  ─────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1059,16 +1277,21 @@ forbid_tier_violations <- function(.kn) {
 
   # true cartesian crossing of those two tibbles
   bad <- tidyr::crossing(vf, vt) |>
-    dplyr::filter(rank_from > rank_to) # now these columns actually exist!
+    dplyr::filter(rank_from > rank_to)
 
   # add all those forbidden edges, dropping self-loops
   if (nrow(bad)) {
-    .kn <- .add_edges(
-      .kn,
-      status            = "forbidden",
-      from              = bad$var_from,
-      to                = bad$var_to,
-      remove_self_loops = TRUE
+    new_edges <- dplyr::tibble(
+      status    = "forbidden",
+      from      = bad$var_from,
+      to        = bad$var_to,
+      tier_from = .kn$vars$tier[match(bad$var_from, .kn$vars$var)],
+      tier_to   = .kn$vars$tier[match(bad$var_to, .kn$vars$var)]
+    )
+
+    # bind to existing, drop duplicates
+    .kn$edges <- dplyr::distinct(
+      dplyr::bind_rows(.kn$edges, new_edges)
     )
   }
   .kn

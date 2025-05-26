@@ -1469,3 +1469,217 @@ test_that("exogenous() on unknown var errors when frozen", {
     "Unknown variable"
   )
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# remove functions
+# ──────────────────────────────────────────────────────────────────────────────
+
+testthat::test_that("remove_edges() drops forbidden and required edges", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3, D = 4),
+    tier(1 ~ A + B, 2 ~ C, 3 ~ D),
+    forbidden(A ~ C, B ~ D),
+    required(B ~ C, C ~ D)
+  )
+  # check edges present
+  testthat::expect_true(any(kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"))
+  testthat::expect_true(any(kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"))
+  # remove a forbidden edge
+  kn2 <- remove_edges(kn, A ~ C)
+  testthat::expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
+  # remove a required edge
+  kn3 <- remove_edges(kn, C ~ D)
+  testthat::expect_false(any(kn3$edges$from == "C" & kn3$edges$to == "D"))
+  # other edges remain
+  testthat::expect_true(any(kn3$edges$from == "B" & kn3$edges$to == "D"))
+})
+
+testthat::test_that("remove_edges() supports multiple formulas and tidyselect", {
+  kn <- knowledge(
+    data.frame(X1 = 1, X2 = 2, Y = 3),
+    tier(1 ~ X1 + X2, 2 ~ Y),
+    forbidden(X1 ~ Y, X2 ~ Y),
+    required(X2 ~ X1)
+  )
+
+  # remove both X1→Y and X2→Y in one call
+  kn2 <- remove_edges(kn, X1 ~ Y, X2 ~ Y)
+  testthat::expect_false(any(kn2$edges$from %in% c("X1", "X2") & kn2$edges$to == "Y"))
+
+  # remove via character‐vector on the LHS
+  kn3 <- remove_edges(kn, c("X1", "X2") ~ Y)
+  testthat::expect_false(any(kn3$edges$to == "Y"))
+})
+
+testthat::test_that("remove_edges() warns if no edges matched", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2),
+    forbidden(A ~ B)
+  )
+  testthat::expect_error(
+    remove_edges(kn, B ~ C),
+    "remove_edges() matched no edges",
+    fixed = TRUE
+  )
+})
+
+testthat::test_that("remove_vars() drops vars and associated edges", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3),
+    forbidden(A ~ B),
+    required(B ~ C)
+  )
+  testthat::expect_true("B" %in% kn$vars$var)
+  testthat::expect_true(any(kn$edges$to == "B" | kn$edges$from == "B"))
+  kn2 <- remove_vars(kn, B)
+  testthat::expect_false("B" %in% kn2$vars$var)
+  testthat::expect_false(any(kn2$edges$from == "B" | kn2$edges$to == "B"))
+})
+
+testthat::test_that("remove_vars() accepts tidyselect and character vector", {
+  kn <- knowledge(
+    data.frame(foo = 1, bar = 2, baz = 3),
+    forbidden(foo ~ bar),
+    forbidden(bar ~ baz)
+  )
+  kn2 <- remove_vars(kn, starts_with("ba"))
+  testthat::expect_false(any(grepl("^ba", kn2$vars$var)))
+  kn3 <- remove_vars(kn, c("foo", "baz"))
+  testthat::expect_false(any(kn3$vars$var %in% c("foo", "baz")))
+})
+
+testthat::test_that("remove_vars() errors on no matches", {
+  kn <- knowledge(data.frame(A = 1, B = 2))
+  testthat::expect_error(
+    remove_vars(kn, X),
+    "matched no variables"
+  )
+})
+
+testthat::test_that("remove_tiers() drops tier and resets vars", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3),
+    tier("alpha" ~ A + B, "beta" ~ C)
+  )
+  testthat::expect_true("alpha" %in% kn$tiers$label)
+  testthat::expect_equal(kn$vars$tier[kn$vars$var == "A"], "alpha")
+  kn2 <- remove_tiers(kn, "alpha")
+  testthat::expect_false("alpha" %in% kn2$tiers$label)
+  testthat::expect_true(is.na(kn2$vars$tier[kn2$vars$var == "A"]))
+})
+
+testthat::test_that("remove_tiers() accepts numeric index", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3),
+    tier(1 ~ A, 2 ~ B, 3 ~ C)
+  )
+  # remove second tier (label "2")
+  kn2 <- remove_tiers(kn, 2)
+  testthat::expect_false("2" %in% kn2$tiers$label)
+  testthat::expect_true(is.na(kn2$vars$tier[kn2$vars$var == "B"]))
+})
+
+testthat::test_that("remove_tiers() no-op if no match", {
+  kn <- knowledge(
+    data.frame(X = 1, Y = 2),
+    tier("t1" ~ X, "t2" ~ Y)
+  )
+  kn2 <- remove_tiers(kn, "none")
+  testthat::expect_identical(kn2, kn)
+})
+
+testthat::test_that("chaining remove_* works together", {
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3, D = 4),
+    tier(1 ~ A + B, 2 ~ C, 3 ~ D),
+    forbidden(A ~ C),
+    required(B ~ D)
+  )
+  kn2 <- kn |>
+    remove_edges(A ~ C) |>
+    remove_vars(D) |>
+    remove_tiers(3)
+  testthat::expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
+  testthat::expect_false("D" %in% kn2$vars$var)
+  testthat::expect_false("3" %in% kn2$tiers$label)
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# deparse_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+testthat::test_that("deparse_knowledge() emits minimal code for empty knowledge", {
+  kn <- knowledge()
+  code <- deparse_knowledge(kn)
+  expected <- "knowledge(\n)"
+  testthat::expect_equal(code, expected)
+})
+
+testthat::test_that("deparse_knowledge() includes data-frame name when provided", {
+  df <- data.frame(A = 1, B = 2)
+  kn <- knowledge(df, tier(1 ~ A, 2 ~ B))
+  code <- deparse_knowledge(kn, "df")
+  expected <- paste0(
+    "knowledge(df,",
+    "\n  tier(",
+    "\n    1 ~ A,",
+    "\n    2 ~ B",
+    "\n  )",
+    "\n)"
+  )
+  testthat::expect_equal(code, expected)
+})
+
+testthat::test_that("deparse_knowledge() groups multiple tiers into one tier() call", {
+  df <- data.frame(X = 1, Y = 2, Z = 3)
+  kn <- knowledge(
+    df,
+    tier(first ~ X + Y, second ~ Z)
+  )
+  code <- deparse_knowledge(kn, "df")
+  testthat::expect_true(grepl("tier\\(\\s*first ~ X \\+ Y,\\s*second ~ Z\\s*\\)", code))
+})
+
+testthat::test_that("deparse_knowledge() collapses forbidden edges by source", {
+  df <- data.frame(A = 1, B = 2, C = 3, D = 4)
+  kn <- knowledge(
+    df,
+    forbidden(A ~ C, A ~ D, B ~ C)
+  )
+  code <- deparse_knowledge(kn, "df")
+  # should have a single forbidden() call with two formulas:
+  #   A ~ C + D
+  #   B ~ C
+  testthat::expect_true(
+    grepl(
+      "forbidden\\(\\s*A ~ C \\+ D,\\s*B ~ C\\s*\\)",
+      code
+    )
+  )
+})
+
+testthat::test_that("deparse_knowledge() collapses required edges by source", {
+  df <- data.frame(P = 1, Q = 2, R = 3)
+  kn <- knowledge(
+    df,
+    required(P ~ Q, P ~ R)
+  )
+  code <- deparse_knowledge(kn, "df")
+  testthat::expect_true(
+    grepl("required\\(\\s*P ~ Q \\+ R\\s*\\)", code)
+  )
+})
+
+testthat::test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", {
+  df <- data.frame(A = 1, B = 2, C = 3)
+  kn <- knowledge(
+    df,
+    tier(1 ~ A + B, 2 ~ C),
+    forbidden(A ~ C),
+    required(B ~ A)
+  )
+  code <- deparse_knowledge(kn, "df")
+  kn2 <- eval(parse(text = code))
+  testthat::expect_equal(kn2, kn)
+})
