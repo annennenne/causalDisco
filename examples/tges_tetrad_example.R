@@ -16,18 +16,24 @@ df <- data.frame(V1, V2, V3, V4, V5, V6)
 
 # create a knowledge object
 kn <- knowledge(
+  df,
   tier(
     baby ~ V1 + V2,
     child ~ V3,
     adult ~ V4,
     old ~ V5 + V6
   ),
-  forbidden(V1 ~ V3, edge_type = "undirected"),
-  required(V1 ~ V2, V2 ~ V3, edge_type = "undirected")
+  forbidden(V1 ~ V3),
+  required(V1 ~ V2, V2 ~ V3)
+)
+kn2 <- knowledge(
+  df,
+  forbidden(V1 ~ V3),
+  required(V1 ~ V2, V2 ~ V3)
 )
 my_tges_tetrad <- ges(engine = "tetrad", score = "sem_bic")
-my_ges_pcalg <- ges(engine = "pcalg", score = "sem_bic")
+my_ges_pcalg <- ges(engine = "pcalg", score = "sem_bic", directed_as_undirected_knowledge = TRUE)
 
 # call disco with background knowledge
 disco(df, method = my_tges_tetrad, knowledge = kn) |> cat()
-disco(df, method = my_ges_pcalg, knowledge = kn)
+disco(df, method = my_ges_pcalg, knowledge = kn2)

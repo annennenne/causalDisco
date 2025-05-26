@@ -16,22 +16,26 @@ df <- data.frame(V1, V2, V3, V4, V5, V6)
 
 # create a knowledge object
 kn <- knowledge(
-  tier(
-    baby ~ V1 + V2 + V3,
-    adult ~ V4,
-    old ~ V5 + V6
-  ),
+  df,
+  # tier(
+  #   baby ~ V1 + V2 + V3,
+  #   adult ~ V4,
+  #   old ~ V5 + V6
+  # ),
   required(
     V1 ~ V2,
-    V2 ~ V1,
-    V2 ~ V3,
-    V3 ~ V2
+    V2 ~ V3
   )
 )
 
 # initialize pc algorithm as usual
-my_pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
-my_pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+my_pc_tetrad <- pc(
+  engine = "tetrad", test = "fisher_z", alpha = 0.05,
+)
+my_pc_pcalg <- pc(
+  engine = "pcalg", test = "fisher_z", alpha = 0.05,
+  directed_as_undirected_knowledge = TRUE
+)
 
 # can be called like this
 my_pc_tetrad(df)
