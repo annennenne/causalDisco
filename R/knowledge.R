@@ -942,7 +942,7 @@ as_pcalg_constraints <- function(.kn,
       dplyr::anti_join(.kn$edges,
         by = c("from" = "to", "to" = "from")
       ) |>
-      dplyr::mutate(desc = paste0(from, " → ", to)) |>
+      dplyr::mutate(desc = paste0(from, " --> ", to)) |>
       dplyr::pull(desc)
     if (length(bad)) {
       stop(
