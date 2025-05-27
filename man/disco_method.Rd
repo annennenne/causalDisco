@@ -7,6 +7,14 @@
 disco_method(builder, method_class)
 }
 \description{
-Wrap a runner list into a “disco_method” closure
+A \code{disco_method} is a closure that wraps a builder function.
+The builder function is expected to return a runner object.
+The closure can be called with a dataframe, and it will
+build a fresh runner with the empty knowledge. Use \code{set_knowledge}
+to set knowledge into the method.
+
+Every \code{disco_method} can be used in combination with \code{disco}. If you want
+to build your own method, you can use this function to create a closure
+that will run with \code{disco}.
 }
 \keyword{internal}

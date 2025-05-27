@@ -2,15 +2,17 @@
 % Please edit documentation in R/knowledge.R
 \name{.validate_forbidden_required}
 \alias{.validate_forbidden_required}
-\title{Validate that an edge is not simultaneously forbidden \emph{and} required}
+\title{Detect inconsistent edge declarations}
 \usage{
 .validate_forbidden_required(edges_df)
 }
 \arguments{
-\item{edges_df}{A data frame with columns \code{status}, \code{from},
-\code{to}, \code{tier_from}, and \code{tier_to}.}
+\item{edges_df}{Data frame with columns \code{status}, \code{from}, \code{to},
+\code{tier_from}, and \code{tier_to}.}
 }
 \description{
-Validate that an edge is not simultaneously forbidden \emph{and} required
+Throws an error if any edges are declared as both
+\code{forbidden} and \code{required}, or if a required edge is declared in both
+directions.
 }
 \keyword{internal}

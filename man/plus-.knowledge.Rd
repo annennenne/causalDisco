@@ -4,7 +4,7 @@
 \alias{+.knowledge}
 \title{Merge two \code{knowledge} objects}
 \usage{
-\method{+}{knowledge}(e1, e2)
+\method{+}{knowledge}(kn1, kn2)
 }
 \description{
 Merge two \code{knowledge} objects

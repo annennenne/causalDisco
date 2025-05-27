@@ -3,7 +3,6 @@
 #' @description
 #' Run the FCI algorithm for causal discovery using one of several engines.
 #'
-#' @inheritParams disco_method
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
 #'     \item{\code{"tetrad"}}{Tetrad Java library.}

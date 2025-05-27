@@ -4,7 +4,7 @@
 \alias{.add_edges}
 \title{Add one or many edges to a knowledge object}
 \usage{
-.add_edges(.kn, status, from, to)
+.add_edges(.kn, status, from, to, remove_self_loops = TRUE)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
@@ -14,6 +14,9 @@
 \item{from}{A tidyselect specification or character vector of variable names.}
 
 \item{to}{A tidyselect specification or character vector of variable names.}
+
+\item{remove_self_loops}{Logical. If \code{TRUE}, self-loops are removed.
+Defaults to \code{FALSE}.}
 }
 \description{
 Add one or many edges to a knowledge object

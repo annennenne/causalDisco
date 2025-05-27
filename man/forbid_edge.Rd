@@ -2,15 +2,21 @@
 % Please edit documentation in R/knowledge.R
 \name{forbid_edge}
 \alias{forbid_edge}
-\title{Add a forbidden edge to a knowledge object}
+\title{Add forbidden edges}
 \usage{
 forbid_edge(.kn, ...)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
-\item{...}{Either a two-sided formula (\code{A ~ C}) \emph{or} \code{from}, \code{to}.}
+\item{...}{One or more two-sided formulas.}
+}
+\value{
+The updated \code{knowledge} object.
 }
 \description{
-These edges are not allowed to be present in the final graph.
+Forbid one or more directed edges.
+Each argument \strong{must} be a two–sided formula, e.g. \code{X ~ Y}.
+Formulas can use tidy-select on either side, so
+\code{forbid_edge(kn, starts_with("X") ~ Y)} forbids every \verb{X_i --> Y}.
 }

@@ -2,22 +2,20 @@
 % Please edit documentation in R/knowledge.R
 \name{.edge_verb}
 \alias{.edge_verb}
-\title{Handle \code{forbid_edge()} and \code{require_edge()} verbs}
+\title{Handle forbid_edge() / require_edge() calls}
 \usage{
-.edge_verb(.kn, status, from_quo, to_quo = NULL)
+.edge_verb(.kn, status, fml)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
-\item{status}{A string, either "forbidden" or "required".}
+\item{status}{Either \code{"forbidden"} or \code{"required"}.}
 
-\item{from}{A tidyselect specification or a variable name string or symbol.}
-
-\item{to}{A tidyselect specification or a variable name string or symbol.}
+\item{fml}{A quosure that must wrap a two-sided formula.}
 }
 \description{
-Help \code{forbid_edge()} and \code{require_edge()} to handle both
-tidyselect and formula inputs as well as standard \code{to}, \code{from} arguments.
-Passes arguments correctly to \code{.add_edges()}.
+Internal helper that turns each \strong{two-sided formula} supplied by
+\code{forbid_edge()} or \code{require_edge()} into concrete variable names, then passes
+the cross-product to \code{.add_edges()}.
 }
 \keyword{internal}

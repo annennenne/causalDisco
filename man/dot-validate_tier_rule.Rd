@@ -4,7 +4,7 @@
 \alias{.validate_tier_rule}
 \title{Validate that no edge runs from higher tier to lower tier}
 \usage{
-.validate_tier_rule(edges_df)
+.validate_tier_rule(edges_df, tiers)
 }
 \arguments{
 \item{edges_df}{A data frame with columns \code{status}, \code{from},

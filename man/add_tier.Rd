@@ -7,7 +7,7 @@
 add_tier(.kn, tier, before = NULL, after = NULL)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{.kn}{A knowledge object.}
 
 \item{tier}{Bare symbol / character (label) \strong{or} numeric literal.}
 
@@ -16,7 +16,7 @@ tier index, or variable.  Once the knowledge object already
 has >= 1 tier, you must supply \strong{exactly one} of these.}
 }
 \value{
-Updated \code{knowledge} object.
+Updated knowledge object.
 }
 \description{
 Add (and position) a tier

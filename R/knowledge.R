@@ -1679,5 +1679,5 @@ seq_tiers <- function(tiers, vars) {
 #' @importFrom rlang enquo eval_tidy set_names is_formula f_lhs f_rhs as_name !!
 #' @importFrom rlang is_integerish as_string list2 inject new_formula empty_env
 #' @importFrom purrr pwalk
-#' @importFrom cli cli_h1 cli_h2 cli_symbol
+#' @importFrom cli cli_h1 cli_h2 symbol
 NULL

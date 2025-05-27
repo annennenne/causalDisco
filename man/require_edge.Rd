@@ -2,15 +2,20 @@
 % Please edit documentation in R/knowledge.R
 \name{require_edge}
 \alias{require_edge}
-\title{Add a forbidden edge to a knowledge object}
+\title{Add required edges}
 \usage{
 require_edge(.kn, ...)
 }
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
-\item{...}{Either a two-sided formula (\code{A ~ C}) \emph{or} \code{from}, \code{to}.}
+\item{...}{One or more two-sided formulas.}
+}
+\value{
+The updated \code{knowledge} object.
 }
 \description{
-These edges are not allowed to be present in the final graph.
+Require one or more directed edges.
+Arguments follow the same rules as \strong{\code{forbid_edge()}} but a required edge
+may only be given in \emph{one} direction (\code{X ~ Y} \strong{or} \code{Y ~ X}, not both).
 }

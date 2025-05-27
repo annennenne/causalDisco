@@ -2,24 +2,49 @@
 % Please edit documentation in R/knowledge.R
 \name{as_pcalg_constraints}
 \alias{as_pcalg_constraints}
-\title{Convert to a pair of (fixedGaps, fixedEdges) matrices for the \strong{pcalg} package}
+\title{Convert background knowledge to pcalg constraint matrices}
 \usage{
-as_pcalg_constraints(.kn, labels, directed_as_undirected = FALSE)
+as_pcalg_constraints(
+  .kn,
+  labels = .kn$vars$var,
+  directed_as_undirected = FALSE
+)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{.kn}{A \code{knowledge} object.  Must have no tier information.}
 
-\item{labels}{Character vector of variable names in the \emph{exact} order of
-your data matrix / data frame.}
+\item{labels}{Character vector of all variable names, in the exact order
+of your data columns.  Every variable referenced by an edge in \code{.kn}
+must appear here.}
+
+\item{directed_as_undirected}{Logical (default \code{FALSE}).  If
+\code{FALSE}, we require that every edge in \code{.kn} has its
+mirror-image present as well, and will error if any are missing.  If
+\code{TRUE}, we automatically mirror every directed edge into
+an undirected constraint.}
 }
 \value{
-A list with elements \code{fixedGaps} and \code{fixedEdges}.
+A list with two elements, each an \code{n × n} logical matrix
+corresponding to \code{pcalg}'s \code{fixedGaps} and \code{fixedEdges} arguments.
 }
 \description{
-pcalg supports \emph{symmetric} background knowledge only:
-• \strong{fixedGaps}  – \strong{forbidden} edges (should be going both ways))
-• \strong{fixedEdges} – \strong{required} edges (should be going both ways))
+pcalg only supports \emph{undirected} (symmetric) background constraints:
+\itemize{
+\item \strong{fixedGaps}  — forbidding edges (zeros enforced)
+\item \strong{fixedEdges} — requiring edges (ones enforced)
+}
 }
 \details{
-We therefore throw an error if any edges relations are not symmetrical.
+This function takes a \code{knowledge} object (with only forbidden/required
+edges, no tiers) and returns the two logical matrices in the exact
+variable order you supply.
 }
+\section{Errors}{
+
+\itemize{
+\item If the knowledge object contains tiered knowledge.
+\item If \code{directed_as_undirected = FALSE} and any edge lacks its
+symmetrical counterpart. This can only hold for forbidden edges.
+}
+}
+

@@ -6,6 +6,12 @@
 \usage{
 as_tetrad_knowledge(.kn)
 }
+\arguments{
+\item{.kn}{A \code{knowledge} object.}
+}
 \description{
-Convert to Tetrad \code{edu.cmu.tetrad.data.Knowledge}
+Converts a \code{knowledge} object to a Tetrad \code{edu.cmu.tetrad.data.Knowledge}.
+This requires \code{rJava}. This is used internally, when setting knowledge with
+\code{set_knowledge} for methods using the Tetrad engine. \code{set_knowledge} is used
+internally, when using the \code{disco} function with knowledge given.
 }

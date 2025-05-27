@@ -10,9 +10,12 @@
 \item{.kn}{A \code{knowledge} object.}
 
 \item{spec}{A tidyselect specification (e.g. \code{everything()},
-\code{starts_with("V")}) or a character vector.}
+\code{starts_with("V")}), a bare symbol, a character vector,
+\emph{or} a literal c(V1, V2, "V3") call.}
 }
 \description{
+Resolve a tidy-select or character spec to character names
+
 Resolve a tidy-select or character spec to character names
 }
 \keyword{internal}

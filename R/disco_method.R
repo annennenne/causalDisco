@@ -1,4 +1,15 @@
 #' @title Wrap a runner list into a “disco_method” closure
+#'
+#' @description
+#' A `disco_method` is a closure that wraps a builder function.
+#' The builder function is expected to return a runner object.
+#' The closure can be called with a dataframe, and it will
+#' build a fresh runner with the empty knowledge. Use `set_knowledge`
+#' to set knowledge into the method.
+#'
+#' Every `disco_method` can be used in combination with `disco`. If you want
+#' to build your own method, you can use this function to create a closure
+#' that will run with `disco`.
 #' @keywords internal
 disco_method <- function(builder, method_class) {
   f <- function(data) {
@@ -41,5 +52,5 @@ set_knowledge.disco_method <- function(method, knowledge) {
     runner
   }
 
-  disco_method(new_builder, method_class)
+  disco_method(new_builder, class = c(method_class, "disco_method", "function"))
 }

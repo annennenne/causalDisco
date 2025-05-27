@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge.R
 \name{forbid_tier_violations}
 \alias{forbid_tier_violations}
-\title{Forbid all “uphill” edges implied by tiers}
+\title{Forbid all tier violations}
 \usage{
 forbid_tier_violations(.kn)
 }
