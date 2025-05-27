@@ -1090,10 +1090,19 @@ deparse_knowledge <- function(kn, df_name = NULL) {
 # ────────────────── Conversion to Tetrad, pcalg, bnlearn  ─────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-
 #' @title Convert to Tetrad `edu.cmu.tetrad.data.Knowledge`
+#'
+#' @description
+#' Converts a `knowledge` object to a Tetrad `edu.cmu.tetrad.data.Knowledge`.
+#' This requires `rJava`. This is used internally, when setting knowledge with
+#' `set_knowledge` for methods using the Tetrad engine. `set_knowledge` is used
+#' internally, when using the `disco` function with knowledge given.
+#' @param .kn A `knowledge` object.
+#' @importFrom rJava .jinit .jnew
+#'
 #' @export
 as_tetrad_knowledge <- function(.kn) {
+  check_knowledge_obj(.kn)
   if (!requireNamespace("rJava", quietly = TRUE)) {
     stop("Package 'rJava' is required for as_tetrad_knowledge().")
   }
