@@ -52,5 +52,5 @@ set_knowledge.disco_method <- function(method, knowledge) {
     runner
   }
 
-  disco_method(new_builder, class = c(method_class, "disco_method", "function"))
+  disco_method(new_builder, method_class)
 }
