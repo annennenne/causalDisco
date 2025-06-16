@@ -1,5 +1,9 @@
-library(pcalg)
-
+#' Class for pcalg search algorithms
+#'
+#' This class implements the search algorithms from the pcalg package.
+#' It allows to set the data, sufficient statistics, test, score, and algorithm.
+#'
+#' @importFrom pcalg pc fci ges gaussCItest binCItest disCItest
 #' @export pcalgSearch
 pcalgSearch <- R6Class(
   "pcalgSearch",
@@ -190,7 +194,6 @@ pcalgSearch <- R6Class(
           labels,
           directed_as_undirected = directed_as_undirected
         )
-        invisible(self)
       }
     },
     run_search = function(data, set_suff_stat = TRUE) {
