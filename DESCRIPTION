@@ -32,9 +32,11 @@ Imports:
     magick,
     rmarkdown,
     rJava,
-    R6
+    R6,
+    bnlearn
 Collate: 
     'amat.R'
+    'bnlearn_search.R'
     'cast_obj.R'
     'causalDisco-package.R'
     'check_args.R'
