@@ -1,6 +1,23 @@
-#' @importFrom R6 R6Class
-#' @import bnlearn
-#' @export bnlearnSearch
+#' bnlearnSearch – a tidy R6 front-end for **bnlearn**
+#'
+#' A wrapper that lets you drive `bnlearns`’s structure-learning
+#' algorithms within the `causalDisco` framework.
+#'
+#' @param data A `data.frame` holding the data set currently attached to the
+#'   search object.
+#' @param rdata Reserved for parity with other engines; not used internally.
+#' @param score Character string naming the score selected via `set_score()`
+#'   (e.g. `"bic"`, `"bge"`).
+#' @param test Character string naming the conditional-independence test
+#'   selected via `set_test()` (e.g. `"zf"`, `"mc-mi"`).
+#' @param alg A partially-applied bnlearn learner produced by `set_alg()`.
+#' @param params A list of extra tuning parameters stored by `set_params()`
+#'   and spliced into the learner call.
+#' @param knowledge A list with elements `whitelist` and `blacklist`
+#'   containing prior-knowledge constraints added via `set_knowledge()`.
+#'
+#' @return An R6 object with the methods documented below.
+#' @export
 bnlearnSearch <- R6Class(
   "bnlearnSearch",
   public = list(
@@ -128,9 +145,15 @@ bnlearnSearch <- R6Class(
       self$score <- method
       invisible(self)
     },
-    set_alg = function(method) {
+    set_alg = function(method, args = NULL) {
       method <- tolower(method)
 
+      if (!is.null(args)) {
+        if (!is.list(args)) {
+          stop("Arguments must be provided as a list.", call. = FALSE)
+        }
+        self$set_params(args)
+      }
       need_test <- c(
         "pc.stable", "gs", "iamb", "fast.iamb", "inter.iamb", "iamb.fdr",
         "mmpc", "si.hiton.pc", "hpc"
@@ -238,9 +261,41 @@ bnlearnSearch <- R6Class(
 
       invisible(self)
     },
-    set_knowledge = function(knowledge_obj, directed_as_undirected = FALSE) {
+    set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
+      self$knowledge <- as_bnlearn_knowledge(knowledge_obj)
     },
-  ),
-  private = list()
+    run_search = function(data = NULL) {
+      # Data checks
+      if (!is.null(data)) self$set_data(data)
+
+      if (is.null(self$data)) {
+        stop("No data is set. Use set_data() first or pass data to run_search().",
+          call. = FALSE
+        )
+      }
+
+      if (is.null(self$alg)) {
+        stop("No algorithm is set. Use set_alg() first.", call. = FALSE)
+      }
+
+      # Build the argument list for the algorithm call
+      arg_list <- list(x = self$data) # all bnlearn learners expect `x = data`
+
+      # knowledge
+      if (!is.null(self$knowledge)) {
+        if (!is.null(self$knowledge$whitelist) &&
+          nrow(self$knowledge$whitelist) > 0) {
+          arg_list$whitelist <- self$knowledge$whitelist
+        }
+        if (!is.null(self$knowledge$blacklist) &&
+          nrow(self$knowledge$blacklist) > 0) {
+          arg_list$blacklist <- self$knowledge$blacklist
+        }
+      }
+
+      result <- do.call(self$alg, arg_list)
+      return(result)
+    }
+  )
 )

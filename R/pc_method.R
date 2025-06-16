@@ -97,5 +97,20 @@ pc_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge =
 
 #' @keywords internal
 pc_bnlearn_runner <- function(test, alpha, ...) {
-  stop("Not implemented yet.")
+  args <- list(...)
+  search <- bnlearnSearch$new()
+  args_to_pass <- check_args_and_distribute_args(search, args, "bnlearn", "pc")
+
+  search$set_test(test, alpha)
+  search$set_alg("pc.stable", args_to_pass)
+
+  runner <- list(
+    set_knowledge = function(knowledge) {
+      search$set_knowledge(knowledge)
+    },
+    run = function(data) {
+      search$run_search(data)
+    }
+  )
+  runner
 }

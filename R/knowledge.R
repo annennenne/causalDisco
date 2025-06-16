@@ -294,7 +294,10 @@ knowledge <- function(...) {
   allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
   for (expr in dots) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
-      stop("Only tier(), forbidden(), required() calls are allowed.", call. = FALSE)
+      stop("Only tier(), forbidden(), required(), and exogenous()
+           (as well as exo() and root() as synonyms) calls are allowed.",
+        call. = FALSE
+      )
     }
     eval(expr, envir = environment())
   }
@@ -1263,6 +1266,41 @@ as_pcalg_constraints <- function(.kn,
   }
 
   list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
+}
+
+#' Convert background knowledge to bnlearns white- and blacklists
+#'
+#' @description
+#' Converts a `knowledge` object to a list of two data frames, namely
+#' `whitelist` and `blacklist`, which can be used as arguments for
+#' `bnlearn` algorithms. The `whitelist` contains all required edges, and the
+#' `blacklist` containts all forbidden edges. Tiers will be made into forbidden
+#' edges before running the conversion.
+#'
+#' @param .kn A \code{knowledge} object.  Must have no tier information.
+#'
+#' @return A list with two elements, `whitelist` and `blacklist`, each a data
+#' frame containing the edges in a `from`, `to` format.
+#'
+#' @export
+as_bnlearn_knowledge <- function(.kn) {
+  check_knowledge_obj(.kn)
+
+  # whitelist holds all required edges in a "from", "to" dataframe
+  whitelist <- dplyr::filter(.kn$edges, status == "required") |>
+    dplyr::select(from, to) |>
+    as.data.frame()
+
+  # blacklist holds all forbidden edges (including tier violations)
+  blacklist <- forbid_tier_violations(.kn)$edges |>
+    dplyr::filter(status == "forbidden") |>
+    dplyr::select(from, to) |>
+    as.data.frame()
+
+  return(list(
+    whitelist = whitelist,
+    blacklist = blacklist
+  ))
 }
 
 #' @title Forbid all tier violations

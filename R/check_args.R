@@ -10,7 +10,7 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
   switch(engine,
     tetrad = check_args_and_distribute_args_tetrad(search, args, alg, test, score),
     pcalg = check_args_and_distribute_args_pcalg(search, args, alg, test, score),
-    bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg, test, score),
+    bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg),
     stop("Unsupported engine: ", engine, call. = FALSE)
   )
 }
@@ -59,7 +59,11 @@ check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL
   ))
 }
 
-check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL, score = NULL) {
+check_args_and_distribute_args_pcalg <- function(search,
+                                                 args,
+                                                 alg,
+                                                 test = NULL,
+                                                 score = NULL) {
   # Note that the pcalg package does not have args that are sent
   # directly to the test itself, but it is rather sent to the algorithm.
   switch(alg,
@@ -106,6 +110,44 @@ check_args_and_distribute_args_pcalg <- function(search, args, alg, test = NULL,
   ))
 }
 
-check_args_and_distribute_args_bnlearn <- function() {
-  stop("Not implemented yet for bnlearn", call. = FALSE)
+check_args_and_distribute_args_bnlearn <- function(search,
+                                                   args,
+                                                   alg,
+                                                   allow_dots = FALSE) {
+  # find bnlearn function
+  if (!exists(alg, envir = asNamespace("bnlearn"))) {
+    stop("Unsupported algorithm: ", alg, call. = FALSE)
+  }
+
+  # get the formal arguments of the function
+  bn_fun <- get(alg, envir = asNamespace("bnlearn"))
+  alg_formals <- names(formals(bn_fun))
+  dots_allowed <- "..." %in% alg_formals
+
+  # which user supplied arguments are valid?
+  unclaimed <- setdiff(names(args), alg_formals)
+
+  if (length(unclaimed) > 0) {
+    if (!dots_allowed) {
+      # learner has no '...' : throw error
+      stop(
+        "The following arguments are not valid for bnlearn::", alg, ": ",
+        paste(unclaimed, collapse = ", "),
+        call. = FALSE
+      )
+    }
+
+    if (dots_allowed && !allow_dots) {
+      # learner has '...' but caller did not allow extras
+      stop(
+        "bnlearn::", alg, " has a '...' formal, but these arguments are not ",
+        "recognised: ", paste(unclaimed, collapse = ", "),
+        ".  Set allow_dots = TRUE if you really want to forward them."
+      )
+    }
+    # if dots_allowed && allow_dots == TRUE: silently forward extras
+  }
+
+  # we do not distribute arguments here, as it is not needed
+  args
 }
