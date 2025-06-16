@@ -57,7 +57,10 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom scales alpha
 #' @importFrom graphics axis mtext
-#' @import igraph
+#' @importFrom igraph graph_from_adjacency_matrix
+#' @importFrom igraph as_edgelist
+#' @importFrom igraph delete.edges
+#' @importFrom igraph plot.igraph
 plotOrderedAmat <- function(amat, order,
                             psi = NULL,
                             addTimeAxis = TRUE,
