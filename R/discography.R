@@ -22,8 +22,9 @@ discography <- function(x, nodes = NULL, ...) {
   UseMethod("discography")
 }
 
-# -------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
 # helpers
+# ──────────────────────────────────────────────────────────────────────────────
 
 as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
   # -----------------------------------------------------------------
@@ -97,7 +98,6 @@ as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
   }
 }
 
-
 mark_cpdag <- function(m_ij, m_ji, i, j) {
   # codes: 0 none | 1 arrowhead (row)
   if (m_ij == 0 && m_ji == 1) {
@@ -147,28 +147,10 @@ mark_pag <- function(m_ij, m_ji, i, j) {
   }
 }
 
-
-#' @export
-discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
-  ig <- igraph::igraph.from.graphNEL(x)
-  edge_df <- igraph::as_data_frame(ig, what = "edges")
-
-  types <-
-    if (igraph::is_directed(ig)) rep("-->", nrow(edge_df)) else rep("---", nrow(edge_df))
-  cpdag <- igraph::is_directed(ig)
-  as_tibble_edges(edge_df$from, edge_df$to, types, nodes, cpdag = cpdag)
-}
-
-#' @export
-discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
-  discography(x@graph, nodes = nodes)
-}
-
-#' @export
-discography.gAlgo <- function(x, nodes = x@graph@nodes, ...) {
-  discography(x@graph, nodes = nodes)
-}
-
+# ──────────────────────────────────────────────────────────────────────────────
+# methods
+# ──────────────────────────────────────────────────────────────────────────────
+#' Convert bnlearn object to a discography object.
 #' @export
 discography.bn <- function(x, nodes = names(x$nodes), ...) {
   arcs <- x$arcs |>
@@ -194,8 +176,31 @@ discography.bn <- function(x, nodes = names(x$nodes), ...) {
   as_tibble_edges(edges$from, edges$to, edges$type, nodes)
 }
 
-# -------------------------------------------------------------------------
-# EssGraph / GES  (pcalg)
+#' Convert graphNEL object to a discography object.
+#' @export
+discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
+  ig <- igraph::igraph.from.graphNEL(x)
+  edge_df <- igraph::as_data_frame(ig, what = "edges")
+
+  types <-
+    if (igraph::is_directed(ig)) rep("-->", nrow(edge_df)) else rep("---", nrow(edge_df))
+  cpdag <- igraph::is_directed(ig)
+  as_tibble_edges(edge_df$from, edge_df$to, types, nodes, cpdag = cpdag)
+}
+
+#' Convert pcAlgo object to a discography object.
+#' @export
+discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
+  discography(x@graph, nodes = nodes)
+}
+
+#' Convert gAlgo object to a discography object.
+#' @export
+discography.gAlgo <- function(x, nodes = x@graph@nodes, ...) {
+  discography(x@graph, nodes = nodes)
+}
+
+#' #' Convert EssGraph object (used by pcalg::ges) to a discography object.
 #' @export
 discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
   parents <- purrr::map2_dfr(
@@ -223,9 +228,7 @@ discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
 }
 
 
-# -------------------------------------------------------------------------
-# fciAlgo (PAG)  or pcAlgo returned as CPDAG adjacency matrix
-
+#' Convert fciAlgo object to a discography object.
 #' @export
 discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
   amat <- methods::as(x, "amat")
@@ -237,7 +240,7 @@ discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
   discography(amat, nodes = nodes, ...)
 }
 
-
+#' Convert amat object to a discography object.
 #' @export
 discography.amat <- function(x, nodes = NULL, ...) {
   if (inherits(x, "amat.pag")) {
@@ -247,17 +250,15 @@ discography.amat <- function(x, nodes = NULL, ...) {
   }
 }
 
-
+#' Convert amat.pag object to a discography object.
 #' @export
 discography.amat.pag <- function(x, nodes = NULL, ...) {
-  ## 1. figure out node labels -------------------------------------------
   if (is.null(nodes)) {
     nodes <- rownames(x)
     if (is.null(nodes)) nodes <- colnames(x)
     if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(x)))
   }
 
-  ## 2. walk through ALL ordered pairs  -----------------------------------
   idx <- expand.grid(
     i = seq_len(nrow(x)),
     j = seq_len(ncol(x))
@@ -274,6 +275,7 @@ discography.amat.pag <- function(x, nodes = NULL, ...) {
   as_tibble_edges(edges$from, edges$to, edges$type, nodes)
 }
 
+#' Convert amat.cpdag object to a discography object.
 #' @export
 discography.amat.cpdag <- function(x, nodes = NULL, ...) {
   if (is.null(nodes)) {
@@ -298,28 +300,23 @@ discography.amat.cpdag <- function(x, nodes = NULL, ...) {
   as_tibble_edges(edges$from, edges$to, edges$type, nodes)
 }
 
-#' @export
-discography.tetrad_graph <- function(x, nodes = x$nodes, ...) {
-  discography(x$amat, nodes = nodes)
-}
-
-
+#' Convert tetrad_graph object to a discography object.
 #' @export
 discography.tetrad_graph <- function(x, nodes = x$nodes, ...) {
   discography(x$amat, nodes = nodes, ...)
 }
 
+#' Default method for discography
+#'
+#' If the input is not recognized, throw error.
 #' @export
 discography.default <- function(x, ...) {
   cli::cli_abort(c(
-    "Don't know how to convert {.cls {class(x)[1]}} to a discography.",
-    "x" = "Provide a method or coerce your object first."
+    "Don't know how to convert {.cls {class(x)[1]}} to a discography."
   ))
 }
 
-# -------------------------------------------------------------------------
-# print method just shows the tibble
-
+#' Print method for discography objects.
 #' @export
 print.discography <- function(x, ...) {
   NextMethod()
