@@ -66,7 +66,6 @@ pc_tetrad_runner <- function(test, alpha, ...) {
     },
     run = function(data) {
       search$run_search(data)
-      search$get_dot()
     }
   )
   runner
@@ -102,7 +101,7 @@ pc_bnlearn_runner <- function(test, alpha, ...) {
   args_to_pass <- check_args_and_distribute_args(search, args, "bnlearn", "pc")
 
   search$set_test(test, alpha)
-  search$set_alg("pc.stable", args_to_pass)
+  search$set_alg("pc", args_to_pass)
 
   runner <- list(
     set_knowledge = function(knowledge) {

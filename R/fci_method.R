@@ -63,7 +63,6 @@ fci_tetrad_runner <- function(test, alpha, ...) {
     },
     run = function(data) {
       search$run_search(data)
-      search$get_dot() # todo: change to igraph later
     }
   )
   runner

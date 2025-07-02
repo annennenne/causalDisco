@@ -65,7 +65,6 @@ ges_tetrad_runner <- function(score, ...) {
     },
     run = function(data) {
       search$run_search(data)
-      search$get_dot() # todo: change to igraph later
     }
   )
   runner
