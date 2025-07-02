@@ -109,7 +109,7 @@ TetradSearch <- R6Class(
           private$use_probabilistic_test(..., use_for_mc = mc)
         },
         {
-          stop("Unknown test type using tetrad engine: ", method, .call = FALSE)
+          stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
         }
       )
       invisible(self)
@@ -161,7 +161,7 @@ TetradSearch <- R6Class(
         },
         {
           stop("Unknown score type using tetrad engine: ", method,
-            .call = FALSE
+            call. = FALSE
           )
         }
       )
@@ -178,172 +178,172 @@ TetradSearch <- R6Class(
       switch(method,
         "fges" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_fges_alg(...)
         },
         "fges_mb" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_fges_mb_alg(...)
         },
         "boss" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_boss_alg(...)
         },
         "restricted_boss" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               " This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_restricted_boss_alg(...)
         },
         "cstar" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               " This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_cstar_alg(...)
         },
         "sp" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_sp_alg(...)
         },
         "grasp" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_grasp_alg(...)
         },
         "pc" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_pc_alg(...)
         },
         "cpc" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_cpc_alg(...)
         },
         "pcmax" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_pcmax_alg(...)
         },
         "fci" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_fci_alg(...)
         },
         "rfci" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_rfci_alg(...)
         },
         "cfci" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_cfci_alg(...)
         },
         "gfci" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_gfci_alg(...)
         },
         "bfci" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_bfci_alg(...)
         },
         "lv_lite" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_lv_lite_alg(...)
         },
         "grasp_fci" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_grasp_fci_alg(...)
         },
         "spfci" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_spfci_alg(...)
         },
         "ica_lingam" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_ica_lingam_alg(...)
         },
         "ica_lingd" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_ica_lingd_alg(...)
         },
         "fask" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_fask_alg(...)
         },
@@ -351,19 +351,19 @@ TetradSearch <- R6Class(
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_fofc_alg(...)
         },
         "ccd" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", .call = FALSE)
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_ccd_alg(...)
@@ -373,12 +373,12 @@ TetradSearch <- R6Class(
         },
         "direct_lingam" = {
           if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", .call = FALSE)
+            stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_direct_lingam_alg(...)
@@ -387,7 +387,7 @@ TetradSearch <- R6Class(
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_dagma_alg(...)
@@ -396,7 +396,7 @@ TetradSearch <- R6Class(
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_pc_lingam_alg(...)
@@ -405,13 +405,13 @@ TetradSearch <- R6Class(
           if (!is.null(self$knowledge)) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           private$set_svar_gfci_alg(...)
         },
         {
-          stop("Unknown method type using tetrad engine: ", method, .call = FALSE)
+          stop("Unknown method type using tetrad engine: ", method, call. = FALSE)
         }
       )
       invisible(self)
@@ -482,7 +482,7 @@ TetradSearch <- R6Class(
         stop(
           "Score is: ", score, ", test is: ", test, ", and alg is: ", alg,
           ". (Exclusively) one of them should be TRUE.",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (score) {
@@ -492,7 +492,7 @@ TetradSearch <- R6Class(
       } else if (alg) {
         function_names <- sprintf("^(set_|use_)%s(_alg)?$", fn_pattern)
       } else {
-        stop("Either score or test should be TRUE.", .call = FALSE)
+        stop("Either score or test should be TRUE.", call. = FALSE)
       }
       is_private_method <- function(name) {
         is.function(get(name, envir = as.environment(private))) &&
@@ -512,7 +512,7 @@ TetradSearch <- R6Class(
             fn_pattern, "\n  This is probably a misspecification of either a algorithm, test, or score.",
             "\n  There should be (only) a single match.", error_message_suffix
           ),
-          .call = FALSE
+          call. = FALSE
         )
       }
       return(names(formals(matched_function, envir = as.environment(private))))
@@ -546,13 +546,13 @@ TetradSearch <- R6Class(
         self$set_data(data)
       }
       if (!is.data.frame(data)) {
-        stop("Input data should be a data frame.", .call = FALSE)
+        stop("Input data should be a data frame.", call. = FALSE)
       }
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or input data directly into run_search().", .call = FALSE)
+        stop("No data is set. Use set_data() first or input data directly into run_search().", call. = FALSE)
       }
       if (is.null(self$alg)) {
-        stop("No algorithm is set. Use set_alg() first.", .call = FALSE)
+        stop("No algorithm is set. Use set_alg() first.", call. = FALSE)
       }
       self$java <- self$alg$search(self$data, self$params)
       if (bootstrap) {

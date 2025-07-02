@@ -28,6 +28,6 @@ cast_obj <- function(obj) {
     return(obj)
   } else {
     # Cast error
-    stop("Java object cannot be cast to a superclass.", .call = FALSE)
+    stop("Java object cannot be cast to a superclass.", call. = FALSE)
   }
 }

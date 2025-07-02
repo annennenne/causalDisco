@@ -43,12 +43,12 @@ pcalgSearch <- R6Class(
     set_suff_stat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (is.null(self$test)) {
         stop("Test must be set before sufficient statistic.",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (is.null(self$continuous)) {
@@ -56,7 +56,7 @@ pcalgSearch <- R6Class(
              sufficient statistic is for a continuous or discrete test.
              Please set test using set_test() or set continuous directly
              by self$continuous <- TRUE/FALSE.",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (self$continuous) {
@@ -64,7 +64,7 @@ pcalgSearch <- R6Class(
           self$suff_stat <- list(C = cor(self$data), n = nrow(self$data))
         } else {
           stop("Data must be a matrix or data frame if numeric.",
-            .call = FALSE
+            call. = FALSE
           )
         }
       } else if (is.data.frame(self$data)) {
@@ -73,7 +73,7 @@ pcalgSearch <- R6Class(
         stop("Unrecognized data format.
              The data should be either continouos or discrete,
              and the data should be in a data.frame.",
-          .call = FALSE
+          call. = FALSE
         )
       }
     },
@@ -88,7 +88,7 @@ pcalgSearch <- R6Class(
         "fisher_z" = {
           if (is.null(self$params$alpha)) {
             stop("Alpha must be set before test.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           self$test <- pcalg::gaussCItest
@@ -97,14 +97,14 @@ pcalgSearch <- R6Class(
         "g_square" = {
           if (is.null(self$params$alpha)) {
             stop("Alpha must be set before test.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           self$test <- private$use_g_square()
           self$continuous <- FALSE
         },
         stop("Unknown test type using pcalg engine: ", method,
-          .call = FALSE
+          call. = FALSE
         )
       )
     },
@@ -114,7 +114,7 @@ pcalgSearch <- R6Class(
       return_pcalg_score <- function() {
         if (is.null(self$data)) {
           stop("Data must be set before score.",
-            .call = FALSE
+            call. = FALSE
           )
         }
         switch(method,
@@ -137,7 +137,7 @@ pcalgSearch <- R6Class(
             )
           },
           stop("Unknown score type using pcalg engine: ", method,
-            .call = FALSE
+            call. = FALSE
           )
         )
         return(score)
@@ -150,7 +150,7 @@ pcalgSearch <- R6Class(
         "pc" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           self$alg <- purrr::partial(
@@ -174,7 +174,7 @@ pcalgSearch <- R6Class(
           )
         },
         stop("Unknown method type using pcalg engine: ", method,
-          .call = FALSE
+          call. = FALSE
         )
       )
     },
@@ -202,17 +202,17 @@ pcalgSearch <- R6Class(
       }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (is.null(self$suff_stat) && set_suff_stat) {
         stop("No sufficient statistic is set. Use set_data() first.",
-          .call = FALSE
+          call. = FALSE
         )
       }
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.",
-          .call = FALSE
+          call. = FALSE
         )
       }
 
@@ -245,7 +245,7 @@ pcalgSearch <- R6Class(
             warning(
               "pcalg::ges() does not take required edges as arguments.",
               "\n  They will not be used here.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           result <- self$alg(
@@ -279,7 +279,7 @@ pcalgSearch <- R6Class(
           if (length(private$uniques) < 2) {
             stop("The data contains less than 2 unique values.",
               " If this is the case, there is nothing to discover.",
-              .call = FALSE
+              call. = FALSE
             )
           }
           if (length(private$uniques) == 2) {
