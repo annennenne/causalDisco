@@ -90,7 +90,7 @@ search object.}
 \if{latex}{\out{\hypertarget{method-bnlearnSearch-set_alg}{}}}
 \subsection{Method \code{set_alg()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{bnlearnSearch$set_alg(method)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{bnlearnSearch$set_alg(method, args = NULL)}\if{html}{\out{</div>}}
 }
 
 }

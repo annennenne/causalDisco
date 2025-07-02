@@ -48,8 +48,8 @@ scoring functions, specify causal search algorithms, and run them on data.
 \item \href{#method-TetradSearch-get_knowledge}{\code{TetradSearch$get_knowledge()}}
 \item \href{#method-TetradSearch-get_java}{\code{TetradSearch$get_java()}}
 \item \href{#method-TetradSearch-get_string}{\code{TetradSearch$get_string()}}
-\item \href{#method-TetradSearch-get_graph_to_matrix}{\code{TetradSearch$get_graph_to_matrix()}}
 \item \href{#method-TetradSearch-get_dot}{\code{TetradSearch$get_dot()}}
+\item \href{#method-TetradSearch-get_amat}{\code{TetradSearch$get_amat()}}
 \item \href{#method-TetradSearch-clone}{\code{TetradSearch$clone()}}
 }
 }
@@ -376,46 +376,32 @@ Returns the string representation of a given Java object or \code{self$java}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-get_graph_to_matrix"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-get_graph_to_matrix}{}}}
-\subsection{Method \code{get_graph_to_matrix()}}{
-Converts a Tetrad graph into a matrix representation with coded endpoints.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_graph_to_matrix(
-  java_obj = NULL,
-  null_ept = 0,
-  circle_ept = 1,
-  arrow_ept = 2,
-  tail_ept = 3
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) The graph to convert. If NULL, uses \code{self$java}.}
-
-\item{\code{null_ept}}{(numeric) Code for a null endpoint.}
-
-\item{\code{circle_ept}}{(numeric) Code for a circle endpoint.}
-
-\item{\code{arrow_ept}}{(numeric) Code for an arrow endpoint.}
-
-\item{\code{tail_ept}}{(numeric) Code for a tail endpoint.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(matrix) The adjacency matrix with these endpoint codes.
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_dot"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_dot}{}}}
 \subsection{Method \code{get_dot()}}{
 Produces a DOT (Graphviz) representation of the graph.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_dot(java_obj = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(character) The DOT-format string.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TetradSearch-get_amat"></a>}}
+\if{latex}{\out{\hypertarget{method-TetradSearch-get_amat}{}}}
+\subsection{Method \code{get_amat()}}{
+Produces a DOT (Graphviz) representation of the graph.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_amat(java_obj = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

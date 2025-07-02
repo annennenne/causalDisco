@@ -24,7 +24,7 @@ kn <- knowledge(
   # ),
   required(
     V1 ~ V2,
-    V2 ~ V3
+    V5 ~ V6
   )
 )
 
@@ -35,6 +35,9 @@ my_pc_tetrad <- pc(
 my_pc_pcalg <- pc(
   engine = "pcalg", test = "fisher_z", alpha = 0.05,
   directed_as_undirected_knowledge = TRUE
+)
+my_pc_bnlearn <- pc(
+  engine = "bnlearn", test = "fisher_z", alpha = 0.05
 )
 
 # can be called like this
@@ -49,7 +52,14 @@ new_pc_pcalg <- my_pc_pcalg |>
   set_knowledge(kn)
 new_pc_pcalg(df)
 
+# with bnlearn
+my_pc_bnlearn(df)
+new_pc_bnlearn <- my_pc_bnlearn |>
+  set_knowledge(kn)
+new_pc_bnlearn(df)
+
 # or with disco
 # call disco with background knowledge
 disco(df, method = my_pc_tetrad, knowledge = kn)
 disco(df, method = my_pc_pcalg, knowledge = kn)
+disco(df, method = my_pc_bnlearn, knowledge = kn)
