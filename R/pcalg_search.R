@@ -259,7 +259,7 @@ pcalgSearch <- R6Class(
           )
         }
       }
-      return(result)
+      return(result |> discography())
     }
   ),
   private = list(

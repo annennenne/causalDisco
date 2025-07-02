@@ -39,6 +39,7 @@ TetradSearch <- R6Class(
     alg = NULL,
     mc_test = NULL,
     java = NULL,
+    result = NULL,
     knowledge = NULL,
     params = NULL,
     bootstrap_graphs = NULL,
@@ -554,7 +555,12 @@ TetradSearch <- R6Class(
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.", call. = FALSE)
       }
+      # run the search
       self$java <- self$alg$search(self$data, self$params)
+
+      # convert to tetrad_graph object (essentially a wrapper around amat.pag)
+      self$result <- tetrad_graph(self$get_amat())
+
       if (bootstrap) {
         self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
       }
@@ -567,6 +573,7 @@ TetradSearch <- R6Class(
       if (stable_bhat) {
         self$stable_bhats <- self$alg$getStableBhats()
       }
+      return(self$result |> discography())
     },
 
     ###### set_bootstrapping ######
@@ -682,39 +689,6 @@ TetradSearch <- R6Class(
       }
     },
 
-    ###### get_graph_to_matrix ######
-    # NOT WORKING
-    #' @description Converts a Tetrad graph into a matrix representation with coded endpoints.
-    #' @param java_obj (Java object, optional) The graph to convert. If NULL, uses \code{self$java}.
-    #' @param null_ept (numeric) Code for a null endpoint.
-    #' @param circle_ept (numeric) Code for a circle endpoint.
-    #' @param arrow_ept (numeric) Code for an arrow endpoint.
-    #' @param tail_ept (numeric) Code for a tail endpoint.
-    #' @return (matrix) The adjacency matrix with these endpoint codes.
-    get_graph_to_matrix = function(java_obj = NULL,
-                                   null_ept = 0,
-                                   circle_ept = 1,
-                                   arrow_ept = 2,
-                                   tail_ept = 3) {
-      stopifnot(
-        is.numeric(c(null_ept, circle_ept, arrow_ept, tail_ept)),
-        floor(null_ept) == null_ept,
-        floor(circle_ept) == circle_ept,
-        floor(arrow_ept) == arrow_ept,
-        floor(tail_ept) == tail_ept
-      )
-      if (is.null(java_obj)) {
-        java_obj <- self$java
-      }
-      graph_to_matrix(
-        g = java_obj,
-        null_ept = null_ept,
-        circle_ept = circle_ept,
-        arrow_ept = arrow_ept,
-        tail_ept = tail_ept
-      )
-    },
-
     ###### get_dot ######
     #' @description Produces a DOT (Graphviz) representation of the graph.
     #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
@@ -734,6 +708,29 @@ TetradSearch <- R6Class(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToDot",
+          java_obj
+        ))
+      }
+    },
+    ###### get_amat ######
+    #' @description Produces a DOT (Graphviz) representation of the graph.
+    #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
+    #' @return (character) The DOT-format string.
+    get_amat = function(java_obj = NULL) {
+      if (is.null(java_obj)) {
+        self$java <- cast_obj(self$java)
+        return(.jcall(
+          "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
+          "S",
+          "graphToPcalg",
+          self$java
+        ))
+      } else {
+        java_obj <- cast_obj(java_obj)
+        return(.jcall(
+          "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
+          "S",
+          "graphToPcalg",
           java_obj
         ))
       }
