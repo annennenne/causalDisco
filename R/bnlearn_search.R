@@ -76,6 +76,7 @@ bnlearnSearch <- R6Class(
         "mc-cor", # Monte Carlo pearson correlation
         "smc-cor", # sequential Monte Carlo pearson correlation
         "zf", # fisher Z test
+        "fisher_z",
         "mc-zf", # Monte Carlo fisher Z test
         "smc-zf", # sequential Monte Carlo fisher Z test
         "mi-g", # mutual information for Gaussian variables
@@ -91,6 +92,9 @@ bnlearnSearch <- R6Class(
         stop("Unknown test type using bnlearn engine: ", method,
           call. = FALSE
         )
+      }
+      if (method == "fisher_z") {
+        method <- "zf" # alias
       }
 
       self$params$alpha <- alpha
@@ -183,7 +187,7 @@ bnlearnSearch <- R6Class(
       self$alg <- switch(method,
 
         # constraint-based
-        "pc.stable" = purrr::partial(bnlearn::pc.stable,
+        "pc" = purrr::partial(bnlearn::pc.stable,
           test = self$test,
           !!!self$params
         ),
@@ -295,7 +299,7 @@ bnlearnSearch <- R6Class(
       }
 
       result <- do.call(self$alg, arg_list)
-      return(result)
+      return(result |> discography())
     }
   )
 )
