@@ -75,31 +75,34 @@ as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
   )
   if (cpdag) {
     # convert to cpdag
-    out <- out |>
+    undirected <- dplyr::inner_join(out, out,
+      by = c("from" = "to", "to" = "from")
+    ) |>
+      # put the smaller-index node first so each pair is unique
+      dplyr::rowwise() |>
       dplyr::mutate(
-        idx_from = match(from, nodes),
-        idx_to = match(to, nodes),
-        node1 = dplyr::if_else(idx_from < idx_to, from, to),
-        node2 = dplyr::if_else(idx_from < idx_to, to, from)
+        node1 = pmin(from, to),
+        node2 = pmax(from, to)
       ) |>
-      dplyr::group_by(node1, node2) |>
-      dplyr::summarise(
-        edge_type = if (dplyr::n() > 1 && all(edge_type == "-->")) {
-          "---"
-        } else {
-          dplyr::first(edge_type)
-        },
-        .groups = "drop"
-      ) |>
+      dplyr::ungroup() |>
+      dplyr::distinct(node1, node2) |>
+      dplyr::mutate(edge_type = "---") |>
       dplyr::select(from = node1, to = node2, edge_type)
+
+    ## 3. keep all the single arrows that were *not* bidirectional
+    out <- out |>
+      dplyr::anti_join(undirected, by = c("from", "to")) |>
+      dplyr::anti_join(undirected, by = c("from" = "to", "to" = "from")) |>
+      dplyr::bind_rows(undirected)
   }
+  nrows <- nrow(out)
   out |>
     dplyr::arrange(
       factor(from, levels = nodes),
       factor(to, levels = nodes)
     ) |>
     tibble::new_tibble(
-      nrow  = nrow(directed) + nrow(symmetric),
+      nrow  = nrows,
       class = c("discography", "tbl_df", "tbl", "data.frame")
     )
 }
@@ -185,7 +188,7 @@ discography.bn <- function(x, nodes = names(x$nodes), ...) {
 #' Convert graphNEL object to a discography object.
 #' @export
 discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
-  ig <- igraph::igraph.from.graphNEL(x)
+  ig <- igraph::graph_from_graphnel(x)
   edge_df <- igraph::as_data_frame(ig, what = "edges")
 
   types <-
@@ -224,6 +227,12 @@ discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
       )
     }
   )
+  if (nrow(parents) == 0L) {
+    return(as_tibble_edges(character(), character(), character(),
+      nodes,
+      cpdag = TRUE
+    ))
+  }
 
   as_tibble_edges(parents$from,
     parents$to,
