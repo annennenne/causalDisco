@@ -156,6 +156,37 @@ mark_pag <- function(m_ij, m_ji, i, j) {
   }
 }
 
+#' Minimal constructor for discography objects
+#'
+#' @param x A tibble (or data.frame) containing at least
+#'          `from`, `to`, and `edge_type` columns.
+#'
+#' @return A tibble with class `c("discography", "tbl_df", "tbl", "data.frame")`.
+#' @export
+new_discography <- function(x) {
+  x <- tibble::as_tibble(x)
+
+  required <- c("from", "to", "edge_type")
+  if (!all(required %in% names(x))) {
+    cli::cli_abort(
+      "Input must contain {.code from}, {.code to}, and {.code edge_type} columns."
+    )
+  }
+
+  # ensure the three key columns are characters and come first
+  x <- x |>
+    dplyr::select(dplyr::all_of(required), dplyr::everything()) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::all_of(required), as.character)
+    )
+
+  tibble::new_tibble(
+    x,
+    nrow  = nrow(x),
+    class = "discography"
+  )
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # methods
 # ──────────────────────────────────────────────────────────────────────────────
@@ -343,4 +374,109 @@ discography.default <- function(x, ...) {
 #' @export
 print.discography <- function(x, ...) {
   NextMethod()
+}
+
+#' Autoplot for discography objects — clear-node ggarrow version
+#'
+#' @param object        A discography tibble.
+#' @param layout        Layout algorithm for ggraph.
+#' @param head_len      Triangle-arrow length (mm).
+#' @param circle_len    Cup radius (mm).
+#' @param node_size     Node-point diameter (mm).
+#' @param label_size    Text size.
+#' @param gap_mm        Extra clearance between ornament and node edge.
+#' @param ...           Passed on to ggraph::create_layout().
+#' @return ggplot object.
+#' @method autoplot discography
+#' @importFrom ggplot2 autoplot
+#' @importFrom ggarrow geom_arrow_segment arrow_head_wings arrow_cup
+#' @export
+autoplot.discography <- function(object,
+                                 layout = "graphopt",
+                                 head_len = grid::unit(4, "mm"),
+                                 circle_len = NULL,
+                                 node_size = 5,
+                                 label_size = 5,
+                                 gap_mm = 0.5,
+                                 ...) {
+  # sensible default for the cup radius
+  if (is.null(circle_len)) {
+    circle_len <- grid::unit(node_size * 0.5, "mm")
+  }
+
+  # clearance = node radius + tiny gap
+  clearance <- node_size / 2 + gap_mm # mm
+
+  # build graph & layout ----------------------------------------------------
+  nodes <- tibble::tibble(name = unique(c(object$from, object$to)))
+  graph <- tidygraph::tbl_graph(nodes, object, directed = TRUE)
+  lay <- ggraph::create_layout(graph, layout = layout, ...)
+
+  # edge coordinates --------------------------------------------------------
+  coords <- tibble::tibble(name = lay$name, x = lay$x, y = lay$y)
+  edges <- object |>
+    dplyr::left_join(coords, by = c("from" = "name")) |>
+    dplyr::rename(x = x, y = y) |>
+    dplyr::left_join(coords,
+      by = c("to" = "name"),
+      suffix = c("", "_to")
+    ) |>
+    dplyr::rename(xend = x_to, yend = y_to)
+
+  # ornament palette --------------------------------------------------------
+  tri <- ggarrow::arrow_head_wings()
+  cup <- ggarrow::arrow_cup(angle = 70)
+
+  add <- function(data,
+                  head = NULL,
+                  fins = NULL,
+                  head_off = 0,
+                  fins_off = 0) {
+    ggarrow::geom_arrow_segment(
+      data = data,
+      ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
+      arrow_head = head,
+      arrow_fins = fins,
+      length_head = head_len,
+      length_fins = circle_len,
+      resect_head = head_off,
+      resect_fins = fins_off
+    )
+  }
+
+  ggraph::ggraph(lay) +
+    add(dplyr::filter(edges, edge_type == "---")) +
+    add(dplyr::filter(edges, edge_type == "-->"),
+      head     = tri,
+      head_off = clearance
+    ) +
+    add(dplyr::filter(edges, edge_type == "<->"),
+      head     = tri,
+      fins     = tri,
+      head_off = clearance,
+      fins_off = clearance
+    ) +
+    add(dplyr::filter(edges, edge_type == "--o"),
+      head     = cup,
+      head_off = clearance
+    ) +
+    add(dplyr::filter(edges, edge_type == "o->"),
+      head     = tri,
+      fins     = cup,
+      head_off = clearance,
+      fins_off = clearance
+    ) +
+    add(dplyr::filter(edges, edge_type == "o-o"),
+      head     = cup,
+      fins     = cup,
+      head_off = clearance,
+      fins_off = clearance
+    ) +
+    ggraph::geom_node_point(size = node_size) +
+    ggraph::geom_node_text(
+      ggplot2::aes(label = name),
+      size = label_size,
+      vjust = -1
+    ) +
+    ggplot2::theme_void()
 }
