@@ -907,14 +907,14 @@ testthat::test_that("knowledge() throws error when using another function than t
       df,
       musthave(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required() calls are allowed.",
+    "Only tier(), forbidden(), required(), and exogenous()",
     fixed = TRUE
   )
   expect_error(
     knowledge(
       makingmistakes(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required() calls are allowed.",
+    "Only tier(), forbidden(), required(), and exogenous()",
     fixed = TRUE
   )
 })
@@ -1134,7 +1134,7 @@ testthat::test_that("knowledge() errors when required edges are bidirectional", 
 testthat::test_that("knowledge() rejects unknown top-level calls", {
   expect_error(
     knowledge(foo(V1)),
-    "Only tier(), forbidden(), required() calls are allowed",
+    "Only tier(), forbidden(), required(), and exogenous()",
     fixed = TRUE
   )
 })
