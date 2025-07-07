@@ -546,9 +546,6 @@ TetradSearch <- R6Class(
       if (!is.null(data)) {
         self$set_data(data)
       }
-      if (!is.data.frame(data)) {
-        stop("Input data should be a data frame.", call. = FALSE)
-      }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().", call. = FALSE)
       }
