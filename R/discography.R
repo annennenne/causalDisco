@@ -71,31 +71,37 @@ as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
 
   out <- tibble::new_tibble(
     dplyr::bind_rows(directed, symmetric),
-    nrow  = nrow(directed) + nrow(symmetric),
-    class = c("discography", "tbl_df", "tbl", "data.frame")
+    nrow = nrow(directed) + nrow(symmetric)
   )
   if (cpdag) {
     # convert to cpdag
-    out |>
-      mutate(
+    out <- out |>
+      dplyr::mutate(
         idx_from = match(from, nodes),
         idx_to = match(to, nodes),
-        node1 = if_else(idx_from < idx_to, from, to),
-        node2 = if_else(idx_from < idx_to, to, from)
+        node1 = dplyr::if_else(idx_from < idx_to, from, to),
+        node2 = dplyr::if_else(idx_from < idx_to, to, from)
       ) |>
-      group_by(node1, node2) |>
-      summarise(
-        edge_type = if (n() > 1 && all(edge_type == "-->")) {
+      dplyr::group_by(node1, node2) |>
+      dplyr::summarise(
+        edge_type = if (dplyr::n() > 1 && all(edge_type == "-->")) {
           "---"
         } else {
-          first(edge_type)
+          dplyr::first(edge_type)
         },
         .groups = "drop"
       ) |>
-      select(from = node1, to = node2, edge_type)
-  } else {
-    out
+      dplyr::select(from = node1, to = node2, edge_type)
   }
+  out |>
+    dplyr::arrange(
+      factor(from, levels = nodes),
+      factor(to, levels = nodes)
+    ) |>
+    tibble::new_tibble(
+      nrow  = nrow(directed) + nrow(symmetric),
+      class = c("discography", "tbl_df", "tbl", "data.frame")
+    )
 }
 
 mark_cpdag <- function(m_ij, m_ji, i, j) {
@@ -272,6 +278,10 @@ discography.amat.pag <- function(x, nodes = NULL, ...) {
     }
   )
 
+  if (nrow(edges) == 0L) {
+    return(as_tibble_edges(character(), character(), character(), nodes))
+  }
+
   as_tibble_edges(edges$from, edges$to, edges$type, nodes)
 }
 
@@ -296,6 +306,10 @@ discography.amat.cpdag <- function(x, nodes = NULL, ...) {
       mark_cpdag(x[i, j], x[j, i], nodes[i], nodes[j])
     }
   )
+
+  if (nrow(edges) == 0L) {
+    return(as_tibble_edges(character(), character(), character(), nodes))
+  }
 
   as_tibble_edges(edges$from, edges$to, edges$type, nodes)
 }
