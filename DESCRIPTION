@@ -78,5 +78,6 @@ Collate:
     'tplot.R'
     'zzz.R'
 Suggests: 
+    mockery,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
