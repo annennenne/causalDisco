@@ -481,6 +481,45 @@ testthat::test_that("forbidden() and required() errors when no to vars matched",
 # ──────────────────────────────────────────────────────────────────────────────
 # Tier errors
 # ──────────────────────────────────────────────────────────────────────────────
+testthat::test_that("tier() errors if no formulas are supplied", {
+  df <- tibble::tibble(V1 = 1, V2 = 2)
+
+  expect_error(
+    knowledge(df, tier()),
+    "tier() needs at least one two-sided formula.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_tier() errors for an empty tier label", {
+  kn <- knowledge()
+
+  expect_error(
+    add_tier(kn, ""), # invalid label
+    "`tier` must be a non-empty label.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_tier() errors when the label already exists", {
+  kn <- knowledge() |> add_tier(1) # creates tier "1"
+
+  expect_error(
+    add_tier(kn, 1), # duplicate
+    "Tier label `1` already exists.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_tier() errors if the anchor tier is missing", {
+  kn <- knowledge() |> add_tier("first") # only one tier so far
+
+  expect_error(
+    add_tier(kn, "second", after = "ghost"), # bad anchor
+    "`ghost` does not refer to an existing tier.",
+    fixed = TRUE
+  )
+})
 
 testthat::test_that("add_to_tier() errors when adding existing variable to another tier", {
   testthat::expect_error(
@@ -506,6 +545,47 @@ testthat::test_that("add_to_tier() errors when adding existing variable to anoth
       add_to_tier(2 ~ V3 + V1),
     "Cannot reassign variable(s) [V1] to tier `2` using add_to_tier().",
     fixed = TRUE
+  )
+})
+
+test_that("add_to_tier() errors if no formulas are supplied", {
+  kn <- knowledge()
+
+  expect_error(
+    add_to_tier(kn), # no ...
+    "add_to_tier() needs at least one two-sided formula.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_to_tier() errors when a non-formula argument is given", {
+  kn <- knowledge()
+
+  expect_error(
+    add_to_tier(kn, "oops"), # not a formula
+    "Each argument must be a two-sided formula.",
+    fixed = TRUE
+  )
+})
+
+test_that("add_to_tier() errors when the target tier does not exist", {
+  kn <- knowledge() # no tiers yet
+
+  expect_error(
+    add_to_tier(kn, ghost ~ V1), # lhs tier unknown
+    "Tier `ghost` does not exist. Create it first with add_tier().",
+    fixed = TRUE
+  )
+})
+
+test_that("add_to_tier() errors when RHS matches no variables", {
+  kn <- knowledge() |> add_tier("T1") # create tier
+
+  # tidyselect call that matches nothing because kn$vars is still empty
+  expect_error(
+    add_to_tier(kn, T1 ~ starts_with("foo")),
+    "matched no variables",
+    fixed = FALSE
   )
 })
 
@@ -671,6 +751,23 @@ testthat::test_that("tier() errors when two seq_tiers patterns overlap", {
   )
 })
 
+testthat::test_that("seq_tiers() placeholder validation and numeric default branch", {
+  expect_error(
+    seq_tiers(1:2, foo), # no placeholder
+    "`vars` must contain the placeholder `i`",
+    fixed = TRUE
+  )
+
+  fml <- seq_tiers(1:2, c(i, 42))
+
+  expect_length(fml, 2)
+  rhs_txt <- rlang::expr_text(rlang::f_rhs(fml[[1]]))
+
+  expect_true(grepl("\\b1\\b", rhs_txt)) # i → "1"
+  expect_true(grepl("\\b42\\b", rhs_txt)) # 42 unchanged
+})
+
+
 testthat::test_that("add_tier() errors when both `before` and `after` are supplied", {
   expect_error(
     knowledge() |>
@@ -732,6 +829,24 @@ testthat::test_that("add_tier() errors when no before or after is provided", {
   )
 })
 
+test_that("tier() attaches to an existing tier label", {
+  df <- tibble::tibble(V1 = 1, V2 = 2)
+
+  kn <- knowledge(
+    df,
+    tier(1 ~ V1), # creates tier "1" and assigns V1
+    tier(1 ~ V2) # same label, should hit the 'add_to_tier' path
+  )
+
+  # only one tier row exists and it is labelled "1"
+  expect_equal(kn$tiers$label, "1")
+
+  # both variables now belong to that tier
+  expect_setequal(
+    kn$vars |> dplyr::filter(tier == "1") |> dplyr::pull(var),
+    c("V1", "V2")
+  )
+})
 
 # ──────────────────────────────────────────────────────────────────────────────
 # reorder_tiers()
@@ -778,6 +893,34 @@ testthat::test_that("reorder_tiers() errors on incomplete or duplicated permutat
   expect_error(
     reorder_tiers(kn, c(1, 1, 2), by_index = TRUE),
     "`order` must be a permutation of 1:3 when `by_index = TRUE`.",
+    fixed = TRUE
+  )
+})
+
+test_that("reorder_tiers() handles numeric, character and bad elements", {
+  kn_num <- knowledge(
+    tibble::tibble(A = 1, B = 2),
+    tier(1 ~ A),
+    tier(2 ~ B)
+  )
+
+  kn_chr <- knowledge(
+    tibble::tibble(X = 1, Y = 2),
+    tier("a" ~ X),
+    tier("b" ~ Y)
+  )
+  kn_num2 <- reorder_tiers(kn_num, c(2, 1)) # numeric literals
+
+  expect_equal(kn_num2$tiers$label, c("2", "1"))
+
+  kn_chr2 <- reorder_tiers(kn_chr, c("b", "a")) # quoted strings
+
+  expect_equal(kn_chr2$tiers$label, c("b", "a"))
+
+  # 1:2 is a language call, so as_label1() must raise the custom error
+  expect_error(
+    reorder_tiers(kn_chr, c(a, 1:2)), # 'a' is fine, 1:2 is not
+    "`order` contains an unsupported element",
     fixed = TRUE
   )
 })
@@ -851,6 +994,40 @@ testthat::test_that("reposition_tier() errors when no before or after is provide
   )
 })
 
+test_that("reposition_tier() edge cases", {
+  kn <- knowledge(
+    tibble::tibble(V1 = 1, V2 = 2, V3 = 3),
+    tier(1 ~ V1),
+    tier(2 ~ V2),
+    tier(3 ~ V3)
+  )
+
+  # by_index = TRUE but anchor has length > 1
+  expect_error(
+    reposition_tier(kn, tier = 1, after = c(2, 3), by_index = TRUE),
+    "length-1 numeric",
+    fixed = TRUE
+  )
+
+  # numeric literal resolves to a character label and reorder succeeds
+  kn2 <- reposition_tier(kn, tier = 2, before = 1)
+  expect_equal(kn2$tiers$label, c("2", "1", "3"))
+
+  # invalid tier reference triggers custom error
+  expect_error(
+    reposition_tier(kn, tier = 1:2, after = 1),
+    "Tier reference .* is invalid",
+    perl = TRUE
+  )
+
+  # tier identical to anchor returns object unchanged
+  expect_identical(
+    reposition_tier(kn, tier = 1, before = 1),
+    kn
+  )
+})
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Tier violations
 # ──────────────────────────────────────────────────────────────────────────────
@@ -899,7 +1076,26 @@ testthat::test_that("adding tier after required edge is provided will trigger ti
 # ──────────────────────────────────────────────────────────────────────────────
 # Misc errors
 # ──────────────────────────────────────────────────────────────────────────────
+test_that("unfreeze() clears the frozen flag", {
+  df <- tibble::tibble(A = 1, B = 2)
 
+  kn_frozen <- knowledge(df) # passing a data frame sets frozen = TRUE
+  expect_true(kn_frozen$frozen)
+
+  kn_unfrozen <- unfreeze(kn_frozen)
+  expect_false(kn_unfrozen$frozen)
+})
+
+test_that("unfreeze() allows adding new variables", {
+  df <- tibble::tibble(A = 1, B = 2)
+  kn <- knowledge(df) |> unfreeze() # thaw the object
+
+  # add a new variable that wasn't in the original data frame
+  kn2 <- add_vars(kn, "C")
+
+  expect_setequal(kn2$vars$var, c("A", "B", "C"))
+  expect_false(kn2$frozen) # flag stays FALSE
+})
 testthat::test_that("knowledge() throws error when using another function than tier(), forbidden(), or required()", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
@@ -916,6 +1112,63 @@ testthat::test_that("knowledge() throws error when using another function than t
     ),
     "Only tier(), forbidden(), required(), and exogenous()",
     fixed = TRUE
+  )
+})
+# tests/testthat/test-print-knowledge.R
+test_that("print.knowledge() snapshot", {
+  local_edition(3) # enable v3 snapshotting
+
+  withr::with_options(list(
+    crayon.enabled = FALSE, # strip colour codes
+    cli.num_colors = 1
+  ), {
+    kn <- knowledge(
+      tibble::tibble(V1 = 1, V2 = 2),
+      tier(1 ~ V1),
+      tier(2 ~ V2),
+      forbidden(V1 ~ V2)
+    )
+
+    expect_snapshot_output(print(kn), cran = FALSE)
+  })
+})
+
+test_that(".edge_verb() validates formula structure and matches", {
+  kn <- knowledge() # empty, so no vars are known yet
+
+  # not a two-sided formula
+  expect_error(
+    .edge_verb(kn, "forbidden", rlang::quo(V1)),
+    "Edge specification must be a two-sided formula",
+    fixed = TRUE
+  )
+
+  # both sides match zero vars: specific error branch
+  expect_error(
+    .edge_verb(
+      kn, "forbidden", rlang::quo(starts_with("Z") ~ starts_with("W"))
+    ),
+    "Formula `starts_with(\"Z\") ~ starts_with(\"W\")` matched no variables.",
+    fixed = TRUE
+  )
+})
+
+
+testthat::test_that(".vars_from_spec() handles c(...) and symbol fallback paths", {
+  kn <- knowledge(tibble::tibble(V1 = 1, V2 = 2))
+
+  # unsupported argument inside c()
+  expect_error(
+    .vars_from_spec(kn, quote(c(V1, 42))),
+    "Unsupported argument in c\\(\\):",
+    perl = TRUE
+  )
+
+  # symbol resolves to a user-supplied character vector
+  local_vec <- c("V1", "V2")
+  expect_equal(
+    .vars_from_spec(kn, quote(local_vec)),
+    local_vec
   )
 })
 
@@ -1139,6 +1392,16 @@ testthat::test_that("knowledge() rejects unknown top-level calls", {
   )
 })
 
+test_that("require_edge() errors when called with no formulas", {
+  kn <- knowledge() # empty knowledge object
+
+  expect_error(
+    require_edge(kn), # no ... arguments
+    "require_edge() needs at least one two-sided formula.",
+    fixed = TRUE
+  )
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 #   forbid_tier_violations()
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1192,6 +1455,97 @@ testthat::test_that("single-tier or untiered variables add no edges", {
 
 testthat::test_that("function errors on non-knowledge objects", {
   expect_error(forbid_tier_violations(list()), "knowledge")
+})
+# ──────────────────────────────────────────────────────────────────────────────
+# as_tetrad_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
+test_that("as_tetrad_knowledge() errors when rJava is missing", {
+  kn <- knowledge(tibble::tibble(A = 1), tier(1 ~ A))
+
+  # run this branch only when rJava *isn't* installed
+  skip_if(requireNamespace("rJava", quietly = TRUE), "rJava available; skip guard test")
+
+  expect_error(
+    as_tetrad_knowledge(kn),
+    "Package 'rJava' is required for as_tetrad_knowledge\\(\\)\\.",
+    perl = TRUE
+  )
+})
+
+test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
+  kn <- knowledge(
+    tibble::tibble(X = 1, Y = 2, Z = 3),
+    tier(1 ~ X),
+    tier(2 ~ Y + Z),
+    forbidden(Y ~ X),
+    required(X ~ Z)
+  )
+
+  fake <- rlang::env(
+    tiers     = list(),
+    forbidden = list(),
+    required  = list()
+  )
+
+  new_stub <- function(class) {
+    list(
+      addToTier    = function(i, v) fake$tiers <- append(fake$tiers, list(c(i, v))),
+      setForbidden = function(f, t) fake$forbidden <- append(fake$forbidden, list(c(f, t))),
+      setRequired  = function(f, t) fake$required <- append(fake$required, list(c(f, t)))
+    )
+  }
+
+  mockery::stub(
+    as_tetrad_knowledge, "requireNamespace",
+    function(pkg, quietly = FALSE) pkg == "rJava"
+  )
+  mockery::stub(as_tetrad_knowledge, "rJava::.jinit", function(...) NULL)
+  mockery::stub(as_tetrad_knowledge, "rJava::.jnew", new_stub)
+
+  j <- as_tetrad_knowledge(kn)
+  expect_type(j, "list")
+
+  expect_equal(
+    fake$tiers |> purrr::map_chr(~ paste(.x, collapse = ":")),
+    c("1:X", "2:Y", "2:Z")
+  )
+  expect_equal(
+    fake$forbidden |> purrr::map_chr(~ paste(.x, collapse = ">")),
+    "Y>X"
+  )
+  expect_equal(
+    fake$required |> purrr::map_chr(~ paste(.x, collapse = ">")),
+    "X>Z"
+  )
+})
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# as_bnlearn_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
+
+test_that("as_bnlearn_knowledge() returns correct whitelist and blacklist", {
+  kn <- knowledge(
+    tibble::tibble(A = 1, B = 2),
+    tier(1 ~ A),
+    tier(2 ~ B),
+    required(A ~ B) # whitelist candidate
+  )
+
+  # tier rule makes B -> A a forbidden edge
+  out <- as_bnlearn_knowledge(kn)
+
+  expect_type(out, "list")
+  expect_named(out, c("whitelist", "blacklist"))
+
+  expect_equal(
+    out$whitelist,
+    data.frame(from = "A", to = "B", stringsAsFactors = FALSE)
+  )
+
+  expect_true(
+    any(out$blacklist$from == "B" & out$blacklist$to == "A")
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1314,6 +1668,37 @@ You can add variables to your knowledge object with add_vars().",
   )
 })
 
+test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
+  kn_forb <- knowledge(
+    tibble::tibble(A = 1, B = 2),
+    forbidden(A ~ B)
+  )
+  kn_forb$edges$to[1] <- "X" # X not in vars or labels
+
+  expect_error(
+    as_pcalg_constraints(kn_forb,
+      labels = c("A", "B"),
+      directed_as_undirected = TRUE
+    ),
+    "Forbidden edge refers to unknown variable",
+    fixed = FALSE
+  )
+
+  kn_req <- knowledge(
+    tibble::tibble(A = 1, B = 2),
+    required(A ~ B)
+  )
+  kn_req$edges$to[1] <- "Y"
+
+  expect_error(
+    as_pcalg_constraints(kn_req,
+      labels = c("A", "B"),
+      directed_as_undirected = TRUE
+    ),
+    "Forbidden edge refers to unknown variable",
+    fixed = FALSE
+  )
+})
 
 # ──────────────────────────────────────────────────────────────────────────────
 # exogenous() or exo()
@@ -1492,6 +1877,19 @@ testthat::test_that("remove_edges() drops forbidden and required edges", {
   testthat::expect_false(any(kn3$edges$from == "C" & kn3$edges$to == "D"))
   # other edges remain
   testthat::expect_true(any(kn3$edges$from == "B" & kn3$edges$to == "D"))
+})
+
+test_that("remove_edges() errors when called with no formulas", {
+  kn <- knowledge(
+    tibble::tibble(A = 1, B = 2),
+    forbidden(A ~ B)
+  )
+
+  expect_error(
+    remove_edges(kn),
+    "remove_edges() needs at least one two-sided formula.",
+    fixed = TRUE
+  )
 })
 
 testthat::test_that("remove_edges() supports multiple formulas and tidyselect", {

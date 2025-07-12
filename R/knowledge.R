@@ -112,7 +112,7 @@ knowledge <- function(...) {
     }
 
     if (!length(specs)) {
-      stop("tier() needs at least one two-sided formula.", call. = FALSE)
+      stop("tier() needs at least one two-sided formula.", call. = FALSE) # nocov
     }
 
     ## ───────────────────────────── main loop ─────────────────────────────────
@@ -201,7 +201,7 @@ knowledge <- function(...) {
       }
 
       if (tier_label %in% kn$tiers$label) {
-        kn <<- add_to_tier(kn, fml) # already exists → just attach
+        kn <<- add_to_tier(kn, fml) # already exists, so just attach
         next
       }
 
@@ -751,9 +751,13 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
       if (is.numeric(val)) {
         return(as.character(val))
       }
+      # nocov start
+      # this is a fallback that currently can't be reached, but will be kept
+      # there for future-proofing.
       if (is.character(val) && nzchar(val)) {
         return(val)
       }
+      # nocov end
     }
     stop("`order` contains an unsupported element: ", rlang::expr_text(expr),
       call. = FALSE
@@ -1106,7 +1110,7 @@ deparse_knowledge <- function(kn, df_name = NULL) {
 #' @export
 as_tetrad_knowledge <- function(.kn) {
   check_knowledge_obj(.kn)
-  if (!requireNamespace("rJava", quietly = TRUE)) {
+  if (!requireNamespace("rJava", quietly = TRUE)) { # nocov start
     stop("Package 'rJava' is required for as_tetrad_knowledge().")
   }
   if (!.jniInitialized) {
@@ -1115,7 +1119,7 @@ as_tetrad_knowledge <- function(.kn) {
       parameters = "-Xmx2g",
       classpath = "inst/java/tetrad-current.jar"
     )
-  }
+  } # nocov end
 
   j <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
 
@@ -1209,12 +1213,13 @@ as_pcalg_constraints <- function(.kn,
         call. = FALSE
       )
     } else {
-      # can this even happen?
-      # just for good measure
+      # nocov start
+      # this is a future-proofing security measure, not reachable as of now
       stop("`labels` must contain all variables in the knowledge object.",
         call. = FALSE
       )
     }
+    # nocov end
   }
 
   p <- length(labels)
@@ -1600,8 +1605,7 @@ seq_tiers <- function(tiers, vars) {
   to_vars <- .formula_vars(.kn, rlang::f_rhs(expr))
 
   if (!length(from_vars) || !length(to_vars)) {
-    stop(
-      sprintf("Formula `%s` matched no variables.", deparse(expr)),
+    stop(sprintf("Formula `%s` matched no variables.", deparse(expr)),
       call. = FALSE
     )
   }
