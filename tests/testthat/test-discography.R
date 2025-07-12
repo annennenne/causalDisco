@@ -265,7 +265,7 @@ testthat::test_that("conversion from fully-connected undirected graphNEL works",
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# pcAlgo, gAlgo
+# pcAlgo
 # ──────────────────────────────────────────────────────────────────────────────
 set.seed(42)
 p <- 4
@@ -284,8 +284,6 @@ pc_fit <- pcalg::pc(
   labels    = colnames(X),
   verbose   = FALSE
 )
-# coerce to the (virtual) superclass "gAlgo"
-g_fit <- methods::as(pc_fit, "gAlgo")
 
 testthat::test_that("conversion from pcAlgo works", {
   # discography on the pcAlgo object
@@ -311,7 +309,7 @@ testthat::test_that("conversion from pcAlgo is the same as the conversion from t
 
 testthat::test_that("conversion from pcAlgo works", {
   # discography on the pcAlgo object
-  disco_tbl <- tibble::as_tibble(discography(g_fit))
+  disco_tbl <- tibble::as_tibble(discography(pc_fit))
 
   # expected edge table
   expected_tbl <- tibble::tibble(
@@ -323,19 +321,8 @@ testthat::test_that("conversion from pcAlgo works", {
   testthat::expect_equal(disco_tbl, expected_tbl)
 })
 
-testthat::test_that("conversion from gAlgo is the same as the conversion from the graph", {
-  disco_tbl <- tibble::as_tibble(discography(g_fit))
-  reference_tbl <- tibble::as_tibble(discography(g_fit@graph))
-
-  testthat::expect_equal(disco_tbl, reference_tbl)
-})
-
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Essgraph (pcalg::ges)
-# ──────────────────────────────────────────────────────────────────────────────
-# ──────────────────────────────────────────────────────────────────────────────
-# EssGraph  (pcalg::ges)
 # ──────────────────────────────────────────────────────────────────────────────
 
 testthat::test_that("conversion from empty EssGraph works", {
@@ -550,4 +537,110 @@ testthat::test_that("conversion from fciAlgo to amat to discography works", {
   reference_tbl <- tibble::as_tibble(discography(methods::as(fci_fit, "amat")))
 
   testthat::expect_equal(disco_tbl, reference_tbl)
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Misc
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+test_that("as_tibble_edges() infers and alphabetically sorts nodes when nodes = NULL", {
+  # two directed edges; B appears before A in the input on purpose
+  out <- as_tibble_edges(
+    from  = c("B", "A"),
+    to    = c("C", "C"),
+    type  = c("-->", "-->")
+  )
+
+  # node order should be inferred as A, B, C (alphabetical)
+  expect_equal(out$from, c("A", "B"))
+  expect_equal(out$to, c("C", "C"))
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# new_discography()
+# ──────────────────────────────────────────────────────────────────────────────
+
+test_that("new_discography() checks required columns and coerces types", {
+  # error path: edge_type column missing
+  bad <- tibble::tibble(from = "A", to = "B")
+  expect_error(
+    new_discography(bad),
+    "contain .*from.*to.*edge_type",
+    perl = TRUE
+  )
+
+  # success path: factors become character, columns reordered
+  ok <- tibble::tibble(
+    weight     = 1, # extra column
+    edge_type  = factor("-->"),
+    to         = factor("B"),
+    from       = factor("A")
+  )
+
+  dg <- new_discography(ok)
+
+  expect_s3_class(dg, "discography")
+  expect_equal(names(dg)[1:3], c("from", "to", "edge_type"))
+  expect_type(dg$from, "character")
+  expect_type(dg$edge_type, "character")
+  expect_equal(dg$weight, 1)
+})
+
+test_that("discography.amat.cpdag() assigns nodes from colnames() or V1…Vn", {
+  m1 <- matrix(0, 2, 2)
+  colnames(m1) <- c("X", "Y") # triggers the colnames() fallback
+  m1[1, 2] <- m1[2, 1] <- 1 # X --- Y
+  class(m1) <- c("amat.cpdag", "matrix")
+
+  tbl1 <- tibble::as_tibble(discography(m1))
+  expect_equal(tbl1$from, "X")
+  expect_equal(tbl1$to, "Y")
+
+  m2 <- matrix(0, 2, 2, dimnames = list(NULL, NULL))
+  m2[1, 2] <- m2[2, 1] <- 1 # V1 --- V2
+  class(m2) <- c("amat.cpdag", "matrix")
+
+  tbl2 <- tibble::as_tibble(discography(m2))
+  expect_equal(tbl2$from, "V1")
+  expect_equal(tbl2$to, "V2")
+})
+
+test_that("discography.amat.pag() assigns nodes from colnames() or V1…Vn", {
+  m1 <- matrix(0, 2, 2)
+  colnames(m1) <- c("X", "Y") # triggers the colnames() fallback
+  m1[1, 2] <- m1[2, 1] <- 1 # X --- Y
+  class(m1) <- c("amat.pag", "matrix")
+
+  tbl1 <- tibble::as_tibble(discography(m1))
+  expect_equal(tbl1$from, "X")
+  expect_equal(tbl1$to, "Y")
+
+  m2 <- matrix(0, 2, 2, dimnames = list(NULL, NULL))
+  m2[1, 2] <- m2[2, 1] <- 1 # V1 --- V2
+  class(m2) <- c("amat.pag", "matrix")
+
+  tbl2 <- tibble::as_tibble(discography(m2))
+  expect_equal(tbl2$from, "V1")
+  expect_equal(tbl2$to, "V2")
+})
+
+test_that("discography.amat.cpdag() early-returns for an empty adjacency matrix", {
+  m <- matrix(0, 3, 3, dimnames = list(LETTERS[1:3], LETTERS[1:3]))
+  class(m) <- c("amat.cpdag", "matrix")
+
+  tbl <- tibble::as_tibble(discography(m))
+
+  expect_equal(nrow(tbl), 0) # early-return path
+  expect_named(tbl, c("from", "to", "edge_type"))
+})
+
+test_that("discography.amat() delegates to .amat.pag when object inherits amat.pag", {
+  m <- matrix(0, 2, 2, dimnames = list(c("X", "Y"), c("X", "Y")))
+  class(m) <- c("amat.pag", "matrix") # inherits("amat.pag") is TRUE
+
+  tbl_via_switch <- discography.amat(m)
+  tbl_direct <- discography.amat.pag(m)
+
+  expect_equal(tbl_via_switch, tbl_direct)
 })

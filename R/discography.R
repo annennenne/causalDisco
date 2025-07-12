@@ -234,12 +234,6 @@ discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
   discography(x@graph, nodes = nodes)
 }
 
-#' Convert gAlgo object to a discography object.
-#' @export
-discography.gAlgo <- function(x, nodes = x@graph@nodes, ...) {
-  discography(x@graph, nodes = nodes)
-}
-
 #' #' Convert EssGraph object (used by pcalg::ges) to a discography object.
 #' @export
 discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
@@ -278,11 +272,6 @@ discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
 #' @export
 discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
   amat <- methods::as(x, "amat")
-
-  if (is.null(nodes)) {
-    nodes <- rownames(amat)
-    if (is.null(nodes)) nodes <- colnames(amat)
-  }
   discography(amat, nodes = nodes, ...)
 }
 
@@ -369,6 +358,8 @@ discography.default <- function(x, ...) {
     "Don't know how to convert {.cls {class(x)[1]}} to a discography."
   ))
 }
+
+# nocov start
 
 #' Print method for discography objects.
 #' @export
@@ -480,3 +471,4 @@ autoplot.discography <- function(object,
     ) +
     ggplot2::theme_void()
 }
+# nocov end
