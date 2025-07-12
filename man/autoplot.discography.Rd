@@ -2,39 +2,39 @@
 % Please edit documentation in R/discography.R
 \name{autoplot.discography}
 \alias{autoplot.discography}
-\title{Autoplot for discography objects}
+\title{Autoplot for discography objects — clear-node ggarrow version}
 \usage{
 \method{autoplot}{discography}(
   object,
   layout = "graphopt",
-  arrow_length = grid::unit(4, "mm"),
-  circle_size = 2.5,
+  head_len = grid::unit(4, "mm"),
+  circle_len = NULL,
   node_size = 5,
-  label_size = 3.5,
-  label_vjust = -0.8,
+  label_size = 5,
+  gap_mm = 0.5,
   ...
 )
 }
 \arguments{
-\item{object}{A discography object.}
+\item{object}{A discography tibble.}
 
-\item{layout}{ggraph layout algorithm.}
+\item{layout}{Layout algorithm for ggraph.}
 
-\item{arrow_length}{Length of arrow heads.}
+\item{head_len}{Triangle-arrow length (mm).}
 
-\item{circle_size}{Size of hollow‐circle markers.}
+\item{circle_len}{Cup radius (mm).}
 
-\item{node_size}{Size of node points.}
+\item{node_size}{Node-point diameter (mm).}
 
-\item{label_size}{Size of node text labels.}
+\item{label_size}{Text size.}
 
-\item{label_vjust}{Vertical adjustment of node labels.}
+\item{gap_mm}{Extra clearance between ornament and node edge.}
 
-\item{...}{Extra arguments passed to ggraph::create_layout().}
+\item{...}{Passed on to ggraph::create_layout().}
 }
 \value{
-A ggplot object.
+ggplot object.
 }
 \description{
-Autoplot for discography objects
+Autoplot for discography objects — clear-node ggarrow version
 }
