@@ -48,7 +48,6 @@ TetradSearch <- R6Class(
     unstable_bhats = NULL,
     stable_bhats = NULL,
 
-    ###### initialize ######
     #' @description Initializes the \code{TetradSearch} object, creating new Java objects for
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
@@ -69,7 +68,6 @@ TetradSearch <- R6Class(
       self$set_verbose(FALSE) # Set verbose to FALSE per default.
     },
 
-    ###### set_test ######
     #' @description Sets the independence test to use in Tetrad.
     #' @param method (character) Name of the test method (e.g., "chi_square", "fisher_z").
     #' @param ... Additional arguments passed to the private test-setting methods.
@@ -116,7 +114,6 @@ TetradSearch <- R6Class(
       invisible(self)
     },
 
-    ###### set_score ######
     #' @description Sets the scoring function to use in Tetrad.
     #' @param method (character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
     #' @param ... Additional arguments passed to the private score-setting methods.
@@ -169,7 +166,6 @@ TetradSearch <- R6Class(
       invisible(self)
     },
 
-    ###### set_alg ######
     #' @description Sets the causal discovery algorithm to use in Tetrad.
     #' @param method (character) Name of the algorithm (e.g., "fges", "pc", "fci", etc.).
     #' @param ... Additional parameters passed to the private algorithm-setting methods.
@@ -417,8 +413,6 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
-
-    ###### set_knowledge ######
     #' @description Sets the background knowledge object.
     #' @param knowledge_obj An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).
     set_knowledge = function(knowledge_obj) {
@@ -431,7 +425,6 @@ TetradSearch <- R6Class(
         self$alg$setKnowledge(self$knowledge)
       }
     },
-    ###### set_params ######
     #' @description Sets parameters for the Tetrad search.
     #' @param ... Named arguments for the parameters to set.
     set_params = function(...) {
@@ -458,9 +451,6 @@ TetradSearch <- R6Class(
       }
       invisible(NULL)
     },
-
-
-    ###### get_parameters_for_function ######
     #' @description Retrieves the argument names of a matching private function.
     #' @param fn_pattern (character) A pattern that should match a private method name.
     #' @param score (logical) If TRUE, retrieves parameters for a scoring function.
@@ -518,8 +508,6 @@ TetradSearch <- R6Class(
       }
       return(names(formals(matched_function, envir = as.environment(private))))
     },
-
-    ###### run_search ######
     #' @description Runs the chosen Tetrad algorithm on the data.
     #' @param data (optional) If provided, overrides the previously set data.
     #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be generated.
@@ -572,8 +560,6 @@ TetradSearch <- R6Class(
       }
       return(self$result |> discography())
     },
-
-    ###### set_bootstrapping ######
     # NOT TESTED
     #' @description Configures bootstrapping parameters for the Tetrad search.
     #' @param number_resampling (integer) Number of bootstrap samples.
@@ -611,8 +597,6 @@ TetradSearch <- R6Class(
         SEED = seed
       )
     },
-
-    ###### set_data ######
     #' @description Sets or overrides the data used by Tetrad.
     #' @param data (data.frame) The new data to load.
     set_data = function(data) {
@@ -626,8 +610,6 @@ TetradSearch <- R6Class(
         self$data <- rdata_to_tetrad(data)
       }
     },
-
-    ###### set_verbose ######
     #' @description Toggles the verbosity in Tetrad.
     #' @param verbose (logical) TRUE to enable verbose logging, FALSE otherwise.
     set_verbose = function(verbose) {
@@ -639,8 +621,6 @@ TetradSearch <- R6Class(
         VERBOSE = verbose
       )
     },
-
-    ###### set_time_lag ######
     #' @description Sets an integer time lag for time-series algorithms.
     #' @param time_lag (integer) The time lag to set.
     set_time_lag = function(time_lag = 0) {
@@ -652,29 +632,21 @@ TetradSearch <- R6Class(
         TIME_LAG = time_lag
       )
     },
-
-    ###### get_data ######
     #' @description Retrieves the current Java data object.
     #' @return (Java object) Tetrad dataset.
     get_data = function() {
       return(self$data)
     },
-
-    ###### get_knowledge ######
     #' @description Returns the background knowledge object.
     #' @return (Java object) Tetrad Knowledge.
     get_knowledge = function() {
       return(self$knowledge)
     },
-
-    ###### get_java ######
     #' @description Gets the main Java result object (usually a graph) from the last search.
     #' @return (Java object) The Tetrad result graph or model.
     get_java = function() {
       return(self$java)
     },
-
-    ###### get_string ######
     #' @description Returns the string representation of a given Java object or \code{self$java}.
     #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
     #' @return (character) The \code{toString()} of that Java object.
@@ -685,8 +657,6 @@ TetradSearch <- R6Class(
         return(.jcall(java_obj, "S", "toString"))
       }
     },
-
-    ###### get_dot ######
     #' @description Produces a DOT (Graphviz) representation of the graph.
     #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
     #' @return (character) The DOT-format string.
@@ -709,8 +679,7 @@ TetradSearch <- R6Class(
         ))
       }
     },
-    ###### get_amat ######
-    #' @description Produces a DOT (Graphviz) representation of the graph.
+    #' @description Produces an amat representation of the graph.
     #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
     #' @return (character) The DOT-format string.
     get_amat = function(java_obj = NULL) {
