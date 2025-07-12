@@ -90,6 +90,11 @@ plot(thistamat)
 The causalDisco webtool provides an overview of R procedures for working with causal discovery in R, including example code. The webtool can be accessed [here](https://shiny.sund.ku.dk/zms499/causalDisco). Source code for the webtool is available in this repository. 
 
 
+## Code coverage
+<!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/frederikfabriciusbjerre/causalDisco)
+<!-- badges: end -->
+
 ## Bugs & requests
 
 If you find bugs or have a request for a new feature, please [open an issue](https://github.com/annennenne/causalDisco/issues).
