@@ -3,31 +3,149 @@
 #' A wrapper that lets you drive `bnlearns`’s structure-learning
 #' algorithms within the `causalDisco` framework.
 #'
-#' @param data A `data.frame` holding the data set currently attached to the
-#'   search object.
-#' @param rdata Reserved for parity with other engines; not used internally.
-#' @param score Character string naming the score selected via `set_score()`
-#'   (e.g. `"bic"`, `"bge"`).
-#' @param test Character string naming the conditional-independence test
-#'   selected via `set_test()` (e.g. `"zf"`, `"mc-mi"`).
-#' @param alg A partially-applied bnlearn learner produced by `set_alg()`.
-#' @param params A list of extra tuning parameters stored by `set_params()`
-#'   and spliced into the learner call.
-#' @param knowledge A list with elements `whitelist` and `blacklist`
-#'   containing prior-knowledge constraints added via `set_knowledge()`.
 #'
 #' @return An R6 object with the methods documented below.
 #' @export
 bnlearnSearch <- R6Class(
   "bnlearnSearch",
   public = list(
+    #' @field data A `data.frame` holding the data set currently attached to the
+    #' search object. Can be set with `set_data()`.
     data = NULL,
-    rdata = NULL,
+
+    #' @field score Character scalar naming the score function to pass to
+    #'   **bnlearn**. Can be set with \code{$set_score()}.
+    #'   Recognised values are:
+    #'   \strong{Discrete—categorical}
+    #'   \itemize{
+    #'     \item \code{"loglik"} — log-likelihood
+    #'     \item \code{"aic"} — Akaike Information Criterion
+    #'     \item \code{"bic"} — Bayesian Information Criterion
+    #'     \item \code{"ebic"} — Extended BIC
+    #'     \item \code{"pred-loglik"} — predictive log-likelihood
+    #'     \item \code{"bde"} — Bayesian Dirichlet equivalent (uniform)
+    #'     \item \code{"bds"} — Bayesian Dirichlet score
+    #'     \item \code{"mbde"} — modified BDE
+    #'     \item \code{"bdla"} — locally averaged BDE
+    #'     \item \code{"k2"} — K2 score
+    #'     \item \code{"fnml"} — factorised NML
+    #'     \item \code{"qnml"} — quotient NML
+    #'     \item \code{"nal"} — node-average log-likelihood
+    #'     \item \code{"pnal"} — penalised node-average log-likelihood
+    #'   }
+    #'   \strong{Gaussian}
+    #'   \itemize{
+    #'     \item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"}, \code{"ebic-g"},
+    #'       \code{"pred-loglik-g"}
+    #'     \item \code{"bge"} — Gaussian posterior density
+    #'     \item \code{"nal-g"} — node-average log-likelihood
+    #'     \item \code{"pnal-g"} — penalised node-average log-likelihood
+    #'   }
+    #'   \strong{Conditional Gaussian}
+    #'   \itemize{
+    #'     \item \code{"loglik-cg"}, \code{"aic-cg"}, \code{"bic-cg"},
+    #'       \code{"ebic-cg"}, \code{"pred-loglik-cg"},
+    #'       \code{"nal-cg"}, \code{"pnal-cg"}
+    #'   }
     score = NULL,
+
+    #' @field test Character scalar naming the conditional-independence test
+    #'   passed to **bnlearn**. Can be set with set_test().
+    #'   Recognised values are:
+    #'
+    #'   **Discrete – categorical**
+    #'   \itemize{
+    #'     \item \code{"mi"} – mutual information
+    #'     \item \code{"mi-adf"} – mutual information with adjusted d.f.
+    #'     \item \code{"mc-mi"} – Monte Carlo mutual information
+    #'     \item \code{"smc-mi"} – sequential Monte Carlo mutual information
+    #'     \item \code{"sp-mi"} – semi-parametric mutual information
+    #'     \item \code{"mi-sh"} – mutual information (shrinkage)
+    #'     \item \code{"x2"} – chi-squared
+    #'     \item \code{"x2-adf"} – chi-squared with adjusted d.f.
+    #'     \item \code{"mc-x2"} – Monte Carlo chi-squared
+    #'     \item \code{"smc-x2"} – sequential Monte Carlo chi-squared
+    #'     \item \code{"sp-x2"} – semi-parametric chi-squared
+    #'   }
+    #'
+    #'   **Discrete – ordered factors**
+    #'   \itemize{
+    #'     \item \code{"jt"} – Jonckheere–Terpstra
+    #'     \item \code{"mc-jt"} – Monte Carlo Jonckheere–Terpstra
+    #'     \item \code{"smc-jt"} – sequential Monte Carlo Jonckheere–Terpstra
+    #'   }
+    #'
+    #'   **Gaussian**
+    #'   \itemize{
+    #'     \item \code{"cor"} – Pearson correlation
+    #'     \item \code{"mc-cor"} – Monte Carlo Pearson correlation
+    #'     \item \code{"smc-cor"} – sequential Monte Carlo Pearson correlation
+    #'     \item \code{"zf"} / \code{"fisher_z"} – Fisher Z test
+    #'     \item \code{"mc-zf"} – Monte Carlo Fisher Z
+    #'     \item \code{"smc-zf"} – sequential Monte Carlo Fisher Z
+    #'     \item \code{"mi-g"} – mutual information (Gaussian)
+    #'     \item \code{"mc-mi-g"} – Monte Carlo mutual information (Gaussian)
+    #'     \item \code{"smc-mi-g"} – sequential Monte Carlo mutual information (Gaussian)
+    #'     \item \code{"mi-g-sh"} – mutual information (Gaussian, shrinkage)
+    #'   }
+    #'
+    #'   **Conditional Gaussian**
+    #'   \itemize{
+    #'     \item \code{"mi-cg"} – mutual information (conditional Gaussian)
+    #'   }
     test = NULL,
+
+    #' @field alg Function generated by \code{$set_alg()} that runs a
+    #'   structure-learning algorithm from **bnlearn**.  Supply one of the method
+    #'   strings below when calling \code{$set_alg(method)}:
+    #'
+    #'   **Constraint-based**
+    #'   \itemize{
+    #'     \item \code{"pc"} – PC-stable algorithm
+    #'     \item \code{"gs"} – Grow-Shrink
+    #'     \item \code{"iamb"} – Incremental Association Markov Blanket
+    #'     \item \code{"fast.iamb"} – Fast-IAMB
+    #'     \item \code{"inter.iamb"} – Interleaved-IAMB
+    #'     \item \code{"iamb.fdr"} – IAMB with FDR control
+    #'   }
+    #'
+    #'   **Local / skeleton discovery**
+    #'   \itemize{
+    #'     \item \code{"mmpc"} – Max–Min Parents and Children
+    #'     \item \code{"si.hiton.pc"} – Semi-Interleaved HITON-PC
+    #'     \item \code{"hpc"} – Hybrid Parents and Children
+    #'   }
+    #'
+    #'   **Score-based**
+    #'   \itemize{
+    #'     \item \code{"hc"} – Hill-Climbing
+    #'     \item \code{"tabu"} – Tabu search
+    #'   }
+    #'
+    #'   **Hybrid**
+    #'   \itemize{
+    #'     \item \code{"mmhc"} – Max–Min Hill-Climbing
+    #'     \item \code{"rsmax2"} – Restricted Maximisation (two-stage)
+    #'     \item \code{"h2pc"} – Hybrid HPC–PC
+    #'   }
+    #'
+    #'   **Pairwise mutual-information learners**
+    #'   \itemize{
+    #'     \item \code{"chow.liu"} – Chow–Liu tree
+    #'     \item \code{"aracne"} – ARACNE network
+    #'   }
     alg = NULL,
+
+    #' @field params A list of extra tuning parameters stored by `set_params()`
+    #'   and spliced into the learner call.
     params = NULL,
+
+    #' @field knowledge A list with elements `whitelist` and `blacklist`
+    #'   containing prior-knowledge constraints added via `set_knowledge()`.
     knowledge = NULL,
+
+    #' @description
+    #' Initialize an empty `bnlearnSearch` object.
     initialize = function() {
       self$data <- NULL
       self$score <- NULL
@@ -35,12 +153,28 @@ bnlearnSearch <- R6Class(
       self$knowledge <- NULL
       self$params <- list()
     },
+
+    #' @description
+    #' Set the parameters for the search algorithm.
+    #'
+    #' @param params A parameter to set.
     set_params = function(params) {
       self$params <- params
     },
+
+    #' @description
+    #' Set the data for the search algorithm.
+    #'
+    #' @param data A data frame containing the data to use for the search.
     set_data = function(data) {
       self$data <- data
     },
+
+    #' @description
+    #' Set the conditional-independence test to use in the search algorithm.
+    #'
+    #' @param method Character naming the test to use.
+    #' @param alpha Significance level for the test.
     set_test = function(method,
                         alpha = 0.05) {
       stopifnot(
@@ -101,6 +235,11 @@ bnlearnSearch <- R6Class(
       self$test <- method
       invisible(self)
     },
+
+    #' @description
+    #' Set the score function for the search algorithm.
+    #'
+    #' @param method Character naming the score function to use.
     set_score = function(method) {
       method <- tolower(method)
 
@@ -149,6 +288,12 @@ bnlearnSearch <- R6Class(
       self$score <- method
       invisible(self)
     },
+
+    #' @description
+    #' Set the causal discovery algorithm to use.
+    #'
+    #' @param method Character naming the algorithm to use.
+    #' @param args A list of additional arguments to pass to the algorithm.
     set_alg = function(method, args = NULL) {
       method <- tolower(method)
 
@@ -265,10 +410,21 @@ bnlearnSearch <- R6Class(
 
       invisible(self)
     },
+
+    #' @description
+    #' Set the prior knowledge for the search algorithm usind a knowledge object.
+    #'
+    #' @param knowledge_obj A knowledge object containing prior knowledge
     set_knowledge = function(knowledge_obj) {
       check_knowledge_obj(knowledge_obj)
       self$knowledge <- as_bnlearn_knowledge(knowledge_obj)
     },
+
+    #' @description
+    #' Run the search algorithm on the currently set data.
+    #'
+    #' @param data A data frame containing the data to use for the search.
+    #'  If NULL, the currently set data will be used, i.e. \code{self$data}.
     run_search = function(data = NULL) {
       # Data checks
       if (!is.null(data)) self$set_data(data)
