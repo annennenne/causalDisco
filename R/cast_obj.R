@@ -1,4 +1,11 @@
-# function that takes a java object and casts it to some superclass
+#' Cast a Java object to a superclass
+#'
+#' This function takes a Java object and casts it to a superclass, so it can be
+#' used in the Tetrad Search class.
+#'
+#' @importFrom rJava .jcast .jinstanceof
+#' @param obj A Java object to be cast.
+#' @return A Java object cast to a superclass that Tetrad takes as input.
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper
   if (.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")) {
