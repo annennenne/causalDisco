@@ -52,11 +52,7 @@ TetradSearch <- R6Class(
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
       if (!.jniInitialized) {
-        .jinit(
-          # todo: how many gb?
-          parameters = "-Xmx2g",
-          classpath = "inst/java/tetrad-current.jar"
-        )
+        init_java()
       }
       self$data <- NULL
       self$score <- NULL
