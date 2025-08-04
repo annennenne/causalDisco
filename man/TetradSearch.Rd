@@ -3,32 +3,84 @@
 \docType{class}
 \name{TetradSearch}
 \alias{TetradSearch}
-\title{TetradSearch R6 Class}
+\title{TetradSearch R6 class}
 \description{
-The \code{TetradSearch} R6 class provides a high-level interface to the Tetrad
-Java library. It allows users to set up different independence tests and
-scoring functions, specify causal search algorithms, and run them on data.
+High-level wrapper around the Java-based \strong{Tetrad} causal-discovery
+library.  The class lets you choose independence tests, scores, and search
+algorithms from Tetrad, run them on an R data set, and retrieve the
+resulting graph or statistics.
 }
-\section{Fields}{
-
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{data}}{(Java object) The Java object representing the loaded data.}
-\item{\code{rdata}}{(data.frame) The original R data passed to the class.}
-\item{\code{score}}{(Java object) The scoring function object.}
-\item{\code{test}}{(Java object) The independence test object.}
-\item{\code{alg}}{(Java object) The causal discovery algorithm object.}
-\item{\code{mc_test}}{(Java object) The independence test object used for Markov checker.}
-\item{\code{java}}{(Java object) The resulting graph or model object after running a search.}
-\item{\code{knowledge}}{(Java object) The Tetrad \code{Knowledge} object storing background knowledge.}
-\item{\code{params}}{(Java object) The Tetrad \code{Parameters} object with various configuration settings.}
-\item{\code{bootstrap_graphs}}{(Java List) A list of bootstrapped graphs produced by Tetrad.}
-\item{\code{mc_ind_results}}{(Java List) A list of results for independence tests from Markov checking.}
-\item{\code{bhat}}{(Java object) BHat adjacency matrix from the Tetrad search, if requested.}
-\item{\code{unstable_bhats}}{(Java object) A collection of BHat matrices from the Tetrad search, if requested.}
-\item{\code{stable_bhats}}{(Java object) A collection of BHat matrices from the Tetrad search, if requested.}
-}
-}
+\item{\code{data}}{Java object that stores the (possibly converted) data set
+used by Tetrad.}
 
+\item{\code{rdata}}{Original \strong{R} \code{data.frame} supplied by the user.}
+
+\item{\code{score}}{Java object holding the scoring function selected with
+\code{set_score()}. Supply one of the method strings for
+\code{set_score()}. Recognised values are:
+
+\itemize{
+\item \code{"sem_bic"} – SEM BIC score.
+\item \code{"ebic"} – Extended BIC score.
+\item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
+\item \code{"basis_function_bic"} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
+\item \code{"discrete_bic"} – BIC score for discrete data.
+\item \code{"gic"} – Generalized Information Criterion (GIC) score.
+\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
+\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
+\item \code{"poisson_prior"} – Poisson prior score.
+\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+}}
+
+\item{\code{test}}{Java object holding the independence test selected with
+\code{set_test()}. Supply one of the method strings for
+\code{set_test()}. Recognised values are:
+
+\itemize{
+\item \code{"chi_square"} – chi-squared test
+\item \code{"g_square"}   – likelihood-ratio \(G^2\) test
+\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
+\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
+\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
+\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+}}
+
+\item{\code{alg}}{Java object representing the search algorithm.}
+
+\item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
+
+\item{\code{java}}{Java object returned by the search (typically a graph).}
+
+\item{\code{result}}{Convenience alias for \code{java}; may store additional
+metadata depending on the search type.}
+
+\item{\code{knowledge}}{Java \code{Knowledge} object carrying background
+constraints (required/forbidden edges).}
+
+\item{\code{params}}{Java \code{Parameters} object holding algorithm settings.}
+
+\item{\code{bootstrap_graphs}}{Java \code{List} of graphs produced by bootstrap
+resampling, if that feature was requested.}
+
+\item{\code{mc_ind_results}}{Java \code{List} with Markov-checker test results.}
+
+\item{\code{bhat}}{Java object containing the \eqn{\hat B} adjacency matrix
+(returned by some Tetrad algorithms).}
+
+\item{\code{unstable_bhats}}{Collection of unstable \eqn{\hat B} matrices.}
+
+\item{\code{stable_bhats}}{Collection of stable \eqn{\hat B} matrices.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -100,9 +152,179 @@ Sets the scoring function to use in Tetrad.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").}
+\item{\code{method}}{(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
+\itemize{
+\item \code{"sem_bic"} – SEM BIC score.
+\item \code{"ebic"} – Extended BIC score.
+\item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
+\item \code{"basis_function_bic"} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
+\item \code{"discrete_bic"} – BIC score for discrete data.
+\item \code{"gic"} – Generalized Information Criterion (GIC) score.
+\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
+\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
+\item \code{"poisson_prior"} – Poisson prior score.
+\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+}}
 
-\item{\code{...}}{Additional arguments passed to the private score-setting methods.}
+\item{\code{...}}{Additional arguments passed to the private score-setting methods.
+For the following scores, the following parameters are available:
+\itemize{
+\item \code{sem_bic} – SEM BIC score.
+\itemize{
+\item \code{penalty_discount = 2} – Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,
+\item \code{sem_bic_rule = 1} – The Chickering Rule uses the
+difference of BIC scores to add or remove edges. The Nandy et al.
+rule uses a single calculation of a partial correlation in place
+of the likelihood difference,
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse
+}
+\item \code{ebic} – Extended BIC score.
+\itemize{
+\item \code{gamma} – The gamma parameter in the EBIC score.
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{bdeu} – Bayes Dirichlet Equivalent score with uniform priors.
+\itemize{
+\item \code{sample_prior = 10} – This sets the prior equivalent
+sample size. This number is added to the sample size for each
+conditional probability table in the model and is divided equally
+among the cells in the table,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{basis_function_bic} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\itemize{
+\item \code{truncation_limit = 3} – Basis functions 1 though this
+number will be used. The Degenerate Gaussian category indicator
+variables for mixed data are also used,
+\item \code{penalty_discount = 2} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse,
+\item \code{do_one_equation_only = FALSE} – If TRUE, only one
+equation should be used when expanding the basis.
+}
+\item \code{conditional_gaussian} – Mixed discrete/continuous BIC score.
+\itemize{
+\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{discretize = TRUE} – If TRUE for the conditional
+Gaussian likelihood, when scoring X->D where X is continuous and D
+discrete, one should to simply discretize X for just those cases.
+If FALSE, the integration will be exact,
+\item \code{num_categories_to_discretize = 3} –  In case the exact
+algorithm is not used for discrete children and continuous parents
+is not used, this parameter gives the number of categories to use
+for this second (discretize) backup copy of the continuous
+variables,
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution.
+}
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
+\itemize{
+\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data.
+}
+\item \code{"discrete_bic"} – BIC score for discrete data.
+\itemize{
+'item \code{penalty_discount = 2} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution.
+}
+\item \code{"gic"} – Generalized Information Criterion (GIC) score.
+\itemize{
+\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{sem_gic_rule = "bic"} – The following rules are available:
+\itemize{
+\item \code{"bic"} –  ln n,
+\item \code{"gic2"} – pn^1/3,
+\item \code{"ric"} –  2 ln pn,
+\item \code{"ricc"} – 2(ln pn + ln ln pn),
+\item \code{"gic5"} – ln ln n ln pn,
+\item \code{"gic6"} – ln n ln pn
+},
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
+\itemize{
+\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+yields sparser graphs,
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data.
+}
+\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
+\itemize{
+\item \code{structure_prior = 0} – The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,
+\item \code{f_degree = 0} – The f degree.
+\item \code{discretize = FALSE} – If TRUE for the conditional
+Gaussian likelihood, when scoring X->D where X is continuous and D
+discrete, one should to simply discretize X for just those cases.
+If FALSE, the integration will be exact.
+}
+\item \code{"poisson_prior"} – Poisson prior score.
+\itemize{
+\item \code{poission_lambda = 2} – Lambda parameter for the Poisson
+distribution (> 0),
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+\itemize{
+\item \code{risk_bound = 0.2} – This is the probability of getting
+the true model if a correct model is discovered. Could underfit.
+\item \code{precompute_covariances = TRUE} – For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+}}
 }
 \if{html}{\out{</div>}}
 }
