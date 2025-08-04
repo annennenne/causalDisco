@@ -145,7 +145,7 @@ bnlearnSearch <- R6Class(
     knowledge = NULL,
 
     #' @description
-    #' Initialize an empty `bnlearnSearch` object.
+    #' Constructor for the `bnlearnSearch` class.
     initialize = function() {
       self$data <- NULL
       self$score <- NULL

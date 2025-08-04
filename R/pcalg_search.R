@@ -8,15 +8,54 @@
 pcalgSearch <- R6Class(
   "pcalgSearch",
   public = list(
+    #' @field data A `data.frame` holding the data set currently attached to the
+    #' search object. Can be set with `set_data()`.
     data = NULL,
-    rdata = NULL,
+
+    #' @field score A function that will be used to build the score,
+    #'  when data is set. Can be set with \code{$set_score()}. Recognized values
+    #'  are:
+    #'  \itemize{
+    #'     \item \code{sem_bic} - BIC score for Gaussian data. See \code{\link[pcalg:GaussL0penObsScore-class]{GaussL0penObsScore}}.
+    #'     \item \code{sem_bic_int} - BIC score for Gaussian data with integer values. See \code{\link[pcalg:GaussL0penIntScore-class]{GaussL0penIntScore}}.
+    #'     }
     score = NULL,
+
+    #' @field test A function that will be used to test independence.
+    #'  Can be set with \code{$set_test()}. Recognized values are:
+    #'  \itemize{
+    #'    \item \code{fisher_z} - Fisher Z test for Gaussian data. See \code{\link[pcalg:gaussCItest]{gaussCItest}}.
+    #'    \item \code{g_square} - G square test for discrete data. See \code{\link[pcalg:binCItest]{binCItest}} and \code{\link[pcalg:disCItest]{disCItest}}.
+    #'    }
     test = NULL,
+
+    #' @field alg A function that will be used to run the search algorithm.
+    #' Can be set with \code{$set_alg()}. Recognized values are:
+    #' \itemize{
+    #'   \item \code{pc} - PC algorithm. See \code{\link[pcalg:pc]{pc}}.
+    #'   \item \code{fci} - FCI algorithm. See \code{\link[pcalg:fci]{fci}}.
+    #'   \item \code{ges} - GES algorithm. See \code{\link[pcalg:ges]{ges}}.
+    #'   }
     alg = NULL,
+
+    #' @field params A list of parameters for the test and algorithm.
+    #' Can be set with \code{$set_params()}.
+    #' The parameters are passed to the test and algorithm functions.
     params = NULL,
+
+    #' @field suff_stat Sufficient statistic. The format and contents of the
+    #' sufficient statistic depends on which test is being used.
     suff_stat = NULL,
+
+    #' @field continuous Logical; whether the sufficient statistic is for a
+    #' continuous test.
     continuous = NULL,
+
+    #' @field knowledge A list of fixed constraints for the search algorithm.
     knowledge = NULL,
+
+    #' @description
+    #' Constructor for the `pcalgSearch` class.
     initialize = function() {
       self$data <- NULL
       self$score <- NULL
@@ -24,9 +63,21 @@ pcalgSearch <- R6Class(
       self$knowledge <- NULL
       self$params <- NULL
     },
+
+    #' @description
+    #' Sets the parameters for the test and algorithm.
+    #'
+    #' @param params A list of parameters to set.
     set_params = function(params) {
       self$params <- params
     },
+
+    #' @description
+    #' Sets the data for the search algorithm.
+    #'
+    #' @param data A `data.frame` or a `matrix` containing the data.
+    #' @param set_suff_stat Logical; whether to set the sufficient statistic
+    #' for the data.
     set_data = function(data, set_suff_stat = TRUE) {
       self$data <- data
       if (set_suff_stat) {
@@ -40,6 +91,9 @@ pcalgSearch <- R6Class(
       # Reset knowledge function
       # private$knowledge_function <- NULL
     },
+
+    #' @description
+    #' Sets the sufficient statistic for the data.
     set_suff_stat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.",
@@ -77,6 +131,12 @@ pcalgSearch <- R6Class(
         )
       }
     },
+
+    #' @description
+    #' Sets the test for the search algorithm.
+    #'
+    #' @param method A string specifying the type of test to use.
+    #' @param alpha Significance level for the test.
     set_test = function(method,
                         alpha = NULL) {
       if (!is.null(alpha)) {
@@ -108,6 +168,12 @@ pcalgSearch <- R6Class(
         )
       )
     },
+
+    #' @description
+    #' Sets the score for the search algorithm.
+    #'
+    #' @param method A string specifying the type of score to use.
+    #' @param params A list of parameters to pass to the score function.
     set_score = function(method, params = list()) {
       method <- tolower(method)
       # Function that will be used to build the score, when data is set
@@ -144,6 +210,11 @@ pcalgSearch <- R6Class(
       }
       private$score_function <- return_pcalg_score
     },
+
+    #' @description
+    #' Sets the algorithm for the search.
+    #'
+    #' @param method A string specifying the type of algorithm to use.
     set_alg = function(method) {
       method <- tolower(method)
       switch(method,
@@ -178,13 +249,18 @@ pcalgSearch <- R6Class(
         )
       )
     },
+
+    #' @description
+    #' Sets the knowledge for the search algorithm. Due to the nature of pcalg,
+    #' we cannot set knowledge before we run it on data. So we set the function
+    #' that will be used to build the fixed constraints, but it can first be
+    #' done when data is provided.
+    #'
+    #' @param knowledge_obj A knowledge object that contains the fixed constraints.
+    #' @param directed_as_undirected Logical; whether to treat directed edges as undirected.
     set_knowledge = function(knowledge_obj, directed_as_undirected = FALSE) {
       check_knowledge_obj(knowledge_obj)
 
-      # Due to the nature of pcalg, we cannot set knowledge before
-      # we run it on data. So we set the function that will be
-      # used to build the fixed constraints, but it can first be
-      # done when data is provided.
       private$knowledge_function <- function() {
         if (is.null(self$data)) {
           stop("Data must be set before knowledge.", call. = FALSE)
@@ -196,7 +272,13 @@ pcalgSearch <- R6Class(
         )
       }
     },
-    run_search = function(data, set_suff_stat = TRUE) {
+
+    #' @description
+    #' Runs the search algorithm on the data.
+    #'
+    #' @param data A `data.frame` or a `matrix` containing the data.
+    #' @param set_suff_stat Logical; whether to set the sufficient statistic
+    run_search = function(data = NULL, set_suff_stat = TRUE) {
       if (!is.null(data)) {
         self$set_data(data, set_suff_stat)
       }
@@ -263,9 +345,10 @@ pcalgSearch <- R6Class(
     }
   ),
   private = list(
+
+    # Function that will be used to determine which G square test to use.
+    # It checks the number of unique values in the sufficient statistic.
     use_g_square = function() {
-      # Finds out whether to use binary or non-binary test (based on suff_stat).
-      # Then, sets the test to the found test, and evaluates in this test.
       return(
         function(x, y, S, suffStat) {
           # Check if the number of unqiue values has been found yet

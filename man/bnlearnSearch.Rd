@@ -167,7 +167,7 @@ containing prior-knowledge constraints added via \code{set_knowledge()}.}
 \if{html}{\out{<a id="method-bnlearnSearch-new"></a>}}
 \if{latex}{\out{\hypertarget{method-bnlearnSearch-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize an empty \code{bnlearnSearch} object.
+Constructor for the \code{bnlearnSearch} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{bnlearnSearch$new()}\if{html}{\out{</div>}}
 }
