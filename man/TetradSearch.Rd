@@ -399,7 +399,7 @@ Produces a DOT (Graphviz) representation of the graph.
 \if{html}{\out{<a id="method-TetradSearch-get_amat"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_amat}{}}}
 \subsection{Method \code{get_amat()}}{
-Produces a DOT (Graphviz) representation of the graph.
+Produces an amat representation of the graph.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_amat(java_obj = NULL)}\if{html}{\out{</div>}}
 }

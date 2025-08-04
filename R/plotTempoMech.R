@@ -47,13 +47,37 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
   )
 }
 
-
-
 ############################################################################
 ## Not exported below ######################################################
 ############################################################################
 
-
+#' Plot an ordered adjacency matrix
+#'
+#' Helper for visualizing temporal adjacency matrices with optional grouping,
+#' colored edges, and shaded period regions.
+#'
+#' @param amat Square binary matrix giving directed edges (rows cause columns).
+#' @param order Character vector of period prefixes in temporal order.
+#' @param psi Numeric sparsity level to annotate above the plot (optional).
+#' @param addTimeAxis Logical indicating whether to draw a time axis.
+#' @param addPsi Logical indicating whether to draw \eqn{\psi}.
+#' @param CPDAG Logical; ignored here but retained for back-compatibility.
+#' @param varLabels Named character vector for vertex labels. Defaults to
+#'   \code{colnames(amat)}.
+#' @param periodLabels Character vector of axis labels for periods.
+#' @param vertex.size Positive numeric vertex size passed to igraph.
+#' @param jitter Numeric offset separating vertices within a period.
+#' @param space Numeric horizontal gap between periods.
+#' @param mark.border Colour for period borders passed to igraph.
+#' @param edge.arrow.size,edge.width Numeric arrow and line size parameters.
+#' @param edge.curved Logical or numeric curvature for igraph edges.
+#' @param sep Character separator between prefix and variable name.
+#' @param colors Character vector of fill colours for period shading.
+#' @param ... Further arguments forwarded to \code{\link[igraph]{plot.igraph}}.
+#'
+#' @return Invisibly returns \code{NULL}. Called for its side-effect of plotting.
+#' @keywords internal
+#'
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom scales alpha
 #' @importFrom graphics axis mtext
@@ -185,13 +209,19 @@ plotOrderedAmat <- function(amat, order,
   }
 }
 
-
-
-
-
-
-
-# make a layout matrix from ordering
+#' Compute vertex layout for temporal plotting
+#'
+#' Converts a set of variable names and their temporal prefixes into an
+#' \eqn{n \times 2} matrix of \eqn{(x, y)} coordinates suitable for igraph.
+#'
+#' @param vnames Character vector of full variable names (including prefix).
+#' @param order Character vector of unique period prefixes in temporal order.
+#' @param sep Character separator between prefix and the remainder of the name.
+#' @param jitter Numeric horizontal jitter applied within a period.
+#' @param space Numeric horizontal gap between successive periods.
+#'
+#' @return A numeric matrix with two columns named \code{"x"} and \code{"y"}.
+#' @keywords internal
 orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
   outMat <- matrix(NA,
     nrow = length(vnames), ncol = 2,
@@ -213,21 +243,44 @@ orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
 
 
 
-# Choose variables with a certain prefix (before _)
+#' Extract variables that share a prefix
+#'
+#' Generic for selecting variables whose names start with a given prefix.
+#'
+#' @param x Object to search: character vector or data frame.
+#' @param prefix Character prefix of interest.
+#' @param sep Character separator between prefix and remainder of name.
+#'
+#' @return Character vector of matching variable names.
+#' @keywords internal
 getvar <- function(x, prefix, sep = "_") UseMethod("getvar")
 
+#' @rdname getvar
+#' @keywords internal
 getvar.character <- function(x, prefix, sep = "_") {
   out <- x[sapply(strsplit(x, sep), function(x) x[[1]]) == prefix]
   # if(is.data.frame(out)) out <- as.list(out)
   out
 }
 
+#' @rdname getvar
+#' @keywords internal
 getvar.data.frame <- function(x, prefix, sep = "_") {
   getvar(names(x), prefix = prefix, sep = sep)
 }
 
-
-# from https://stat.ethz.ch/pipermail/r-help/2006-January/086034.html
+#' Convert numeric to scientific-notation expression
+#'
+#' Produces an \code{expression} representing a single value in scientific
+#' notation, useful for annotation in base graphics functions.
+#'
+#' from https://stat.ethz.ch/pipermail/r-help/2006-January/086034.html
+#'
+#' @param x Numeric vector.
+#' @param digits Integer number of significant digits for the mantissa.
+#'
+#' @return An \code{expression} (or vector of expressions) for pretty printing.
+#' @keywords internal
 sciNotation <- function(x, digits = 1) {
   if (length(x) > 1) {
     return(append(sciNotation(x[1]), sciNotation(x[-1])))
