@@ -128,9 +128,135 @@ Sets the independence test to use in Tetrad.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{(character) Name of the test method (e.g., "chi_square", "fisher_z").}
+\item{\code{method}}{(character) Name of the test method (e.g., "chi_square", "fisher_z").
+\itemize{
+\item \code{"chi_square"} – chi-squared test
+\item \code{"g_square"}   – likelihood-ratio \(G^2\) test
+\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
+\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
+\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
+\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+}}
 
-\item{\code{...}}{Additional arguments passed to the private test-setting methods.}
+\item{\code{...}}{Additional arguments passed to the private test-setting methods.
+For the following tests, the following parameters are available:
+\itemize{
+\item \code{"chi_square"} – chi-squared test
+\itemize{
+\item \code{min_count = 1} – Minimum count for the chi-squared
+test. Increasing this can improve accuracy of chi square
+estimates,
+\item \code{alpha = 0.01} – Significance level for the
+chi-squared test,
+\item \code{cell_table_type = 1} – The type of cell table to use
+(optimization), 1 = AD Tree, 2 = Count Sample.
+}
+\item \code{"g_square"}   – likelihood-ratio \(G^2\) test
+\itemize{
+\item \code{min_count = 1} – Minimum count for the chi-squared
+test. Increasing this can improve accuracy of chi square
+estimates,
+\item \code{alpha = 0.01} – Significance level for the
+chi-squared test,
+\item \code{cell_table_type = 1} – The type of cell table to use
+(optimization), 1 = AD Tree, 2 = Count Sample.
+}
+\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
+\itemize{
+\item \code{truncation_limit = 3} – Basis functions 1 through
+this number will be used. The Degenerate Gaussian category
+indicator variables for mixed data are also used,
+\item \code{alpha = 0.01} – Significance level for the
+likelihood-ratio test,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\itemize{
+\item \code{threshold = FALSE} – Set to TRUE if using the cutoff
+threshold for the independence test,
+\item \code{cutoff = 0.5} – Cutoff for the independence test,
+\item \code{prior_ess = 10} – Prior equivalent sample size
+for the independence test. This number is added to the sample
+size for each conditional probability table in the model and is
+divided equally among the cells in the table.
+}
+\item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
+\itemize{
+\item \code{alpha = 0.01} – Significance level
+for the independence test,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
+\itemize{
+\item \code{alpha = 0.01} – Significance level for the
+independence test,
+\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+lambda to the the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
+\itemize{
+\item \code{alpha = 0.01} – Significance level for the
+independence test,
+\item \code{scaling_factor = 2} – For Gaussian kernel: The
+scaling factor * Silverman bandwidth.
+\item \code{basis_type = 4} – The type of basis function to use.
+\itemize{
+\item \code{1 = Polynomial},
+\item \code{2 = Hermite1},
+\item \code{3 = Hermite2},
+\item \code{4 = Legendre},
+\item \code{5 = Chebyshev}
+}
+\item \code{basis_scale = 0.0} – The scale of the basis function.
+Variables are scaled to \verb{[-b, b]} for this b (0 = standardized).
+\item \code{truncation_limit = 3} – Basis functions 1 through
+this number will be used. The Degenerate Gaussian category
+indicator variables for mixed data are also used.
+}
+\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
+\itemize{
+\item \code{alpha = 0.01} – Significance level for the
+independence test,
+\item \code{discretize = TRUE} – If TRUE for the conditional
+Gaussian likelihood, when scoring X->D where X is continuous and D
+discrete, one should to simply discretize X for just those cases.
+If FALSE, the integration will be exact,
+\item \code{num_categories_to_discretize = 3} – In case the exact
+algorithm is not used for discrete children and continuous parents
+is not used, this parameter gives the number of categories to use
+for this second (discretize) backup copy of the continuous
+}
+\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+\itemize{
+\item \code{alpha = 0.01} – Significance level for the
+independence test,
+\item \code{approximate = TRUE} – If TRUE, use the approximate
+Gamma approximation algorithm. If FALSE, use the exact,
+\item \code{scaling_factor = 1} – For Gaussian kernel: The
+scaling factor * Silverman bandwidth.
+\item \code{num_bootstraps = 5000} – Number of bootstrap
+samples to use for the KCI test.
+\item \code{threshold = 1e-3} – Threshold for the KCI test.
+Threshold to determine how many eigenvalues to use --
+the lower the more (0 to 1).
+\item \code{kernel_type = "gaussian"} – The type of kernel to
+use.
+\itemize{
+\item \code{1 = Gaussian},
+\item \code{2 = Linear},
+\item \code{3 = Polynomial},
+}
+\item \code{polyd = 5} – The degree of the polynomial kernel,
+if used.
+\item \code{polyc = 1} – The constant of the polynomial kernel,
+if used.
+}
+}}
 
 \item{\code{mc}}{(logical) If TRUE, sets this test for the Markov checker \code{mc_test}.}
 }
