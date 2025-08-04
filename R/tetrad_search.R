@@ -61,6 +61,39 @@ TetradSearch <- R6Class(
     test = NULL,
 
     #' @field alg Java object representing the search algorithm.
+    #'  Supply one of the method strings for \code{set_alg()}.
+    #'  Recognised values are:
+    #'
+    #' \itemize{
+    #'   \item \code{"bfci"} – BOSS-FCI algorithm.
+    #'   \item \code{"boss"} – BOSS algorithm.
+    #'   \item \code{"ccd"} – Cyclic Causal Discovery.
+    #'   \item \code{"cfci"} – Adjusts FCI to use conservative orientation as in CPC.
+    #'   \item \code{"cpc"} – Conservative PC algorithm.
+    #'   \item \code{"cstar"} – CStaR algorithm (Causal Stability Ranking).
+    #'   \item \code{"dagma"} – DAGMA algorithm.
+    #'   \item \code{"direct_lingam"} – DirectLiNGAM algorithm.
+    #'   \item \code{"fask"} – FASK algorithm.
+    #'   \item \code{"fci"} – FCI algorithm.
+    #'   \item \code{"fges"} – Fast Greedy Equivalence Search (FGES) algorithm.
+    #'   \item \code{"fges_mb"} – Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
+    #'   \item \code{"fofc"} – Find One Factor Clusters (FOFC)/MIMBUILD algorithm.
+    #'   \item \code{"gfci"} – GFCI algorithm. Combines FGES and FCI.
+    #'   \item \code{"grasp"} – GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
+    #'   \item \code{"grasp_fci"} – GRaSP-FCI algorithm. Combines GRaSP and FCI.
+    #'   \item \code{"ica_lingam"} – ICA LiNGAM algorithm.
+    #'   \item \code{"ica_lingd"} – ICA-LiNG-D algorithm
+    #'   \item \code{"lv_lite"} – ????
+    #'   \item \code{"pc"} –
+    #'   \item \code{"pc_lingam"} –
+    #'   \item \code{"pcmax"} –
+    #'   \item \code{"restricted_boss"} –
+    #'   \item \code{"rfci"} –
+    #'   \item \code{"sp"} –
+    #'   \item \code{"spfci"} –
+    #'   \item \code{"svar_fci"} –
+    #'   \item \code{"svar_gfci"} –
+    #' }
     alg = NULL,
 
     #' @field mc_test Java independence-test object used by the Markov checker.
