@@ -35,6 +35,7 @@ Imports:
     R6,
     bnlearn
 Collate: 
+    'aaa_java_init_helpers.R'
     'amat.R'
     'bnlearn_search.R'
     'cast_obj.R'
