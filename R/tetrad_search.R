@@ -86,7 +86,6 @@ TetradSearch <- R6Class(
     #'   \item \code{"ica_lingd"} – ICA-LiNG-D algorithm
     #'   \item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
     #'   \item \code{"pc"} – Peter-Clark (PC) algorithm
-    #'   \item \code{"pc_lingam"} – ????
     #'   \item \code{"pc_max"} – PCMax algorithm
     #'   \item \code{"restricted_boss"} – Restricted BOSS algorithm
     #'   \item \code{"rfci"} – Restricted FCI algorithm
@@ -905,9 +904,6 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_cpdag = FALSE} – If TRUE, ensure the output is
     #'       a legal CPDAG.
     #'    }
-    #'
-    #'   \item \code{"pc_lingam"} – ????
-    #'
     #'   \item \code{"pc_max"} – PCMax algorithm
     #'    \itemize{
     #'      \item \code{conflict_rule = 1} –
@@ -1210,15 +1206,6 @@ TetradSearch <- R6Class(
             )
           }
           private$set_dagma_alg(...)
-        },
-        "pc_lingam" = {
-          if (!is.null(self$knowledge)) {
-            warning("Background knowledge is set.",
-              "This algorithm does not use background knowledge.",
-              call. = FALSE
-            )
-          }
-          private$set_pc_lingam_alg(...)
         },
         "svar_gfci" = {
           if (!is.null(self$knowledge)) {
@@ -2844,11 +2831,6 @@ TetradSearch <- R6Class(
       )
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Dagma"
-      )
-    },
-    set_pc_lingam_alg = function() {
-      self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/PcLingam"
       )
     },
     set_svar_gfci_alg = function(penalty_discount = 2) {

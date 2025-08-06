@@ -79,12 +79,11 @@ Recognised values are:
 \item \code{"ica_lingd"} – ICA-LiNG-D algorithm
 \item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
 \item \code{"pc"} – Peter-Clark (PC) algorithm
-\item \code{"pc_lingam"} – ????
-\item \code{"pcmax"} – PCMax algorithm
+\item \code{"pc_max"} – PCMax algorithm
 \item \code{"restricted_boss"} – Restricted BOSS algorithm
 \item \code{"rfci"} – Restricted FCI algorithm
 \item \code{"sp"} – Sparsest Permutation algorithm
-\item \code{"spfci"} – Sparsest Permutation using FCI
+\item \code{"sp_fci"} – Sparsest Permutation using FCI
 \item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
 \item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI, but uses a BIC score to search for a skeleton.
 }}
@@ -257,13 +256,15 @@ indicator variables for mixed data are also used.
 \item \code{alpha = 0.01} – Significance level for the
 independence test,
 \item \code{discretize = TRUE} – If TRUE for the conditional
-Gaussian likelihood, when scoring X->D where X is continuous and D
-discrete, one should to simply discretize X for just those cases.
+Gaussian likelihood, when scoring X --> D where X is continuous
+and D discrete, one should to simply discretize X for just
+those cases.
 If FALSE, the integration will be exact,
 \item \code{num_categories_to_discretize = 3} – In case the exact
-algorithm is not used for discrete children and continuous parents
-is not used, this parameter gives the number of categories to use
-for this second (discretize) backup copy of the continuous
+algorithm is not used for discrete children and continuous
+parents is not used, this parameter gives the number of
+categories to use for this second (discretized) backup copy of
+the continuous variables.
 }
 \item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
 \itemize{
@@ -385,13 +386,13 @@ equation should be used when expanding the basis.
 \item \code{penalty_discount = 1} – Penalty discount. Higher penalty
 yields sparser graphs,
 \item \code{discretize = TRUE} – If TRUE for the conditional
-Gaussian likelihood, when scoring X->D where X is continuous and D
-discrete, one should to simply discretize X for just those cases.
+Gaussian likelihood, when scoring X --> D where X is continuous and
+D discrete, one should to simply discretize X for just those cases.
 If FALSE, the integration will be exact,
 \item \code{num_categories_to_discretize = 3} –  In case the exact
 algorithm is not used for discrete children and continuous parents
 is not used, this parameter gives the number of categories to use
-for this second (discretize) backup copy of the continuous
+for this second (discretized) backup copy of the continuous
 variables,
 \item \code{structure_prior = 0} – The default number of parents
 for any conditional probability table. Higher weight is accorded
@@ -460,8 +461,8 @@ to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
 \item \code{f_degree = 0} – The f degree.
 \item \code{discretize = FALSE} – If TRUE for the conditional
-Gaussian likelihood, when scoring X->D where X is continuous and D
-discrete, one should to simply discretize X for just those cases.
+Gaussian likelihood, when scoring X --> D where X is continuous and
+D discrete, one should to simply discretize X for just those cases.
 If FALSE, the integration will be exact.
 }
 \item \code{"poisson_prior"} – Poisson prior score.
@@ -865,10 +866,7 @@ for depth k + 1 to that of the previous depth k.
 \item \code{guarantee_cpdag = FALSE} – If TRUE, ensure the output is
 a legal CPDAG.
 }
-
-\item \code{"pc_lingam"} – ????
-
-\item \code{"pcmax"} – PCMax algorithm
+\item \code{"pc_max"} – PCMax algorithm
 \itemize{
 \item \code{conflict_rule = 1} –
 \itemize{
@@ -919,7 +917,7 @@ J. Zhang, should be used guaranteeing additional tail completeness.
 PAG (where feasible).
 }
 \item \code{"sp"} – Sparsest Permutation algorithm. No parameters.
-\item \code{"spfci"} – Sparsest Permutation using FCI
+\item \code{"sp_fci"} – Sparsest Permutation using FCI
 \itemize{
 \item \code{depth = -1} – Maximum size of conditioning set,
 \item \code{max_disc_path_length = -1} – Maximum length for any
