@@ -87,11 +87,11 @@ TetradSearch <- R6Class(
     #'   \item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
     #'   \item \code{"pc"} – Peter-Clark (PC) algorithm
     #'   \item \code{"pc_lingam"} – ????
-    #'   \item \code{"pcmax"} – PCMax algorithm
+    #'   \item \code{"pc_max"} – PCMax algorithm
     #'   \item \code{"restricted_boss"} – Restricted BOSS algorithm
     #'   \item \code{"rfci"} – Restricted FCI algorithm
     #'   \item \code{"sp"} – Sparsest Permutation algorithm
-    #'   \item \code{"spfci"} – Sparsest Permutation using FCI
+    #'   \item \code{"sp_fci"} – Sparsest Permutation using FCI
     #'   \item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
     #'   \item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI, but uses a BIC score to search for a skeleton.
     #' }
@@ -906,7 +906,7 @@ TetradSearch <- R6Class(
     #'
     #'   \item \code{"pc_lingam"} – ????
     #'
-    #'   \item \code{"pcmax"} – PCMax algorithm
+    #'   \item \code{"pc_max"} – PCMax algorithm
     #'    \itemize{
     #'      \item \code{conflict_rule = 1} –
     #'      \itemize{
@@ -957,7 +957,7 @@ TetradSearch <- R6Class(
     #'       PAG (where feasible).
     #'    }
     #'   \item \code{"sp"} – Sparsest Permutation algorithm. No parameters.
-    #'   \item \code{"spfci"} – Sparsest Permutation using FCI
+    #'   \item \code{"sp_fci"} – Sparsest Permutation using FCI
     #'    \itemize{
     #'      \item \code{depth = -1} – Maximum size of conditioning set,
     #'      \item \code{max_disc_path_length = -1} – Maximum length for any
@@ -1059,11 +1059,11 @@ TetradSearch <- R6Class(
           }
           private$set_cpc_alg(...)
         },
-        "pcmax" = {
+        "pc_max" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          private$set_pcmax_alg(...)
+          private$set_pc_max_alg(...)
         },
         "fci" = {
           if (is.null(self$test)) {
@@ -1125,14 +1125,14 @@ TetradSearch <- R6Class(
           }
           private$set_grasp_fci_alg(...)
         },
-        "spfci" = {
+        "sp_fci" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          private$set_spfci_alg(...)
+          private$set_sp_fci_alg(...)
         },
         "ica_lingam" = {
           if (is.null(self$score)) {
@@ -2303,7 +2303,7 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_pcmax_alg = function(conflict_rule = 1,
+    set_pc_max_alg = function(conflict_rule = 1,
                              depth = -1,
                              use_heuristic = TRUE,
                              max_disc_path_length = -1,
@@ -2629,7 +2629,7 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_spfci_alg = function(depth = -1,
+    set_sp_fci_alg = function(depth = -1,
                              max_disc_path_length = -1,
                              complete_rule_set_used = TRUE,
                              guarantee_pag = FALSE) {
