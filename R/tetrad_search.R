@@ -568,7 +568,7 @@ TetradSearch <- R6Class(
     #'      should be started from different initializations. By default, the
     #'       algorithm will be run through at least once using the initialized
     #'       parameters,
-    #'      \item \code{use_bes = FALSE} – If TRUE, the algorithm uses the
+    #'      \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
     #'       backward equivalence search from the GES algorithm as one of its
     #'        steps,
     #'      \item \code{use_data_order = TRUE} – If TRUE, the data variable
@@ -832,39 +832,103 @@ TetradSearch <- R6Class(
     #'       setting small entries less than this threshold to zero.
     #'    }
     #'   \item \code{"lv_lite"} – ????
+    #'
     #'   \item \code{"pc"} – Peter-Clark (PC) algorithm
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{conflict_rule = 1} –
+    #'      \itemize{
+    #'        \item \code{1} – The “overwrite” rule as introduced in the
+    #'         \code{\link[pcalg:pc]{pcalg}} R package,
+    #'        \item \code{2} – All collider conflicts using bidirected edges
+    #'         should be prioritized,
+    #'        \item \code{3} – Existing colliders should be prioritized,
+    #'         ignoring subsequent conflicting information,
+    #'      }
+    #'      \item \code{depth = -1} – Maximum size of conditioning set,
+    #'      \item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+    #'       the PC adjacency search is used, which for k > 0 fixes the graph
+    #'       for depth k + 1 to that of the previous depth k.
+    #'      \item \code{guarantee_cpdag = FALSE} – If TRUE, ensure the output is
+    #'       a legal CPDAG.
     #'    }
+    #'
     #'   \item \code{"pc_lingam"} – ????
+    #'
     #'   \item \code{"pcmax"} – PCMax algorithm
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{conflict_rule = 1} –
+    #'      \itemize{
+    #'        \item \code{1} – The “overwrite” rule as introduced in the
+    #'         \code{\link[pcalg:pc]{pcalg}} R package,
+    #'        \item \code{2} – All collider conflicts using bidirected edges
+    #'         should be prioritized,
+    #'        \item \code{3} – Existing colliders should be prioritized,
+    #'         ignoring subsequent conflicting information,
+    #'      }
+    #'      \item \code{depth = -1} – Maximum size of conditioning set,
+    #'      \item \code{use_heuristic = TRUE} – If TRUE, use the max p heuristic
+    #'       version
+    #'      \item \code{max_disc_path_length = -1} – The maximum path length to
+    #'       use for the max p heuristic version. If -1, no limit is used.
+    #'      \item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+    #'       the PC adjacency search is used, which for k > 0 fixes the graph
+    #'       for depth k + 1 to that of the previous depth k.
     #'    }
     #'   \item \code{"restricted_boss"} – Restricted BOSS algorithm
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{targets = ""} – Target names (comma or space separated),
+    #'      \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+    #'       backward equivalence search from the GES algorithm as one of its
+    #'       steps,
+    #'      \item \code{num_starts = 1} – The number of times the algorithm
+    #'       should be started from different initializations. By default, the
+    #'       algorithm will be run through at least once using the initialized
+    #'       parameters,
+    #'      \item \code{allow_internal_randomness = TRUE} –  If TRUE, the
+    #'       algorithm allow the algorithm to use certain heuristic random
+    #'       steps. This can improve performance, but may make the algorithm
+    #'       non-deterministic.
     #'    }
     #'   \item \code{"rfci"} – Restricted FCI algorithm
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{depth = -1} – Maximum size of conditioning set,
+    #'      \item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+    #'       the PC adjacency search is used, which for k > 0 fixes the graph
+    #'       for depth k + 1 to that of the previous depth k.
+    #'      \item \code{max_disc_path_length = -1} – Maximum length for any
+    #'       discriminating path,
+    #'      \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+    #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #'       completeness, should be used; TRUE if the (fuller) set due to
+    #'       J. Zhang, should be used guaranteeing additional tail completeness.
+    #'      \item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+    #'       PAG (where feasible).
     #'    }
-    #'   \item \code{"sp"} – Sparsest Permutation algorithm
-    #'    \itemize{
-    #'      \item \code{} –
-    #'    }
+    #'   \item \code{"sp"} – Sparsest Permutation algorithm. No parameters.
     #'   \item \code{"spfci"} – Sparsest Permutation using FCI
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{depth = -1} – Maximum size of conditioning set,
+    #'      \item \code{max_disc_path_length = -1} – Maximum length for any
+    #'       discriminating path,
+    #'      \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+    #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #'       completeness, should be used; TRUE if the (fuller) set due to
+    #'       J. Zhang, should be used guaranteeing additional tail completeness,
+    #'       \item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+    #'       PAG (where feasible).
     #'    }
     #'   \item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{penalty_discount = 2} – Penalty discount factor used
+    #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
+    #'       sparser graphs.
     #'    }
     #'   \item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI,
     #'   but uses a BIC score to search for a skeleton.
     #'    \itemize{
-    #'      \item \code{} –
+    #'      \item \code{penalty_discount = 2} – Penalty discount factor used
+    #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
+    #'       sparser graphs.
     #'    }
     #' }
     #' @return Invisibly returns \code{self}.
@@ -1989,7 +2053,7 @@ TetradSearch <- R6Class(
       self$alg$setKnowledge(self$knowledge)
     },
     set_boss_alg = function(num_starts = 1,
-                            use_bes = FALSE,
+                            use_bes = TRUE,
                             use_data_order = TRUE,
                             output_cpdag = TRUE) {
       stopifnot(
@@ -2015,7 +2079,7 @@ TetradSearch <- R6Class(
       self$alg$setKnowledge(self$knowledge)
     },
     set_restricted_boss_alg = function(targets = "",
-                                       use_bes = FALSE,
+                                       use_bes = TRUE,
                                        num_starts = 1,
                                        allow_internal_randomness = TRUE) {
       stopifnot(
@@ -2432,9 +2496,9 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_spfci_alg = function(max_disc_path_length = -1,
+    set_spfci_alg = function(depth = -1,
+                             max_disc_path_length = -1,
                              complete_rule_set_used = TRUE,
-                             depth = -1,
                              guarantee_pag = FALSE) {
       stopifnot(
         is.numeric(c(max_disc_path_length, depth)),
