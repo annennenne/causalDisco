@@ -2304,10 +2304,10 @@ TetradSearch <- R6Class(
       self$alg$setKnowledge(self$knowledge)
     },
     set_pc_max_alg = function(conflict_rule = 1,
-                             depth = -1,
-                             use_heuristic = TRUE,
-                             max_disc_path_length = -1,
-                             stable_fas = TRUE) {
+                              depth = -1,
+                              use_heuristic = TRUE,
+                              max_disc_path_length = -1,
+                              stable_fas = TRUE) {
       stopifnot(
         is.numeric(conflict_rule),
         length(conflict_rule) == 1,
@@ -2630,9 +2630,9 @@ TetradSearch <- R6Class(
       self$alg$setKnowledge(self$knowledge)
     },
     set_sp_fci_alg = function(depth = -1,
-                             max_disc_path_length = -1,
-                             complete_rule_set_used = TRUE,
-                             guarantee_pag = FALSE) {
+                              max_disc_path_length = -1,
+                              complete_rule_set_used = TRUE,
+                              guarantee_pag = FALSE) {
       stopifnot(
         is.numeric(c(max_disc_path_length, depth)),
         max_disc_path_length >= 0,
