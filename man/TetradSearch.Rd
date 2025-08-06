@@ -1003,11 +1003,11 @@ Retrieves the argument names of a matching private function.
 \describe{
 \item{\code{fn_pattern}}{(character) A pattern that should match a private method name.}
 
-\item{\code{score}}{(logical) If TRUE, retrieves parameters for a scoring function.}
+\item{\code{score}}{If TRUE, retrieves parameters for a scoring function.}
 
-\item{\code{test}}{(logical) If TRUE, retrieves parameters for a test function.}
+\item{\code{test}}{If TRUE, retrieves parameters for a test function.}
 
-\item{\code{alg}}{(logical) If TRUE, retrieves parameters for an algorithm.}
+\item{\code{alg}}{If TRUE, retrieves parameters for an algorithm.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1046,7 +1046,7 @@ Runs the chosen Tetrad algorithm on the data.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Nothing, but populates \code{self$java} with the resulting graph.
+discography with graph. Also populates \code{self$java}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -1230,7 +1230,7 @@ Produces an amat representation of the graph.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(character) The DOT-format string.
+(character) The adjacency matrix.
 }
 }
 \if{html}{\out{<hr>}}

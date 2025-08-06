@@ -1262,9 +1262,9 @@ TetradSearch <- R6Class(
     },
     #' @description Retrieves the argument names of a matching private function.
     #' @param fn_pattern (character) A pattern that should match a private method name.
-    #' @param score (logical) If TRUE, retrieves parameters for a scoring function.
-    #' @param test (logical) If TRUE, retrieves parameters for a test function.
-    #' @param alg (logical) If TRUE, retrieves parameters for an algorithm.
+    #' @param score If TRUE, retrieves parameters for a scoring function.
+    #' @param test If TRUE, retrieves parameters for a test function.
+    #' @param alg If TRUE, retrieves parameters for an algorithm.
     #' @return (character) The names of the parameters.
     get_parameters_for_function = function(fn_pattern,
                                            score = FALSE,
@@ -1323,7 +1323,7 @@ TetradSearch <- R6Class(
     #' @param bhat (logical) If TRUE, retrieve the BHat adjacency matrix.
     #' @param unstable_bhat (logical) If TRUE, retrieve unstable BHats.
     #' @param stable_bhat (logical) If TRUE, retrieve stable BHats.
-    #' @return Nothing, but populates \code{self$java} with the resulting graph.
+    #' @return discography with graph. Also populates \code{self$java}.
     run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE,
                           unstable_bhat = FALSE, stable_bhat = FALSE) {
       stopifnot(
@@ -1490,7 +1490,7 @@ TetradSearch <- R6Class(
     },
     #' @description Produces an amat representation of the graph.
     #' @param java_obj (Java object, optional) If NULL, uses \code{self$java}.
-    #' @return (character) The DOT-format string.
+    #' @return (character) The adjacency matrix.
     get_amat = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
@@ -1512,9 +1512,8 @@ TetradSearch <- R6Class(
     }
   ),
 
-  # Scores and tests are private
-  # and should be called through
-  # set_score and set_test.
+  # Setting scores and tests is done through private functions,
+  # and should be this should be done through set_score() and set_test().
   private = list(
     # Scores
     use_basis_function_bic_score = function(truncation_limit = 3,
