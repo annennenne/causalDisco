@@ -165,22 +165,30 @@ TetradSearch <- R6Class(
     #'       \item \code{"chi_square"} – chi-squared test
     #'       \itemize{
     #'          \item \code{min_count = 1} – Minimum count for the chi-squared
-    #'          test. Increasing this can improve accuracy of chi square
+    #'          test per cell. Increasing this can improve accuracy of the test
     #'          estimates,
     #'          \item \code{alpha = 0.01} – Significance level for the
-    #'          chi-squared test,
-    #'          \item \code{cell_table_type = 1} – The type of cell table to use
-    #'          (optimization), 1 = AD Tree, 2 = Count Sample.
+    #'          independence test,
+    #'          \item \code{cell_table_type = "ad} – The type of cell table to
+    #'          use for optimization:
+    #'          \itemize{
+    #'            \item \code("ad") – AD tree,
+    #'            \item \code("count") – Count sample.
+    #'          }
     #'       }
     #'       \item \code{"g_square"}   – likelihood-ratio \(G^2\) test
     #'       \itemize{
-    #'          \item \code{min_count = 1} – Minimum count for the chi-squared
+    #'          \item \code{min_count = 1} – Minimum count for the independence
     #'          test. Increasing this can improve accuracy of chi square
     #'          estimates,
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          chi-squared test,
-    #'          \item \code{cell_table_type = 1} – The type of cell table to use
-    #'          (optimization), 1 = AD Tree, 2 = Count Sample.
+    #'          \item \code{cell_table_type = "ad} – The type of cell table to
+    #'          use for optimization:
+    #'          \itemize{
+    #'            \item \code("ad") – AD tree,
+    #'            \item \code("count") – Count sample.
+    #'          }
     #'       }
     #'       \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
     #'       \itemize{
@@ -190,9 +198,12 @@ TetradSearch <- R6Class(
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          likelihood-ratio test,
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'          lambda to the the diagonal, < 0 Pseudoinverse.
+    #'          lambda to the the diagonal, < 0 Pseudoinverse,
+    #'          \item \code{do_one_equation_only = FALSE} – If TRUE, only one
+    #'          equation should be used when expanding the basis.
     #'       }
-    #'       \item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+    #'       \item \code{"probabilistic"} – Uses BCInference by Cooper and Bui
+    #'        to calculate probabilistic conditional independence judgments.
     #'       \itemize{
     #'          \item \code{threshold = FALSE} – Set to TRUE if using the cutoff
     #'          threshold for the independence test,
@@ -209,26 +220,29 @@ TetradSearch <- R6Class(
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
     #'          lambda to the the diagonal, < 0 Pseudoinverse.
     #'       }
-    #'       \item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
+    #'       \item \code{"degenerate_gaussian"} – Degenerate Gaussian
+    #'       likelihood ratio test
     #'       \itemize{
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          independence test,
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
     #'          lambda to the the diagonal, < 0 Pseudoinverse.
     #'       }
-    #'       \item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
+    #'       \item \code{"cci"} – Conditional independence of variable in a
+    #'       continuous data set using Daudin's method.
     #'       \itemize{
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          independence test,
     #'          \item \code{scaling_factor = 2} – For Gaussian kernel: The
     #'          scaling factor * Silverman bandwidth.
-    #'          \item \code{basis_type = 4} – The type of basis function to use.
+    #'          \item \code{basis_type = "legendre"} –
+    #'          The type of basis function to use.
     #'          \itemize{
-    #'            \item \code{1 = Polynomial},
-    #'            \item \code{2 = Hermite1},
-    #'            \item \code{3 = Hermite2},
-    #'            \item \code{4 = Legendre},
-    #'            \item \code{5 = Chebyshev}
+    #'            \item \code{"polynomial"},
+    #'            \item \code{"hermite1"},
+    #'            \item \code{"hermite2"},
+    #'            \item \code{"legendre"},
+    #'            \item \code{"chebyshev"}
     #'          }
     #'          \item \code{basis_scale = 0.0} – The scale of the basis function.
     #'          Variables are scaled to `[-b, b]` for this b (0 = standardized).
@@ -249,7 +263,9 @@ TetradSearch <- R6Class(
     #'           algorithm is not used for discrete children and continuous
     #'           parents is not used, this parameter gives the number of
     #'           categories to use for this second (discretized) backup copy of
-    #'           the continuous variables.
+    #'           the continuous variables,
+    #'          \item \code{min_sample_size_per_cell = 4} – Minimum sample size
+    #'          per cell for the independence test.
     #'       }
     #'       \item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'       \itemize{
@@ -267,9 +283,9 @@ TetradSearch <- R6Class(
     #'          \item \code{kernel_type = "gaussian"} – The type of kernel to
     #'          use.
     #'          \itemize{
-    #'            \item \code{1 = Gaussian},
-    #'            \item \code{2 = Linear},
-    #'            \item \code{3 = Polynomial},
+    #'            \item \code{"gaussian},
+    #'            \item \code{"linear"},
+    #'            \item \code{"polynomial"},
     #'          }
     #'          \item \code{polyd = 5} – The degree of the polynomial kernel,
     #'          if used.
@@ -1649,8 +1665,10 @@ TetradSearch <- R6Class(
         "gic5" = 5L,
         "gic6" = 6L,
         stop(
-          "Unsupported gic rule:", sem_gic_rule, "\n Supported values are",
-          "'bic', 'gic2', 'ric', 'ricc', 'gic5', and 'gic6'."
+          "Unsupported `sem_gic_rule` input:", sem_gic_rule, "\n",
+          "Supported values are: 'bic', 'gic2', 'ric', 'ricc', 'gic5', and ",
+          "'gic6'.",
+          call. = FALSE
         )
       )
       self$set_params(
@@ -1826,7 +1844,7 @@ TetradSearch <- R6Class(
     },
     use_chi_square_test = function(min_count = 1,
                                    alpha = 0.01,
-                                   cell_table_type = 1,
+                                   cell_table_type = "ad",
                                    use_for_mc = FALSE) {
       stopifnot(
         is.numeric(c(min_count, alpha, cell_table_type)),
@@ -1835,10 +1853,19 @@ TetradSearch <- R6Class(
         floor(min_count) == min_count,
         floor(cell_table_type) == cell_table_type
       )
+      cell_table_type_int <- switch(tolower(cell_table_type),
+        ad = 1L,
+        count = 2L,
+        stop(
+          "Unsupported `cell_table_type` input: ", cell_table_type, "\n",
+          "Supported values are: 'ad' and 'count'.",
+          call. = FALSE
+        )
+      )
       self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
-        CELL_TABLE_TYPE = cell_table_type
+        CELL_TABLE_TYPE = cell_table_type_int
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
@@ -1854,7 +1881,7 @@ TetradSearch <- R6Class(
     },
     use_g_square_test = function(min_count = 1,
                                  alpha = 0.01,
-                                 cell_table_type = 1,
+                                 cell_table_type = "ad",
                                  use_for_mc = FALSE) {
       stopifnot(
         is.numeric(c(min_count, alpha, cell_table_type)),
@@ -1863,10 +1890,19 @@ TetradSearch <- R6Class(
         floor(min_count) == min_count,
         floor(cell_table_type) == cell_table_type
       )
+      cell_table_type_int <- switch(tolower(cell_table_type),
+        ad = 1L,
+        count = 2L,
+        stop(
+          "Unsupported `cell_table_type` input: ", cell_table_type, "\n",
+          "Supported values are: 'ad' and 'count'.",
+          call. = FALSE
+        )
+      )
       self$set_params(
         ALPHA = alpha,
         MIN_COUNT_PER_CELL = min_count,
-        CELL_TABLE_TYPE = cell_table_type
+        CELL_TABLE_TYPE = cell_table_type_int
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
@@ -1881,20 +1917,27 @@ TetradSearch <- R6Class(
     use_conditional_gaussian_test = function(alpha = 0.01,
                                              discretize = TRUE,
                                              num_categories_to_discretize = 3,
+                                             min_sample_size_per_cell = 4,
                                              use_for_mc = FALSE) {
       stopifnot(
-        is.numeric(c(alpha, num_categories_to_discretize)),
+        is.numeric(c(
+          alpha,
+          num_categories_to_discretize,
+          min_sample_size_per_cell
+        )),
         alpha >= 0,
         num_categories_to_discretize >= 0,
         floor(num_categories_to_discretize) == num_categories_to_discretize,
         is.logical(discretize),
-        length(discretize) == 1
+        length(discretize) == 1,
+        length(min_sample_size_per_cell) == 1,
+        floor(min_sample_size_per_cell) == min_sample_size_per_cell
       )
-      self$set_p
-      arams(
+      self$set_params(
         ALPHA = alpha,
         DISCRETIZE = discretize,
-        NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
+        NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize,
+        MIN_SAMPLE_SIZE_PER_CELL = min_sample_size_per_cell
       )
       if (use_for_mc) {
         self$mc_test <- .jnew(
@@ -2011,7 +2054,7 @@ TetradSearch <- R6Class(
     },
     use_cci_test = function(alpha = 0.01,
                             scaling_factor = 2,
-                            basis_type = 4,
+                            basis_type = "legendre",
                             basis_scale = 0.0,
                             truncation_limit = 3,
                             use_for_mc = FALSE) {
@@ -2023,13 +2066,26 @@ TetradSearch <- R6Class(
         floor(truncation_limit) == truncation_limit,
         is.logical(use_for_mc),
         length(use_for_mc) == 1,
-        floor(basis_type) == basis_type,
+        is.character(basis_type),
         basis_scale >= 0
+      )
+      basis_type_int <- switch(tolower(basis_type),
+        polynomial = 1L,
+        hermite1 = 2L,
+        hermite2 = 3L,
+        legendre = 4L,
+        chebyshev = 5L,
+        stop(
+          "Unsupported `basis_type` input: ", basis_type, "\n",
+          "Supported values are: 'polynomial', 'hermite1', 'hermite2', ",
+          "'legendre', and 'chebyshev'.",
+          call. = FALSE
+        )
       )
       self$set_params(
         ALPHA = alpha,
         SCALING_FACTOR = scaling_factor,
-        BASIS_TYPE = basis_type,
+        BASIS_TYPE = basis_type_int,
         BASIS_SCALE = basis_scale,
         TRUNCATION_LIMIT = truncation_limit
       )
@@ -2094,8 +2150,9 @@ TetradSearch <- R6Class(
         mb_dags = 3L,
         semdir_paths = 4L,
         stop(
-          "Invalid trimming_style value. ",
-          "Must be one of 'none', 'adj', 'mb_dags' or 'semdir_paths'."
+          "Unsupported `trimming_style` input: ", trimming_style, "\n",
+          "Supported values are: 'none', 'adj', 'mb_dags' or 'semdir_paths'.",
+          call. = FALSE
         )
       )
       self$set_params(
@@ -2191,8 +2248,9 @@ TetradSearch <- R6Class(
         subsample = 1L,
         bootstrap = 2L,
         stop(
-          "Invalid sample_style value. ",
-          "Must be one of 'subsample' or 'bootstrap'."
+          "Unsupported `sample_style` input: ", sample_style, "\n",
+          "Supported values are: 'subsample' or 'bootstrap'.",
+          call. = FALSE
         )
       )
       cpdag_algorithm_int <- switch(tolower(cpdag_algorithm),
@@ -2201,8 +2259,9 @@ TetradSearch <- R6Class(
         boss = 3L,
         restricted_boss = 4L,
         stop(
-          "Invalid cpdag_algorithm value. ",
-          "Must be one of 'pc', 'fges', 'boss', or 'restricted_boss'."
+          "Unsupported `cpdag_algorithm` input: ", cpdag_algorithm, "\n",
+          "Supported values are: 'pc', 'fges', 'boss', or 'restricted_boss'.",
+          call. = FALSE
         )
       )
       self$set_params(
@@ -2575,7 +2634,9 @@ TetradSearch <- R6Class(
         grasp = 2L,
         sp = 3L,
         stop(
-          "Invalid start_with value. Must be one of 'boss', 'grasp', or 'sp'."
+          "Unsupported `start_with` input: ", start_with, "\n",
+          "Supported values are: 'boss', 'grasp', or 'sp'.",
+          call. = FALSE
         )
       )
       self$set_params(
@@ -2776,7 +2837,9 @@ TetradSearch <- R6Class(
         wishart = 3L,
         ark = 4L,
         stop(
-          "Invalid start_with value. Must be one of 'BOSS', 'GRaSP', or 'SP'."
+          "Unsupported `tetrad_test` input: ", tetrad_test, "\n",
+          "Supported values are: 'cca', 'bt', 'wishart' or 'ark'.",
+          call. = FALSE
         )
       )
       self$set_params(

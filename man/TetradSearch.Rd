@@ -180,22 +180,30 @@ For the following tests, the following parameters are available:
 \item \code{"chi_square"} – chi-squared test
 \itemize{
 \item \code{min_count = 1} – Minimum count for the chi-squared
-test. Increasing this can improve accuracy of chi square
+test per cell. Increasing this can improve accuracy of the test
 estimates,
 \item \code{alpha = 0.01} – Significance level for the
-chi-squared test,
-\item \code{cell_table_type = 1} – The type of cell table to use
-(optimization), 1 = AD Tree, 2 = Count Sample.
+independence test,
+\item \code{cell_table_type = "ad} – The type of cell table to
+use for optimization:
+\itemize{
+\item \code("ad") – AD tree,
+\item \code("count") – Count sample.
+}
 }
 \item \code{"g_square"}   – likelihood-ratio \(G^2\) test
 \itemize{
-\item \code{min_count = 1} – Minimum count for the chi-squared
+\item \code{min_count = 1} – Minimum count for the independence
 test. Increasing this can improve accuracy of chi square
 estimates,
 \item \code{alpha = 0.01} – Significance level for the
 chi-squared test,
-\item \code{cell_table_type = 1} – The type of cell table to use
-(optimization), 1 = AD Tree, 2 = Count Sample.
+\item \code{cell_table_type = "ad} – The type of cell table to
+use for optimization:
+\itemize{
+\item \code("ad") – AD tree,
+\item \code("count") – Count sample.
+}
 }
 \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
 \itemize{
@@ -205,9 +213,12 @@ indicator variables for mixed data are also used,
 \item \code{alpha = 0.01} – Significance level for the
 likelihood-ratio test,
 \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-lambda to the the diagonal, < 0 Pseudoinverse.
+lambda to the the diagonal, < 0 Pseudoinverse,
+\item \code{do_one_equation_only = FALSE} – If TRUE, only one
+equation should be used when expanding the basis.
 }
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui
+to calculate probabilistic conditional independence judgments.
 \itemize{
 \item \code{threshold = FALSE} – Set to TRUE if using the cutoff
 threshold for the independence test,
@@ -224,26 +235,29 @@ for the independence test,
 \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
 lambda to the the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
+\item \code{"degenerate_gaussian"} – Degenerate Gaussian
+likelihood ratio test
 \itemize{
 \item \code{alpha = 0.01} – Significance level for the
 independence test,
 \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
 lambda to the the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
+\item \code{"cci"} – Conditional independence of variable in a
+continuous data set using Daudin's method.
 \itemize{
 \item \code{alpha = 0.01} – Significance level for the
 independence test,
 \item \code{scaling_factor = 2} – For Gaussian kernel: The
 scaling factor * Silverman bandwidth.
-\item \code{basis_type = 4} – The type of basis function to use.
+\item \code{basis_type = "legendre"} –
+The type of basis function to use.
 \itemize{
-\item \code{1 = Polynomial},
-\item \code{2 = Hermite1},
-\item \code{3 = Hermite2},
-\item \code{4 = Legendre},
-\item \code{5 = Chebyshev}
+\item \code{"polynomial"},
+\item \code{"hermite1"},
+\item \code{"hermite2"},
+\item \code{"legendre"},
+\item \code{"chebyshev"}
 }
 \item \code{basis_scale = 0.0} – The scale of the basis function.
 Variables are scaled to \verb{[-b, b]} for this b (0 = standardized).
@@ -264,7 +278,9 @@ If FALSE, the integration will be exact,
 algorithm is not used for discrete children and continuous
 parents is not used, this parameter gives the number of
 categories to use for this second (discretized) backup copy of
-the continuous variables.
+the continuous variables,
+\item \code{min_sample_size_per_cell = 4} – Minimum sample size
+per cell for the independence test.
 }
 \item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
 \itemize{
