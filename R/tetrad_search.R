@@ -65,8 +65,9 @@ TetradSearch <- R6Class(
     #'  Recognised values are:
     #'
     #' \itemize{
-    #'   \item \code{"bfci"} – BOSS-FCI algorithm.
     #'   \item \code{"boss"} – BOSS algorithm.
+    #'   \item \code{"boss_fci"} – BOSS-FCI algorithm.
+    #'   \item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
     #'   \item \code{"ccd"} – Cyclic Causal Discovery.
     #'   \item \code{"cfci"} – Adjusts FCI to use conservative orientation as in CPC.
     #'   \item \code{"cpc"} – Conservative PC algorithm.
@@ -83,7 +84,7 @@ TetradSearch <- R6Class(
     #'   \item \code{"grasp_fci"} – GRaSP-FCI algorithm. Combines GRaSP and FCI.
     #'   \item \code{"ica_lingam"} – ICA LiNGAM algorithm.
     #'   \item \code{"ica_lingd"} – ICA-LiNG-D algorithm
-    #'   \item \code{"lv_lite"} – ????
+    #'   \item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
     #'   \item \code{"pc"} – Peter-Clark (PC) algorithm
     #'   \item \code{"pc_lingam"} – ????
     #'   \item \code{"pcmax"} – PCMax algorithm
@@ -548,20 +549,6 @@ TetradSearch <- R6Class(
     #' methods.
     #' For the following algorithms, the following parameters are available:
     #' \itemize{
-    #'   \item \code{"bfci"} – BOSS-FCI algorithm.
-    #'   \itemize{
-    #'    \item \code{depth = -1} – Maximum size of conditioning set,
-    #'    Set to -1 for unlimited,
-    #'    \item \code{max_disc_path_length = -1} – Maximum length for any
-    #'    discriminating path,
-    #'    Set to -1 for unlimited,
-    #'    \item \code{complete_rule_set_used = TRUE} –  FALSE if the (simpler)
-    #'    final orientation rules set due to P. Spirtes, guaranteeing arrow
-    #'    completeness, should be used; TRUE if the (fuller) set due to
-    #'    J. Zhang, should be used guaranteeing additional tail completeness,
-    #'    \item \code{guarantee_pag = FALSE} – Ensure the output is a legal PAG
-    #'    (where feasible).
-    #'   }
     #'   \item \code{"boss"} – BOSS algorithm.
     #'    \itemize{
     #'      \item \code{num_start = 1} – The number of times the algorithm
@@ -576,6 +563,41 @@ TetradSearch <- R6Class(
     #'      \item \code{output_cpdag = TRUE} – BOSS can output a DAG or the
     #'       CPDAG of the DAG if FALSE.
     #'    }
+    #'  \item \code{"boss_fci"} – BOSS-FCI algorithm.
+    #'   \itemize{
+    #'    \item \code{depth = -1} – Maximum size of conditioning set,
+    #'     Set to -1 for unlimited,
+    #'    \item \code{max_disc_path_length = -1} – Maximum length for any
+    #'     discriminating path,
+    #'     Set to -1 for unlimited,
+    #'    \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+    #'     backward equivalence search from the GES algorithm as one of its 
+    #'     steps,
+    #'    \item \code{use_heuristic} – If TRUE, use the max p heuristic
+    #'     version,
+    #'    \item \code{complete_rule_set_used = TRUE} –  FALSE if the (simpler)
+    #'     final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #'     completeness, should be used; TRUE if the (fuller) set due to
+    #'     J. Zhang, should be used guaranteeing additional tail completeness,
+    #'    \item \code{guarantee_pag = FALSE} – Ensure the output is a legal PAG
+    #'     (where feasible).
+    #'   }
+    #'   \item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
+    #'    \itemize{
+    #'     \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+    #'      backward equivalence search from the GES algorithm as one of its
+    #'      steps,
+    #'     \item \code{use_data_order = TRUE} – If TRUE, the data variable
+    #'      order should be used for the first initial permutation,
+    #'     \item \code{num_starts = 1} – The number of times the algorithm
+    #'      should be started from different initializations. By default, the
+    #'      algorithm will be run through at least once using the initialized
+    #'      parameters,
+    #'     \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+    #'      final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #'      completeness, should be used; TRUE if the (fuller) set due to
+    #'      J. Zhang, should be used guaranteeing additional tail completeness.
+    #'   }
     #'   \item \code{"ccd"} – Cyclic Causal Discovery.
     #'    \itemize{
     #'      \item \code{depth = -1} – Maximum size of conditioning set,
@@ -677,6 +699,37 @@ TetradSearch <- R6Class(
     #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
     #'       completeness, should be used; TRUE if the (fuller) set due to
     #'       J. Zhang, should be used guaranteeing additional tail completeness.
+    #'      \item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+    #'       PAG (where feasible).
+    #'    }
+    #'   \item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
+    #'    \itemize{
+    #'      \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+    #'       backward equivalence search from the GES algorithm as one of its
+    #'       steps,
+    #'      \item \code{use_data_order = TRUE} – If TRUE, the data variable
+    #'       order should be used for the first initial permutation,
+    #'      \item \code{num_starts = 1} – The number of times the algorithm
+    #'       should be started from different initializations. By default, the
+    #'       algorithm will be run through at least once using the initialized
+    #'       parameters,
+    #'      \item \code{start_with = "BOSS"} – What algorithm to run first to get
+    #'       the initial CPDAG that the rest of the FCIT procedure refines.
+    #'       \itemize{
+    #'         \item \code{BOSS}
+    #'         \item \code{GRaSP}
+    #'         \item \code{SP}
+    #'       }
+    #'      \item \code{check_adjacency_sepsets = FALSE} – If TRUE, the
+    #'       condition sets should at the end be checked that are subsets of
+    #'       adjacencies of the variables. This is only done after all recursive
+    #'       sepset removals have been done. True by default. This is needed in
+    #'       order to pass an Oracle test, but can reduce accuracy from data.
+    #'      \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+    #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #'       completeness, should be used; TRUE if the (fuller) set due to
+    #'       J. Zhang, should be used guaranteeing additional tail completeness,
+    #'      \item \code{depth = -1} – Maximum size of conditioning set,
     #'      \item \code{guarantee_pag = FALSE} – Ensure the output is a legal
     #'       PAG (where feasible).
     #'    }
@@ -831,7 +884,6 @@ TetradSearch <- R6Class(
     #'      \item \code{threshold_w} – The estimated W matrix is thresholded by
     #'       setting small entries less than this threshold to zero.
     #'    }
-    #'   \item \code{"lv_lite"} – ????
     #'
     #'   \item \code{"pc"} – Peter-Clark (PC) algorithm
     #'    \itemize{
@@ -1040,23 +1092,29 @@ TetradSearch <- R6Class(
           }
           private$set_gfci_alg(...)
         },
-        "bfci" = {
+        "boss_fci" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          private$set_bfci_alg(...)
+          private$set_boss_fci_alg(...)
         },
-        "lv_lite" = {
+        "boss_pod" = {
+          if (is.null(self$score)) {
+            stop("No score is set. Use set_score() first.", call. = FALSE)
+          }
+          private$set_boss_pod_alg(...)
+        }
+        "fcit" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          private$set_lv_lite_alg(...)
+          private$set_fcit_alg(...)
         },
         "grasp_fci" = {
           if (is.null(self$score)) {
@@ -2198,6 +2256,7 @@ TetradSearch <- R6Class(
         length(conflict_rule) == 1,
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.logical(stable_fas),
         length(stable_fas) == 1,
         is.logical(guarantee_cpdag),
@@ -2224,6 +2283,7 @@ TetradSearch <- R6Class(
         is.numeric(conflict_rule),
         length(conflict_rule) == 1,
         is.numeric(depth),
+        depth >= -1,
         length(depth) == 1,
         is.logical(stable_fas),
         length(stable_fas) == 1,
@@ -2253,6 +2313,7 @@ TetradSearch <- R6Class(
         length(conflict_rule) == 1,
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.logical(use_heuristic),
         length(use_heuristic) == 1,
         is.numeric(max_disc_path_length),
@@ -2282,6 +2343,7 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.logical(stable_fas),
         length(stable_fas) == 1,
         is.numeric(max_disc_path_length),
@@ -2312,6 +2374,7 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.logical(stable_fas),
         length(stable_fas) == 1,
         is.numeric(max_disc_path_length),
@@ -2338,6 +2401,7 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
         is.logical(complete_rule_set_used),
@@ -2363,6 +2427,7 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
+        depth >= -1,
         is.numeric(max_degree),
         length(max_degree) == 1,
         is.numeric(max_disc_path_length),
@@ -2387,59 +2452,119 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_bfci_alg = function(depth = -1,
-                            max_disc_path_length = -1,
-                            complete_rule_set_used = TRUE,
-                            guarantee_pag = FALSE) {
+    set_boss_fci_alg <- function(use_bes = TRUE,
+                                 max_disc_path_length = -1,
+                                 complete_rule_set_used = TRUE,
+                                 depth = -1,
+                                 num_threads = 0,
+                                 guarantee_pag = FALSE,
+                                 use_heuristic = FALSE,
+                                 num_starts = 1) {
       stopifnot(
-        is.numeric(depth),
-        length(depth) == 1,
-        is.numeric(max_disc_path_length),
+        is.numeric(c(max_disc_path_length,
+                     depth,
+                     num_starts)),
+        is.logical(c(use_bes,
+                     complete_rule_set_used,
+                     guarantee_pag,
+                     use_heuristic)),
         length(max_disc_path_length) == 1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1,
-        is.logical(guarantee_pag),
-        length(guarantee_pag) == 1
+        length(depth) == 1,
+        length(num_starts) == 1,
+        length(guarantee_pag) == 1,
+        floor(max_disc_path_length) == max_disc_path_length,
+        floor(depth) == depth,
+        floor(num_starts) == num_starts,
+        max_disc_path_length >= -1,
+        depth >= -1,
+        num_starts  >= 1
       )
+      
       self$set_params(
-        DEPTH = depth,
-        COMPLETE_RULE_SET_USED = complete_rule_set_used,
+        USE_BES = use_bes,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
-        GUARANTEE_PAG = guarantee_pag
+        COMPLETE_RULE_SET_USED = complete_rule_set_used,
+        DEPTH = depth,
+        GUARANTEE_PAG = guarantee_pag,
+        USE_MAX_P_HEURISTIC = use_heuristic,
+        NUM_STARTS = num_starts
       )
-
+      
       self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Bfci",
+        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossFci",
         self$test,
         self$score
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_lv_lite_alg = function(num_starts = 1,
-                               max_blocking_path_length = 5,
-                               depth = 5,
-                               max_disc_path_length = 5,
-                               guarantee_pag = TRUE) {
+    set_boss_pod_alg <- function(use_bes = TRUE,
+                                 use_data_order = TRUE,
+                                 num_starts = 1,
+                                 complete_rule_set_used = TRUE) {
       stopifnot(
-        is.numeric(c(num_starts, max_blocking_path_length, depth, max_disc_path_length)),
+        is.numeric(c(num_starts)),
+        is.logical(c(use_bes,
+                     complete_rule_set_used,
+                     use_data_order)),
+        length(num_starts) == 1,
         floor(num_starts) == num_starts,
+        num_starts  >= 1
+      )
+      
+      self$set_params(
+        USE_BES = use_bes,
+        USE_DATA_ORDER = use_data_order,
+        COMPLETE_RULE_SET_USED = complete_rule_set_used,
+        NUM_STARTS = num_starts
+      )
+      
+      self$alg <- .jnew(
+        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossPod",
+        self$score
+      )
+      self$alg$setKnowledge(self$knowledge)
+    },
+    set_fcit_alg = function(use_bes = TRUE,
+                            use_data_order = TRUE,
+                            num_starts = 1,
+                            start_with = "BOSS",
+                            check_adjacency_sepsets = FALSE,
+                            complete__rule_set_used = TRUE,
+                            depth = -1,
+                            guarantee_pag = FALSE) {
+      stopifnot(
+        is.numeric(c(num_starts, start_with, depth)),
+        is.logical(c(use_bes, use_data_order, check_adjacency_sepsets, 
+                      complete__rule_set_used, guarantee_pag)),
+        floor(num_starts) == num_starts,
+        floor(depth) == num_starts,
+        length(depth) == 1,
         num_starts >= 1,
-        max_blocking_path_length >= 0,
-        depth >= 0,
-        max_disc_path_length >= 0,
-        is.logical(guarantee_pag),
+        depth >= -1,
         length(guarantee_pag) == 1
       )
+      start_with_int <- switch(
+        tolower(start_with),
+        "boss" = 1L,
+        "grasp" = 2L,
+        "sp" = 3L,
+        stop(
+          "Invalid start_with value. Must be one of 'BOSS', 'GRaSP', or 'SP'."
+          )
+      )
       self$set_params(
+        USE_BES = use_bes,
+        USE_DATA_ORDER = use_data_order,
         NUM_STARTS = num_starts,
-        MAX_BLOCKING_PATH_LENGTH = max_blocking_path_length,
+        FCIT_STARTS_WITH = start_with_int,
+        CHECK_ADJACENCY_SEPSETS = check_adjacency_sepsets,
+        COMPLETE_RULE_SET_USED = complete__rule_set_used,
         DEPTH = depth,
-        MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         GUARANTEE_PAG = guarantee_pag
       )
 
       self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/LvLite",
+        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Fcit",
         self$test,
         self$score
       )
@@ -2472,7 +2597,8 @@ TetradSearch <- R6Class(
         length(guarantee_pag) == 1,
         is.numeric(num_starts),
         floor(num_starts) == num_starts,
-        num_starts >= 1
+        num_starts >= 1,
+        depth >= -1
       )
       self$set_params(
         GRASP_DEPTH = covered_depth,
@@ -2503,7 +2629,8 @@ TetradSearch <- R6Class(
       stopifnot(
         is.numeric(c(max_disc_path_length, depth)),
         max_disc_path_length >= 0,
-        depth >= 0,
+        depth >= -1,
+        length(depth) == 1
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1,
         is.logical(guarantee_pag),
@@ -2586,6 +2713,7 @@ TetradSearch <- R6Class(
         fask_delta >= -1,
         skew_edge_threshold >= 0,
         floor(depth) == depth,
+        length(depth) == 1,
         floor(left_right_rule) == left_right_rule
       )
       self$set_params(
