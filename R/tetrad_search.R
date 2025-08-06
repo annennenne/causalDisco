@@ -240,15 +240,17 @@ TetradSearch <- R6Class(
     #'       \item \code{"conditional_gaussian"} – Mixed discrete/continuous test
     #'       \itemize{
     #'          \item \code{alpha = 0.01} – Significance level for the
-    #'          independence test,
+    #'           independence test,
     #'          \item \code{discretize = TRUE} – If TRUE for the conditional
-    #'          Gaussian likelihood, when scoring X->D where X is continuous and D
-    #'          discrete, one should to simply discretize X for just those cases.
-    #'          If FALSE, the integration will be exact,
+    #'           Gaussian likelihood, when scoring X --> D where X is continuous
+    #'           and D discrete, one should to simply discretize X for just
+    #'           those cases.
+    #'           If FALSE, the integration will be exact,
     #'          \item \code{num_categories_to_discretize = 3} – In case the exact
-    #'          algorithm is not used for discrete children and continuous parents
-    #'          is not used, this parameter gives the number of categories to use
-    #'          for this second (discretize) backup copy of the continuous
+    #'           algorithm is not used for discrete children and continuous
+    #'           parents is not used, this parameter gives the number of
+    #'           categories to use for this second (discretized) backup copy of
+    #'           the continuous variables.
     #'       }
     #'       \item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'       \itemize{
@@ -392,14 +394,14 @@ TetradSearch <- R6Class(
     #'      \item \code{penalty_discount = 1} – Penalty discount. Higher penalty
     #'      yields sparser graphs,
     #'      \item \code{discretize = TRUE} – If TRUE for the conditional
-    #'      Gaussian likelihood, when scoring X->D where X is continuous and D
-    #'      discrete, one should to simply discretize X for just those cases.
-    #'      If FALSE, the integration will be exact,
+    #'       Gaussian likelihood, when scoring X --> D where X is continuous and
+    #'       D discrete, one should to simply discretize X for just those cases.
+    #'       If FALSE, the integration will be exact,
     #'      \item \code{num_categories_to_discretize = 3} –  In case the exact
-    #'      algorithm is not used for discrete children and continuous parents
-    #'      is not used, this parameter gives the number of categories to use
-    #'      for this second (discretize) backup copy of the continuous
-    #'      variables,
+    #'       algorithm is not used for discrete children and continuous parents
+    #'       is not used, this parameter gives the number of categories to use
+    #'       for this second (discretized) backup copy of the continuous
+    #'       variables,
     #'      \item \code{structure_prior = 0} – The default number of parents
     #'        for any conditional probability table. Higher weight is accorded
     #'        to tables with about that number of parents. The prior structure
@@ -467,8 +469,8 @@ TetradSearch <- R6Class(
     #'      weights are distributed according to a binomial distribution,
     #'      \item \code{f_degree = 0} – The f degree.
     #'      \item \code{discretize = FALSE} – If TRUE for the conditional
-    #'      Gaussian likelihood, when scoring X->D where X is continuous and D
-    #'      discrete, one should to simply discretize X for just those cases.
+    #'      Gaussian likelihood, when scoring X --> D where X is continuous and
+    #'      D discrete, one should to simply discretize X for just those cases.
     #'      If FALSE, the integration will be exact.
     #'    }
     #'    \item \code{"poisson_prior"} – Poisson prior score.
