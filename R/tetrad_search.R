@@ -571,7 +571,7 @@ TetradSearch <- R6Class(
     #'     discriminating path,
     #'     Set to -1 for unlimited,
     #'    \item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
-    #'     backward equivalence search from the GES algorithm as one of its 
+    #'     backward equivalence search from the GES algorithm as one of its
     #'     steps,
     #'    \item \code{use_heuristic} – If TRUE, use the max p heuristic
     #'     version,
@@ -1106,7 +1106,7 @@ TetradSearch <- R6Class(
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_boss_pod_alg(...)
-        }
+        },
         "fcit" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
@@ -2452,22 +2452,26 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss_fci_alg <- function(use_bes = TRUE,
-                                 max_disc_path_length = -1,
-                                 complete_rule_set_used = TRUE,
-                                 depth = -1,
-                                 num_threads = 0,
-                                 guarantee_pag = FALSE,
-                                 use_heuristic = FALSE,
-                                 num_starts = 1) {
+    set_boss_fci_alg = function(use_bes = TRUE,
+                                max_disc_path_length = -1,
+                                complete_rule_set_used = TRUE,
+                                depth = -1,
+                                num_threads = 0,
+                                guarantee_pag = FALSE,
+                                use_heuristic = FALSE,
+                                num_starts = 1) {
       stopifnot(
-        is.numeric(c(max_disc_path_length,
-                     depth,
-                     num_starts)),
-        is.logical(c(use_bes,
-                     complete_rule_set_used,
-                     guarantee_pag,
-                     use_heuristic)),
+        is.numeric(c(
+          max_disc_path_length,
+          depth,
+          num_starts
+        )),
+        is.logical(c(
+          use_bes,
+          complete_rule_set_used,
+          guarantee_pag,
+          use_heuristic
+        )),
         length(max_disc_path_length) == 1,
         length(depth) == 1,
         length(num_starts) == 1,
@@ -2477,9 +2481,9 @@ TetradSearch <- R6Class(
         floor(num_starts) == num_starts,
         max_disc_path_length >= -1,
         depth >= -1,
-        num_starts  >= 1
+        num_starts >= 1
       )
-      
+
       self$set_params(
         USE_BES = use_bes,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -2489,7 +2493,7 @@ TetradSearch <- R6Class(
         USE_MAX_P_HEURISTIC = use_heuristic,
         NUM_STARTS = num_starts
       )
-      
+
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossFci",
         self$test,
@@ -2497,27 +2501,29 @@ TetradSearch <- R6Class(
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss_pod_alg <- function(use_bes = TRUE,
-                                 use_data_order = TRUE,
-                                 num_starts = 1,
-                                 complete_rule_set_used = TRUE) {
+    set_boss_pod_alg = function(use_bes = TRUE,
+                                use_data_order = TRUE,
+                                num_starts = 1,
+                                complete_rule_set_used = TRUE) {
       stopifnot(
         is.numeric(c(num_starts)),
-        is.logical(c(use_bes,
-                     complete_rule_set_used,
-                     use_data_order)),
+        is.logical(c(
+          use_bes,
+          complete_rule_set_used,
+          use_data_order
+        )),
         length(num_starts) == 1,
         floor(num_starts) == num_starts,
-        num_starts  >= 1
+        num_starts >= 1
       )
-      
+
       self$set_params(
         USE_BES = use_bes,
         USE_DATA_ORDER = use_data_order,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
         NUM_STARTS = num_starts
       )
-      
+
       self$alg <- .jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossPod",
         self$score
@@ -2534,8 +2540,10 @@ TetradSearch <- R6Class(
                             guarantee_pag = FALSE) {
       stopifnot(
         is.numeric(c(num_starts, start_with, depth)),
-        is.logical(c(use_bes, use_data_order, check_adjacency_sepsets, 
-                      complete__rule_set_used, guarantee_pag)),
+        is.logical(c(
+          use_bes, use_data_order, check_adjacency_sepsets,
+          complete__rule_set_used, guarantee_pag
+        )),
         floor(num_starts) == num_starts,
         floor(depth) == num_starts,
         length(depth) == 1,
@@ -2543,14 +2551,13 @@ TetradSearch <- R6Class(
         depth >= -1,
         length(guarantee_pag) == 1
       )
-      start_with_int <- switch(
-        tolower(start_with),
+      start_with_int <- switch(tolower(start_with),
         "boss" = 1L,
         "grasp" = 2L,
         "sp" = 3L,
         stop(
           "Invalid start_with value. Must be one of 'BOSS', 'GRaSP', or 'SP'."
-          )
+        )
       )
       self$set_params(
         USE_BES = use_bes,
@@ -2630,7 +2637,7 @@ TetradSearch <- R6Class(
         is.numeric(c(max_disc_path_length, depth)),
         max_disc_path_length >= 0,
         depth >= -1,
-        length(depth) == 1
+        length(depth) == 1,
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1,
         is.logical(guarantee_pag),

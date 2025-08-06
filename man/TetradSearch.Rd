@@ -58,8 +58,9 @@ Supply one of the method strings for \code{set_alg()}.
 Recognised values are:
 
 \itemize{
-\item \code{"bfci"} – BOSS-FCI algorithm.
 \item \code{"boss"} – BOSS algorithm.
+\item \code{"boss_fci"} – BOSS-FCI algorithm.
+\item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
 \item \code{"ccd"} – Cyclic Causal Discovery.
 \item \code{"cfci"} – Adjusts FCI to use conservative orientation as in CPC.
 \item \code{"cpc"} – Conservative PC algorithm.
@@ -76,7 +77,7 @@ Recognised values are:
 \item \code{"grasp_fci"} – GRaSP-FCI algorithm. Combines GRaSP and FCI.
 \item \code{"ica_lingam"} – ICA LiNGAM algorithm.
 \item \code{"ica_lingd"} – ICA-LiNG-D algorithm
-\item \code{"lv_lite"} – ????
+\item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
 \item \code{"pc"} – Peter-Clark (PC) algorithm
 \item \code{"pc_lingam"} – ????
 \item \code{"pcmax"} – PCMax algorithm
@@ -510,20 +511,6 @@ Sets the causal discovery algorithm to use in Tetrad.
 methods.
 For the following algorithms, the following parameters are available:
 \itemize{
-\item \code{"bfci"} – BOSS-FCI algorithm.
-\itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-Set to -1 for unlimited,
-\item \code{max_disc_path_length = -1} – Maximum length for any
-discriminating path,
-Set to -1 for unlimited,
-\item \code{complete_rule_set_used = TRUE} –  FALSE if the (simpler)
-final orientation rules set due to P. Spirtes, guaranteeing arrow
-completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness,
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal PAG
-(where feasible).
-}
 \item \code{"boss"} – BOSS algorithm.
 \itemize{
 \item \code{num_start = 1} – The number of times the algorithm
@@ -537,6 +524,41 @@ steps,
 order should be used for the first initial permutation,
 \item \code{output_cpdag = TRUE} – BOSS can output a DAG or the
 CPDAG of the DAG if FALSE.
+}
+\item \code{"boss_fci"} – BOSS-FCI algorithm.
+\itemize{
+\item \code{depth = -1} – Maximum size of conditioning set,
+Set to -1 for unlimited,
+\item \code{max_disc_path_length = -1} – Maximum length for any
+discriminating path,
+Set to -1 for unlimited,
+\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+backward equivalence search from the GES algorithm as one of its
+steps,
+\item \code{use_heuristic} – If TRUE, use the max p heuristic
+version,
+\item \code{complete_rule_set_used = TRUE} –  FALSE if the (simpler)
+final orientation rules set due to P. Spirtes, guaranteeing arrow
+completeness, should be used; TRUE if the (fuller) set due to
+J. Zhang, should be used guaranteeing additional tail completeness,
+\item \code{guarantee_pag = FALSE} – Ensure the output is a legal PAG
+(where feasible).
+}
+\item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
+\itemize{
+\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+backward equivalence search from the GES algorithm as one of its
+steps,
+\item \code{use_data_order = TRUE} – If TRUE, the data variable
+order should be used for the first initial permutation,
+\item \code{num_starts = 1} – The number of times the algorithm
+should be started from different initializations. By default, the
+algorithm will be run through at least once using the initialized
+parameters,
+\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+final orientation rules set due to P. Spirtes, guaranteeing arrow
+completeness, should be used; TRUE if the (fuller) set due to
+J. Zhang, should be used guaranteeing additional tail completeness.
 }
 \item \code{"ccd"} – Cyclic Causal Discovery.
 \itemize{
@@ -639,6 +661,37 @@ discriminating path,
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
+\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+PAG (where feasible).
+}
+\item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
+\itemize{
+\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+backward equivalence search from the GES algorithm as one of its
+steps,
+\item \code{use_data_order = TRUE} – If TRUE, the data variable
+order should be used for the first initial permutation,
+\item \code{num_starts = 1} – The number of times the algorithm
+should be started from different initializations. By default, the
+algorithm will be run through at least once using the initialized
+parameters,
+\item \code{start_with = "BOSS"} – What algorithm to run first to get
+the initial CPDAG that the rest of the FCIT procedure refines.
+\itemize{
+\item \code{BOSS}
+\item \code{GRaSP}
+\item \code{SP}
+}
+\item \code{check_adjacency_sepsets = FALSE} – If TRUE, the
+condition sets should at the end be checked that are subsets of
+adjacencies of the variables. This is only done after all recursive
+sepset removals have been done. True by default. This is needed in
+order to pass an Oracle test, but can reduce accuracy from data.
+\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+final orientation rules set due to P. Spirtes, guaranteeing arrow
+completeness, should be used; TRUE if the (fuller) set due to
+J. Zhang, should be used guaranteeing additional tail completeness,
+\item \code{depth = -1} – Maximum size of conditioning set,
 \item \code{guarantee_pag = FALSE} – Ensure the output is a legal
 PAG (where feasible).
 }
@@ -793,7 +846,6 @@ zero.
 \item \code{threshold_w} – The estimated W matrix is thresholded by
 setting small entries less than this threshold to zero.
 }
-\item \code{"lv_lite"} – ????
 
 \item \code{"pc"} – Peter-Clark (PC) algorithm
 \itemize{
