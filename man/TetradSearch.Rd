@@ -611,19 +611,20 @@ Must be >= 1,
 \item \code{top_bracket = 10} – Top bracket to look for causes in,
 \item \code{parallelized = FALSE} – If TRUE, the algorithm should
 be parallelized,
-\item \code{cpdag_algorithm = 4} – The CPDAG algorithm to use:
+\item \code{cpdag_algorithm = "restricted_boss"} – The CPDAG
+algorithm to use:
 \itemize{
-\item \code{1} – PC Stable,
-\item \code{2} – FGES,
-\item \code{3} – BOSS,
-\item \code{4} – Restricted BOSS.
+\item \code{"pc"} – PC Stable,
+\item \code{"fges"},
+\item \code{"boss"},
+\item \code{"restricted_boss"}.
 }
 \item \code{remove_effect_nodes = TRUE} – If TRUE, the effect nodes
 should be removed from possible causes,
-\item \code{sample_style = 1} – The sampling style to use:
+\item \code{sample_style = "subsample"} – The sampling style to use:
 \itemize{
-\item \code{1} – Subsample
-\item \code{2} – Bootstrap
+\item \code{"subsample"},
+\item \code{"bootstrap"}.
 }
 }
 \item \code{"dagma"} – DAGMA algorithm.
@@ -714,15 +715,15 @@ Blanket (FGES-MB) algorithm.
 \item \code{targets = ""} – Target names (comma or space separated),
 \item \code{max_degree = -1} – Maximum degree of any node in the
 graph. Set to -1 for unlimited,
-\item \code{trimming_style = 3} –  'Adjacencies' trims to the
+\item \code{trimming_style = "mb_dags"} –  'Adjacencies' trims to the
 adjacencies the targets, MB DAGs to the
 Union(MB(targets)) U targets, semidirected trims to nodes with
 semidirected paths to the targets. The trimming style to use:
 \itemize{
-\item \code{1} – No trimming,
-\item \code{2} – Adjacencies,
-\item \code{3} – MB DAGs,
-\item \code{4} – Semidirected paths,
+\item \code{"none"} – No trimming,
+\item \code{"adj"} – Adjacencies,
+\item \code{"mb_dags"} – MB DAGs,
+\item \code{"semidir_paths"} – Semidirected paths,
 }
 \item \code{number_of_expansions = 2} – Number of expansions of the
 algorithm away from the targetv
@@ -737,12 +738,12 @@ algorithm.
 \item \code{penalty_discount = 2.0} – Penalty discount factor used
 in BIC = 2L - ck log N, where c is the penalty. Higher c yields
 sparser graphs,
-\item \code{tetrad_test = 1} –  The tetrad test used:
+\item \code{tetrad_test = "cca"} –  The tetrad test used:
 \itemize{
-\item \code{1} – CCA,
-\item \code{2} – Bollen-Ting,
-\item \code{3} – Wishart,
-\item \code{4} – Ark,
+\item \code{"cca"} – CCA,
+\item \code{"bt"} – Bollen-Ting,
+\item \code{"wishart"} – Wishart,
+\item \code{"ark"} – Ark,
 }
 \item \code{include_structure_model = TRUE} – If \code{TRUE}
 FOFC goes beyond the clustering step and calls a MIMBUILD routine

@@ -648,20 +648,21 @@ TetradSearch <- R6Class(
     #'       Must be >= 1,
     #'      \item \code{top_bracket = 10} – Top bracket to look for causes in,
     #'      \item \code{parallelized = FALSE} – If TRUE, the algorithm should
-    #'      be parallelized,
-    #'      \item \code{cpdag_algorithm = 4} – The CPDAG algorithm to use:
+    #'       be parallelized,
+    #'      \item \code{cpdag_algorithm = "restricted_boss"} – The CPDAG
+    #'       algorithm to use:
     #'       \itemize{
-    #'         \item \code{1} – PC Stable,
-    #'         \item \code{2} – FGES,
-    #'         \item \code{3} – BOSS,
-    #'         \item \code{4} – Restricted BOSS.
+    #'         \item \code{"pc"} – PC Stable,
+    #'         \item \code{"fges"},
+    #'         \item \code{"boss"},
+    #'         \item \code{"restricted_boss"}.
     #'       }
     #'      \item \code{remove_effect_nodes = TRUE} – If TRUE, the effect nodes
     #'       should be removed from possible causes,
-    #'      \item \code{sample_style = 1} – The sampling style to use:
+    #'      \item \code{sample_style = "subsample"} – The sampling style to use:
     #'       \itemize{
-    #'         \item \code{1} – Subsample
-    #'         \item \code{2} – Bootstrap
+    #'         \item \code{"subsample"},
+    #'         \item \code{"bootstrap"}.
     #'       }
     #'    }
     #'   \item \code{"dagma"} – DAGMA algorithm.
@@ -752,15 +753,15 @@ TetradSearch <- R6Class(
     #'      \item \code{targets = ""} – Target names (comma or space separated),
     #'      \item \code{max_degree = -1} – Maximum degree of any node in the
     #'       graph. Set to -1 for unlimited,
-    #'      \item \code{trimming_style = 3} –  'Adjacencies' trims to the
+    #'      \item \code{trimming_style = "mb_dags"} –  'Adjacencies' trims to the
     #'       adjacencies the targets, MB DAGs to the
     #'       Union(MB(targets)) U targets, semidirected trims to nodes with
     #'       semidirected paths to the targets. The trimming style to use:
     #'       \itemize{
-    #'         \item \code{1} – No trimming,
-    #'         \item \code{2} – Adjacencies,
-    #'         \item \code{3} – MB DAGs,
-    #'         \item \code{4} – Semidirected paths,
+    #'         \item \code{"none"} – No trimming,
+    #'         \item \code{"adj"} – Adjacencies,
+    #'         \item \code{"mb_dags"} – MB DAGs,
+    #'         \item \code{"semidir_paths"} – Semidirected paths,
     #'       }
     #'      \item \code{number_of_expansions = 2} – Number of expansions of the
     #'       algorithm away from the targetv
@@ -775,12 +776,12 @@ TetradSearch <- R6Class(
     #'      \item \code{penalty_discount = 2.0} – Penalty discount factor used
     #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
     #'       sparser graphs,
-    #'      \item \code{tetrad_test = 1} –  The tetrad test used:
+    #'      \item \code{tetrad_test = "cca"} –  The tetrad test used:
     #'       \itemize{
-    #'         \item \code{1} – CCA,
-    #'         \item \code{2} – Bollen-Ting,
-    #'         \item \code{3} – Wishart,
-    #'         \item \code{4} – Ark,
+    #'         \item \code{"cca"} – CCA,
+    #'         \item \code{"bt"} – Bollen-Ting,
+    #'         \item \code{"wishart"} – Wishart,
+    #'         \item \code{"ark"} – Ark,
     #'       }
     #'      \item \code{include_structure_model = TRUE} – If \code{TRUE}
     #'       FOFC goes beyond the clustering step and calls a MIMBUILD routine
@@ -1641,13 +1642,16 @@ TetradSearch <- R6Class(
         is.character(sem_gic_rule),
       )
       sem_gic_rule_int <- switch(sem_gic_rule,
-        "bic"  = 1L,
+        "bic" = 1L,
         "gic2" = 2L,
-        "ric"  = 3L,
+        "ric" = 3L,
         "ricc" = 4L,
         "gic5" = 5L,
         "gic6" = 6L,
-        stop("Unsupported gic rule:", sem_gic_rule)
+        stop(
+          "Unsupported gic rule:", sem_gic_rule, "\n Supported values are",
+          "'bic', 'gic2', 'ric', 'ricc', 'gic5', and 'gic6'."
+        )
       )
       self$set_params(
         SEM_GIC_RULE = sem_gic_rule_int,
@@ -2069,7 +2073,7 @@ TetradSearch <- R6Class(
     },
     set_fges_mb_alg = function(targets = "",
                                max_degree = -1,
-                               trimming_style = 3,
+                               trimming_style = "mb_dags",
                                number_of_expansions = 2,
                                faithfulness_assumed = FALSE) {
       stopifnot(
@@ -2077,19 +2081,28 @@ TetradSearch <- R6Class(
         length(targets) == 1,
         is.numeric(max_degree),
         max_degree >= -1,
-        is.numeric(trimming_style),
-        floor(trimming_style) == trimming_style,
+        is.character(trimming_style),
         is.numeric(number_of_expansions),
         floor(number_of_expansions) == number_of_expansions,
         number_of_expansions >= 0,
         is.logical(faithfulness_assumed),
         length(faithfulness_assumed) == 1
       )
+      trimming_style_int <- switch(tolower(trimming_style),
+        none = 1L,
+        adj = 2L,
+        mb_dags = 3L,
+        semdir_paths = 4L,
+        stop(
+          "Invalid trimming_style value. ",
+          "Must be one of 'none', 'adj', 'mb_dags' or 'semdir_paths'."
+        )
+      )
       self$set_params(
         TARGETS = targets,
         FAITHFULNESS_ASSUMED = faithfulness_assumed,
         MAX_DEGREE = max_degree,
-        TRIMMING_STYLE = trimming_style,
+        TRIMMING_STYLE = trimming_style_int,
         NUMBER_OF_EXPANSIONS = number_of_expansions
       )
       self$alg <- .jnew(
@@ -2156,11 +2169,13 @@ TetradSearch <- R6Class(
                              num_subsamples = 50,
                              top_bracket = 10,
                              parallelized = FALSE,
-                             cpdag_algorithm = 4,
+                             cpdag_algorithm = "restricted_boss",
                              remove_effect_nodes = TRUE,
-                             sample_style = 1) {
+                             sample_style = "subsample") {
       stopifnot(
         is.character(targets),
+        is.character(sample_style),
+        is.character(cpdag_algorithm),
         length(targets) == 1,
         is.numeric(c(selection_min_effect, num_subsamples, top_bracket)),
         selection_min_effect >= 0,
@@ -2171,8 +2186,24 @@ TetradSearch <- R6Class(
         is.logical(c(parallelized, remove_effect_nodes)),
         length(parallelized) == 1,
         length(remove_effect_nodes) == 1,
-        floor(cpdag_algorithm) == cpdag_algorithm,
-        floor(sample_style) == sample_style
+      )
+      sample_style_int <- switch(tolower(sample_style),
+        subsample = 1L,
+        bootstrap = 2L,
+        stop(
+          "Invalid sample_style value. ",
+          "Must be one of 'subsample' or 'bootstrap'."
+        )
+      )
+      cpdag_algorithm_int <- switch(tolower(cpdag_algorithm),
+        pc = 1L,
+        fges = 2L,
+        boss = 3L,
+        restricted_boss = 4L,
+        stop(
+          "Invalid cpdag_algorithm value. ",
+          "Must be one of 'pc', 'fges', 'boss', or 'restricted_boss'."
+        )
       )
       self$set_params(
         SELECTION_MIN_EFFECT = selection_min_effect,
@@ -2180,10 +2211,10 @@ TetradSearch <- R6Class(
         TARGETS = targets,
         TOP_BRACKET = top_bracket,
         PARALLELIZED = parallelized,
-        CSTAR_CPDAG_ALGORITHM = cpdag_algorithm,
+        CSTAR_CPDAG_ALGORITHM = cpdag_algorithm_int,
         FILE_OUT_PATH = file_out_path,
         REMOVE_EFFECT_NODES = remove_effect_nodes,
-        SAMPLE_STYLE = sample_style
+        SAMPLE_STYLE = sample_style_int
       )
 
       self$alg <- .jnew(
@@ -2521,7 +2552,7 @@ TetradSearch <- R6Class(
     set_fcit_alg = function(use_bes = TRUE,
                             use_data_order = TRUE,
                             num_starts = 1,
-                            start_with = "BOSS",
+                            start_with = "boss",
                             check_adjacency_sepsets = FALSE,
                             complete__rule_set_used = TRUE,
                             depth = -1,
@@ -2540,11 +2571,11 @@ TetradSearch <- R6Class(
         length(guarantee_pag) == 1
       )
       start_with_int <- switch(tolower(start_with),
-        "boss" = 1L,
-        "grasp" = 2L,
-        "sp" = 3L,
+        boss = 1L,
+        grasp = 2L,
+        sp = 3L,
         stop(
-          "Invalid start_with value. Must be one of 'BOSS', 'GRaSP', or 'SP'."
+          "Invalid start_with value. Must be one of 'boss', 'grasp', or 'sp'."
         )
       )
       self$set_params(
@@ -2727,7 +2758,7 @@ TetradSearch <- R6Class(
     },
     set_fofc_alg = function(alpha = 0.001,
                             penalty_discount = 2.0,
-                            tetrad_test = 1,
+                            tetrad_test = "cca",
                             include_structure_model = TRUE,
                             precompute_covariances = TRUE) {
       stopifnot(
@@ -2739,10 +2770,19 @@ TetradSearch <- R6Class(
         length(include_structure_model) == 1,
         length(precompute_covariances) == 1
       )
+      tetrad_test_int <- switch(tolower(tetrad_test),
+        cca = 1L,
+        bt = 2L,
+        wishart = 3L,
+        ark = 4L,
+        stop(
+          "Invalid start_with value. Must be one of 'BOSS', 'GRaSP', or 'SP'."
+        )
+      )
       self$set_params(
         ALPHA = alpha,
         PENALTY_DISCOUNT = penalty_discount,
-        TETRAD_TEST_FOFC = tetrad_test,
+        TETRAD_TEST_FOFC = tetrad_test_int,
         INCLUDE_STRUCTURE_MODEL = include_structure_model,
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
