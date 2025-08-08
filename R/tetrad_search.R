@@ -1464,7 +1464,10 @@ TetradSearch <- R6Class(
     set_time_lag = function(time_lag = 0) {
       stopifnot(
         is.numeric(time_lag),
+        length(time_lag) == 1,
+        is.finite(time_lag),
         floor(time_lag) == time_lag,
+        time_lag >= 0
       )
       self$set_params(
         TIME_LAG = time_lag
