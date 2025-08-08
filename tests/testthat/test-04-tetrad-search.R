@@ -59,3 +59,29 @@ test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
   expect_true(nzchar(dot))
   expect_true(nzchar(amat))
 })
+
+test_that("run_search(df) works instead of using set_data(df)", {
+  skip_if_no_tetrad()
+
+  df <- make_cont_test_data(n = 150)
+
+  ts <- TetradSearch$new()
+  ts$set_score("sem_bic")
+  ts$set_alg("fges")
+
+  res <- ts$run_search(df)
+
+  # main return type
+  expect_s3_class(res, "discography")
+
+  # java result object exists
+  expect_jobj(ts$get_java())
+
+  # dot / amat are non-empty strings
+  dot <- ts$get_dot()
+  amat <- ts$get_amat()
+  expect_type(dot, "character")
+  expect_type(amat, "character")
+  expect_true(nzchar(dot))
+  expect_true(nzchar(amat))
+})

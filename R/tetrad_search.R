@@ -1301,9 +1301,8 @@ TetradSearch <- R6Class(
         function_names <- sprintf("^(set_|use_)%s(_test)?$", fn_pattern)
       } else if (alg) {
         function_names <- sprintf("^(set_|use_)%s(_alg)?$", fn_pattern)
-      } else {
-        stop("Either score or test should be TRUE.", call. = FALSE)
       }
+
       is_private_method <- function(name) {
         is.function(get(name, envir = as.environment(private))) &&
           grepl(function_names, name)
@@ -1312,7 +1311,13 @@ TetradSearch <- R6Class(
       matched_function <- base::Filter(is_private_method, private_names)
       if (length(matched_function) != 1) {
         if (length(matched_function > 1)) {
-          error_message_suffix <- paste0("\n  Matches: ", paste(matched_function, collapse = ", "))
+          # this is an extra precaution, which cannot be triggered currently,
+          # but is nice to have for extra security.
+          # nocov start
+          error_message_suffix <- paste0(
+            "\n  Matches: ",
+            paste(matched_function, collapse = ", ")
+          ) # nocov end
         } else {
           error_message_suffix <- ""
         }
