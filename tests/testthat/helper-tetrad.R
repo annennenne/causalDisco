@@ -59,7 +59,7 @@ make_disc_test_data <- function(n = 300, k = 3, seed = 2) {
   withr::local_seed(seed)
 
   # latent continuous vars with structure
-  cdat <- make_cont_data(n = n, seed = seed)
+  cdat <- make_cont_test_data(n = n, seed = seed)
 
   # discretize into k roughly equal-frequency bins
   disc <- lapply(cdat, function(col) {
@@ -72,14 +72,38 @@ make_disc_test_data <- function(n = 300, k = 3, seed = 2) {
   })
 
   as.data.frame(disc) |>
-    rlang::set_names(paste0("D", seq_len(5)))
+    rlang::set_names(paste0("X", seq_len(5)))
 }
 
 # make knowledge object that respects the data-generating mechanism
-make_knowledge_test_object <- function() {
+make_knowledge_test_object <- function(df) {
+  tiered_kn <- knowledge(
+    df,
+    tier(
+      1 ~ X1,
+      2 ~ X2 + X3,
+      3 ~ X4,
+      4 ~ X5
+    )
+  )
+  # forbid a tier violation
+  forbidden_kn <- knowledge(
+    df,
+    forbidden(X2 ~ X1)
+  )
+  required_kn <- knowledge(
+    df,
+    required(X1 ~ X2)
+  )
+  combi_kn <- tiered_kn + forbidden_kn + required_kn
 
+  return(list(
+    tiered_kn = tiered_kn,
+    forbidden_kn = forbidden_kn,
+    required_kn = required_kn,
+    combi_kn = combi_kn
+  ))
 }
-
 
 # small assertion helper for Java objects
 expect_jobj <- function(x) {
