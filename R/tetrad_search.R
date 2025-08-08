@@ -49,10 +49,10 @@ TetradSearch <- R6Class(
     #'
     #'   \itemize{
     #'     \item \code{"chi_square"} – chi-squared test
-    #'     \item \code{"g_square"}   – likelihood-ratio \(G^2\) test
+    #'     \item \code{"g_square"}   – likelihood-ratio \eqn{G^2} test
     #'     \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
     #'     \item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
-    #'     \item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
+    #'     \item \code{"fisher_z"} – Fisher \eqn{Z} (partial correlation) test
     #'     \item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
     #'     \item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
     #'     \item \code{"conditional_gaussian"} – Mixed discrete/continuous test
@@ -169,11 +169,11 @@ TetradSearch <- R6Class(
     #'          estimates,
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          independence test,
-    #'          \item \code{cell_table_type = "ad} – The type of cell table to
+    #'          \item \code{cell_table_type = "ad"} – The type of cell table to
     #'          use for optimization:
     #'          \itemize{
-    #'            \item \code("ad") – AD tree,
-    #'            \item \code("count") – Count sample.
+    #'            \item \code{"ad"} – AD tree,
+    #'            \item \code{"count"} – Count sample.
     #'          }
     #'       }
     #'       \item \code{"g_square"}   – likelihood-ratio \(G^2\) test
@@ -183,11 +183,11 @@ TetradSearch <- R6Class(
     #'          estimates,
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          chi-squared test,
-    #'          \item \code{cell_table_type = "ad} – The type of cell table to
+    #'          \item \code{cell_table_type = "ad"} – The type of cell table to
     #'          use for optimization:
     #'          \itemize{
-    #'            \item \code("ad") – AD tree,
-    #'            \item \code("count") – Count sample.
+    #'            \item \code{"ad"} – AD tree,
+    #'            \item \code{"count"} – Count sample.
     #'          }
     #'       }
     #'       \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
@@ -198,7 +198,7 @@ TetradSearch <- R6Class(
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          likelihood-ratio test,
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'          lambda to the the diagonal, < 0 Pseudoinverse,
+    #'          lambda to the diagonal, < 0 Pseudoinverse,
     #'          \item \code{do_one_equation_only = FALSE} – If TRUE, only one
     #'          equation should be used when expanding the basis.
     #'       }
@@ -218,7 +218,7 @@ TetradSearch <- R6Class(
     #'          \item \code{alpha = 0.01} – Significance level
     #'          for the independence test,
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'          lambda to the the diagonal, < 0 Pseudoinverse.
+    #'          lambda to the diagonal, < 0 Pseudoinverse.
     #'       }
     #'       \item \code{"degenerate_gaussian"} – Degenerate Gaussian
     #'       likelihood ratio test
@@ -226,7 +226,7 @@ TetradSearch <- R6Class(
     #'          \item \code{alpha = 0.01} – Significance level for the
     #'          independence test,
     #'          \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'          lambda to the the diagonal, < 0 Pseudoinverse.
+    #'          lambda to the diagonal, < 0 Pseudoinverse.
     #'       }
     #'       \item \code{"cci"} – Conditional independence of variable in a
     #'       continuous data set using Daudin's method.
@@ -283,7 +283,7 @@ TetradSearch <- R6Class(
     #'          \item \code{kernel_type = "gaussian"} – The type of kernel to
     #'          use.
     #'          \itemize{
-    #'            \item \code{"gaussian},
+    #'            \item \code{"gaussian"},
     #'            \item \code{"linear"},
     #'            \item \code{"polynomial"},
     #'          }
@@ -372,7 +372,7 @@ TetradSearch <- R6Class(
     #'        variables or so, set this to FALSE in order to calculate
     #'        covariances on the fly from data,
     #'        \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'        lambda to the the diagonal, < 0 Pseudoinverse
+    #'        lambda to the diagonal, < 0 Pseudoinverse
     #'      }
     #'    \item \code{ebic} – Extended BIC score.
     #'    \itemize{
@@ -381,7 +381,7 @@ TetradSearch <- R6Class(
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse.
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
     #'    \item \code{bdeu} – Bayes Dirichlet Equivalent score with uniform priors.
     #'    \itemize{
@@ -390,7 +390,7 @@ TetradSearch <- R6Class(
     #'      conditional probability table in the model and is divided equally
     #'      among the cells in the table,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'        lambda to the the diagonal, < 0 Pseudoinverse.
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
     #'    \item \code{basis_function_bic} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
     #'    \itemize{
@@ -400,7 +400,7 @@ TetradSearch <- R6Class(
     #'      \item \code{penalty_discount = 2} – Penalty discount. Higher penalty
     #'      yields sparser graphs,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse,
+    #'      lambda to the diagonal, < 0 Pseudoinverse,
     #'      \item \code{do_one_equation_only = FALSE} – If TRUE, only one
     #'      equation should be used when expanding the basis.
     #'    }
@@ -431,7 +431,7 @@ TetradSearch <- R6Class(
     #'      to tables with about that number of parents. The prior structure
     #'      weights are distributed according to a binomial distribution,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse.
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'      \item \code{precompute_covariances = TRUE} – For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data.
@@ -462,7 +462,7 @@ TetradSearch <- R6Class(
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse.
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
     #'    \item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
     #'    \itemize{
@@ -496,7 +496,7 @@ TetradSearch <- R6Class(
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse.
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
     #'    \item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
     #'    \itemize{
@@ -506,7 +506,7 @@ TetradSearch <- R6Class(
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
-    #'      lambda to the the diagonal, < 0 Pseudoinverse.
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
     #'  }
     #'
