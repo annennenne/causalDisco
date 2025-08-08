@@ -104,13 +104,6 @@ constraints (required/forbidden edges).}
 resampling, if that feature was requested.}
 
 \item{\code{mc_ind_results}}{Java \code{List} with Markov-checker test results.}
-
-\item{\code{bhat}}{Java object containing the \eqn{\hat B} adjacency matrix
-(returned by some Tetrad algorithms).}
-
-\item{\code{unstable_bhats}}{Collection of unstable \eqn{\hat B} matrices.}
-
-\item{\code{stable_bhats}}{Collection of stable \eqn{\hat B} matrices.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1035,13 +1028,7 @@ Retrieves the argument names of a matching private function.
 \subsection{Method \code{run_search()}}{
 Runs the chosen Tetrad algorithm on the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_search(
-  data = NULL,
-  bootstrap = FALSE,
-  bhat = FALSE,
-  unstable_bhat = FALSE,
-  stable_bhat = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_search(data = NULL, bootstrap = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1050,12 +1037,6 @@ Runs the chosen Tetrad algorithm on the data.
 \item{\code{data}}{(optional) If provided, overrides the previously set data.}
 
 \item{\code{bootstrap}}{(logical) If TRUE, bootstrapped graphs will be generated.}
-
-\item{\code{bhat}}{(logical) If TRUE, retrieve the BHat adjacency matrix.}
-
-\item{\code{unstable_bhat}}{(logical) If TRUE, retrieve unstable BHats.}
-
-\item{\code{stable_bhat}}{(logical) If TRUE, retrieve stable BHats.}
 }
 \if{html}{\out{</div>}}
 }

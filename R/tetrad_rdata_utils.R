@@ -48,7 +48,8 @@ rdata_to_tetrad <- function(df) {
       cont_data[[j]] <- .jnull("[D") # null double[] for continuous
       disc_data[[j]] <- .jarray(as.integer(col), dispatch = TRUE)
     } else {
-      stop(paste("Unsupported column:", name, "with type: ", class(col)))
+      # extra safety precaution
+      stop(paste("Unsupported column:", name, "with type: ", class(col))) # nocov
     }
   }
 
@@ -70,34 +71,94 @@ rdata_to_tetrad <- function(df) {
   return(ds)
 }
 
-# doesn't work
+#' Convert a Tetrad Java DataSet to an R data frame
+#'
+#' @description
+#' Converts a Tetrad `DataSet` (Java) into a base R data frame, preserving
+#' variable names and mapping variable kinds to matching R types.
+#'
+#' @details
+#' Continuous variables become `double`, discrete variables become `integer`.
+#' Missing values (`null`, `Double.NaN`, or `Integer.MIN_VALUE`) are converted
+#' to the corresponding typed `NA`. Unknown variable kinds fall back to
+#' character with `NA_character_` for missing entries.
+#'
+#' The JVM must be initialized and Tetrad classes available on the class path.
+#'
+#' @param data A Java object of class `edu.cmu.tetrad.data.DataSet`.
+#'
+#' @return
+#' A data frame with the same dimensions and names as `data`.
 tetrad_data_to_rdata <- function(data) {
-  namesList <- .jcall(data, "Ljava/util/List;", "getVariableNames")
-  numVars <- .jcall(data, "I", "getNumColumns")
-  varNames <- character(numVars)
-  for (i in 0:(numVars - 1)) {
-    varNames[i + 1] <- as.character(.jcall(
-      namesList,
-      "Ljava/lang/Object;",
-      "get",
-      as.integer(i)
-    )$toString())
+  # names
+  names_list <- rJava::.jcall(data, "Ljava/util/List;", "getVariableNames")
+  num_vars <- rJava::.jcall(data, "I", "getNumColumns")
+  var_names <- character(num_vars)
+
+  for (i in seq_len(num_vars) - 1L) {
+    jstr <- rJava::.jcall(names_list, "Ljava/lang/Object;", "get", as.integer(i))
+    var_names[i + 1L] <- as.character(rJava::.jcall(jstr, "Ljava/lang/String;", "toString"))
   }
 
-  n <- .jcall(data, "I", "getNumRows")
-  df <- data.frame(matrix(nrow = n, ncol = numVars))
-  colnames(df) <- varNames
+  n <- rJava::.jcall(data, "I", "getNumRows")
+  cols <- vector("list", num_vars)
 
-  for (row in 0:(n - 1)) {
-    for (col in 0:(numVars - 1)) {
-      df[row + 1, col + 1] <- .jcall(
-        data,
-        "Ljava/lang/Object;",
-        "getObject",
-        as.integer(row),
-        as.integer(col)
-      )
+  for (j in seq_len(num_vars) - 1L) {
+    node <- rJava::.jcall(data, "Ledu/cmu/tetrad/graph/Node;", "getVariable", as.integer(j))
+    is_discrete <- rJava::.jinstanceof(node, "edu/cmu/tetrad/data/DiscreteVariable")
+    is_cont <- rJava::.jinstanceof(node, "edu/cmu/tetrad/data/ContinuousVariable")
+
+    # preallocate target R vector by type to keep classes correct
+    if (is_cont) {
+      v <- numeric(n)
+    } else if (is_discrete) {
+      v <- integer(n)
+    } else {
+      # unknown type fallback
+      v <- character(n) # nocov
     }
+
+    for (r in seq_len(n) - 1L) {
+      obj <- rJava::.jcall(data, "Ljava/lang/Object;", "getObject", as.integer(r), as.integer(j))
+
+      is_null <- isTRUE(rJava::is.jnull(obj))
+      is_double <- isTRUE(rJava::.jinstanceof(obj, "java/lang/Double"))
+      is_integer <- isTRUE(rJava::.jinstanceof(obj, "java/lang/Integer"))
+
+      dbl_val <- if (is_double) rJava::.jcall(obj, "D", "doubleValue") else NA_real_
+      int_val <- if (is_integer) rJava::.jcall(obj, "I", "intValue") else NA_integer_
+
+      miss_double <- is_double && isTRUE(is.nan(dbl_val))
+      miss_integer <- is_integer && isTRUE(is.na(int_val) || int_val == .Machine$integer.min)
+
+      is_missing <- isTRUE(is_null || miss_double || miss_integer)
+
+      if (is_missing) {
+        if (is_cont) {
+          v[r + 1L] <- NA_real_
+        } else if (is_discrete) {
+          v[r + 1L] <- NA_integer_
+        } else {
+          # extra safety precaution
+          v[r + 1L] <- NA_character_ # nocov
+        }
+        next
+      }
+
+      if (is_double) {
+        v[r + 1L] <- dbl_val
+      } else if (is_integer) {
+        v[r + 1L] <- int_val
+      } else {
+        # extra safety precaution
+        # nocov start
+        s <- rJava::.jcall(obj, "Ljava/lang/String;", "toString")
+        v[r + 1L] <- if (isTRUE(is.na(s))) NA_character_ else as.character(s)
+        # nocov end
+      }
+    }
+    cols[[j + 1L]] <- v
   }
-  return(df)
+
+  stats::setNames(as.data.frame(cols, optional = TRUE), var_names)
 }

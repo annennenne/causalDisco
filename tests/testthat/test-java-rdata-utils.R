@@ -1,0 +1,130 @@
+library(testthat)
+
+test_that("rdata_to_tetrad() validates input", {
+  skip_if_no_tetrad()
+  expect_error(rdata_to_tetrad(1), "Input must be a data frame.")
+
+  df_bad <- data.frame(a = 1:3, b = c("x", "y", "z"))
+  expect_error(
+    rdata_to_tetrad(df_bad),
+    "Data frame contains non-numeric columns"
+  )
+})
+
+test_that("tetrad_data_to_rdata() and rdata_to_tetrad() round-trip mixed data with NAs", {
+  skip_if_no_tetrad()
+
+  # small mixed data frame
+  df <- data.frame(
+    x = c(1, 2.5, NA_real_), # continuous (double)
+    y = c(1L, NA_integer_, 3L), # discrete (integer)
+    check.names = FALSE
+  )
+
+  # R -> Java
+  ds <- rdata_to_tetrad(df)
+  # quick sanity: Java reports same shape
+  nrows <- rJava::.jcall(ds, "I", "getNumRows")
+  ncols <- rJava::.jcall(ds, "I", "getNumColumns")
+  expect_identical(nrows, nrow(df))
+  expect_identical(ncols, ncol(df))
+
+  # Java -> R
+  back <- tetrad_data_to_rdata(ds)
+
+  # names preserved
+  expect_identical(names(back), names(df))
+
+  # types preserved
+  expect_identical(typeof(back$x), "double")
+  expect_identical(typeof(back$y), "integer")
+
+  # values preserved, including NAs
+  expect_equal(back$x, df$x, tolerance = 1e-12)
+  expect_identical(is.na(back$x), is.na(df$x))
+  expect_identical(back$y, df$y)
+})
+
+test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
+  skip_if_no_tetrad()
+
+  df <- data.frame(
+    cont = c(0.1, NA_real_, 2.3),
+    disc = c(1L, 2L, NA_integer_),
+    check.names = FALSE
+  )
+
+  ds <- rdata_to_tetrad(df)
+
+  # column 0: ContinuousVariable, column 1: DiscreteVariable
+  node0 <- rJava::.jcall(
+    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    as.integer(0)
+  )
+  node1 <- rJava::.jcall(
+    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    as.integer(1)
+  )
+
+  expect_true(rJava::.jinstanceof(node0, "edu/cmu/tetrad/data/ContinuousVariable"))
+  expect_true(rJava::.jinstanceof(node1, "edu/cmu/tetrad/data/DiscreteVariable"))
+
+  # back conversion keeps NA conventions
+  back <- tetrad_data_to_rdata(ds)
+  expect_true(is.na(back$cont[2]))
+  expect_true(is.na(back$disc[3]))
+})
+
+test_that("rdata_to_tetrad() errors on unsupported column type", {
+  df <- data.frame(a = factor(c("x", "y")))
+  expect_error(
+    rdata_to_tetrad(df),
+    "Data frame contains non-numeric columns"
+  )
+})
+
+test_that("tetrad_data_to_rdata() assigns correct NA types", {
+  skip_if_no_tetrad()
+
+  # continuous with NA -> NA_real_
+  cvar <- rJava::.jnew("edu/cmu/tetrad/data/ContinuousVariable", "cont")
+  vlist1 <- rJava::.jnew("java/util/ArrayList")
+  rJava::.jcall(vlist1, "Z", "add", rJava::.jcast(cvar, "java/lang/Object"))
+
+  c_inner <- rJava::.jarray(c(NA_real_), dispatch = TRUE) # double[]
+  c_outer <- rJava::.jarray(list(c_inner), dispatch = TRUE) # double[][]
+  i_outer <- rJava::.jarray(list(rJava::.jnull("[I")), dispatch = TRUE) # int[][]
+
+  ds_cont <- rJava::.jcall(
+    "edu/cmu/tetrad/util/DataSetHelper",
+    "Ledu/cmu/tetrad/data/DataSet;",
+    "fromR",
+    rJava::.jcast(vlist1, "java.util.List"),
+    as.integer(1L),
+    rJava::.jcast(c_outer, "[[D"),
+    rJava::.jcast(i_outer, "[[I")
+  )
+  out_c <- tetrad_data_to_rdata(ds_cont)
+  expect_true(is.na(out_c$cont[1]))
+
+  # discrete with NA -> NA_integer_
+  dvar <- rJava::.jnew("edu/cmu/tetrad/data/DiscreteVariable", "disc", as.integer(3))
+  vlist2 <- rJava::.jnew("java/util/ArrayList")
+  rJava::.jcall(vlist2, "Z", "add", rJava::.jcast(dvar, "java/lang/Object"))
+
+  d_inner <- rJava::.jarray(as.integer(NA_integer_), dispatch = TRUE) # int[]
+  d_outer <- rJava::.jarray(list(d_inner), dispatch = TRUE) # int[][]
+  c0_outer <- rJava::.jarray(list(rJava::.jnull("[D")), dispatch = TRUE) # double[][]
+
+  ds_disc <- rJava::.jcall(
+    "edu/cmu/tetrad/util/DataSetHelper",
+    "Ledu/cmu/tetrad/data/DataSet;",
+    "fromR",
+    rJava::.jcast(vlist2, "java.util.List"),
+    as.integer(1L),
+    rJava::.jcast(c0_outer, "[[D"),
+    rJava::.jcast(d_outer, "[[I")
+  )
+  out_d <- tetrad_data_to_rdata(ds_disc)
+  expect_true(is.na(out_d$disc[1]))
+})
