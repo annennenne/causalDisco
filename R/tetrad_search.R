@@ -568,7 +568,7 @@ TetradSearch <- R6Class(
     #' \itemize{
     #'   \item \code{"boss"} – BOSS algorithm.
     #'    \itemize{
-    #'      \item \code{num_start = 1} – The number of times the algorithm
+    #'      \item \code{num_starts = 1} – The number of times the algorithm
     #'      should be started from different initializations. By default, the
     #'       algorithm will be run through at least once using the initialized
     #'       parameters,
@@ -577,8 +577,8 @@ TetradSearch <- R6Class(
     #'        steps,
     #'      \item \code{use_data_order = TRUE} – If TRUE, the data variable
     #'       order should be used for the first initial permutation,
-    #'      \item \code{output_cpdag = TRUE} – BOSS can output a DAG or the
-    #'       CPDAG of the DAG if FALSE.
+    #'      \item \code{output_cpdag = TRUE} – If TRUE, the DAG output of the
+    #'      algorithm is converted to a CPDAG.
     #'    }
     #'  \item \code{"boss_fci"} – BOSS-FCI algorithm.
     #'   \itemize{
@@ -684,7 +684,7 @@ TetradSearch <- R6Class(
     #'   \item \code{"dagma"} – DAGMA algorithm.
     #'    \itemize{
     #'      \item \code{lambda1 = 0.05} – Tuning parameter for DAGMA,
-    #'      \item \code{w_threshold - 0.1} – Second tuning parameter for DAGMA,
+    #'      \item \code{w_threshold = 0.1} – Second tuning parameter for DAGMA,
     #'      \item \code{cpdag = TRUE} – The algorithm returns a DAG;
     #'      if this is set to TRUE, this DAG is converted to a CPDAG.
     #'    }
@@ -700,7 +700,7 @@ TetradSearch <- R6Class(
     #'       default, but two other (related) left-right rules are given for
     #'       relation to the literature, and the v1 FASK rule is included for
     #'       backward compatibility,
-    #'      \item \code{skew_edge_threshold 0.3} – For FASK, this includes an
+    #'      \item \code{skew_edge_threshold = 0.3} – For FASK, this includes an
     #'       adjacency X --- Y in the model if
     #'       |corr(X, Y | X > 0) – corr(X, Y | Y > 0)|
     #'       exceeds some threshold.
@@ -760,8 +760,8 @@ TetradSearch <- R6Class(
     #'      \item \code{parallelized = FALSE} – If TRUE, the algorithm should
     #'       be parallelized,
     #'      \item \code{faithfulness_assumed = FALSE} – If TRUE, assume that if
-    #'       X _||_ Y (by an independence test) then X _||_ Y | Z for nonempty
-    #'       Z.
+    #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
+    #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
     #'    }
     #'   \item \code{"fges_mb"} – Fast Greedy Equivalence Search with Markov
     #'   Blanket (FGES-MB) algorithm.
@@ -780,10 +780,10 @@ TetradSearch <- R6Class(
     #'         \item \code{"semidir_paths"} – Semidirected paths,
     #'       }
     #'      \item \code{number_of_expansions = 2} – Number of expansions of the
-    #'       algorithm away from the targetv
+    #'       algorithm away from the target,
     #'      \item \code{faithfulness_assumed = FALSE} – If TRUE, assume that if
-    #'       X _||_ Y (by an independence test) then X _||_ Y | Z for nonempty
-    #'       Z.
+    #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
+    #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
     #'    }
     #'   \item \code{"fofc"} – Find One Factor Clusters (FOFC)/MIMBUILD
     #'   algorithm.
