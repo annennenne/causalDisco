@@ -615,8 +615,6 @@ unfreeze <- function(.kn) {
 # ────────────────────────────────── Print ─────────────────────────────────────
 #' @title Print a `knowledge` object
 #' @exportS3Method print knowledge
-# ’ @title Print a `knowledge` object
-# ’ @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
   cli::cli_h1("Knowledge object")
 

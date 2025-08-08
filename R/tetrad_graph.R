@@ -1,7 +1,7 @@
 #' Build a lightweight S3 wrapper around a Tetrad PAG string
 #'
 #' @param x Character scalar in the form
-#'   "V1,V2,V3\n0,2,0\n3,0,1\n0,3,0\n"
+#'   \verb{"V1,V2,V3\\n0,2,0\\n3,0,1\\n0,3,0\\n"}
 #' @return An object of class <tetrad_graph>
 #' @export
 tetrad_graph <- function(x) {
