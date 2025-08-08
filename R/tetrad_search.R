@@ -120,16 +120,6 @@ TetradSearch <- R6Class(
     #' @field mc_ind_results Java \code{List} with Markov-checker test results.
     mc_ind_results = NULL,
 
-    #' @field bhat Java object containing the \eqn{\hat B} adjacency matrix
-    #'  (returned by some Tetrad algorithms).
-    bhat = NULL,
-
-    #' @field unstable_bhats Collection of unstable \eqn{\hat B} matrices.
-    unstable_bhats = NULL,
-
-    #' @field stable_bhats Collection of stable \eqn{\hat B} matrices.
-    stable_bhats = NULL,
-
     #' @description Initializes the \code{TetradSearch} object, creating new Java objects for
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
@@ -1380,15 +1370,6 @@ TetradSearch <- R6Class(
 
       if (bootstrap) {
         self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
-      }
-      if (bhat) {
-        self$bhat <- self$alg$getBhat()
-      }
-      if (unstable_bhat) {
-        self$unstable_bhats <- self$alg$getUnstableBhats()
-      }
-      if (stable_bhat) {
-        self$stable_bhats <- self$alg$getStableBhats()
       }
       return(self$result |> discography())
     },
