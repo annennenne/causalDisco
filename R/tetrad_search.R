@@ -1024,8 +1024,9 @@ TetradSearch <- R6Class(
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
-          if (!is.null(self$knowledge)) {
-            warning("Background knowledge is set.",
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
+            warning(
+              "Background knowledge is set.",
               " This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1262,14 +1263,25 @@ TetradSearch <- R6Class(
         key <- .jfield("edu/cmu/tetrad/util/Params", "S", param_name)
 
         # Wrap the value based on its type.
-        wrapped <- if (is.numeric(value)) {
-          .jcast(.jnew("java/lang/Double", as.double(value)), "java/lang/Object")
+        wrapped <- if (is.integer(value)) {
+          .jcast(
+            .jnew("java/lang/Integer", as.integer(value)),
+            "java/lang/Object"
+          )
+        } else if (is.numeric(value)) {
+          .jcast(
+            .jnew("java/lang/Double", as.double(value)),
+            "java/lang/Object"
+          )
         } else if (is.logical(value)) {
-          .jcast(.jnew("java/lang/Boolean", as.logical(value)), "java/lang/Object")
+          .jcast(
+            .jnew("java/lang/Boolean", as.logical(value)),
+            "java/lang/Object"
+          )
         } else if (is.character(value)) {
-          .jcast(value, "java/lang/Object")
+          .jcast(.jnew("java/lang/String", value), "java/lang/Object")
         } else {
-          .jcast(value, "java/lang/Object")
+          .jcast(value, "java/lang/Object") # must already be a Java object
         }
 
         # Set the parameter using the key and wrapped value.
@@ -1847,11 +1859,12 @@ TetradSearch <- R6Class(
                                    cell_table_type = "ad",
                                    use_for_mc = FALSE) {
       stopifnot(
-        is.numeric(c(min_count, alpha, cell_table_type)),
+        is.numeric(c(min_count, alpha)),
         min_count >= 0,
         alpha >= 0,
         floor(min_count) == min_count,
-        floor(cell_table_type) == cell_table_type
+        is.character(cell_table_type),
+        is.logical(use_for_mc)
       )
       cell_table_type_int <- switch(tolower(cell_table_type),
         ad = 1L,
