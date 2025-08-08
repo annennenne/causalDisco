@@ -107,5 +107,5 @@ make_knowledge_test_object <- function(df) {
 
 # small assertion helper for Java objects
 expect_jobj <- function(x) {
-  testthat::expect_s3_class(x, "jobjRef")
+  testthat::expect_s4_class(x, "jobjRef")
 }
