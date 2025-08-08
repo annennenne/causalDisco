@@ -124,7 +124,7 @@ TetradSearch <- R6Class(
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
       if (!.jniInitialized) {
-        init_java()
+        init_java() # nocov
       }
       self$data <- NULL
       self$score <- NULL
@@ -1183,9 +1183,6 @@ TetradSearch <- R6Class(
           private$set_ccd_alg(...)
         },
         "svar_fci" = {
-          if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.", call. = FALSE)
-          }
           private$set_svar_fci_alg(...)
         },
         "direct_lingam" = {
@@ -1333,25 +1330,11 @@ TetradSearch <- R6Class(
     #' @description Runs the chosen Tetrad algorithm on the data.
     #' @param data (optional) If provided, overrides the previously set data.
     #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be generated.
-    #' @param bhat (logical) If TRUE, retrieve the BHat adjacency matrix.
-    #' @param unstable_bhat (logical) If TRUE, retrieve unstable BHats.
-    #' @param stable_bhat (logical) If TRUE, retrieve stable BHats.
     #' @return discography with graph. Also populates \code{self$java}.
-    run_search = function(data = NULL, bootstrap = FALSE, bhat = FALSE,
-                          unstable_bhat = FALSE, stable_bhat = FALSE) {
+    run_search = function(data = NULL, bootstrap = FALSE) {
       stopifnot(
-        is.logical(
-          c(
-            bootstrap,
-            bhat,
-            unstable_bhat,
-            stable_bhat
-          )
-        ),
-        length(bootstrap) == 1,
-        length(bhat) == 1,
-        length(unstable_bhat) == 1,
-        length(stable_bhat) == 1
+        is.logical(bootstrap),
+        length(bootstrap) == 1
       )
       if (!is.null(data)) {
         self$set_data(data)
@@ -2025,15 +2008,21 @@ TetradSearch <- R6Class(
         polyc >= 0
       )
 
-      switch(kernel_type,
-        gaussian = self$set_params(KERNEL_TYPE = 1),
-        linear = self$set_params(KERNEL_TYPE = 2),
-        polynomial = self$set_params(KERNEL_TYPE = 3)
+      kernel_type_int <- switch(kernel_type,
+        gaussian = 1L,
+        linear = 2L,
+        polynomial = 3L,
+        stop(
+          "Unsupported `kernel_type` input: ", kernel_type, "\n",
+          "Supported values are: 'gaussian', 'linear', and 'polynomial'.",
+          call. = FALSE
+        )
       )
 
       self$set_params(
         KCI_USE_APPROXIMATION = approximate,
         ALPHA = alpha,
+        KERNEL_TYPE = kernel_type_int,
         SCALING_FACTOR = scaling_factor,
         KCI_NUM_BOOTSTRAPS = num_bootstraps,
         THRESHOLD_FOR_NUM_EIGENVALUES = threshold,
@@ -2951,7 +2940,9 @@ TetradSearch <- R6Class(
       )
 
       if (is.null(self$data)) {
-        stop("Data must be set before using `set_svar_fci_alg`.", call. = FALSE)
+        stop("Data must be set before using `set_svar_gfci_alg`.",
+          call. = FALSE
+        )
       }
       num_lags <- 2L
       lagged_data <- rJava::.jcall(
