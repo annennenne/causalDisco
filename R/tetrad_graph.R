@@ -23,7 +23,7 @@ tetrad_graph <- function(x) {
   ) |>
     as.matrix()
 
-  mode(amat) <- "integer"
+  storage.mode(amat) <- "integer"
   class(amat) <- c("amat.pag", "matrix")
   if (nrow(amat) != ncol(amat)) {
     stop("Adjacency matrix must be square")
