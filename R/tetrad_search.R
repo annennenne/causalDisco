@@ -731,6 +731,8 @@ TetradSearch <- R6Class(
     #'       should be started from different initializations. By default, the
     #'       algorithm will be run through at least once using the initialized
     #'       parameters,
+    #'      \item \code{max_disc_path_length = -1} – Maximum length for any
+    #'       discriminating path,
     #'      \item \code{start_with = "BOSS"} – What algorithm to run first to get
     #'       the initial CPDAG that the rest of the FCIT procedure refines.
     #'       \itemize{
@@ -738,11 +740,6 @@ TetradSearch <- R6Class(
     #'         \item \code{GRaSP}
     #'         \item \code{SP}
     #'       }
-    #'      \item \code{check_adjacency_sepsets = FALSE} – If TRUE, the
-    #'       condition sets should at the end be checked that are subsets of
-    #'       adjacencies of the variables. This is only done after all recursive
-    #'       sepset removals have been done. True by default. This is needed in
-    #'       order to pass an Oracle test, but can reduce accuracy from data.
     #'      \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
     #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
     #'       completeness, should be used; TRUE if the (fuller) set due to
@@ -1040,7 +1037,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               " This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1151,10 +1148,7 @@ TetradSearch <- R6Class(
           private$set_sp_fci_alg(...)
         },
         "ica_lingam" = {
-          if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", call. = FALSE)
-          }
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1163,10 +1157,7 @@ TetradSearch <- R6Class(
           private$set_ica_lingam_alg(...)
         },
         "ica_lingd" = {
-          if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", call. = FALSE)
-          }
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1181,7 +1172,7 @@ TetradSearch <- R6Class(
           private$set_fask_alg(...)
         },
         "fofc" = {
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1193,7 +1184,7 @@ TetradSearch <- R6Class(
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1202,13 +1193,16 @@ TetradSearch <- R6Class(
           private$set_ccd_alg(...)
         },
         "svar_fci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.", call. = FALSE)
+          }
           private$set_svar_fci_alg(...)
         },
         "direct_lingam" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1217,7 +1211,7 @@ TetradSearch <- R6Class(
           private$set_direct_lingam_alg(...)
         },
         "dagma" = {
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1226,7 +1220,7 @@ TetradSearch <- R6Class(
           private$set_dagma_alg(...)
         },
         "svar_gfci" = {
-          if (!is.null(self$knowledge)) {
+          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
             warning("Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
@@ -1670,7 +1664,7 @@ TetradSearch <- R6Class(
         is.numeric(c(penalty_discount, singularity_lambda)),
         penalty_discount >= 0,
         singularity_lambda >= 0,
-        is.character(sem_gic_rule),
+        is.character(sem_gic_rule)
       )
       sem_gic_rule_int <- switch(sem_gic_rule,
         "bic" = 1L,
@@ -1792,7 +1786,7 @@ TetradSearch <- R6Class(
         is.logical(precompute_covariances),
         length(precompute_covariances) == 1
       )
-      self$set_params(self$params,
+      self$set_params(
         ZS_RISK_BOUND = risk_bound,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -1827,7 +1821,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
@@ -1851,7 +1845,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/FisherZ"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/FisherZ")
         self$test <- cast_obj(self$test)
@@ -1887,7 +1881,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
@@ -1900,11 +1894,12 @@ TetradSearch <- R6Class(
                                  cell_table_type = "ad",
                                  use_for_mc = FALSE) {
       stopifnot(
-        is.numeric(c(min_count, alpha, cell_table_type)),
+        is.numeric(c(min_count, alpha)),
         min_count >= 0,
         alpha >= 0,
         floor(min_count) == min_count,
-        floor(cell_table_type) == cell_table_type
+        is.character(cell_table_type),
+        is.logical(use_for_mc)
       )
       cell_table_type_int <- switch(tolower(cell_table_type),
         ad = 1L,
@@ -1924,7 +1919,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/GSquare"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/GSquare")
         self$test <- cast_obj(self$test)
@@ -1959,7 +1954,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
@@ -1983,7 +1978,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
@@ -2030,19 +2025,23 @@ TetradSearch <- R6Class(
                             polyc = 1,
                             use_for_mc = FALSE) {
       stopifnot(
-        is.numeric(c(alpha, scaling_factor, num_bootstraps, threshold, epsilon)),
+        is.numeric(c(
+          alpha, scaling_factor, num_bootstraps, threshold,
+          polyd, polyc
+        )),
         alpha >= 0,
         scaling_factor >= 0,
         num_bootstraps >= 0,
         floor(num_bootstraps) == num_bootstraps,
         threshold >= 0,
-        epsilon >= 0,
         is.logical(c(approximate, use_for_mc)),
         length(approximate) == 1,
         length(use_for_mc) == 1,
         kernel_type %in% c("gaussian", "linear", "polynomial"),
         floor(polyd) == polyd,
+        floor(polyc) == polyc,
         polyd >= 1,
+        polyc >= 0
       )
 
       switch(kernel_type,
@@ -2109,7 +2108,7 @@ TetradSearch <- R6Class(
         self$mc_test <- .jnew(
           "edu/cmu/tetrad/algcomparison/independence/CciTest"
         )
-        self$mc_test <- cast_obj(self$test)
+        self$mc_test <- cast_obj(self$mc_test)
       } else {
         self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/CciTest")
         self$test <- cast_obj(self$test)
@@ -2189,7 +2188,7 @@ TetradSearch <- R6Class(
                             use_data_order = TRUE,
                             output_cpdag = TRUE) {
       stopifnot(
-        is.numeric(c(num_starts, time_lag)),
+        is.numeric(num_starts),
         floor(num_starts) == num_starts,
         num_starts >= 1,
         is.logical(c(use_bes, use_data_order, output_cpdag)),
@@ -2258,7 +2257,7 @@ TetradSearch <- R6Class(
         floor(top_bracket) == top_bracket,
         is.logical(c(parallelized, remove_effect_nodes)),
         length(parallelized) == 1,
-        length(remove_effect_nodes) == 1,
+        length(remove_effect_nodes) == 1
       )
       sample_style_int <- switch(tolower(sample_style),
         subsample = 1L,
@@ -2412,6 +2411,7 @@ TetradSearch <- R6Class(
         length(use_heuristic) == 1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.logical(stable_fas),
         length(stable_fas) == 1
       )
@@ -2419,7 +2419,7 @@ TetradSearch <- R6Class(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
         USE_MAX_P_ORIENTATION_HEURISTIC = use_heuristic,
-        MAX_P_ORIENTATION_MAX_PATH_LENGTH = max_disc_path_length,
+        MaX_PAX_P_ORIENTATION_HEURISTIC_MAX_LENGTH = max_disc_path_length,
         STABLE_FAS = stable_fas
       )
 
@@ -2442,6 +2442,7 @@ TetradSearch <- R6Class(
         length(stable_fas) == 1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1,
         is.logical(guarantee_pag),
@@ -2473,6 +2474,7 @@ TetradSearch <- R6Class(
         length(stable_fas) == 1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1
       )
@@ -2498,6 +2500,7 @@ TetradSearch <- R6Class(
         depth >= -1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1
       )
@@ -2526,6 +2529,7 @@ TetradSearch <- R6Class(
         length(max_degree) == 1,
         is.numeric(max_disc_path_length),
         length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.logical(complete_rule_set_used),
         length(complete_rule_set_used) == 1,
         is.logical(guarantee_pag),
@@ -2573,7 +2577,7 @@ TetradSearch <- R6Class(
         floor(max_disc_path_length) == max_disc_path_length,
         floor(depth) == depth,
         floor(num_starts) == num_starts,
-        max_disc_path_length >= -1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         depth >= -1,
         num_starts >= 1
       )
@@ -2627,23 +2631,24 @@ TetradSearch <- R6Class(
     set_fcit_alg = function(use_bes = TRUE,
                             use_data_order = TRUE,
                             num_starts = 1,
+                            max_disc_path_length = -1,
                             start_with = "boss",
-                            check_adjacency_sepsets = FALSE,
-                            complete__rule_set_used = TRUE,
+                            complete_rule_set_used = TRUE,
                             depth = -1,
                             guarantee_pag = FALSE) {
       stopifnot(
-        is.numeric(c(num_starts, start_with, depth)),
+        is.numeric(c(num_starts, depth)),
         is.logical(c(
-          use_bes, use_data_order, check_adjacency_sepsets,
-          complete__rule_set_used, guarantee_pag
+          use_bes, use_data_order,
+          complete_rule_set_used, guarantee_pag
         )),
         floor(num_starts) == num_starts,
-        floor(depth) == num_starts,
+        floor(depth) == depth,
         length(depth) == 1,
         num_starts >= 1,
         depth >= -1,
-        length(guarantee_pag) == 1
+        length(guarantee_pag) == 1,
+        is.character(start_with)
       )
       start_with_int <- switch(tolower(start_with),
         boss = 1L,
@@ -2660,8 +2665,8 @@ TetradSearch <- R6Class(
         USE_DATA_ORDER = use_data_order,
         NUM_STARTS = num_starts,
         FCIT_STARTS_WITH = start_with_int,
-        CHECK_ADJACENCY_SEPSETS = check_adjacency_sepsets,
-        COMPLETE_RULE_SET_USED = complete__rule_set_used,
+        MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
+        COMPLETE_RULE_SET_USED = complete_rule_set_used,
         DEPTH = depth,
         GUARANTEE_PAG = guarantee_pag
       )
@@ -2686,7 +2691,10 @@ TetradSearch <- R6Class(
                                  num_starts = 1,
                                  guarantee_pag = FALSE) {
       stopifnot(
-        is.numeric(c(depth, max_disc_path_length, covered_depth, singular_depth, nonsingular_depth)),
+        is.numeric(c(
+          depth, max_disc_path_length, covered_depth,
+          singular_depth, nonsingular_depth
+        )),
         floor(depth) == depth,
         floor(max_disc_path_length) == max_disc_path_length,
         floor(covered_depth) == covered_depth,
@@ -2698,6 +2706,8 @@ TetradSearch <- R6Class(
         length(raskutti_uhler) == 1,
         length(use_data_order) == 1,
         length(guarantee_pag) == 1,
+        length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         is.numeric(num_starts),
         floor(num_starts) == num_starts,
         num_starts >= 1,
@@ -2731,7 +2741,8 @@ TetradSearch <- R6Class(
                               guarantee_pag = FALSE) {
       stopifnot(
         is.numeric(c(max_disc_path_length, depth)),
-        max_disc_path_length >= 0,
+        length(max_disc_path_length) == 1,
+        max_disc_path_length >= 0 || max_disc_path_length == -1,
         depth >= -1,
         length(depth) == 1,
         is.logical(complete_rule_set_used),
@@ -2773,8 +2784,7 @@ TetradSearch <- R6Class(
       )
 
       self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingam",
-        self$score
+        "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingam"
       )
     },
     set_ica_lingd_alg = function(ica_a = 1.1,
@@ -2800,8 +2810,7 @@ TetradSearch <- R6Class(
       )
 
       self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingD",
-        self$score
+        "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingD"
       )
     },
     set_fask_alg = function(alpha = 0.05,
@@ -2842,7 +2851,7 @@ TetradSearch <- R6Class(
         is.numeric(c(alpha, penalty_discount)),
         alpha >= 0,
         penalty_discount >= 0,
-        floor(tetrad_test) == tetrad_test,
+        is.character(tetrad_test),
         is.logical(c(include_structure_model, precompute_covariances)),
         length(include_structure_model) == 1,
         length(precompute_covariances) == 1
@@ -2877,13 +2886,13 @@ TetradSearch <- R6Class(
         length(apply_r1) == 1
       )
       stopifnot(
-        is.numerical(depth),
+        is.numeric(depth),
         depth >= -1,
         floor(depth) == depth,
         is.logical(apply_r1),
         length(apply_r1) == 1
       )
-      self$set_params(self$params,
+      self$set_params(
         DEPTH = depth,
         APPLY_R1 = apply_r1
       )
@@ -2892,39 +2901,6 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Ccd",
         self$test
       )
-    },
-    set_svar_fci_alg = function(penalty_discount = 2) {
-      stopifnot(
-        is.numeric(penalty_discount),
-        penalty_discount >= 0
-      )
-      num_lags <- 2
-      # Create lagged data using Java method.
-      lagged_data <- .jcall(
-        "edu/cmu/tetrad/search/TimeSeriesUtils",
-        "Ljava/lang/Object;",
-        "createLagData",
-        self$data,
-        num_lags
-      )
-      ts_test <- .jnew(
-        "edu/cmu/tetrad/search/utils/IndTestFisherZ",
-        lagged_data,
-        0.01
-      )
-      ts_score <- .jnew(
-        "edu/cmu/tetrad/algcomparison/score/SemBicScore",
-        lagged_data
-      )
-
-      ts_score$setPenaltyDiscount(.jcast(
-        .jnew("java/lang/Double", as.double(penalty_discount)),
-        "java/lang/Object"
-      ))
-      svar_fci <- .jnew("edu/cmu/tetrad/search/utils/SvarFci", ts_test)
-      svar_fci$setKnowledge(lagged_data$getKnowledge())
-      svar_fci$setVerbose(TRUE)
-      self$alg <- svar_fci
     },
     set_direct_lingam_alg = function() {
       self$alg <- .jnew(
@@ -2951,35 +2927,83 @@ TetradSearch <- R6Class(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Dagma"
       )
     },
-    set_svar_gfci_alg = function(penalty_discount = 2) {
+    set_svar_fci_alg = function(penalty_discount = 2) {
       stopifnot(
         is.numeric(penalty_discount),
-        penalty_discount >= 0
+        penalty_discount >= 0,
+        length(penalty_discount) == 1
       )
-      num_lags <- 2
-      lagged_data <- .jcall(
-        "edu/cmu/tetrad/search/utils/TsUtils",
-        "Ljava/lang/Object;",
-        "createLagData",
-        self$data,
-        num_lags
+      if (is.null(self$data)) {
+        stop("Data must be set before using `set_svar_fci_alg`.", call. = FALSE)
+      }
+      num_lags <- 2L
+      # Create lagged data using Java method.
+      lagged_data <- rJava::.jcall(
+        "edu/cmu/tetrad/search/utils/TsUtils", # correct class
+        "Ledu/cmu/tetrad/data/DataSet;", # return type
+        "createLagData", # static method
+        self$data, # DataSet
+        as.integer(num_lags) # int
       )
+
       ts_test <- .jnew(
         "edu/cmu/tetrad/search/test/IndTestFisherZ",
         lagged_data,
         0.01
+      )
+      ts_test <- .jcast(
+        ts_test,
+        "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
+      )
+      svar_fci <- .jnew(
+        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarFci",
+        ts_test
+      )
+      svar_fci$setKnowledge(lagged_data$getKnowledge())
+      self$alg <- svar_fci
+    },
+    set_svar_gfci_alg = function(penalty_discount = 2) {
+      stopifnot(
+        is.numeric(penalty_discount),
+        penalty_discount >= 0,
+        length(penalty_discount) == 1
+      )
+
+      if (is.null(self$data)) {
+        stop("Data must be set before using `set_svar_fci_alg`.", call. = FALSE)
+      }
+      num_lags <- 2L
+      lagged_data <- rJava::.jcall(
+        "edu/cmu/tetrad/search/utils/TsUtils", # correct class
+        "Ledu/cmu/tetrad/data/DataSet;", # return type
+        "createLagData", # static method
+        self$data, # DataSet
+        as.integer(num_lags) # int
+      )
+
+      ts_test <- .jnew(
+        "edu/cmu/tetrad/search/test/IndTestFisherZ",
+        lagged_data,
+        0.01
+      )
+      ts_test <- .jcast(
+        ts_test,
+        "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
       )
       ts_score <- .jnew(
         "edu/cmu/tetrad/search/score/SemBicScore",
         lagged_data,
         TRUE
       )
-      ts_score$setPenaltyDiscount(.jcast(
-        .jnew("java/lang/Double", as.double(penalty_discount)),
-        "java/lang/Object"
-      ))
+      ts_score <- .jcast(
+        ts_score,
+        "edu/cmu/tetrad/algcomparison/score/ScoreWrapper"
+      )
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount
+      )
       svar_gfci <- .jnew(
-        "edu/cmu/tetrad/search/utils/SvarGfci",
+        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarGfci",
         ts_test,
         ts_score
       )

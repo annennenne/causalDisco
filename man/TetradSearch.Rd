@@ -693,6 +693,8 @@ order should be used for the first initial permutation,
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
+\item \code{max_disc_path_length = -1} – Maximum length for any
+discriminating path,
 \item \code{start_with = "BOSS"} – What algorithm to run first to get
 the initial CPDAG that the rest of the FCIT procedure refines.
 \itemize{
@@ -700,11 +702,6 @@ the initial CPDAG that the rest of the FCIT procedure refines.
 \item \code{GRaSP}
 \item \code{SP}
 }
-\item \code{check_adjacency_sepsets = FALSE} – If TRUE, the
-condition sets should at the end be checked that are subsets of
-adjacencies of the variables. This is only done after all recursive
-sepset removals have been done. True by default. This is needed in
-order to pass an Oracle test, but can reduce accuracy from data.
 \item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
