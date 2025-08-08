@@ -46,9 +46,10 @@ test_that("all known tests can be set without error (and mc path sets mc_test on
   })
 
   # one explicit mc=TRUE path to cover mc_test
-  ts_mc <- TetradSearch$new()
-  expect_no_condition(ts_mc$set_test("chi_square", mc = TRUE))
-  expect_jobj(ts_mc$mc_test)
+  purrr::walk(tests, \(tst) {
+    ts <- TetradSearch$new()
+    expect_no_condition(ts$set_test(tst, mc = TRUE))
+  })
 })
 
 test_that("unknown method names error clearly", {
@@ -69,7 +70,7 @@ test_that("unknown method names error clearly", {
   )
 })
 
-test_that("set_alg() succeeds for score-only algorithms when a score is set", {
+test_that("set_alg() succeeds for score-only algorithms when a score is set and fails if not", {
   skip_if_no_tetrad()
 
   score_only <- c(
@@ -88,9 +89,13 @@ test_that("set_alg() succeeds for score-only algorithms when a score is set", {
     ts$set_score("sem_bic")
     expect_no_condition(ts$set_alg(alg))
   })
+  purrr::walk(score_only, \(alg) {
+    ts <- TetradSearch$new()
+    expect_error(ts$set_alg(alg))
+  })
 })
 
-test_that("set_alg() succeeds for test-only algorithms when a test is set", {
+test_that("set_alg() succeeds for test-only algorithms when a test is set and fails if not", {
   skip_if_no_tetrad()
 
   test_only <- c(
@@ -108,9 +113,13 @@ test_that("set_alg() succeeds for test-only algorithms when a test is set", {
     ts$set_test("fisher_z")
     expect_no_condition(ts$set_alg(alg))
   })
+  purrr::walk(test_only, \(alg) {
+    ts <- TetradSearch$new()
+    expect_error(ts$set_alg(alg))
+  })
 })
 
-test_that("set_alg() succeeds for algorithms that require both score and test", {
+test_that("set_alg() succeeds for algorithms that require both score and test and fails if both are not provided", {
   skip_if_no_tetrad()
 
   both_required <- c(
@@ -128,6 +137,16 @@ test_that("set_alg() succeeds for algorithms that require both score and test", 
     ts$set_score("sem_bic")
     ts$set_test("fisher_z")
     expect_no_condition(ts$set_alg(alg))
+  })
+  purrr::walk(both_required, \(alg) {
+    ts <- TetradSearch$new()
+    ts$set_test("fisher_z")
+    expect_error(ts$set_alg(alg))
+  })
+  purrr::walk(both_required, \(alg) {
+    ts <- TetradSearch$new()
+    ts$set_score("sem_bic")
+    expect_error(ts$set_alg(alg))
   })
 })
 
@@ -158,4 +177,37 @@ test_that("set_alg() with svar_fci and svar_gfci", {
   ts$set_data(df)
   expect_no_condition(ts$set_alg("svar_fci"))
   expect_no_condition(ts$set_alg("svar_gfci"))
+
+  # no data
+  ts <- TetradSearch$new()
+  ts$set_score("sem_bic")
+  ts$set_test("fisher_z")
+  expect_error(ts$set_alg("svar_fci"))
+  expect_error(ts$set_alg("svar_gfci"))
+})
+
+test_that("set_alg() warns when background knowledge is set for algorithms that do not use it", {
+  skip_if_no_tetrad()
+
+  no_background_algorithms <- c(
+    "restricted_boss",
+    "cstar",
+    "ica_lingam",
+    "ica_lingd",
+    "fofc",
+    "ccd",
+    "direct_lingam",
+    "dagma",
+    "svar_gfci"
+  )
+  df <- make_cont_test_data()
+  purrr::walk(no_background_algorithms, \(alg) {
+    ts <- TetradSearch$new()
+    kn_list <- make_knowledge_test_object(df)
+    ts$set_knowledge(kn_list$combi_kn)
+    ts$set_score("sem_bic")
+    ts$set_test("fisher_z")
+    ts$set_data(df)
+    expect_warning(ts$set_alg(alg))
+  })
 })
