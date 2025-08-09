@@ -24,8 +24,8 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Reconfigure Java
-        run: R CMD javareconf
+      # - name: Reconfigure Java
+      #  run: R CMD javareconf
 
       - name: Install deps (incl covr)
         uses: r-lib/actions/setup-r-dependencies@v2
