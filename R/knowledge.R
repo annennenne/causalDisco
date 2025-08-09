@@ -885,6 +885,8 @@ check_knowledge_obj <- function(x) {
 #' @param ...   Unquoted variable names or tidy‐select helpers.
 #'
 #' @return An updated `knowledge` object.
+#'
+#' @importFrom purrr map
 #' @export
 remove_vars <- function(.kn, ...) {
   check_knowledge_obj(.kn)
@@ -919,6 +921,7 @@ remove_vars <- function(.kn, ...) {
 #' @param .kn   A `knowledge` object.
 #' @param ...   One or more two‐sided formulas, e.g. `A ~ B` or `starts_with("X") ~ Y`.
 #' @return The updated `knowledge` object.
+#' @importFrom purrr map_dfr
 #' @export
 remove_edges <- function(.kn, ...) {
   check_knowledge_obj(.kn)
@@ -960,6 +963,7 @@ remove_edges <- function(.kn, ...) {
 #' @param ...   Tier labels (unquoted or character) or numeric indices.
 #'
 #' @return An updated `knowledge` object.
+#' @importFrom purrr map_chr
 #' @export
 remove_tiers <- function(.kn, ...) {
   check_knowledge_obj(.kn)
@@ -1104,6 +1108,7 @@ deparse_knowledge <- function(kn, df_name = NULL) {
 #' internally, when using the `disco` function with knowledge given.
 #' @param .kn A `knowledge` object.
 #' @importFrom rJava .jinit .jnew
+#' @importFrom purrr pwalk
 #'
 #' @export
 as_tetrad_knowledge <- function(.kn) {
@@ -1625,6 +1630,7 @@ seq_tiers <- function(tiers, vars) {
 #'             `starts_with("V")`), a bare symbol, a character vector,
 #'             *or* a literal c(V1, V2, "V3") call.
 #' @keywords internal
+#' @importFrom purrr map_chr
 .vars_from_spec <- function(.kn, spec) {
   #  scalars can't be variable names
   if (is.atomic(spec) && length(spec) == 1L && !is.character(spec)) {

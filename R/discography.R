@@ -235,6 +235,7 @@ discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
 }
 
 #' #' Convert EssGraph object (used by pcalg::ges) to a discography object.
+#' @importFrom purrr map2_dfr
 #' @export
 discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
   parents <- purrr::map2_dfr(
@@ -286,6 +287,7 @@ discography.amat <- function(x, nodes = NULL, ...) {
 }
 
 #' Convert amat.pag object to a discography object.
+#' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.pag <- function(x, nodes = NULL, ...) {
   if (is.null(nodes)) {
@@ -315,6 +317,7 @@ discography.amat.pag <- function(x, nodes = NULL, ...) {
 }
 
 #' Convert amat.cpdag object to a discography object.
+#' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.cpdag <- function(x, nodes = NULL, ...) {
   if (is.null(nodes)) {

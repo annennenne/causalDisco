@@ -215,6 +215,7 @@ pcalgSearch <- R6Class(
     #' Sets the algorithm for the search.
     #'
     #' @param method A string specifying the type of algorithm to use.
+    #' @importFrom purrr partial
     set_alg = function(method) {
       method <- tolower(method)
       switch(method,
