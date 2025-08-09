@@ -35,9 +35,9 @@ Imports:
     rmarkdown,
     scales,
     tibble,
-    tidyselect
+    tidyselect,
+    ggarrow
 Suggests: 
-    ggarrow,
     mockery,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
