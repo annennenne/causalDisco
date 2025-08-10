@@ -6,6 +6,17 @@
 \usage{
 \method{discography}{pcAlgo}(x, nodes = x@graph@nodes, ...)
 }
+\arguments{
+\item{x}{A causal-graph object (see methods below).}
+
+\item{nodes}{Optional character vector giving the desired node order.
+If \code{NULL}, the unique node names are sorted alphabetically.}
+
+\item{...}{Passed on to methods.}
+}
+\value{
+A \code{"discography"} tibble.
+}
 \description{
 Convert pcAlgo object to a discography object.
 }

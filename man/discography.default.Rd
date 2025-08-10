@@ -6,6 +6,14 @@
 \usage{
 \method{discography}{default}(x, ...)
 }
+\arguments{
+\item{x}{An unsupported object.}
+
+\item{...}{Unused, passed for extensibility.}
+}
+\value{
+Never returns; errors.
+}
 \description{
 If the input is not recognized, throw error.
 }

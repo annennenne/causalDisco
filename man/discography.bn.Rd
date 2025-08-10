@@ -2,10 +2,21 @@
 % Please edit documentation in R/discography.R
 \name{discography.bn}
 \alias{discography.bn}
-\title{Convert bnlearn object to a discography object.}
+\title{Convert a bnlearn network to a discography tibble}
 \usage{
 \method{discography}{bn}(x, nodes = names(x$nodes), ...)
 }
+\arguments{
+\item{x}{A causal-graph object (see methods below).}
+
+\item{nodes}{Optional character vector giving the desired node order.
+If \code{NULL}, the unique node names are sorted alphabetically.}
+
+\item{...}{Passed on to methods.}
+}
+\value{
+A \code{"discography"} tibble.
+}
 \description{
-Convert bnlearn object to a discography object.
+Convert a bnlearn network to a discography tibble
 }

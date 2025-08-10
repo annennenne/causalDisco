@@ -13,7 +13,7 @@
 #'
 #' @param x     A causal-graph object (see methods below).
 #' @param nodes Optional character vector giving the desired node order.
-#'              If `NULL`, the unique node names are sorted alphabetically.
+#'  If `NULL`, the unique node names are sorted alphabetically.
 #' @param ...   Passed on to methods.
 #'
 #' @return A tibble with class `"discography"`.
@@ -26,6 +26,19 @@ discography <- function(x, nodes = NULL, ...) {
 # helpers
 # ──────────────────────────────────────────────────────────────────────────────
 
+#' Build a discography tibble from edge vectors
+#'
+#' Create a correctly classed tibble from parallel `from`, `to`, and `type`
+#' vectors, normalising symmetric edges and optionally converting bidirected
+#' pairs into undirected edges for CPDAGs.
+#'
+#' @param from,to,type Character vectors of equal length.
+#' @param nodes Optional character vector of node order used for normalisation
+#'  and final sorting.
+#' @param cpdag Logical. If `TRUE`, opposite directed edges are collapsed
+#'  into undirected `"---"` edges.
+#' @return A tibble of class `"discography"`.
+#' @keywords internal
 as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
   # -----------------------------------------------------------------
   out <- tibble::tibble(from = from, to = to, edge_type = type)
@@ -106,7 +119,15 @@ as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
       class = c("discography", "tbl_df", "tbl", "data.frame")
     )
 }
-
+#' Mark a CPDAG edge from pairwise marks
+#'
+#' Translate two binary marks into a directed or undirected edge for CPDAGs.
+#'
+#' @param m_ij,m_ji Integers (`0` = none, `1` = arrowhead).
+#' @param i,j Node names corresponding to matrix indices.
+#'
+#' @return A list with `from`, `to`, and `type`, or `NULL` if no edge.
+#' @keywords internal
 mark_cpdag <- function(m_ij, m_ji, i, j) {
   # codes: 0 none | 1 arrowhead (row)
   if (m_ij == 0 && m_ji == 1) {
@@ -120,6 +141,15 @@ mark_cpdag <- function(m_ij, m_ji, i, j) {
   }
 }
 
+#' Mark a PAG edge from pairwise marks
+#'
+#' Translate two sided marks into a PAG edge, considering circle/arrow/tail.
+#'
+#' @param m_ij,m_ji Integers (`0` = none, `1` = circle, `2` = arrowhead, `3` = tail).
+#' @param i,j Node names corresponding to matrix indices.
+#'
+#' @return A list with `from`, `to`, and `type`, or `NULL` if no valid edge.
+#' @keywords internal
 mark_pag <- function(m_ij, m_ji, i, j) {
   # codes: 0 none | 1 circle | 2 arrowhead | 3 tail   (column oriented)
   decode <- function(code) {
@@ -190,7 +220,10 @@ new_discography <- function(x) {
 # ──────────────────────────────────────────────────────────────────────────────
 # methods
 # ──────────────────────────────────────────────────────────────────────────────
-#' Convert bnlearn object to a discography object.
+#' Convert a bnlearn network to a discography tibble
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.bn <- function(x, nodes = names(x$nodes), ...) {
   arcs <- x$arcs |>
@@ -217,6 +250,9 @@ discography.bn <- function(x, nodes = names(x$nodes), ...) {
 }
 
 #' Convert graphNEL object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
   ig <- igraph::graph_from_graphnel(x)
@@ -229,12 +265,18 @@ discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
 }
 
 #' Convert pcAlgo object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
   discography(x@graph, nodes = nodes)
 }
 
 #' #' Convert EssGraph object (used by pcalg::ges) to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @importFrom purrr map2_dfr
 #' @export
 discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
@@ -270,6 +312,9 @@ discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
 
 
 #' Convert fciAlgo object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
   amat <- methods::as(x, "amat")
@@ -277,6 +322,9 @@ discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
 }
 
 #' Convert amat object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.amat <- function(x, nodes = NULL, ...) {
   if (inherits(x, "amat.pag")) {
@@ -287,6 +335,9 @@ discography.amat <- function(x, nodes = NULL, ...) {
 }
 
 #' Convert amat.pag object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.pag <- function(x, nodes = NULL, ...) {
@@ -317,6 +368,9 @@ discography.amat.pag <- function(x, nodes = NULL, ...) {
 }
 
 #' Convert amat.cpdag object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.cpdag <- function(x, nodes = NULL, ...) {
@@ -347,6 +401,9 @@ discography.amat.cpdag <- function(x, nodes = NULL, ...) {
 }
 
 #' Convert tetrad_graph object to a discography object.
+#'
+#' @inheritParams discography
+#' @return A `"discography"` tibble.
 #' @export
 discography.tetrad_graph <- function(x, nodes = x$nodes, ...) {
   discography(x$amat, nodes = nodes, ...)
@@ -355,6 +412,10 @@ discography.tetrad_graph <- function(x, nodes = x$nodes, ...) {
 #' Default method for discography
 #'
 #' If the input is not recognized, throw error.
+#' @param x An unsupported object.
+#' @param ... Unused, passed for extensibility.
+#'
+#' @return Never returns; errors.
 #' @export
 discography.default <- function(x, ...) {
   cli::cli_abort(c(
@@ -365,113 +426,117 @@ discography.default <- function(x, ...) {
 # nocov start
 
 #' Print method for discography objects.
+#'
+#' @param x A `discography` object.
+#' @param ... Additional arguments.
 #' @export
 print.discography <- function(x, ...) {
   NextMethod()
 }
 
-#' Autoplot for discography objects — clear-node ggarrow version
+#' #' Autoplot for discography objects — clear-node ggarrow version
+#' #'
+#' #' @param object        A discography tibble.
+#' #' @param layout        Layout algorithm for ggraph.
+#' #' @param head_len      Triangle-arrow length (mm).
+#' #' @param circle_len    Cup radius (mm).
+#' #' @param node_size     Node-point diameter (mm).
+#' #' @param label_size    Text size.
+#' #' @param gap_mm        Extra clearance between ornament and node edge.
+#' #' @param ...           Passed on to ggraph::create_layout().
+#' #' @return ggplot object.
+#' #' @method autoplot discography
+#' #' @importFrom ggplot2 autoplot
+#' #' @importFrom ggarrow geom_arrow_segment arrow_head_wings arrow_cup
+#' #' @export
+#' autoplot.discography <- function(object,
+#'                                  layout = "graphopt",
+#'                                  head_len = grid::unit(4, "mm"),
+#'                                  circle_len = NULL,
+#'                                  node_size = 5,
+#'                                  label_size = 5,
+#'                                  gap_mm = 0.5,
+#'                                  ...) {
+#'   # sensible default for the cup radius
+#'   if (is.null(circle_len)) {
+#'     circle_len <- grid::unit(node_size * 0.5, "mm")
+#'   }
 #'
-#' @param object        A discography tibble.
-#' @param layout        Layout algorithm for ggraph.
-#' @param head_len      Triangle-arrow length (mm).
-#' @param circle_len    Cup radius (mm).
-#' @param node_size     Node-point diameter (mm).
-#' @param label_size    Text size.
-#' @param gap_mm        Extra clearance between ornament and node edge.
-#' @param ...           Passed on to ggraph::create_layout().
-#' @return ggplot object.
-#' @method autoplot discography
-#' @importFrom ggplot2 autoplot
-#' @importFrom ggarrow geom_arrow_segment arrow_head_wings arrow_cup
-#' @export
-autoplot.discography <- function(object,
-                                 layout = "graphopt",
-                                 head_len = grid::unit(4, "mm"),
-                                 circle_len = NULL,
-                                 node_size = 5,
-                                 label_size = 5,
-                                 gap_mm = 0.5,
-                                 ...) {
-  # sensible default for the cup radius
-  if (is.null(circle_len)) {
-    circle_len <- grid::unit(node_size * 0.5, "mm")
-  }
-
-  # clearance = node radius + tiny gap
-  clearance <- node_size / 2 + gap_mm # mm
-
-  # build graph & layout ----------------------------------------------------
-  nodes <- tibble::tibble(name = unique(c(object$from, object$to)))
-  graph <- tidygraph::tbl_graph(nodes, object, directed = TRUE)
-  lay <- ggraph::create_layout(graph, layout = layout, ...)
-
-  # edge coordinates --------------------------------------------------------
-  coords <- tibble::tibble(name = lay$name, x = lay$x, y = lay$y)
-  edges <- object |>
-    dplyr::left_join(coords, by = c("from" = "name")) |>
-    dplyr::rename(x = x, y = y) |>
-    dplyr::left_join(coords,
-      by = c("to" = "name"),
-      suffix = c("", "_to")
-    ) |>
-    dplyr::rename(xend = x_to, yend = y_to)
-
-  # ornament palette --------------------------------------------------------
-  tri <- ggarrow::arrow_head_wings()
-  cup <- ggarrow::arrow_cup(angle = 70)
-
-  add <- function(data,
-                  head = NULL,
-                  fins = NULL,
-                  head_off = 0,
-                  fins_off = 0) {
-    ggarrow::geom_arrow_segment(
-      data = data,
-      ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
-      arrow_head = head,
-      arrow_fins = fins,
-      length_head = head_len,
-      length_fins = circle_len,
-      resect_head = head_off,
-      resect_fins = fins_off
-    )
-  }
-
-  ggraph::ggraph(lay) +
-    add(dplyr::filter(edges, edge_type == "---")) +
-    add(dplyr::filter(edges, edge_type == "-->"),
-      head     = tri,
-      head_off = clearance
-    ) +
-    add(dplyr::filter(edges, edge_type == "<->"),
-      head     = tri,
-      fins     = tri,
-      head_off = clearance,
-      fins_off = clearance
-    ) +
-    add(dplyr::filter(edges, edge_type == "--o"),
-      head     = cup,
-      head_off = clearance
-    ) +
-    add(dplyr::filter(edges, edge_type == "o->"),
-      head     = tri,
-      fins     = cup,
-      head_off = clearance,
-      fins_off = clearance
-    ) +
-    add(dplyr::filter(edges, edge_type == "o-o"),
-      head     = cup,
-      fins     = cup,
-      head_off = clearance,
-      fins_off = clearance
-    ) +
-    ggraph::geom_node_point(size = node_size) +
-    ggraph::geom_node_text(
-      ggplot2::aes(label = name),
-      size = label_size,
-      vjust = -1
-    ) +
-    ggplot2::theme_void()
-}
-# nocov end
+#'   # clearance = node radius + tiny gap
+#'   clearance <- node_size / 2 + gap_mm # mm
+#'
+#'   # build graph & layout ----------------------------------------------------
+#'   nodes <- tibble::tibble(name = unique(c(object$from, object$to)))
+#'   graph <- tidygraph::tbl_graph(nodes, object, directed = TRUE)
+#'   lay <- ggraph::create_layout(graph, layout = layout, ...)
+#'
+#'   # edge coordinates --------------------------------------------------------
+#'   coords <- tibble::tibble(name = lay$name, x = lay$x, y = lay$y)
+#'   edges <- object |>
+#'     dplyr::left_join(coords, by = c("from" = "name")) |>
+#'     dplyr::rename(x = x, y = y) |>
+#'     dplyr::left_join(coords,
+#'       by = c("to" = "name"),
+#'       suffix = c("", "_to")
+#'     ) |>
+#'     dplyr::rename(xend = x_to, yend = y_to)
+#'
+#'   # ornament palette --------------------------------------------------------
+#'   tri <- ggarrow::arrow_head_wings()
+#'   cup <- ggarrow::arrow_cup(angle = 70)
+#'
+#'   add <- function(data,
+#'                   head = NULL,
+#'                   fins = NULL,
+#'                   head_off = 0,
+#'                   fins_off = 0) {
+#'     ggarrow::geom_arrow_segment(
+#'       data = data,
+#'       ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
+#'       arrow_head = head,
+#'       arrow_fins = fins,
+#'       length_head = head_len,
+#'       length_fins = circle_len,
+#'       resect_head = head_off,
+#'       resect_fins = fins_off
+#'     )
+#'   }
+#'
+#'   ggraph::ggraph(lay) +
+#'     add(dplyr::filter(edges, edge_type == "---")) +
+#'     add(dplyr::filter(edges, edge_type == "-->"),
+#'       head     = tri,
+#'       head_off = clearance
+#'     ) +
+#'     add(dplyr::filter(edges, edge_type == "<->"),
+#'       head     = tri,
+#'       fins     = tri,
+#'       head_off = clearance,
+#'       fins_off = clearance
+#'     ) +
+#'     add(dplyr::filter(edges, edge_type == "--o"),
+#'       head     = cup,
+#'       head_off = clearance
+#'     ) +
+#'     add(dplyr::filter(edges, edge_type == "o->"),
+#'       head     = tri,
+#'       fins     = cup,
+#'       head_off = clearance,
+#'       fins_off = clearance
+#'     ) +
+#'     add(dplyr::filter(edges, edge_type == "o-o"),
+#'       head     = cup,
+#'       fins     = cup,
+#'       head_off = clearance,
+#'       fins_off = clearance
+#'     ) +
+#'     ggraph::geom_node_point(size = node_size) +
+#'     ggraph::geom_node_text(
+#'       ggplot2::aes(label = name),
+#'       size = label_size,
+#'       vjust = -1
+#'     )
+#'   +
+#'     ggplot2::theme_void()
+#' }
+#' # nocov end

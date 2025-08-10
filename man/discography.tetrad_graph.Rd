@@ -6,6 +6,17 @@
 \usage{
 \method{discography}{tetrad_graph}(x, nodes = x$nodes, ...)
 }
+\arguments{
+\item{x}{A causal-graph object (see methods below).}
+
+\item{nodes}{Optional character vector giving the desired node order.
+If \code{NULL}, the unique node names are sorted alphabetically.}
+
+\item{...}{Passed on to methods.}
+}
+\value{
+A \code{"discography"} tibble.
+}
 \description{
 Convert tetrad_graph object to a discography object.
 }
