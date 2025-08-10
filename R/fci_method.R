@@ -7,7 +7,6 @@
 #'   \describe{
 #'     \item{\code{"tetrad"}}{Tetrad Java library.}
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
-#'     \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
 #'   }
 #' @param test Character; name of the conditional‐independence test.
 #' @param alpha Numeric; significance level for the CI tests.
@@ -15,11 +14,11 @@
 #'
 #' @return
 #' A function of class \code{"fci"} that takes a single argument \code{data}
-#' (a data frame) and returns an igraph_party object.
+#' (a data frame) and returns an `discography` object.
 #'
 #' @export
 fci <- function(
-    engine = c("tetrad", "pcalg", "bnlearn"),
+    engine = c("tetrad", "pcalg"),
     test,
     alpha = 0.05,
     ...) {
@@ -87,8 +86,4 @@ fci_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge 
     }
   )
   runner
-}
-
-fci_bnlearn_runner <- function(test, alpha, ...) {
-  stop("Not implemented yet.")
 }
