@@ -9,7 +9,7 @@ meta
 courses
 presentations
 notes
-webtool
+^webtool$
 README.*
 ^cran-comments\.md$
 CRAN-SUBMISSION
