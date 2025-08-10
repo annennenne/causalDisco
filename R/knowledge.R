@@ -40,6 +40,21 @@
 #' The left-hand side of the formula is the *from* variable, and the right-hand
 #' side is the *to* variable.
 #'
+#' @param ... Either
+#'  - a single **data frame** (first argument) whose column names initialise the
+#'    variable set and freeze the knowledge object, followed by
+#'  - zero or more calls to the mini‑DSL:
+#'    `tier()`, `forbidden()`, `required()`, or `exogenous()` (aliases: `exo()`,
+#'    `root()`).
+#'
+#'  For `tier()` you may pass one or more two‑sided **formulas**
+#'  (`tier(1 ~ x + y)`, `tier("baseline" ~ starts_with("V"))`) or a single
+#'  numeric vector shortcut matching the number of variables to set tiers by
+#'  index. `forbidden()`/`required()` take one or more two‑sided formulas
+#'  (`from ~ to`), where each side can use tidyselect semantics to select
+#'  multiple variables. `exogenous()`/`exo()`/`root()` take variable selectors
+#'  (names or tidyselect), possibly multiple. Arguments are evaluated in order;
+#'  only these calls are allowed.
 #' @return A populated `knowledge` object.
 #' @export
 knowledge <- function(...) {
@@ -314,6 +329,7 @@ knowledge <- function(...) {
 #' @param .kn A `knowledge` object.
 #' @param vars A character vector of variable names to add.
 #'
+#' @return The updated `knowledge` object.
 #' @export
 add_vars <- function(.kn, vars) {
   stopifnot(inherits(.kn, "knowledge"), is.character(vars))
@@ -337,13 +353,13 @@ add_vars <- function(.kn, vars) {
 
 #' @title Add (and position) a tier
 #'
-#' @param .kn     A knowledge object.
-#' @param tier    Bare symbol / character (label) **or** numeric literal.
+#' @param .kn A knowledge object.
+#' @param tier Bare symbol / character (label) **or** numeric literal.
 #' @param before,after  Optional anchor relative to an existing tier label,
-#'                tier index, or variable.  Once the knowledge object already
-#'                has >= 1 tier, you must supply **exactly one** of these.
+#'  tier index, or variable.  Once the knowledge object already
+#'  has >= 1 tier, you must supply **exactly one** of these.
 #'
-#' @return Updated knowledge object.
+#' @return The updated `knowledge` object.
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   check_knowledge_obj(.kn)
@@ -448,9 +464,10 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
 #' @title Add variables to an existing tier
 #'
-#' @inheritParams add_tier
+#' @param .kn A `knowledge` object.
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
 #'
+#' @return The updated `knowledge` object.
 #' @export
 add_to_tier <- function(.kn, ...) {
   check_knowledge_obj(.kn)
@@ -597,7 +614,6 @@ add_exo <- add_exogenous
 #' @export
 add_root <- add_exogenous
 
-
 #' @title Unfreeze a `knowledge` object.
 #'
 #' @description This allows you to add new variables to the `knowledge` object,
@@ -614,6 +630,9 @@ unfreeze <- function(.kn) {
 
 # ────────────────────────────────── Print ─────────────────────────────────────
 #' @title Print a `knowledge` object
+#'
+#' @param x A `knowledge` object.
+#' @param ... Additional arguments (not used).
 #' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
   cli::cli_h1("Knowledge object")
@@ -680,20 +699,20 @@ print.knowledge <- function(x, ...) {
   invisible(x)
 }
 
-
-
 # ────────────────────────────── Manipulation ──────────────────────────────────
 #' @title Merge two `knowledge` objects
+#' @param .kn1 A `knowledge` object.
+#' @param .kn2 Another `knowledge` object.
 #' @exportS3Method "+" knowledge
-`+.knowledge` <- function(kn1, kn2) {
-  stopifnot(inherits(kn1, "knowledge"), inherits(kn2, "knowledge"))
+`+.knowledge` <- function(.kn1, .kn2) {
+  stopifnot(inherits(.kn1, "knowledge"), inherits(.kn2, "knowledge"))
 
   # combine
-  vars_all <- unique(c(kn1$vars$var, kn2$vars$var))
+  vars_all <- unique(c(.kn1$vars$var, .kn2$vars$var))
   out <- .new_knowledge(vars_all)
 
   # var tiers
-  vtiers <- dplyr::bind_rows(kn1$vars, kn2$vars) |>
+  vtiers <- dplyr::bind_rows(.kn1$vars, .kn2$vars) |>
     dplyr::group_by(var) |>
     dplyr::slice(1L) |>
     dplyr::ungroup()
@@ -701,12 +720,12 @@ print.knowledge <- function(x, ...) {
   # merge vars
   out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
 
-  # merge tier labels, preserving kn1 order then any new from kn2
-  all_labels <- unique(c(kn1$tiers$label, kn2$tiers$label))
+  # merge tier labels, preserving .kn1 order then any new from .kn2
+  all_labels <- unique(c(.kn1$tiers$label, .kn2$tiers$label))
   out$tiers <- tibble::tibble(label = all_labels)
 
   # merge edges (status, from, to, tier_from, tier_to are all character)
-  out$edges <- dplyr::distinct(dplyr::bind_rows(kn1$edges, kn2$edges)) |>
+  out$edges <- dplyr::distinct(dplyr::bind_rows(.kn1$edges, .kn2$edges)) |>
     dplyr::mutate(
       tier_from = out$vars$tier[match(from, out$vars$var)],
       tier_to   = out$vars$tier[match(to, out$vars$var)]
@@ -721,12 +740,12 @@ print.knowledge <- function(x, ...) {
 
 #' @title Reorder all tiers at once
 #'
-#' @param .kn      A `knowledge` object.
-#' @param order    A vector that lists *every* tier exactly once, either by
-#'                 label (default) or by numeric index (`by_index = TRUE`).
-#'                 Be careful if you have numeric tier labels.
+#' @param .kn A `knowledge` object.
+#' @param order A vector that lists *every* tier exactly once, either by
+#'  label (default) or by numeric index (`by_index = TRUE`).
+#'  Be careful if you have numeric tier labels.
 #' @param by_index If `TRUE`, treat `order` as the positions instead of
-#'                 labels. Defaults to `FALSE`.
+#'  labels. Defaults to `FALSE`.
 #'
 #' @return The same `knowledge` object with tiers rearranged.
 #' @export
@@ -799,13 +818,19 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
 #' @title Move one tier before / after another
 #'
 #' @inheritParams reorder_tiers
-#' @param tier   The tier to move (label or index, honouring `by_index`).
-#' @param before,after Exactly one of these must be supplied and must identify
-#'                     another existing tier.
+#' @param tier The tier to move (label or index, honouring `by_index`).
+#' @param before Exactly one of these must be supplied and must identify
+#'  another existing tier.
+#' @param after Exactly one of these must be supplied and must identify
+#'  another existing tier.
 #'
 #' @return The updated `knowledge` object.
 #' @export
-reposition_tier <- function(.kn, tier, before = NULL, after = NULL, by_index = FALSE) {
+reposition_tier <- function(.kn,
+                            tier,
+                            before = NULL,
+                            after = NULL,
+                            by_index = FALSE) {
   check_knowledge_obj(.kn)
   if (!xor(missing(before), missing(after))) {
     stop("Supply exactly one of `before` or `after`.", call. = FALSE)
@@ -874,7 +899,6 @@ check_knowledge_obj <- function(x) {
 }
 
 # ───────────────────────────────── Remove ─────────────────────────────────────
-
 #' @title Remove variables (and their edges) from a knowledge object
 #'
 #' @description
@@ -914,6 +938,7 @@ remove_vars <- function(.kn, ...) {
 
   .kn
 }
+
 #' @title Remove edges from a knowledge object
 #' @description
 #' Drop any directed edge(s) matching the two‐sided formulas you supply.
@@ -953,7 +978,6 @@ remove_edges <- function(.kn, ...) {
   .kn
 }
 
-
 #' @title Remove entire tiers from a knowledge object
 #'
 #' @description
@@ -991,8 +1015,6 @@ remove_tiers <- function(.kn, ...) {
   .kn
 }
 
-
-
 # ───────────────────────────────── Deparse ────────────────────────────────────
 #' @title Deparse a knowledge object to knowledge() mini-DSL code
 #'
@@ -1003,13 +1025,13 @@ remove_tiers <- function(.kn, ...) {
 #'
 #' @param .kn A `knowledge` object.
 #' @param df_name Optional name of the data frame you used
-#'   (used as the first argument to `knowledge()`).  If `NULL`,
-#'   `knowledge()` is called with no data frame.
+#' (used as the first argument to `knowledge()`).  If `NULL`,
+#' `knowledge()` is called with no data frame.
 #'
 #' @return A single string (with newlines) of R code.
 #' @export
-deparse_knowledge <- function(kn, df_name = NULL) {
-  check_knowledge_obj(kn)
+deparse_knowledge <- function(.kn, df_name = NULL) {
+  check_knowledge_obj(.kn)
 
   fmt_fml <- function(lhs, rhs_vars) {
     paste0(
@@ -1029,12 +1051,12 @@ deparse_knowledge <- function(kn, df_name = NULL) {
   }
 
   # ---- tiers ----
-  if (nrow(kn$tiers)) {
-    tier_labels <- kn$tiers$label
+  if (nrow(.kn$tiers)) {
+    tier_labels <- .kn$tiers$label
     tier_fmls <- vapply(
       tier_labels,
       function(lbl) {
-        vars <- kn$vars$var[kn$vars$tier == lbl]
+        vars <- .kn$vars$var[.kn$vars$tier == lbl]
         fmt_fml(lbl, vars)
       },
       character(1)
@@ -1049,7 +1071,7 @@ deparse_knowledge <- function(kn, df_name = NULL) {
   }
 
   # ---- forbidden edges ----
-  forb <- dplyr::filter(kn$edges, status == "forbidden")
+  forb <- dplyr::filter(.kn$edges, status == "forbidden")
   if (nrow(forb)) {
     # group by 'from'
     f_grouped <- split(forb$to, forb$from)
@@ -1068,7 +1090,7 @@ deparse_knowledge <- function(kn, df_name = NULL) {
   }
 
   # ---- required edges ----
-  req <- dplyr::filter(kn$edges, status == "required")
+  req <- dplyr::filter(.kn$edges, status == "required")
   if (nrow(req)) {
     r_grouped <- split(req$to, req$from)
     req_fmls <- vapply(
@@ -1385,6 +1407,7 @@ forbid_tier_violations <- function(.kn) {
 #'   automatically).
 #'
 #' @examples
+#' \dontrun{
 #' # Suppose your data frame has columns X_1, X_2, X_3, X_4
 #' # Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
 #' formulas <- seq_tiers(1:4, ends_with("_{i}"))
@@ -1397,6 +1420,7 @@ forbid_tier_violations <- function(.kn) {
 #' tier(
 #'   seq_tiers(4:9, matches("Var{i}th$"))
 #' )
+#' }
 #'
 #' @seealso
 #' \code{\link{tier}}, for turning these formulas into actual tiers.
