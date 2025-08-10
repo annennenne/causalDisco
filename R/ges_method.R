@@ -21,7 +21,6 @@
 ges <- function(
     engine = c("tetrad", "pcalg", "bnlearn"),
     score,
-    alpha = 0.05,
     ...) {
   engine <- match.arg(engine)
 
@@ -29,9 +28,9 @@ ges <- function(
 
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
-      tetrad = rlang::exec(ges_tetrad_runner, score, alpha, !!!args),
-      pcalg = rlang::exec(ges_pcalg_runner, score, alpha, !!!args),
-      bnlearn = rlang::exec(ges_bnlearn_runner, score, alpha, !!!args)
+      tetrad = rlang::exec(ges_tetrad_runner, score, !!!args),
+      pcalg = rlang::exec(ges_pcalg_runner, score, !!!args),
+      bnlearn = rlang::exec(ges_bnlearn_runner, score, !!!args)
     )
     if (!is.null(knowledge)) {
       runner$set_knowledge(knowledge)
