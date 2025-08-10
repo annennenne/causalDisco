@@ -29,6 +29,7 @@ by each element of \code{tiers} in turn, allowing you to write a single
 template rather than many nearly identical formulas.
 }
 \examples{
+\dontrun{
 # Suppose your data frame has columns X_1, X_2, X_3, X_4
 # Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
 formulas <- seq_tiers(1:4, ends_with("_{i}"))
@@ -41,6 +42,7 @@ tier(
 tier(
   seq_tiers(4:9, matches("Var{i}th$"))
 )
+}
 
 }
 \seealso{

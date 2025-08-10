@@ -32,17 +32,22 @@ oriented in the incorrect direction counts as both a false positive (FP)
 and a false negative (FN).
 }
 \examples{
+\dontrun{
 #############################################################################
 # Compare two adjacency matrices ############################################
 #############################################################################
-x1 <- matrix(c(0, 0, 0, 0,
-               1, 0, 1, 0,
-               1, 0, 0, 0, 
-               0, 0, 1, 0), 4, 4, byrow = TRUE)
-x2 <- matrix(c(0, 0, 1, 0,
-               1, 0, 0, 0,
-               0, 0, 0, 0, 
-               1, 0, 1, 0), 4, 4, byrow = TRUE)
+x1 <- matrix(c(
+  0, 0, 0, 0,
+  1, 0, 1, 0,
+  1, 0, 0, 0,
+  0, 0, 1, 0
+), 4, 4, byrow = TRUE)
+x2 <- matrix(c(
+  0, 0, 1, 0,
+  1, 0, 0, 0,
+  0, 0, 0, 0,
+  1, 0, 1, 0
+), 4, 4, byrow = TRUE)
 
 # confusion matrix for adjacencies
 confusion(x2, x1)
@@ -55,10 +60,12 @@ confusion(x2, x1, type = "dir")
 #############################################################################
 # simulate DAG adjacency matrix and Gaussian data
 set.seed(123)
-x3 <- matrix(c(0, 0, 0, 0,
-               1, 0, 1, 0,
-               0, 0, 0, 0, 
-               0, 0, 1, 0), 4, 4, byrow = TRUE)
+x3 <- matrix(c(
+  0, 0, 0, 0,
+  1, 0, 1, 0,
+  0, 0, 0, 0,
+  0, 0, 1, 0
+), 4, 4, byrow = TRUE)
 ex_data <- simGausFromDAG(x3, n = 50)
 pcres <- pc(ex_data, sparsity = 0.1, test = corTest)
 
@@ -67,6 +74,6 @@ confusion(pcres, x3)
 
 # compare conditional orientations with true amat
 confusion(pcres, x1, type = "dir")
-
+}
 
 }

@@ -6,6 +6,11 @@
 \usage{
 \method{print}{discography}(x, ...)
 }
+\arguments{
+\item{x}{A \code{discography} object.}
+
+\item{...}{Additional arguments.}
+}
 \description{
 Print method for discography objects.
 }

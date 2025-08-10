@@ -43,8 +43,8 @@ Recognised values are:
 }
 \strong{Gaussian}
 \itemize{
-\item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"}, \code{"ebic-g"},
-\code{"pred-loglik-g"}
+\item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"},
+\code{"ebic-g"}, \code{"pred-loglik-g"}
 \item \code{"bge"} — Gaussian posterior density
 \item \code{"nal-g"} — node-average log-likelihood
 \item \code{"pnal-g"} — penalised node-average log-likelihood

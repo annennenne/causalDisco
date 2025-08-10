@@ -11,7 +11,10 @@ reposition_tier(.kn, tier, before = NULL, after = NULL, by_index = FALSE)
 
 \item{tier}{The tier to move (label or index, honouring \code{by_index}).}
 
-\item{before, after}{Exactly one of these must be supplied and must identify
+\item{before}{Exactly one of these must be supplied and must identify
+another existing tier.}
+
+\item{after}{Exactly one of these must be supplied and must identify
 another existing tier.}
 
 \item{by_index}{If \code{TRUE}, treat \code{order} as the positions instead of

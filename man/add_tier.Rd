@@ -16,7 +16,7 @@ tier index, or variable.  Once the knowledge object already
 has >= 1 tier, you must supply \strong{exactly one} of these.}
 }
 \value{
-Updated knowledge object.
+The updated \code{knowledge} object.
 }
 \description{
 Add (and position) a tier

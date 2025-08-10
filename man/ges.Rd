@@ -4,7 +4,7 @@
 \alias{ges}
 \title{The GES algorithm for causal discovery}
 \usage{
-ges(engine = c("tetrad", "pcalg", "bnlearn"), score, alpha = 0.05, ...)
+ges(engine = c("tetrad", "pcalg", "bnlearn"), score, ...)
 }
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:

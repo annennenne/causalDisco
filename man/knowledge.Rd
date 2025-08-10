@@ -6,6 +6,25 @@
 \usage{
 knowledge(...)
 }
+\arguments{
+\item{...}{Either
+\itemize{
+\item a single \strong{data frame} (first argument) whose column names initialise the
+variable set and freeze the knowledge object, followed by
+\item zero or more calls to the mini‑DSL:
+\code{tier()}, \code{forbidden()}, \code{required()}, or \code{exogenous()} (aliases: \code{exo()},
+\code{root()}).
+}
+
+For \code{tier()} you may pass one or more two‑sided \strong{formulas}
+(\code{tier(1 ~ x + y)}, \code{tier("baseline" ~ starts_with("V"))}) or a single
+numeric vector shortcut matching the number of variables to set tiers by
+index. \code{forbidden()}/\code{required()} take one or more two‑sided formulas
+(\code{from ~ to}), where each side can use tidyselect semantics to select
+multiple variables. \code{exogenous()}/\code{exo()}/\code{root()} take variable selectors
+(names or tidyselect), possibly multiple. Arguments are evaluated in order;
+only these calls are allowed.}
+}
 \value{
 A populated \code{knowledge} object.
 }

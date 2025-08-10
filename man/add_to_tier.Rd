@@ -7,9 +7,12 @@
 add_to_tier(.kn, ...)
 }
 \arguments{
-\item{.kn}{A knowledge object.}
+\item{.kn}{A \code{knowledge} object.}
 
 \item{...}{One or more two-sided formulas \code{tier ~ vars}.}
+}
+\value{
+The updated \code{knowledge} object.
 }
 \description{
 Add variables to an existing tier

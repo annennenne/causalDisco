@@ -11,6 +11,9 @@ add_vars(.kn, vars)
 
 \item{vars}{A character vector of variable names to add.}
 }
+\value{
+The updated \code{knowledge} object.
+}
 \description{
 Adds variables to the \code{knowledge} object. If the object is
 frozen, an error is thrown if any of the variables are not present in the

@@ -6,6 +6,11 @@
 \usage{
 \method{print}{knowledge}(x, ...)
 }
+\arguments{
+\item{x}{A \code{knowledge} object.}
+
+\item{...}{Additional arguments (not used).}
+}
 \description{
 Print a \code{knowledge} object
 }

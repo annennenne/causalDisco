@@ -4,14 +4,14 @@
 \alias{deparse_knowledge}
 \title{Deparse a knowledge object to knowledge() mini-DSL code}
 \usage{
-deparse_knowledge(kn, df_name = NULL)
+deparse_knowledge(.kn, df_name = NULL)
 }
 \arguments{
+\item{.kn}{A \code{knowledge} object.}
+
 \item{df_name}{Optional name of the data frame you used
 (used as the first argument to \code{knowledge()}).  If \code{NULL},
 \code{knowledge()} is called with no data frame.}
-
-\item{.kn}{A \code{knowledge} object.}
 }
 \value{
 A single string (with newlines) of R code.
