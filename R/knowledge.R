@@ -1422,9 +1422,6 @@ forbid_tier_violations <- function(.kn) {
 #' )
 #' }
 #'
-#' @seealso
-#' \code{\link{tier}}, for turning these formulas into actual tiers.
-#'
 #' @export
 seq_tiers <- function(tiers, vars) {
   stopifnot(is.numeric(tiers), all(tiers >= 1L))

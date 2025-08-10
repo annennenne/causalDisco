@@ -45,6 +45,3 @@ tier(
 }
 
 }
-\seealso{
-\code{\link{tier}}, for turning these formulas into actual tiers.
-}

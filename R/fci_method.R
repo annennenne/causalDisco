@@ -28,8 +28,7 @@ fci <- function(
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
       tetrad  = rlang::exec(fci_tetrad_runner, test, alpha, !!!args),
-      pcalg   = rlang::exec(fci_pcalg_runner, test, alpha, !!!args),
-      bnlearn = rlang::exec(fci_bnlearn_runner, test, alpha, !!!args)
+      pcalg   = rlang::exec(fci_pcalg_runner, test, alpha, !!!args)
     )
     if (!is.null(knowledge)) {
       runner$set_knowledge(knowledge)
