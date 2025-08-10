@@ -21,7 +21,7 @@ ask_heap_size <- function() {
     if (grepl("^[1-9][0-9]*$", answer)) {
       return(paste0(answer, "g"))
     }
-    message("Please enter a positive integer such as 4, 8, 16 …")
+    message("Please enter a positive integer such as 4, 8, 16, etc.")
   }
 }
 
