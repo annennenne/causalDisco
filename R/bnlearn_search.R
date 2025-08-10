@@ -35,8 +35,8 @@ bnlearnSearch <- R6Class(
     #'   }
     #'   \strong{Gaussian}
     #'   \itemize{
-    #'     \item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"}, \code{"ebic-g"},
-    #'       \code{"pred-loglik-g"}
+    #'     \item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"},
+    #'       \code{"ebic-g"}, \code{"pred-loglik-g"}
     #'     \item \code{"bge"} — Gaussian posterior density
     #'     \item \code{"nal-g"} — node-average log-likelihood
     #'     \item \code{"pnal-g"} — penalised node-average log-likelihood
@@ -322,11 +322,16 @@ bnlearnSearch <- R6Class(
 
       if (method %in% need_both) {
         if (is.null(self$test) || is.null(self$score)) {
-          stop("Both test and score must be set for this algorithm.", call. = FALSE)
+          stop("Both test and score must be set for this algorithm.",
+            call. = FALSE
+          )
         }
         if (method %in% need_restrict_maximize ||
           (is.null(self$maximize_alg) || is.null(self$restrict_alg))) {
-          stop("Both maximize and restrict algorithms must be set for this algorithm.", call. = FALSE)
+          stop("Both maximize and restrict algorithms must be set for this ",
+            "algorithm.",
+            call. = FALSE
+          )
         }
       }
 
@@ -406,7 +411,9 @@ bnlearnSearch <- R6Class(
           bnlearn::aracne,
           !!!self$params
         ),
-        stop("Unknown method type using bnlearn engine: ", method, call. = FALSE)
+        stop("Unknown method type using bnlearn engine: ", method,
+          call. = FALSE
+        )
       )
 
       invisible(self)
