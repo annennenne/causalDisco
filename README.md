@@ -92,7 +92,7 @@ The causalDisco webtool provides an overview of R procedures for working with ca
 
 ## Code coverage
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/frederikfabriciusbjerre/causalDisco)
+[![codecov](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg?token=8MHGWDUN4R)](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco)
 <!-- badges: end -->
 
 ## Bugs & requests
