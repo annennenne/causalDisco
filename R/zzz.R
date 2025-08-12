@@ -5,27 +5,19 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  # Prompt only if option/env absent
-  if (interactive() &&
+  if (is_interactive() &&
     is.null(getOption("java.heap.size")) &&
     !nzchar(Sys.getenv("JAVA_HEAP_SIZE", unset = ""))) {
-    options(java.heap.size = ask_heap_size()) # "2g", "4g", etc.
+    options(java.heap.size = ask_heap_size())
   }
 
-  # ---- tidy up user input -----------------------------------------
   raw_heap <- getOption("java.heap.size", default_heap())
-  heap_gb <- parse_heap_gb(raw_heap) # numeric
-  # overwrite with canonical "Ng" so future checks are easy
+  heap_gb <- parse_heap_gb(raw_heap)
   options(java.heap.size = paste0(heap_gb, "g"))
-  # -----------------------------------------------------------------
 
-  init_java(heap = paste0(heap_gb, "g")) # start or attach JVM
+  init_java(heap = paste0(heap_gb, "g"))
 
-  # warn if running JVM ≠ requested (optional)
-  rt <- rJava::.jcall("java/lang/Runtime", "Ljava/lang/Runtime;", "getRuntime")
-  current_heap_size <-
-    (rJava::.jcall(rt, "J", "maxMemory") / 1e9) |>
-    round()
+  current_heap_size <- current_heap_gb()
   if (abs(current_heap_size - heap_gb) > 0.1) {
     warning(
       "Java heap is ", current_heap_size,

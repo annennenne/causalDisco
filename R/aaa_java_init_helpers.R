@@ -8,13 +8,20 @@ default_heap <- function() {
     }()
 }
 
+# only written so we can mock for testing
+# nocov start
+.read_line <- function(prompt) {
+  readline(prompt)
+}
+# nocov end
+
 ask_heap_size <- function() {
   prompt <- paste(
     "How many GB should the Java heap use?",
     "Press <Return> for the default (2):"
   )
   repeat {
-    answer <- readline(prompt)
+    answer <- .read_line(prompt)
     if (!nzchar(answer)) {
       return("2g")
     }
@@ -43,7 +50,6 @@ init_java <- function(heap = default_heap()) {
   }
 }
 
-# R/aaa_java_init_helpers.R
 parse_heap_gb <- function(x) {
   stopifnot(length(x) == 1)
 
@@ -62,4 +68,14 @@ parse_heap_gb <- function(x) {
     "Specify a whole number followed by 'g' (gigabytes) ",
     "or 'm' (megabytes), e.g. \"4g\" or \"4096m\"."
   )
+}
+
+current_heap_gb <- function() {
+  rt <- rJava::.jcall("java/lang/Runtime", "Ljava/lang/Runtime;", "getRuntime")
+  (rJava::.jcall(rt, "J", "maxMemory") / 1e9) |> round()
+}
+
+
+is_interactive <- function() {
+  interactive()
 }

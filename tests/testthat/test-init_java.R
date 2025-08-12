@@ -36,3 +36,20 @@ test_that("init_java starts JVM once and adds jars", {
     assignInNamespace("find_tetrad_jars", orig, pkg)
   })
 })
+
+test_that("init_java errors when no Tetrad JARs are found", {
+  with_mock_rjava({
+    pkg <- "causalDisco"
+    ns <- asNamespace(pkg)
+    orig <- get("find_tetrad_jars", envir = ns)
+    defer(assignInNamespace("find_tetrad_jars", orig, pkg))
+
+    assignInNamespace("find_tetrad_jars", function() character(), pkg)
+
+    expect_error(
+      causalDisco:::init_java(heap = "2g"),
+      "No Tetrad JARs found",
+      fixed = TRUE
+    )
+  })
+})
