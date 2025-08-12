@@ -21,8 +21,8 @@ pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 \item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
 \value{
-A function of class \code{"pc"} that takes a single argument \code{data}
-(a data frame) and returns an igraph_party object.
+A function of class \code{"fci"} that takes a single argument \code{data}
+(a data frame) and returns an \code{discography} object.
 }
 \description{
 Run the PC algorithm for causal discovery using one of several engines.
