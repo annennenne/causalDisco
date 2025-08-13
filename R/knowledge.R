@@ -56,6 +56,8 @@
 #'  (names or tidyselect), possibly multiple. Arguments are evaluated in order;
 #'  only these calls are allowed.
 #' @return A populated `knowledge` object.
+#'
+#' @importFrom stats setNames
 #' @export
 knowledge <- function(...) {
   dots <- as.list(substitute(list(...)))[-1]
@@ -142,7 +144,7 @@ knowledge <- function(...) {
 
           pos <- tidyselect::eval_select(
             rhs,
-            setNames(seq_along(kn$vars$var), kn$vars$var)
+            stats::setNames(seq_along(kn$vars$var), kn$vars$var)
           )
 
           if (!length(pos)) {
@@ -221,7 +223,7 @@ knowledge <- function(...) {
       }
 
       # create new tier after the current last one
-      after_anchor <- if (nrow(kn$tiers)) tail(kn$tiers$label, 1) else NULL
+      after_anchor <- if (nrow(kn$tiers)) utils::tail(kn$tiers$label, 1) else NULL
 
       if (is.null(after_anchor)) {
         kn <<- add_tier(kn, !!lhs_expr)
@@ -1697,7 +1699,7 @@ seq_tiers <- function(tiers, vars) {
 
   # character vector --> wrap in all_of()
   if (is.character(spec)) {
-    q <- rlang::quo(all_of(spec))
+    q <- rlang::quo(dplyr::all_of(spec))
   } else {
     # 5) otherwise, a tidy-select expression → leave it as a quosure
     q <- rlang::as_quosure(spec, env = parent.frame())

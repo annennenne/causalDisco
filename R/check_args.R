@@ -15,6 +15,10 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
   )
 }
 
+#' Check arguments and distribute them to TetradSearch class functions
+#'
+#' @importFrom methods formalArgs
+#' @keywords internal
 check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL, score = NULL) {
   if (is.null(test) && is.null(score)) {
     stop("Neither test or score is specified.", call. = FALSE)
@@ -78,7 +82,7 @@ check_args_and_distribute_args_pcalg <- function(search,
   if (!is.null(score)) {
     engine_args_score <- methods::getRefClass("GaussL0penIntScore")$
       methods("initialize") |>
-      formalArgs()
+      methods::formalArgs()
     args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
   } else {
     args_to_pass_to_engine_score <- list()
