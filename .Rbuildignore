@@ -1,4 +1,5 @@
 ^causalDisco\.Rproj$
+^\.github$
 ^\.Rproj\.user$
 .gitignore
 app

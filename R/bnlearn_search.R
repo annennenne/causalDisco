@@ -295,6 +295,8 @@ bnlearnSearch <- R6Class(
     #' @param method Character naming the algorithm to use.
     #' @param args A list of additional arguments to pass to the algorithm.
     #' @importFrom purrr partial
+    #' @importFrom bnlearn pc.stable gs iamb fast.iamb inter.iamb iamb.fdr
+    #' mmpc si.hiton.pc hpc hc tabu mmhc rsmax2 h2pc chow.liu aracne
     set_alg = function(method, args = NULL) {
       method <- tolower(method)
 
