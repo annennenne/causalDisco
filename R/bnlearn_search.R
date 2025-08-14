@@ -307,7 +307,7 @@ bnlearnSearch <- R6Class(
         self$set_params(args)
       }
       need_test <- c(
-        "pc.stable", "gs", "iamb", "fast.iamb", "inter.iamb", "iamb.fdr",
+        "pc", "gs", "iamb", "fast.iamb", "inter.iamb", "iamb.fdr",
         "mmpc", "si.hiton.pc", "hpc"
       )
       need_score <- c("hc", "tabu")

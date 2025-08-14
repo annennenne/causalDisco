@@ -1,5 +1,3 @@
-# tests/testthat/test-check_args.R
-
 test_that("engine guard in check_args_and_distribute_args() rejects unsupported engines", {
   reg <- engine_registry
   expect_error(

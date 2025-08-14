@@ -1114,7 +1114,7 @@ testthat::test_that("knowledge() throws error when using another function than t
     fixed = TRUE
   )
 })
-# tests/testthat/test-print-knowledge.R
+
 test_that("print.knowledge() snapshot", {
   local_edition(3) # enable v3 snapshotting
 
