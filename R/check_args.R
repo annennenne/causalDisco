@@ -2,7 +2,7 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
   # Check if the engine is supported
   if (!(engine %in% engine_registry)) {
     stop(
-      "Engine ", paste(engine), "is not supported. Supported engines are: ",
+      "Engine ", paste(engine), " is not supported. Supported engines are: ",
       paste(engine_registry, collapse = ", "),
       call. = FALSE
     )
@@ -10,8 +10,7 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
   switch(engine,
     tetrad = check_args_and_distribute_args_tetrad(search, args, alg, test, score),
     pcalg = check_args_and_distribute_args_pcalg(search, args, alg, test, score),
-    bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg),
-    stop("Unsupported engine: ", engine, call. = FALSE)
+    bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg)
   )
 }
 
@@ -94,7 +93,7 @@ check_args_and_distribute_args_pcalg <- function(search,
   )
   # If '...' in given algorithm/test is an argument, it will throw a warning rather than an error.
   if (length(args_not_in_engine_args) > 0) {
-    if ("..." %in% names(c(engine_args_alg, engine_args_score))) {
+    if ("..." %in% c(engine_args_alg, engine_args_score)) {
       warning(
         paste0("The following arguments are not used in pcalg::", alg, ": "),
         paste(args_not_in_engine_args, collapse = ", "),
@@ -102,7 +101,7 @@ check_args_and_distribute_args_pcalg <- function(search,
       )
     } else {
       stop(
-        paste0("The following arguments are not used in pcalg::", alg, " or in the given score:"),
+        paste0("The following arguments are not used in pcalg::", alg, ": "),
         paste(args_not_in_engine_args, collapse = ", "),
         call. = FALSE
       )
