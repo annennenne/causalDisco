@@ -17,7 +17,8 @@ fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 
 \item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
 }
 \value{
 A function of class \code{"fci"} that takes a single argument \code{data}

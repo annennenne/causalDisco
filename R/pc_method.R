@@ -33,9 +33,6 @@ pc <- function(
       pcalg   = rlang::exec(pc_pcalg_runner, test, alpha, !!!args),
       bnlearn = rlang::exec(pc_bnlearn_runner, test, alpha, !!!args)
     )
-    if (!is.null(knowledge)) {
-      runner$set_knowledge(knowledge)
-    }
     runner
   }
 
@@ -49,27 +46,26 @@ pc_tetrad_runner <- function(test, alpha, ...) {
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
 
   if (length(args_to_pass$test_args) > 0) {
-    search$set_test(test, alpha, args_to_pass$test_args)
+    # splice
+    rlang::exec(search$set_test, test, alpha, !!!args_to_pass$test_args)
   } else {
     search$set_test(test, alpha)
   }
 
   if (length(args_to_pass$alg_args) > 0) {
-    search$set_alg("pc", args_to_pass$alg_args)
+    # splice
+    rlang::exec(search$set_alg, "pc", !!!args_to_pass$alg_args)
   } else {
     search$set_alg("pc")
   }
 
   runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
+    set_knowledge = function(knowledge) search$set_knowledge(knowledge),
+    run = function(data) search$run_search(data)
   )
   runner
 }
+
 
 #' @keywords internal
 pc_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge = FALSE) {

@@ -86,7 +86,7 @@ test_that("disco enforces method type and injects knowledge when provided", {
     fixed = TRUE
   )
 
-  # happy path without knowledge
+  # mocking ab uilder that returns a runner
   builder <- function(k) {
     e <- new.env(parent = emptyenv())
     e$k <- k
@@ -112,6 +112,7 @@ test_that("disco enforces method type and injects knowledge when provided", {
 })
 
 test_that("set_knowledge wrapped method still validates data.frame input", {
+  # mocking a builder
   builder <- function(k) {
     e <- new.env(parent = emptyenv())
     e$k <- k
