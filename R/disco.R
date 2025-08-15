@@ -14,7 +14,8 @@ disco <- function(data, method, knowledge = NULL) {
         method <- set_knowledge(method, knowledge)
       },
       error = function(e) {
-        stop("Error in setting knowledge: ", e$message, call. = FALSE)
+        # extra precaution to catch errors in setting knowledge
+        stop("Error in setting knowledge: ", e$message, call. = FALSE) # nocov
       }
     )
   }
