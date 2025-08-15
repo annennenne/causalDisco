@@ -124,9 +124,8 @@ pcalgSearch <- R6Class(
       } else if (is.data.frame(self$data)) {
         self$suff_stat <- list(dm = data.matrix(self$data), adaptDF = FALSE)
       } else {
-        stop("Unrecognized data format.
-             The data should be either continouos or discrete,
-             and the data should be in a data.frame.",
+        stop("Unrecognized data format. The data should be either continouos ",
+          "or discrete, and the data should be in a data.frame.",
           call. = FALSE
         )
       }
@@ -176,6 +175,12 @@ pcalgSearch <- R6Class(
     #' @param params A list of parameters to pass to the score function.
     set_score = function(method, params = list()) {
       method <- tolower(method)
+      allowed <- c("sem_bic", "sem_bic_int")
+      if (!(method %in% allowed)) {
+        stop("Unknown score type using pcalg engine: ", method,
+          call. = FALSE
+        )
+      }
       # Function that will be used to build the score, when data is set
       return_pcalg_score <- function() {
         if (is.null(self$data)) {
@@ -189,7 +194,7 @@ pcalgSearch <- R6Class(
               "new",
               Class = "GaussL0penObsScore",
               data  = self$data,
-              !!!params # disappears cleanly when empty
+              !!!params
             )
           },
           # todo: find the equivalent in tetrad and make them have same name
@@ -199,12 +204,9 @@ pcalgSearch <- R6Class(
               "new",
               Class = "GaussL0penIntScore",
               data  = self$data,
-              !!!params # disappears cleanly when empty
+              !!!params
             )
-          },
-          stop("Unknown score type using pcalg engine: ", method,
-            call. = FALSE
-          )
+          }
         )
         return(score)
       }
@@ -281,15 +283,14 @@ pcalgSearch <- R6Class(
     #' @param set_suff_stat Logical; whether to set the sufficient statistic
     run_search = function(data = NULL, set_suff_stat = TRUE) {
       if (!is.null(data)) {
-        self$set_data(data, set_suff_stat)
+        if (is.null(private$score_function)) {
+          self$set_data(data, set_suff_stat = set_suff_stat)
+        } else {
+          self$set_data(data, set_suff_stat = FALSE)
+        }
       }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().",
-          call. = FALSE
-        )
-      }
-      if (is.null(self$suff_stat) && set_suff_stat) {
-        stop("No sufficient statistic is set. Use set_data() first.",
           call. = FALSE
         )
       }
@@ -301,6 +302,11 @@ pcalgSearch <- R6Class(
 
       # If score_function is NULL, then we are not using a score-based algorithm
       if (is.null(private$score_function)) {
+        if (is.null(self$suff_stat) && set_suff_stat) {
+          stop("No sufficient statistic is set. Use set_data() first.",
+            call. = FALSE
+          )
+        }
         if (!is.null(private$knowledge_function)) {
           # If knowledge is set, we now need to call the function
           # to get the fixed constraints.
@@ -342,7 +348,13 @@ pcalgSearch <- R6Class(
           )
         }
       }
-      return(result |> discography())
+      out <- if (is.list(result) && !is.null(result$essgraph)) {
+        # if ges output
+        result$essgraph
+      } else {
+        result
+      }
+      return(out |> discography())
     }
   ),
   private = list(
