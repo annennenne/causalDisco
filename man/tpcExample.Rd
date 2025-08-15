@@ -23,8 +23,8 @@ A small simulated data example intended to showcase the TPC algorithm. Note that
 prefixes defines with period they are related to ("child", "youth" or "oldage").
 }
 \examples{
- data(tpcExample)
- 
+data(tpcExample)
+
 }
 \references{
 Petersen, AH; Osler, M and Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology,
