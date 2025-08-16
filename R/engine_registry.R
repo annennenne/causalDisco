@@ -4,7 +4,8 @@
 #'
 #' @export
 engine_registry <- list(
-  "tetrad",
   "bnlearn",
-  "pcalg"
+  "causalDisco",
+  "pcalg",
+  "tetrad"
 )

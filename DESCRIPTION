@@ -61,6 +61,7 @@ Collate:
     'bnlearn_search.R'
     'cast_obj.R'
     'causalDisco-package.R'
+    'causalDisco_search.R'
     'check_args.R'
     'compare.R'
     'confusion.R'
