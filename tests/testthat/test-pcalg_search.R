@@ -189,9 +189,14 @@ test_that("set_alg builds partials and errors on unknown/guard", {
 
   s <- pcalgSearch$new()
 
-  # pc requires test
+  # pc and fci requires test
   expect_error(
     s$set_alg("pc"),
+    "No test is set. Use set_test() first.",
+    fixed = TRUE
+  )
+  expect_error(
+    s$set_alg("fci"),
     "No test is set. Use set_test() first.",
     fixed = TRUE
   )
@@ -203,6 +208,8 @@ test_that("set_alg builds partials and errors on unknown/guard", {
 
   # fci builds partial even if no test set (it will be passed as NULL)
   s2 <- pcalgSearch$new()
+  s2$set_params(list(alpha = 0.05))
+  s2$set_test("fisher_z")
   s2$set_alg("fci")
   expect_true(is.function(s2$alg))
 
