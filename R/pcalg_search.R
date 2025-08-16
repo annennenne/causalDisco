@@ -234,6 +234,11 @@ pcalgSearch <- R6Class(
           )
         },
         "fci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.",
+              call. = FALSE
+            )
+          }
           self$alg <- purrr::partial(
             pcalg::fci,
             indepTest = self$test,
