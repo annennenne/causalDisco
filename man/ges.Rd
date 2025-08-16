@@ -4,14 +4,13 @@
 \alias{ges}
 \title{The GES algorithm for causal discovery}
 \usage{
-ges(engine = c("tetrad", "pcalg", "bnlearn"), score, ...)
+ges(engine = c("tetrad", "pcalg"), score, ...)
 }
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:
 \describe{
 \item{\code{"tetrad"}}{Tetrad Java library.}
 \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
-\item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
 }}
 
 \item{score}{Character; name of the scoring function to use.}

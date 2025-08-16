@@ -7,7 +7,6 @@
 #'   \describe{
 #'     \item{\code{"tetrad"}}{Tetrad Java library.}
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
-#'     \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
 #'   }
 #' @param score Character; name of the scoring function to use.
 #' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
@@ -18,7 +17,7 @@
 #'
 #' @export
 ges <- function(
-    engine = c("tetrad", "pcalg", "bnlearn"),
+    engine = c("tetrad", "pcalg"),
     score,
     ...) {
   engine <- match.arg(engine)
@@ -27,8 +26,7 @@ ges <- function(
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
       tetrad = rlang::exec(ges_tetrad_runner, score, !!!args),
-      pcalg = rlang::exec(ges_pcalg_runner, score, !!!args),
-      bnlearn = rlang::exec(ges_bnlearn_runner, score, !!!args)
+      pcalg = rlang::exec(ges_pcalg_runner, score, !!!args)
     )
     runner
   }
