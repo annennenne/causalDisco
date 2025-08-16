@@ -14,7 +14,8 @@ URL: https://github.com/annennenne/causalDisco
 BugReports: https://github.com/annennenne/causalDisco/issues
 SystemRequirements: Java (>= 17). Includes the Tetrad Java library
     (see inst/java/LICENSE and inst/java/COPYRIGHT).
-    Source: https://github.com/cmu-phil/tetrad
+    Source code: https://github.com/cmu-phil/tetrad
+    Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
 Depends: 
     R (>= 4.1.0)
 Imports:

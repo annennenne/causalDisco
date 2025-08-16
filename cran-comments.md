@@ -12,3 +12,9 @@
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
+
+## Files
+Note about .jar file: Package bundles third‑party JARs in inst/java/.
+Sources are available in DESCRIPTION under GPL-2.0 license. We include
+license information in inst/java/LICENSE and copyright information in 
+inst/java/COPYRIGHT/.
