@@ -1656,9 +1656,7 @@ testthat::test_that("labels errors are thrown for pcalg constraints conversion",
   labels <- c("A", "B")
   expect_error(
     as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
-    "`labels` must contain all variables in the knowledge object: [C, D]
-You can add variables to your knowledge object with add_vars().",
-    fixed = TRUE
+    "The following is missing: \\[C, D\\]"
   )
   labels <- c("A", "B", "C", "D", "E")
   expect_error(
