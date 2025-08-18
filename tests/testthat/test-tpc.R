@@ -13,8 +13,6 @@ build_kn_from_order <- function() {
   )
 }
 
-# no matrix-equality helper anymore (no parity tests)
-
 test_that("tpc returns tpdag on example data", {
   set.seed(123)
   data(tpcExample, package = "causalDisco")
@@ -329,6 +327,21 @@ test_that("tpc adds missing vars to knowledge and uses provided suffStat (tskele
   expect_true(is.matrix(A))
   expect_identical(rownames(A), colnames(A))
   expect_setequal(rownames(A), names(df))
+
+  kn_bad <- knowledge() |> add_vars(c("child_a")) # missing oldage_z
+
+  expect_error(
+    tpc(
+      data = NULL,
+      knowledge = kn_bad,
+      sparsity = 0.1,
+      test = regTest,
+      suffStat = suff,
+      output = "tskeleton",
+      varnames = names(df)
+    ),
+    "Knowledge contains variables not present in `data`"
+  )
 })
 
 test_that(".build_knowledge_from_order builds tiers in the given order and attaches starts_with() vars", {
