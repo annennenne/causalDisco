@@ -155,6 +155,13 @@ tpc <- function(data = NULL,
   if (length(missing_vars)) {
     knowledge <- add_vars(knowledge, missing_vars)
   }
+  bad_vars <- setdiff(knowledge$vars$var, vnames)
+  if (length(bad_vars)) {
+    stop(
+      "Knowledge contains variables not present in `data`: ",
+      paste(bad_vars, collapse = ", ")
+    )
+  }
 
   indepTest_dir <- dirTest(test, vnames, knowledge)
 
