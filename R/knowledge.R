@@ -1234,7 +1234,8 @@ as_pcalg_constraints <- function(.kn,
     # all vars that aren't in labels
     missing_vars <- setdiff(.kn$vars$var, labels)
     if (length(missing_vars)) {
-      stop("`labels` must contain all variables in the knowledge object: [",
+      stop("`labels` must contain all variables in the knowledge",
+        " object. The following is missing: [",
         paste(missing_vars, collapse = ", "),
         "]\nYou can add variables to your knowledge object with add_vars().",
         call. = FALSE
