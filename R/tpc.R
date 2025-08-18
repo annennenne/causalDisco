@@ -1,323 +1,274 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────── Public API  ──────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+
 #' Perform causal discovery using the temporal PC algorithm (TPC)
 #'
-#' @param data A data.frame with data. All variables should be
-#' assigned to exactly one period by prefixing them with the period name
-#' (see example below).
-#' @param order A character vector with period-prefixes in their
-#' temporal order (see example below).
-#' @param sparsity The sparsity level to be used for independence
-#' testing (i.e. significance level threshold to use for each test).
-#' @param test A procedure for testing conditional independence.
-#' The default, \code{regTest} uses a regression-based information
-#' loss test. Another available option is \code{corTest} which
-#' tests for vanishing partial correlations. User supplied functions
-#' may also be used, see details below about the required syntax.
-#' @param suffStat Sufficient statistic. If this argument is supplied, the
-#' sufficient statistic is not computed from the inputted data. The format and
-#' contents of the sufficient statistic depends on which test is being used.
-#' @param method Which method to use for skeleton construction, must be
-#' \code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-#' See \code{\link[pcalg]{skeleton}} for details.
-#' @param methodNA Method for handling missing information (\code{NA} values).
-#' Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-#' are present), \code{"cc"} (complete case analysis, deletes all observations
-#' that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-#' observations with missing information test-by-test) (further details below).
-#' @param methodOri Method for handling conflicting separating sets when orienting
-#' edges. Currently only the conservative method is available.
-#' @param output One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
-#' \code{"tskeleton"}, a temporal skeleton is constructed and outputted,
-#' but the edges are not directed. If \code{"tpdag"} (the default), a
-#' the edges are directed, resulting in a temporal partially directed
-#' acyclic graph (TPDAG). If \code{"pcAlgo"} the TPDAG is outputted as the
-#' object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
-#' intended for compatability with tools from that package.
-#' @param varnames A character vector of variable names. It only needs to be supplied
-#' if the \code{data} argument is not used, and data are hence passed exclusively
-#' through the \code{suffStat} argument.
-#' @param ... Further optional arguments which are passed to
-#' \code{\link[pcalg]{skeleton}} for the skeleton constructing phase.
+#' @description
+#' Run a tier-aware variant of the PC algorithm that respects background
+#' knowledge about a partial temporal order. Supply the temporal order via a
+#' \code{knowledge} object. For backward compatibility, you may still pass
+#' \code{order}, but that interface is deprecated and will be removed in a
+#' future release.
 #'
-#' @details Note that all independence test procedures implemented
-#' in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
+#' @param data A data frame with the observed variables. Columns are variables.
+#'   When using the deprecated \code{order} argument, variables should be
+#'   prefixed with their period name (see examples). When using
+#'   \code{knowledge}, prefixes are not required.
+#' @param knowledge A \code{knowledge} object created with \code{knowledge()},
+#'   encoding tier assignments and optional forbidden/required edges. This is
+#'   the preferred way to provide temporal background knowledge.
+#' @param order A character vector of period prefixes in temporal order.
+#'   Deprecated; use \code{knowledge} instead. If supplied, it is converted
+#'   internally to tier knowledge using \code{tidyselect::starts_with()} for
+#'   each prefix.
+#' @param sparsity The sparsity level used as the per-test significance
+#'   threshold for conditional independence testing.
+#' @param test A conditional independence test. The default \code{regTest}
+#'   uses a regression-based information-loss test. Another available option is
+#'   \code{corTest} which tests for vanishing partial correlations. User-supplied
+#'   functions may also be used; see details for the required interface.
+#' @param suffStat A sufficient statistic. If supplied, it is passed directly
+#'   to the test and no statistics are computed from \code{data}. Its structure
+#'   depends on the chosen \code{test}.
+#' @param method Skeleton construction method, one of \code{"stable"},
+#'   \code{"original"}, or \code{"stable.fast"} (default). See
+#'   \code{\link[pcalg]{skeleton}} for details.
+#' @param methodNA Handling of missing values, one of \code{"none"} (default;
+#'   error on any \code{NA}), \code{"cc"} (complete-case analysis), or
+#'   \code{"twd"} (test-wise deletion).
+#' @param methodOri Conflict-handling method when orienting edges.
+#'   Currently only the conservative method is available.
+#' @param output One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
+#'   or \code{"discography"}. If \code{"tskeleton"}, return the temporal
+#'   skeleton without directions. If \code{"tpdag"} (default), return a
+#'   temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
+#'   return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
+#'   \pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
+#'   \code{discography()}.
+#' @param varnames Character vector of variable names. Only needed when
+#'   \code{data} is not supplied and all information is passed via
+#'   \code{suffStat}.
+#' @param ... Additional arguments passed to
+#'   \code{\link[pcalg]{skeleton}} during skeleton construction.
 #'
-#' The methods for handling missing information require that the \code{data},
-#' rather than the \code{suffStat} argument is used for inputting data; the latter
-#' assumes no missing information and hence always sets \code{methodNA = "none"}.
-#' If the test is \code{corTest}, test-wise deletion is performed when computing the
-#' sufficient statistic (correlation matrix) (so for each pair of variables, only
-#' complete cases are used). If the test is \code{regTest}, test-wise deletion
-#' is performed for each conditional independence test instead.
-#
-#' @return A \code{tpdag} or \code{tskeleton} object. Both return types are
-#' S3 objects, i.e., lists with entries: \code{$tamat} (the estimated adjacency
-#' matrix), \code{$order} (character vector with the order, as inputted to
-#' this function), \code{$psi} (the significance level used for testing), and
-#' \code{$ntests} (the number of tests conducted).
+#' @details
+#' Any independence test implemented in \pkg{pcalg} may be used; see
+#' \code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
+#' performed: for \code{corTest}, each pairwise correlation uses complete cases;
+#' for \code{regTest}, each conditional test performs its own deletion. If you
+#' supply a user-defined \code{test}, you must also provide \code{suffStat}.
 #'
+#' Temporal or tiered knowledge enters in two places:
+#' \itemize{
+#'   \item during skeleton estimation, candidate conditioning sets are pruned so
+#'   they do not contain variables that are strictly after both endpoints;
+#'   \item during orientation, any cross-tier edge is restricted to point
+#'   forward in time.
+#' }
+#' The \code{order} argument is deprecated. If provided, it is converted to a
+#' \code{knowledge} object by assigning variables to tiers using
+#' \code{tidyselect::starts_with()} for each prefix.
 #'
+#' @return
+#' If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
+#' \code{$tamat} (temporal adjacency matrix), \code{$psi} (sparsity level),
+#' and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
+#' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
+#' a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
 #'
 #' @examples
-#' # TPC on included example data, use sparsity psi = 0.01, default test (regression-based
-#' # information loss):
+#' # Using knowledge (preferred)
 #' data(tpcExample)
+#' kn <- knowledge(
+#'   tpcExample,
+#'   tier(
+#'     child ~ tidyselect::starts_with("child"),
+#'     youth ~ tidyselect::starts_with("youth"),
+#'     oldage ~ tidyselect::starts_with("oldage")
+#'   )
+#' )
+#' tpc(tpcExample, knowledge = kn, sparsity = 0.01)
+#'
+#' # Deprecated: using order prefixes (will warn)
 #' tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
-#'
-#'
-#' # TPC on included example data, use sparsity psi = 0.01, use test for vanishing partial
-#' # correlations:
-#' data(tpcExample)
-#' tpc(tpcExample,
-#'   order = c("child", "youth", "oldage"), sparsity = 0.01,
-#'   test = corTest
-#' )
-#'
-#'
-#' # TPC on another simulated data set
-#'
-#' # Simulate data
-#' set.seed(123)
-#' n <- 500
-#' child_x <- rnorm(n)^2
-#' child_y <- 0.5 * child_x + rnorm(n)
-#' child_z <- sample(c(0, 1), n,
-#'   replace = TRUE,
-#'   prob = c(0.3, 0.7)
-#' )
-#'
-#' adult_x <- child_x + rnorm(n)
-#' adult_z <- as.numeric(child_z + rnorm(n) > 0)
-#' adult_w <- 2 * adult_z + rnorm(n)
-#' adult_y <- 2 * sqrt(child_x) + adult_w^2 + rnorm(n)
-#'
-#' simdata <- data.frame(
-#'   child_x, child_y, child_z,
-#'   adult_x, adult_z, adult_w,
-#'   adult_y
-#' )
-#'
-#' # Define order
-#' simorder <- c("child", "adult")
-#'
-#' # Perform TPC with sparsity psi = 0.001
-#' results <- tpc(simdata, order = simorder, sparsity = 10^(-3))
 #'
 #' @importFrom pcalg skeleton
 #' @importFrom stats na.omit
-#'
 #' @export
-tpc <- function(data = NULL, order, sparsity = 10^(-1), test = regTest,
-                suffStat = NULL, method = "stable.fast",
+tpc <- function(data = NULL,
+                knowledge = NULL,
+                order = NULL,
+                sparsity = 10^(-1),
+                test = regTest,
+                suffStat = NULL,
+                method = "stable.fast",
                 methodNA = "none",
                 methodOri = "conservative",
-                output = "tpdag",
+                output = "discography",
                 varnames = NULL, ...) {
-  # check arguments
-  if (!output %in% c("tpdag", "tskeleton", "pcAlgo")) {
-    stop("Output must be tpdag, tskeleton or pcAlgo.")
+  if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "discography")) {
+    stop("Output must be tpdag, tskeleton, pcAlgo, or discography.")
   }
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
   }
-  if (is.null(data) & is.null(suffStat)) {
+  if (is.null(data) && is.null(suffStat)) {
     stop("Either data or sufficient statistic must be supplied.")
   }
+  if (!is.null(knowledge) && !is.null(order)) {
+    stop(
+      "Both `knowledge` and `order` supplied. ",
+      "Please supply a knowledge object."
+    )
+  }
+  # backward compatibility: build knowledge from legacy `order` if needed
+  if (is.null(knowledge) && !is.null(order)) {
+    warning(
+      "`order` is deprecated in version 1.0.0 and will be removed in a ",
+      "future version. Please supply a `knowledge` object instead."
+    )
+    vnames0 <- if (is.null(data)) varnames else names(data)
+    knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
+  }
 
-  # handle missing information
-  # note: twd is handled by the test: they have this as default, so the code here
-  # is used to ensure that missing info is only passed along if we in fact want to
-  # use twd
-  if (any(is.na(data))) {
+
+  check_knowledge_obj(knowledge)
+
+  if (!is.null(data) && any(is.na(data))) {
     if (methodNA == "none") {
       stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
     } else if (methodNA == "cc") {
-      data <- na.omit(data)
+      data <- stats::na.omit(data)
       if (nrow(data) == 0) {
         stop("Complete case analysis chosen, but inputted data contain no complete cases.")
       }
     }
   }
 
-  # variable names
-  if (is.null(data)) {
-    vnames <- varnames
-  } else {
-    vnames <- names(data)
+  vnames <- if (is.null(data)) varnames else names(data)
+  if (is.null(vnames) || !length(vnames)) {
+    stop("Could not determine variable names. Supply `data` or `varnames`.")
   }
 
-  # make testing procedure that does not condition on
-  # the future
-  thisDirTest <- dirTest(test, vnames, order)
+  missing_vars <- setdiff(vnames, knowledge$vars$var)
+  if (length(missing_vars)) {
+    knowledge <- add_vars(knowledge, missing_vars)
+  }
 
-  # Construct sufficient statistic for built-in tests
+  indepTest_dir <- dirTest(test, vnames, knowledge)
+
   if (is.null(suffStat)) {
-    # thisTestName <- deparse(match.call()[["test"]])
     thisTestName <- deparse(substitute(test))
     if (thisTestName == "regTest") {
-      thisSuffStat <- makeSuffStat(data, type = "regTest")
+      thisSuffStat <- make_suff_stat(data, type = "regTest")
     } else if (thisTestName == "corTest") {
-      thisSuffStat <- makeSuffStat(data, type = "corTest")
+      thisSuffStat <- make_suff_stat(data, type = "corTest")
     } else {
-      stop(paste(
-        "suffStat needs to be supplied",
-        "when using a non-builtin test."
-      ))
+      stop("suffStat needs to be supplied when using a non-builtin test.")
     }
   } else {
     thisSuffStat <- suffStat
-    methodNA <- "none" # can't handle NA for user-supplied suff. stat./test
+    methodNA <- "none"
   }
 
-  # Learn skeleton
-  skel <- skeleton(
+  constraints <- .pcalg_constraints_from_knowledge(knowledge, labels = vnames)
+
+  skel <- pcalg::skeleton(
     suffStat = thisSuffStat,
-    indepTest = thisDirTest,
+    indepTest = indepTest_dir,
     alpha = sparsity,
     labels = vnames,
-    method = method, ...
+    method = method,
+    fixedGaps = constraints$fixedGaps,
+    fixedEdges = constraints$fixedEdges,
+    ...
   )
   ntests <- sum(skel@n.edgetests)
 
-
   if (output == "tskeleton") {
     out <- list(
-      tamat = tamat(amat = graph2amat(skel), order = order), psi = sparsity,
+      tamat = tamat(amat = graph2amat(skel), order = knowledge$tiers$label),
+      psi = sparsity,
       ntest = ntests
     )
     class(out) <- "tskeleton"
-  } else { # case: output == "tpdag" or "pcAlgo"
-
-    # Direct edges
-    res <- tpdag(skel, order = order)
-
-    # Pack up output
-    if (output == "tpdag") {
-      out <- list(
-        tamat = tamat(amat = graph2amat(res, toFrom = FALSE), order = order), psi = sparsity,
-        ntests = ntests
-      )
-      class(out) <- "tpdag"
-    } else if (output == "pcAlgo") {
-      out <- res
-    }
+    return(out)
   }
 
-  out
-}
+  res <- tpdag(skel, knowledge = knowledge)
 
-
-
-
-
-############################################################################
-## Not exported below ######################################################
-############################################################################
-
-
-
-
-#' @importFrom stats cor na.omit
-makeSuffStat <- function(data, type, ...) {
-  # browser()
-  if (type == "regTest") {
-    bin <- unlist(sapply(data, function(x) length(unique(na.omit(x))) == 2))
-    suff <- list(data = data, binary = bin)
-    #  if (!is.null(order)) suff$order <- order
-  } else if (type == "corTest") {
-    suff <- list(
-      C = cor(data, use = "pairwise.complete.obs"),
-      n = nrow(data)
+  if (output == "tpdag") {
+    out <- list(
+      tamat = tamat(amat = graph2amat(res, toFrom = FALSE), order = knowledge$tiers$label),
+      psi = sparsity,
+      ntests = ntests
     )
-  } else {
-    stop(paste(
-      type, "is not a supported type for",
-      "autogenerating a sufficient statistic"
-    ))
+    class(out) <- "tpdag"
+    return(out)
+  } else if (output == "pcAlgo") {
+    return(res)
+  } else if (output == "discography") {
+    out <- tamat(
+      amat = graph2amat(res, toFrom = FALSE),
+      order = knowledge$tiers$label
+    ) |>
+      discography()
+    out
   }
-
-  # else suff <- list(data = data)
-  # suff$otherArgs <- list(...)
-
-  suff
 }
 
-# is x (strictly) after y in order?
-is.after <- function(x, y, order, sep = "_") {
-  prefix_x <- strsplit(x, sep)[[1]][1]
-  prefix_y <- strsplit(y, sep)[[1]][1]
-  res <- which(order == prefix_x) > which(order == prefix_y)
-  if (length(res) == 0) res <- FALSE
-  res
-}
+# ──────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────── Helpers  ────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
-
-
-
-dirTest <- function(test, vnames, order) {
-  thistest <- function(x, y, S, suffStat) {
-    # check if we need to conduct the test at all
-    # (whether S occurs strictly after both
-    # x and y in order)
-    snames <- vnames[S] # NOTE: CHECK IF THIS IS CORRECT FOR EMPTY S
-    xname <- vnames[x]
-    yname <- vnames[y]
-    laterS <- FALSE
-    i <- 1
-    nS <- length(snames)
-    while (!laterS & i <= nS) {
-      s <- snames[i]
-      afterx <- is.after(s, xname, order)
-      aftery <- is.after(s, yname, order)
-      if (afterx & aftery) laterS <- TRUE
-      i <- i + 1
-    }
-    if (laterS) {
-      return(0)
-    }
-
-    # If no order problem, use test function:
-    do.call(test, list(x = x, y = y, S = S, suffStat = suffStat))
-  }
-  thistest
-}
-
-
-#' @importFrom pcalg addBgKnowledge
-tpdag <- function(skel, order) {
-  thisAmat <- graph2amat(skel)
-
-  # order restrict amat
-  tempSkelAmat <- orderRestrictAmat_cpdag(thisAmat, order = order)
-
-  pcalg::addBgKnowledge(vOrientTemporal(tempSkelAmat, skel@sepset), checkInput = FALSE)
-}
-
-
-
-orderRestrictAmat_cpdag <- function(amat, order) {
-  p <- nrow(amat)
-  vnames <- rownames(amat)
-
-  for (i in 1:p) {
-    for (j in 1:p) {
-      if (is.after(vnames[i], vnames[j], order)) amat[j, i] <- 0
-    }
-  }
-  amat
-}
-
-
-
-
+#' Build tiered knowledge from legacy order prefixes
 #'
+#' @description
+#' Helper that converts a character \code{order} of prefixes into a
+#' \code{knowledge} object by creating one tier per prefix and assigning
+#' variables with \code{tidyselect::starts_with("<prefix>")}.
+#'
+#' @param order Character vector of prefixes in temporal order.
+#' @param data Optional data frame used to freeze the knowledge variable set.
+#' @param vnames Optional character vector of variable names when \code{data}
+#'   is not supplied.
+#'
+#' @return A \code{knowledge} object with tiers matching \code{order}.
+#' @keywords internal
+
+.build_knowledge_from_order <- function(order, data, vnames = NULL) {
+  stopifnot(is.character(order), length(order) > 0)
+
+  # tier specs: "<lbl>" ~ starts_with("<lbl>")
+  fmls <- lapply(order, function(lbl) {
+    rlang::new_formula(
+      lhs = rlang::expr(!!lbl),
+      rhs = rlang::expr(tidyselect::starts_with(!!lbl)),
+      env = rlang::empty_env()
+    )
+  })
+  rlang::inject(knowledge(data, tier(!!!fmls)))
+}
+
+#' Temporally orient unshielded colliders
+#'
+#' @description
+#' Given a CPDAG adjacency matrix and separation sets, orient v-structures
+#' that do not contradict the current directions, respecting temporal tiering.
+#'
+#' @param amat Square adjacency matrix (from-to convention).
+#' @param sepsets Separation sets as computed by \pkg{pcalg}.
+#'
+#' @return The updated adjacency matrix with additional arrowheads.
 #' @importFrom gtools combinations
-#'
-vOrientTemporal <- function(amat, sepsets) {
+#' @keywords internal
+v_orient_temporal <- function(amat, sepsets) {
   vnames <- rownames(amat)
   nvar <- nrow(amat)
 
   for (i in 1:nvar) {
-    theseAdj <- findAdjacencies(amat, i)
+    theseAdj <- find_adjacencies(amat, i)
 
     # if there are at least two adjacent nodes
     if (length(theseAdj) >= 2) {
@@ -330,7 +281,7 @@ vOrientTemporal <- function(amat, sepsets) {
           thisPair <- adjpairs[j, ]
           j1 <- thisPair[1]
           j2 <- thisPair[2]
-          thisPairAdj <- j2 %in% findAdjacencies(amat, j1)
+          thisPairAdj <- j2 %in% find_adjacencies(amat, j1)
 
           # if pair is not adjacent (unmarried)
           if (!thisPairAdj) {
@@ -354,50 +305,212 @@ vOrientTemporal <- function(amat, sepsets) {
   amat
 }
 
-
-findAdjacencies <- function(amatrix, index) {
+#' Find adjacencies of a node in an adjacency matrix
+#'
+#' @param amatrix Square adjacency matrix.
+#' @param index Integer index of the node.
+#'
+#' @return Integer vector of adjacent node indices.
+#' @keywords internal
+find_adjacencies <- function(amatrix, index) {
   union(which(as.logical(amatrix[index, ])), which(as.logical(amatrix[, index])))
 }
 
-
-edgesFromAdjMat <- function(amat) {
-  vnames <- rownames(amat)
-  nvar <- dim(amat)[1]
-  mat <- matrix(amat, nrow = nvar, ncol = nvar)
-  outF <- data.frame(from = NULL, to = NULL)
-  # browser()
-  for (i in 1:nvar) {
-    thisC <- mat[, i]
-    if (sum(thisC) > 0) {
-      outF <- rbind(outF, data.frame(from = vnames[i], to = vnames[as.logical(thisC)]))
-    }
-  }
-  outF$from <- as.character(outF$from)
-  outF$to <- as.character(outF$to)
-  outF
+#' Compute tier indices for variables
+#'
+#' @description
+#' Map variable names to their tier ranks according to a \code{knowledge}
+#' object. Variables without a tier receive \code{NA}.
+#'
+#' @param kn A \code{knowledge} object.
+#' @param vnames Character vector of variable names.
+#'
+#' @return Named integer vector of the same length as \code{vnames}.
+#' @keywords internal
+.tier_index <- function(kn, vnames) {
+  check_knowledge_obj(kn)
+  idx <- match(vnames, kn$vars$var)
+  tiers <- kn$vars$tier[idx]
+  rank <- match(tiers, kn$tiers$label)
+  stats::setNames(rank, vnames)
 }
 
+#' Check whether one variable is strictly after another in tier order
+#'
+#' @param x,y Variable names.
+#' @param knowledge A \code{knowledge} object.
+#'
+#' @return Logical. \code{TRUE} if \code{x} is in a strictly later tier than
+#'   \code{y}. Returns \code{FALSE} if either variable lacks a tier.
+#' @keywords internal
+is_after <- function(x, y, knowledge) {
+  ti <- .tier_index(knowledge, c(x, y))
+  if (any(is.na(ti))) {
+    return(FALSE)
+  }
+  ti[[1]] > ti[[2]]
+}
 
-##' @importFrom methods as
-# amat <- function(pcres) {
-#  as(pcres, "amat") #methods
-# }
+#' Directed indepTest wrapper that forbids conditioning on the future
+#'
+#' @description
+#' Wrap a conditional independence test so that conditioning sets that are
+#' strictly after both endpoints are rejected, implementing the temporal
+#' restriction during skeleton learning.
+#'
+#' @param test A function \code{f(x, y, S, suffStat)} returning a p-value or
+#'   test statistic compatible with \pkg{pcalg}.
+#' @param vnames Character vector of variable names (labels).
+#' @param knowledge A \code{knowledge} object.
+#'
+#' @return A function with the same interface as \code{test}.
+#' @keywords internal
+dirTest <- function(test, vnames, knowledge) {
+  function(x, y, S, suffStat) {
+    snames <- vnames[S]
+    xname <- vnames[x]
+    yname <- vnames[y]
 
+    if (length(snames)) {
+      for (s in snames) {
+        if (isTRUE(is_after(s, xname, knowledge)) &&
+          isTRUE(is_after(s, yname, knowledge))) {
+          return(0)
+        }
+      }
+    }
+    do.call(test, list(x = x, y = y, S = S, suffStat = suffStat))
+  }
+}
 
-## Old function that may be useful if we want to add bnlearn engine
-## #' @importFrom dplyr intersect
-## makeBgKnowledge <- function(amat, data, order, sep = "_") {
-##  # browser()
-##  crossTimeWL <- orderedBL(data, order = rev(order), sep = sep)
-##  edges <- edgesFromAdjMat(amat)
-##  fromPrefixes <- sapply(strsplit(edges$from, split = sep), function(x) x[1])
-##  toPrefixes <- sapply(strsplit(edges$to, split = sep), function(x) x[1])
-##  crossTimeEdges <- edges[fromPrefixes != toPrefixes,]
-##  #edgesOut <- rbind(edges[fromPrefixes == toPrefixes,],
-## #                  dplyr::intersect(crossTimeWL, crossTimeEdges))
-##  #edgesOut
-##  intersect(crossTimeWL, crossTimeEdges) #dplyr
-## }
+#' Convert knowledge to \pkg{pcalg} constraints
+#'
+#' @description
+#' Turn directed forbidden/required edges into undirected \code{fixedGaps} and
+#' \code{fixedEdges} matrices in the supplied \code{labels} order. Tier
+#' annotations are ignored here; use \code{order_restrict_amat_cpdag()} for
+#' tier-based pruning.
+#'
+#' @param kn A \code{knowledge} object.
+#' @param labels Character vector of variable names in the desired order.
+#'
+#' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
+#' @keywords internal
+.pcalg_constraints_from_knowledge <- function(kn, labels) {
+  kn_undirected <- kn
+  kn_undirected$vars$tier <- NA_character_
+  as_pcalg_constraints(
+    kn_undirected,
+    labels = labels,
+    directed_as_undirected = TRUE
+  )
+}
 
+#' Remove disallowed backward edges across tiers
+#'
+#' @description
+#' Apply tier constraints to a CPDAG adjacency matrix by zeroing any entry that
+#' points from a later tier into an earlier tier.
+#'
+#' @param amat Square adjacency matrix (from-to convention).
+#' @param knowledge A \code{knowledge} object with tier labels.
+#'
+#' @return The pruned adjacency matrix.
+#' @keywords internal
+order_restrict_amat_cpdag <- function(amat, knowledge) {
+  p <- nrow(amat)
+  vnames <- rownames(amat)
+  tr <- .tier_index(knowledge, vnames)
 
-####
+  if (all(is.na(tr))) {
+    return(amat)
+  }
+
+  for (i in seq_len(p)) {
+    for (j in seq_len(p)) {
+      if (!is.na(tr[i]) && !is.na(tr[j]) && tr[i] > tr[j]) {
+        amat[j, i] <- 0
+      }
+    }
+  }
+  amat
+}
+
+#' Orient a CPDAG under temporal background knowledge
+#'
+#' @description
+#' Take a learned skeleton and apply tier-based pruning and v-structure
+#' orientation, then delegate to \code{pcalg::addBgKnowledge()} for final
+#' orientation under background knowledge.
+#'
+#' @param skel A \code{\link[pcalg]{pcAlgo-class}} skeleton result.
+#' @param knowledge A \code{knowledge} object with tiers (and optionally edges).
+#'
+#' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
+#' @keywords internal
+tpdag <- function(skel, knowledge) {
+  thisAmat <- graph2amat(skel)
+  tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge)
+  pcalg::addBgKnowledge(
+    v_orient_temporal(tempSkelAmat, skel@sepset),
+    checkInput = FALSE
+  )
+}
+
+#' Construct sufficient statistics for built-in CI tests
+#'
+#' @description
+#' Build the \emph{sufficient statistic} object expected by the built-in
+#' conditional independence tests. Supports:
+#' \itemize{
+#'   \item \code{type = "regTest"} — returns the original \code{data} and a
+#'         logical indicator of which variables are binary;
+#'   \item \code{type = "corTest"} — returns a pairwise-complete correlation
+#'         matrix and the sample size \code{n}.
+#' }
+#'
+#' @param data A data frame (or numeric matrix) of variables used by the test.
+#'   Columns are variables; rows are observations.
+#' @param type A string selecting the test family. Must be either
+#'   \code{"regTest"} or \code{"corTest"}.
+#' @param ... currently ignored.
+#'
+#' @details
+#' For \code{type = "regTest"}, the return value is a list with elements:
+#' \itemize{
+#'   \item \code{data} — the original \code{data} object;
+#'   \item \code{binary} — a logical vector (one per column) indicating whether
+#'         the variable is binary.
+#' }
+#'
+#' For \code{type = "corTest"}, the return value is a list with elements:
+#' \itemize{
+#'   \item \code{C} — the correlation matrix computed with
+#'         \code{use = "pairwise.complete.obs"};
+#'   \item \code{n} — the number of rows in \code{data}.
+#' }
+#'
+#' Any other \code{type} results in an error.
+#'
+#' @return A list whose structure depends on \code{type}, suitable for passing
+#'   as \code{suffStat} to the corresponding test.
+#'
+#
+#' @importFrom stats cor na.omit
+#' @keywords internal
+make_suff_stat <- function(data, type, ...) {
+  if (type == "regTest") {
+    bin <- unlist(sapply(data, function(x) length(unique(na.omit(x))) == 2))
+    suff <- list(data = data, binary = bin)
+  } else if (type == "corTest") {
+    suff <- list(
+      C = cor(data, use = "pairwise.complete.obs"),
+      n = nrow(data)
+    )
+  } else {
+    stop(paste(
+      type, "is not a supported type for autogenerating a sufficient statistic."
+    ))
+  }
+  suff
+}

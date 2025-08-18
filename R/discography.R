@@ -412,56 +412,32 @@ discography.tetrad_graph <- function(x, nodes = x$nodes, ...) {
 #' Convert a temporal adjacency matrix (tamat) to a discography tibble
 #'
 #' @inheritParams discography
-#' @return A `"discography"` tibble.
+#' @return A "discography" tibble.
 #' @export
 discography.tamat <- function(x, nodes = NULL, ...) {
-  # resolve node order
+  type <- tolower(attr(x, "tamat_type", exact = TRUE) %||% "pdag")
+
   if (is.null(nodes)) {
     nodes <- rownames(x)
     if (is.null(nodes)) nodes <- colnames(x)
     if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(x)))
   }
 
-  # decide how to interpret marks
-  type <- attr(x, "tamat_type")
-  if (is.null(type)) type <- "pdag" # default for tamat
-  type <- tolower(type)
-
-  use_pag <- type %in% c("ag", "pag")
-  use_cpdag <- !use_pag # treat anything else as CPDAG/PDAG
-
-  # build one edge per unordered pair (i < j)
-  idx <- expand.grid(
-    i = seq_len(nrow(x)),
-    j = seq_len(ncol(x))
-  )
-  idx <- idx[idx$i < idx$j, , drop = FALSE]
-
-  edge_rows <- purrr::pmap_dfr(
-    idx,
-    function(i, j) {
-      if (use_pag) {
-        mark_pag(x[i, j], x[j, i], nodes[i], nodes[j])
-      } else {
-        mark_cpdag(x[i, j], x[j, i], nodes[i], nodes[j])
-      }
-    }
-  )
-
-  if (nrow(edge_rows) == 0L) {
-    return(as_tibble_edges(character(), character(), character(), nodes))
+  if (type %in% c("pag", "ag")) {
+    class(x) <- c("amat.pag", "matrix")
+    return(discography.amat.pag(x, nodes = nodes, ...))
   }
 
-  # for tamat/"pdag" we already produce one edge per pair; no need to collapse
-  as_tibble_edges(
-    from  = edge_rows$from,
-    to    = edge_rows$to,
-    type  = edge_rows$type,
-    nodes = nodes,
-    cpdag = FALSE
+  if (type == "pdag") {
+    class(x) <- c("amat.cpdag", "matrix")
+    return(discography.amat.cpdag(x, nodes = nodes, ...))
+  }
+
+  stop(
+    "Unknown `tamat_type`: ", type,
+    ". Expected '`pdag`' or '`ag`'."
   )
 }
-
 
 #' Default method for discography
 #'

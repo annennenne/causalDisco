@@ -6,132 +6,118 @@
 \usage{
 tpc(
   data = NULL,
-  order,
+  knowledge = NULL,
+  order = NULL,
   sparsity = 10^(-1),
   test = regTest,
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
   methodOri = "conservative",
-  output = "tpdag",
+  output = "discography",
   varnames = NULL,
   ...
 )
 }
 \arguments{
-\item{data}{A data.frame with data. All variables should be
-assigned to exactly one period by prefixing them with the period name
-(see example below).}
+\item{data}{A data frame with the observed variables. Columns are variables.
+When using the deprecated \code{order} argument, variables should be
+prefixed with their period name (see examples). When using
+\code{knowledge}, prefixes are not required.}
 
-\item{order}{A character vector with period-prefixes in their
-temporal order (see example below).}
+\item{knowledge}{A \code{knowledge} object created with \code{knowledge()},
+encoding tier assignments and optional forbidden/required edges. This is
+the preferred way to provide temporal background knowledge.}
 
-\item{sparsity}{The sparsity level to be used for independence
-testing (i.e. significance level threshold to use for each test).}
+\item{order}{A character vector of period prefixes in temporal order.
+Deprecated; use \code{knowledge} instead. If supplied, it is converted
+internally to tier knowledge using \code{tidyselect::starts_with()} for
+each prefix.}
 
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
+\item{sparsity}{The sparsity level used as the per-test significance
+threshold for conditional independence testing.}
 
-\item{suffStat}{Sufficient statistic. If this argument is supplied, the
-sufficient statistic is not computed from the inputted data. The format and
-contents of the sufficient statistic depends on which test is being used.}
+\item{test}{A conditional independence test. The default \code{regTest}
+uses a regression-based information-loss test. Another available option is
+\code{corTest} which tests for vanishing partial correlations. User-supplied
+functions may also be used; see details for the required interface.}
 
-\item{method}{Which method to use for skeleton construction, must be
-\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-See \code{\link[pcalg]{skeleton}} for details.}
+\item{suffStat}{A sufficient statistic. If supplied, it is passed directly
+to the test and no statistics are computed from \code{data}. Its structure
+depends on the chosen \code{test}.}
 
-\item{methodNA}{Method for handling missing information (\code{NA} values).
-Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-observations with missing information test-by-test) (further details below).}
+\item{method}{Skeleton construction method, one of \code{"stable"},
+\code{"original"}, or \code{"stable.fast"} (default). See
+\code{\link[pcalg]{skeleton}} for details.}
 
-\item{methodOri}{Method for handling conflicting separating sets when orienting
-edges. Currently only the conservative method is available.}
+\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
+error on any \code{NA}), \code{"cc"} (complete-case analysis), or
+\code{"twd"} (test-wise deletion).}
 
-\item{output}{One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
-\code{"tskeleton"}, a temporal skeleton is constructed and outputted,
-but the edges are not directed. If \code{"tpdag"} (the default), a
-the edges are directed, resulting in a temporal partially directed
-acyclic graph (TPDAG). If \code{"pcAlgo"} the TPDAG is outputted as the
-object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
-intended for compatability with tools from that package.}
+\item{methodOri}{Conflict-handling method when orienting edges.
+Currently only the conservative method is available.}
 
-\item{varnames}{A character vector of variable names. It only needs to be supplied
-if the \code{data} argument is not used, and data are hence passed exclusively
-through the \code{suffStat} argument.}
+\item{output}{One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
+or \code{"discography"}. If \code{"tskeleton"}, return the temporal
+skeleton without directions. If \code{"tpdag"} (default), return a
+temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
+return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
+\pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
+\code{discography()}.}
 
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
+\item{varnames}{Character vector of variable names. Only needed when
+\code{data} is not supplied and all information is passed via
+\code{suffStat}.}
+
+\item{...}{Additional arguments passed to
+\code{\link[pcalg]{skeleton}} during skeleton construction.}
 }
 \value{
-A \code{tpdag} or \code{tskeleton} object. Both return types are
-S3 objects, i.e., lists with entries: \code{$tamat} (the estimated adjacency
-matrix), \code{$order} (character vector with the order, as inputted to
-this function), \code{$psi} (the significance level used for testing), and
-\code{$ntests} (the number of tests conducted).
+If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
+\code{$tamat} (temporal adjacency matrix), \code{$psi} (sparsity level),
+and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
+\code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
+a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
 }
 \description{
-Perform causal discovery using the temporal PC algorithm (TPC)
+Run a tier-aware variant of the PC algorithm that respects background
+knowledge about a partial temporal order. Supply the temporal order via a
+\code{knowledge} object. For backward compatibility, you may still pass
+\code{order}, but that interface is deprecated and will be removed in a
+future release.
 }
 \details{
-Note that all independence test procedures implemented
-in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
+Any independence test implemented in \pkg{pcalg} may be used; see
+\code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
+performed: for \code{corTest}, each pairwise correlation uses complete cases;
+for \code{regTest}, each conditional test performs its own deletion. If you
+supply a user-defined \code{test}, you must also provide \code{suffStat}.
 
-The methods for handling missing information require that the \code{data},
-rather than the \code{suffStat} argument is used for inputting data; the latter
-assumes no missing information and hence always sets \code{methodNA = "none"}.
-If the test is \code{corTest}, test-wise deletion is performed when computing the
-sufficient statistic (correlation matrix) (so for each pair of variables, only
-complete cases are used). If the test is \code{regTest}, test-wise deletion
-is performed for each conditional independence test instead.
+Temporal or tiered knowledge enters in two places:
+\itemize{
+\item during skeleton estimation, candidate conditioning sets are pruned so
+they do not contain variables that are strictly after both endpoints;
+\item during orientation, any cross-tier edge is restricted to point
+forward in time.
+}
+The \code{order} argument is deprecated. If provided, it is converted to a
+\code{knowledge} object by assigning variables to tiers using
+\code{tidyselect::starts_with()} for each prefix.
 }
 \examples{
-# TPC on included example data, use sparsity psi = 0.01, default test (regression-based
-# information loss):
+# Using knowledge (preferred)
 data(tpcExample)
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    youth ~ tidyselect::starts_with("youth"),
+    oldage ~ tidyselect::starts_with("oldage")
+  )
+)
+tpc(tpcExample, knowledge = kn, sparsity = 0.01)
+
+# Deprecated: using order prefixes (will warn)
 tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
-
-
-# TPC on included example data, use sparsity psi = 0.01, use test for vanishing partial
-# correlations:
-data(tpcExample)
-tpc(tpcExample,
-  order = c("child", "youth", "oldage"), sparsity = 0.01,
-  test = corTest
-)
-
-
-# TPC on another simulated data set
-
-# Simulate data
-set.seed(123)
-n <- 500
-child_x <- rnorm(n)^2
-child_y <- 0.5 * child_x + rnorm(n)
-child_z <- sample(c(0, 1), n,
-  replace = TRUE,
-  prob = c(0.3, 0.7)
-)
-
-adult_x <- child_x + rnorm(n)
-adult_z <- as.numeric(child_z + rnorm(n) > 0)
-adult_w <- 2 * adult_z + rnorm(n)
-adult_y <- 2 * sqrt(child_x) + adult_w^2 + rnorm(n)
-
-simdata <- data.frame(
-  child_x, child_y, child_z,
-  adult_x, adult_z, adult_w,
-  adult_y
-)
-
-# Define order
-simorder <- c("child", "adult")
-
-# Perform TPC with sparsity psi = 0.001
-results <- tpc(simdata, order = simorder, sparsity = 10^(-3))
 
 }

@@ -18,46 +18,46 @@ tfci(
 )
 }
 \arguments{
-\item{data}{A data.frame with data. All variables should be
-assigned to exactly one period by prefixing them with the period name
-(see example below).}
+\item{data}{A data frame with the observed variables. Columns are variables.
+When using the deprecated \code{order} argument, variables should be
+prefixed with their period name (see examples). When using
+\code{knowledge}, prefixes are not required.}
 
-\item{order}{A character vector with period-prefixes in their
-temporal order (see example below).}
+\item{order}{A character vector of period prefixes in temporal order.
+Deprecated; use \code{knowledge} instead. If supplied, it is converted
+internally to tier knowledge using \code{tidyselect::starts_with()} for
+each prefix.}
 
-\item{sparsity}{The sparsity level to be used for independence
-testing (i.e. significance level threshold to use for each test).}
+\item{sparsity}{The sparsity level used as the per-test significance
+threshold for conditional independence testing.}
 
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
+\item{test}{A conditional independence test. The default \code{regTest}
+uses a regression-based information-loss test. Another available option is
+\code{corTest} which tests for vanishing partial correlations. User-supplied
+functions may also be used; see details for the required interface.}
 
-\item{suffStat}{Sufficient statistic. If this argument is supplied, the
-sufficient statistic is not computed from the inputted data. The format and
-contents of the sufficient statistic depends on which test is being used.}
+\item{suffStat}{A sufficient statistic. If supplied, it is passed directly
+to the test and no statistics are computed from \code{data}. Its structure
+depends on the chosen \code{test}.}
 
-\item{method}{Which method to use for skeleton construction, must be
-\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-See \code{\link[pcalg]{skeleton}} for details.}
+\item{method}{Skeleton construction method, one of \code{"stable"},
+\code{"original"}, or \code{"stable.fast"} (default). See
+\code{\link[pcalg]{skeleton}} for details.}
 
-\item{methodNA}{Method for handling missing information (\code{NA} values).
-Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-observations with missing information test-by-test) (further details below).}
+\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
+error on any \code{NA}), \code{"cc"} (complete-case analysis), or
+\code{"twd"} (test-wise deletion).}
 
 \item{methodOri}{Method for handling conflicting separating sets when orienting
 edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
 \code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
 
-\item{varnames}{A character vector of variable names. It only needs to be supplied
-if the \code{data} argument is not used, and data are hence passed exclusively
-through the \code{suffStat} argument.}
+\item{varnames}{Character vector of variable names. Only needed when
+\code{data} is not supplied and all information is passed via
+\code{suffStat}.}
 
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
+\item{...}{Additional arguments passed to
+\code{\link[pcalg]{skeleton}} during skeleton construction.}
 }
 \value{
 The default output is a \code{tpag} object. This is an
@@ -96,15 +96,17 @@ for details.
 # simulate linear Gaussian data w unobserved variable L1
 set.seed(123)
 n <- 100
-L1 <- rnorm(n) 
+L1 <- rnorm(n)
 X1 <- rnorm(n)
 X2 <- L1 + X1 + rnorm(n)
 X3 <- X1 + rnorm(n)
 X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(p1_X1 = X1,
-                p1_X2 = X2,
-                p2_X3 = X3,
-                p2_X4 = X4)
+d <- data.frame(
+  p1_X1 = X1,
+  p1_X2 = X2,
+  p2_X3 = X3,
+  p2_X4 = X4
+)
 
 # use tfci algorithm to recover tpag (conservative edge orientation)
 tfci(d, test = corTest, order = c("p1", "p2"))
