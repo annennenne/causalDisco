@@ -1,0 +1,387 @@
+testthat::skip_if_not_installed("pcalg")
+testthat::skip_if_not_installed("gtools")
+
+# helpers
+build_kn_from_order <- function() {
+  knowledge(
+    tpcExample,
+    tier(
+      child ~ child_x2 + child_x1,
+      youth ~ youth_x4 + youth_x3,
+      oldage ~ oldage_x6 + oldage_x5
+    )
+  )
+}
+
+# no matrix-equality helper anymore (no parity tests)
+
+test_that("tpc returns tpdag on example data", {
+  set.seed(123)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- build_kn_from_order()
+
+  res <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.01,
+    test = regTest,
+    output = "tpdag"
+  )
+
+  expect_s3_class(res, "tpdag")
+  A <- res$tamat
+  expect_true(is.matrix(A))
+  expect_identical(rownames(A), colnames(A))
+  expect_setequal(rownames(A), names(tpcExample))
+  expect_gt(res$ntests, 0)
+  expect_identical(res$psi, 0.01)
+})
+
+test_that("tpc returns tskeleton on example data", {
+  set.seed(321)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- build_kn_from_order()
+
+  res <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.02,
+    test = regTest,
+    output = "tskeleton"
+  )
+
+  expect_s3_class(res, "tskeleton")
+  A <- res$tamat
+  expect_true(is.matrix(A))
+  expect_identical(rownames(A), colnames(A))
+  expect_setequal(rownames(A), names(tpcExample))
+})
+
+test_that("tpc returns pcAlgo output", {
+  set.seed(42)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- build_kn_from_order()
+
+  res <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.05,
+    test = regTest,
+    output = "pcAlgo"
+  )
+
+  A <- graph2amat(res, toFrom = FALSE)
+  expect_true(is.matrix(A))
+  expect_identical(rownames(A), colnames(A))
+  expect_setequal(rownames(A), names(tpcExample))
+})
+
+test_that("tpc works with corTest", {
+  set.seed(777)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- build_kn_from_order()
+
+  res <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.01,
+    test = corTest,
+    output = "tpdag"
+  )
+
+  expect_s3_class(res, "tpdag")
+  expect_gt(res$ntests, 0)
+})
+
+test_that("tpc respects forbidden knowledge", {
+  set.seed(999)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- build_kn_from_order()
+
+  vars <- names(tpcExample)
+  x <- vars[1]
+  y <- vars[2]
+  kn_forb <- kn |> forbid_edge(!!as.name(x) ~ !!as.name(y))
+
+  res <- tpc(
+    data = tpcExample,
+    knowledge = kn_forb,
+    sparsity = 0.02,
+    test = regTest,
+    output = "tpdag"
+  )
+
+  A <- res$tamat
+  # directed-as-undirected constraints: both directions should be absent
+  expect_identical(A[rownames(A) == x, colnames(A) == y], 0)
+  expect_identical(A[rownames(A) == y, colnames(A) == x], 0)
+})
+
+test_that("tpc(order=...) runs and returns tpdag, throws deprecation warning", {
+  set.seed(202)
+  data(tpcExample, package = "causalDisco")
+
+  ord <- c("child", "youth", "oldage")
+
+  expect_warning(
+    res <- tpc(
+      data = tpcExample,
+      order = ord,
+      sparsity = 0.01,
+      test = regTest,
+      output = "tpdag"
+    )
+  )
+  expect_s3_class(res, "tpdag")
+  A <- res$tamat
+  expect_true(is.matrix(A))
+  expect_identical(rownames(A), colnames(A))
+})
+
+test_that("tpc errors when both knowledge and order are supplied", {
+  set.seed(606)
+  data(tpcExample, package = "causalDisco")
+
+  ord <- c("child", "youth", "oldage")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  expect_error(
+    tpc(
+      data = tpcExample,
+      knowledge = kn,
+      order = ord,
+      sparsity = 0.015,
+      test = regTest,
+      output = "tpdag"
+    ),
+    "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
+    fixed = TRUE
+  )
+})
+
+test_that("tpc supports tskeleton, pcAlgo, and discography outputs", {
+  set.seed(707)
+  data(tpcExample, package = "causalDisco")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  res_skel <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.03,
+    test = regTest,
+    output = "tskeleton"
+  )
+  expect_s3_class(res_skel, "tskeleton")
+
+  res_pc <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.03,
+    test = regTest,
+    output = "pcAlgo"
+  )
+  A_pc <- graph2amat(res_pc, toFrom = FALSE)
+  expect_true(is.matrix(A_pc))
+
+  res_disco <- tpc(
+    data = tpcExample,
+    knowledge = kn,
+    sparsity = 0.03,
+    test = regTest,
+    output = "discography"
+  )
+  expect_s3_class(res_disco, "discography")
+  expect_true(all(c("from", "to", "edge_type") %in% names(res_disco)))
+})
+
+# input-guard tests (unchanged but only for tpc)
+test_that("tpc input guards fail fast with clear messages", {
+  df <- data.frame(a = 1:3, b = 1:3)
+  kn <- knowledge() |> add_vars(names(df))
+
+  expect_error(
+    tpc(data = df, knowledge = kn, output = "nope"),
+    "Output must be tpdag, tskeleton, pcAlgo, or discography.",
+    fixed = TRUE
+  )
+  expect_error(
+    tpc(data = df, knowledge = kn, methodNA = "oops"),
+    "Invalid choice of method for handling NA values.",
+    fixed = TRUE
+  )
+  expect_error(
+    tpc(data = NULL, suffStat = NULL, knowledge = knowledge()),
+    "Either data or sufficient statistic must be supplied.",
+    fixed = TRUE
+  )
+})
+
+test_that("tpc NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
+  df1 <- data.frame(a = c(1, NA), b = c(2, NA))
+  kn1 <- knowledge() |> add_vars(names(df1))
+
+  expect_error(
+    tpc(data = df1, knowledge = kn1, methodNA = "none"),
+    "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
+    fixed = TRUE
+  )
+
+  df2 <- data.frame(a = c(NA, NA), b = c(NA, NA))
+  kn2 <- knowledge() |> add_vars(names(df2))
+
+  expect_error(
+    tpc(data = df2, knowledge = kn2, methodNA = "cc"),
+    "contain no complete cases.",
+    fixed = TRUE
+  )
+})
+
+test_that("tpc errors when varnames are unknown with suffStat-only usage", {
+  suff <- list(dummy = TRUE)
+  expect_error(
+    tpc(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
+    "Could not determine variable names. Supply `data` or `varnames`.",
+    fixed = TRUE
+  )
+})
+
+test_that("tpc demands suffStat for non-builtin test functions", {
+  set.seed(1)
+  df <- data.frame(a = rnorm(10), b = rnorm(10))
+  kn <- knowledge() |> add_vars(names(df))
+  strange_test <- function(x, y, S, suffStat) 0
+
+  expect_error(
+    tpc(data = df, knowledge = kn, test = strange_test),
+    "suffStat needs to be supplied when using a non-builtin test.",
+    fixed = TRUE
+  )
+})
+
+test_that("make_suff_stat() returns correct suffStat for different tests and fails correctly", {
+  set.seed(12)
+  df <- data.frame(
+    child_x = rnorm(40),
+    youth_y = rnorm(40),
+    oldage_z = rnorm(40)
+  )
+  suff <- make_suff_stat(df, type = "regTest")
+  expect_true(is.list(suff))
+  expect_true(!is.null(suff$data))
+  expect_true(!is.null(suff$bin))
+
+  suff2 <- make_suff_stat(df, type = "corTest")
+  expect_true(is.list(suff2))
+  expect_true(!is.null(suff2$C))
+  expect_true(!is.null(suff2$n))
+
+  expect_error(
+    make_suff_stat(df, type = "unknownTest"),
+    "unknownTest is not a supported type for autogenerating a sufficient statistic",
+    fixed = TRUE
+  )
+})
+
+test_that("tpc adds missing vars to knowledge and uses provided suffStat (tskeleton path)", {
+  set.seed(11)
+  df <- data.frame(
+    child_x = rnorm(40),
+    youth_y = rnorm(40),
+    oldage_z = rnorm(40)
+  )
+
+  kn0 <- knowledge() |> add_vars(c("child_x", "youth_y")) # missing oldage_z
+  suff <- make_suff_stat(df, type = "regTest")
+
+  res <- tpc(
+    data = NULL,
+    knowledge = kn0,
+    sparsity = 0.1,
+    test = regTest,
+    suffStat = suff,
+    output = "tskeleton",
+    varnames = names(df)
+  )
+
+  expect_s3_class(res, "tskeleton")
+  A <- res$tamat
+  expect_true(is.matrix(A))
+  expect_identical(rownames(A), colnames(A))
+  expect_setequal(rownames(A), names(df))
+})
+
+test_that(".build_knowledge_from_order builds tiers in the given order and attaches starts_with() vars", {
+  vars <- c("childA", "childB", "youthC", "oldageD")
+  df <- data.frame(
+    childA = 1:3,
+    childB = 1:3,
+    youthC = 1:3,
+    oldageD = 1:3
+  )
+  kn <- .build_knowledge_from_order(
+    order = c("child", "youth", "oldage"),
+    data = df,
+    vnames = vars
+  )
+
+  expect_s3_class(kn, "knowledge")
+  expect_identical(kn$tiers$label, c("child", "youth", "oldage"))
+  expect_setequal(kn$vars$var[kn$vars$tier == "child"], c("childA", "childB"))
+  expect_setequal(kn$vars$var[kn$vars$tier == "youth"], "youthC")
+  expect_setequal(kn$vars$var[kn$vars$tier == "oldage"], "oldageD")
+})
+
+test_that(".build_knowledge_from_order returns merged knowledge when data is present", {
+  df <- data.frame(child_x = 1:3, youth_y = 1:3, oldage_z = 1:3)
+  kn <- .build_knowledge_from_order(
+    order = c("child", "youth", "oldage"),
+    data = df,
+    vnames = NULL
+  )
+
+  expect_s3_class(kn, "knowledge")
+  expect_identical(kn$tiers$label, c("child", "youth", "oldage"))
+  expect_true(all(names(df) %in% kn$vars$var))
+})
+
+test_that("is_after returns FALSE when any tier is missing", {
+  kn <- knowledge() |> add_vars(c("A", "B"))
+  expect_false(is_after("A", "B", kn))
+})
+
+test_that("order_restrict_amat_cpdag returns input matrix when all tier ranks are NA", {
+  labs <- c("V1", "V2", "V3")
+  amat <- matrix(
+    c(
+      0, 1, 0,
+      0, 0, 1,
+      1, 0, 0
+    ),
+    nrow = 3, byrow = TRUE, dimnames = list(labs, labs)
+  )
+  kn <- knowledge() |> add_vars(labs)
+
+  out <- order_restrict_amat_cpdag(amat, kn)
+  expect_equal(out, amat)
+})
