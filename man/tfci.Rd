@@ -6,7 +6,8 @@
 \usage{
 tfci(
   data = NULL,
-  order,
+  knowledge = NULL,
+  order = NULL,
   sparsity = 10^(-1),
   test = regTest,
   suffStat = NULL,
@@ -23,10 +24,15 @@ When using the deprecated \code{order} argument, variables should be
 prefixed with their period name (see examples). When using
 \code{knowledge}, prefixes are not required.}
 
-\item{order}{A character vector of period prefixes in temporal order.
-Deprecated; use \code{knowledge} instead. If supplied, it is converted
-internally to tier knowledge using \code{tidyselect::starts_with()} for
-each prefix.}
+\item{knowledge}{A \emph{knowledge} object describing tiers/periods and optional
+forbidden/required edges. This replaces the legacy \code{order} interface and
+is the preferred way to supply temporal background knowledge.}
+
+\item{order}{\strong{Deprecated}. A character vector with period-prefixes in their
+temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
+is \code{NULL}), a temporary \code{knowledge} object is constructed using
+\code{\link{tidyselect}::\link[tidyselect]{starts_with}} for each prefix. Supplying
+both \code{knowledge} and \code{order} is an error.}
 
 \item{sparsity}{The sparsity level used as the per-test significance
 threshold for conditional independence testing.}
@@ -49,7 +55,7 @@ error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \code{"twd"} (test-wise deletion).}
 
 \item{methodOri}{Method for handling conflicting separating sets when orienting
-edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
+edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 \code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
 
 \item{varnames}{Character vector of variable names. Only needed when
@@ -60,40 +66,30 @@ edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
 \code{\link[pcalg]{skeleton}} during skeleton construction.}
 }
 \value{
-The default output is a \code{tpag} object. This is an
-S3 object, i.e., a list, with entries: \code{$tamat} (the estimated adjacency
-matrix), \code{$order} (character vector with the order, as inputted to
-this function), \code{$psi} (the significance level used for testing), and
-\code{$ntests} (the number of tests conducted).
-
-The adjacency matrix A has four possible entry values: 0 (no edge), 1 (circle),
-2 (arrowhead), 3 (tail). It is encoded as a "to-from" adjacency matrix, which means
-that e.g. A(i,j) = 1 places a circle in the directed from j to i. For example, if
-A(i,j) = 1 and A(j,i) = 2, we have that i o-> j. Similarly, A(i,j) = 2 and A(j,i) = 3
-mean that i <- j. Note that this is a transposed version of the adjacency
-matrix outputted for \code{fciAlgo} objects from the \code{pcalg} package, which
-is "to-from". But it is consistent with the "from-to" adjacency matrices used
-for \code{pcAlgo} objects from the same package.
+A \code{discography} tibble with columns \code{from}, \code{to}, and
+\code{edge_type}. The underlying orientation corresponds to a PAG learned by
+TFCI under the supplied temporal background knowledge.
 }
 \description{
 Use a modification of the FCI algorithm that makes use of background knowledge
-in the format of a partial ordering. This may for instance come about when
+in the format of a partial ordering. This may, for instance, come about when
 variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
 }
 \details{
 The temporal/tiered background information enters several places in the TFCI
-algorithm: 1) In the skeleton construction phase, when looking for separating
-sets Z between two variables X and Y, Z is not allowed to contain variables that
-are strictly after both X and Y in the temporal order. 2) This also applies to
-the subsequent phase where the algorithm searches for possible D-SEP sets. 3)
-Prior to other orientation steps, any cross-tier edges get an arrowhead placed
-at their latest node.
+algorithm: (1) In the skeleton construction phase, when looking for separating
+sets \eqn{Z} between two variables \eqn{X} and \eqn{Y}, \eqn{Z} is not allowed to
+contain variables that are strictly after both \eqn{X} and \eqn{Y} in the temporal
+order (as specified by the \code{knowledge} tiers). (2) This also applies to the
+subsequent phase where the algorithm searches for possible D-SEP sets. (3) Prior
+to other orientation steps, any cross-tier edges get an arrowhead placed at their
+latest node.
 
-After this, the usual FCI orientation rules are applied, see \link[pcalg]{udag2pag}
+After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2pag}
 for details.
 }
 \examples{
-# simulate linear Gaussian data w unobserved variable L1
+# simulate linear Gaussian data with an unobserved variable L1
 set.seed(123)
 n <- 100
 L1 <- rnorm(n)
@@ -108,13 +104,21 @@ d <- data.frame(
   p2_X4 = X4
 )
 
-# use tfci algorithm to recover tpag (conservative edge orientation)
+# Build knowledge from tidy tier rules (recommended)
+kn <- knowledge(
+  d,
+  tier(
+    p1 ~ tidyselect::starts_with("p1_"),
+    p2 ~ tidyselect::starts_with("p2_")
+  )
+)
+
+# Use TFCI to recover a PAG (returned as a discography tibble)
+tfci(d, test = corTest, knowledge = kn)
+
+# Legacy interface (deprecated): supply order only
+\dontrun{
 tfci(d, test = corTest, order = c("p1", "p2"))
-
-# use tfci with standard (non-conservative) method for edge orientation
-tfci(d, test = corTest, order = c("p1", "p2"), methodOri = "standard")
-
 }
-\author{
-Anne Helby Petersen, Qixiang Chen, and Daniel Malinsky.
+
 }
