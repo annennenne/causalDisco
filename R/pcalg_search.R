@@ -3,7 +3,7 @@
 #' This class implements the search algorithms from the pcalg package.
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
 #'
-#' @importFrom pcalg pc fci ges gaussCItest binCItest disCItest
+#' @importFrom R6 R6Class
 #' @export pcalgSearch
 pcalgSearch <- R6Class(
   "pcalgSearch",
@@ -224,7 +224,6 @@ pcalgSearch <- R6Class(
     #' Sets the algorithm for the search.
     #'
     #' @param method A string specifying the type of algorithm to use.
-    #' @importFrom purrr partial
     set_alg = function(method) {
       method <- tolower(method)
       switch(method,

@@ -75,15 +75,12 @@ plot.tamat <- function(x, ...) {
 #' plot(res)
 #' }
 #'
-#' @importFrom Rgraphviz renderGraph layoutGraph
-#' @importFrom graph nodes numNodes edgeRenderInfo<-
-#'
 #' @export
 plot.pag <- function(x, ...) {
   thisamat <- t(amat(x))
   thisg <- as.graphNEL(thisamat)
-  nn <- nodes(thisg)
-  p <- numNodes(thisg)
+  nn <- graph::nodes(thisg)
+  p <- graph::numNodes(thisg)
   n.edges <- nedges(thisamat)
   ahs <- ats <- rep("none", n.edges)
   nms <- character(n.edges)
@@ -108,8 +105,8 @@ plot.pag <- function(x, ...) {
     }
   }
   names(ahs) <- names(ats) <- nms
-  edgeRenderInfo(thisg) <- list(arrowhead = ahs, arrowtail = ats)
-  renderGraph(layoutGraph(thisg))
+  graph::edgeRenderInfo(thisg) <- list(arrowhead = ahs, arrowtail = ats)
+  Rgraphviz::renderGraph(Rgraphviz::layoutGraph(thisg))
 }
 
 

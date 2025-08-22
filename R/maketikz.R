@@ -72,7 +72,6 @@
 #' maketikz(thistamat)
 #' }
 #'
-#' @importFrom clipr write_clip
 #' @export
 maketikz <- function(model, xjit = 2, yjit = 2,
                      markperiods = TRUE, xpgap = 4,
@@ -85,6 +84,13 @@ maketikz <- function(model, xjit = 2, yjit = 2,
                      rawout = FALSE,
                      colorAnnotate = NULL,
                      bendedges = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "clipr"
+    ),
+    function_name = "maketikz"
+  )
+
   if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) |
     "tpag" %in% class(model)) {
     amat <- model$tamat
@@ -281,7 +287,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   }
 
   if (clipboard) {
-    write_clip(out)
+    clipr::write_clip(out)
   } else {
     cat(paste(out, collapse = "\n"))
   }

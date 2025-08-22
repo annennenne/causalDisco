@@ -35,8 +35,7 @@ x3 <- x1 + x2 + rnorm(100)
 d <- data.frame(x1, x2, x3)
 cmat <- cor(d)
 
-# Use gausCorScore with pcalg::ges() 
+# Use gausCorScore with pcalg::ges()
 pcalg::ges(gausCorScore(cmat, n = 100))
-
 
 }

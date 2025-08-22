@@ -39,7 +39,7 @@ tges <- function(score,
                  verbose = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "pcalg"
+      "methods", "pcalg"
     ),
     function_name = "tges"
   )
@@ -90,7 +90,10 @@ tges <- function(score,
   # ---------------------------------------------------------------------------
   # Initialize graph / forbidden parent sets from temporal knowledge
   # ---------------------------------------------------------------------------
-  essgraph <- new("TEssGraph", nodes = as.character(node.numbers), score = score)
+  essgraph <- methods::new("TEssGraph",
+    nodes = as.character(node.numbers),
+    score = score
+  )
 
   # Forbidden incoming edges are from *later* temporal tiers
   Forbidden.edges <- essgraph$.in.edges
@@ -326,7 +329,7 @@ to_adj_mat <- function(obj) {
 #' }
 #'
 #' @seealso [tges()], [GaussL0penIntScoreORDER]
-#'
+#' @importFrom methods new
 #' @export
 TEssGraph <- setRefClass("TEssGraph",
   contains = "EssGraph",
@@ -343,7 +346,7 @@ TEssGraph <- setRefClass("TEssGraph",
         turning = "GIES-T"
       )
 
-      new.graph <- .Call(
+      new_graph <- .Call(
         causalInference,
         .in.edges,
         score$pp.dat,
@@ -356,22 +359,22 @@ TEssGraph <- setRefClass("TEssGraph",
           ...
         )
       )
-      if (identical(new.graph, "interrupt")) {
+      if (identical(new_graph, "interrupt")) {
         return(FALSE)
       }
 
-      if (new.graph$steps > 0) {
+      if (new_graph$steps > 0) {
         last.edges <- .in.edges
-        .in.edges <<- new.graph$in.edges
+        .in.edges <<- new_graph$in.edges
         names(.in.edges) <<- .nodes
 
-        new.in.edges <- .in.edges[sapply(names(.in.edges), function(x) !identical(.in.edges[[x]], last.edges[[x]]))]
+        new_in.edges <- .in.edges[sapply(names(.in.edges), function(x) !identical(.in.edges[[x]], last.edges[[x]]))]
       } else {
-        new.in.edges <- list()
+        new_in.edges <- list()
       }
 
 
-      return(c((new.graph$steps == 1), new.in.edges))
+      return(c((new_graph$steps == 1), new_in.edges))
     }
   ), inheritPackage = TRUE
 )
@@ -433,7 +436,7 @@ GaussL0penIntScoreORDER <- setRefClass("GaussL0penIntScoreORDER",
 
     # Calculates the local score of a vertex and its parents
     local.score = function(vertex, parents, ...) {
-      ## Check validity of arguments
+      # Check validity of arguments
       validate.vertex(vertex)
       validate.parents(parents)
       order <- .order
@@ -475,7 +478,8 @@ GaussL0penIntScoreORDER <- setRefClass("GaussL0penIntScoreORDER",
           }
 
           # Return local score
-          lscore <- -0.5 * pp.dat$data.count[vertex] * (1 + log(sigma2 / pp.dat$data.count[vertex])) -
+          lscore <- -0.5 * pp.dat$data.count[vertex] *
+            (1 + log(sigma2 / pp.dat$data.count[vertex])) -
             pp.dat$lambda * (1 + length(parents))
           return(lscore)
         } else {

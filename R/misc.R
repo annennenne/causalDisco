@@ -8,15 +8,20 @@
 #'
 #' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
 #'
-#' @importFrom methods as
-#'
 #' @export
 as.graphNEL <- function(amat) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods"
+    ),
+    function_name = "as.graphNEL"
+  )
+
   thisClass <- class(amat)
   if ("tamat" %in% thisClass) {
     class(amat) <- "matrix"
   }
-  as(t(amat), "graphNEL")
+  methods::as(t(amat), "graphNEL")
 }
 
 #' Check for PDAG
@@ -87,11 +92,16 @@ is_cpdag <- function(amat) {
 #'
 #' See \link{amat} for details about how an \code{ag} adjacency matrix is encoded.
 #'
-#' @importFrom methods as
-#'
 #' @export
 graph2amat <- function(graph, toFrom = TRUE, type = "pdag") {
-  res <- as(graph, "matrix")
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods"
+    ),
+    function_name = "graph2amat"
+  )
+
+  res <- methods::as(graph, "matrix")
   if (toFrom) res <- t(res)
   attr(res, "tamat_type") <- type
   res

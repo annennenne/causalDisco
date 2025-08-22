@@ -5,6 +5,9 @@
 #'
 #'
 #' @return An R6 object with the methods documented below.
+#'
+#' @importFrom R6 R6Class
+#'
 #' @export
 bnlearnSearch <- R6Class(
   "bnlearnSearch",
@@ -300,9 +303,6 @@ bnlearnSearch <- R6Class(
     #'
     #' @param method Character naming the algorithm to use.
     #' @param args A list of additional arguments to pass to the algorithm.
-    #' @importFrom purrr partial
-    #' @importFrom bnlearn pc.stable gs iamb fast.iamb inter.iamb iamb.fdr
-    #' mmpc si.hiton.pc hpc hc tabu mmhc rsmax2 h2pc chow.liu aracne
     set_alg = function(method, args = NULL) {
       method <- tolower(method)
 

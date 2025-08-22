@@ -16,7 +16,6 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
 
 #' Check arguments and distribute them to TetradSearch class functions
 #'
-#' @importFrom methods formalArgs
 #' @keywords internal
 check_args_and_distribute_args_tetrad <- function(search,
                                                   args,

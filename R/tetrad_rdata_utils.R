@@ -12,7 +12,7 @@
 rdata_to_tetrad <- function(df) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rJava"
+      "rJava", "stats"
     ),
     function_name = "rdata_to_tetrad"
   )
@@ -49,7 +49,7 @@ rdata_to_tetrad <- function(df) {
       cont_data[[j]] <- rJava::.jarray(as.numeric(col), dispatch = TRUE)
       disc_data[[j]] <- rJava::.jnull("[I") # null int[] for discrete
     } else if (integer_cols[j]) {
-      num_categories <- length(unique(na.omit(col)))
+      num_categories <- length(unique(stats::na.omit(col)))
       variable <- rJava::.jnew("edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories))
       node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
       rJava::.jcall(var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object"))

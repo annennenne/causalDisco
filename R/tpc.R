@@ -572,8 +572,6 @@ tpdag <- function(skel, knowledge) {
 #' @return A list whose structure depends on \code{type}, suitable for passing
 #'   as \code{suffStat} to the corresponding test.
 #'
-#
-#' @importFrom stats cor na.omit
 #' @keywords internal
 make_suff_stat <- function(data, type, ...) {
   .check_if_pkgs_are_installed(
@@ -591,7 +589,7 @@ make_suff_stat <- function(data, type, ...) {
     suff <- list(data = data, binary = bin)
   } else if (type == "corTest") {
     suff <- list(
-      C = cor(data, use = "pairwise.complete.obs"),
+      C = stats::cor(data, use = "pairwise.complete.obs"),
       n = nrow(data)
     )
   } else {
