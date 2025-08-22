@@ -31,7 +31,7 @@ is the preferred way to supply temporal background knowledge.}
 \item{order}{\strong{Deprecated}. A character vector with period-prefixes in their
 temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
 is \code{NULL}), a temporary \code{knowledge} object is constructed using
-\code{\link{tidyselect}::\link[tidyselect]{starts_with}} for each prefix. Supplying
+\link[tidyselect:starts_with]{tidyselect::starts_with} for each prefix. Supplying
 both \code{knowledge} and \code{order} is an error.}
 
 \item{sparsity}{The sparsity level used as the per-test significance

@@ -28,7 +28,7 @@
 #' @param order \strong{Deprecated}. A character vector with period-prefixes in their
 #'   temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
 #'   is \code{NULL}), a temporary \code{knowledge} object is constructed using
-#'   \code{\link{tidyselect}::\link[tidyselect]{starts_with}} for each prefix. Supplying
+#'   [tidyselect::starts_with] for each prefix. Supplying
 #'   both \code{knowledge} and \code{order} is an error.
 #' @param methodOri Method for handling conflicting separating sets when orienting
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
