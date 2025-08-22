@@ -19,7 +19,6 @@ SystemRequirements: Java (>= 17). Includes the Tetrad Java library
 Depends: 
     R (>= 4.1.0)
 Imports:
-    bnlearn,
     cli,
     clipr,
     dplyr,
@@ -41,13 +40,14 @@ Imports:
     scales,
     stringr,
     tibble,
-    tidyr,
     tidyselect
 Suggests: 
+    bnlearn,
     MASS,
     mockery,
     ggplot2,
     testthat (>= 3.0.0),
+    tidyr,
     withr
 Config/testthat/edition: 3
 Encoding: UTF-8
@@ -56,7 +56,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Collate: 
     'aaa_globals.R'
-    'aaa_java_init_helpers.R'
+    'aaa_init_helpers.R'
     'amat.R'
     'bnlearn_search.R'
     'cast_obj.R'
@@ -72,16 +72,15 @@ Collate:
     'edges.R'
     'engine_registry.R'
     'evaluate.R'
-    'fci_method.R'
+    'fci.R'
     'gausCorScore.R'
-    'ges_method.R'
-    'java_r_utils.R'
+    'ges.R'
     'knowledge.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'
     'nDAGs.R'
-    'pc_method.R'
+    'pc.R'
     'pcalg_search.R'
     'plot.R'
     'plotTempoMech.R'
