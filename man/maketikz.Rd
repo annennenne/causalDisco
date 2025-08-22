@@ -83,18 +83,33 @@ Latex preamble. The relevant lines of code are (depending a bit on parameter set
 
 # Make tikz figure code from tpdag, print code to screen
 data(tpcExample)
-tpdag1 <- tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
-              test = corTest)
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    youth ~ tidyselect::starts_with("youth"),
+    oldage ~ tidyselect::starts_with("oldage")
+  )
+)
+
+tpdag1 <- tpc(tpcExample,
+  kn,
+  sparsity = 0.01,
+  test = corTest,
+  output = "tpdag"
+)
 maketikz(tpdag1, clipboard = FALSE)
 
 # Make tikz figure code from tamat, copy code to clipboard
 thisdag <- simDAG(5)
-rownames(thisdag) <- colnames(thisdag) <- c("child_x", "child_y",
-                                            "child_z", "adult_x", 
-                                            "adult_y")
-thistamat <- tamat(thisdag, order = c("child", "adult"))        
+rownames(thisdag) <- colnames(thisdag) <- c(
+  "child_x", "child_y",
+  "child_z", "adult_x",
+  "adult_y"
+)
+thistamat <- tamat(thisdag, order = c("child", "adult"))
 \dontrun{
-maketikz(thistamat)            
-}   
-              
+maketikz(thistamat)
+}
+
 }

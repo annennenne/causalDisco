@@ -63,26 +63,5 @@ confusion(x2, x1)
 
 # confusion matrix for conditional orientations
 confusion(x2, x1, type = "dir")
-
-#############################################################################
-# Compare estimated cpdag with true adjacency matrix ########################
-#############################################################################
-# simulate DAG adjacency matrix and Gaussian data
-set.seed(123)
-x3 <- matrix(c(
-  0, 0, 0, 0,
-  1, 0, 1, 0,
-  0, 0, 0, 0,
-  0, 0, 1, 0
-), 4, 4, byrow = TRUE)
-ex_data <- simGausFromDAG(x3, n = 50)
-pcres <- pc(ex_data, sparsity = 0.1, test = corTest)
-
-# compare adjacencies with true amat (x1)
-confusion(pcres, x3)
-
-# compare conditional orientations with true amat
-confusion(pcres, x1, type = "dir")
 }
-
 }

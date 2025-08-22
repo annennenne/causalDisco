@@ -91,7 +91,9 @@
 #' tpc(tpcExample, knowledge = kn, sparsity = 0.01)
 #'
 #' # Deprecated: using order prefixes (will warn)
-#' tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
+#' testthat::expect_warning(
+#'   tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
+#' )
 #'
 #' @importFrom pcalg skeleton
 #' @importFrom stats na.omit
