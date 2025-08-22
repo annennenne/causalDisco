@@ -78,13 +78,6 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @return Invisibly returns \code{NULL}. Called for its side-effect of plotting.
 #' @keywords internal
 #'
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom scales alpha
-#' @importFrom graphics axis mtext
-#' @importFrom igraph graph_from_adjacency_matrix
-#' @importFrom igraph as_edgelist
-#' @importFrom igraph delete.edges
-#' @importFrom igraph plot.igraph
 plotOrderedAmat <- function(amat, order,
                             psi = NULL,
                             addTimeAxis = TRUE,
@@ -100,12 +93,19 @@ plotOrderedAmat <- function(amat, order,
                             sep = "_",
                             colors = NULL,
                             ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "graphics", "igraph", "RColorBrewer", "scales"
+    ),
+    function_name = "plotOrderedAmat"
+  )
+
   if (is.null(periodLabels)) periodLabels <- order
 
   ncol <- length(order)
   if (is.null(colors)) {
     if (ncol < 3) ncol <- 3
-    colors <- brewer.pal("Dark2", n = ncol) # RColorBrewer
+    colors <- RColorBrewer::brewer.pal("Dark2", n = ncol)
   }
   cols <- colors[1:length(order)]
 
@@ -118,14 +118,14 @@ plotOrderedAmat <- function(amat, order,
     varLabels <- varLabels[vnames]
   }
 
-  thisGraph <- graph_from_adjacency_matrix(t(amat)) # igraph
+  thisGraph <- igraph::graph_from_adjacency_matrix(t(amat)) # igraph
 
   groups <- sapply(order, function(x) getvar(vnames, x), simplify = FALSE)
 
 
   #  browser()
   mat <- orderedLayout(vnames, order, sep = sep, jitter = jitter, space = space)
-  edges <- as_edgelist(thisGraph) # igraph
+  edges <- igraph::as_edgelist(thisGraph) # igraph
 
   # drop one copy of double edges
   makedouble <- NULL
@@ -152,8 +152,8 @@ plotOrderedAmat <- function(amat, order,
   }
   if (length(makedouble) > 0) {
     oldedges <- edges
-    thisGraph <- delete.edges(thisGraph, duplies) # igraph
-    edges <- as_edgelist(thisGraph) # igraph
+    thisGraph <- igraph::delete.edges(thisGraph, duplies) # igraph
+    edges <- igraph::as_edgelist(thisGraph) # igraph
     for (i in 1:length(makedouble)) {
       thisEdge <- oldedges[makedouble[i], ]
       for (j in 1:nrow(edges)) {
@@ -184,7 +184,7 @@ plotOrderedAmat <- function(amat, order,
   }
 
 
-  plot.igraph(thisGraph,
+  igraph::plot.igraph(thisGraph,
     mark.groups = groups,
     edge.color = edgecolors,
     edge.arrow.mode = arrowmodes,
@@ -193,7 +193,7 @@ plotOrderedAmat <- function(amat, order,
     edge.width = edge.width,
     edge.curved = edge.curved,
     mark.border = mark.border,
-    mark.col = alpha(cols, alpha = 0.2),
+    mark.col = scales::alpha(cols, alpha = 0.2),
     vertex.color = "grey",
     vertex.frame.color = NA,
     vertex.label.color = "black",
@@ -202,10 +202,15 @@ plotOrderedAmat <- function(amat, order,
     vertex.label.family = "sans",
     ...
   ) # igraph
-  if (addTimeAxis) axis(1, seq(-1, 1, 2 / (length(periodLabels) - 1)), periodLabels, cex.axis = 1.5)
+  if (addTimeAxis) {
+    graphics::axis(1, seq(-1, 1, 2 / (length(periodLabels) - 1)),
+      periodLabels,
+      cex.axis = 1.5
+    )
+  }
   if (!is.null(psi) & addPsi) {
     #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
-    mtext(bquote(psi == .(psi)), side = 3, line = 2)
+    graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }
 }
 
@@ -295,19 +300,3 @@ sciNotation <- function(x, digits = 1) {
     list(base = base, exponent = exponent)
   ))
 }
-
-
-
-# Builds on plot method from pcalg for fciAlgo objects
-
-# plotPAG <- function(x, ...) {
-#  if (any(c("tpdag", "pag") %in% class(x))) {
-#    thisamat <- amat(x)
-#  } else {
-#    thisamat <- x
-#  }
-#
-#  Rgraphviz::renderGraph(Rgraphviz::layoutGraph(g))
-#
-#
-# }

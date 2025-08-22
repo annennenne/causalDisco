@@ -40,6 +40,13 @@ discography <- function(x, nodes = NULL, ...) {
 #' @return A tibble of class `"discography"`.
 #' @keywords internal
 as_tibble_edges <- function(from, to, type, nodes = NULL, cpdag = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "dplyr", "tibble"
+    ),
+    function_name = "as_tibble_edges"
+  )
+
   # -----------------------------------------------------------------
   out <- tibble::tibble(from = from, to = to, edge_type = type)
 
@@ -151,6 +158,13 @@ mark_cpdag <- function(m_ij, m_ji, i, j) {
 #' @return A list with `from`, `to`, and `type`, or `NULL` if no valid edge.
 #' @keywords internal
 mark_pag <- function(m_ij, m_ji, i, j) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "dplyr"
+    ),
+    function_name = "mark_pag"
+  )
+
   # codes: 0 none | 1 circle | 2 arrowhead | 3 tail   (column oriented)
   decode <- function(code) {
     switch(as.character(code),
@@ -194,12 +208,17 @@ mark_pag <- function(m_ij, m_ji, i, j) {
 #' @return A tibble with class `c("discography", "tbl_df", "tbl", "data.frame")`.
 #' @export
 new_discography <- function(x) {
+  .check_if_pkgs_are_installed(
+    pkgs = c("dplyr", "tibble"),
+    function_name = "new_discography"
+  )
+
   x <- tibble::as_tibble(x)
 
   required <- c("from", "to", "edge_type")
   if (!all(required %in% names(x))) {
-    cli::cli_abort(
-      "Input must contain {.code from}, {.code to}, and {.code edge_type} columns."
+    stop(
+      "Input must contain `from`, `to`, and `edge_type` columns."
     )
   }
 
@@ -226,6 +245,13 @@ new_discography <- function(x) {
 #' @return A `"discography"` tibble.
 #' @export
 discography.bn <- function(x, nodes = names(x$nodes), ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "dplyr", "rlang", "tibble"
+    ),
+    function_name = "discography.bn"
+  )
+
   arcs <- x$arcs |>
     tibble::as_tibble() |>
     rlang::set_names(c("from", "to"))
@@ -255,6 +281,13 @@ discography.bn <- function(x, nodes = names(x$nodes), ...) {
 #' @return A `"discography"` tibble.
 #' @export
 discography.graphNEL <- function(x, nodes = graph::nodes(x), ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "igraph"
+    ),
+    function_name = "discography.graphNEL"
+  )
+
   ig <- igraph::graph_from_graphnel(x)
   edge_df <- igraph::as_data_frame(ig, what = "edges")
 
@@ -277,9 +310,15 @@ discography.pcAlgo <- function(x, nodes = x@graph@nodes, ...) {
 #'
 #' @inheritParams discography
 #' @return A `"discography"` tibble.
-#' @importFrom purrr map2_dfr
 #' @export
 discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "purrr", "tibble"
+    ),
+    function_name = "discography.EssGraph"
+  )
+
   parents <- purrr::map2_dfr(
     seq_along(x$.in.edges), # numeric child-index
     x$.in.edges, # its list of parent-indices
@@ -317,6 +356,13 @@ discography.EssGraph <- function(x, nodes = x$.nodes, ...) {
 #' @return A `"discography"` tibble.
 #' @export
 discography.fciAlgo <- function(x, nodes = rownames(x@amat), ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods"
+    ),
+    function_name = "discography.fciAlgo"
+  )
+
   amat <- methods::as(x, "amat")
   discography(amat, nodes = nodes, ...)
 }
@@ -338,9 +384,15 @@ discography.amat <- function(x, nodes = NULL, ...) {
 #'
 #' @inheritParams discography
 #' @return A `"discography"` tibble.
-#' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.pag <- function(x, nodes = NULL, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "purrr"
+    ),
+    function_name = "discography.amat.pag"
+  )
+
   if (is.null(nodes)) {
     nodes <- rownames(x)
     if (is.null(nodes)) nodes <- colnames(x)
@@ -371,9 +423,15 @@ discography.amat.pag <- function(x, nodes = NULL, ...) {
 #'
 #' @inheritParams discography
 #' @return A `"discography"` tibble.
-#' @importFrom purrr pmap_dfr
 #' @export
 discography.amat.cpdag <- function(x, nodes = NULL, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "purrr"
+    ),
+    function_name = "discography.amat.cpdag"
+  )
+
   if (is.null(nodes)) {
     nodes <- rownames(x)
     if (is.null(nodes)) nodes <- colnames(x)
@@ -448,6 +506,13 @@ discography.tamat <- function(x, nodes = NULL, ...) {
 #' @return Never returns; errors.
 #' @export
 discography.default <- function(x, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "cli"
+    ),
+    function_name = "discography.default"
+  )
+
   cli::cli_abort(c(
     "Don't know how to convert {.cls {class(x)[1]}} to a discography."
   ))

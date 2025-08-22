@@ -1,14 +1,22 @@
 #' @title Tetrad R Data Utilities
 #'
-#' @description \code{tetrad_rdata_utils} provides functions to convert between R data frames and Tetrad Java objects.
+#' @description \code{tetrad_rdata_utils} provides functions to convert between
+#' R data frames and Tetrad Java objects.
 #'
-#' @details This function is made to be used internally with the TetradSearch class.
-#' The function will copy the data into the Java heap, so be careful with larger data frames.
-#' This function was provided by Joseph Ramsey, and slightly modified by Frederik Fabricius-Bjerre.
-#' @importFrom rJava .jnew .jcall .jarray .jnull .jcast
+#' @details This function is made to be used internally with the TetradSearch
+#' class. The function will copy the data into the Java heap, so be careful with
+#' larger data frames. This function was provided by Joseph Ramsey, and slightly
+#' modified by Frederik Fabricius-Bjerre.
 #' @param df A data frame to be converted to a Tetrad Java object.
 #' @return A Tetrad Java object representing the data frame.
 rdata_to_tetrad <- function(df) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rJava"
+    ),
+    function_name = "rdata_to_tetrad"
+  )
+
   # Check if the input is a data frame
   if (!is.data.frame(df)) {
     stop("Input must be a data frame.")
@@ -17,7 +25,7 @@ rdata_to_tetrad <- function(df) {
   ncols <- ncol(df)
 
   # Create Java ArrayList<Node>
-  var_list <- .jnew("java/util/ArrayList")
+  var_list <- rJava::.jnew("java/util/ArrayList")
 
   # Prepare empty double[][] and int[][] (as Java arrays)
   cont_data <- vector("list", ncols)
@@ -35,18 +43,18 @@ rdata_to_tetrad <- function(df) {
     col <- df[[j]]
 
     if (numeric_cols[j]) {
-      variable <- .jnew("edu/cmu/tetrad/data/ContinuousVariable", name)
-      node <- .jcast(variable, "edu/cmu/tetrad/graph/Node")
-      .jcall(var_list, "Z", "add", .jcast(node, "java/lang/Object"))
-      cont_data[[j]] <- .jarray(as.numeric(col), dispatch = TRUE)
-      disc_data[[j]] <- .jnull("[I") # null int[] for discrete
+      variable <- rJava::.jnew("edu/cmu/tetrad/data/ContinuousVariable", name)
+      node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
+      rJava::.jcall(var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object"))
+      cont_data[[j]] <- rJava::.jarray(as.numeric(col), dispatch = TRUE)
+      disc_data[[j]] <- rJava::.jnull("[I") # null int[] for discrete
     } else if (integer_cols[j]) {
       num_categories <- length(unique(na.omit(col)))
-      variable <- .jnew("edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories))
-      node <- .jcast(variable, "edu/cmu/tetrad/graph/Node")
-      .jcall(var_list, "Z", "add", .jcast(node, "java/lang/Object"))
-      cont_data[[j]] <- .jnull("[D") # null double[] for continuous
-      disc_data[[j]] <- .jarray(as.integer(col), dispatch = TRUE)
+      variable <- rJava::.jnew("edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories))
+      node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
+      rJava::.jcall(var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object"))
+      cont_data[[j]] <- rJava::.jnull("[D") # null double[] for continuous
+      disc_data[[j]] <- rJava::.jarray(as.integer(col), dispatch = TRUE)
     } else {
       # extra safety precaution
       stop(paste("Unsupported column:", name, "with type: ", class(col))) # nocov
@@ -54,18 +62,18 @@ rdata_to_tetrad <- function(df) {
   }
 
   # Convert R lists of arrays to Java double[][] and int[][]
-  j_cont_data <- .jarray(cont_data, dispatch = TRUE)
-  j_disc_data <- .jarray(disc_data, dispatch = TRUE)
+  j_cont_data <- rJava::.jarray(cont_data, dispatch = TRUE)
+  j_disc_data <- rJava::.jarray(disc_data, dispatch = TRUE)
 
   # Call static Java helper method
-  ds <- .jcall(
+  ds <- rJava::.jcall(
     "edu.cmu.tetrad.util.DataSetHelper",
     "Ledu/cmu/tetrad/data/DataSet;",
     "fromR",
-    .jcast(var_list, "java.util.List"),
+    rJava::.jcast(var_list, "java.util.List"),
     as.integer(nrows),
-    .jcast(j_cont_data, "[[D"),
-    .jcast(j_disc_data, "[[I")
+    rJava::.jcast(j_cont_data, "[[D"),
+    rJava::.jcast(j_disc_data, "[[I")
   )
 
   return(ds)
@@ -90,6 +98,13 @@ rdata_to_tetrad <- function(df) {
 #' @return
 #' A data frame with the same dimensions and names as `data`.
 tetrad_data_to_rdata <- function(data) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rJava", "stats"
+    ),
+    function_name = "tetrad_data_to_rdata"
+  )
+
   # names
   names_list <- rJava::.jcall(data, "Ljava/util/List;", "getVariableNames")
   num_vars <- rJava::.jcall(data, "I", "getNumColumns")
@@ -159,6 +174,5 @@ tetrad_data_to_rdata <- function(data) {
     }
     cols[[j + 1L]] <- v
   }
-
   stats::setNames(as.data.frame(cols, optional = TRUE), var_names)
 }

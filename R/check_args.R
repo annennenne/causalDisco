@@ -18,7 +18,11 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
 #'
 #' @importFrom methods formalArgs
 #' @keywords internal
-check_args_and_distribute_args_tetrad <- function(search, args, alg, test = NULL, score = NULL) {
+check_args_and_distribute_args_tetrad <- function(search,
+                                                  args,
+                                                  alg,
+                                                  test = NULL,
+                                                  score = NULL) {
   if (is.null(test) && is.null(score)) {
     stop("Neither test or score is specified.", call. = FALSE)
   }
@@ -67,6 +71,13 @@ check_args_and_distribute_args_pcalg <- function(search,
                                                  alg,
                                                  test = NULL,
                                                  score = NULL) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods", "pcalg"
+    ),
+    function_name = "check_args_and_distribute_args_pcalg"
+  )
+
   # Note that the pcalg package does not have args that are sent
   # directly to the test itself, but it is rather sent to the algorithm.
   switch(alg,
@@ -91,7 +102,8 @@ check_args_and_distribute_args_pcalg <- function(search,
     names(args),
     c(engine_args_alg, engine_args_score)
   )
-  # If '...' in given algorithm/test is an argument, it will throw a warning rather than an error.
+  # If '...' in given algorithm/test is an argument, it will throw a warning
+  # rather than an error.
   if (length(args_not_in_engine_args) > 0) {
     if ("..." %in% c(engine_args_alg, engine_args_score)) {
       warning(
@@ -113,10 +125,20 @@ check_args_and_distribute_args_pcalg <- function(search,
   ))
 }
 
+#' @title Check arguments for bnlearnSearch class functions
+#'
+#' @keywords internal
 check_args_and_distribute_args_bnlearn <- function(search,
                                                    args,
                                                    alg,
                                                    allow_dots = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "bnlearn"
+    ),
+    function_name = "check_args_and_distribute_args_bnlearn"
+  )
+
   # find bnlearn function
   if (!exists(alg, envir = asNamespace("bnlearn"))) {
     stop("Unsupported algorithm: ", alg, call. = FALSE)
@@ -148,7 +170,6 @@ check_args_and_distribute_args_bnlearn <- function(search,
         ".  Set allow_dots = TRUE if you really want to forward them."
       )
     }
-    # if dots_allowed && allow_dots == TRUE: silently forward extras
   }
 
   # we do not distribute arguments here, as it is not needed

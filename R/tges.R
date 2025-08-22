@@ -37,6 +37,13 @@ tges <- function(score,
                  knowledge = NULL,
                  order = NULL, # deprecated
                  verbose = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "tges"
+  )
+
   # ---------------------------------------------------------------------------
   # Arg handling: prefer `knowledge`, allow legacy `order` with a warning
   # ---------------------------------------------------------------------------
@@ -273,6 +280,13 @@ create_list_from_adj_matrix <- function(adjMatrix) {
 #'
 #' @keywords internal
 to_adj_mat <- function(obj) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods", "pcalg"
+    ),
+    function_name = "to_adj_mat"
+  )
+
   if (is.matrix(obj)) {
     return(obj)
   }

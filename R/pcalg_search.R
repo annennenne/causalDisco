@@ -57,6 +57,13 @@ pcalgSearch <- R6Class(
     #' @description
     #' Constructor for the `pcalgSearch` class.
     initialize = function() {
+      .check_if_pkgs_are_installed(
+        pkgs = c(
+          "pcalg", "purrr", "rlang"
+        ),
+        class_name = "pcalgSearch"
+      )
+
       self$data <- NULL
       self$score <- NULL
       self$test <- NULL

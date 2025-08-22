@@ -5,6 +5,13 @@
 #' @return An object of class <tetrad_graph>
 #' @export
 tetrad_graph <- function(x) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "readr", "stringr"
+    ),
+    function_name = "tetrad_graph"
+  )
+
   if (!is.character(x) || length(x) != 1) {
     stop("`x` must be a single character string")
   }

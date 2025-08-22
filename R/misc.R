@@ -30,6 +30,13 @@ as.graphNEL <- function(amat) {
 #'
 #' @export
 is_pdag <- function(amat) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "is_pdag"
+  )
+
   pcalg::isValidGraph(amat, "pdag")
 }
 
@@ -44,6 +51,13 @@ is_pdag <- function(amat) {
 #'
 #' @export
 is_cpdag <- function(amat) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "is_cpdag"
+  )
+
   pcalg::isValidGraph(amat, "cpdag")
 }
 
@@ -166,9 +180,9 @@ nedges <- function(amat) {
 
 
 
-###############################################################################################################
-# Not exported below###########################################################################################
-###############################################################################################################
+################################################################################
+# Not exported below############################################################
+################################################################################
 
 
 which2indicator <- function(x, p) {
@@ -182,14 +196,3 @@ halfskel <- function(amat) {
   out <- amat + t(amat) != 0
   as.numeric(out[lower.tri(out)])
 }
-
-##' @importClassesFrom pcalg fciAlgo
-# amat2fciAlgo <- function(amat) {
-#  class(amat) <- c(class(amat), "matrix")
-#  new("fciAlgo", amat = amat, call = NA, n = NA,
-#      max.ord = NA,
-#      max.ordPDSEP = NA,
-#      n.edgetests = NA, n.edgetestsPDSEP = NA,
-#      sepset = NA, pMax = NA, allPdsep = NA)
-#
-# }

@@ -123,6 +123,13 @@ TetradSearch <- R6Class(
     #' @description Initializes the \code{TetradSearch} object, creating new Java objects for
     #'   \code{knowledge} and \code{params}.
     initialize = function() {
+      .check_if_pkgs_are_installed(
+        pkgs = c(
+          "rJava"
+        ),
+        function_name = "TetradSearch"
+      )
+
       if (!.jniInitialized) {
         init_java() # nocov
       }

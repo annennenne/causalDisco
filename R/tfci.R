@@ -72,8 +72,6 @@
 #' }
 #'
 #' @include tpc.R
-#' @importFrom pcalg pdsep skeleton pc.cons.intern
-#' @importFrom stats na.omit
 #' @importClassesFrom pcalg pcAlgo
 #' @export
 tfci <- function(data = NULL,
@@ -86,6 +84,13 @@ tfci <- function(data = NULL,
                  methodNA = "none",
                  methodOri = "conservative",
                  varnames = NULL, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods", "pcalg", "stats", "tidyselect"
+    ),
+    function_name = "tfci"
+  )
+
   if (!(methodNA %in% c("none", "cc", "twd"))) {
     stop("Invalid choice of method for handling NA values.")
   }
@@ -319,9 +324,15 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #'   temporal constraints before orientation.
 #'
 #' @return A PAG adjacency matrix in pcalg format (integer codes \code{0/1/2/3}).
-#' @importFrom pcalg udag2pag
 #' @keywords internal
 tpag <- function(skel, knowledge, unfVect, cautious = TRUE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "tpag"
+  )
+
   # boolean amat -> add 0 converts to numeric
   amat <- order_restrict_pag_skel(skel$G + 0, knowledge = knowledge)
   sepsets <- skel$sepset

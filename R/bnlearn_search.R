@@ -147,6 +147,12 @@ bnlearnSearch <- R6Class(
     #' @description
     #' Constructor for the `bnlearnSearch` class.
     initialize = function() {
+      .check_if_pkgs_are_installed(
+        pkgs = c(
+          "bnlearn", "purrr"
+        ),
+        class_name = "bnlearnSearch"
+      )
       self$data <- NULL
       self$score <- NULL
       self$test <- NULL

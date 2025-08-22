@@ -95,8 +95,6 @@
 #'   tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
 #' )
 #'
-#' @importFrom pcalg skeleton
-#' @importFrom stats na.omit
 #' @export
 tpc <- function(data = NULL,
                 knowledge = NULL,
@@ -109,6 +107,13 @@ tpc <- function(data = NULL,
                 methodOri = "conservative",
                 output = "discography",
                 varnames = NULL, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg", "stats", "tidyselect"
+    ),
+    function_name = "tpc"
+  )
+
   if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "discography")) {
     stop("Output must be tpdag, tskeleton, pcAlgo, or discography.")
   }
@@ -246,6 +251,13 @@ tpc <- function(data = NULL,
 #' @return A \code{knowledge} object with tiers matching \code{order}.
 #' @keywords internal
 .build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang", "tidyselect", "utils"
+    ),
+    function_name = ".build_knowledge_from_order"
+  )
+
   stopifnot(is.character(order), length(order) > 0)
 
   # build tier specs like: "<lbl>" ~ starts_with("<lbl>")
@@ -303,9 +315,15 @@ tpc <- function(data = NULL,
 #' @param sepsets Separation sets as computed by \pkg{pcalg}.
 #'
 #' @return The updated adjacency matrix with additional arrowheads.
-#' @importFrom gtools combinations
 #' @keywords internal
 v_orient_temporal <- function(amat, sepsets) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "gtools"
+    ),
+    function_name = "v_orient_temporal"
+  )
+
   vnames <- rownames(amat)
   nvar <- nrow(amat)
 
@@ -314,7 +332,7 @@ v_orient_temporal <- function(amat, sepsets) {
 
     # if there are at least two adjacent nodes
     if (length(theseAdj) >= 2) {
-      adjpairs <- combinations(length(theseAdj), 2, v = theseAdj) # gtools
+      adjpairs <- gtools::combinations(length(theseAdj), 2, v = theseAdj)
 
       npairs <- nrow(adjpairs)
 
@@ -355,7 +373,10 @@ v_orient_temporal <- function(amat, sepsets) {
 #' @return Integer vector of adjacent node indices.
 #' @keywords internal
 find_adjacencies <- function(amatrix, index) {
-  union(which(as.logical(amatrix[index, ])), which(as.logical(amatrix[, index])))
+  union(
+    which(as.logical(amatrix[index, ])),
+    which(as.logical(amatrix[, index]))
+  )
 }
 
 #' Compute tier indices for variables
@@ -370,6 +391,13 @@ find_adjacencies <- function(amatrix, index) {
 #' @return Named integer vector of the same length as \code{vnames}.
 #' @keywords internal
 .tier_index <- function(kn, vnames) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "stats"
+    ),
+    function_name = ".tier_index"
+  )
+
   check_knowledge_obj(kn)
   idx <- match(vnames, kn$vars$var)
   tiers <- kn$vars$tier[idx]
@@ -491,6 +519,13 @@ order_restrict_amat_cpdag <- function(amat, knowledge) {
 #' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
 #' @keywords internal
 tpdag <- function(skel, knowledge) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "tpdag"
+  )
+
   thisAmat <- graph2amat(skel)
   tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge)
   pcalg::addBgKnowledge(
@@ -541,8 +576,18 @@ tpdag <- function(skel, knowledge) {
 #' @importFrom stats cor na.omit
 #' @keywords internal
 make_suff_stat <- function(data, type, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "stats"
+    ),
+    function_name = "make_suff_stat"
+  )
+
   if (type == "regTest") {
-    bin <- unlist(sapply(data, function(x) length(unique(na.omit(x))) == 2))
+    bin <- unlist(sapply(
+      data,
+      function(x) length(unique(stats::na.omit(x))) == 2
+    ))
     suff <- list(data = data, binary = bin)
   } else if (type == "corTest") {
     suff <- list(
