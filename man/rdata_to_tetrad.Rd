@@ -13,10 +13,12 @@ rdata_to_tetrad(df)
 A Tetrad Java object representing the data frame.
 }
 \description{
-\code{tetrad_rdata_utils} provides functions to convert between R data frames and Tetrad Java objects.
+\code{tetrad_rdata_utils} provides functions to convert between
+R data frames and Tetrad Java objects.
 }
 \details{
-This function is made to be used internally with the TetradSearch class.
-The function will copy the data into the Java heap, so be careful with larger data frames.
-This function was provided by Joseph Ramsey, and slightly modified by Frederik Fabricius-Bjerre.
+This function is made to be used internally with the TetradSearch
+class. The function will copy the data into the Java heap, so be careful with
+larger data frames. This function was provided by Joseph Ramsey, and slightly
+modified by Frederik Fabricius-Bjerre.
 }

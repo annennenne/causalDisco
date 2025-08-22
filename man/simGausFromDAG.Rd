@@ -50,9 +50,9 @@ The residual, \eqn{e_{i}}, is drawn from a normal distribution.
 }
 \examples{
 # Simulate DAG adjacency matrix with 6 nodes
-ex_dag <- simDAG(6) 
+ex_dag <- simDAG(6)
 
-# Simulate Gaussian data (100 iid observations) 
+# Simulate Gaussian data (100 iid observations)
 ex_data <- simGausFromDAG(ex_dag, n = 100)
 
 }

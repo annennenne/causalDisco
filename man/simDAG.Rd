@@ -29,6 +29,6 @@ that are absent, relative to a fully connected DAG.
 }
 \examples{
 # Simulate a DAG adjacency matrix with 5 nodes
-simDAG(5) 
+simDAG(5)
 
 }

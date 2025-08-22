@@ -53,15 +53,15 @@ a proper adjacency matrix (using the graph criterion specified in the
 See Petersen et al. 2022 for further details.
 }
 \examples{
-#Make random probability matrix that can be 
-#converted into adjancency matrix
+# Make random probability matrix that can be
+# converted into adjancency matrix
 pmat <- matrix(runif(25, 0, 1), 5, 5)
 diag(pmat) <- 0
 
-#Convert to adjacency matrix using cutoff-method (threshold = 0.5)
+# Convert to adjacency matrix using cutoff-method (threshold = 0.5)
 probmat2amat(pmat, threshold = 0.5)
 
-#Convert to adjacency matrix using BPCO-method (threshold = 0.5)
+# Convert to adjacency matrix using BPCO-method (threshold = 0.5)
 probmat2amat(pmat, threshold = 0.5, method = "bpco")
 
 }
