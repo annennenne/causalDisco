@@ -246,11 +246,6 @@ create_adj_matrix_from_list <- function(inputList) {
 #' @return A named list of integer vectors with one element per node; each
 #'   element lists the parent indices (columns with value 1 in that row).
 #'
-#' @examples
-#' M <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 0), nrow = 3, byrow = TRUE)
-#' rownames(M) <- colnames(M) <- c("A", "B", "C")
-#' create_list_from_adj_matrix(M)
-#'
 #' @keywords internal
 create_list_from_adj_matrix <- function(adjMatrix) {
   n <- nrow(adjMatrix)
