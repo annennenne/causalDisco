@@ -3,10 +3,34 @@
 \docType{class}
 \name{GaussL0penIntScoreORDER-class}
 \alias{GaussL0penIntScoreORDER-class}
-\title{Constructor
-Calculates the local score of a vertex and its parents}
+\alias{GaussL0penIntScoreORDER}
+\title{Order-aware Gauss L0 penalized score}
 \description{
-Constructor
-Calculates the local score of a vertex and its parents
+Extends \code{GaussL0penIntScore} with an \code{.order} field and enforces that a
+vertex may only have parents from the same or earlier order/tier. When
+\code{.format == "raw"} or \code{"scatter"} and \code{c.fcn == "none"}, the local score is
+computed in R; otherwise it delegates to the C++ scoring function.
 }
 
+\section{Fields}{
+
+\describe{
+\item{.order}{Numeric or integer vector, one per node, giving the allowed
+temporal/tier order. Parents must not have a strictly larger value than the
+child.}
+}
+}
+
+\section{Methods}{
+
+\describe{
+\item{initialize(..., order = rep(1, p))}{Constructor that stores the order
+and forwards remaining arguments to \code{GaussL0penIntScore}.}
+\item{local.score(vertex, parents, ...)}{Returns the local contribution of
+\code{vertex} given \code{parents}. Returns \code{-Inf} if any parent violates the order.}
+}
+}
+
+\seealso{
+\code{\link[=tges]{tges()}}
+}

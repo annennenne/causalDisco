@@ -4,7 +4,7 @@
 \alias{.build_knowledge_from_order}
 \title{Build tiered knowledge from legacy order prefixes}
 \usage{
-.build_knowledge_from_order(order, data, vnames = NULL)
+.build_knowledge_from_order(order, data = NULL, vnames = NULL)
 }
 \arguments{
 \item{order}{Character vector of prefixes in temporal order.}

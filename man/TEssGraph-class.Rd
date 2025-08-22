@@ -4,8 +4,25 @@
 \name{TEssGraph-class}
 \alias{TEssGraph-class}
 \alias{TEssGraph}
-\title{Performs one greedy step}
+\title{Temporal EssGraph class with greedy steps}
 \description{
-Performs one greedy step
+A \code{RefClass} extending \code{EssGraph} that exposes a single-step greedy move
+(\code{forward}, \code{backward}, or \code{turning}) through \code{greedy.step()}. Used by
+\code{\link[=tges]{tges()}} to iterate GIES one step at a time and interleave background
+knowledge enforcement.
 }
 
+\section{Methods}{
+
+\describe{
+\item{greedy.step(direction = c("forward","backward","turning"), verbose = FALSE, ...)}{
+Performs a single improving step in the requested phase. Returns a named
+vector/list where the first element indicates whether a step happened,
+followed by any nodes whose in-edges changed.
+}
+}
+}
+
+\seealso{
+\code{\link[=tges]{tges()}}, \link{GaussL0penIntScoreORDER}
+}
