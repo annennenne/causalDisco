@@ -1241,12 +1241,9 @@ as_tetrad_knowledge <- function(.kn) {
   )
 
   check_knowledge_obj(.kn)
+  # nocov start
   if (!rJava::.jniInitialized) {
-    rJava::.jinit(
-      # todo: how many gb?
-      parameters = "-Xmx2g",
-      classpath = "inst/java/tetrad-current.jar"
-    )
+    init_java()
   } # nocov end
 
   j <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
