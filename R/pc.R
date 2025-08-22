@@ -86,7 +86,7 @@ pc_pcalg_runner <- function(test, alpha, ...,
                             directed_as_undirected_knowledge = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "pcalg",
+      "pcalg"
     ),
     function_name = "pc_pcalg_runner"
   )
@@ -118,7 +118,7 @@ pc_pcalg_runner <- function(test, alpha, ...,
 pc_bnlearn_runner <- function(test, alpha, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "bnlearn",
+      "bnlearn"
     ),
     function_name = "pc_bnlearn_runner"
   )

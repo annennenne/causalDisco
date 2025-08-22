@@ -57,6 +57,10 @@
 #'  only these calls are allowed.
 #' @return A populated `knowledge` object.
 #'
+#' @importFrom tidyselect eval_select everything starts_with ends_with
+#' @importFrom tidyselect starts_with ends_with contains matches num_range
+#' @importFrom rlang !!
+#'
 #' @export
 knowledge <- function(...) {
   .check_if_pkgs_are_installed(
@@ -65,6 +69,7 @@ knowledge <- function(...) {
     ),
     function_name = "knowledge"
   )
+
   dots <- as.list(substitute(list(...)))[-1]
   df <- NULL
 
@@ -137,7 +142,7 @@ knowledge <- function(...) {
       stop("tier() needs at least one two-sided formula.", call. = FALSE) # nocov
     }
 
-    # ───────────────────────────── main loop ──────────────────────────────────
+    # ────────────────────────────── main loop ─────────────────────────────────
     for (fml in specs) {
       # ---------- tier_bundle ----------
       if (inherits(fml, "tier_bundle")) {
@@ -180,7 +185,7 @@ knowledge <- function(...) {
         next
       }
 
-      # ---------- ordinary two-sided formula ----------
+      # ────────────────────── ordinary two-sided formula ──────────────────────
       if (!rlang::is_formula(fml, lhs = TRUE)) {
         stop("Each tier() argument must be a two-sided formula.", call. = FALSE)
       }
@@ -327,7 +332,6 @@ knowledge <- function(...) {
 }
 
 # ────────────────────────────────── Verbs ─────────────────────────────────────
-
 #' @title Add variables to `knowledge` object
 #'
 #' @description Adds variables to the `knowledge` object. If the object is
@@ -340,13 +344,15 @@ knowledge <- function(...) {
 #' @return The updated `knowledge` object.
 #' @export
 add_vars <- function(.kn, vars) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "tibble"
     ),
     function_name = "add_vars"
   )
+
+  check_knowledge_obj(.kn)
+
   missing <- setdiff(vars, .kn$vars$var)
 
   if (.kn$frozen && length(missing)) {
@@ -375,13 +381,14 @@ add_vars <- function(.kn, vars) {
 #' @return The updated `knowledge` object.
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "rlang", "tibble"
     ),
     function_name = "add_tier"
   )
+
+  check_knowledge_obj(.kn)
   before_sup <- !missing(before)
   after_sup <- !missing(after)
 
@@ -489,13 +496,14 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 #' @return The updated `knowledge` object.
 #' @export
 add_to_tier <- function(.kn, ...) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "glue", "rlang"
     ),
     function_name = "add_to_tier"
   )
+
+  check_knowledge_obj(.kn)
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
@@ -586,6 +594,7 @@ forbid_edge <- function(.kn, ...) {
     ),
     function_name = "forbid_edge"
   )
+
   dots <- rlang::enquos(...)
   if (!length(dots)) {
     stop("forbid_edge() needs at least one two-sided formula.", call. = FALSE)
@@ -614,6 +623,7 @@ require_edge <- function(.kn, ...) {
     ),
     function_name = "require_edge"
   )
+
   dots <- rlang::enquos(...)
   if (!length(dots)) {
     stop("require_edge() needs at least one two-sided formula.", call. = FALSE)
@@ -666,20 +676,19 @@ unfreeze <- function(.kn) {
 }
 
 # ────────────────────────────────── Print ─────────────────────────────────────
-
 #' @title Print a `knowledge` object
 #'
 #' @param x A `knowledge` object.
 #' @param ... Additional arguments (not used).
 #' @exportS3Method print knowledge
 print.knowledge <- function(x, ...) {
-  check_knowledge_obj(x)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "cli", "tibble"
     ),
     function_name = "print.knowledge"
   )
+
   cli::cli_h1("Knowledge object")
 
   if (nrow(x$tiers)) {
@@ -745,20 +754,20 @@ print.knowledge <- function(x, ...) {
 }
 
 # ────────────────────────────── Manipulation ──────────────────────────────────
-
 #' @title Merge two `knowledge` objects
 #' @param .kn1 A `knowledge` object.
 #' @param .kn2 Another `knowledge` object.
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(.kn1, .kn2) {
-  check_knowledge_obj(.kn1)
-  check_knowledge_obj(.kn2)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "tibble"
     ),
     function_name = "+.knowledge"
   )
+
+  check_knowledge_obj(.kn1)
+  check_knowledge_obj(.kn2)
 
   # combine
   vars_all <- unique(c(.kn1$vars$var, .kn2$vars$var))
@@ -803,13 +812,15 @@ print.knowledge <- function(x, ...) {
 #' @return The same `knowledge` object with tiers rearranged.
 #' @export
 reorder_tiers <- function(.kn, order, by_index = FALSE) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang", "tibble"
     ),
     function_name = "reorder_tiers"
   )
+
+  check_knowledge_obj(.kn)
+
   current <- .kn$tiers$label
   n <- length(current)
 
@@ -889,13 +900,14 @@ reposition_tier <- function(.kn,
                             before = NULL,
                             after = NULL,
                             by_index = FALSE) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
     ),
     function_name = "reposition_tier"
   )
+
+  check_knowledge_obj(.kn)
   if (!xor(missing(before), missing(after))) {
     stop("Supply exactly one of `before` or `after`.", call. = FALSE)
   }
@@ -948,7 +960,6 @@ reposition_tier <- function(.kn,
 }
 
 # ────────────────────────────────── Check ─────────────────────────────────────
-
 #' @title Verify that an object is a knowledge
 #'
 #' @description Check that the object is a `knowledge` object. Mostly
@@ -964,7 +975,6 @@ check_knowledge_obj <- function(x) {
 }
 
 # ───────────────────────────────── Remove ─────────────────────────────────────
-
 #' @title Remove variables (and their edges) from a knowledge object
 #'
 #' @description
@@ -978,13 +988,14 @@ check_knowledge_obj <- function(x) {
 #'
 #' @export
 remove_vars <- function(.kn, ...) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "purrr", "rlang"
     ),
     function_name = "remove_vars"
   )
+
+  check_knowledge_obj(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
 
   # resolve each quosure to a character vector of names
@@ -1019,10 +1030,13 @@ remove_vars <- function(.kn, ...) {
 #' @return The updated `knowledge` object.
 #' @export
 remove_edges <- function(.kn, ...) {
-  check_if_pkgs_are_installed(
-    pkgs = c("dplyr", "rlang", "tidyr", "purrr"),
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "dplyr", "purrr", "rlang", "tidyr"
+    ),
     function_name = "remove_edges"
   )
+
   check_knowledge_obj(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
   if (length(specs) == 0L) {
@@ -1063,13 +1077,14 @@ remove_edges <- function(.kn, ...) {
 #' @return An updated `knowledge` object.
 #' @export
 remove_tiers <- function(.kn, ...) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "purrr", "rlang"
     ),
     function_name = "remove_tiers"
   )
+
+  check_knowledge_obj(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
   keep <- .kn$tiers$label
   to_drop <- purrr::map_chr(specs, function(q) {
@@ -1095,7 +1110,6 @@ remove_tiers <- function(.kn, ...) {
 }
 
 # ───────────────────────────────── Deparse ────────────────────────────────────
-
 #' @title Deparse a knowledge object to knowledge() mini-DSL code
 #'
 #' @description
@@ -1111,13 +1125,14 @@ remove_tiers <- function(.kn, ...) {
 #' @return A single string (with newlines) of R code.
 #' @export
 deparse_knowledge <- function(.kn, df_name = NULL) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr"
     ),
     function_name = "deparse_knowledge"
   )
+
+  check_knowledge_obj(.kn)
 
   fmt_fml <- function(lhs, rhs_vars) {
     paste0(
@@ -1218,16 +1233,21 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 #'
 #' @export
 as_tetrad_knowledge <- function(.kn) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "purrr", "rJava"
     ),
     function_name = "as_tetrad_knowledge"
   )
+
+  check_knowledge_obj(.kn)
   if (!rJava::.jniInitialized) {
-    init_java() # nocov
-  }
+    rJava::.jinit(
+      # todo: how many gb?
+      parameters = "-Xmx2g",
+      classpath = "inst/java/tetrad-current.jar"
+    )
+  } # nocov end
 
   j <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
 
@@ -1288,13 +1308,14 @@ as_tetrad_knowledge <- function(.kn) {
 as_pcalg_constraints <- function(.kn,
                                  labels = .kn$vars$var,
                                  directed_as_undirected = FALSE) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "rlang"
+      "dplyr", "pcalg", "rlang"
     ),
     function_name = "as_pcalg_constraints"
   )
+
+  check_knowledge_obj(.kn)
 
   if (any(!is.na(.kn$vars$tier))) {
     stop(
@@ -1404,13 +1425,14 @@ as_pcalg_constraints <- function(.kn,
 #'
 #' @export
 as_bnlearn_knowledge <- function(.kn) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr"
     ),
     function_name = "as_bnlearn_knowledge"
   )
+
+  check_knowledge_obj(.kn)
 
   # whitelist holds all required edges in a "from", "to" dataframe
   whitelist <- dplyr::filter(.kn$edges, status == "required") |>
@@ -1429,8 +1451,6 @@ as_bnlearn_knowledge <- function(.kn) {
   ))
 }
 
-# ────────────────────────────────── Tiers ─────────────────────────────────────
-
 #' @title Forbid all tier violations
 #'
 #' @description
@@ -1441,16 +1461,17 @@ as_bnlearn_knowledge <- function(.kn) {
 #' @return The same `knowledge` object with new forbidden edges added.
 #' @export
 forbid_tier_violations <- function(.kn) {
-  check_knowledge_obj(.kn)
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "tidyr"
+      "dplyr", "rlang", "tibble", "tidyr"
     ),
     function_name = "forbid_tier_violations"
   )
 
+  check_knowledge_obj(.kn)
+
   # build a named vector of tier rank
-  tier_ranks <- set_names(
+  tier_ranks <- rlang::set_names(
     seq_along(.kn$tiers$label),
     .kn$tiers$label
   )
@@ -1469,7 +1490,7 @@ forbid_tier_violations <- function(.kn) {
 
   # add all those forbidden edges, dropping self-loops
   if (nrow(bad)) {
-    new_edges <- dplyr::tibble(
+    new_edges <- tibble::tibble(
       status    = "forbidden",
       from      = bad$var_from,
       to        = bad$var_to,
@@ -1528,13 +1549,15 @@ forbid_tier_violations <- function(.kn) {
 #'
 #' @export
 seq_tiers <- function(tiers, vars) {
-  stopifnot(is.numeric(tiers), all(tiers >= 1L))
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
     ),
     function_name = "seq_tiers"
   )
+
+  stopifnot(is.numeric(tiers), all(tiers >= 1L))
+
   vars_expr <- rlang::enexpr(vars)
 
   # guard: placeholder must be present
@@ -1568,7 +1591,6 @@ seq_tiers <- function(tiers, vars) {
 # ──────────────────────────────────────────────────────────────────────────────
 
 # ────────────────────────────── New knowledge  ────────────────────────────────
-
 #' @title Create a `knowledge` object
 #'
 #' @param vars Character vector of variable names.  Defaults to empty.
@@ -1583,6 +1605,7 @@ seq_tiers <- function(tiers, vars) {
     ),
     function_name = ".new_knowledge"
   )
+
   stopifnot(is.character(vars), !anyDuplicated(vars))
 
   structure(
@@ -1603,7 +1626,6 @@ seq_tiers <- function(tiers, vars) {
 }
 
 # ─────────────────────────── Validation helpers  ──────────────────────────────
-
 #' @title Validate that no edge runs from higher tier to lower tier
 #'
 #' @param edges_df A data frame with columns `status`, `from`,
@@ -1616,6 +1638,7 @@ seq_tiers <- function(tiers, vars) {
     ),
     function_name = ".validate_tier_rule"
   )
+
   rank <- function(lbl) match(lbl, tiers$label)
 
   bad <- dplyr::filter(
@@ -1689,7 +1712,6 @@ seq_tiers <- function(tiers, vars) {
 }
 
 # ───────────────────────────── Edge helpers  ──────────────────────────────────
-
 #' @title Add one or many edges to a knowledge object
 #'
 #' @param .kn A `knowledge` object.
@@ -1783,7 +1805,6 @@ seq_tiers <- function(tiers, vars) {
 }
 
 # ───────────────────────────── Misc helpers  ──────────────────────────────────
-
 #' @title Resolve a tidy-select or character spec to character names
 #'
 #' @param .kn A `knowledge` object.
@@ -1857,7 +1878,10 @@ seq_tiers <- function(tiers, vars) {
 
   # fall back to tidyselect
   vars <- tryCatch(
-    names(tidyselect::eval_select(q, set_names(seq_along(.kn$vars$var), .kn$vars$var))),
+    names(tidyselect::eval_select(q, rlang::set_names(
+      seq_along(.kn$vars$var),
+      .kn$vars$var
+    ))),
     error = function(e) character(0)
   )
   if (length(vars)) {
