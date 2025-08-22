@@ -653,7 +653,11 @@ test_that("conversion from empty tamat (pdag) works", {
   disco_tbl <- tibble::as_tibble(discography(tm))
   expect_equal(
     disco_tbl,
-    tibble(from = character(), to = character(), edge_type = character())
+    tibble::tibble(
+      from = character(),
+      to = character(),
+      edge_type = character()
+    )
   )
 })
 
@@ -730,7 +734,7 @@ test_that("tamat defaults to pdag when type is NULL and no prior attr", {
   tm <- tamat(m, order = "t", type = NULL) # no attr on input
   disco_tbl <- tibble::as_tibble(discography(tm))
 
-  expect_equal(disco_tbl, tibble(from = "X", to = "Y", edge_type = "---"))
+  expect_equal(disco_tbl, tibble::tibble(from = "X", to = "Y", edge_type = "---"))
 })
 
 test_that("tamat respects existing tamat_type attr when type = NULL", {
@@ -744,7 +748,7 @@ test_that("tamat respects existing tamat_type attr when type = NULL", {
   tm <- tamat(m, order = "t", type = NULL) # should keep 'ag'
   disco_tbl <- tibble::as_tibble(discography(tm))
 
-  expect_equal(disco_tbl, tibble(from = "A", to = "B", edge_type = "o-o"))
+  expect_equal(disco_tbl, tibble::tibble(from = "A", to = "B", edge_type = "o-o"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -789,7 +793,7 @@ test_that("tamat accepts 'pag' alias for AG/PAG handling", {
   tm <- tamat(m, order = "t", type = "pag")
   disco_tbl <- tibble::as_tibble(discography(tm))
 
-  expect_equal(disco_tbl, tibble(from = "a", to = "b", edge_type = "o-o"))
+  expect_equal(disco_tbl, tibble::tibble(from = "a", to = "b", edge_type = "o-o"))
 })
 
 test_that("discography.tamat falls back to V1…Vn when dimnames are missing", {
@@ -799,7 +803,7 @@ test_that("discography.tamat falls back to V1…Vn when dimnames are missing", {
   tm <- tamat(m, order = "t", type = "pdag")
 
   disco_tbl <- tibble::as_tibble(discography(tm))
-  expect_equal(disco_tbl, tibble(from = "V1", to = "V2", edge_type = "---"))
+  expect_equal(disco_tbl, tibble::tibble(from = "V1", to = "V2", edge_type = "---"))
 })
 
 test_that("discography.tamat errors on unknown tamat_type", {
