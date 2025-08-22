@@ -243,11 +243,10 @@ tpc <- function(data = NULL,
 #'
 #' @return A \code{knowledge} object with tiers matching \code{order}.
 #' @keywords internal
-
-.build_knowledge_from_order <- function(order, data, vnames = NULL) {
+.build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
   stopifnot(is.character(order), length(order) > 0)
 
-  # tier specs: "<lbl>" ~ starts_with("<lbl>")
+  # build tier specs like: "<lbl>" ~ starts_with("<lbl>")
   fmls <- lapply(order, function(lbl) {
     rlang::new_formula(
       lhs = rlang::expr(!!lbl),
@@ -255,7 +254,41 @@ tpc <- function(data = NULL,
       env = rlang::empty_env()
     )
   })
-  rlang::inject(knowledge(data, tier(!!!fmls)))
+
+  # if data is provided, delegate to knowledge() with tier() rules
+  if (!is.null(data)) {
+    return(rlang::inject(knowledge(data, tier(!!!fmls))))
+  }
+
+  # otherwise, build a bare knowledge object from variable names
+  if (is.null(vnames) && is.null(data)) {
+    stop("`data` is NULL, so `vnames` should be provided.")
+  }
+
+  kn <- knowledge() |> add_vars(vnames)
+
+  # create tiers in declared order
+  for (lbl in order) {
+    if (nrow(kn$tiers) == 0L) {
+      kn <- add_tier(kn, !!lbl)
+    } else {
+      last <- utils::tail(kn$tiers$label, 1)
+      kn <- rlang::inject(add_tier(kn, !!lbl, after = !!last))
+    }
+  }
+
+  # assign tiers by prefix match; do not overwrite earlier assignments
+  for (lbl in order) {
+    hits <- startsWith(vnames, lbl)
+    if (any(hits)) {
+      idx <- match(vnames[hits], kn$vars$var)
+      unassigned <- is.na(kn$vars$tier[idx])
+      if (any(unassigned)) {
+        kn$vars$tier[idx[unassigned]] <- lbl
+      }
+    }
+  }
+  kn
 }
 
 #' Temporally orient unshielded colliders

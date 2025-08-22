@@ -378,6 +378,65 @@ test_that(".build_knowledge_from_order returns merged knowledge when data is pre
   expect_true(all(names(df) %in% kn$vars$var))
 })
 
+
+test_that(".build_knowledge_from_order errors when data is NULL and vnames missing", {
+  expect_error(
+    .build_knowledge_from_order(order = c("T1", "T2"), data = NULL, vnames = NULL),
+    "`data` is NULL, so `vnames` should be provided.",
+    fixed = TRUE
+  )
+})
+
+test_that(".build_knowledge_from_order builds tiers in declared order (vnames path)", {
+  vnames <- c("T1_x", "T1_y", "T2_a", "zzz")
+  kn <- .build_knowledge_from_order(order = c("T1", "T2"), data = NULL, vnames = vnames)
+
+  expect_s3_class(kn, "knowledge")
+  expect_identical(kn$tiers$label, c("T1", "T2"))
+  expect_setequal(kn$vars$var, vnames)
+
+  # guard against NA in the logical index
+  t1_idx <- which(!is.na(kn$vars$tier) & kn$vars$tier == "T1")
+  t2_idx <- which(!is.na(kn$vars$tier) & kn$vars$tier == "T2")
+
+  expect_setequal(kn$vars$var[t1_idx], c("T1_x", "T1_y"))
+  expect_setequal(kn$vars$var[t2_idx], "T2_a")
+
+  # variables with no matching prefix remain NA
+  expect_true(is.na(kn$vars$tier[match("zzz", kn$vars$var)]))
+})
+
+test_that(".build_knowledge_from_order does not overwrite earlier tier assignments", {
+  # x1a matches both "x" and "x1"; since we declare order = c("x", "x1"),
+  # "x" must win and x1a should stay in tier "x"
+  vnames <- c("x", "x1a", "x1b", "other")
+  kn <- .build_knowledge_from_order(order = c("x", "x1"), data = NULL, vnames = vnames)
+
+  expect_identical(kn$tiers$label, c("x", "x1"))
+
+  # x assigned to tier "x"
+  expect_identical(kn$vars$tier[match("x", kn$vars$var)], "x")
+
+  # x1a/x1b start with both "x" and "x1"; first hit ("x") should stick
+  expect_identical(kn$vars$tier[match("x1a", kn$vars$var)], "x")
+  expect_identical(kn$vars$tier[match("x1b", kn$vars$var)], "x")
+
+  # unmatched stays NA
+  expect_true(is.na(kn$vars$tier[match("other", kn$vars$var)]))
+})
+
+test_that(".build_knowledge_from_order respects order even with empty-hit tiers", {
+  # Include a tier label that matches no variables; it should still appear
+  vnames <- c("A_1", "B_2")
+  kn <- .build_knowledge_from_order(order = c("A", "NOHIT", "B"), data = NULL, vnames = vnames)
+
+  expect_identical(kn$tiers$label, c("A", "NOHIT", "B"))
+  expect_setequal(kn$vars$var[kn$vars$tier == "A"], "A_1")
+  expect_setequal(kn$vars$var[kn$vars$tier == "B"], "B_2")
+
+  # NOHIT tier exists but has no assigned vars
+  expect_false("NOHIT" %in% kn$vars$tier)
+})
 test_that("is_after returns FALSE when any tier is missing", {
   kn <- knowledge() |> add_vars(c("A", "B"))
   expect_false(is_after("A", "B", kn))
