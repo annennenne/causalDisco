@@ -644,3 +644,167 @@ test_that("discography.amat() delegates to .amat.pag when object inherits amat.p
 
   expect_equal(tbl_via_switch, tbl_direct)
 })
+
+test_that("conversion from empty tamat (pdag) works", {
+  nodes <- LETTERS[1:4]
+  m <- matrix(0L, 4, 4, dimnames = list(nodes, nodes))
+  tm <- tamat(m, order = c("t1", "t2"), type = "pdag")
+
+  disco_tbl <- tibble::as_tibble(discography(tm))
+  expect_equal(
+    disco_tbl,
+    tibble(from = character(), to = character(), edge_type = character())
+  )
+})
+
+test_that("conversion from fully connected tamat (pdag) works", {
+  nodes <- LETTERS[1:6]
+  m <- matrix(0L, 6, 6, dimnames = list(nodes, nodes))
+
+  # Encode all i -> j for i < j using CPDAG 0/1 convention:
+  # A --> B  == put 1 in [B, A]
+  pairs_from <- c(
+    "A", "A", "A", "A", "A",
+    "B", "B", "B", "B",
+    "C", "C", "C",
+    "D", "D",
+    "E"
+  )
+  pairs_to <- c(
+    "B", "C", "D", "E", "F",
+    "C", "D", "E", "F",
+    "D", "E", "F",
+    "E", "F",
+    "F"
+  )
+  for (k in seq_along(pairs_from)) {
+    m[pairs_to[k], pairs_from[k]] <- 1L
+  }
+
+  tm <- tamat(m, order = c("t1", "t2"), type = "pdag")
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  expect_equal(
+    disco_tbl,
+    tibble::tibble(
+      from = pairs_from,
+      to = pairs_to,
+      edge_type = rep("-->", sum(1:5))
+    )
+  )
+})
+
+test_that("conversion from tamat cpdag mixture (directed + undirected) works", {
+  nodes <- LETTERS[1:4]
+  m <- matrix(0L, 4, 4, dimnames = list(nodes, nodes))
+
+  # A --> B  (mark 1 at [B, A])
+  m["B", "A"] <- 1L
+  # C --> B
+  m["B", "C"] <- 1L
+  # A --- D  (1 both ways)
+  m["A", "D"] <- 1L
+  m["D", "A"] <- 1L
+  # C --- D
+  m["C", "D"] <- 1L
+  m["D", "C"] <- 1L
+
+  tm <- tamat(m, order = c("t1", "t2"), type = "pdag")
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  cpdag_edge_tbl <- tibble::tibble(
+    from      = c("A", "A", "C", "C"),
+    to        = c("B", "D", "B", "D"),
+    edge_type = c("-->", "---", "-->", "---")
+  )
+  expect_equal(disco_tbl, cpdag_edge_tbl)
+})
+
+test_that("tamat defaults to pdag when type is NULL and no prior attr", {
+  nodes <- c("X", "Y")
+  m <- matrix(0L, 2, 2, dimnames = list(nodes, nodes))
+  # X --- Y
+  m["X", "Y"] <- 1L
+  m["Y", "X"] <- 1L
+
+  tm <- tamat(m, order = "t", type = NULL) # no attr on input
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  expect_equal(disco_tbl, tibble(from = "X", to = "Y", edge_type = "---"))
+})
+
+test_that("tamat respects existing tamat_type attr when type = NULL", {
+  nodes <- c("A", "B")
+  m <- matrix(0L, 2, 2, dimnames = list(nodes, nodes))
+  # A o-o B (circles both ends in PAG encoding)
+  m["A", "B"] <- 1L
+  m["B", "A"] <- 1L
+  attr(m, "tamat_type") <- "ag"
+
+  tm <- tamat(m, order = "t", type = NULL) # should keep 'ag'
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  expect_equal(disco_tbl, tibble(from = "A", to = "B", edge_type = "o-o"))
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# tamat
+# ──────────────────────────────────────────────────────────────────────────────
+
+test_that("conversion from tamat PAG/AG works (mixed marks)", {
+  # codes: 0 none | 1 circle | 2 arrow | 3 tail   (column-oriented)
+  nodes <- LETTERS[1:4]
+  m <- matrix(0L, 4, 4, dimnames = list(nodes, nodes))
+  # A --> B     : [B,A]=2? (No: PAG uses 3 tail & 2 arrow; see below)
+  # Use same pattern as your amat.pag test:
+  m[1, 2] <- 2
+  m[2, 1] <- 3 # A --> B
+  m[1, 3] <- 1
+  m[3, 1] <- 2 # A --o C
+  m[2, 3] <- 3
+  m[3, 2] <- 1 # B o-> C
+  m[2, 4] <- 1
+  m[4, 2] <- 2 # B o-> D
+  m[3, 4] <- 3
+  m[4, 3] <- 1 # C --o D
+
+  tm <- tamat(m, order = c("t1", "t2"), type = "ag")
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  pag_edge_tbl <- tibble::tibble(
+    from      = c("A", "C", "C", "D", "D"),
+    to        = c("B", "A", "B", "B", "C"),
+    edge_type = c("-->", "o->", "--o", "o->", "--o")
+  )
+  expect_equal(disco_tbl, pag_edge_tbl)
+})
+
+test_that("tamat accepts 'pag' alias for AG/PAG handling", {
+  nodes <- c("a", "b")
+  m <- matrix(0L, 2, 2, dimnames = list(nodes, nodes))
+  # a o-o b
+  m["a", "b"] <- 1L
+  m["b", "a"] <- 1L
+
+  tm <- tamat(m, order = "t", type = "pag")
+  disco_tbl <- tibble::as_tibble(discography(tm))
+
+  expect_equal(disco_tbl, tibble(from = "a", to = "b", edge_type = "o-o"))
+})
+
+test_that("discography.tamat falls back to V1…Vn when dimnames are missing", {
+  m <- matrix(0L, 2, 2) # no names
+  m[1, 2] <- 1L
+  m[2, 1] <- 1L # V1 --- V2 (pdag)
+  tm <- tamat(m, order = "t", type = "pdag")
+
+  disco_tbl <- tibble::as_tibble(discography(tm))
+  expect_equal(disco_tbl, tibble(from = "V1", to = "V2", edge_type = "---"))
+})
+
+test_that("discography.tamat errors on unknown tamat_type", {
+  m <- matrix(0L, 1, 1)
+  tm <- tamat(m, order = "t", type = "weird")
+
+  expect_error(discography(tm), "Unknown `tamat_type`")
+})
