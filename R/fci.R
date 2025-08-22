@@ -23,6 +23,13 @@ fci <- function(
     test,
     alpha = 0.05,
     ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang"
+    ),
+    function_name = "fci"
+  )
+
   engine <- match.arg(engine)
   args <- rlang::list2(...)
 
@@ -40,6 +47,13 @@ fci <- function(
 attr(fci, "engines") <- c("tetrad", "pcalg")
 
 fci_tetrad_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang", "rJava"
+    ),
+    function_name = "fci_tetrad_runner"
+  )
+
   search <- TetradSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "fci",
@@ -67,6 +81,12 @@ fci_tetrad_runner <- function(test, alpha, ...) {
 
 fci_pcalg_runner <- function(test, alpha, ...,
                              directed_as_undirected_knowledge = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "fci_pcalg_runner"
+  )
   args <- list(...)
   search <- pcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "fci",

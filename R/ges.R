@@ -20,6 +20,13 @@ ges <- function(
     engine = c("tetrad", "pcalg"),
     score,
     ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang"
+    ),
+    function_name = "ges"
+  )
+
   engine <- match.arg(engine)
   args <- rlang::list2(...)
 
@@ -36,6 +43,13 @@ ges <- function(
 
 #' @keywords internal
 ges_tetrad_runner <- function(score, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rJava", "rlang"
+    ),
+    function_name = "ges_tetrad_runner"
+  )
+
   search <- TetradSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "fges",
@@ -68,6 +82,13 @@ ges_tetrad_runner <- function(score, ...) {
 #' @keywords internal
 ges_pcalg_runner <- function(score, ...,
                              directed_as_undirected_knowledge = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "ges_pcalg_runner"
+  )
+
   args <- list(...)
   search <- pcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "ges",

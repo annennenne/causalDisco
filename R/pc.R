@@ -23,6 +23,13 @@ pc <- function(
     test,
     alpha = 0.05,
     ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang"
+    ),
+    function_name = "pc"
+  )
+
   engine <- match.arg(engine)
   args <- rlang::list2(...)
 
@@ -41,6 +48,13 @@ pc <- function(
 
 #' @keywords internal
 pc_tetrad_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rJava", "rlang"
+    ),
+    function_name = "pc_tetrad_runner"
+  )
+
   search <- TetradSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
@@ -68,10 +82,20 @@ pc_tetrad_runner <- function(test, alpha, ...) {
 
 
 #' @keywords internal
-pc_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge = FALSE) {
+pc_pcalg_runner <- function(test, alpha, ...,
+                            directed_as_undirected_knowledge = FALSE) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg",
+    ),
+    function_name = "pc_pcalg_runner"
+  )
+
   search <- pcalgSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc", test = test)
+  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc",
+    test = test
+  )
 
   search$set_params(args_to_pass$alg_args)
   search$set_test(test, alpha)
@@ -92,6 +116,13 @@ pc_pcalg_runner <- function(test, alpha, ..., directed_as_undirected_knowledge =
 
 #' @keywords internal
 pc_bnlearn_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "bnlearn",
+    ),
+    function_name = "pc_bnlearn_runner"
+  )
+
   args <- list(...)
   search <- bnlearnSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "bnlearn", "pc")
