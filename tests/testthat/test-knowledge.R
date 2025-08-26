@@ -33,14 +33,28 @@ testthat::test_that("knowledge object is created correctly using mini-DSL", {
 })
 
 # seeding with dataframe
-testthat::test_that("seeding knowledge object with a df", {
+testthat::test_that("seeding knowledge object with a df, matrix, or tibble works", {
   df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
+  tbl <- tibble::as_tibble(df)
+  mat <- as.matrix(df)
   kn <-
     knowledge(
       df,
       tier(1 ~ X1, 2 ~ X2 + X3),
       required(X1 ~ X2)
     )
+  kn_tbl <- knowledge(
+    tbl,
+    tier(1 ~ X1, 2 ~ X2 + X3),
+    required(X1 ~ X2)
+  )
+  kn_mat <- knowledge(
+    mat,
+    tier(1 ~ X1, 2 ~ X2 + X3),
+    required(X1 ~ X2)
+  )
+  testthat::expect_equal(kn, kn_tbl)
+  testthat::expect_equal(kn, kn_mat)
   testthat::expect_equal(kn$frozen, TRUE)
   testthat::expect_equal(kn$vars, tibble::tibble(
     var = c("X1", "X2", "X3", "X4"),

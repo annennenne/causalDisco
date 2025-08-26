@@ -78,8 +78,9 @@ knowledge <- function(...) {
       eval(dots[[1]], parent.frame()),
       error = function(e) NULL
     )
-    if (is.data.frame(first)) {
-      df <- first
+
+    if (inherits(first, c("data.frame", "matrix", "tbl_df"))) {
+      df <- as.data.frame(first)
       dots <- dots[-1]
     }
   }
@@ -321,8 +322,9 @@ knowledge <- function(...) {
   allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
   for (expr in dots) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
-      stop("Only tier(), forbidden(), required(), and exogenous()
-           (as well as exo() and root() as synonyms) calls are allowed.",
+      stop("Only tier(), forbidden(), required(), and exogenous()",
+        "(as well as exo() and root() as synonyms) calls are allowed.\n",
+        "The expression that triggered this error was: ", deparse(expr),
         call. = FALSE
       )
     }
