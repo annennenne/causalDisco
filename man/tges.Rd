@@ -2,41 +2,27 @@
 % Please edit documentation in R/tges.R
 \name{tges}
 \alias{tges}
-\title{Temporal GES with background knowledge}
+\title{Estimate the restricted Markov equivalence class using Temporal Greedy Equivalence Search}
 \usage{
-tges(score, knowledge = NULL, order = NULL, verbose = FALSE)
+tges(score, verbose = FALSE)
 }
 \arguments{
-\item{score}{A score object compatible with \pkg{pcalg}/\pkg{gies}, typically
-an instance of \code{GaussL0penIntScore} or \code{GaussL0penIntScoreORDER}.
-Must provide \code{score$pp.dat$vertex.count} (scalar integer) and \code{score$.nodes}.}
+\item{score}{tiered scoring object to be used.
+At the moment only scores supported are
+\itemize{
+\item \code{\linkS4class{TemporalBIC}} and
+\item \code{\linkS4class{TemporalBDeu}}.
+}}
 
-\item{knowledge}{A knowledge object describing tiers/temporal ordering of
-variables. Parents from later tiers are forbidden. See \link{knowledge}.}
-
-\item{order}{Deprecated. A character vector of tier labels used to build a
-\code{knowledge} object via prefix matching of node names. Use \verb{knowledge=}
-instead.}
-
-\item{verbose}{Logical; if \code{TRUE}, passes verbosity to the C++ search and
-background-knowledge application.}
+\item{verbose}{indicates whether debug output should be printed.}
 }
 \value{
 A \code{discography} object (the canonical representation for
 \code{EssGraph}/\code{TEssGraph} results in this package).
 }
 \description{
-Runs a greedy equivalence search (GES) over essential graphs while enforcing
-temporal background knowledge. The search proceeds in three phases
-(forward, backward, turning), cleaning up any edges that violate the supplied
-knowledge after each improving step.
+Perform causal discovery using the temporal greedy equivalence search algorithm.
 }
-\details{
-The function constructs forbidden parent sets per node from \code{knowledge} and
-runs GIES one step at a time in each phase. After any improving step, it
-applies \code{pcalg::addBgKnowledge()} to re-impose the tier constraints and
-updates the in-edge representation accordingly.
-}
-\seealso{
-\link{GaussL0penIntScoreORDER}, \code{\link[=knowledge]{knowledge()}}, \code{\link[pcalg:addBgKnowledge]{pcalg::addBgKnowledge()}}
+\author{
+Tobias Ellegaard Larsen
 }

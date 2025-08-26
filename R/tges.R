@@ -3,213 +3,133 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-#' Temporal GES with background knowledge
+#' Estimate the restricted Markov equivalence class using Temporal Greedy Equivalence Search
 #'
-#' Runs a greedy equivalence search (GES) over essential graphs while enforcing
-#' temporal background knowledge. The search proceeds in three phases
-#' (forward, backward, turning), cleaning up any edges that violate the supplied
-#' knowledge after each improving step.
+#' Perform causal discovery using the temporal greedy equivalence search algorithm.
 #'
-#' @param score A score object compatible with \pkg{pcalg}/\pkg{gies}, typically
-#'   an instance of `GaussL0penIntScore` or `GaussL0penIntScoreORDER`.
-#'   Must provide `score$pp.dat$vertex.count` (scalar integer) and `score$.nodes`.
-#' @param knowledge A knowledge object describing tiers/temporal ordering of
-#'   variables. Parents from later tiers are forbidden. See \link{knowledge}.
-#' @param order Deprecated. A character vector of tier labels used to build a
-#'   `knowledge` object via prefix matching of node names. Use `knowledge=`
-#'   instead.
-#' @param verbose Logical; if `TRUE`, passes verbosity to the C++ search and
-#'   background-knowledge application.
+#' @param score tiered scoring object to be used.
+#'    At the moment only scores supported are
+#'    * \code{\linkS4class{TemporalBIC}} and
+#'    * \code{\linkS4class{TemporalBDeu}}.
+#' @param verbose	indicates whether debug output should be printed.
 #'
-#' @details
-#' The function constructs forbidden parent sets per node from `knowledge` and
-#' runs GIES one step at a time in each phase. After any improving step, it
-#' applies `pcalg::addBgKnowledge()` to re-impose the tier constraints and
-#' updates the in-edge representation accordingly.
+#' @author Tobias Ellegaard Larsen
 #'
 #' @return A `discography` object (the canonical representation for
 #'   `EssGraph`/`TEssGraph` results in this package).
 #'
-#' @seealso [GaussL0penIntScoreORDER], [knowledge()], [pcalg::addBgKnowledge()]
 #'
 #' @export
-tges <- function(score,
-                 knowledge = NULL,
-                 order = NULL, # deprecated
-                 verbose = FALSE) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "methods", "pcalg"
-    ),
-    function_name = "tges"
-  )
-
-  # ---------------------------------------------------------------------------
-  # Arg handling: prefer `knowledge`, allow legacy `order` with a warning
-  # ---------------------------------------------------------------------------
-  if (!is.null(knowledge) && !is.null(order)) {
-    stop(
-      "Both `knowledge` and `order` supplied. ",
-      "Please supply a knowledge object."
+tges <- function(score, verbose = FALSE) {
+  if (!inherits(score, c("TemporalBIC", "TemporalBDeu"))) {
+    stop("Score must be of type TemporalBIC or TemporalBDeu, ",
+      "the only score criteria supported by tges at the moment.",
+      call. = FALSE
     )
   }
-  if (is.null(knowledge) && !is.null(order)) {
-    warning(
-      "`order` is deprecated in version 1.0.0 and will be removed in a ",
-      "future version. Please supply a `knowledge` object instead."
-    )
-    knowledge <- .build_knowledge_from_order(
-      order,
-      vnames = score$.nodes
-    )
+  if (inherits(score, "TemporalBDeu") &&
+    !all(vapply(score$pp.dat$data, is.factor, logical(1)))) {
+    stop("When using TemporalBDeu the data must be factors.", call. = FALSE)
   }
-
-  check_knowledge_obj(knowledge)
-
-
-  # ---------------------------------------------------------------------------
-  # Validate score object before using it
-  # ---------------------------------------------------------------------------
-  if (is.null(score$pp.dat) ||
-    is.null(score$pp.dat$vertex.count) ||
-    !is.numeric(score$pp.dat$vertex.count) ||
-    length(score$pp.dat$vertex.count) != 1L ||
-    is.null(score$.nodes)) {
-    stop(
-      "Invalid `score` object supplied: must have ",
-      "`score$pp.dat$vertex.count` (scalar integer) and `.nodes`."
-    )
+  if (anyNA(score$pp.dat$data)) {
+    stop("Data must not contain missing values.", call. = FALSE)
   }
-
-  # ---------------------------------------------------------------------------
-  # Basic score-derived quantities
-  # ---------------------------------------------------------------------------
-  node.names <- score$.nodes
-  node.numbers <- seq_len(score$pp.dat$vertex.count)
-
-  # ---------------------------------------------------------------------------
-  # Initialize graph / forbidden parent sets from temporal knowledge
-  # ---------------------------------------------------------------------------
-  essgraph <- methods::new("TEssGraph",
+  node.numbers <- 1:score$pp.dat$vertex.count
+  essgraph <- new("TEssGraph",
     nodes = as.character(node.numbers),
     score = score
   )
+  Forbidden.edges <- essgraph$.in.edges # all with integer(0) entry (list)
+  node.names <- score$.nodes
+  num.bidir <- 0
+  num.directed <- 0
 
-  # Forbidden incoming edges are from *later* temporal tiers
-  Forbidden.edges <- essgraph$.in.edges
-  tier_idx <- .tier_index(knowledge, node.names)
-
-  for (i in node.numbers) {
-    # all nodes with strictly higher tier rank than node i are forbidden as parents of i
-    later_nodes <- node.numbers[which(tier_idx > tier_idx[i])]
-    Forbidden.edges[[i]] <- later_nodes
+  ord <- score$.order
+  for (n in node.numbers) {
+    Forbidden.edges[[n]] <- node.numbers[ord[n] < ord]
   }
 
-  # ---------------------------------------------------------------------------
-  # Greedy search (forward, backward, turning) with clean-up of forbidden edges
-  # ---------------------------------------------------------------------------
   cont <- TRUE
   while (cont) {
     cont <- FALSE
 
-    # ----- forward phase ------------------------------------------------------
+    # Forward phase
     runwhile <- TRUE
     while (runwhile) {
       tempstep <- essgraph$greedy.step("forward", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile) cont <- TRUE
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])) {
-        in.node.edges <- tempstep[-1][[i]]
+      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
+        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
-
+        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
         if (length(removed.edges) > 0) {
           bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(
-            gInput  = create_adj_matrix_from_list(essgraph$.in.edges),
-            x       = bgx,
-            y       = bgy,
-            verbose = verbose
-          )
-          amatbg <- to_adj_mat(amatbg)
-          if (!is.null(amatbg)) {
-            no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-            essgraph$.in.edges <- no.forbidden.edges
-          }
+          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
+          essgraph$.in.edges <- no.forbidden.edges
         }
       }
     }
 
-    # ----- backward phase -----------------------------------------------------
+    # Backward phase
     runwhile <- TRUE
     while (runwhile) {
       tempstep <- essgraph$greedy.step("backward", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile) cont <- TRUE
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])) {
-        in.node.edges <- tempstep[-1][[i]]
+      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
+        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
-
+        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
         if (length(removed.edges) > 0) {
           bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(
-            gInput  = create_adj_matrix_from_list(essgraph$.in.edges),
-            x       = bgx,
-            y       = bgy,
-            verbose = verbose
-          )
-          amatbg <- to_adj_mat(amatbg)
-          if (!is.null(amatbg)) {
-            no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-            essgraph$.in.edges <- no.forbidden.edges
-          }
+          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
+          essgraph$.in.edges <- no.forbidden.edges
         }
       }
     }
 
-    # ----- turning phase ------------------------------------------------------
+    # Turning phase
     runwhile <- TRUE
     while (runwhile) {
       tempstep <- essgraph$greedy.step("turning", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile) cont <- TRUE
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])) {
-        in.node.edges <- tempstep[-1][[i]]
+      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
+        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
-
+        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
         if (length(removed.edges) > 0) {
           bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(
-            gInput  = create_adj_matrix_from_list(essgraph$.in.edges),
-            x       = bgx,
-            y       = bgy,
-            verbose = verbose
-          )
-          amatbg <- to_adj_mat(amatbg)
-          if (!is.null(amatbg)) {
-            no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-            essgraph$.in.edges <- no.forbidden.edges
-          }
+          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
+          essgraph$.in.edges <- no.forbidden.edges
         }
       }
     }
   }
 
-  # ---------------------------------------------------------------------------
-  # Finalize names and return as discography (method for EssGraph/TEssGraph)
-  # ---------------------------------------------------------------------------
-  essgraph$.nodes <- node.names
-  names(essgraph$.in.edges) <- node.names
-
-  essgraph |> discography()
+  return(essgraph |> discography())
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -329,6 +249,7 @@ to_adj_mat <- function(obj) {
 #' }
 #'
 #' @seealso [tges()], [GaussL0penIntScoreORDER]
+#' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
 #' @export
 TEssGraph <- setRefClass("TEssGraph",
@@ -379,48 +300,151 @@ TEssGraph <- setRefClass("TEssGraph",
   ), inheritPackage = TRUE
 )
 
-
-#' Order-aware Gauss L0 penalized score
+#' Temporal Bayesian Information Criterion (Score criterion)
 #'
-#' Extends `GaussL0penIntScore` with an `.order` field and enforces that a
-#' vertex may only have parents from the same or earlier order/tier. When
-#' `.format == "raw"` or `"scatter"` and `c.fcn == "none"`, the local score is
-#' computed in R; otherwise it delegates to the C++ scoring function.
+#' A Reference Class for Gaussian Observational Data Scoring with Tiered
+#' Background Knowledge. This class represents a score for causal discovery
+#' using tiered background knowledge from observational Gaussian
+#' data; it is used in the causal discovery function \code{\link{tges}}.
 #'
-#' @section Fields:
-#' \describe{
-#'   \item{.order}{Numeric or integer vector, one per node, giving the allowed
-#'   temporal/tier order. Parents must not have a strictly larger value than the
-#'   child.}
+#' The class implements a score which scores all edges contradicting the ordering
+#' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
+#' the edges does not contradict, the score is equal to that of \code{\linkS4class{GaussL0penObsScore}}:
+#' The class implements an \eqn{\ell_0}{ℓ0}-penalized Gaussian maximum
+#' likelihood estimator. The penalization is a constant (specified by
+#' the argument \code{lambda} in the constructor) times the number of
+#' parameters of the DAG model. By default, the constant \eqn{\lambda}{λ} is
+#' chosen as \eqn{\log(n)/2}{log(n)/2}, which corresponds to the BIC score.
+#'
+#' @section Extends:
+#' Class \code{\linkS4class{GaussL0penObsScore}} from \pkg{pcalg}, directly.
+#'
+#' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
+#'
+#' @section Constructor:
+#' \preformatted{
+#' new("TemporalBIC",
+#'   data = matrix(1, 1, 1),
+#'   order =  rep(1,ncol(data)),
+#'   lambda = 0.5 * log(nrow(data)),
+#'   intercept = TRUE,
+#'   ...)
 #' }
 #'
-#' @section Methods:
-#' \describe{
-#'   \item{initialize(..., order = rep(1, p))}{Constructor that stores the order
-#'   and forwards remaining arguments to `GaussL0penIntScore`.}
-#'   \item{local.score(vertex, parents, ...)}{Returns the local contribution of
-#'   `vertex` given `parents`. Returns `-Inf` if any parent violates the order.}
-#' }
+#' @param data A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
+#' corresponds to one observational realization.
+#' @param order A vector specifying the order each variable. Can be either a vector of integers
+#' or an vector of prefixes. If integers, such that the ith entry
+#' will detail the order of the ith variable in the dataset. Must start at 1 an increase
+#' with increments of 1. If prefixes, must be in order.
+#' @param lambda Penalization constant (see details).
+#' @param intercept Logical; indicates whether an intercept is allowed in the
+#' linear structural equations (i.e., whether a nonzero mean is allowed).
 #'
-#' @seealso [tges()]
+#' @author Tobias Ellegaard Larsen
 #'
-#' @export
-GaussL0penIntScoreORDER <- setRefClass("GaussL0penIntScoreORDER",
+#' @examples
+#' # Simulate Gaussian data
+#' set.seed(123)
+#' n <- 500
+#' child_x <- rnorm(n)
+#' child_y <- 0.5 * child_x + rnorm(n)
+#' child_z <- 2 * child_x + child_y + rnorm(n)
+#'
+#' adult_x <- child_x + rnorm(n)
+#' adult_z <- child_z + rnorm(n)
+#' adult_w <- 2 * adult_z + rnorm(n)
+#' adult_y <- 2 * child_x + adult_w + rnorm(n)
+#'
+#' simdata <- data.frame(
+#'   child_x, child_y, child_z,
+#'   adult_x, adult_z, adult_w,
+#'   adult_y
+#' )
+#'
+#' # Define order in prefix way
+#' prefix_order <- c("child", "adult")
+#'
+#' # Define TBIC score
+#' t_score <- new("TemporalBIC",
+#'   order = prefix_order,
+#'   data = simdata
+#' )
+#' # Run tges
+#' tges_pre <- tges(t_score)
+#'
+#' # Plot MPDAG
+#' plot(tges_pre)
+#'
+#' # Define order in integer way
+#' integer_order <- c(1, 1, 1, 2, 2, 2, 2)
+#'
+#' # Define TBIC score
+#' t_score <- new("TemporalBIC",
+#'   order = integer_order,
+#'   data = simdata
+#' )
+#' # Run tges
+#' tges_int <- tges(t_score)
+#'
+#' # Plot MPDAG
+#' plot(tges_int)
+#'
+#' @seealso
+#' \code{\link{tges}}
+#'
+#' @importClassesFrom pcalg GaussL0penIntScore
+#'
+#' @exportClass TemporalBIC
+#' @export TemporalBIC
+TemporalBIC <- setRefClass("TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
     .order = "vector"
   ),
   methods = list(
-    # Constructor
-    initialize = function(data = matrix(1, 1, 1),
+    initialize = function(data = NULL,
                           nodes = colnames(data),
                           lambda = 0.5 * log(nrow(data)),
                           intercept = TRUE,
                           format = c("raw", "scatter"),
-                          use.cpp = TRUE,
-                          order = rep(1, ncol(data)),
+                          use.cpp = FALSE,
+                          knowledge = NULL,
+                          order = NULL, # deprecated
                           ...) {
-      .order <<- order
+      if (!is.null(knowledge) && !is.null(order)) {
+        stop("Both `knowledge` and `order` supplied. ",
+          "Please supply a knowledge object only.",
+          call. = FALSE
+        )
+      }
+      if (is.null(knowledge) && !is.null(order)) {
+        warning(
+          "`order` is deprecated in version 1.0.0 and will be removed in",
+          " a future version. Please supply a `knowledge` object instead."
+        )
+        if (is.numeric(order)) {
+          knowledge <- rlang::inject(knowledge(data, tier(!!order)))
+        } else if (is.character(order)) {
+          knowledge <- .build_knowledge_from_order(
+            order,
+            vnames = nodes
+          )
+        } else {
+          stop("`order` must be either a vector of integers or a vector of ",
+            "prefixes. Provide a knowledge object instead.",
+            call. = FALSE
+          )
+        }
+      }
+      if (is.null(knowledge) && is.null(order)) {
+        knowledge <- knowledge() |> add_vars(nodes)
+      }
+
+      check_knowledge_obj(knowledge)
+
+      .order <<- .tier_index(knowledge, nodes)
+
       callSuper(
         data = data,
         targets = list(integer(0)),
@@ -432,38 +456,40 @@ GaussL0penIntScoreORDER <- setRefClass("GaussL0penIntScoreORDER",
         use.cpp = use.cpp,
         ...
       )
-    }, # Same as GaussL0penObsScore
-
-    # Calculates the local score of a vertex and its parents
+    },
     local.score = function(vertex, parents, ...) {
-      # Check validity of arguments
       validate.vertex(vertex)
       validate.parents(parents)
-      order <- .order
-      if (order[vertex] >= max(c(order[parents], -Inf))) {
-        # Checks if parents are before or same
+
+      ord <- .order
+      child_t <- ord[vertex]
+      parent_ts <- ord[parents]
+
+      # do not enforce if child or any parent lacks a tier (NA)
+      if (is.na(child_t) || any(is.na(parent_ts)) ||
+        child_t >= max(c(parent_ts, -Inf))) {
         if (c.fcn == "none") {
-          # Calculate score in R
+          # calculate score in R
           if (.format == "raw") {
             # calculate score from raw data matrix
-            # Response vector for linear regression
+            # response vector for linear regression
             Y <- pp.dat$data[pp.dat$non.int[[vertex]], vertex]
             sigma2 <- sum(Y^2)
 
             if (length(parents) + pp.dat$intercept != 0) {
-              # Get data matrix on which linear regression is based
+              # get data matrix on which linear regression is based
               Z <- pp.dat$data[pp.dat$non.int[[vertex]], parents, drop = FALSE]
               if (pp.dat$intercept) {
                 Z <- cbind(1, Z)
               }
 
-              # Calculate the scaled error covariance using QR decomposition
+              # calculate the scaled error covariance using QR decomposition
               Q <- qr.Q(qr(Z))
               sigma2 <- sigma2 - sum((Y %*% Q)^2)
             }
           } else if (.format == "scatter") {
-            # Calculate the score based on pre-calculated scatter matrices
-            # If an intercept is allowed, add a fake parent node
+            # calculate the score based on pre-calculated scatter matrices
+            # if an intercept is allowed, add a fake parent node
             parents <- sort(parents)
             if (pp.dat$intercept) {
               parents <- c(pp.dat$vertex.count + 1, parents)
@@ -477,17 +503,261 @@ GaussL0penIntScoreORDER <- setRefClass("GaussL0penIntScoreORDER",
             }
           }
 
-          # Return local score
+          # return local score
           lscore <- -0.5 * pp.dat$data.count[vertex] *
             (1 + log(sigma2 / pp.dat$data.count[vertex])) -
             pp.dat$lambda * (1 + length(parents))
           return(lscore)
         } else {
-          # Calculate score with the C++ library
-          .Call(localScore, c.fcn, pp.dat, vertex, parents, c.fcn.options(...))
+          # Calculate score with the C++ library (NOT ABLE TO DO THIS YET)
+          stop("Not able to compute using C++. Set use.cpp = FALSE")
         }
       } else {
-        # set score to minus infinity if vertex earlier than parents
+        skip <- -Inf
+        return(skip)
+      } # set score to minus infinity if vertex earlier than parents
+    }
+  ),
+  inheritPackage = TRUE
+)
+
+#' Temporal Bayesian Dirichlet equivalent uniform (Score criterion)
+#'
+#' A reference class for categorical observational data Scoring with Tiered
+#' Background Knowledge. This class represents a score for causal discovery
+#' using tiered background knowledge from observational categorical
+#' data; it is used in the causal discovery function \code{\link{tges}}.
+#'
+#' The class implements a score which scores all edges contradicting the ordering
+#' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
+#' the edges does not contradict, the score is equal to that of the standard BDeu.
+#'
+#' @section Extends:
+#' Class \code{\linkS4class{Score}} from \pkg{pcalg}, directly.
+#'
+#' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
+#'
+#' @section Constructor:
+#' \preformatted{
+#' new("TemporalBdeu",
+#'   data = matrix(1, 1, 1),
+#'   order =  rep(1,ncol(data)),
+#'   iss = 1
+#'   ...)
+#' }
+#'
+#'
+#'
+#' @param data A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
+#' corresponds to one observational realization.
+#' @param order A vector specifying the order each variable. Can be either a vector of integers
+#' or an vector of prefixes. If integers, such that the ith entry
+#' will detail the order of the ith variable in the dataset. Must start at 1 an increase
+#' with increments of 1. If prefixes, must be in order.
+#' @param iss Imaginary Sample Size (ISS), also referred to as
+#' Equivalent Sample Size (ESS), determines how much weight is assigned to the prior
+#' in terms of the size of animaginary sample supporting it. Increasing the ISS will
+#' increase the density of the estimated graph.
+#'
+#' @author Tobias Ellegaard Larsen
+#'
+#' @examples
+#' # For reproducibility
+#' set.seed(123)
+#'
+#' # Number of samples
+#' n <- 1000
+#'
+#' # Define probabilities for A
+#' p_A <- c(0.4, 0.35, 0.25) # Probabilities for A = {1, 2, 3}
+#'
+#' # Simulate A from a categorical distribution
+#' A <- sample(1:3, n, replace = TRUE, prob = p_A)
+#'
+#' # Define conditional probabilities for B given A
+#' p_B_given_A <- list(
+#'   c(0.7, 0.3), # P(B | A=1)
+#'   c(0.4, 0.6), # P(B | A=2)
+#'   c(0.2, 0.8) # P(B | A=3)
+#' )
+#'
+#' # Sample B based on A
+#' B <- sapply(A, function(a) sample(1:2, 1, prob = p_B_given_A[[a]]))
+#'
+#' # Define conditional probabilities for C given A and B
+#' p_C_given_A_B <- list(
+#'   "1_1" = c(0.6, 0.4), # P(C | A=1, B=1)
+#'   "1_2" = c(0.3, 0.7), # P(C | A=1, B=2)
+#'   "2_1" = c(0.5, 0.5), # P(C | A=2, B=1)
+#'   "2_2" = c(0.2, 0.8), # P(C | A=2, B=2)
+#'   "3_1" = c(0.7, 0.3), # P(C | A=3, B=1)
+#'   "3_2" = c(0.4, 0.6) # P(C | A=3, B=2)
+#' )
+#'
+#' # Sample C based on A and B
+#' C <- mapply(function(a, b) sample(1:2, 1, prob = p_C_given_A_B[[paste(a, b, sep = "_")]]), A, B)
+#'
+#' # Create dataset
+#' simdata <- data.frame(as.factor(A), as.factor(B), as.factor(C))
+#'
+#' # Define order in prefix way
+#' colnames(simdata) <- c("child_A", "child_B", "adult_C")
+#' prefix_order <- c("child", "adult")
+#'
+#' # Define TemporalBDeu score
+#' t_score <- new("TemporalBDeu",
+#'   order = prefix_order,
+#'   data = simdata
+#' )
+#' # Run tges
+#' tges_pre <- tges(t_score)
+#'
+#' # Plot MPDAG
+#' plot(tges_pre)
+#'
+#'
+#' # Define order in integer way
+#' colnames(simdata) <- c("A", "B", "C")
+#' integer_order <- c(1, 1, 2)
+#'
+#' # Define TemporalBDeu score
+#' t_score <- new("TemporalBDeu",
+#'   order = integer_order,
+#'   data = simdata
+#' )
+#' # Run tges
+#' tges_integer <- tges(t_score)
+#'
+#' # Plot MPDAG
+#' plot(tges_integer)
+#'
+#' @seealso
+#' \code{\link{tges}}
+#'
+#' @importClassesFrom pcalg Score
+#'
+#' @exportClass TemporalBDeu
+#' @export TemporalBDeu
+TemporalBDeu <- setRefClass("TemporalBDeu",
+  contains = "DataScore",
+  fields = list(
+    .order = "vector",
+    .iss = "numeric"
+  ),
+  methods = list(
+    initialize = function(data = matrix(1, 1, 1),
+                          nodes = colnames(data),
+                          iss = 1,
+                          knowledge = NULL,
+                          order = NULL, # deprecated
+                          ...) {
+      if (!is.null(knowledge) && !is.null(order)) {
+        stop("Both `knowledge` and `order` supplied. ",
+          "Please supply a knowledge object only.",
+          call. = FALSE
+        )
+      }
+      if (is.null(knowledge) && !is.null(order)) {
+        warning(
+          "`order` is deprecated in version 1.0.0 and will be removed in",
+          " a future version. Please supply a `knowledge` object instead."
+        )
+        if (is.numeric(order)) {
+          knowledge <- rlang::inject(knowledge(data, tier(!!order)))
+        } else if (is.character(order)) {
+          knowledge <- .build_knowledge_from_order(
+            order,
+            vnames = nodes
+          )
+        } else {
+          stop("`order` must be either a vector of integers or a vector of ",
+            "prefixes. Provide a knowledge object instead.",
+            call. = FALSE
+          )
+        }
+      }
+      if (is.null(knowledge) && is.null(order)) {
+        knowledge <- knowledge() |> add_vars(nodes)
+      }
+
+      check_knowledge_obj(knowledge)
+
+      .order <<- .tier_index(knowledge, nodes)
+      .iss <<- iss
+
+      callSuper(
+        data = data,
+        nodes = nodes,
+        iss = iss,
+        ...
+      )
+    },
+    local.score = function(vertex, parents, ...) {
+      # check validity of arguments
+      validate.vertex(vertex)
+      validate.parents(parents)
+      ord <- .order
+      iss <- .iss
+      child_t <- ord[vertex]
+      parent_ts <- ord[parents]
+
+      # do not enforce if child or any parent lacks a tier (NA)
+      if (is.na(child_t) || any(is.na(parent_ts)) ||
+        child_t >= max(c(parent_ts, -Inf))) {
+        D <- pp.dat$data[, c(vertex, parents), drop = FALSE]
+        pa_nam <- colnames(pp.dat$data)[parents]
+        ve_nam <- colnames(pp.dat$data)[vertex]
+
+        if (length(parents) == 0) {
+          # number of possible configurations of states of parents
+          q <- 1
+
+          # number of states for vertex
+          r <- nlevels(D[[ve_nam]])
+
+          alpha_j <- iss
+
+          # set pa_score to 0
+          pa_score <- lgamma(alpha_j) - lgamma(alpha_j + nrow(D))
+        } else {
+          # number of in variables
+          nlev_D <- sapply(D[, c(ve_nam, pa_nam)], nlevels)
+
+          # number of possible configurations of states of parents
+          q <- prod(nlev_D[pa_nam])
+
+          # number of states for vertex
+          r <- nlev_D[ve_nam]
+
+          # table with number of occurences for parents and parents combinations
+          tab_pa <- as.data.frame(table(D[, c(pa_nam)]))
+
+          alpha_j <- iss / q
+
+          pa_score <- nrow(tab_pa) * lgamma(alpha_j) -
+            sum(sapply(tab_pa$Freq, function(x) lgamma(alpha_j + x)))
+        }
+
+
+        # table with number of occurences and state combinations
+        tab_D <- as.data.frame(table(D))
+
+
+        # uniform prior with alpha according to imaginary sample size (iss)
+        alpha_jk <- alpha_j / r
+
+        constant <- nrow(tab_D) * lgamma(alpha_jk) + pa_score
+        BdeuScore <- sum(
+          sapply(
+            tab_D$Freq,
+            function(x) lgamma(alpha_jk + x)
+          )
+        ) - constant
+
+
+
+        return(BdeuScore)
+      } else {
         skip <- -Inf
         return(skip)
       }
