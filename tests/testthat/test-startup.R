@@ -1,5 +1,3 @@
-# tests/testthat/test-startup.R
-
 pkg <- "causalDisco"
 
 test_that(".onLoad sets default heap when option is absent", {
@@ -171,5 +169,48 @@ test_that("ask_heap_size reprompts on invalid input and messages once", {
         fixed = TRUE
       )
     }
+  )
+})
+
+test_that(".check_if_pkgs_are_installed returns TRUE (invisibly) when packages exist", {
+  expect_true(isTRUE(.check_if_pkgs_are_installed(
+    pkgs = c("utils", "stats"),
+    function_name = "some_function"
+  )))
+  expect_invisible(.check_if_pkgs_are_installed(
+    pkgs = c("utils", "stats"),
+    function_name = "some_function"
+  ))
+})
+
+test_that(".check_if_pkgs_are_installed errors if neither function_name nor class_name is provided", {
+  expect_error(
+    .check_if_pkgs_are_installed(pkgs = "utils"),
+    "Either function_name or class_name must be provided",
+    fixed = FALSE
+  )
+})
+
+test_that(".check_if_pkgs_are_installed errors with helpful message for missing pkgs (function case)", {
+  fake <- "definitelyNotARealPkg_abcdef"
+  expect_error(
+    .check_if_pkgs_are_installed(
+      pkgs = c("utils", fake),
+      function_name = "needs_pkgs"
+    ),
+    "The following packages are required for `needs_pkgs()` but are not installed:",
+    fixed = T
+  )
+})
+
+test_that(".check_if_pkgs_are_installed errors with helpful message for missing pkgs (class case)", {
+  fake <- "definitelyNotARealPkg_ghijkl"
+  expect_error(
+    .check_if_pkgs_are_installed(
+      pkgs = c("stats", fake),
+      class_name = "CoolR6Class"
+    ),
+    paste0("The following packages are required for the R6 class `CoolR6Class` but are not installed"),
+    fixed = FALSE
   )
 })
