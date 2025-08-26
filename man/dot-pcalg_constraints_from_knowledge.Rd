@@ -4,7 +4,7 @@
 \alias{.pcalg_constraints_from_knowledge}
 \title{Convert knowledge to \pkg{pcalg} constraints}
 \usage{
-.pcalg_constraints_from_knowledge(kn, labels)
+.pcalg_constraints_from_knowledge(kn, labels, directed_as_undirected)
 }
 \arguments{
 \item{kn}{A \code{knowledge} object.}

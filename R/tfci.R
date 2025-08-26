@@ -83,6 +83,7 @@ tfci <- function(data = NULL,
                  method = "stable.fast",
                  methodNA = "none",
                  methodOri = "conservative",
+                 directed_as_undirected = FALSE,
                  varnames = NULL, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -170,7 +171,10 @@ tfci <- function(data = NULL,
   }
 
   # pcalg background constraints (forbidden/required) from knowledge
-  constraints <- .pcalg_constraints_from_knowledge(knowledge, labels = vnames)
+  constraints <- .pcalg_constraints_from_knowledge(knowledge,
+    labels = vnames,
+    directed_as_undirected = directed_as_undirected
+  )
 
   # learn skeleton
   skel <- pcalg::skeleton(

@@ -46,6 +46,10 @@
 #'   return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
 #'   \pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
 #'   \code{discography()}.
+#' @param directed_as_undirected Logical; if \code{TRUE}, treat any directed
+#'   edges in \code{knowledge} as undirected during skeleton learning. This
+#'   is due to the fact that \pkg{pcalg} does not allow directed edges in
+#'   \code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.
 #' @param varnames Character vector of variable names. Only needed when
 #'   \code{data} is not supplied and all information is passed via
 #'   \code{suffStat}.
@@ -106,6 +110,7 @@ tpc <- function(data = NULL,
                 methodNA = "none",
                 methodOri = "conservative",
                 output = "discography",
+                directed_as_undirected = FALSE,
                 varnames = NULL, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -186,7 +191,10 @@ tpc <- function(data = NULL,
     methodNA <- "none"
   }
 
-  constraints <- .pcalg_constraints_from_knowledge(knowledge, labels = vnames)
+  constraints <- .pcalg_constraints_from_knowledge(knowledge,
+    labels = vnames,
+    directed_as_undirected = directed_as_undirected
+  )
 
   skel <- pcalg::skeleton(
     suffStat = thisSuffStat,
@@ -466,7 +474,9 @@ dirTest <- function(test, vnames, knowledge) {
 #'
 #' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
 #' @keywords internal
-.pcalg_constraints_from_knowledge <- function(kn, labels) {
+.pcalg_constraints_from_knowledge <- function(kn,
+                                              labels,
+                                              directed_as_undirected) {
   kn_undirected <- kn
   kn_undirected$vars$tier <- NA_character_
   as_pcalg_constraints(

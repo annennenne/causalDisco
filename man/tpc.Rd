@@ -15,6 +15,7 @@ tpc(
   methodNA = "none",
   methodOri = "conservative",
   output = "discography",
+  directed_as_undirected = FALSE,
   varnames = NULL,
   ...
 )
@@ -64,6 +65,11 @@ temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
 return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
 \pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
 \code{discography()}.}
+
+\item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
+edges in \code{knowledge} as undirected during skeleton learning. This
+is due to the fact that \pkg{pcalg} does not allow directed edges in
+\code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.}
 
 \item{varnames}{Character vector of variable names. Only needed when
 \code{data} is not supplied and all information is passed via

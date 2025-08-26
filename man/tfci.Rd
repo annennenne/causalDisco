@@ -14,6 +14,7 @@ tfci(
   method = "stable.fast",
   methodNA = "none",
   methodOri = "conservative",
+  directed_as_undirected = FALSE,
   varnames = NULL,
   ...
 )
@@ -57,6 +58,11 @@ error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \item{methodOri}{Method for handling conflicting separating sets when orienting
 edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 \code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
+
+\item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
+edges in \code{knowledge} as undirected during skeleton learning. This
+is due to the fact that \pkg{pcalg} does not allow directed edges in
+\code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.}
 
 \item{varnames}{Character vector of variable names. Only needed when
 \code{data} is not supplied and all information is passed via
