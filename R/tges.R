@@ -395,8 +395,7 @@ TEssGraph <- setRefClass("TEssGraph",
 #'
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
-#' @exportClass TemporalBIC
-#' @export TemporalBIC
+#' @export
 TemporalBIC <- setRefClass("TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
@@ -426,7 +425,7 @@ TemporalBIC <- setRefClass("TemporalBIC",
         if (is.numeric(order)) {
           knowledge <- rlang::inject(knowledge(data, tier(!!order)))
         } else if (is.character(order)) {
-          knowledge <- .build_knowledge_from_order(
+          knowledge <- causalDisco:::.build_knowledge_from_order(
             order,
             vnames = nodes
           )
@@ -441,9 +440,9 @@ TemporalBIC <- setRefClass("TemporalBIC",
         knowledge <- knowledge() |> add_vars(nodes)
       }
 
-      check_knowledge_obj(knowledge)
+      causalDisco:::check_knowledge_obj(knowledge)
 
-      .order <<- .tier_index(knowledge, nodes)
+      .order <<- causalDisco:::.tier_index(knowledge, nodes)
 
       callSuper(
         data = data,
@@ -636,8 +635,7 @@ TemporalBIC <- setRefClass("TemporalBIC",
 #'
 #' @importClassesFrom pcalg Score
 #'
-#' @exportClass TemporalBDeu
-#' @export TemporalBDeu
+#' @export
 TemporalBDeu <- setRefClass("TemporalBDeu",
   contains = "DataScore",
   fields = list(
@@ -665,7 +663,7 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
         if (is.numeric(order)) {
           knowledge <- rlang::inject(knowledge(data, tier(!!order)))
         } else if (is.character(order)) {
-          knowledge <- .build_knowledge_from_order(
+          knowledge <- causalDisco:::.build_knowledge_from_order(
             order,
             vnames = nodes
           )
@@ -680,9 +678,9 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
         knowledge <- knowledge() |> add_vars(nodes)
       }
 
-      check_knowledge_obj(knowledge)
+      causalDisco:::check_knowledge_obj(knowledge)
 
-      .order <<- .tier_index(knowledge, nodes)
+      .order <<- causalDisco:::.tier_index(knowledge, nodes)
       .iss <<- iss
 
       callSuper(

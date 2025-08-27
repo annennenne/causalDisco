@@ -61,21 +61,21 @@ test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
 test_that("Scores initialize invalid `order` type errors cleanly", {
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   expect_warning(expect_error(
-    TemporalBIC$new(
+    new("TemporalBIC",
       data = df,
       order = list(1, 2) # neither numeric nor character
     ),
     regexp = "`order` must be either a vector of integers or a vector of"
   ))
   expect_warning(expect_error(
-    TemporalBDeu$new(
+    new("TemporalBDeu",
       data = df,
       order = list(1, 2)
     ),
     regexp = "`order` must be either a vector of integers or a vector of"
   ))
   expect_error(
-    TemporalBIC$new(
+    new("TemporalBIC",
       data = df,
       order = c(1, 2),
       knowledge = knowledge(df, tier(1 ~ a, 2 ~ b))
@@ -83,7 +83,7 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
     regexp = "Both `knowledge` and `order` supplied"
   )
   expect_error(
-    TemporalBDeu$new(
+    new("TemporalBDeu",
       data = df,
       order = c(1, 2),
       knowledge = knowledge(df, tier(1 ~ a, 2 ~ b))
@@ -91,26 +91,26 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
     regexp = "Both `knowledge` and `order` supplied"
   )
   expect_warning(expect_error(
-    TemporalBIC$new(
+    new("TemporalBIC",
       data = df,
       order = c(factor(1), factor(2))
     ),
     regexp = "`order` must be either a vector of integers or a vector of prefixes"
   ))
   expect_warning(expect_error(
-    TemporalBDeu$new(
+    new("TemporalBDeu",
       data = df,
       order = c(factor(1), factor(2))
     ),
     regexp = "`order` must be either a vector of integers or a vector of prefixes"
   ))
-  score_bic <- TemporalBIC$new(
+  score_bic <- new("TemporalBIC",
     data = df,
     order = NULL,
     knowledge = NULL
   )
 
-  score_bdeu <- TemporalBDeu$new(
+  score_bdeu <- new("TemporalBDeu",
     data = df,
     order = NULL,
     knowledge = NULL
@@ -120,13 +120,13 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
   expect_equal(score_bdeu$.order, c("a" = NA_integer_, "b" = NA_integer_))
 
   expect_warning(
-    score_bdeu <- TemporalBDeu$new(
+    score_bdeu <- new("TemporalBDeu",
       data = df,
       order = c(1, 2)
     )
   )
   expect_warning(
-    score_bdeu <- TemporalBDeu$new(
+    score_bdeu <- new("TemporalBDeu",
       data = df,
       order = c("a", "b")
     )
@@ -146,7 +146,7 @@ test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on vi
   kn$vars$tier[idx[1]] <- "T2"
   kn$vars$tier[idx[2]] <- "T1"
 
-  sc <- TemporalBIC$new(
+  sc <- new("TemporalBIC",
     data      = X,
     nodes     = colnames(X),
     lambda    = 0.5 * log(nrow(X)),
@@ -172,7 +172,7 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
   idx <- match(c("x", "y"), kn$vars$var)
   kn$vars$tier[idx] <- "T1"
 
-  sc_raw <- TemporalBIC$new(
+  sc_raw <- new("TemporalBIC",
     data      = X,
     nodes     = colnames(X),
     lambda    = 0.5 * log(nrow(X)),
@@ -186,7 +186,7 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
 
   Z <- cbind(1, X)
   S <- crossprod(Z)
-  sc_sc <- TemporalBIC$new(
+  sc_sc <- new("TemporalBIC",
     data      = X,
     nodes     = colnames(X),
     lambda    = 0.5 * log(nrow(X)),
@@ -210,7 +210,7 @@ test_that("TemporalBIC initialize from deprecated numeric/character order builds
   # numeric order
   expect_warning(
     {
-      sc_num <- TemporalBIC$new(
+      sc_num <- new("TemporalBIC",
         data = X, nodes = colnames(X),
         order = c(1, 2), use.cpp = FALSE
       )
@@ -222,7 +222,7 @@ test_that("TemporalBIC initialize from deprecated numeric/character order builds
   # character prefixes -> needs helper .build_knowledge_from_order
   expect_warning(
     {
-      sc_chr <- TemporalBIC$new(
+      sc_chr <- new("TemporalBIC",
         data = X, nodes = c("T1_a", "T2_b"),
         order = c("T1", "T2"),
         use.cpp = FALSE
@@ -241,7 +241,7 @@ test_that("TemporalBIC with partially tiered knowledge skips enforcement for unt
   # assign tier only to x; y stays NA
   kn$vars$tier[kn$vars$var == "x"] <- "T1"
 
-  sc <- TemporalBIC$new(
+  sc <- new("TemporalBIC",
     data = X, nodes = colnames(X),
     knowledge = kn, use.cpp = FALSE
   )
@@ -266,7 +266,7 @@ test_that("TemporalBDeu initializes and returns finite BDeu when allowed", {
   # both in same tier
   kn$vars$tier[] <- "T1"
 
-  sc <- TemporalBDeu$new(
+  sc <- new("TemporalBDeu",
     data = D, nodes = colnames(D),
     iss = 1, knowledge = kn
   )
@@ -288,7 +288,7 @@ test_that("TemporalBDeu returns -Inf when a later-tier parent is proposed", {
   kn$vars$tier[kn$vars$var == "A"] <- "T2"
   kn$vars$tier[kn$vars$var == "B"] <- "T1"
 
-  sc <- TemporalBDeu$new(
+  sc <- new("TemporalBDeu",
     data = D, nodes = colnames(D),
     iss = 1, knowledge = kn
   )
@@ -309,11 +309,11 @@ test_that("tges() enforces factors for TemporalBDeu and missing-value guard", {
   D_bad_type <- data.frame(A = rnorm(10), B = rnorm(10)) # not factors
   kn <- knowledge() |> add_vars(c("A", "B"))
   kn <- add_tier(kn, !!"T1")
-  sc_bad <- TemporalBDeu$new(data = D_bad_type, nodes = c("A", "B"), knowledge = kn)
+  sc_bad <- new("TemporalBDeu", data = D_bad_type, nodes = c("A", "B"), knowledge = kn)
   expect_error(tges(sc_bad), "must be factors", fixed = TRUE)
 
   D_na <- data.frame(A = factor(c(1, 1, NA, 2, 2)), B = factor(c(1, 2, 1, 2, 2)))
-  sc_na <- TemporalBDeu$new(data = D_na, nodes = c("A", "B"), knowledge = kn)
+  sc_na <- new("TemporalBDeu", data = D_na, nodes = c("A", "B"), knowledge = kn)
   expect_error(tges(sc_na), "Data must not contain missing values", fixed = TRUE)
 })
 
@@ -328,7 +328,7 @@ test_that("tges() builds Forbidden.edges from score$.order (smoke test, no C++)"
   kn$vars$tier[kn$vars$var == "x"] <- "T2"
   kn$vars$tier[kn$vars$var == "y"] <- "T1"
 
-  sc <- TemporalBIC$new(
+  sc <- new("TemporalBIC",
     data = X, nodes = colnames(X),
     knowledge = kn, use.cpp = FALSE
   )
