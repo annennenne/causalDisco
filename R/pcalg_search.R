@@ -75,6 +75,7 @@ pcalgSearch <- R6::R6Class(
       self$test <- NULL
       self$knowledge <- NULL
       self$params <- NULL
+      self$continuous <- NULL
     },
 
     #' @description
@@ -89,7 +90,7 @@ pcalgSearch <- R6::R6Class(
     #' Sets the data for the search algorithm.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suff_stat Logical; whether to set the sufficient statistic
+    #' @param set_suff_stat Logical; whether to set the sufficient statistic.
     #' for the data.
     set_data = function(data, set_suff_stat = TRUE) {
       self$data <- data
@@ -380,8 +381,6 @@ pcalgSearch <- R6::R6Class(
     use_g_square = function() {
       return(
         function(x, y, S, suffStat) {
-          # Check if the number of unqiue values has been found yet
-          # to do: this can probably be done in a faster way
           if (private$nlevels == 0) {
             private$nlevels <- self$suff_stat$dm |>
               as.factor() |>
