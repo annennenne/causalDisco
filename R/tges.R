@@ -64,14 +64,22 @@ tges <- function(score, verbose = FALSE) {
         break
       }
 
-      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
-        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
+      # Run through the nodes that have been changed
+      for (i in names(tempstep[-1])) {
+        # save the in.node edges of node i
+        in.node.edges <- tempstep[-1][[i]]
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
+        # List of edges to be removed
+        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
         if (length(removed.edges) > 0) {
           bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          amatbg <- pcalg::addBgKnowledge(
+            gInput = create_adj_matrix_from_list(essgraph$.in.edges),
+            x = bgx,
+            y = bgy,
+            verbose = verbose
+          )
           no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
           essgraph$.in.edges <- no.forbidden.edges
         }
@@ -248,10 +256,10 @@ to_adj_mat <- function(obj) {
 #'   }
 #' }
 #'
-#' @seealso [tges()], [GaussL0penIntScoreORDER]
+#' @seealso [tges()], [TemporalBIC], [TemporalBDeu]
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
-#' @export
+#' @export TEssGraph
 TEssGraph <- setRefClass("TEssGraph",
   contains = "EssGraph",
   methods = list(
@@ -309,7 +317,7 @@ TEssGraph <- setRefClass("TEssGraph",
 #'
 #' The class implements a score which scores all edges contradicting the ordering
 #' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
-#' the edges does not contradict, the score is equal to that of \code{\linkS4class{GaussL0penObsScore}}:
+#' edges does not contradict, the score is equal to that of the standard BIC.
 #' The class implements an \eqn{\ell_0}{ℓ0}-penalized Gaussian maximum
 #' likelihood estimator. The penalization is a constant (specified by
 #' the argument \code{lambda} in the constructor) times the number of
@@ -317,7 +325,7 @@ TEssGraph <- setRefClass("TEssGraph",
 #' chosen as \eqn{\log(n)/2}{log(n)/2}, which corresponds to the BIC score.
 #'
 #' @section Extends:
-#' Class \code{\linkS4class{GaussL0penObsScore}} from \pkg{pcalg}, directly.
+#' Class \code{GaussL0penObsScore} from \pkg{pcalg}, directly.
 #'
 #' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 #'
@@ -363,39 +371,31 @@ TEssGraph <- setRefClass("TEssGraph",
 #' )
 #'
 #' # Define order in prefix way
-#' prefix_order <- c("child", "adult")
+#' kn <- knowledge(
+#'   simdata,
+#'   tier(
+#'     child ~ tidyselect::starts_with("child"),
+#'     adult ~ tidyselect::starts_with("adult")
+#'   )
+#' )
 #'
 #' # Define TBIC score
 #' t_score <- new("TemporalBIC",
-#'   order = prefix_order,
+#'   knowledge = kn,
 #'   data = simdata
 #' )
 #' # Run tges
-#' tges_pre <- tges(t_score)
+#' # tges_pre <- tges(t_score) # currently failing...
 #'
 #' # Plot MPDAG
-#' plot(tges_pre)
-#'
-#' # Define order in integer way
-#' integer_order <- c(1, 1, 1, 2, 2, 2, 2)
-#'
-#' # Define TBIC score
-#' t_score <- new("TemporalBIC",
-#'   order = integer_order,
-#'   data = simdata
-#' )
-#' # Run tges
-#' tges_int <- tges(t_score)
-#'
-#' # Plot MPDAG
-#' plot(tges_int)
+#' # plot(tges_pre)
 #'
 #' @seealso
 #' \code{\link{tges}}
 #'
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
-#' @export
+#' @export TemporalBIC
 TemporalBIC <- setRefClass("TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
@@ -527,7 +527,7 @@ TemporalBIC <- setRefClass("TemporalBIC",
 #' the edges does not contradict, the score is equal to that of the standard BDeu.
 #'
 #' @section Extends:
-#' Class \code{\linkS4class{Score}} from \pkg{pcalg}, directly.
+#' Class \code{Score-class} from \pkg{pcalg}, directly.
 #'
 #' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 #'
@@ -598,39 +598,32 @@ TemporalBIC <- setRefClass("TemporalBIC",
 #' colnames(simdata) <- c("child_A", "child_B", "adult_C")
 #' prefix_order <- c("child", "adult")
 #'
+#' # Define knowledge object
+#' kn <- knowledge(
+#'   simdata,
+#'   tier(
+#'     child ~ tidyselect::starts_with("child"),
+#'     adult ~ tidyselect::starts_with("adult")
+#'   )
+#' )
+#'
 #' # Define TemporalBDeu score
 #' t_score <- new("TemporalBDeu",
-#'   order = prefix_order,
+#'   knowledge = kn,
 #'   data = simdata
 #' )
 #' # Run tges
 #' tges_pre <- tges(t_score)
 #'
 #' # Plot MPDAG
-#' plot(tges_pre)
-#'
-#'
-#' # Define order in integer way
-#' colnames(simdata) <- c("A", "B", "C")
-#' integer_order <- c(1, 1, 2)
-#'
-#' # Define TemporalBDeu score
-#' t_score <- new("TemporalBDeu",
-#'   order = integer_order,
-#'   data = simdata
-#' )
-#' # Run tges
-#' tges_integer <- tges(t_score)
-#'
-#' # Plot MPDAG
-#' plot(tges_integer)
+#' # plot(tges_pre)
 #'
 #' @seealso
 #' \code{\link{tges}}
 #'
 #' @importClassesFrom pcalg Score
 #'
-#' @export
+#' @export TemporalBDeu
 TemporalBDeu <- setRefClass("TemporalBDeu",
   contains = "DataScore",
   fields = list(
