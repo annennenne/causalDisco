@@ -145,7 +145,7 @@ tpc <- function(data = NULL,
   }
 
 
-  check_knowledge_obj(knowledge)
+  is_knowledge(knowledge)
 
   if (!is.null(data) && any(is.na(data))) {
     if (methodNA == "none") {
@@ -406,7 +406,7 @@ find_adjacencies <- function(amatrix, index) {
     function_name = ".tier_index"
   )
 
-  check_knowledge_obj(kn)
+  is_knowledge(kn)
   idx <- match(vnames, kn$vars$var)
   tiers <- kn$vars$tier[idx]
   rank <- match(tiers, kn$tiers$label)

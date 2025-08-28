@@ -353,7 +353,7 @@ add_vars <- function(.kn, vars) {
     function_name = "add_vars"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   missing <- setdiff(vars, .kn$vars$var)
 
@@ -390,7 +390,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
     function_name = "add_tier"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   before_sup <- !missing(before)
   after_sup <- !missing(after)
 
@@ -505,7 +505,7 @@ add_to_tier <- function(.kn, ...) {
     function_name = "add_to_tier"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
@@ -650,7 +650,7 @@ require_edge <- function(.kn, ...) {
 #' @return Updated knowledge object.
 #' @export
 add_exogenous <- function(.kn, vars) {
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   .kn <- forbid_edge(.kn, everything() ~ {{ vars }})
   .kn
 }
@@ -672,7 +672,7 @@ add_root <- add_exogenous
 #' @param .kn A `knowledge` object.
 #' @return The same `knowledge` object with the `frozen` attribute set to `FALSE`.
 unfreeze <- function(.kn) {
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   .kn$frozen <- FALSE
   .kn
 }
@@ -768,8 +768,8 @@ print.knowledge <- function(x, ...) {
     function_name = "+.knowledge"
   )
 
-  check_knowledge_obj(.kn1)
-  check_knowledge_obj(.kn2)
+  is_knowledge(.kn1)
+  is_knowledge(.kn2)
 
   # combine
   vars_all <- unique(c(.kn1$vars$var, .kn2$vars$var))
@@ -821,7 +821,7 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
     function_name = "reorder_tiers"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   current <- .kn$tiers$label
   n <- length(current)
@@ -909,7 +909,7 @@ reposition_tier <- function(.kn,
     function_name = "reposition_tier"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   if (!xor(missing(before), missing(after))) {
     stop("Supply exactly one of `before` or `after`.", call. = FALSE)
   }
@@ -969,7 +969,7 @@ reposition_tier <- function(.kn,
 #'
 #' @param x Object to check.
 #' @keywords internal
-check_knowledge_obj <- function(x) {
+is_knowledge <- function(x) {
   if (!inherits(x, "knowledge")) {
     stop("Input must be a knowledge instance.", call. = FALSE)
   }
@@ -997,7 +997,7 @@ remove_vars <- function(.kn, ...) {
     function_name = "remove_vars"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
 
   # resolve each quosure to a character vector of names
@@ -1039,7 +1039,7 @@ remove_edges <- function(.kn, ...) {
     function_name = "remove_edges"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
   if (length(specs) == 0L) {
     stop("remove_edges() needs at least one two-sided formula.", call. = FALSE)
@@ -1086,7 +1086,7 @@ remove_tiers <- function(.kn, ...) {
     function_name = "remove_tiers"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
   keep <- .kn$tiers$label
   to_drop <- purrr::map_chr(specs, function(q) {
@@ -1134,7 +1134,7 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
     function_name = "deparse_knowledge"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   fmt_fml <- function(lhs, rhs_vars) {
     paste0(
@@ -1242,7 +1242,7 @@ as_tetrad_knowledge <- function(.kn) {
     function_name = "as_tetrad_knowledge"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
   # nocov start
   if (!rJava::.jniInitialized) {
     init_java()
@@ -1314,7 +1314,7 @@ as_pcalg_constraints <- function(.kn,
     function_name = "as_pcalg_constraints"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   if (any(!is.na(.kn$vars$tier))) {
     stop(
@@ -1431,7 +1431,7 @@ as_bnlearn_knowledge <- function(.kn) {
     function_name = "as_bnlearn_knowledge"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   # whitelist holds all required edges in a "from", "to" dataframe
   whitelist <- dplyr::filter(.kn$edges, status == "required") |>
@@ -1467,7 +1467,7 @@ forbid_tier_violations <- function(.kn) {
     function_name = "forbid_tier_violations"
   )
 
-  check_knowledge_obj(.kn)
+  is_knowledge(.kn)
 
   # build a named vector of tier rank
   tier_ranks <- rlang::set_names(

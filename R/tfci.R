@@ -119,7 +119,7 @@ tfci <- function(data = NULL,
     knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
   }
 
-  check_knowledge_obj(knowledge)
+  is_knowledge(knowledge)
 
   # NA handling
   if (!is.null(data) && any(is.na(data))) {

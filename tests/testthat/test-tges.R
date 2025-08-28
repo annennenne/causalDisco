@@ -135,6 +135,7 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
 
 test_that("TemporalBDeu covers if(length(parents) == 0) part", {
   skip_if_not_installed("bnlearn")
+  library(bnlearn)
   data(alarm)
   sc <- new("TemporalBDeu",
     iss = 0.5,
@@ -149,8 +150,8 @@ test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on vi
   set.seed(1)
   X <- cbind(x = rnorm(50), y = rnorm(50))
   kn <- knowledge() |> add_vars(c("x", "y"))
-  kn <- add_tier(kn, !!"T1")
-  kn <- add_tier(kn, !!"T2", after = "T1")
+  kn <- add_tier(kn, "T1")
+  kn <- add_tier(kn, "T2", after = "T1")
   # x in T2, y in T1 ⇒ y cannot have parent x
   idx <- match(c("x", "y"), kn$vars$var)
   kn$vars$tier[idx[1]] <- "T2"
@@ -178,7 +179,7 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
 
   # put both in same tier so no restriction
   kn <- knowledge() |> add_vars(c("x", "y"))
-  kn <- add_tier(kn, !!"T1")
+  kn <- add_tier(kn, "T1")
   idx <- match(c("x", "y"), kn$vars$var)
   kn$vars$tier[idx] <- "T1"
 
@@ -272,7 +273,7 @@ test_that("TemporalBDeu initializes and returns finite BDeu when allowed", {
   D <- data.frame(A = A, B = B)
 
   kn <- knowledge() |> add_vars(c("A", "B"))
-  kn <- add_tier(kn, !!"T1")
+  kn <- add_tier(kn, "T1")
   # both in same tier
   kn$vars$tier[] <- "T1"
 
@@ -292,8 +293,8 @@ test_that("TemporalBDeu returns -Inf when a later-tier parent is proposed", {
   D <- data.frame(A = A, B = B)
 
   kn <- knowledge() |> add_vars(c("A", "B"))
-  kn <- add_tier(kn, !!"T1")
-  kn <- add_tier(kn, !!"T2", after = "T1")
+  kn <- add_tier(kn, "T1")
+  kn <- add_tier(kn, "T2", after = "T1")
   # A in T2, B in T1 → B <- A forbidden
   kn$vars$tier[kn$vars$var == "A"] <- "T2"
   kn$vars$tier[kn$vars$var == "B"] <- "T1"
@@ -327,14 +328,12 @@ test_that("tges() enforces factors for TemporalBDeu and missing-value guard", {
   expect_error(tges(sc_na), "Data must not contain missing values", fixed = TRUE)
 })
 
-test_that("tges() builds Forbidden.edges from score$.order (smoke test, no C++)", {
-  # We can't run the actual greedy steps (they call into C++),
-  # but we can at least exercise the setup path up to the loop start.
+test_that("tges() builds Forbidden.edges from score$.order", {
   set.seed(8)
   X <- cbind(x = rnorm(10), y = rnorm(10))
   kn <- knowledge() |> add_vars(c("x", "y"))
-  kn <- add_tier(kn, !!"T1")
-  kn <- add_tier(kn, !!"T2", after = "T1")
+  kn <- add_tier(kn, "T1")
+  kn <- add_tier(kn, "T2", after = "T1")
   kn$vars$tier[kn$vars$var == "x"] <- "T2"
   kn$vars$tier[kn$vars$var == "y"] <- "T1"
 
@@ -342,8 +341,6 @@ test_that("tges() builds Forbidden.edges from score$.order (smoke test, no C++)"
     data = X, nodes = colnames(X),
     knowledge = kn, use.cpp = FALSE
   )
-  # We expect tges() to at least construct TEssGraph and not error before it hits the C++ loop.
-  # Wrap in try to avoid failing if the C++ layer is invoked immediately on your build.
   expect_no_error(try(suppressWarnings(tges(sc, verbose = FALSE)), silent = TRUE))
 })
 
