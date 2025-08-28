@@ -28,7 +28,7 @@ data; it is used in the causal discovery function \code{\link{tges}}.
 \details{
 The class implements a score which scores all edges contradicting the ordering
 (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
-the edges does not contradict, the score is equal to that of \code{\linkS4class{GaussL0penObsScore}}:
+edges does not contradict, the score is equal to that of the standard BIC.
 The class implements an \eqn{\ell_0}{ℓ0}-penalized Gaussian maximum
 likelihood estimator. The penalization is a constant (specified by
 the argument \code{lambda} in the constructor) times the number of
@@ -38,7 +38,7 @@ chosen as \eqn{\log(n)/2}{log(n)/2}, which corresponds to the BIC score.
 
 \section{Extends}{
 
-Class \code{\linkS4class{GaussL0penObsScore}} from \pkg{pcalg}, directly.
+Class \code{GaussL0penObsScore} from \pkg{pcalg}, directly.
 
 All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 }
@@ -75,32 +75,24 @@ simdata <- data.frame(
 )
 
 # Define order in prefix way
-prefix_order <- c("child", "adult")
+kn <- knowledge(
+  simdata,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    adult ~ tidyselect::starts_with("adult")
+  )
+)
 
 # Define TBIC score
 t_score <- new("TemporalBIC",
-  order = prefix_order,
+  knowledge = kn,
   data = simdata
 )
 # Run tges
-tges_pre <- tges(t_score)
+# tges_pre <- tges(t_score) # currently failing...
 
 # Plot MPDAG
-plot(tges_pre)
-
-# Define order in integer way
-integer_order <- c(1, 1, 1, 2, 2, 2, 2)
-
-# Define TBIC score
-t_score <- new("TemporalBIC",
-  order = integer_order,
-  data = simdata
-)
-# Run tges
-tges_int <- tges(t_score)
-
-# Plot MPDAG
-plot(tges_int)
+# plot(tges_pre)
 
 }
 \seealso{

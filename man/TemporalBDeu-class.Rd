@@ -33,7 +33,7 @@ the edges does not contradict, the score is equal to that of the standard BDeu.
 
 \section{Extends}{
 
-Class \code{\linkS4class{Score}} from \pkg{pcalg}, directly.
+Class \code{Score-class} from \pkg{pcalg}, directly.
 
 All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 }
@@ -92,32 +92,25 @@ simdata <- data.frame(as.factor(A), as.factor(B), as.factor(C))
 colnames(simdata) <- c("child_A", "child_B", "adult_C")
 prefix_order <- c("child", "adult")
 
+# Define knowledge object
+kn <- knowledge(
+  simdata,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    adult ~ tidyselect::starts_with("adult")
+  )
+)
+
 # Define TemporalBDeu score
 t_score <- new("TemporalBDeu",
-  order = prefix_order,
+  knowledge = kn,
   data = simdata
 )
 # Run tges
 tges_pre <- tges(t_score)
 
 # Plot MPDAG
-plot(tges_pre)
-
-
-# Define order in integer way
-colnames(simdata) <- c("A", "B", "C")
-integer_order <- c(1, 1, 2)
-
-# Define TemporalBDeu score
-t_score <- new("TemporalBDeu",
-  order = integer_order,
-  data = simdata
-)
-# Run tges
-tges_integer <- tges(t_score)
-
-# Plot MPDAG
-plot(tges_integer)
+# plot(tges_pre)
 
 }
 \seealso{

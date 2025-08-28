@@ -117,7 +117,7 @@ Sets the data for the search algorithm.
 \describe{
 \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
 
-\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic
+\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic.
 for the data.}
 }
 \if{html}{\out{</div>}}

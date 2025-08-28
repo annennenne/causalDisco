@@ -24,5 +24,5 @@ followed by any nodes whose in-edges changed.
 }
 
 \seealso{
-\code{\link[=tges]{tges()}}, \link{GaussL0penIntScoreORDER}
+\code{\link[=tges]{tges()}}, \link{TemporalBIC}, \link{TemporalBDeu}
 }
