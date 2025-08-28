@@ -91,8 +91,8 @@ pcalgSearch <- R6Class(
         self$set_suff_stat()
       }
 
-      # Reset uniques, used to determine binary (or not) G square test
-      private$uniques <- c()
+      # Reset nlevels, used to determine binary (or not) G square test
+      private$nlevels <- 0L
 
       # todo: Should it be changed or not?
       # Reset knowledge function
@@ -273,7 +273,7 @@ pcalgSearch <- R6Class(
     #' @param knowledge_obj A knowledge object that contains the fixed constraints.
     #' @param directed_as_undirected Logical; whether to treat directed edges as undirected.
     set_knowledge = function(knowledge_obj, directed_as_undirected = FALSE) {
-      check_knowledge_obj(knowledge_obj)
+      is_knowledge(knowledge_obj)
 
       private$knowledge_function <- function() {
         if (is.null(self$data)) {
@@ -377,19 +377,18 @@ pcalgSearch <- R6Class(
         function(x, y, S, suffStat) {
           # Check if the number of unqiue values has been found yet
           # to do: this can probably be done in a faster way
-          if (length(private$uniques) == 0) {
-            private$uniques <- self$suff_stat$dm |>
-              c() |> # turn to vector such that unique works on value level
-              unique() |>
-              sort()
+          if (private$nlevels == 0) {
+            private$nlevels <- self$suff_stat$dm |>
+              as.factor() |>
+              nlevels()
           }
-          if (length(private$uniques) < 2) {
+          if (private$nlevels < 2) {
             stop("The data contains less than 2 unique values.",
               " If this is the case, there is nothing to discover.",
               call. = FALSE
             )
           }
-          if (length(private$uniques) == 2) {
+          if (private$nlevels == 2) {
             return(pcalg::binCItest(x, y, S, suffStat))
           } else {
             return(pcalg::disCItest(x, y, S, suffStat))
@@ -397,7 +396,7 @@ pcalgSearch <- R6Class(
         }
       ) # end return
     },
-    uniques = c(),
+    nlevels = 0L,
     knowledge_function = NULL,
     score_function = NULL
   )
