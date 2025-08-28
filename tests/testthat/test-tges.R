@@ -133,7 +133,17 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
   )
 })
 
-
+test_that("TemporalBDeu covers if(length(parents) == 0) part", {
+  skip_if_not_installed("bnlearn")
+  data(alarm)
+  sc <- new("TemporalBDeu",
+    iss = 0.5,
+    data = head(alarm, 1000),
+    knowledge = knowledge()
+  )
+  g <- tges(sc, verbose = FALSE)
+  expect_true(TRUE)
+})
 
 test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on violation)", {
   set.seed(1)
@@ -306,9 +316,9 @@ test_that("tges() rejects non-supported score classes with clear message", {
 
 test_that("tges() enforces factors for TemporalBDeu and missing-value guard", {
   set.seed(7)
-  D_bad_type <- data.frame(A = rnorm(10), B = rnorm(10)) # not factors
+  D_bad_type <- data.frame(A = rnorm(10), B = rnorm(10))
   kn <- knowledge() |> add_vars(c("A", "B"))
-  kn <- add_tier(kn, !!"T1")
+  kn <- add_tier(kn, "T1")
   sc_bad <- new("TemporalBDeu", data = D_bad_type, nodes = c("A", "B"), knowledge = kn)
   expect_error(tges(sc_bad), "must be factors", fixed = TRUE)
 
@@ -335,4 +345,41 @@ test_that("tges() builds Forbidden.edges from score$.order (smoke test, no C++)"
   # We expect tges() to at least construct TEssGraph and not error before it hits the C++ loop.
   # Wrap in try to avoid failing if the C++ layer is invoked immediately on your build.
   expect_no_error(try(suppressWarnings(tges(sc, verbose = FALSE)), silent = TRUE))
+})
+
+test_that("tges forward phase", {
+  set.seed(13) # friday the 13th
+  n <- 100
+  X1 <- rnorm(n)
+  X2 <- 0.5 * X1 + rnorm(n)
+  X3 <- rnorm(n)
+  X4 <- 1.2 * X2 + 0.5 * X3 + rnorm(n)
+  df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
+  # scale
+  df <- as.data.frame(scale(df))
+  kn <- knowledge(df, tier(1 ~ X1, 2 ~ X2 + X3 + X4))
+  sc <- new("TemporalBIC",
+    data = df,
+    knowledge = kn
+  )
+  g <- tges(sc, verbose = FALSE)
+  expect_true(TRUE)
+})
+
+test_that("tges turning phase", {
+  set.seed(13) # friday the 13th
+  n <- 100
+  X1 <- rnorm(n) + rbinom(n, 1, 0.3)
+  X2 <- 0.6 * X1**2 + rnorm(n) + rbinom(n, 1, 0.3)
+  X3 <- -0.3 * X1 + rnorm(n) + rbinom(n, 1, 0.3)
+  X4 <- 1.5 * X1 + -0.2 * X2**2 + 0.1 * X3**3 + rnorm(n) + rbinom(n, 1, 0.3)
+
+  df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
+  kn <- knowledge(df, tier(1 ~ X1 + X2 + X3 + X4))
+  sc <- new("TemporalBIC",
+    data = df,
+    knowledge = kn
+  )
+  g <- tges(sc, verbose = FALSE)
+  expect_true(TRUE)
 })

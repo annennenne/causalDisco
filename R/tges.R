@@ -407,7 +407,6 @@ TemporalBIC <- setRefClass("TemporalBIC",
                           lambda = 0.5 * log(nrow(data)),
                           intercept = TRUE,
                           format = c("raw", "scatter"),
-                          use.cpp = FALSE,
                           knowledge = NULL,
                           order = NULL, # deprecated
                           ...) {
@@ -452,7 +451,6 @@ TemporalBIC <- setRefClass("TemporalBIC",
         lambda = lambda,
         intercept = intercept,
         format = format,
-        use.cpp = use.cpp,
         ...
       )
     },
@@ -507,9 +505,6 @@ TemporalBIC <- setRefClass("TemporalBIC",
             (1 + log(sigma2 / pp.dat$data.count[vertex])) -
             pp.dat$lambda * (1 + length(parents))
           return(lscore)
-        } else {
-          # Calculate score with the C++ library (NOT ABLE TO DO THIS YET)
-          stop("Not able to compute using C++. Set use.cpp = FALSE")
         }
       } else {
         skip <- -Inf
