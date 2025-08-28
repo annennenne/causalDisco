@@ -135,8 +135,7 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
 
 test_that("TemporalBDeu covers if(length(parents) == 0) part", {
   skip_if_not_installed("bnlearn")
-  library(bnlearn)
-  data(alarm)
+  data("alarm", package = "bnlearn")
   sc <- new("TemporalBDeu",
     iss = 0.5,
     data = head(alarm, 1000),
