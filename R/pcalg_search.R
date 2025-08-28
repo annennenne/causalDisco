@@ -5,7 +5,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @export pcalgSearch
-pcalgSearch <- R6Class(
+pcalgSearch <- R6::R6Class(
   "pcalgSearch",
   public = list(
     #' @field data A `data.frame` holding the data set currently attached to the
@@ -16,16 +16,22 @@ pcalgSearch <- R6Class(
     #'  when data is set. Can be set with \code{$set_score()}. Recognized values
     #'  are:
     #'  \itemize{
-    #'     \item \code{sem_bic} - BIC score for Gaussian data. See \code{\link[pcalg:GaussL0penObsScore-class]{GaussL0penObsScore}}.
-    #'     \item \code{sem_bic_int} - BIC score for Gaussian data with integer values. See \code{\link[pcalg:GaussL0penIntScore-class]{GaussL0penIntScore}}.
+    #'     \item \code{sem_bic} - BIC score for Gaussian observed data.
+    #'     See \code{\link[pcalg:GaussL0penObsScore-class]{GaussL0penObsScore}}.
+    #'     \item \code{sem_bic_int} - BIC score for Gaussian data from jointly
+    #'     interventional and observational Gaussian data.
+    #'     See \code{\link[pcalg:GaussL0penIntScore-class]{GaussL0penIntScore}}.
     #'     }
     score = NULL,
 
     #' @field test A function that will be used to test independence.
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
-    #'    \item \code{fisher_z} - Fisher Z test for Gaussian data. See \code{\link[pcalg:gaussCItest]{gaussCItest}}.
-    #'    \item \code{g_square} - G square test for discrete data. See \code{\link[pcalg:binCItest]{binCItest}} and \code{\link[pcalg:disCItest]{disCItest}}.
+    #'    \item \code{fisher_z} - Fisher Z test for Gaussian data.
+    #'    See \code{\link[pcalg:gaussCItest]{gaussCItest}}.
+    #'    \item \code{g_square} - G square test for discrete data.
+    #'    See \code{\link[pcalg:binCItest]{binCItest}} and
+    #'    \code{\link[pcalg:disCItest]{disCItest}}.
     #'    }
     test = NULL,
 
@@ -204,8 +210,6 @@ pcalgSearch <- R6Class(
               !!!params
             )
           },
-          # todo: find the equivalent in tetrad and make them have same name
-          # should this even be here?
           "sem_bic_int" = {
             score <- rlang::exec(
               "new",
@@ -301,7 +305,8 @@ pcalgSearch <- R6Class(
         }
       }
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or input data directly into run_search().",
+        stop("No data is set. ",
+          "Use set_data() first or input data directly into run_search().",
           call. = FALSE
         )
       }
