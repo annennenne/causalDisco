@@ -1,6 +1,3 @@
-library(testthat)
-library(mockery)
-
 # fake JVM state ----------------------------------------------------
 .j_state <- new.env(parent = emptyenv())
 .j_state$started <- FALSE

@@ -4,7 +4,7 @@
 # Knowledge generation using mini-dsl
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("knowledge object is created correctly using mini-DSL", {
+test_that("knowledge object is created correctly using mini-DSL", {
   kn <-
     knowledge(
       tier(
@@ -15,25 +15,25 @@ testthat::test_that("knowledge object is created correctly using mini-DSL", {
       forbidden(V1 ~ V3),
       required(V1 ~ V2, V2 ~ V3)
     )
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = c("V1", "V2", "V3", "V4", "V5"),
     tier = c("1", "1", "2", "3", "3")
   ))
-  testthat::expect_equal(kn$frozen, FALSE)
-  testthat::expect_equal(kn$edges, tibble::tibble(
+  expect_equal(kn$frozen, FALSE)
+  expect_equal(kn$edges, tibble::tibble(
     status = c("forbidden", "required", "required"),
     from = c("V1", "V1", "V2"),
     to = c("V3", "V2", "V3"),
     tier_from = c("1", "1", "1"),
     tier_to = c("2", "1", "2")
   ))
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "2", "3")
   ))
 })
 
 # seeding with dataframe
-testthat::test_that("seeding knowledge object with a df, matrix, or tibble works", {
+test_that("seeding knowledge object with a df, matrix, or tibble works", {
   df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
   tbl <- tibble::as_tibble(df)
   mat <- as.matrix(df)
@@ -53,10 +53,10 @@ testthat::test_that("seeding knowledge object with a df, matrix, or tibble works
     tier(1 ~ X1, 2 ~ X2 + X3),
     required(X1 ~ X2)
   )
-  testthat::expect_equal(kn, kn_tbl)
-  testthat::expect_equal(kn, kn_mat)
-  testthat::expect_equal(kn$frozen, TRUE)
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn, kn_tbl)
+  expect_equal(kn, kn_mat)
+  expect_equal(kn$frozen, TRUE)
+  expect_equal(kn$vars, tibble::tibble(
     var = c("X1", "X2", "X3", "X4"),
     tier = c("1", "2", "2", NA_character_)
   ))
@@ -66,7 +66,7 @@ testthat::test_that("seeding knowledge object with a df, matrix, or tibble works
 # Tiers
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("tier generation with named tiers using character names", {
+test_that("tier generation with named tiers using character names", {
   kn <- knowledge(
     tier(
       "One" ~ V1 + V2,
@@ -76,12 +76,12 @@ testthat::test_that("tier generation with named tiers using character names", {
     forbidden(V1 ~ V3),
     required(V1 ~ V2, V2 ~ V3)
   )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
 
-testthat::test_that("tier generation with named tiers using symbols/expression", {
+test_that("tier generation with named tiers using symbols/expression", {
   kn <- knowledge(
     tier(
       One ~ V1 + V2,
@@ -91,12 +91,12 @@ testthat::test_that("tier generation with named tiers using symbols/expression",
     forbidden(V1 ~ V3),
     required(V1 ~ V2, V2 ~ V3)
   )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
 
-testthat::test_that("tier generation with named tiers using mix of integers, chars, and symbols", {
+test_that("tier generation with named tiers using mix of integers, chars, and symbols", {
   kn <- knowledge(
     tier(
       1 ~ V1 + V2,
@@ -108,13 +108,13 @@ testthat::test_that("tier generation with named tiers using mix of integers, cha
     forbidden(V1 ~ V3),
     required(V1 ~ V2, V2 ~ V3)
   )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "Two", "3", "Four", "Five")
   ))
 })
 
-testthat::test_that("tier generation with negative numeric tiers errors", {
-  testthat::expect_error(
+test_that("tier generation with negative numeric tiers errors", {
+  expect_error(
     knowledge(
       tier(
         -1 ~ V1 + V2,
@@ -129,50 +129,50 @@ testthat::test_that("tier generation with negative numeric tiers errors", {
 # Tiers using verbs only
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("tier generation using verbs only", {
+test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(1) |>
     add_tier(2, after = 1) |>
     add_tier(3, after = 2) |>
     add_to_tier(2 ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "2", "3")
   ))
 })
 
-testthat::test_that("tier generation using verbs only", {
+test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(One) |>
     add_tier(Two, after = One) |>
     add_tier(Three, after = Two) |>
     add_to_tier(Two ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
 
-testthat::test_that("tier generation using verbs only", {
+test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(One) |>
     add_tier(Three, after = One) |>
     add_tier(Two, before = Three) |>
     add_to_tier(Two ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
 
-testthat::test_that("tier generation using verbs only", {
+test_that("tier generation using verbs only", {
   kn <- knowledge() |>
     add_tier(One) |>
     add_tier(2, after = One) |>
     add_tier(Three, after = 2) |>
     add_to_tier(Three ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "2", "Three")
   ))
 })
@@ -184,7 +184,7 @@ test_that("tier generation with verbs works", {
     add_tier(Two, before = 3) |>
     add_tier(Two_and_a_Half, after = Two) |>
     add_tier(2.75, before = 3)
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "Two", "Two_and_a_Half", "2.75", "3")
   ))
 })
@@ -193,7 +193,7 @@ test_that("tier generation with verbs works", {
 # Tiers using verbs and mini-DSL
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("tier generation with mixing DSL and verbs", {
+test_that("tier generation with mixing DSL and verbs", {
   kn <- knowledge(
     tier(
       1 ~ V1,
@@ -203,12 +203,12 @@ testthat::test_that("tier generation with mixing DSL and verbs", {
     add_tier(3, after = 2) |>
     add_to_tier(3 ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "2", "3")
   ))
 })
 
-testthat::test_that("tier generation with mixing DSL and verbs with symbols", {
+test_that("tier generation with mixing DSL and verbs with symbols", {
   kn <- knowledge(
     tier(
       1 ~ V1,
@@ -218,12 +218,12 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols", {
     add_tier(Three, after = 2) |>
     add_to_tier(Three ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "2", "Three")
   ))
 })
 
-testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
+test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   kn <- knowledge(
     tier(
       "One" ~ V1,
@@ -233,12 +233,12 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_tier(Two, before = "Three") |>
     add_to_tier("Two" ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
 
-testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
+test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   kn <- knowledge(
     tier(
       "One" ~ V1,
@@ -248,12 +248,12 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_tier(2, after = One) |>
     add_to_tier(2 ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "2", "Three")
   ))
 })
 
-testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
+test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   kn <- knowledge(
     tier(
       "One" ~ V1,
@@ -263,12 +263,12 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_tier(2, after = One) |>
     add_to_tier(2 ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "2", "Three")
   ))
 })
 
-testthat::test_that("tier generation with mixing DSL and verbs with symbols and chars", {
+test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   kn <- knowledge(
     tier(
       "One" ~ V1,
@@ -278,7 +278,7 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
     add_tier(Two, before = Three) |>
     add_to_tier(Two ~ V3)
 
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
   ))
 })
@@ -287,7 +287,7 @@ testthat::test_that("tier generation with mixing DSL and verbs with symbols and 
 # Tiers using seq_tiers
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("tier generation using seq_tiers", {
+test_that("tier generation using seq_tiers", {
   df <- as.data.frame(
     matrix(runif(10), # 10 random numbers in (0,1)
       nrow = 1,
@@ -308,16 +308,16 @@ testthat::test_that("tier generation using seq_tiers", {
     ),
     required(X_1 ~ X_2)
   )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = 1:10 |> as.character()
   ))
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = paste0("X_", 1:10),
     tier = 1:10 |> as.character()
   ))
 })
 
-testthat::test_that("tier generation using seq_tiers with labels", {
+test_that("tier generation using seq_tiers with labels", {
   df <- data.frame(
     X_1 = 1,
     X_2 = 2,
@@ -334,10 +334,10 @@ testthat::test_that("tier generation using seq_tiers with labels", {
       seq_tiers(5, matches("Y{i}_")) # exact match
     )
   )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "2", "3", "5")
   ))
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = c("X_1", "X_2", "tier3_A", "Y5_ok"),
     tier = c(1, 2, 3, 5) |> as.character()
   ))
@@ -347,7 +347,7 @@ testthat::test_that("tier generation using seq_tiers with labels", {
 # Tiers using 1:n
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("tier generation using 1:n", {
+test_that("tier generation using 1:n", {
   df <- as.data.frame(
     matrix(runif(10), # 10 random numbers in (0,1)
       nrow = 1,
@@ -365,10 +365,10 @@ testthat::test_that("tier generation using 1:n", {
         1:10
       )
     )
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = 1:10 |> as.character()
   ))
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = paste0("X_", 1:10),
     tier = 1:10 |> as.character()
   ))
@@ -379,20 +379,20 @@ testthat::test_that("tier generation using 1:n", {
 # Add to tier verb
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("add_to_tier() works as expected", {
+test_that("add_to_tier() works as expected", {
   kn <- knowledge() |>
     add_tier(One) |>
     add_to_tier(One ~ V1 + V2)
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One")
   ))
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = c("V1", "V2"),
     tier = c("One", "One")
   ))
 })
 
-testthat::test_that("add_to_tier() works as expected with mini-DSL", {
+test_that("add_to_tier() works as expected with mini-DSL", {
   kn <- knowledge(
     tier(
       One ~ V1 + V2,
@@ -401,10 +401,10 @@ testthat::test_that("add_to_tier() works as expected with mini-DSL", {
     )
   ) |>
     add_to_tier(One ~ V6)
-  testthat::expect_equal(kn$tiers, tibble::tibble(
+  expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "2", "Three")
   ))
-  testthat::expect_equal(kn$vars, tibble::tibble(
+  expect_equal(kn$vars, tibble::tibble(
     var = c("V1", "V2", "V6", "V3", "V4", "V5"),
     tier = c("One", "One", "One", "2", "2", "Three")
   ))
@@ -414,7 +414,7 @@ testthat::test_that("add_to_tier() works as expected with mini-DSL", {
 # Edge errors
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("forbidden() errors when called without any formulas", {
+test_that("forbidden() errors when called without any formulas", {
   expect_error(
     knowledge(
       forbidden()
@@ -424,7 +424,7 @@ testthat::test_that("forbidden() errors when called without any formulas", {
   )
 })
 
-testthat::test_that("required() errors when called without any formulas", {
+test_that("required() errors when called without any formulas", {
   expect_error(
     knowledge(
       required()
@@ -433,7 +433,7 @@ testthat::test_that("required() errors when called without any formulas", {
     fixed = TRUE
   )
 })
-testthat::test_that("forbidden() errors when called with a non-formula", {
+test_that("forbidden() errors when called with a non-formula", {
   expect_error(
     knowledge(
       forbidden(1)
@@ -442,7 +442,7 @@ testthat::test_that("forbidden() errors when called with a non-formula", {
     fixed = TRUE
   )
 })
-testthat::test_that("required() errors when called with a non-formula", {
+test_that("required() errors when called with a non-formula", {
   expect_error(
     knowledge(
       required(1)
@@ -452,7 +452,7 @@ testthat::test_that("required() errors when called with a non-formula", {
   )
 })
 
-testthat::test_that("forbidden() and required() errors when no from vars matched", {
+test_that("forbidden() and required() errors when no from vars matched", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
@@ -472,7 +472,7 @@ testthat::test_that("forbidden() and required() errors when no from vars matched
   )
 })
 
-testthat::test_that("forbidden() and required() errors when no to vars matched", {
+test_that("forbidden() and required() errors when no to vars matched", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
@@ -495,7 +495,7 @@ testthat::test_that("forbidden() and required() errors when no to vars matched",
 # ──────────────────────────────────────────────────────────────────────────────
 # Tier errors
 # ──────────────────────────────────────────────────────────────────────────────
-testthat::test_that("tier() errors if no formulas are supplied", {
+test_that("tier() errors if no formulas are supplied", {
   df <- tibble::tibble(V1 = 1, V2 = 2)
 
   expect_error(
@@ -535,8 +535,8 @@ test_that("add_tier() errors if the anchor tier is missing", {
   )
 })
 
-testthat::test_that("add_to_tier() errors when adding existing variable to another tier", {
-  testthat::expect_error(
+test_that("add_to_tier() errors when adding existing variable to another tier", {
+  expect_error(
     knowledge(
       tier(
         One ~ V1 + V2,
@@ -548,7 +548,7 @@ testthat::test_that("add_to_tier() errors when adding existing variable to anoth
     "Cannot reassign variable(s) [V3, V4] to tier `One` using add_to_tier().",
     fixed = TRUE
   )
-  testthat::expect_error(
+  expect_error(
     knowledge(
       tier(
         One ~ V1 + V2,
@@ -603,8 +603,8 @@ test_that("add_to_tier() errors when RHS matches no variables", {
   )
 })
 
-testthat::test_that("tier throws error for one variable in two tiers", {
-  testthat::expect_error(
+test_that("tier throws error for one variable in two tiers", {
+  expect_error(
     knowledge(
       tier(
         1 ~ V1 + V2,
@@ -616,8 +616,8 @@ testthat::test_that("tier throws error for one variable in two tiers", {
   )
 })
 
-testthat::test_that("tier throws error for using numeric vector without df", {
-  testthat::expect_error(
+test_that("tier throws error for using numeric vector without df", {
+  expect_error(
     knowledge(
       tier(
         1:10
@@ -628,9 +628,9 @@ testthat::test_that("tier throws error for using numeric vector without df", {
   )
 })
 
-testthat::test_that("tier() errors when numeric vector length != ncol(df)", {
+test_that("tier() errors when numeric vector length != ncol(df)", {
   df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
-  testthat::expect_error(
+  expect_error(
     knowledge(
       df,
       tier(
@@ -642,7 +642,7 @@ testthat::test_that("tier() errors when numeric vector length != ncol(df)", {
   )
 })
 
-testthat::test_that("numeric-vector tier() errors on duplicate indices", {
+test_that("numeric-vector tier() errors on duplicate indices", {
   df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
@@ -656,7 +656,7 @@ testthat::test_that("numeric-vector tier() errors on duplicate indices", {
   )
 })
 
-testthat::test_that("tier() throws error when mispecifying tier", {
+test_that("tier() throws error when mispecifying tier", {
   df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
@@ -711,7 +711,7 @@ They are not present in the data frame provided to this knowledge object.",
   )
 })
 
-testthat::test_that("numeric-vector tier() errors on duplicate indices", {
+test_that("numeric-vector tier() errors on duplicate indices", {
   df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
@@ -725,7 +725,7 @@ testthat::test_that("numeric-vector tier() errors on duplicate indices", {
   )
 })
 
-testthat::test_that("seq_tiers() in tier() errors when no variables match the pattern", {
+test_that("seq_tiers() in tier() errors when no variables match the pattern", {
   df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
@@ -742,7 +742,7 @@ testthat::test_that("seq_tiers() in tier() errors when no variables match the pa
   )
 })
 
-testthat::test_that("tier() errors when two seq_tiers patterns overlap", {
+test_that("tier() errors when two seq_tiers patterns overlap", {
   df <- data.frame(
     A = 1,
     B = 2,
@@ -765,7 +765,7 @@ testthat::test_that("tier() errors when two seq_tiers patterns overlap", {
   )
 })
 
-testthat::test_that("seq_tiers() placeholder validation and numeric default branch", {
+test_that("seq_tiers() placeholder validation and numeric default branch", {
   expect_error(
     seq_tiers(1:2, foo), # no placeholder
     "`vars` must contain the placeholder `i`",
@@ -782,7 +782,7 @@ testthat::test_that("seq_tiers() placeholder validation and numeric default bran
 })
 
 
-testthat::test_that("add_tier() errors when both `before` and `after` are supplied", {
+test_that("add_tier() errors when both `before` and `after` are supplied", {
   expect_error(
     knowledge() |>
       add_tier(2, before = 3, after = 1),
@@ -791,7 +791,7 @@ testthat::test_that("add_tier() errors when both `before` and `after` are suppli
   )
 })
 
-testthat::test_that("add_tier() errors when both `before` and `after` are supplied for a labelled tier", {
+test_that("add_tier() errors when both `before` and `after` are supplied for a labelled tier", {
   expect_error(
     knowledge() |>
       add_tier(1) |>
@@ -801,7 +801,7 @@ testthat::test_that("add_tier() errors when both `before` and `after` are suppli
   )
 })
 
-testthat::test_that("add_tier() errors when either `before` or `after` is given but is not in kn$tiers", {
+test_that("add_tier() errors when either `before` or `after` is given but is not in kn$tiers", {
   expect_error(
     knowledge() |>
       add_tier(One, before = Two),
@@ -810,7 +810,7 @@ testthat::test_that("add_tier() errors when either `before` or `after` is given 
   )
 })
 
-testthat::test_that("add_to_tier() errors when tier input is bad", {
+test_that("add_to_tier() errors when tier input is bad", {
   expect_error(
     knowledge() |>
       add_tier(NA),
@@ -825,7 +825,7 @@ testthat::test_that("add_to_tier() errors when tier input is bad", {
   )
 })
 
-testthat::test_that("add_tier() errors when no before or after is provided", {
+test_that("add_tier() errors when no before or after is provided", {
   expect_error(
     knowledge() |>
       add_tier(1) |>
@@ -869,7 +869,7 @@ test_that("tier() attaches to an existing tier label", {
 # helper to avoid repetition
 tiers_tbl <- function(...) tibble::tibble(label = c(...))
 
-testthat::test_that("reorder_tiers() works with complete permutations", {
+test_that("reorder_tiers() works with complete permutations", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
 
   # by label, character
@@ -891,7 +891,7 @@ testthat::test_that("reorder_tiers() works with complete permutations", {
   )
 })
 
-testthat::test_that("reorder_tiers() errors on incomplete or duplicated permutations", {
+test_that("reorder_tiers() errors on incomplete or duplicated permutations", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
 
   expect_error(
@@ -943,7 +943,7 @@ test_that("reorder_tiers() handles numeric, character and bad elements", {
 # reposition_tier()
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("reposition_tier() moves a tier before/after another", {
+test_that("reposition_tier() moves a tier before/after another", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
 
   expect_equal(
@@ -974,7 +974,7 @@ testthat::test_that("reposition_tier() moves a tier before/after another", {
   )
 })
 
-testthat::test_that("reposition_tier() validates inputs", {
+test_that("reposition_tier() validates inputs", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
 
   # both before and after supplied
@@ -999,7 +999,7 @@ testthat::test_that("reposition_tier() validates inputs", {
   )
 })
 
-testthat::test_that("reposition_tier() errors when no before or after is provided", {
+test_that("reposition_tier() errors when no before or after is provided", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
   expect_error(
     reposition_tier(kn, One),
@@ -1046,7 +1046,7 @@ test_that("reposition_tier() edge cases", {
 # Tier violations
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("reordering respects tier-violation rules", {
+test_that("reordering respects tier-violation rules", {
   # only forbidden edge → any reorder is fine
   kn <- knowledge(
     tier(One ~ V1, Two ~ V2, Three ~ V3),
@@ -1073,7 +1073,7 @@ testthat::test_that("reordering respects tier-violation rules", {
   )
 })
 
-testthat::test_that("adding tier after required edge is provided will trigger tier violation error", {
+test_that("adding tier after required edge is provided will trigger tier violation error", {
   expect_error(
     knowledge(
       required(V2 ~ V1)
@@ -1110,7 +1110,7 @@ test_that("unfreeze() allows adding new variables", {
   expect_setequal(kn2$vars$var, c("A", "B", "C"))
   expect_false(kn2$frozen) # flag stays FALSE
 })
-testthat::test_that("knowledge() throws error when using another function than tier(), forbidden(), or required()", {
+test_that("knowledge() throws error when using another function than tier(), forbidden(), or required()", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
@@ -1168,7 +1168,7 @@ test_that(".edge_verb() validates formula structure and matches", {
 })
 
 
-testthat::test_that(".vars_from_spec() handles c(...) and symbol fallback paths", {
+test_that(".vars_from_spec() handles c(...) and symbol fallback paths", {
   kn <- knowledge(tibble::tibble(V1 = 1, V2 = 2))
 
   # unsupported argument inside c()
@@ -1190,7 +1190,7 @@ testthat::test_that(".vars_from_spec() handles c(...) and symbol fallback paths"
 # + operator
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("merge of numeric-looking tiers preserves left order", {
+test_that("merge of numeric-looking tiers preserves left order", {
   kn1 <- knowledge(tier(`1` ~ V1, `3` ~ V3))
   kn2 <- knowledge(tier(`1` ~ V4, `2` ~ V2, `3` ~ V5))
 
@@ -1210,7 +1210,7 @@ testthat::test_that("merge of numeric-looking tiers preserves left order", {
   )
 })
 
-testthat::test_that("merge of arbitrary labels concatenates e1 order then new from e2", {
+test_that("merge of arbitrary labels concatenates e1 order then new from e2", {
   kn1 <- knowledge(tier(A ~ V1, AA ~ V3))
   kn2 <- knowledge(tier(A ~ V4, B ~ V2))
 
@@ -1222,7 +1222,7 @@ testthat::test_that("merge of arbitrary labels concatenates e1 order then new fr
   )
 })
 
-testthat::test_that("merge errors if resulting tiers violate required-edge order", {
+test_that("merge errors if resulting tiers violate required-edge order", {
   kn_left <- knowledge(tier(One ~ V1))
   kn_right <- knowledge(
     tier(Two ~ V2),
@@ -1236,7 +1236,7 @@ testthat::test_that("merge errors if resulting tiers violate required-edge order
   )
 })
 
-testthat::test_that("merge errors if required and forbidden edges overlap", {
+test_that("merge errors if required and forbidden edges overlap", {
   kn1 <- knowledge(
     forbidden(V1 ~ V2),
     forbidden(V2 ~ V3)
@@ -1257,7 +1257,7 @@ testthat::test_that("merge errors if required and forbidden edges overlap", {
 # add_vars()
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("add_vars adds new vars and ignores existing ones (unfrozen)", {
+test_that("add_vars adds new vars and ignores existing ones (unfrozen)", {
   kn <- knowledge()
   kn <- add_vars(kn, c("A", "B"))
   expect_equal(
@@ -1269,7 +1269,7 @@ testthat::test_that("add_vars adds new vars and ignores existing ones (unfrozen)
   expect_equal(nrow(kn2$vars), 2L)
 })
 
-testthat::test_that("add_vars respects frozen knowledge objects", {
+test_that("add_vars respects frozen knowledge objects", {
   kn_frozen <- knowledge(data.frame(A = 1, B = 2, check.names = FALSE))
 
   expect_silent(add_vars(kn_frozen, c("A"))) # existing var is OK
@@ -1280,7 +1280,7 @@ testthat::test_that("add_vars respects frozen knowledge objects", {
   )
 })
 
-testthat::test_that("add_vars validates input types", {
+test_that("add_vars validates input types", {
   expect_error(add_vars("not_kn", c("X")), "knowledge")
   expect_error(add_vars(knowledge(), X))
 })
@@ -1289,7 +1289,7 @@ testthat::test_that("add_vars validates input types", {
 # forbidden and required
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("forbid_edge() and require_edge() add single edges", {
+test_that("forbid_edge() and require_edge() add single edges", {
   kn <- knowledge()
   kn_f <- forbid_edge(kn, V1 ~ V2)
   expect_equal(kn_f$edges, tibble::tibble(
@@ -1306,14 +1306,14 @@ testthat::test_that("forbid_edge() and require_edge() add single edges", {
   expect_equal(kn_r$edges$to, "V2")
 })
 
-testthat::test_that("forbid_edge() and require_edge() need two-sided formulas", {
+test_that("forbid_edge() and require_edge() need two-sided formulas", {
   kn <- knowledge()
   expect_error(forbid_edge(kn), "needs at least one")
   expect_error(forbid_edge(kn, V1), "two-sided formula")
   expect_error(require_edge(kn, 1), "two-sided formula")
 })
 
-testthat::test_that("forbid_edge()/require_edge() respect tidy-select on either side", {
+test_that("forbid_edge()/require_edge() respect tidy-select on either side", {
   kn <- knowledge(
     tier(
       T1 ~ Y,
@@ -1334,7 +1334,7 @@ testthat::test_that("forbid_edge()/require_edge() respect tidy-select on either 
   expect_equal(sort(kn2$edges$status), c("forbidden", "forbidden", "required", "required"))
 })
 
-testthat::test_that("forbidden() and required() inside knowledge() create edges", {
+test_that("forbidden() and required() inside knowledge() create edges", {
   kn <- knowledge(
     tier(
       A ~ V1,
@@ -1379,7 +1379,7 @@ testthat::test_that("forbidden() and required() inside knowledge() create edges"
   )
 })
 
-testthat::test_that("knowledge() errors on forbidden + required clash", {
+test_that("knowledge() errors on forbidden + required clash", {
   expect_error(
     knowledge(
       forbidden(V1 ~ V2),
@@ -1390,7 +1390,7 @@ testthat::test_that("knowledge() errors on forbidden + required clash", {
   )
 })
 
-testthat::test_that("knowledge() errors when required edges are bidirectional", {
+test_that("knowledge() errors when required edges are bidirectional", {
   expect_error(
     knowledge(required(V1 ~ V2, V2 ~ V1)),
     "required in both directions",
@@ -1398,7 +1398,7 @@ testthat::test_that("knowledge() errors when required edges are bidirectional", 
   )
 })
 
-testthat::test_that("knowledge() rejects unknown top-level calls", {
+test_that("knowledge() rejects unknown top-level calls", {
   expect_error(
     knowledge(foo(V1)),
     "Only tier(), forbidden(), required(), and exogenous()",
@@ -1420,7 +1420,7 @@ test_that("require_edge() errors when called with no formulas", {
 #   forbid_tier_violations()
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("forbid_tier_violations() adds exactly the uphill edges", {
+test_that("forbid_tier_violations() adds exactly the uphill edges", {
   kn <- knowledge(
     tier(
       1 ~ V1 + V2,
@@ -1446,7 +1446,7 @@ testthat::test_that("forbid_tier_violations() adds exactly the uphill edges", {
   expect_true(any(edges$from == "V3" & edges$to == "V1"))
 })
 
-testthat::test_that("calling it again is a no-op (no duplicate edges)", {
+test_that("calling it again is a no-op (no duplicate edges)", {
   kn <- knowledge(tier(1 ~ V1, 2 ~ V2))
   kn1 <- forbid_tier_violations(kn)
   kn2 <- forbid_tier_violations(kn1)
@@ -1454,7 +1454,7 @@ testthat::test_that("calling it again is a no-op (no duplicate edges)", {
   expect_equal(nrow(kn1$edges), nrow(kn2$edges))
 })
 
-testthat::test_that("single-tier or untiered variables add no edges", {
+test_that("single-tier or untiered variables add no edges", {
   # single tier
   kn_single <- knowledge(tier(1 ~ V1 + V2 + V3))
   kn_single <- forbid_tier_violations(kn_single)
@@ -1467,7 +1467,7 @@ testthat::test_that("single-tier or untiered variables add no edges", {
   expect_equal(nrow(kn_mixed$edges), 0) # NA tiers ignored
 })
 
-testthat::test_that("function errors on non-knowledge objects", {
+test_that("function errors on non-knowledge objects", {
   expect_error(forbid_tier_violations(list()), "knowledge")
 })
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1566,7 +1566,7 @@ test_that("as_bnlearn_knowledge() returns correct whitelist and blacklist", {
 # as_pcalg_constraints()
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("errors if any tiers are present", {
+test_that("errors if any tiers are present", {
   kn <- knowledge(tier(1 ~ X1 + X2))
   expect_error(
     as_pcalg_constraints(kn, labels = c("X1", "X2")),
@@ -1574,7 +1574,7 @@ testthat::test_that("errors if any tiers are present", {
   )
 })
 
-testthat::test_that("errors on asymmetric edges when directed_as_undirected = FALSE", {
+test_that("errors on asymmetric edges when directed_as_undirected = FALSE", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2),
     forbidden(X1 ~ X2) # only one direction
@@ -1585,7 +1585,7 @@ testthat::test_that("errors on asymmetric edges when directed_as_undirected = FA
   )
 })
 
-testthat::test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
+test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
     forbidden(X1 ~ X2),
@@ -1604,7 +1604,7 @@ testthat::test_that("symmetrical counterpart edges when directed_as_undirected =
   expect_true(cons$fixedEdges["X1", "Y"])
 })
 
-testthat::test_that("works when forbidden edges are fully symmetric via DSL", {
+test_that("works when forbidden edges are fully symmetric via DSL", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
     forbidden(X1 ~ X2, X2 ~ X1)
@@ -1625,7 +1625,7 @@ testthat::test_that("works when forbidden edges are fully symmetric via DSL", {
   expect_false(any(cons$fixedEdges))
 })
 
-testthat::test_that("result has correct dimnames and dimensions", {
+test_that("result has correct dimnames and dimensions", {
   labels <- c("A", "B", "C", "D")
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
@@ -1638,7 +1638,7 @@ testthat::test_that("result has correct dimnames and dimensions", {
   expect_equal(dim(cons$fixedEdges), c(4L, 4L))
   expect_equal(dimnames(cons$fixedEdges), list(labels, labels))
 })
-testthat::test_that("create pcalg cons without providing labels", {
+test_that("create pcalg cons without providing labels", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     forbidden(A ~ B),
@@ -1651,7 +1651,7 @@ testthat::test_that("create pcalg cons without providing labels", {
   )
 })
 
-testthat::test_that("labels errors are thrown for pcalg constraints conversion", {
+test_that("labels errors are thrown for pcalg constraints conversion", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     forbidden(A ~ B),
@@ -1716,7 +1716,7 @@ test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
 # exogenous() or exo()
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("exogenous() creates a variable that has all ingoing nodes forbidden", {
+test_that("exogenous() creates a variable that has all ingoing nodes forbidden", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exogenous(A)
@@ -1728,7 +1728,7 @@ testthat::test_that("exogenous() creates a variable that has all ingoing nodes f
   expect_equal(kn$edges$to, c("A", "A"))
 })
 
-testthat::test_that("exogenous() can take a list of variables", {
+test_that("exogenous() can take a list of variables", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exogenous(c(A, B))
@@ -1740,7 +1740,7 @@ testthat::test_that("exogenous() can take a list of variables", {
   expect_equal(kn$edges$to, c("B", "A", "A", "B"))
 })
 
-testthat::test_that("exo() is an alias for exogenous()", {
+test_that("exo() is an alias for exogenous()", {
   kn1 <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exo(A)
@@ -1754,7 +1754,7 @@ testthat::test_that("exo() is an alias for exogenous()", {
   expect_equal(kn1, kn2)
 })
 
-testthat::test_that("exogenous() works with multiple variables specified in different ways", {
+test_that("exogenous() works with multiple variables specified in different ways", {
   df <- data.frame(X1 = 1, X11 = 2, Y = 3)
   kn1 <- knowledge(
     df,
@@ -1780,7 +1780,7 @@ testthat::test_that("exogenous() works with multiple variables specified in diff
   expect_equal(kn1, kn4)
 })
 
-testthat::test_that("exogenous() with no variables errors", {
+test_that("exogenous() with no variables errors", {
   expect_error(
     knowledge(
       data.frame(A = 1, B = 2, C = 3),
@@ -1791,7 +1791,7 @@ testthat::test_that("exogenous() with no variables errors", {
   )
 })
 
-testthat::test_that("exogenous() gives error for non-existent variables", {
+test_that("exogenous() gives error for non-existent variables", {
   expect_error(
     knowledge(
       data.frame(A = 1, B = 2, C = 3),
@@ -1802,7 +1802,7 @@ testthat::test_that("exogenous() gives error for non-existent variables", {
   )
 })
 
-testthat::test_that("exogenous() handles duplicate variables gracefully", {
+test_that("exogenous() handles duplicate variables gracefully", {
   kn1 <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exogenous(c(A, A))
@@ -1816,7 +1816,7 @@ testthat::test_that("exogenous() handles duplicate variables gracefully", {
   expect_equal(kn1, kn2)
 })
 
-testthat::test_that("multiple calls of exogenous() accumulate correctly", {
+test_that("multiple calls of exogenous() accumulate correctly", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exogenous(A),
@@ -1828,7 +1828,7 @@ testthat::test_that("multiple calls of exogenous() accumulate correctly", {
   expect_setequal(kn$edges$to, c("A", "A", "B", "B"))
 })
 
-testthat::test_that("exogenous() is invariant to order of variables", {
+test_that("exogenous() is invariant to order of variables", {
   kn1 <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     exogenous(c(A, B))
@@ -1871,7 +1871,7 @@ test_that("exogenous() on unknown var errors when frozen", {
 # remove functions
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("remove_edges() drops forbidden and required edges", {
+test_that("remove_edges() drops forbidden and required edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
@@ -1879,16 +1879,16 @@ testthat::test_that("remove_edges() drops forbidden and required edges", {
     required(B ~ C, C ~ D)
   )
   # check edges present
-  testthat::expect_true(any(kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"))
-  testthat::expect_true(any(kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"))
+  expect_true(any(kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"))
+  expect_true(any(kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"))
   # remove a forbidden edge
   kn2 <- remove_edges(kn, A ~ C)
-  testthat::expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
+  expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
   # remove a required edge
   kn3 <- remove_edges(kn, C ~ D)
-  testthat::expect_false(any(kn3$edges$from == "C" & kn3$edges$to == "D"))
+  expect_false(any(kn3$edges$from == "C" & kn3$edges$to == "D"))
   # other edges remain
-  testthat::expect_true(any(kn3$edges$from == "B" & kn3$edges$to == "D"))
+  expect_true(any(kn3$edges$from == "B" & kn3$edges$to == "D"))
 })
 
 test_that("remove_edges() errors when called with no formulas", {
@@ -1904,7 +1904,7 @@ test_that("remove_edges() errors when called with no formulas", {
   )
 })
 
-testthat::test_that("remove_edges() supports multiple formulas and tidyselect", {
+test_that("remove_edges() supports multiple formulas and tidyselect", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
     tier(1 ~ X1 + X2, 2 ~ Y),
@@ -1914,91 +1914,91 @@ testthat::test_that("remove_edges() supports multiple formulas and tidyselect", 
 
   # remove both X1→Y and X2→Y in one call
   kn2 <- remove_edges(kn, X1 ~ Y, X2 ~ Y)
-  testthat::expect_false(any(kn2$edges$from %in% c("X1", "X2") & kn2$edges$to == "Y"))
+  expect_false(any(kn2$edges$from %in% c("X1", "X2") & kn2$edges$to == "Y"))
 
   # remove via character‐vector on the LHS
   kn3 <- remove_edges(kn, c("X1", "X2") ~ Y)
-  testthat::expect_false(any(kn3$edges$to == "Y"))
+  expect_false(any(kn3$edges$to == "Y"))
 })
 
-testthat::test_that("remove_edges() warns if no edges matched", {
+test_that("remove_edges() warns if no edges matched", {
   kn <- knowledge(
     data.frame(A = 1, B = 2),
     forbidden(A ~ B)
   )
-  testthat::expect_error(
+  expect_error(
     remove_edges(kn, B ~ C),
     "remove_edges() matched no edges",
     fixed = TRUE
   )
 })
 
-testthat::test_that("remove_vars() drops vars and associated edges", {
+test_that("remove_vars() drops vars and associated edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     forbidden(A ~ B),
     required(B ~ C)
   )
-  testthat::expect_true("B" %in% kn$vars$var)
-  testthat::expect_true(any(kn$edges$to == "B" | kn$edges$from == "B"))
+  expect_true("B" %in% kn$vars$var)
+  expect_true(any(kn$edges$to == "B" | kn$edges$from == "B"))
   kn2 <- remove_vars(kn, B)
-  testthat::expect_false("B" %in% kn2$vars$var)
-  testthat::expect_false(any(kn2$edges$from == "B" | kn2$edges$to == "B"))
+  expect_false("B" %in% kn2$vars$var)
+  expect_false(any(kn2$edges$from == "B" | kn2$edges$to == "B"))
 })
 
-testthat::test_that("remove_vars() accepts tidyselect and character vector", {
+test_that("remove_vars() accepts tidyselect and character vector", {
   kn <- knowledge(
     data.frame(foo = 1, bar = 2, baz = 3),
     forbidden(foo ~ bar),
     forbidden(bar ~ baz)
   )
   kn2 <- remove_vars(kn, starts_with("ba"))
-  testthat::expect_false(any(grepl("^ba", kn2$vars$var)))
+  expect_false(any(grepl("^ba", kn2$vars$var)))
   kn3 <- remove_vars(kn, c("foo", "baz"))
-  testthat::expect_false(any(kn3$vars$var %in% c("foo", "baz")))
+  expect_false(any(kn3$vars$var %in% c("foo", "baz")))
 })
 
-testthat::test_that("remove_vars() errors on no matches", {
+test_that("remove_vars() errors on no matches", {
   kn <- knowledge(data.frame(A = 1, B = 2))
-  testthat::expect_error(
+  expect_error(
     remove_vars(kn, X),
     "matched no variables"
   )
 })
 
-testthat::test_that("remove_tiers() drops tier and resets vars", {
+test_that("remove_tiers() drops tier and resets vars", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     tier("alpha" ~ A + B, "beta" ~ C)
   )
-  testthat::expect_true("alpha" %in% kn$tiers$label)
-  testthat::expect_equal(kn$vars$tier[kn$vars$var == "A"], "alpha")
+  expect_true("alpha" %in% kn$tiers$label)
+  expect_equal(kn$vars$tier[kn$vars$var == "A"], "alpha")
   kn2 <- remove_tiers(kn, "alpha")
-  testthat::expect_false("alpha" %in% kn2$tiers$label)
-  testthat::expect_true(is.na(kn2$vars$tier[kn2$vars$var == "A"]))
+  expect_false("alpha" %in% kn2$tiers$label)
+  expect_true(is.na(kn2$vars$tier[kn2$vars$var == "A"]))
 })
 
-testthat::test_that("remove_tiers() accepts numeric index", {
+test_that("remove_tiers() accepts numeric index", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
     tier(1 ~ A, 2 ~ B, 3 ~ C)
   )
   # remove second tier (label "2")
   kn2 <- remove_tiers(kn, 2)
-  testthat::expect_false("2" %in% kn2$tiers$label)
-  testthat::expect_true(is.na(kn2$vars$tier[kn2$vars$var == "B"]))
+  expect_false("2" %in% kn2$tiers$label)
+  expect_true(is.na(kn2$vars$tier[kn2$vars$var == "B"]))
 })
 
-testthat::test_that("remove_tiers() no-op if no match", {
+test_that("remove_tiers() no-op if no match", {
   kn <- knowledge(
     data.frame(X = 1, Y = 2),
     tier("t1" ~ X, "t2" ~ Y)
   )
   kn2 <- remove_tiers(kn, "none")
-  testthat::expect_identical(kn2, kn)
+  expect_identical(kn2, kn)
 })
 
-testthat::test_that("chaining remove_* works together", {
+test_that("chaining remove_* works together", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
@@ -2009,9 +2009,9 @@ testthat::test_that("chaining remove_* works together", {
     remove_edges(A ~ C) |>
     remove_vars(D) |>
     remove_tiers(3)
-  testthat::expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
-  testthat::expect_false("D" %in% kn2$vars$var)
-  testthat::expect_false("3" %in% kn2$tiers$label)
+  expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
+  expect_false("D" %in% kn2$vars$var)
+  expect_false("3" %in% kn2$tiers$label)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -2019,14 +2019,14 @@ testthat::test_that("chaining remove_* works together", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-testthat::test_that("deparse_knowledge() emits minimal code for empty knowledge", {
+test_that("deparse_knowledge() emits minimal code for empty knowledge", {
   kn <- knowledge()
   code <- deparse_knowledge(kn)
   expected <- "knowledge(\n)"
-  testthat::expect_equal(code, expected)
+  expect_equal(code, expected)
 })
 
-testthat::test_that("deparse_knowledge() includes data-frame name when provided", {
+test_that("deparse_knowledge() includes data-frame name when provided", {
   df <- data.frame(A = 1, B = 2)
   kn <- knowledge(df, tier(1 ~ A, 2 ~ B))
   code <- deparse_knowledge(kn, "df")
@@ -2038,20 +2038,20 @@ testthat::test_that("deparse_knowledge() includes data-frame name when provided"
     "\n  )",
     "\n)"
   )
-  testthat::expect_equal(code, expected)
+  expect_equal(code, expected)
 })
 
-testthat::test_that("deparse_knowledge() groups multiple tiers into one tier() call", {
+test_that("deparse_knowledge() groups multiple tiers into one tier() call", {
   df <- data.frame(X = 1, Y = 2, Z = 3)
   kn <- knowledge(
     df,
     tier(first ~ X + Y, second ~ Z)
   )
   code <- deparse_knowledge(kn, "df")
-  testthat::expect_true(grepl("tier\\(\\s*first ~ X \\+ Y,\\s*second ~ Z\\s*\\)", code))
+  expect_true(grepl("tier\\(\\s*first ~ X \\+ Y,\\s*second ~ Z\\s*\\)", code))
 })
 
-testthat::test_that("deparse_knowledge() collapses forbidden edges by source", {
+test_that("deparse_knowledge() collapses forbidden edges by source", {
   df <- data.frame(A = 1, B = 2, C = 3, D = 4)
   kn <- knowledge(
     df,
@@ -2061,7 +2061,7 @@ testthat::test_that("deparse_knowledge() collapses forbidden edges by source", {
   # should have a single forbidden() call with two formulas:
   #   A ~ C + D
   #   B ~ C
-  testthat::expect_true(
+  expect_true(
     grepl(
       "forbidden\\(\\s*A ~ C \\+ D,\\s*B ~ C\\s*\\)",
       code
@@ -2069,19 +2069,19 @@ testthat::test_that("deparse_knowledge() collapses forbidden edges by source", {
   )
 })
 
-testthat::test_that("deparse_knowledge() collapses required edges by source", {
+test_that("deparse_knowledge() collapses required edges by source", {
   df <- data.frame(P = 1, Q = 2, R = 3)
   kn <- knowledge(
     df,
     required(P ~ Q, P ~ R)
   )
   code <- deparse_knowledge(kn, "df")
-  testthat::expect_true(
+  expect_true(
     grepl("required\\(\\s*P ~ Q \\+ R\\s*\\)", code)
   )
 })
 
-testthat::test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", {
+test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", {
   df <- data.frame(A = 1, B = 2, C = 3)
   kn <- knowledge(
     df,
@@ -2091,5 +2091,5 @@ testthat::test_that("deparse_knowledge() round-trips: eval(parse(code)) equals o
   )
   code <- deparse_knowledge(kn, "df")
   kn2 <- eval(parse(text = code))
-  testthat::expect_equal(kn2, kn)
+  expect_equal(kn2, kn)
 })

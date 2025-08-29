@@ -1,5 +1,5 @@
-testthat::skip_if_not_installed("pcalg")
-testthat::skip_if_not_installed("gtools")
+skip_if_not_installed("pcalg")
+skip_if_not_installed("gtools")
 
 # helpers
 build_kn_from_order <- function() {

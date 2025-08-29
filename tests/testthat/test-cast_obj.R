@@ -9,7 +9,7 @@ test_that("cast_obj() casts ScoreWrapper implementors", {
     score <- try(rJava::.jnew("edu/cmu/tetrad/algcomparison/score/BDeuScore"), silent = TRUE)
   }
   if (inherits(score, "try-error")) {
-    testthat::skip("No ScoreWrapper implementation available on classpath (SemBicScore/BDeuScore).")
+    skip("No ScoreWrapper implementation available on classpath (SemBicScore/BDeuScore).")
   }
 
   out <- cast_obj(score)
@@ -32,7 +32,7 @@ test_that("cast_obj() casts IndependenceWrapper implementors", {
   # FisherZ is a common wrapper with a no-arg ctor in algcomparison
   indep <- try(rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/FisherZ"), silent = TRUE)
   if (inherits(indep, "try-error")) {
-    testthat::skip("No IndependenceWrapper implementation available on classpath (FisherZ).")
+    skip("No IndependenceWrapper implementation available on classpath (FisherZ).")
   }
 
   out <- cast_obj(indep)
@@ -45,7 +45,7 @@ test_that("cast_obj() casts Graph implementors (EdgeListGraph)", {
   # EdgeListGraph usually has a no-arg constructor
   graph <- try(rJava::.jnew("edu/cmu/tetrad/graph/EdgeListGraph"), silent = TRUE)
   if (inherits(graph, "try-error")) {
-    testthat::skip("EdgeListGraph not available or lacks no-arg constructor on this Tetrad build.")
+    skip("EdgeListGraph not available or lacks no-arg constructor on this Tetrad build.")
   }
 
   out <- cast_obj(graph)

@@ -214,7 +214,7 @@ test_that("conversion from fully connected graphNEL works", {
   expect_equal(disco_tbl, edge_tbl)
 })
 
-testthat::test_that("conversion from graphNEL cpdag works", {
+test_that("conversion from graphNEL cpdag works", {
   # build graphNEL with directed edgemode
   nodes <- LETTERS[1:4]
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "directed")
@@ -238,10 +238,10 @@ testthat::test_that("conversion from graphNEL cpdag works", {
 
   disco_tbl <- tibble::as_tibble(discography(g))
 
-  testthat::expect_equal(disco_tbl, cpdag_edge_tbl)
+  expect_equal(disco_tbl, cpdag_edge_tbl)
 })
 
-testthat::test_that("conversion from fully-connected undirected graphNEL works", {
+test_that("conversion from fully-connected undirected graphNEL works", {
   # build a 4-node, fully connected, undirected graphNEL
   nodes <- LETTERS[1:4]
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "undirected")
@@ -261,7 +261,7 @@ testthat::test_that("conversion from fully-connected undirected graphNEL works",
 
   disco_tbl <- tibble::as_tibble(discography(g))
 
-  testthat::expect_equal(disco_tbl, cpdag_edge_tbl)
+  expect_equal(disco_tbl, cpdag_edge_tbl)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -285,7 +285,7 @@ pc_fit <- pcalg::pc(
   verbose   = FALSE
 )
 
-testthat::test_that("conversion from pcAlgo works", {
+test_that("conversion from pcAlgo works", {
   # discography on the pcAlgo object
   disco_tbl <- tibble::as_tibble(discography(pc_fit))
 
@@ -296,18 +296,18 @@ testthat::test_that("conversion from pcAlgo works", {
     edge_type = rep("---", 6)
   )
 
-  testthat::expect_equal(disco_tbl, expected_tbl)
+  expect_equal(disco_tbl, expected_tbl)
 })
 
-testthat::test_that("conversion from pcAlgo is the same as the conversion from the graph", {
+test_that("conversion from pcAlgo is the same as the conversion from the graph", {
   # discography on the pcAlgo object versus its graph slot
   disco_tbl <- tibble::as_tibble(discography(pc_fit))
   reference_tbl <- tibble::as_tibble(discography(pc_fit@graph))
 
-  testthat::expect_equal(disco_tbl, reference_tbl)
+  expect_equal(disco_tbl, reference_tbl)
 })
 
-testthat::test_that("conversion from pcAlgo works", {
+test_that("conversion from pcAlgo works", {
   # discography on the pcAlgo object
   disco_tbl <- tibble::as_tibble(discography(pc_fit))
 
@@ -318,14 +318,14 @@ testthat::test_that("conversion from pcAlgo works", {
     edge_type = rep("---", 6)
   )
 
-  testthat::expect_equal(disco_tbl, expected_tbl)
+  expect_equal(disco_tbl, expected_tbl)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Essgraph (pcalg::ges)
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("conversion from empty EssGraph works", {
+test_that("conversion from empty EssGraph works", {
   nodes <- LETTERS[1:4]
   ess <- list(
     .nodes     = nodes,
@@ -341,10 +341,10 @@ testthat::test_that("conversion from empty EssGraph works", {
 
   disco_tbl <- tibble::as_tibble(discography(ess))
 
-  testthat::expect_equal(disco_tbl, edge_tbl)
+  expect_equal(disco_tbl, edge_tbl)
 })
 
-testthat::test_that("conversion from EssGraph works", {
+test_that("conversion from EssGraph works", {
   nodes <- LETTERS[1:4] # A, B, C, D
 
   ## parent lists (indices into 'nodes')
@@ -371,10 +371,10 @@ testthat::test_that("conversion from EssGraph works", {
 
   disco_tbl <- tibble::as_tibble(discography(ess))
 
-  testthat::expect_equal(disco_tbl, edge_tbl)
+  expect_equal(disco_tbl, edge_tbl)
 })
 
-testthat::test_that("conversion from EssGraph produced by pcalg::ges works", {
+test_that("conversion from EssGraph produced by pcalg::ges works", {
   # sim data
   set.seed(42)
   p <- 4
@@ -402,7 +402,7 @@ testthat::test_that("conversion from EssGraph produced by pcalg::ges works", {
     to        = c("C", "D", "D"),
     edge_type = c("---", "-->", "-->")
   )
-  testthat::expect_equal(disco_tbl, edge_tbl)
+  expect_equal(disco_tbl, edge_tbl)
 })
 
 
@@ -410,7 +410,7 @@ testthat::test_that("conversion from EssGraph produced by pcalg::ges works", {
 # fciAlgo, amat, amat.pag, amat.cpdag
 # ──────────────────────────────────────────────────────────────────────────────
 
-testthat::test_that("conversion from empty amat.pag works", {
+test_that("conversion from empty amat.pag works", {
   nodes <- LETTERS[1:4]
   amat <- matrix(0, 4, 4, dimnames = list(nodes, nodes))
   class(amat) <- c("amat.pag", "matrix")
@@ -419,10 +419,10 @@ testthat::test_that("conversion from empty amat.pag works", {
 
   disco_tbl <- tibble::as_tibble(discography(amat))
 
-  testthat::expect_equal(disco_tbl, edge_tbl)
+  expect_equal(disco_tbl, edge_tbl)
 })
 
-testthat::test_that("conversion from amat.pag works", {
+test_that("conversion from amat.pag works", {
   # codes: 0 none | 1 circle | 2 arrowhead | 3 tail   (column-mark convention)
   nodes <- LETTERS[1:4]
   amat <- matrix(0, 4, 4, dimnames = list(nodes, nodes))
@@ -446,10 +446,10 @@ testthat::test_that("conversion from amat.pag works", {
 
   disco_tbl <- tibble::as_tibble(discography(amat))
 
-  testthat::expect_equal(disco_tbl, pag_edge_tbl)
+  expect_equal(disco_tbl, pag_edge_tbl)
 })
 
-testthat::test_that("conversion from amat.cpdag works", {
+test_that("conversion from amat.cpdag works", {
   nodes <- LETTERS[1:4]
   amat <- matrix(0, 4, 4, dimnames = list(nodes, nodes))
 
@@ -477,11 +477,11 @@ testthat::test_that("conversion from amat.cpdag works", {
 
   disco_tbl <- tibble::as_tibble(discography(amat))
 
-  testthat::expect_equal(disco_tbl, cpdag_edge_tbl)
+  expect_equal(disco_tbl, cpdag_edge_tbl)
 })
 
 
-testthat::test_that("conversion from bare amat (default method chooses cpdag)", {
+test_that("conversion from bare amat (default method chooses cpdag)", {
   nodes <- LETTERS[1:4]
   amat <- matrix(0, 4, 4, dimnames = list(nodes, nodes))
 
@@ -509,11 +509,11 @@ testthat::test_that("conversion from bare amat (default method chooses cpdag)", 
 
   disco_tbl <- tibble::as_tibble(discography(amat))
 
-  testthat::expect_equal(disco_tbl, cpdag_edge_tbl)
+  expect_equal(disco_tbl, cpdag_edge_tbl)
 })
 
 
-testthat::test_that("conversion from fciAlgo to amat to discography works", {
+test_that("conversion from fciAlgo to amat to discography works", {
   # reproducible PAG via pcalg::fci
   set.seed(123)
   n <- 500
@@ -536,7 +536,7 @@ testthat::test_that("conversion from fciAlgo to amat to discography works", {
   disco_tbl <- tibble::as_tibble(discography(fci_fit))
   reference_tbl <- tibble::as_tibble(discography(methods::as(fci_fit, "amat")))
 
-  testthat::expect_equal(disco_tbl, reference_tbl)
+  expect_equal(disco_tbl, reference_tbl)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
