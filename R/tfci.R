@@ -77,7 +77,7 @@
 tfci <- function(data = NULL,
                  knowledge = NULL,
                  order = NULL,
-                 sparsity = 10^(-1),
+                 alpha = 10^(-1),
                  test = regTest,
                  suffStat = NULL,
                  method = "stable.fast",
@@ -181,7 +181,7 @@ tfci <- function(data = NULL,
   skel <- pcalg::skeleton(
     suffStat = thisSuffStat,
     indepTest = indep_test_dir,
-    alpha = sparsity,
+    alpha = alpha,
     labels = vnames,
     method = method,
     fixedGaps = constraints$fixedGaps,
@@ -200,7 +200,7 @@ tfci <- function(data = NULL,
     sepset = skel@sepset,
     pMax = skel@pMax,
     unfVect = c(),
-    alpha = sparsity
+    alpha = alpha
   )
   nextratests <- fci_skel$n.edgetests
   ntests <- ntests + nextratests
@@ -224,7 +224,7 @@ tfci <- function(data = NULL,
       tmp,
       suffStat = thisSuffStat,
       indepTest = indep_test_dir,
-      alpha = sparsity,
+      alpha = alpha,
       version.unf = c(1, 1),
       maj.rule = maj.rule
     )

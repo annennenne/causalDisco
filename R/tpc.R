@@ -22,7 +22,7 @@
 #'   Deprecated; use \code{knowledge} instead. If supplied, it is converted
 #'   internally to tier knowledge using \code{tidyselect::starts_with()} for
 #'   each prefix.
-#' @param sparsity The sparsity level used as the per-test significance
+#' @param alpha The alpha level used as the per-test significance
 #'   threshold for conditional independence testing.
 #' @param test A conditional independence test. The default \code{regTest}
 #'   uses a regression-based information-loss test. Another available option is
@@ -76,7 +76,7 @@
 #'
 #' @return
 #' If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
-#' \code{$tamat} (temporal adjacency matrix), \code{$psi} (sparsity level),
+#' \code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
 #' and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
 #' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
 #' a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
@@ -92,18 +92,18 @@
 #'     oldage ~ tidyselect::starts_with("oldage")
 #'   )
 #' )
-#' tpc(tpcExample, knowledge = kn, sparsity = 0.01)
+#' tpc(tpcExample, knowledge = kn, alpha = 0.01)
 #'
 #' # Deprecated: using order prefixes (will warn)
 #' testthat::expect_warning(
-#'   tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
+#'   tpc(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
 #' )
 #'
 #' @export
 tpc <- function(data = NULL,
                 knowledge = NULL,
                 order = NULL,
-                sparsity = 10^(-1),
+                alpha = 10^(-1),
                 test = regTest,
                 suffStat = NULL,
                 method = "stable.fast",
@@ -144,6 +144,9 @@ tpc <- function(data = NULL,
     knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
   }
 
+  if (is.null(knowledge)) {
+    knowledge <- knowledge()
+  }
 
   is_knowledge(knowledge)
 
@@ -199,7 +202,7 @@ tpc <- function(data = NULL,
   skel <- pcalg::skeleton(
     suffStat = thisSuffStat,
     indepTest = indepTest_dir,
-    alpha = sparsity,
+    alpha = alpha,
     labels = vnames,
     method = method,
     fixedGaps = constraints$fixedGaps,
@@ -211,7 +214,7 @@ tpc <- function(data = NULL,
   if (output == "tskeleton") {
     out <- list(
       tamat = tamat(amat = graph2amat(skel), order = knowledge$tiers$label),
-      psi = sparsity,
+      psi = alpha,
       ntest = ntests
     )
     class(out) <- "tskeleton"
@@ -223,7 +226,7 @@ tpc <- function(data = NULL,
   if (output == "tpdag") {
     out <- list(
       tamat = tamat(amat = graph2amat(res, toFrom = FALSE), order = knowledge$tiers$label),
-      psi = sparsity,
+      psi = alpha,
       ntests = ntests
     )
     class(out) <- "tpdag"

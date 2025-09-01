@@ -8,7 +8,7 @@ tfci(
   data = NULL,
   knowledge = NULL,
   order = NULL,
-  sparsity = 10^(-1),
+  alpha = 10^(-1),
   test = regTest,
   suffStat = NULL,
   method = "stable.fast",
@@ -35,7 +35,7 @@ is \code{NULL}), a temporary \code{knowledge} object is constructed using
 \link[tidyselect:starts_with]{tidyselect::starts_with} for each prefix. Supplying
 both \code{knowledge} and \code{order} is an error.}
 
-\item{sparsity}{The sparsity level used as the per-test significance
+\item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
 \item{test}{A conditional independence test. The default \code{regTest}

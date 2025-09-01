@@ -8,7 +8,7 @@ tpc(
   data = NULL,
   knowledge = NULL,
   order = NULL,
-  sparsity = 10^(-1),
+  alpha = 10^(-1),
   test = regTest,
   suffStat = NULL,
   method = "stable.fast",
@@ -35,7 +35,7 @@ Deprecated; use \code{knowledge} instead. If supplied, it is converted
 internally to tier knowledge using \code{tidyselect::starts_with()} for
 each prefix.}
 
-\item{sparsity}{The sparsity level used as the per-test significance
+\item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
 \item{test}{A conditional independence test. The default \code{regTest}
@@ -80,7 +80,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 }
 \value{
 If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
-\code{$tamat} (temporal adjacency matrix), \code{$psi} (sparsity level),
+\code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
 and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
 \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
 a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
@@ -121,11 +121,11 @@ kn <- knowledge(
     oldage ~ tidyselect::starts_with("oldage")
   )
 )
-tpc(tpcExample, knowledge = kn, sparsity = 0.01)
+tpc(tpcExample, knowledge = kn, alpha = 0.01)
 
 # Deprecated: using order prefixes (will warn)
 testthat::expect_warning(
-  tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
+  tpc(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
 )
 
 }
