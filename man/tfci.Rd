@@ -2,129 +2,27 @@
 % Please edit documentation in R/tfci.R
 \name{tfci}
 \alias{tfci}
-\title{Perform causal discovery using the temporal FCI algorithm (TFCI)}
+\title{The Temporal Fast Causal Inference (FCI) algorithm for causal discovery}
 \usage{
-tfci(
-  data = NULL,
-  knowledge = NULL,
-  order = NULL,
-  alpha = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  directed_as_undirected = FALSE,
-  varnames = NULL,
-  ...
-)
+tfci(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data frame with the observed variables. Columns are variables.
-When using the deprecated \code{order} argument, variables should be
-prefixed with their period name (see examples). When using
-\code{knowledge}, prefixes are not required.}
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"causalDisco"}}{causalDisco library.}
+}}
 
-\item{knowledge}{A \emph{knowledge} object describing tiers/periods and optional
-forbidden/required edges. This replaces the legacy \code{order} interface and
-is the preferred way to supply temporal background knowledge.}
+\item{test}{Character; name of the conditional‐independence test.}
 
-\item{order}{\strong{Deprecated}. A character vector with period-prefixes in their
-temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
-is \code{NULL}), a temporary \code{knowledge} object is constructed using
-\link[tidyselect:starts_with]{tidyselect::starts_with} for each prefix. Supplying
-both \code{knowledge} and \code{order} is an error.}
+\item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{alpha}{The alpha level used as the per-test significance
-threshold for conditional independence testing.}
-
-\item{test}{A conditional independence test. The default \code{regTest}
-uses a regression-based information-loss test. Another available option is
-\code{corTest} which tests for vanishing partial correlations. User-supplied
-functions may also be used; see details for the required interface.}
-
-\item{suffStat}{A sufficient statistic. If supplied, it is passed directly
-to the test and no statistics are computed from \code{data}. Its structure
-depends on the chosen \code{test}.}
-
-\item{method}{Skeleton construction method, one of \code{"stable"},
-\code{"original"}, or \code{"stable.fast"} (default). See
-\code{\link[pcalg]{skeleton}} for details.}
-
-\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
-error on any \code{NA}), \code{"cc"} (complete-case analysis), or
-\code{"twd"} (test-wise deletion).}
-
-\item{methodOri}{Method for handling conflicting separating sets when orienting
-edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
-\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
-
-\item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
-edges in \code{knowledge} as undirected during skeleton learning. This
-is due to the fact that \pkg{pcalg} does not allow directed edges in
-\code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.}
-
-\item{varnames}{Character vector of variable names. Only needed when
-\code{data} is not supplied and all information is passed via
-\code{suffStat}.}
-
-\item{...}{Additional arguments passed to
-\code{\link[pcalg]{skeleton}} during skeleton construction.}
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
 }
 \value{
-A \code{discography} tibble with columns \code{from}, \code{to}, and
-\code{edge_type}. The underlying orientation corresponds to a PAG learned by
-TFCI under the supplied temporal background knowledge.
+A function of class \code{"tfci"} that takes a single argument \code{data}
+(a data frame) and returns an \code{discography} object.
 }
 \description{
-Use a modification of the FCI algorithm that makes use of background knowledge
-in the format of a partial ordering. This may, for instance, come about when
-variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
-}
-\details{
-The temporal/tiered background information enters several places in the TFCI
-algorithm: (1) In the skeleton construction phase, when looking for separating
-sets \eqn{Z} between two variables \eqn{X} and \eqn{Y}, \eqn{Z} is not allowed to
-contain variables that are strictly after both \eqn{X} and \eqn{Y} in the temporal
-order (as specified by the \code{knowledge} tiers). (2) This also applies to the
-subsequent phase where the algorithm searches for possible D-SEP sets. (3) Prior
-to other orientation steps, any cross-tier edges get an arrowhead placed at their
-latest node.
-
-After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2pag}
-for details.
-}
-\examples{
-# simulate linear Gaussian data with an unobserved variable L1
-set.seed(123)
-n <- 100
-L1 <- rnorm(n)
-X1 <- rnorm(n)
-X2 <- L1 + X1 + rnorm(n)
-X3 <- X1 + rnorm(n)
-X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(
-  p1_X1 = X1,
-  p1_X2 = X2,
-  p2_X3 = X3,
-  p2_X4 = X4
-)
-
-# Build knowledge from tidy tier rules (recommended)
-kn <- knowledge(
-  d,
-  tier(
-    p1 ~ tidyselect::starts_with("p1_"),
-    p2 ~ tidyselect::starts_with("p2_")
-  )
-)
-
-# Use TFCI to recover a PAG (returned as a discography tibble)
-tfci(d, test = corTest, knowledge = kn)
-
-# Legacy interface (deprecated): supply order only
-\dontrun{
-tfci(d, test = corTest, order = c("p1", "p2"))
-}
-
+Run the temporal FCI algorithm for causal discovery using causalDisco.
 }

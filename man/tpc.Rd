@@ -2,130 +2,27 @@
 % Please edit documentation in R/tpc.R
 \name{tpc}
 \alias{tpc}
-\title{Perform causal discovery using the temporal PC algorithm (TPC)}
+\title{The Temporal Peter-Clark (PC) algorithm for causal discovery}
 \usage{
-tpc(
-  data = NULL,
-  knowledge = NULL,
-  order = NULL,
-  alpha = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  output = "discography",
-  directed_as_undirected = FALSE,
-  varnames = NULL,
-  ...
-)
+tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data frame with the observed variables. Columns are variables.
-When using the deprecated \code{order} argument, variables should be
-prefixed with their period name (see examples). When using
-\code{knowledge}, prefixes are not required.}
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"causalDisco"}}{causalDisco library.}
+}}
 
-\item{knowledge}{A \code{knowledge} object created with \code{knowledge()},
-encoding tier assignments and optional forbidden/required edges. This is
-the preferred way to provide temporal background knowledge.}
+\item{test}{Character; name of the conditional‐independence test.}
 
-\item{order}{A character vector of period prefixes in temporal order.
-Deprecated; use \code{knowledge} instead. If supplied, it is converted
-internally to tier knowledge using \code{tidyselect::starts_with()} for
-each prefix.}
+\item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{alpha}{The alpha level used as the per-test significance
-threshold for conditional independence testing.}
-
-\item{test}{A conditional independence test. The default \code{regTest}
-uses a regression-based information-loss test. Another available option is
-\code{corTest} which tests for vanishing partial correlations. User-supplied
-functions may also be used; see details for the required interface.}
-
-\item{suffStat}{A sufficient statistic. If supplied, it is passed directly
-to the test and no statistics are computed from \code{data}. Its structure
-depends on the chosen \code{test}.}
-
-\item{method}{Skeleton construction method, one of \code{"stable"},
-\code{"original"}, or \code{"stable.fast"} (default). See
-\code{\link[pcalg]{skeleton}} for details.}
-
-\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
-error on any \code{NA}), \code{"cc"} (complete-case analysis), or
-\code{"twd"} (test-wise deletion).}
-
-\item{methodOri}{Conflict-handling method when orienting edges.
-Currently only the conservative method is available.}
-
-\item{output}{One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
-or \code{"discography"}. If \code{"tskeleton"}, return the temporal
-skeleton without directions. If \code{"tpdag"} (default), return a
-temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
-return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
-\pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
-\code{discography()}.}
-
-\item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
-edges in \code{knowledge} as undirected during skeleton learning. This
-is due to the fact that \pkg{pcalg} does not allow directed edges in
-\code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.}
-
-\item{varnames}{Character vector of variable names. Only needed when
-\code{data} is not supplied and all information is passed via
-\code{suffStat}.}
-
-\item{...}{Additional arguments passed to
-\code{\link[pcalg]{skeleton}} during skeleton construction.}
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
 }
 \value{
-If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
-\code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
-and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
-\code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
-a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
+A function of class \code{"tpc"} that takes a single argument \code{data}
+(a data frame) and returns an \code{discography} object.
 }
 \description{
-Run a tier-aware variant of the PC algorithm that respects background
-knowledge about a partial temporal order. Supply the temporal order via a
-\code{knowledge} object. For backward compatibility, you may still pass
-\code{order}, but that interface is deprecated and will be removed in a
-future release.
-}
-\details{
-Any independence test implemented in \pkg{pcalg} may be used; see
-\code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
-performed: for \code{corTest}, each pairwise correlation uses complete cases;
-for \code{regTest}, each conditional test performs its own deletion. If you
-supply a user-defined \code{test}, you must also provide \code{suffStat}.
-
-Temporal or tiered knowledge enters in two places:
-\itemize{
-\item during skeleton estimation, candidate conditioning sets are pruned so
-they do not contain variables that are strictly after both endpoints;
-\item during orientation, any cross-tier edge is restricted to point
-forward in time.
-}
-The \code{order} argument is deprecated. If provided, it is converted to a
-\code{knowledge} object by assigning variables to tiers using
-\code{tidyselect::starts_with()} for each prefix.
-}
-\examples{
-# Using knowledge (preferred)
-data(tpcExample)
-kn <- knowledge(
-  tpcExample,
-  tier(
-    child ~ tidyselect::starts_with("child"),
-    youth ~ tidyselect::starts_with("youth"),
-    oldage ~ tidyselect::starts_with("oldage")
-  )
-)
-tpc(tpcExample, knowledge = kn, alpha = 0.01)
-
-# Deprecated: using order prefixes (will warn)
-testthat::expect_warning(
-  tpc(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
-)
-
+Run the temporal PC algorithm for causal discovery using causalDisco.
 }

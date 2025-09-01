@@ -2,27 +2,26 @@
 % Please edit documentation in R/tges.R
 \name{tges}
 \alias{tges}
-\title{Estimate the restricted Markov equivalence class using Temporal Greedy Equivalence Search}
+\title{The Temporal GES algorithm for causal discovery}
 \usage{
-tges(score, verbose = FALSE)
+tges(engine = c("causalDisco"), score, ...)
 }
 \arguments{
-\item{score}{tiered scoring object to be used.
-At the moment only scores supported are
-\itemize{
-\item \code{\linkS4class{TemporalBIC}} and
-\item \code{\linkS4class{TemporalBDeu}}.
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"causalDisco"}}{causalDisco library.}
 }}
 
-\item{verbose}{indicates whether debug output should be printed.}
+\item{score}{Character; name of the scoring function to use.}
+
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
 }
 \value{
-A \code{discography} object (the canonical representation for
-\code{EssGraph}/\code{TEssGraph} results in this package).
+A function of class \code{"tges"} that takes a single argument \code{data}
+(a data frame) and returns an \code{discography} object.
 }
 \description{
-Perform causal discovery using the temporal greedy equivalence search algorithm.
-}
-\author{
-Tobias Ellegaard Larsen
+Run the Temporal GES algorithm for causal discovery using the causalDisco
+engine.
 }
