@@ -33,7 +33,9 @@ kn2 <- knowledge(
 )
 my_tges_tetrad <- ges(engine = "tetrad", score = "sem_bic")
 my_ges_pcalg <- ges(engine = "pcalg", score = "sem_bic", directed_as_undirected_knowledge = TRUE)
+my_tges_causalDisco <- tges(engine = "causalDisco", score = "tbic")
 
 # call disco with background knowledge
-disco(df, method = my_tges_tetrad, knowledge = kn) |> cat()
+disco(df, method = my_tges_causalDisco, knowledge = kn)
 disco(df, method = my_ges_pcalg, knowledge = kn2)
+disco(df, method = my_tges_tetrad, knowledge = kn)

@@ -40,6 +40,22 @@ my_pc_bnlearn <- pc(
   engine = "bnlearn", test = "fisher_z", alpha = 0.05
 )
 
+kn_tiers <- knowledge(
+  df,
+  tier(
+    baby ~ V1 + V2 + V3,
+    adult ~ V4,
+    old ~ V5,
+    really_old ~ V6
+  ),
+  required(
+    V1 ~ V2,
+    V5 ~ V6
+  )
+)
+
+my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
+
 # can be called like this
 my_pc_tetrad(df)
 new_pc_tetrad <- my_pc_tetrad |>
@@ -58,8 +74,15 @@ new_pc_bnlearn <- my_pc_bnlearn |>
   set_knowledge(kn)
 new_pc_bnlearn(df)
 
+# with causalDisco
+my_tpc(df)
+new_tpc <- my_tpc |>
+  set_knowledge(kn_tiers)
+new_tpc(df)
+
 # or with disco
 # call disco with background knowledge
 disco(df, method = my_pc_tetrad, knowledge = kn)
 disco(df, method = my_pc_pcalg, knowledge = kn)
 disco(df, method = my_pc_bnlearn, knowledge = kn)
+disco(df, method = my_tpc, knowledge = kn_tiers)
