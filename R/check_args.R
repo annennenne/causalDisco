@@ -194,11 +194,14 @@ check_args_and_distribute_args_causalDisco <- function(args,
         call. = FALSE
       )
     } else {
+      # extra precaution, cannot be hit with current algorithms in causalDisco
+      # nocov start
       stop(
         paste0("The following arguments are not used in causalDisco::", alg, ": "),
         paste(args_not_in_engine_args, collapse = ", "),
         call. = FALSE
       )
+      # nocov end
     }
   }
   return(list(
