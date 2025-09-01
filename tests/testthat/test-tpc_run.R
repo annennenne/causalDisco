@@ -13,16 +13,16 @@ build_kn_from_order <- function() {
   )
 }
 
-test_that("tpc returns tpdag on example data", {
+test_that("tpc_run returns tpdag on example data", {
   set.seed(123)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tpc(
+  res <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.01,
+    alpha = 0.01,
     test = regTest,
     output = "tpdag"
   )
@@ -36,16 +36,16 @@ test_that("tpc returns tpdag on example data", {
   expect_identical(res$psi, 0.01)
 })
 
-test_that("tpc returns tskeleton on example data", {
+test_that("tpc_run returns tskeleton on example data", {
   set.seed(321)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tpc(
+  res <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.02,
+    alpha = 0.02,
     test = regTest,
     output = "tskeleton"
   )
@@ -57,16 +57,16 @@ test_that("tpc returns tskeleton on example data", {
   expect_setequal(rownames(A), names(tpcExample))
 })
 
-test_that("tpc returns pcAlgo output", {
+test_that("tpc_run returns pcAlgo output", {
   set.seed(42)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tpc(
+  res <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.05,
+    alpha = 0.05,
     test = regTest,
     output = "pcAlgo"
   )
@@ -77,16 +77,16 @@ test_that("tpc returns pcAlgo output", {
   expect_setequal(rownames(A), names(tpcExample))
 })
 
-test_that("tpc works with corTest", {
+test_that("tpc_run works with corTest", {
   set.seed(777)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tpc(
+  res <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.01,
+    alpha = 0.01,
     test = corTest,
     output = "tpdag"
   )
@@ -95,7 +95,7 @@ test_that("tpc works with corTest", {
   expect_gt(res$ntests, 0)
 })
 
-test_that("tpc respects forbidden knowledge", {
+test_that("tpc_run respects forbidden knowledge", {
   set.seed(999)
   data(tpcExample, package = "causalDisco")
 
@@ -106,10 +106,10 @@ test_that("tpc respects forbidden knowledge", {
   y <- vars[2]
   kn_forb <- kn |> forbid_edge(!!as.name(x) ~ !!as.name(y))
 
-  res <- tpc(
+  res <- tpc_run(
     data = tpcExample,
     knowledge = kn_forb,
-    sparsity = 0.02,
+    alpha = 0.02,
     test = regTest,
     output = "tpdag"
   )
@@ -120,17 +120,17 @@ test_that("tpc respects forbidden knowledge", {
   expect_identical(A[rownames(A) == y, colnames(A) == x], 0)
 })
 
-test_that("tpc(order=...) runs and returns tpdag, throws deprecation warning", {
+test_that("tpc_run(order=...) runs and returns tpdag, throws deprecation warning", {
   set.seed(202)
   data(tpcExample, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
 
   expect_warning(
-    res <- tpc(
+    res <- tpc_run(
       data = tpcExample,
       order = ord,
-      sparsity = 0.01,
+      alpha = 0.01,
       test = regTest,
       output = "tpdag"
     )
@@ -141,7 +141,7 @@ test_that("tpc(order=...) runs and returns tpdag, throws deprecation warning", {
   expect_identical(rownames(A), colnames(A))
 })
 
-test_that("tpc errors when both knowledge and order are supplied", {
+test_that("tpc_run errors when both knowledge and order are supplied", {
   set.seed(606)
   data(tpcExample, package = "causalDisco")
 
@@ -157,11 +157,11 @@ test_that("tpc errors when both knowledge and order are supplied", {
   )
 
   expect_error(
-    tpc(
+    tpc_run(
       data = tpcExample,
       knowledge = kn,
       order = ord,
-      sparsity = 0.015,
+      alpha = 0.015,
       test = regTest,
       output = "tpdag"
     ),
@@ -170,7 +170,7 @@ test_that("tpc errors when both knowledge and order are supplied", {
   )
 })
 
-test_that("tpc supports tskeleton, pcAlgo, and discography outputs", {
+test_that("tpc_run supports tskeleton, pcAlgo, and discography outputs", {
   set.seed(707)
   data(tpcExample, package = "causalDisco")
 
@@ -183,29 +183,29 @@ test_that("tpc supports tskeleton, pcAlgo, and discography outputs", {
     )
   )
 
-  res_skel <- tpc(
+  res_skel <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.03,
+    alpha = 0.03,
     test = regTest,
     output = "tskeleton"
   )
   expect_s3_class(res_skel, "tskeleton")
 
-  res_pc <- tpc(
+  res_pc <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.03,
+    alpha = 0.03,
     test = regTest,
     output = "pcAlgo"
   )
   A_pc <- graph2amat(res_pc, toFrom = FALSE)
   expect_true(is.matrix(A_pc))
 
-  res_disco <- tpc(
+  res_disco <- tpc_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.03,
+    alpha = 0.03,
     test = regTest,
     output = "discography"
   )
@@ -213,34 +213,34 @@ test_that("tpc supports tskeleton, pcAlgo, and discography outputs", {
   expect_true(all(c("from", "to", "edge_type") %in% names(res_disco)))
 })
 
-# input-guard tests (unchanged but only for tpc)
-test_that("tpc input guards fail fast with clear messages", {
+# input-guard tests (unchanged but only for tpc_run)
+test_that("tpc_run input guards fail fast with clear messages", {
   df <- data.frame(a = 1:3, b = 1:3)
   kn <- knowledge() |> add_vars(names(df))
 
   expect_error(
-    tpc(data = df, knowledge = kn, output = "nope"),
+    tpc_run(data = df, knowledge = kn, output = "nope"),
     "Output must be tpdag, tskeleton, pcAlgo, or discography.",
     fixed = TRUE
   )
   expect_error(
-    tpc(data = df, knowledge = kn, methodNA = "oops"),
+    tpc_run(data = df, knowledge = kn, methodNA = "oops"),
     "Invalid choice of method for handling NA values.",
     fixed = TRUE
   )
   expect_error(
-    tpc(data = NULL, suffStat = NULL, knowledge = knowledge()),
+    tpc_run(data = NULL, suffStat = NULL, knowledge = knowledge()),
     "Either data or sufficient statistic must be supplied.",
     fixed = TRUE
   )
 })
 
-test_that("tpc NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
+test_that("tpc_run NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
   df1 <- data.frame(a = c(1, NA), b = c(2, NA))
   kn1 <- knowledge() |> add_vars(names(df1))
 
   expect_error(
-    tpc(data = df1, knowledge = kn1, methodNA = "none"),
+    tpc_run(data = df1, knowledge = kn1, methodNA = "none"),
     "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
     fixed = TRUE
   )
@@ -249,29 +249,29 @@ test_that("tpc NA handling: error on NAs with methodNA = 'none', cc with zero ro
   kn2 <- knowledge() |> add_vars(names(df2))
 
   expect_error(
-    tpc(data = df2, knowledge = kn2, methodNA = "cc"),
+    tpc_run(data = df2, knowledge = kn2, methodNA = "cc"),
     "contain no complete cases.",
     fixed = TRUE
   )
 })
 
-test_that("tpc errors when varnames are unknown with suffStat-only usage", {
+test_that("tpc_run errors when varnames are unknown with suffStat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tpc(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
+    tpc_run(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )
 })
 
-test_that("tpc demands suffStat for non-builtin test functions", {
+test_that("tpc_run demands suffStat for non-builtin test functions", {
   set.seed(1)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
   strange_test <- function(x, y, S, suffStat) 0
 
   expect_error(
-    tpc(data = df, knowledge = kn, test = strange_test),
+    tpc_run(data = df, knowledge = kn, test = strange_test),
     "suffStat needs to be supplied when using a non-builtin test.",
     fixed = TRUE
   )
@@ -301,7 +301,7 @@ test_that("make_suff_stat() returns correct suffStat for different tests and fai
   )
 })
 
-test_that("tpc adds missing vars to knowledge and uses provided suffStat (tskeleton path)", {
+test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (tskeleton path)", {
   set.seed(11)
   df <- data.frame(
     child_x = rnorm(40),
@@ -312,10 +312,10 @@ test_that("tpc adds missing vars to knowledge and uses provided suffStat (tskele
   kn0 <- knowledge() |> add_vars(c("child_x", "youth_y")) # missing oldage_z
   suff <- make_suff_stat(df, type = "regTest")
 
-  res <- tpc(
+  res <- tpc_run(
     data = NULL,
     knowledge = kn0,
-    sparsity = 0.1,
+    alpha = 0.1,
     test = regTest,
     suffStat = suff,
     output = "tskeleton",
@@ -331,10 +331,10 @@ test_that("tpc adds missing vars to knowledge and uses provided suffStat (tskele
   kn_bad <- knowledge() |> add_vars(c("child_a")) # missing oldage_z
 
   expect_error(
-    tpc(
+    tpc_run(
       data = NULL,
       knowledge = kn_bad,
-      sparsity = 0.1,
+      alpha = 0.1,
       test = regTest,
       suffStat = suff,
       output = "tskeleton",

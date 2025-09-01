@@ -141,7 +141,7 @@ test_that("TemporalBDeu covers if(length(parents) == 0) part", {
     data = head(alarm, 1000),
     knowledge = knowledge()
   )
-  g <- tges(sc, verbose = FALSE)
+  g <- tges_run(sc, verbose = FALSE)
   expect_true(TRUE)
 })
 
@@ -306,28 +306,28 @@ test_that("TemporalBDeu returns -Inf when a later-tier parent is proposed", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# tges() guard checks (API is score-only; no knowledge/order here)
+# tges_run() guard checks (API is score-only; no knowledge/order here)
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("tges() rejects non-supported score classes with clear message", {
+test_that("tges_run() rejects non-supported score classes with clear message", {
   fake <- structure(list(pp.dat = list(vertex.count = 2L, data = matrix(0, 1, 2))), class = "NotAScore")
-  expect_error(tges(fake), "Score must be of type TemporalBIC or TemporalBDeu", fixed = TRUE)
+  expect_error(tges_run(fake), "Score must be of type TemporalBIC or TemporalBDeu", fixed = TRUE)
 })
 
-test_that("tges() enforces factors for TemporalBDeu and missing-value guard", {
+test_that("tges_run() enforces factors for TemporalBDeu and missing-value guard", {
   set.seed(7)
   D_bad_type <- data.frame(A = rnorm(10), B = rnorm(10))
   kn <- knowledge() |> add_vars(c("A", "B"))
   kn <- add_tier(kn, "T1")
   sc_bad <- new("TemporalBDeu", data = D_bad_type, nodes = c("A", "B"), knowledge = kn)
-  expect_error(tges(sc_bad), "must be factors", fixed = TRUE)
+  expect_error(tges_run(sc_bad), "must be factors", fixed = TRUE)
 
   D_na <- data.frame(A = factor(c(1, 1, NA, 2, 2)), B = factor(c(1, 2, 1, 2, 2)))
   sc_na <- new("TemporalBDeu", data = D_na, nodes = c("A", "B"), knowledge = kn)
-  expect_error(tges(sc_na), "Data must not contain missing values", fixed = TRUE)
+  expect_error(tges_run(sc_na), "Data must not contain missing values", fixed = TRUE)
 })
 
-test_that("tges() builds Forbidden.edges from score$.order", {
+test_that("tges_run() builds Forbidden.edges from score$.order", {
   set.seed(8)
   X <- cbind(x = rnorm(10), y = rnorm(10))
   kn <- knowledge() |> add_vars(c("x", "y"))
@@ -340,10 +340,10 @@ test_that("tges() builds Forbidden.edges from score$.order", {
     data = X, nodes = colnames(X),
     knowledge = kn, use.cpp = FALSE
   )
-  expect_no_error(try(suppressWarnings(tges(sc, verbose = FALSE)), silent = TRUE))
+  expect_no_error(try(suppressWarnings(tges_run(sc, verbose = FALSE)), silent = TRUE))
 })
 
-test_that("tges forward phase", {
+test_that("tges_run forward phase", {
   set.seed(13) # friday the 13th
   n <- 100
   X1 <- rnorm(n)
@@ -358,11 +358,11 @@ test_that("tges forward phase", {
     data = df,
     knowledge = kn
   )
-  g <- tges(sc, verbose = FALSE)
+  g <- tges_run(sc, verbose = FALSE)
   expect_true(TRUE)
 })
 
-test_that("tges turning phase", {
+test_that("tges_run turning phase", {
   set.seed(13) # friday the 13th
   n <- 100
   X1 <- rnorm(n) + rbinom(n, 1, 0.3)
@@ -376,6 +376,6 @@ test_that("tges turning phase", {
     data = df,
     knowledge = kn
   )
-  g <- tges(sc, verbose = FALSE)
+  g <- tges_run(sc, verbose = FALSE)
   expect_true(TRUE)
 })

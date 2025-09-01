@@ -13,16 +13,16 @@ build_kn_from_order <- function() {
   )
 }
 
-test_that("tfci returns discography on example data", {
+test_that("tfci_run returns discography on example data", {
   set.seed(123)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tfci(
+  res <- tfci_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.01,
+    alpha = 0.01,
     test = corTest,
     methodOri = "conservative"
   )
@@ -35,16 +35,16 @@ test_that("tfci returns discography on example data", {
   }
 })
 
-test_that("tfci works with regTest as well", {
+test_that("tfci_run works with regTest as well", {
   set.seed(777)
   data(tpcExample, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  res <- tfci(
+  res <- tfci_run(
     data = tpcExample,
     knowledge = kn,
-    sparsity = 0.02,
+    alpha = 0.02,
     test = regTest,
     methodOri = "standard"
   )
@@ -52,7 +52,7 @@ test_that("tfci works with regTest as well", {
   expect_s3_class(res, "discography")
 })
 
-test_that("tfci respects forbidden knowledge (edge is removed)", {
+test_that("tfci_run respects forbidden knowledge (edge is removed)", {
   set.seed(999)
   data(tpcExample, package = "causalDisco")
 
@@ -63,10 +63,10 @@ test_that("tfci respects forbidden knowledge (edge is removed)", {
   y <- vars[2]
   kn_forb <- kn |> forbid_edge(!!as.name(x) ~ !!as.name(y))
 
-  res <- tfci(
+  res <- tfci_run(
     data = tpcExample,
     knowledge = kn_forb,
-    sparsity = 0.02,
+    alpha = 0.02,
     test = corTest
   )
 
@@ -75,17 +75,17 @@ test_that("tfci respects forbidden knowledge (edge is removed)", {
   expect_identical(nrow(edges_xy), 0L)
 })
 
-test_that("tfci(order=...) runs and returns discography, throws deprecation warning", {
+test_that("tfci_run(order=...) runs and returns discography, throws deprecation warning", {
   set.seed(202)
   data(tpcExample, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
 
   expect_warning(
-    res <- tfci(
+    res <- tfci_run(
       data = tpcExample,
       order = ord,
-      sparsity = 0.01,
+      alpha = 0.01,
       test = corTest
     )
   )
@@ -93,7 +93,7 @@ test_that("tfci(order=...) runs and returns discography, throws deprecation warn
   expect_true(all(c("from", "to", "edge_type") %in% names(res)))
 })
 
-test_that("tfci errors when both knowledge and order are supplied", {
+test_that("tfci_run errors when both knowledge and order are supplied", {
   set.seed(606)
   data(tpcExample, package = "causalDisco")
 
@@ -109,11 +109,11 @@ test_that("tfci errors when both knowledge and order are supplied", {
   )
 
   expect_error(
-    tfci(
+    tfci_run(
       data = tpcExample,
       knowledge = kn,
       order = ord,
-      sparsity = 0.015,
+      alpha = 0.015,
       test = corTest
     ),
     "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
@@ -121,35 +121,35 @@ test_that("tfci errors when both knowledge and order are supplied", {
   )
 })
 
-test_that("tfci input guards fail fast with clear messages", {
+test_that("tfci_run input guards fail fast with clear messages", {
   df <- data.frame(a = 1:3, b = 1:3)
   kn <- knowledge() |> add_vars(names(df))
 
   expect_error(
-    tfci(data = NULL, suffStat = NULL, knowledge = knowledge()),
+    tfci_run(data = NULL, suffStat = NULL, knowledge = knowledge()),
     "Either data or sufficient statistic must be supplied.",
     fixed = TRUE
   )
 
   expect_error(
-    tfci(data = df, knowledge = kn, methodNA = "oops"),
+    tfci_run(data = df, knowledge = kn, methodNA = "oops"),
     "Invalid choice of method for handling NA values.",
     fixed = TRUE
   )
 
   expect_error(
-    tfci(data = df, knowledge = kn, methodOri = "funky"),
+    tfci_run(data = df, knowledge = kn, methodOri = "funky"),
     "Orientation method must be one of standard, conservative or maj.rule.",
     fixed = TRUE
   )
 })
 
-test_that("tfci NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
+test_that("tfci_run NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
   df1 <- data.frame(a = c(1, NA), b = c(2, NA))
   kn1 <- knowledge() |> add_vars(names(df1))
 
   expect_error(
-    tfci(data = df1, knowledge = kn1, methodNA = "none"),
+    tfci_run(data = df1, knowledge = kn1, methodNA = "none"),
     "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
     fixed = TRUE
   )
@@ -158,62 +158,62 @@ test_that("tfci NA handling: error on NAs with methodNA = 'none', cc with zero r
   kn2 <- knowledge() |> add_vars(names(df2))
 
   expect_error(
-    tfci(data = df2, knowledge = kn2, methodNA = "cc"),
+    tfci_run(data = df2, knowledge = kn2, methodNA = "cc"),
     "contain no complete cases.",
     fixed = TRUE
   )
 })
 
-test_that("tfci errors when varnames are unknown with suffStat-only usage", {
+test_that("tfci_run errors when varnames are unknown with suffStat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tfci(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
+    tfci_run(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )
 })
 
-test_that("tfci demands suffStat for non-builtin test functions", {
+test_that("tfci_run demands suffStat for non-builtin test functions", {
   set.seed(1)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
   strange_test <- function(x, y, S, suffStat) 0
 
   expect_error(
-    tfci(data = df, knowledge = kn, test = strange_test),
+    tfci_run(data = df, knowledge = kn, test = strange_test),
     "suffStat needs to be supplied when using a non-builtin test.",
     fixed = TRUE
   )
 })
 
-test_that("tfci() adds missing vars to knowledge via add_vars() and fails for bad variables", {
+test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails for bad variables", {
   skip_if_not_installed("pcalg")
   skip_if_not_installed("gtools")
 
   # Provide knowledge missing one variable ("oldage_z")
   kn0 <- knowledge() |> add_vars(c("child_x1", "youth_x3"))
 
-  res <- tfci(
-    data      = tpcExample,
+  res <- tfci_run(
+    data = tpcExample,
     knowledge = kn0, # <- triggers the missing_vars path
-    sparsity  = 0.2,
-    test      = regTest
+    alpha = 0.2,
+    test = regTest
   )
   expect_s3_class(res, "discography")
   kn_bad <- knowledge() |> add_vars(c("child_a"))
   expect_error(
-    tfci(
-      data      = tpcExample,
+    tfci_run(
+      data = tpcExample,
       knowledge = kn_bad,
-      sparsity  = 0.2,
-      test      = regTest
+      alpha = 0.2,
+      test = regTest
     ),
     "Knowledge contains variables not present in `data`: child_a",
     fixed = TRUE
   )
 })
 
-test_that("tfci uses provided suffStat (no data needed) and completes", {
+test_that("tfci_run uses provided suffStat (no data needed) and completes", {
   set.seed(2)
   df <- data.frame(
     p1_A = rnorm(25),
@@ -231,10 +231,10 @@ test_that("tfci uses provided suffStat (no data needed) and completes", {
   # Provide suffStat directly to hit the else-branch
   ss <- make_suff_stat(df, type = "regTest")
 
-  out <- tfci(
+  out <- tfci_run(
     data = NULL, # no data path
     knowledge = kn,
-    sparsity = 0.2,
+    alpha = 0.2,
     test = regTest,
     suffStat = ss,
     varnames = names(df)
