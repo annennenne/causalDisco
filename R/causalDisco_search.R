@@ -235,7 +235,7 @@ causalDiscoSearch <- R6::R6Class(
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           self$alg <- purrr::partial(
-            tpc,
+            tpc_run,
             test = self$test,
             !!!self$params
           )
@@ -245,14 +245,14 @@ causalDiscoSearch <- R6::R6Class(
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           self$alg <- purrr::partial(
-            tfci,
+            tfci_run,
             test = self$test,
             !!!self$params
           )
         },
         "tges" = {
           self$alg <- purrr::partial(
-            tges,
+            tges_run,
             verbose = isTRUE(self$params$verbose)
           )
         },
