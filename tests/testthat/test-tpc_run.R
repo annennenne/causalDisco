@@ -1,7 +1,14 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Skip if these packages are not installed
+# ──────────────────────────────────────────────────────────────────────────────
+
 skip_if_not_installed("pcalg")
 skip_if_not_installed("gtools")
 
-# helpers
+# ──────────────────────────────────────────────────────────────────────────────
+# Build helper function for knowledge from example data
+# ──────────────────────────────────────────────────────────────────────────────
+
 build_kn_from_order <- function() {
   knowledge(
     tpcExample,
@@ -12,6 +19,10 @@ build_kn_from_order <- function() {
     )
   )
 }
+
+# ──────────────────────────────────────────────────────────────────────────────
+# tpc_run()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tpc_run returns tpdag on example data", {
   set.seed(123)
@@ -141,35 +152,6 @@ test_that("tpc_run(order=...) runs and returns tpdag, throws deprecation warning
   expect_identical(rownames(A), colnames(A))
 })
 
-test_that("tpc_run errors when both knowledge and order are supplied", {
-  set.seed(606)
-  data(tpcExample, package = "causalDisco")
-
-  ord <- c("child", "youth", "oldage")
-
-  kn <- knowledge(
-    tpcExample,
-    tier(
-      child ~ tidyselect::starts_with("child"),
-      youth ~ tidyselect::starts_with("youth"),
-      oldage ~ tidyselect::starts_with("oldage")
-    )
-  )
-
-  expect_error(
-    tpc_run(
-      data = tpcExample,
-      knowledge = kn,
-      order = ord,
-      alpha = 0.015,
-      test = regTest,
-      output = "tpdag"
-    ),
-    "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
-    fixed = TRUE
-  )
-})
-
 test_that("tpc_run supports tskeleton, pcAlgo, and discography outputs", {
   set.seed(707)
   data(tpcExample, package = "causalDisco")
@@ -213,7 +195,40 @@ test_that("tpc_run supports tskeleton, pcAlgo, and discography outputs", {
   expect_true(all(c("from", "to", "edge_type") %in% names(res_disco)))
 })
 
-# input-guard tests (unchanged but only for tpc_run)
+# ──────────────────────────────────────────────────────────────────────────────
+# tpc_run() guards and errors
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+test_that("tpc_run errors when both knowledge and order are supplied", {
+  set.seed(606)
+  data(tpcExample, package = "causalDisco")
+
+  ord <- c("child", "youth", "oldage")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  expect_error(
+    tpc_run(
+      data = tpcExample,
+      knowledge = kn,
+      order = ord,
+      alpha = 0.015,
+      test = regTest,
+      output = "tpdag"
+    ),
+    "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
+    fixed = TRUE
+  )
+})
+
 test_that("tpc_run input guards fail fast with clear messages", {
   df <- data.frame(a = 1:3, b = 1:3)
   kn <- knowledge() |> add_vars(names(df))
@@ -277,29 +292,6 @@ test_that("tpc_run demands suffStat for non-builtin test functions", {
   )
 })
 
-test_that("make_suff_stat() returns correct suffStat for different tests and fails correctly", {
-  set.seed(12)
-  df <- data.frame(
-    child_x = rnorm(40),
-    youth_y = rnorm(40),
-    oldage_z = rnorm(40)
-  )
-  suff <- make_suff_stat(df, type = "regTest")
-  expect_true(is.list(suff))
-  expect_true(!is.null(suff$data))
-  expect_true(!is.null(suff$bin))
-
-  suff2 <- make_suff_stat(df, type = "corTest")
-  expect_true(is.list(suff2))
-  expect_true(!is.null(suff2$C))
-  expect_true(!is.null(suff2$n))
-
-  expect_error(
-    make_suff_stat(df, type = "unknownTest"),
-    "unknownTest is not a supported type for autogenerating a sufficient statistic",
-    fixed = TRUE
-  )
-})
 
 test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (tskeleton path)", {
   set.seed(11)
@@ -343,6 +335,39 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
     "Knowledge contains variables not present in `data`"
   )
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: make_suff_stat()
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+test_that("make_suff_stat() returns correct suffStat for different tests and fails correctly", {
+  set.seed(12)
+  df <- data.frame(
+    child_x = rnorm(40),
+    youth_y = rnorm(40),
+    oldage_z = rnorm(40)
+  )
+  suff <- make_suff_stat(df, type = "regTest")
+  expect_true(is.list(suff))
+  expect_true(!is.null(suff$data))
+  expect_true(!is.null(suff$bin))
+
+  suff2 <- make_suff_stat(df, type = "corTest")
+  expect_true(is.list(suff2))
+  expect_true(!is.null(suff2$C))
+  expect_true(!is.null(suff2$n))
+
+  expect_error(
+    make_suff_stat(df, type = "unknownTest"),
+    "unknownTest is not a supported type for autogenerating a sufficient statistic",
+    fixed = TRUE
+  )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: .build_knowledge_from_order
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that(".build_knowledge_from_order builds tiers in the given order and attaches starts_with() vars", {
   vars <- c("childA", "childB", "youthC", "oldageD")
@@ -437,10 +462,19 @@ test_that(".build_knowledge_from_order respects order even with empty-hit tiers"
   # NOHIT tier exists but has no assigned vars
   expect_false("NOHIT" %in% kn$vars$tier)
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: is_after()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("is_after returns FALSE when any tier is missing", {
   kn <- knowledge() |> add_vars(c("A", "B"))
   expect_false(is_after("A", "B", kn))
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: order_restrict_amat_cpdag()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("order_restrict_amat_cpdag returns input matrix when all tier ranks are NA", {
   labs <- c("V1", "V2", "V3")

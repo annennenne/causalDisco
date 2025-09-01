@@ -1,3 +1,7 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers for testing constraint-based methods (pc, fci) across engines
+# ──────────────────────────────────────────────────────────────────────────────
+
 # register methods and the engines they support
 method_registry <- list(
   pc  = list(fn = pc, engines = c("tetrad", "pcalg", "bnlearn")),
@@ -41,7 +45,9 @@ toy_knowledge <- function(df) {
   )
 }
 
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Tests for constraint-based methods (pc, fci) across engines
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("methods construct disco_method closures and run across engines", {
   skip_if_no_pcalg_bnlearn_tetrad()
@@ -61,6 +67,10 @@ test_that("methods construct disco_method closures and run across engines", {
     }
   }
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# set_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_knowledge returns a new method and injects knowledge (all engines)", {
   skip_if_no_pcalg_bnlearn_tetrad()
@@ -83,6 +93,10 @@ test_that("set_knowledge returns a new method and injects knowledge (all engines
     }
   }
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# disco()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("disco() injects knowledge and validates method type (pc + fci)", {
   skip_if_no_pcalg_bnlearn_tetrad()
@@ -126,7 +140,9 @@ test_that("disco() forwards knowledge errors from set_knowledge() (pc + fci)", {
   }
 })
 
-# direct runner coverage
+# ──────────────────────────────────────────────────────────────────────────────
+# Direct runner tests (pc + fci)
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("pc and fci runners wire arguments correctly for each engine", {
   skip_if_no_pcalg_bnlearn_tetrad()

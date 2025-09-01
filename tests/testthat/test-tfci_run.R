@@ -1,7 +1,14 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Skip if these packages are not installed
+# ──────────────────────────────────────────────────────────────────────────────
+
 skip_if_not_installed("pcalg")
 skip_if_not_installed("gtools")
 
-# local helper for building knowledge from the example data
+# ──────────────────────────────────────────────────────────────────────────────
+# Build helper function for knowledge from example data
+# ──────────────────────────────────────────────────────────────────────────────
+
 build_kn_from_order <- function() {
   knowledge(
     tpcExample,
@@ -12,6 +19,10 @@ build_kn_from_order <- function() {
     )
   )
 }
+
+# ──────────────────────────────────────────────────────────────────────────────
+# tfci_run()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tfci_run returns discography on example data", {
   set.seed(123)
@@ -92,6 +103,42 @@ test_that("tfci_run(order=...) runs and returns discography, throws deprecation 
   expect_s3_class(res, "discography")
   expect_true(all(c("from", "to", "edge_type") %in% names(res)))
 })
+
+
+test_that("tfci_run uses provided suffStat (no data needed) and completes", {
+  set.seed(2)
+  df <- data.frame(
+    p1_A = rnorm(25),
+    p2_B = rnorm(25)
+  )
+  # Build a valid knowledge with both variables known
+  kn <- knowledge(
+    df,
+    tier(
+      p1 ~ tidyselect::starts_with("p1"),
+      p2 ~ tidyselect::starts_with("p2")
+    )
+  )
+
+  # Provide suffStat directly to hit the else-branch
+  ss <- make_suff_stat(df, type = "regTest")
+
+  out <- tfci_run(
+    data = NULL, # no data path
+    knowledge = kn,
+    alpha = 0.2,
+    test = regTest,
+    suffStat = ss,
+    varnames = names(df)
+  )
+
+  expect_s3_class(out, "discography")
+})
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# tfci_run() guards and errors
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tfci_run errors when both knowledge and order are supplied", {
   set.seed(606)
@@ -211,34 +258,4 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
     "Knowledge contains variables not present in `data`: child_a",
     fixed = TRUE
   )
-})
-
-test_that("tfci_run uses provided suffStat (no data needed) and completes", {
-  set.seed(2)
-  df <- data.frame(
-    p1_A = rnorm(25),
-    p2_B = rnorm(25)
-  )
-  # Build a valid knowledge with both variables known
-  kn <- knowledge(
-    df,
-    tier(
-      p1 ~ tidyselect::starts_with("p1"),
-      p2 ~ tidyselect::starts_with("p2")
-    )
-  )
-
-  # Provide suffStat directly to hit the else-branch
-  ss <- make_suff_stat(df, type = "regTest")
-
-  out <- tfci_run(
-    data = NULL, # no data path
-    knowledge = kn,
-    alpha = 0.2,
-    test = regTest,
-    suffStat = ss,
-    varnames = names(df)
-  )
-
-  expect_s3_class(out, "discography")
 })

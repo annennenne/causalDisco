@@ -1,6 +1,3 @@
-# discography tests
-library(testthat)
-
 # ──────────────────────────────────────────────────────────────────────────────
 # discography() fails on unknown object
 # ──────────────────────────────────────────────────────────────────────────────
@@ -15,6 +12,7 @@ test_that("discography fails on unknown object", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("conversion from empty bnlearn graph works", {
+  skip_if_not_installed("bnlearn")
   e <- bnlearn::empty.graph(LETTERS[1:6])
   edge_tbl <- e$arcs |>
     tibble::as_tibble()
@@ -24,6 +22,7 @@ test_that("conversion from empty bnlearn graph works", {
 })
 
 test_that("conversion from fully connected bnlearn graph works", {
+  skip_if_not_installed("bnlearn")
   e <- bnlearn::complete.graph(LETTERS[1:6])
   edge_tbl <- e$arcs |>
     tibble::as_tibble() |>
@@ -37,6 +36,7 @@ test_that("conversion from fully connected bnlearn graph works", {
 })
 
 test_that("conversion from bnlearn cpdag works", {
+  skip_if_not_installed("bnlearn")
   e <- bnlearn::empty.graph(LETTERS[1:4])
   e <- bnlearn::set.arc(e, "A", "B")
   e <- bnlearn::set.arc(e, "C", "B")
@@ -171,6 +171,7 @@ test_that("conversion from tetrad cpdag works", {
 # graphNEL
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("conversion from empty graphNEL works", {
+  skip_if_not_installed("graph")
   e <- new("graphNEL", edgemode = "directed")
   edge_tbl <- tibble::tibble(
     from = character(0),
@@ -182,6 +183,7 @@ test_that("conversion from empty graphNEL works", {
 })
 
 test_that("conversion from fully connected graphNEL works", {
+  skip_if_not_installed("graph")
   e <- new("graphNEL", nodes = LETTERS[1:6], edgemode = "directed")
   from <- c(
     "A", "A", "A", "A", "A",
@@ -215,6 +217,7 @@ test_that("conversion from fully connected graphNEL works", {
 })
 
 test_that("conversion from graphNEL cpdag works", {
+  skip_if_not_installed("graph")
   # build graphNEL with directed edgemode
   nodes <- LETTERS[1:4]
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "directed")
@@ -242,6 +245,7 @@ test_that("conversion from graphNEL cpdag works", {
 })
 
 test_that("conversion from fully-connected undirected graphNEL works", {
+  skip_if_not_installed("graph")
   # build a 4-node, fully connected, undirected graphNEL
   nodes <- LETTERS[1:4]
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "undirected")
@@ -267,6 +271,8 @@ test_that("conversion from fully-connected undirected graphNEL works", {
 # ──────────────────────────────────────────────────────────────────────────────
 # pcAlgo
 # ──────────────────────────────────────────────────────────────────────────────
+skip_if_not_installed("pcalg")
+
 set.seed(42)
 p <- 4
 n <- 500

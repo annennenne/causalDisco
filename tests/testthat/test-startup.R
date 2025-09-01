@@ -1,5 +1,9 @@
 pkg <- "causalDisco"
 
+# ──────────────────────────────────────────────────────────────────────────────
+# .onLoad() and .onAttach()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that(".onLoad sets default heap when option is absent", {
   local_options(java.heap.size = NULL)
 
@@ -130,6 +134,10 @@ test_that(".onAttach does not prompt when env var set", {
   )
 })
 
+# ──────────────────────────────────────────────────────────────────────────────
+# ask_heap_size()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("ask_heap_size returns default on empty input", {
   with_mocked_bindings(
     .read_line = function(prompt) "",
@@ -171,6 +179,10 @@ test_that("ask_heap_size reprompts on invalid input and messages once", {
     }
   )
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# .check_if_pkgs_are_installed()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that(".check_if_pkgs_are_installed returns TRUE (invisibly) when packages exist", {
   expect_true(isTRUE(.check_if_pkgs_are_installed(

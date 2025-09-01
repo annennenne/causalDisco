@@ -1,4 +1,6 @@
-library(testthat)
+# ──────────────────────────────────────────────────────────────────────────────
+# rdata_to_tetrad() and tetrad_data_to_rdata()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("rdata_to_tetrad() validates input", {
   skip_if_no_tetrad()

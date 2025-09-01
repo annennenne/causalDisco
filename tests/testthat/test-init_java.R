@@ -1,5 +1,6 @@
-library(testthat)
-library(withr)
+# ──────────────────────────────────────────────────────────────────────────────
+# init_java()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("init_java starts JVM once and adds jars", {
   with_mock_rjava({

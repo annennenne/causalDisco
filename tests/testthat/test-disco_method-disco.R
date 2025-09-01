@@ -1,3 +1,7 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# disco_method()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("disco_method builds a closure with correct classes and private env", {
   # fake builder that records the knowledge it was called with
   make_builder <- function() {
@@ -36,6 +40,10 @@ test_that("disco_method builds a closure with correct classes and private env", 
   expect_identical(out$knowledge, NULL)
   expect_identical(out$data, df)
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# set_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_knowledge.disco_method returns a new method that injects knowledge", {
   # fake builder with capturable knowledge flow
@@ -77,6 +85,31 @@ test_that("set_knowledge.disco_method returns a new method that injects knowledg
   expect_null(out2$knowledge)
 })
 
+test_that("set_knowledge wrapped method still validates data.frame input", {
+  # mocking a builder
+  builder <- function(k) {
+    e <- new.env(parent = emptyenv())
+    e$k <- k
+    list(
+      set_knowledge = function(knowledge) {
+        e$k <- knowledge
+        invisible(NULL)
+      },
+      run = function(data) {
+        list(data = data, knowledge = e$k)
+      }
+    )
+  }
+  m <- disco_method(builder, "pc")
+  m2 <- set_knowledge(m, list(foo = "bar"))
+
+  expect_error(m2(1:5), "`data` must be a data frame.", fixed = TRUE)
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# disco()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("disco enforces method type and injects knowledge when provided", {
   # wrong type
   df <- data.frame(x = 1:3, y = 3:1)
@@ -109,25 +142,4 @@ test_that("disco enforces method type and injects knowledge when provided", {
   kn <- list(ok = "yes")
   out2 <- disco(df, m, knowledge = kn)
   expect_identical(out2$knowledge, kn)
-})
-
-test_that("set_knowledge wrapped method still validates data.frame input", {
-  # mocking a builder
-  builder <- function(k) {
-    e <- new.env(parent = emptyenv())
-    e$k <- k
-    list(
-      set_knowledge = function(knowledge) {
-        e$k <- knowledge
-        invisible(NULL)
-      },
-      run = function(data) {
-        list(data = data, knowledge = e$k)
-      }
-    )
-  }
-  m <- disco_method(builder, "pc")
-  m2 <- set_knowledge(m, list(foo = "bar"))
-
-  expect_error(m2(1:5), "`data` must be a data frame.", fixed = TRUE)
 })

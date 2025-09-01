@@ -1,4 +1,6 @@
-# helpers ---------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# Helper functions for tests
+# ──────────────────────────────────────────────────────────────────────────────
 
 ges_registry <- list(
   ges = list(fn = ges, engines = c("tetrad", "pcalg"))
@@ -12,14 +14,13 @@ ges_args <- function(engine) {
   }
 }
 
-
 skip_if_no_pcalg_bnlearn_tetrad <- function() {
   skip_if_no_tetrad()
   skip_if_not_installed("pcalg")
   skip_if_not_installed("bnlearn")
 }
 
-toy_df <- function(n = 60L) {
+toy_df <- function(n = 100) {
   set.seed(7)
   V1 <- rnorm(n)
   V3 <- rnorm(n, 0, 0.2)
@@ -40,7 +41,9 @@ toy_knowledge <- function(df) {
   )
 }
 
-# core checks -----------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# ges()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("ges(): constructor returns a disco_method and runs across engines", {
   skip_if_no_pcalg_bnlearn_tetrad()
@@ -127,7 +130,9 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
   }
 })
 
-# direct runner basic execution ----------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# Direct testing of the runners
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("ges runners wire arguments correctly for each engine", {
   skip_if_no_pcalg_bnlearn_tetrad()

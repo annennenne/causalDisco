@@ -1,3 +1,7 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# parse_heap_gb.R
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("parse_heap_gb converts valid strings", {
   expect_equal(parse_heap_gb("2g"), 2)
   expect_equal(parse_heap_gb("2gb"), 2)

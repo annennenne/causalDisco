@@ -2,6 +2,11 @@
 # pcalgSearch
 # ──────────────────────────────────────────────────────────────────────────────
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Initialize
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("initialize sets clean defaults", {
   s <- pcalgSearch$new()
   expect_null(s$data)
@@ -13,6 +18,10 @@ test_that("initialize sets clean defaults", {
   expect_null(s$alg)
   expect_null(s$continuous)
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# set_params, set_data, set_suff_stat
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_params and set_data store values; set_data can skip suff stat", {
   s <- pcalgSearch$new()
@@ -81,6 +90,25 @@ test_that("set_suff_stat guards and branches", {
   expect_named(s$suff_stat, c("dm", "adaptDF"))
 })
 
+test_that("set_suff_stat errors on unrecognized data format", {
+  skip_if_not_installed("pcalg")
+
+  s <- pcalgSearch$new()
+  s$set_params(list(alpha = 0.05))
+  s$set_test("g_square") # sets continuous = FALSE
+  s$data <- matrix(1L, nrow = 5, ncol = 2) # not a data.frame when discrete
+
+  expect_error(
+    s$set_suff_stat(),
+    "Unrecognized data format. The data should be either continouos or discrete, and the data should be in a data.frame.",
+    fixed = TRUE
+  )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# set_test()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("set_test requires alpha for both tests, sets flags, unknown test errors", {
   s <- pcalgSearch$new()
 
@@ -113,6 +141,10 @@ test_that("set_test requires alpha for both tests, sets flags, unknown test erro
     fixed = TRUE
   )
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# use_g_square private function
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("private use_g_square picks binCItest/disCItest and low-unique error", {
   skip_if_not_installed("pcalg")
@@ -151,6 +183,10 @@ test_that("private use_g_square picks binCItest/disCItest and low-unique error",
   expect_silent(gfun3(1, 2, integer(), s3$suff_stat))
 })
 
+# ──────────────────────────────────────────────────────────────────────────────
+# set_score
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("set_score builds scorer for obs/int and errors on unknown", {
   skip_if_not_installed("pcalg")
 
@@ -181,6 +217,39 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
     fixed = TRUE
   )
 })
+
+test_that("set_score() lazy builder errors if data missing", {
+  skip_if_not_installed("pcalg")
+
+  s <- pcalgSearch$new()
+  s$set_score("sem_bic") # stores closure only
+
+  # call the stored builder directly to hit the error site
+  expect_error(
+    s$.__enclos_env__$private$score_function(),
+    "Data must be set before score.",
+    fixed = TRUE
+  )
+})
+
+test_that("GaussL0penIntScore is constructed when data present", {
+  skip_if_not_installed("pcalg")
+
+  df <- data.frame(
+    A = as.integer(sample(0:3, 20, TRUE)),
+    B = as.integer(sample(0:3, 20, TRUE))
+  )
+  s <- pcalgSearch$new()
+  s$set_data(df, set_suff_stat = FALSE)
+  s$set_score("sem_bic_int")
+
+  sc <- s$.__enclos_env__$private$score_function()
+  expect_true(methods::is(sc, "GaussL0penIntScore"))
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# set_alg()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg builds partials and errors on unknown/guard", {
   skip_if_not_installed("pcalg")
@@ -224,6 +293,10 @@ test_that("set_alg builds partials and errors on unknown/guard", {
   )
 })
 
+# ──────────────────────────────────────────────────────────────────────────────
+# set_knowledge()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("set_knowledge defers building constraints and validates input", {
   # error path from check_knowledge_obj propagated
   s_bad <- pcalgSearch$new()
@@ -247,6 +320,24 @@ test_that("set_knowledge defers building constraints and validates input", {
   s$set_alg("pc")
   expect_s3_class(s$run_search(df), "discography")
 })
+
+test_that("knowledge builder errors if data missing", {
+  # exercise the internal 'Data must be set before knowledge.' stop site
+  s <- pcalgSearch$new()
+  df <- data.frame(X = rnorm(5), Y = rnorm(5))
+  kn <- knowledge(df, required(X ~ Y))
+
+  s$set_knowledge(kn)
+  expect_error(
+    s$.__enclos_env__$private$knowledge_function(),
+    "Data must be set before knowledge.",
+    fixed = TRUE
+  )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────
+# run_search()
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("run_search errors in correct order and messages", {
   s <- pcalgSearch$new()
@@ -308,64 +399,6 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   expect_warning(
     s_ges2$run_search(df),
     "pcalg::ges() does not take required edges as arguments.\n  They will not be used here.",
-    fixed = TRUE
-  )
-})
-
-test_that("set_suff_stat errors on unrecognized data format", {
-  skip_if_not_installed("pcalg")
-
-  s <- pcalgSearch$new()
-  s$set_params(list(alpha = 0.05))
-  s$set_test("g_square") # sets continuous = FALSE
-  s$data <- matrix(1L, nrow = 5, ncol = 2) # not a data.frame when discrete
-
-  expect_error(
-    s$set_suff_stat(),
-    "Unrecognized data format. The data should be either continouos or discrete, and the data should be in a data.frame.",
-    fixed = TRUE
-  )
-})
-
-test_that("set_score() lazy builder errors if data missing", {
-  skip_if_not_installed("pcalg")
-
-  s <- pcalgSearch$new()
-  s$set_score("sem_bic") # stores closure only
-
-  # call the stored builder directly to hit the error site
-  expect_error(
-    s$.__enclos_env__$private$score_function(),
-    "Data must be set before score.",
-    fixed = TRUE
-  )
-})
-
-test_that("GaussL0penIntScore is constructed when data present", {
-  skip_if_not_installed("pcalg")
-
-  df <- data.frame(
-    A = as.integer(sample(0:3, 20, TRUE)),
-    B = as.integer(sample(0:3, 20, TRUE))
-  )
-  s <- pcalgSearch$new()
-  s$set_data(df, set_suff_stat = FALSE)
-  s$set_score("sem_bic_int")
-
-  sc <- s$.__enclos_env__$private$score_function()
-  expect_true(methods::is(sc, "GaussL0penIntScore"))
-})
-
-test_that("knowledge builder errors if data missing", {
-  # exercise the internal 'Data must be set before knowledge.' stop site
-  s <- pcalgSearch$new()
-  df <- data.frame(X = rnorm(5), Y = rnorm(5))
-  kn <- knowledge(df, required(X ~ Y))
-
-  s$set_knowledge(kn)
-  expect_error(
-    s$.__enclos_env__$private$knowledge_function(),
-    "Data must be set before knowledge.",
     fixed = TRUE
   )
 })

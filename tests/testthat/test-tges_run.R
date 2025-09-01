@@ -1,5 +1,11 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers (pure R)
+# Skip if these packages are not installed
+# ──────────────────────────────────────────────────────────────────────────────
+
+skip_if_not_installed("pcalg")
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: create_adj_matrix_from_list and create_list_from_matrix
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("create_adj_matrix_from_list builds the expected adjacency matrix", {
@@ -30,6 +36,10 @@ test_that("create_list_from_adj_matrix inverts create_adj_matrix_from_list", {
   expect_setequal(back$N2, original$N2)
   expect_setequal(back$N3, original$N3)
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers: to_adj_mat
+# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
   expect_null(to_adj_mat(NULL))
@@ -259,10 +269,6 @@ test_that("TemporalBIC with partially tiered knowledge skips enforcement for unt
   val <- sc$local.score(vertex = 2L, parents = 1L)
   expect_true(is.finite(val))
 })
-
-# ──────────────────────────────────────────────────────────────────────────────
-# TemporalBDeu: initialize and local.score
-# ──────────────────────────────────────────────────────────────────────────────
 
 test_that("TemporalBDeu initializes and returns finite BDeu when allowed", {
   set.seed(5)

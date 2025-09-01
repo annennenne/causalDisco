@@ -1,7 +1,8 @@
-skip_if_not_installed("R6")
+# ──────────────────────────────────────────────────────────────────────────────
+# Skip if these packages are not installed
+# ──────────────────────────────────────────────────────────────────────────────
+
 skip_if_not_installed("pcalg")
-skip_if_not_installed("rlang")
-skip_if_not_installed("stats")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Scores

@@ -1,3 +1,7 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# default_heap()
+# ──────────────────────────────────────────────────────────────────────────────
+
 test_that("default_heap respects option and env-var in priority order", {
   # ── 1. Neither option nor env-var  ───────────────────────────────
   withr::with_envvar(list(JAVA_HEAP_SIZE = NA), {
