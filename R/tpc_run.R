@@ -92,11 +92,11 @@
 #'     oldage ~ tidyselect::starts_with("oldage")
 #'   )
 #' )
-#' tpc(tpcExample, knowledge = kn, alpha = 0.01)
+#' tpc_run(tpcExample, knowledge = kn, alpha = 0.01)
 #'
 #' # Deprecated: using order prefixes (will warn)
 #' testthat::expect_warning(
-#'   tpc(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
+#'   tpc_run(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
 #' )
 #'
 #' @export

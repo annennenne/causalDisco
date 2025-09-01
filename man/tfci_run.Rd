@@ -120,11 +120,11 @@ kn <- knowledge(
 )
 
 # Use TFCI to recover a PAG (returned as a discography tibble)
-tfci(d, test = corTest, knowledge = kn)
+tfci_run(d, test = corTest, knowledge = kn)
 
 # Legacy interface (deprecated): supply order only
 \dontrun{
-tfci(d, test = corTest, order = c("p1", "p2"))
+tfci_run(d, test = corTest, order = c("p1", "p2"))
 }
 
 }

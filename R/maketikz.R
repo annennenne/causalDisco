@@ -52,9 +52,9 @@
 #'   )
 #' )
 #'
-#' tpdag1 <- tpc(tpcExample,
+#' tpdag1 <- tpc_run(tpcExample,
 #'   kn,
-#'   sparsity = 0.01,
+#'   alpha = 0.01,
 #'   test = corTest,
 #'   output = "tpdag"
 #' )

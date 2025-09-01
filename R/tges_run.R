@@ -244,7 +244,7 @@ to_adj_mat <- function(obj) {
 #'
 #' A `RefClass` extending `EssGraph` that exposes a single-step greedy move
 #' (`forward`, `backward`, or `turning`) through `greedy.step()`. Used by
-#' [tges()] to iterate GIES one step at a time and interleave background
+#' [tges_run()] to iterate GIES one step at a time and interleave background
 #' knowledge enforcement.
 #'
 #' @section Methods:
@@ -256,7 +256,7 @@ to_adj_mat <- function(obj) {
 #'   }
 #' }
 #'
-#' @seealso [tges()], [TemporalBIC], [TemporalBDeu]
+#' @seealso [tges_run()], [TemporalBIC], [TemporalBDeu]
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
 #' @export TEssGraph
@@ -385,7 +385,7 @@ TEssGraph <- setRefClass("TEssGraph",
 #'   data = simdata
 #' )
 #' # Run tges
-#' # tges_pre <- tges(t_score) # currently failing...
+#' # tges_pre <- tges_run(t_score) # currently failing...
 #'
 #' # Plot MPDAG
 #' # plot(tges_pre)
@@ -613,7 +613,7 @@ TemporalBIC <- setRefClass("TemporalBIC",
 #'   data = simdata
 #' )
 #' # Run tges
-#' tges_pre <- tges(t_score)
+#' tges_pre <- tges_run(t_score)
 #'
 #' # Plot MPDAG
 #' # plot(tges_pre)

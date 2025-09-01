@@ -8,7 +8,7 @@
 \description{
 A \code{RefClass} extending \code{EssGraph} that exposes a single-step greedy move
 (\code{forward}, \code{backward}, or \code{turning}) through \code{greedy.step()}. Used by
-\code{\link[=tges]{tges()}} to iterate GIES one step at a time and interleave background
+\code{\link[=tges_run]{tges_run()}} to iterate GIES one step at a time and interleave background
 knowledge enforcement.
 }
 
@@ -24,5 +24,5 @@ followed by any nodes whose in-edges changed.
 }
 
 \seealso{
-\code{\link[=tges]{tges()}}, \link{TemporalBIC}, \link{TemporalBDeu}
+\code{\link[=tges_run]{tges_run()}}, \link{TemporalBIC}, \link{TemporalBDeu}
 }
