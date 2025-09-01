@@ -1,4 +1,9 @@
-check_args_and_distribute_args <- function(search, args, engine, alg, test = NULL, score = NULL) {
+check_args_and_distribute_args <- function(search,
+                                           args,
+                                           engine,
+                                           alg,
+                                           test = NULL,
+                                           score = NULL) {
   # Check if the engine is supported
   if (!(engine %in% engine_registry)) {
     stop(
@@ -7,10 +12,25 @@ check_args_and_distribute_args <- function(search, args, engine, alg, test = NUL
       call. = FALSE
     )
   }
+
+  if (is.null(search) && engine == "tetrad") {
+    stop("TetradSearch object must be provided for Tetrad engine.",
+      call. = FALSE
+    )
+  }
   switch(engine,
-    tetrad = check_args_and_distribute_args_tetrad(search, args, alg, test, score),
-    pcalg = check_args_and_distribute_args_pcalg(search, args, alg, test, score),
-    bnlearn = check_args_and_distribute_args_bnlearn(search, args, alg)
+    tetrad = check_args_and_distribute_args_tetrad(
+      search, args, alg, test, score
+    ),
+    pcalg = check_args_and_distribute_args_pcalg(
+      args, alg, test, score
+    ),
+    bnlearn = check_args_and_distribute_args_bnlearn(
+      args, alg
+    ),
+    causalDisco = check_args_and_distribute_args_causalDisco(
+      args, alg, test, score
+    )
   )
 }
 
@@ -65,8 +85,7 @@ check_args_and_distribute_args_tetrad <- function(search,
   ))
 }
 
-check_args_and_distribute_args_pcalg <- function(search,
-                                                 args,
+check_args_and_distribute_args_pcalg <- function(args,
                                                  alg,
                                                  test = NULL,
                                                  score = NULL) {
@@ -83,7 +102,7 @@ check_args_and_distribute_args_pcalg <- function(search,
     pc = engine_args_alg <- names(formals(pcalg::pc)),
     fci = engine_args_alg <- names(formals(pcalg::fci)),
     ges = engine_args_alg <- names(formals(pcalg::ges)),
-    stop("Unsupported algorithm:", alg, call. = FALSE)
+    stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
@@ -124,11 +143,74 @@ check_args_and_distribute_args_pcalg <- function(search,
   ))
 }
 
+
+check_args_and_distribute_args_causalDisco <- function(args,
+                                                       alg,
+                                                       test = NULL,
+                                                       score = NULL) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "methods", "pcalg"
+    ),
+    function_name = "check_args_and_distribute_args_causalDisco"
+  )
+
+  # Note that the causalDisco package does not have args that are sent
+  # directly to the test itself
+  switch(alg,
+    tpc = engine_args_alg <- names(formals(tpc)),
+    tfci = engine_args_alg <- names(formals(tfci)),
+    tges = engine_args_alg <- names(formals(tges)),
+    stop("Unsupported algorithm: ", alg, call. = FALSE)
+  )
+
+  args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
+  engine_args_score <- list()
+  if (!is.null(score)) {
+    score <- tolower(score)
+    switch(score,
+      "tbic" = score <- "TemporalBIC",
+      "tbdeu" = score <- "TemporalBDeu"
+    )
+    engine_args_score <- methods::getRefClass(score)$
+      methods("initialize") |>
+      methods::formalArgs()
+    args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
+  } else {
+    args_to_pass_to_engine_score <- list()
+  }
+  # Check if any arguments are not in engine args
+  args_not_in_engine_args <- setdiff(
+    names(args),
+    c(engine_args_alg, engine_args_score)
+  )
+  # If '...' in given algorithm/test is an argument, it will throw a warning
+  # rather than an error.
+  if (length(args_not_in_engine_args) > 0) {
+    if ("..." %in% c(engine_args_alg, engine_args_score)) {
+      warning(
+        paste0("The following arguments are not used in causalDisco::", alg, ": "),
+        paste(args_not_in_engine_args, collapse = ", "),
+        call. = FALSE
+      )
+    } else {
+      stop(
+        paste0("The following arguments are not used in causalDisco::", alg, ": "),
+        paste(args_not_in_engine_args, collapse = ", "),
+        call. = FALSE
+      )
+    }
+  }
+  return(list(
+    alg_args = args_to_pass_to_engine_alg,
+    score_args = args_to_pass_to_engine_score
+  ))
+}
+
 #' @title Check arguments for bnlearnSearch class functions
 #'
 #' @keywords internal
-check_args_and_distribute_args_bnlearn <- function(search,
-                                                   args,
+check_args_and_distribute_args_bnlearn <- function(args,
                                                    alg,
                                                    allow_dots = FALSE) {
   .check_if_pkgs_are_installed(

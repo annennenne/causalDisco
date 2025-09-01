@@ -84,7 +84,8 @@ tfci <- function(data = NULL,
                  methodNA = "none",
                  methodOri = "conservative",
                  directed_as_undirected = FALSE,
-                 varnames = NULL, ...) {
+                 varnames = NULL,
+                 ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods", "pcalg", "stats", "tidyselect"
