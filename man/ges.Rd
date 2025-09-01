@@ -18,7 +18,7 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 \item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
 \value{
-A function of class \code{"fci"} that takes a single argument \code{data}
+A function of class \code{"ges"} that takes a single argument \code{data}
 (a data frame) and returns an \code{discography} object.
 }
 \description{
