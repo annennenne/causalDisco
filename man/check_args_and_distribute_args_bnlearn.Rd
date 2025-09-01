@@ -4,7 +4,7 @@
 \alias{check_args_and_distribute_args_bnlearn}
 \title{Check arguments for bnlearnSearch class functions}
 \usage{
-check_args_and_distribute_args_bnlearn(search, args, alg, allow_dots = FALSE)
+check_args_and_distribute_args_bnlearn(args, alg, allow_dots = FALSE)
 }
 \description{
 Check arguments for bnlearnSearch class functions

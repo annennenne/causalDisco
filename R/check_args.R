@@ -1,3 +1,21 @@
+#' @title Check arguments and distribute them to the appropriate functions
+#'
+#' @description
+#' This function checks if the provided arguments are valid for the specified
+#' engine and algorithm, and distributes them accordingly.
+#'
+#' @param search An object of class \code{TetradSearch}
+#' (required if engine is "tetrad").
+#' @param args A named list of arguments to be checked and distributed.
+#' @param engine The engine to be used
+#' (e.g., "tetrad", "pcalg", "bnlearn", "causalDisco").
+#' @param alg The algorithm to be used
+#' (e.g., "pc", "fci", "ges", etc.).
+#' @param test The independence test to be used (if applicable).
+#' @param score The scoring method to be used (if applicable).
+#' @returns A list containing the distributed arguments for the algorithm, test,
+#' and score.
+#' @keywords internal
 check_args_and_distribute_args <- function(search,
                                            args,
                                            engine,
@@ -85,6 +103,9 @@ check_args_and_distribute_args_tetrad <- function(search,
   ))
 }
 
+#' Check arguments and distribute them to pcalg class functions
+#'
+#' @keywords internal
 check_args_and_distribute_args_pcalg <- function(args,
                                                  alg,
                                                  test = NULL,
@@ -143,7 +164,9 @@ check_args_and_distribute_args_pcalg <- function(args,
   ))
 }
 
-
+#' Check arguments and distribute them to causalDisco class functions
+#'
+#' @keywords internal
 check_args_and_distribute_args_causalDisco <- function(args,
                                                        alg,
                                                        test = NULL,
