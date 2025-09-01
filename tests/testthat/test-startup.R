@@ -5,7 +5,7 @@ pkg <- "causalDisco"
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that(".onLoad sets default heap when option is absent", {
-  local_options(java.heap.size = NULL)
+  withr::local_options(java.heap.size = NULL)
 
   with_mocked_bindings(
     default_heap = function() "2g",
@@ -18,8 +18,8 @@ test_that(".onLoad sets default heap when option is absent", {
 })
 
 test_that(".onAttach prompts and sets heap when interactive and option/env missing", {
-  local_options(java.heap.size = NULL)
-  local_envvar(JAVA_HEAP_SIZE = "")
+  withr::local_options(java.heap.size = NULL)
+  withr::local_envvar(JAVA_HEAP_SIZE = "")
   called <- FALSE
   seen_heap <- NULL
 
@@ -48,8 +48,8 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
 })
 
 test_that(".onAttach canonicalises heap option to 'Ng'", {
-  local_envvar(JAVA_HEAP_SIZE = "")
-  local_options(java.heap.size = "4096m")
+  withr::local_envvar(JAVA_HEAP_SIZE = "")
+  withr::local_options(java.heap.size = "4096m")
 
   with_mocked_bindings(
     is_interactive = function() FALSE,
@@ -69,8 +69,8 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
 })
 
 test_that(".onAttach warns when runtime heap != requested", {
-  local_envvar(JAVA_HEAP_SIZE = "")
-  local_options(java.heap.size = "2g")
+  withr::local_envvar(JAVA_HEAP_SIZE = "")
+  withr::local_options(java.heap.size = "2g")
 
   with_mocked_bindings(
     is_interactive = function() FALSE,
@@ -89,8 +89,8 @@ test_that(".onAttach warns when runtime heap != requested", {
 })
 
 test_that(".onAttach does not prompt in non-interactive mode", {
-  local_envvar(JAVA_HEAP_SIZE = "")
-  local_options(java.heap.size = "3g")
+  withr::local_envvar(JAVA_HEAP_SIZE = "")
+  withr::local_options(java.heap.size = "3g")
   prompted <- FALSE
 
   with_mocked_bindings(
@@ -112,8 +112,8 @@ test_that(".onAttach does not prompt in non-interactive mode", {
 })
 
 test_that(".onAttach does not prompt when env var set", {
-  local_options(java.heap.size = NULL)
-  local_envvar(JAVA_HEAP_SIZE = "5g")
+  withr::local_options(java.heap.size = NULL)
+  withr::local_envvar(JAVA_HEAP_SIZE = "5g")
   prompted <- FALSE
 
   with_mocked_bindings(

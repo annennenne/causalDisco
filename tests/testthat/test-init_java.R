@@ -43,7 +43,7 @@ test_that("init_java errors when no Tetrad JARs are found", {
     pkg <- "causalDisco"
     ns <- asNamespace(pkg)
     orig <- get("find_tetrad_jars", envir = ns)
-    defer(assignInNamespace("find_tetrad_jars", orig, pkg))
+    withr::defer(assignInNamespace("find_tetrad_jars", orig, pkg))
 
     assignInNamespace("find_tetrad_jars", function() character(), pkg)
 
