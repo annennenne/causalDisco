@@ -20,3 +20,22 @@ Converts a \code{knowledge} object to a list of two data frames, namely
 \code{blacklist} containts all forbidden edges. Tiers will be made into forbidden
 edges before running the conversion.
 }
+\examples{
+### as_bnlearn_knowledge() example ###
+
+# produce whitelist/blacklist dataframe for bnlearn
+data(tpcExample)
+
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    oldage ~ starts_with("old")
+  ),
+  required(child_x1 ~ youth_x3)
+)
+
+bnlearn_kn <- as_bnlearn_knowledge(kn)
+print(bnlearn_kn)
+}

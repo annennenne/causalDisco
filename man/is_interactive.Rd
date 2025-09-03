@@ -10,5 +10,11 @@ is_interactive()
 A logical value indicating whether the session is interactive.
 }
 \description{
-This function checks if the current R session is interactive.
+This function checks if the current R session is interactive. Only written
+for mocking.
 }
+\examples{
+### is_interactive() example ###
+causalDisco:::is_interactive()
+}
+\keyword{internal}

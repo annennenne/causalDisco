@@ -13,3 +13,9 @@ A numeric value representing the current heap size in gigabytes.
 This function retrieves the current Java heap size in gigabytes (based on
 rough calculation).
 }
+\examples{
+### current_heap_gb() example ###
+# Returns an integer number of gigabytes on the heap (rough calculation)
+causalDisco:::current_heap_gb() # usually 2
+}
+\keyword{internal}

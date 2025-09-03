@@ -15,4 +15,12 @@ A numeric value representing the heap size in gigabytes.
 \description{
 This function parses a heap size string and returns the size in gigabytes.
 }
+\examples{
+### parse_heap_gb() example ###
+# everything will return 4
+causalDisco:::parse_heap_gb("4g")
+causalDisco:::parse_heap_gb("4G")
+causalDisco:::parse_heap_gb("4096m")
+causalDisco:::parse_heap_gb("4096MB")
+}
 \keyword{internal}

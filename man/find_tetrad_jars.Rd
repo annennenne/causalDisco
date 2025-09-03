@@ -12,4 +12,10 @@ A character vector of file paths to the JAR files.
 \description{
 This function searches for Tetrad JAR files in the package's Java directory.
 }
+\examples{
+### find_tetrad_jars() example ###
+jars <- causalDisco:::find_tetrad_jars()
+length(jars) # usually 1, if installed
+print(jars) # path to the jar file
+}
 \keyword{internal}

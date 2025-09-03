@@ -29,19 +29,14 @@ by each element of \code{tiers} in turn, allowing you to write a single
 template rather than many nearly identical formulas.
 }
 \examples{
-\dontrun{
-# Suppose your data frame has columns X_1, X_2, X_3, X_4
-# Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
-formulas <- seq_tiers(1:4, ends_with("_{i}"))
-tier(
-  # this expands into 1 ~ ends_with("_1"), 2 ~ ends_with("_2"), …
-  formulas
-)
+### seq_tiers() example ###
 
-# You can also use matches() with a custom pattern
-tier(
-  seq_tiers(4:9, matches("Var{i}th$"))
-)
-}
+# generate a bundle of tier formulas using a pattern with {i}
+# here we create: 1 ~ matches("^child_x1$"), 2 ~ matches("^child_x2$")
+formulas <- seq_tiers(1:2, matches("^child_x{i}$"))
 
+# you can pass this bundle directly to tier() inside knowledge()
+data(tpcExample)
+kn <- knowledge(head(tpcExample), tier(formulas))
+print(kn)
 }

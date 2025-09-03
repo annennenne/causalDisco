@@ -9,7 +9,8 @@ remove_edges(.kn, ...)
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 
-\item{...}{One or more two‐sided formulas, e.g. \code{A ~ B} or \code{starts_with("X") ~ Y}.}
+\item{...}{One or more two‐sided formulas, e.g. \code{A ~ B} or
+\code{starts_with("X") ~ Y}.}
 }
 \value{
 The updated \code{knowledge} object.
@@ -17,4 +18,30 @@ The updated \code{knowledge} object.
 \description{
 Drop any directed edge(s) matching the two‐sided formulas you supply.
 Errors if no edges matched.
+}
+\examples{
+### remove_vars() example ###
+
+# remove variables and their incident edges
+data(tpcExample)
+
+kn <- knowledge(
+  head(tpcExample),
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    oldage ~ starts_with("old")
+  ),
+  required(child_x1 ~ youth_x3)
+)
+print(kn)
+
+kn <- remove_edges(kn, child_x1 ~ youth_x3)
+print(kn)
+
+kn <- remove_vars(kn, starts_with("child_"))
+print(kn)
+
+kn <- remove_tiers(kn, "child")
+print(kn)
 }

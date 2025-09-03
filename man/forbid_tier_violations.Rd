@@ -17,3 +17,24 @@ Given a \code{knowledge} object with variables already assigned to tiers,
 forbids every directed edge that runs from a higher-numbered tier down
 into a lower-numbered tier.
 }
+\examples{
+### forbid_tier_violations() example ###
+
+# automatically forbid edges that go from later tiers to earlier tiers
+data(tpcExample)
+
+kn <- knowledge(
+  head(tpcExample),
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+# turn all tier violations to forbidden edges
+kn2 <- forbid_tier_violations(kn)
+
+print(kn)
+print(kn2)
+}

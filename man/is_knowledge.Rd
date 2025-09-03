@@ -13,4 +13,11 @@ is_knowledge(x)
 Check that the object is a \code{knowledge} object. Mostly
 for internal use in causalDisco.
 }
+\examples{
+### is_knowledge() example ###
+
+kn <- knowledge()
+causalDisco:::is_knowledge(kn) # TRUE
+try(causalDisco:::is_knowledge(list())) # throws error
+}
 \keyword{internal}

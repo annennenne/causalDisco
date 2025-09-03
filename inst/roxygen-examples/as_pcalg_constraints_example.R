@@ -1,0 +1,35 @@
+### as_pcalg_constraints() example ###
+
+# pcalg supports undirected constraints; build a tierless knowledge and convert
+data(tpcExample)
+
+kn <- knowledge(
+  tpcExample,
+  forbidden(child_x1 ~ youth_x3),
+  forbidden(youth_x3 ~ child_x1)
+)
+
+pc_constraints <- as_pcalg_constraints(kn, directed_as_undirected = FALSE)
+print(pc_constraints)
+
+# error paths
+# using tiers
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    oldage ~ starts_with("old")
+  ),
+  required(child_x1 ~ youth_x3)
+)
+
+try(as_pcalg_constraints(kn), silent = TRUE) # fails due to tiers
+
+# using directed knowledge
+kn <- knowledge(
+  tpcExample,
+  forbidden(child_x1 ~ youth_x3)
+)
+
+try(as_pcalg_constraints(kn), silent = TRUE) # fails due to directed knowledge

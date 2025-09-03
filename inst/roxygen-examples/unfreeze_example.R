@@ -1,0 +1,15 @@
+### unfreeze() example ###
+
+# unfreeze allows adding variables beyond the original data frame columns
+data(tpcExample)
+
+kn <- knowledge(head(tpcExample))
+
+# this would error while frozen
+try(add_vars(kn, "new_var"))
+
+# unfreeze and add the new variable successfully
+kn <- unfreeze(kn)
+kn <- add_vars(kn, "new_var")
+
+print(kn)

@@ -1,0 +1,23 @@
+### default_heap() example ###
+
+# Save current session state
+op_old <- getOption("java.heap.size", NULL)
+env_old <- Sys.getenv("JAVA_HEAP_SIZE", unset = NA)
+
+# Ensure both are unset for the example
+options(java.heap.size = NULL)
+Sys.unsetenv("JAVA_HEAP_SIZE")
+causalDisco:::default_heap()
+
+# Option takes precedence if set
+options(java.heap.size = "8g")
+causalDisco:::default_heap()
+
+# Environment variable is used if option is not set
+options(java.heap.size = NULL)
+Sys.setenv(JAVA_HEAP_SIZE = "6g")
+causalDisco:::default_heap()
+
+# Restore session state
+if (is.null(op_old)) options(java.heap.size = NULL) else options(java.heap.size = op_old)
+if (is.na(env_old)) Sys.unsetenv("JAVA_HEAP_SIZE") else Sys.setenv(JAVA_HEAP_SIZE = env_old)

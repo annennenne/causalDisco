@@ -9,9 +9,31 @@ as_tetrad_knowledge(.kn)
 \arguments{
 \item{.kn}{A \code{knowledge} object.}
 }
+\value{
+A Java \code{edu.cmu.tetrad.data.Knowledge} object.
+}
 \description{
 Converts a \code{knowledge} object to a Tetrad \code{edu.cmu.tetrad.data.Knowledge}.
 This requires \code{rJava}. This is used internally, when setting knowledge with
 \code{set_knowledge} for methods using the Tetrad engine. \code{set_knowledge} is used
 internally, when using the \code{disco} function with knowledge given.
+}
+\examples{
+### as_tetrad_knowledge() example ###
+
+# convert to Tetrad Knowledge via rJava
+data(tpcExample)
+
+kn <- knowledge(
+  head(tpcExample),
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    oldage ~ starts_with("old")
+  ),
+  required(child_x1 ~ youth_x3)
+)
+
+jk <- try(as_tetrad_knowledge(kn)) # will run only if rJava/JVM available
+try(print(jk)) # prints a Java reference if successful
 }

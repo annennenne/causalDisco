@@ -11,3 +11,13 @@ This function prompts the user to specify the Java heap size if the heap
 size is not set in the options or environment variables. Is only used in
 interactive sessions.
 }
+\examples{
+### ask_heap_size() example ###
+
+# In an interactive session, press Return to accept the default
+# or type a positive integer like 4, 8, 16, ...
+if (interactive()) {
+  ask_heap_size()
+}
+}
+\keyword{internal}

@@ -1,0 +1,13 @@
+### .formula_vars() example ###
+
+# extract variable names from a RHS using tidyselect or symbols
+data(tpcExample)
+kn <- knowledge(tpcExample)
+
+# tidyselect RHS
+rhs1 <- rlang::expr(starts_with("youth"))
+causalDisco:::.formula_vars(kn, rhs1)
+
+# symbol arithmetic-style RHS (falls back to symbols)
+rhs2 <- rlang::expr(child_x1 + youth_x3)
+causalDisco:::.formula_vars(kn, rhs2)

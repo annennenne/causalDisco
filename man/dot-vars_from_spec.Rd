@@ -10,12 +10,30 @@
 \item{.kn}{A \code{knowledge} object.}
 
 \item{spec}{A tidyselect specification (e.g. \code{everything()},
-\code{starts_with("V")}), a bare symbol, a character vector,
-\emph{or} a literal c(V1, V2, "V3") call.}
+\code{starts_with("V")}), a bare symbol, a character vector, \emph{or} a literal
+\code{c(V1, V2, "V3")} call.
+(Should be unevaluated, i.e. passed with rlang::expr or alike.)}
 }
 \description{
 Resolve a tidy-select or character spec to character names
 
 Resolve a tidy-select or character spec to character names
+}
+\examples{
+# resolve different kinds of specs into character names
+data(tpcExample)
+kn <- knowledge(
+  head(tpcExample)
+)
+
+# character vector
+causalDisco:::.vars_from_spec(kn, c("child_x1", "youth_x3"))
+
+# bare symbol that refers to a character vector
+target <- c("oldage_x5", "oldage_x6")
+causalDisco:::.vars_from_spec(kn, target)
+
+# tidyselect expression
+causalDisco:::.vars_from_spec(kn, rlang::expr(starts_with("child_")))
 }
 \keyword{internal}

@@ -10,10 +10,28 @@ unfreeze(.kn)
 \item{.kn}{A \code{knowledge} object.}
 }
 \value{
-The same \code{knowledge} object with the \code{frozen} attribute set to \code{FALSE}.
+The same \code{knowledge} object with the \code{frozen} attribute set to
+\code{FALSE}.
 }
 \description{
 This allows you to add new variables to the \code{knowledge} object,
 even though it was frozen earlier by adding a data frame to the knowledge
 constructor \code{knowledge()}.
+}
+\examples{
+### unfreeze() example ###
+
+# unfreeze allows adding variables beyond the original data frame columns
+data(tpcExample)
+
+kn <- knowledge(head(tpcExample))
+
+# this would error while frozen
+try(add_vars(kn, "new_var"))
+
+# unfreeze and add the new variable successfully
+kn <- unfreeze(kn)
+kn <- add_vars(kn, "new_var")
+
+print(kn)
 }
