@@ -1236,6 +1236,16 @@ test_that("merge errors if resulting tiers violate required-edge order", {
   )
 })
 
+test_that("merge errors if tiers overlap", {
+  kn1 <- knowledge(tier(One ~ V1, Two ~ V2))
+  kn2 <- knowledge(tier(Three ~ V2, Three ~ V3))
+  expect_error(
+    kn1 + kn2,
+    "Tier conflict detected for 1 variable",
+    fixed = TRUE
+  )
+})
+
 test_that("merge errors if required and forbidden edges overlap", {
   kn1 <- knowledge(
     forbidden(V1 ~ V2),

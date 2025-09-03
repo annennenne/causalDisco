@@ -55,12 +55,15 @@
 #'  multiple variables. `exogenous()`/`exo()`/`root()` take variable selectors
 #'  (names or tidyselect), possibly multiple. Arguments are evaluated in order;
 #'  only these calls are allowed.
-#' @return A populated `knowledge` object.
+#' @returns A populated `knowledge` object.
 #'
 #' @importFrom tidyselect eval_select everything starts_with ends_with
 #' @importFrom tidyselect starts_with ends_with contains matches num_range
 #' @importFrom rlang !!
 #'
+#' @example inst/roxygen-examples/knowledge_example.R
+#' @seealso [add_vars()] [add_tier()] [add_to_tier()] [forbid_edge()]
+#' [require_edge()] [add_exogenous()] [forbid_tier_violations()] [seq_tiers()]
 #' @export
 knowledge <- function(...) {
   .check_if_pkgs_are_installed(
@@ -343,7 +346,7 @@ knowledge <- function(...) {
 #' @param .kn A `knowledge` object.
 #' @param vars A character vector of variable names to add.
 #'
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
 #' @export
 add_vars <- function(.kn, vars) {
   .check_if_pkgs_are_installed(
@@ -380,7 +383,7 @@ add_vars <- function(.kn, vars) {
 #'  tier index, or variable.  Once the knowledge object already
 #'  has >= 1 tier, you must supply **exactly one** of these.
 #'
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   .check_if_pkgs_are_installed(
@@ -495,7 +498,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 #' @param .kn A `knowledge` object.
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
 #'
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
 #' @export
 add_to_tier <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -587,7 +590,7 @@ add_to_tier <- function(.kn, ...) {
 #' @param .kn  A `knowledge` object.
 #' @param ...  One or more two-sided formulas.
 #'
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
 #' @export
 forbid_edge <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -616,7 +619,10 @@ forbid_edge <- function(.kn, ...) {
 #' may only be given in *one* direction (`X ~ Y` **or** `Y ~ X`, not both).
 #'
 #' @inheritParams forbid_edge
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/require_edge_example.R
+#'
 #' @export
 require_edge <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -647,7 +653,7 @@ require_edge <- function(.kn, ...) {
 #' @param .kn A knowledge object.
 #' @param vars Tidyselect specification or character vector of variables.
 #'
-#' @return Updated knowledge object.
+#' @returns Updated knowledge object.
 #' @export
 add_exogenous <- function(.kn, vars) {
   is_knowledge(.kn)
@@ -670,7 +676,10 @@ add_root <- add_exogenous
 #' constructor `knowledge()`.
 #'
 #' @param .kn A `knowledge` object.
-#' @return The same `knowledge` object with the `frozen` attribute set to `FALSE`.
+#' @returns The same `knowledge` object with the `frozen` attribute set to
+#' `FALSE`.
+#'
+#' @example inst/roxygen-examples/unfreeze_example.R
 unfreeze <- function(.kn) {
   is_knowledge(.kn)
   .kn$frozen <- FALSE
@@ -775,11 +784,45 @@ print.knowledge <- function(x, ...) {
   vars_all <- unique(c(.kn1$vars$var, .kn2$vars$var))
   out <- .new_knowledge(vars_all)
 
+  # capture caller-provided names for messaging
+  src1 <- deparse(substitute(.kn1))
+  src2 <- deparse(substitute(.kn2))
+
+  # detect tier conflicts
+  tier_conflicts <- dplyr::bind_rows(
+    dplyr::mutate(.kn1$vars, .src = src1),
+    dplyr::mutate(.kn2$vars, .src = src2)
+  ) |>
+    dplyr::distinct(.src, var, tier) |>
+    dplyr::group_by(var) |>
+    dplyr::filter(
+      dplyr::n_distinct(.src) > 1L, # var present in both
+      dplyr::n_distinct(tier, na.rm = TRUE) > 1L # and tiers differ
+    ) |>
+    dplyr::summarise(
+      tier_1 = paste(unique(tier[.src == src1]), collapse = ", "),
+      tier_2 = paste(unique(tier[.src == src2]), collapse = ", "),
+      .groups = "drop"
+    )
+
+  # throw error if there are conflicts
+  if (nrow(tier_conflicts) > 0L) {
+    details <- paste0(
+      "- ", tier_conflicts$var, ": ",
+      src1, ": ", tier_conflicts$tier_1, ", ",
+      src2, ": ", tier_conflicts$tier_2
+    )
+    msg <- paste0(
+      "Tier conflict detected for ", nrow(tier_conflicts),
+      if (nrow(tier_conflicts) == 1L) " variable:\n" else " variables:\n",
+      paste(details, collapse = "\n")
+    )
+    stop(msg, call. = FALSE)
+  }
+
   # var tiers
   vtiers <- dplyr::bind_rows(.kn1$vars, .kn2$vars) |>
-    dplyr::group_by(var) |>
-    dplyr::slice(1L) |>
-    dplyr::ungroup()
+    dplyr::distinct(var, .keep_all = TRUE)
 
   # merge vars
   out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
@@ -811,7 +854,10 @@ print.knowledge <- function(x, ...) {
 #' @param by_index If `TRUE`, treat `order` as the positions instead of
 #'  labels. Defaults to `FALSE`.
 #'
-#' @return The same `knowledge` object with tiers rearranged.
+#' @returns The same `knowledge` object with tiers rearranged.
+#'
+#' @example inst/roxygen-examples/reorder_tiers_example.R
+#'
 #' @export
 reorder_tiers <- function(.kn, order, by_index = FALSE) {
   .check_if_pkgs_are_installed(
@@ -895,7 +941,10 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
 #' @param after Exactly one of these must be supplied and must identify
 #'  another existing tier.
 #'
-#' @return The updated `knowledge` object.
+#' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/reorder_tiers_example.R
+#'
 #' @export
 reposition_tier <- function(.kn,
                             tier,
@@ -986,7 +1035,9 @@ is_knowledge <- function(x) {
 #' @param .kn   A `knowledge` object.
 #' @param ...   Unquoted variable names or tidy‐select helpers.
 #'
-#' @return An updated `knowledge` object.
+#' @returns An updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/remove_from_knowledge_example.R
 #'
 #' @export
 remove_vars <- function(.kn, ...) {
@@ -1027,9 +1078,15 @@ remove_vars <- function(.kn, ...) {
 #' @description
 #' Drop any directed edge(s) matching the two‐sided formulas you supply.
 #' Errors if no edges matched.
+#'
 #' @param .kn   A `knowledge` object.
-#' @param ...   One or more two‐sided formulas, e.g. `A ~ B` or `starts_with("X") ~ Y`.
-#' @return The updated `knowledge` object.
+#' @param ...   One or more two‐sided formulas, e.g. `A ~ B` or
+#' `starts_with("X") ~ Y`.
+#'
+#' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#'
 #' @export
 remove_edges <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -1076,7 +1133,10 @@ remove_edges <- function(.kn, ...) {
 #' @param .kn   A `knowledge` object.
 #' @param ...   Tier labels (unquoted or character) or numeric indices.
 #'
-#' @return An updated `knowledge` object.
+#' @returns An updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#'
 #' @export
 remove_tiers <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -1124,7 +1184,7 @@ remove_tiers <- function(.kn, ...) {
 #' (used as the first argument to `knowledge()`).  If `NULL`,
 #' `knowledge()` is called with no data frame.
 #'
-#' @return A single string (with newlines) of R code.
+#' @returns A single string (with newlines) of R code.
 #' @export
 deparse_knowledge <- function(.kn, df_name = NULL) {
   .check_if_pkgs_are_installed(
@@ -1295,7 +1355,7 @@ as_tetrad_knowledge <- function(.kn) {
 #'   \code{TRUE}, we automatically mirror every directed edge into
 #'   an undirected constraint.
 #'
-#' @return A list with two elements, each an \code{n × n} logical matrix
+#' @returns A list with two elements, each an \code{n × n} logical matrix
 #' corresponding to `pcalg`'s `fixedGaps` and `fixedEdges` arguments.
 #'
 #' @section Errors:
@@ -1419,7 +1479,7 @@ as_pcalg_constraints <- function(.kn,
 #'
 #' @param .kn A \code{knowledge} object.  Must have no tier information.
 #'
-#' @return A list with two elements, `whitelist` and `blacklist`, each a data
+#' @returns A list with two elements, `whitelist` and `blacklist`, each a data
 #' frame containing the edges in a `from`, `to` format.
 #'
 #' @export
@@ -1457,7 +1517,7 @@ as_bnlearn_knowledge <- function(.kn) {
 #' forbids every directed edge that runs from a higher-numbered tier down
 #' into a lower-numbered tier.
 #' @param .kn A `knowledge` object.
-#' @return The same `knowledge` object with new forbidden edges added.
+#' @returns The same `knowledge` object with new forbidden edges added.
 #' @export
 forbid_tier_violations <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1525,26 +1585,12 @@ forbid_tier_violations <- function(.kn) {
 #'   placeholder will be substituted and the resulting call used as the
 #'   right‐hand side of a formula.
 #'
-#' @return
+#' @returns
 #'   A list of two‐sided formulas, each of class \code{"tier_bundle"}.
 #'   You can pass this list directly to \code{tier()} (which will expand it
 #'   automatically).
 #'
-#' @examples
-#' \dontrun{
-#' # Suppose your data frame has columns X_1, X_2, X_3, X_4
-#' # Create formulas 1 ~ ends_with("1"), 2 ~ ends_with("2"), etc.
-#' formulas <- seq_tiers(1:4, ends_with("_{i}"))
-#' tier(
-#'   # this expands into 1 ~ ends_with("_1"), 2 ~ ends_with("_2"), …
-#'   formulas
-#' )
-#'
-#' # You can also use matches() with a custom pattern
-#' tier(
-#'   seq_tiers(4:9, matches("Var{i}th$"))
-#' )
-#' }
+#' @example inst/roxygen-examples/seq_tiers_example.R
 #'
 #' @export
 seq_tiers <- function(tiers, vars) {
@@ -1595,7 +1641,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param vars Character vector of variable names.  Defaults to empty.
 #' @param frozen Logical. If `TRUE`, no new variables can be added. Defaults to `FALSE`.
 #'
-#' @return An S3 object of class `"knowledge"`.
+#' @returns An S3 object of class `"knowledge"`.
 #' @keywords internal
 .new_knowledge <- function(vars = character(), frozen = FALSE) {
   .check_if_pkgs_are_installed(
