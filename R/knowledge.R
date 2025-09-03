@@ -347,6 +347,9 @@ knowledge <- function(...) {
 #' @param vars A character vector of variable names to add.
 #'
 #' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
 #' @export
 add_vars <- function(.kn, vars) {
   .check_if_pkgs_are_installed(
@@ -384,6 +387,9 @@ add_vars <- function(.kn, vars) {
 #'  has >= 1 tier, you must supply **exactly one** of these.
 #'
 #' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   .check_if_pkgs_are_installed(
@@ -499,6 +505,9 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
 #'
 #' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
 #' @export
 add_to_tier <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -591,6 +600,9 @@ add_to_tier <- function(.kn, ...) {
 #' @param ...  One or more two-sided formulas.
 #'
 #' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
 #' @export
 forbid_edge <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -621,7 +633,7 @@ forbid_edge <- function(.kn, ...) {
 #' @inheritParams forbid_edge
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/require_edge_example.R
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
 #'
 #' @export
 require_edge <- function(.kn, ...) {
@@ -654,6 +666,9 @@ require_edge <- function(.kn, ...) {
 #' @param vars Tidyselect specification or character vector of variables.
 #'
 #' @returns Updated knowledge object.
+#'
+#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
 #' @export
 add_exogenous <- function(.kn, vars) {
   is_knowledge(.kn)
@@ -680,6 +695,8 @@ add_root <- add_exogenous
 #' `FALSE`.
 #'
 #' @example inst/roxygen-examples/unfreeze_example.R
+#'
+#' @export
 unfreeze <- function(.kn) {
   is_knowledge(.kn)
   .kn$frozen <- FALSE
@@ -768,6 +785,9 @@ print.knowledge <- function(x, ...) {
 #' @title Merge two `knowledge` objects
 #' @param .kn1 A `knowledge` object.
 #' @param .kn2 Another `knowledge` object.
+#'
+#' @example inst/roxygen-examples/plus-knowledge_example.R
+#'
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(.kn1, .kn2) {
   .check_if_pkgs_are_installed(
@@ -1017,6 +1037,9 @@ reposition_tier <- function(.kn,
 #' for internal use in causalDisco.
 #'
 #' @param x Object to check.
+#'
+#' @example inst/roxygen-examples/is_knowledge_example.R
+#'
 #' @keywords internal
 is_knowledge <- function(x) {
   if (!inherits(x, "knowledge")) {
@@ -1185,6 +1208,9 @@ remove_tiers <- function(.kn, ...) {
 #' `knowledge()` is called with no data frame.
 #'
 #' @returns A single string (with newlines) of R code.
+#'
+#' @example inst/roxygen-examples/deparse_knowledge_example.R
+#'
 #' @export
 deparse_knowledge <- function(.kn, df_name = NULL) {
   .check_if_pkgs_are_installed(
@@ -1293,6 +1319,10 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 #' internally, when using the `disco` function with knowledge given.
 #' @param .kn A `knowledge` object.
 #'
+#' @returns A Java `edu.cmu.tetrad.data.Knowledge` object.
+#'
+#' @example inst/roxygen-examples/as_tetrad_knowledge_example.R
+#'
 #' @export
 as_tetrad_knowledge <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1362,6 +1392,8 @@ as_tetrad_knowledge <- function(.kn) {
 #' * If the knowledge object contains tiered knowledge.
 #' * If \code{directed_as_undirected = FALSE} and any edge lacks its
 #'   symmetrical counterpart. This can only hold for forbidden edges.
+#'
+#' @example inst/roxygen-examples/as_pcalg_constraints_example.R
 #'
 #' @export
 as_pcalg_constraints <- function(.kn,
@@ -1482,6 +1514,8 @@ as_pcalg_constraints <- function(.kn,
 #' @returns A list with two elements, `whitelist` and `blacklist`, each a data
 #' frame containing the edges in a `from`, `to` format.
 #'
+#' @example inst/roxygen-examples/as_bnlearn_knowledge_example.R
+#'
 #' @export
 as_bnlearn_knowledge <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1516,8 +1550,12 @@ as_bnlearn_knowledge <- function(.kn) {
 #' Given a `knowledge` object with variables already assigned to tiers,
 #' forbids every directed edge that runs from a higher-numbered tier down
 #' into a lower-numbered tier.
+#'
 #' @param .kn A `knowledge` object.
 #' @returns The same `knowledge` object with new forbidden edges added.
+#'
+#' @example inst/roxygen-examples/forbid_tier_violations_example.R
+#'
 #' @export
 forbid_tier_violations <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1642,6 +1680,9 @@ seq_tiers <- function(tiers, vars) {
 #' @param frozen Logical. If `TRUE`, no new variables can be added. Defaults to `FALSE`.
 #'
 #' @returns An S3 object of class `"knowledge"`.
+#'
+#' @example inst/roxygen-examples/dot-new_knowledge_example.R
+#'
 #' @keywords internal
 .new_knowledge <- function(vars = character(), frozen = FALSE) {
   .check_if_pkgs_are_installed(
@@ -1675,6 +1716,10 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param edges_df A data frame with columns `status`, `from`,
 #' `to`, `tier_from`, and `tier_to`.
+#' @param tiers A data frame with a column `label` listing tier labels
+#'
+#' @example inst/roxygen-examples/dot-validate_tier_rule_example.R
+#'
 #' @keywords internal
 .validate_tier_rule <- function(edges_df, tiers) {
   .check_if_pkgs_are_installed(
@@ -1709,6 +1754,9 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param edges_df Data frame with columns `status`, `from`, `to`,
 #'   `tier_from`, and `tier_to`.
+#'
+#' @example inst/roxygen-examples/dot-validate_forbidden_required_example.R
+#'
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
   .check_if_pkgs_are_installed(
@@ -1765,6 +1813,11 @@ seq_tiers <- function(tiers, vars) {
 #' @param to A tidyselect specification or character vector of variable names.
 #' @param remove_self_loops Logical. If `TRUE`, self-loops are removed.
 #' Defaults to `FALSE`.
+#'
+#' @returns The updated `knowledge` object.
+#'
+#' @example inst/roxygen-examples/dot-add_edges_example.R
+#'
 #' @keywords internal
 .add_edges <- function(.kn, status, from, to, remove_self_loops = TRUE) {
   .check_if_pkgs_are_installed(
@@ -1819,6 +1872,8 @@ seq_tiers <- function(tiers, vars) {
 #' @param status Either `"forbidden"` or `"required"`.
 #' @param fml A quosure that must wrap a two-sided formula.
 #'
+#' @example inst/roxygen-examples/dot-edge_verb_example.R
+#'
 #' @keywords internal
 .edge_verb <- function(.kn, status, fml) {
   .check_if_pkgs_are_installed(
@@ -1827,6 +1882,13 @@ seq_tiers <- function(tiers, vars) {
     ),
     function_name = ".edge_verb"
   )
+
+  if (!(status %in% c("required", "forbidden"))) {
+    stop("`status` (edge type) must be 'required' or 'forbidden' for ",
+      "knowledge edge generation.",
+      call. = FALSE
+    )
+  }
 
   if (!rlang::quo_is_call(fml, "~")) {
     stop(
@@ -1860,8 +1922,11 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param .kn A `knowledge` object.
 #' @param spec A tidyselect specification (e.g. `everything()`,
-#'             `starts_with("V")`), a bare symbol, a character vector,
-#'             *or* a literal c(V1, V2, "V3") call.
+#' `starts_with("V")`), a bare symbol, a character vector, *or* a literal
+#' `c(V1, V2, "V3")` call.
+#' (Should be unevaluated, i.e. passed with rlang::expr or alike.)
+#'
+#' @example inst/roxygen-examples/dot-vars_from_spec_example.R
 #' @keywords internal
 .vars_from_spec <- function(.kn, spec) {
   .check_if_pkgs_are_installed(
@@ -1870,8 +1935,6 @@ seq_tiers <- function(tiers, vars) {
     ),
     function_name = ".vars_from_spec"
   )
-
-  #  scalars can't be variable names
   if (is.atomic(spec) && length(spec) == 1L && !is.character(spec)) {
     return(character(0))
   }
@@ -1951,6 +2014,9 @@ seq_tiers <- function(tiers, vars) {
 #'
 #' @param .kn A `knowledge` object.
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
+#'
+#' @example inst/roxygen-examples/dot-formula_vars_example.R
+#'
 #' @keywords internal
 .formula_vars <- function(.kn, rhs) {
   vars <- .vars_from_spec(.kn, rhs)
