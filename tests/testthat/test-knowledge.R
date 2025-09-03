@@ -1150,6 +1150,12 @@ test_that("print.knowledge() snapshot", {
 test_that(".edge_verb() validates formula structure and matches", {
   kn <- knowledge() # empty, so no vars are known yet
 
+  # not required or forbidden
+  expect_error(
+    .edge_verb(kn, "unknown", rlang::quo(V1 ~ V2)),
+    "`status` (edge type) must be 'required' or 'forbidden' for ",
+    fixed = TRUE
+  )
   # not a two-sided formula
   expect_error(
     .edge_verb(kn, "forbidden", rlang::quo(V1)),
