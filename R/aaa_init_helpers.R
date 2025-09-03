@@ -4,6 +4,7 @@
 #' This function retrieves the default heap size for the Java Virtual Machine.
 #' The standard size is 2 gigabytes.
 #'
+#' @example inst/roxygen-examples/default_heap_example.R
 #' @keywords internal
 default_heap <- function() {
   getOption(
@@ -21,6 +22,8 @@ default_heap <- function() {
 #'
 #' @description
 #' Only written so we can mock for testing
+#'
+#' @example inst/roxygen-examples/dot-read_line_example.R
 #' @keywords internal
 .read_line <- function(prompt) {
   readline(prompt)
@@ -34,6 +37,9 @@ default_heap <- function() {
 #' This function prompts the user to specify the Java heap size if the heap
 #' size is not set in the options or environment variables. Is only used in
 #' interactive sessions.
+#'
+#' @example inst/roxygen-examples/ask_heap_size_example.R
+#' @keywords internal
 ask_heap_size <- function() {
   prompt <- paste(
     "How many GB should the Java heap use?",
@@ -57,6 +63,8 @@ ask_heap_size <- function() {
 #' This function searches for Tetrad JAR files in the package's Java directory.
 #'
 #' @returns A character vector of file paths to the JAR files.
+#'
+#' @example inst/roxygen-examples/find_tetrad_jars_example.R
 #' @keywords internal
 find_tetrad_jars <- function() {
   jar_dir <- system.file("java", package = "causalDisco")
@@ -73,6 +81,8 @@ find_tetrad_jars <- function() {
 #' @param heap A string specifying the heap size for the JVM. "2g" for 2
 #'  gigabytes.
 #'
+#' @example inst/roxygen-examples/init_java_example.R
+#' @keywords internal
 init_java <- function(heap = default_heap()) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -102,6 +112,8 @@ init_java <- function(heap = default_heap()) {
 #'
 #' @param x A string representing the heap size, e.g., "4g" or "4096m".
 #' @returns A numeric value representing the heap size in gigabytes.
+#'
+#' @example inst/roxygen-examples/parse_heap_gb_example.R
 #' @keywords internal
 parse_heap_gb <- function(x) {
   stopifnot(length(x) == 1)
@@ -130,6 +142,9 @@ parse_heap_gb <- function(x) {
 #' rough calculation).
 #'
 #' @returns A numeric value representing the current heap size in gigabytes.
+#'
+#' @example inst/roxygen-examples/current_heap_gb_example.R
+#' @keywords internal
 current_heap_gb <- function() {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -144,9 +159,12 @@ current_heap_gb <- function() {
 #' @title Check if the session is interactive
 #'
 #' @description
-#' This function checks if the current R session is interactive.
+#' This function checks if the current R session is interactive. Only written
+#' for mocking.
 #'
 #' @returns A logical value indicating whether the session is interactive.
+#' @example inst/roxygen-examples/is_interactive_example.R
+#' @keywords internal
 is_interactive <- function() {
   interactive()
 }
@@ -161,8 +179,10 @@ is_interactive <- function() {
 #' @param function_name Name of the function requiring the packages (string).
 #' @param class_name Name of the R6 class requiring the packages (string).
 #'
-#' @return Invisibly returns TRUE if all packages are installed,
+#' @returns Invisibly returns TRUE if all packages are installed,
 #'   otherwise stops or warns.
+#'
+#' @example inst/roxygen-examples/dot-check_if_pkgs_are_installed_example.R
 #' @keywords internal
 .check_if_pkgs_are_installed <- function(pkgs,
                                          function_name = NULL,
