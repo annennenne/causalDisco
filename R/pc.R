@@ -125,7 +125,12 @@ pc_bnlearn_runner <- function(test, alpha, ...) {
 
   args <- list(...)
   search <- bnlearnSearch$new()
-  args_to_pass <- check_args_and_distribute_args(search, args, "bnlearn", "pc")
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "bnlearn",
+    "pc.stable"
+  )
 
   search$set_test(test, alpha)
   search$set_alg("pc", args_to_pass)
