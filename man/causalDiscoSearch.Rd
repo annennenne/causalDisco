@@ -13,6 +13,70 @@ This class implements the search algorithms from the causalDisco package,
 which wraps and adds temporal order to pcalg algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm.
 }
+\examples{
+### causalDisco_search R6 class example ###
+
+# Generally, we do not recommend using the R6 classes directly, but rather
+# use the disco() or any method function, for example pc(), instead.
+
+data(tpcExample)
+
+# small toy dataset
+dat <- head(tpcExample, 50)
+
+# background knowledge (tiers + one exogenous var)
+kn <- knowledge(
+  dat,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("oldage")
+  )
+)
+
+# --- Constraint-based: TPC ----------------------------------------------------
+s_tpc <- causalDiscoSearch$new()
+s_tpc$set_params(list(verbose = FALSE))
+s_tpc$set_test("fisher_z", alpha = 0.2)
+s_tpc$set_alg("tpc")
+s_tpc$set_knowledge(kn, directed_as_undirected = TRUE)
+s_tpc$set_data(dat)
+res_tpc <- s_tpc$run_search() # returns a discography-like result
+print(res_tpc)
+
+# Switch to TFCI on the same object (reuses suff_stat/test)
+s_tpc$set_alg("tfci")
+res_tfci <- s_tpc$run_search()
+print(res_tfci)
+
+# --- Score-based: TGES --------------------------------------------------------
+s_tges <- causalDiscoSearch$new()
+s_tges$set_score("tbic") # Gaussian temporal score
+s_tges$set_alg("tges")
+s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
+s_tges$set_knowledge(kn)
+# res_tges <- s_tges$run_search() # todo: TGES fails sometimes.
+# print(res_tges)
+
+# --- Intentional error demonstrations ----------------------------------------
+
+# run_search() without setting an algorithm
+try(causalDiscoSearch$new()$run_search(dat))
+
+# set_suff_stat() requires data and test first
+s_err <- causalDiscoSearch$new()
+try(s_err$set_suff_stat()) # no data & no test
+s_err$set_data(dat, set_suff_stat = FALSE)
+try(s_err$set_suff_stat()) # no test
+
+# unknown test / score / algorithm
+try(causalDiscoSearch$new()$set_test("not_a_test"))
+try(causalDiscoSearch$new()$set_score("not_a_score"))
+try(causalDiscoSearch$new()$set_alg("not_an_alg"))
+
+# set_knowledge() requires a `knowledge` object
+try(causalDiscoSearch$new()$set_knowledge(list(not = "knowledge")))
+}
 \seealso{
 \code{\link[causalDisco:knowledge]{knowledge}}.
 }

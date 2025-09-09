@@ -28,14 +28,13 @@ kn <- knowledge(
 )
 kn2 <- knowledge(
   df,
-  forbidden(V1 ~ V3),
-  required(V1 ~ V2, V2 ~ V3)
+  required(V1 ~ V2)
 )
 
 # initialize fci algorithm
 my_fci_tetrad <- fci(engine = "tetrad", test = "fisher_z", alpha = 0.05) # pass whatever extra argument you want to here
-my_fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.05, directed_as_undirected_knowledge = TRUE) # or here
-my_fci_causalDisco <- fci(engine = "causalDisco", test = "fisher_z", alpha = 0.05) # or here
+my_fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.00005, directed_as_undirected_knowledge = TRUE) # or here
+# my_fci_causalDisco <- fci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 # call disco with background knowledge
 disco(df, method = my_fci_tetrad, knowledge = kn)
 disco(df, method = my_fci_pcalg, knowledge = kn2)
