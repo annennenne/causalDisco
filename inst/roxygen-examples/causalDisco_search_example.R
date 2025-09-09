@@ -18,6 +18,18 @@ kn <- knowledge(
   )
 )
 
+# Recommended (TPC example):
+my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
+disco(data = dat, method = my_tpc, knowledge = kn)
+
+# or
+my_tpc <- my_tpc |>
+  set_knowledge(kn)
+my_tpc(dat)
+
+
+# Using R6 class:
+
 # --- Constraint-based: TPC ----------------------------------------------------
 s_tpc <- causalDiscoSearch$new()
 s_tpc$set_params(list(verbose = FALSE))

@@ -2,15 +2,10 @@
 % Please edit documentation in R/causalDisco_search.R
 \name{causalDiscoSearch}
 \alias{causalDiscoSearch}
-\title{Class for causalDisco search algorithms}
+\title{causalDiscoSearch -- an R6 class frontend for \strong{causalDisco}}
 \description{
-Class for causalDisco search algorithms
-
-Class for causalDisco search algorithms
-}
-\details{
-This class implements the search algorithms from the causalDisco package,
-which wraps and adds temporal order to pcalg algorithms.
+This class implements the search algorithms from the causalDisco
+package, which wraps and adds temporal order to pcalg algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm.
 }
 \examples{
@@ -33,6 +28,18 @@ kn <- knowledge(
     old ~ starts_with("oldage")
   )
 )
+
+# Recommended (TPC example):
+my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
+disco(data = dat, method = my_tpc, knowledge = kn)
+
+# or
+my_tpc <- my_tpc |>
+  set_knowledge(kn)
+my_tpc(dat)
+
+
+# Using R6 class:
 
 # --- Constraint-based: TPC ----------------------------------------------------
 s_tpc <- causalDiscoSearch$new()

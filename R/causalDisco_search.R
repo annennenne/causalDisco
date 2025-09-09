@@ -1,7 +1,7 @@
-#' Class for causalDisco search algorithms
+#' @title causalDiscoSearch -- an R6 class frontend for **causalDisco**
 #'
-#' This class implements the search algorithms from the causalDisco package,
-#' which wraps and adds temporal order to pcalg algorithms.
+#' @description This class implements the search algorithms from the causalDisco
+#' package, which wraps and adds temporal order to pcalg algorithms.
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
 #'
 #' @importFrom R6 R6Class

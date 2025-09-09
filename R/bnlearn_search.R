@@ -1,6 +1,6 @@
-#' bnlearnSearch – a tidy R6 front-end for **bnlearn**
+#' @title bnlearnSearch – an R6 front-end for **bnlearn**
 #'
-#' A wrapper that lets you drive `bnlearns`’s structure-learning
+#' @description A wrapper that lets you drive `bnlearns`’s structure-learning
 #' algorithms within the `causalDisco` framework.
 #'
 #'
