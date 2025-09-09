@@ -8,6 +8,8 @@
 #'
 #' @importFrom R6 R6Class
 #'
+#' @R6example inst/roxygen-examples/bnlearn_search_example.R
+#'
 #' @export
 bnlearnSearch <- R6Class(
   "bnlearnSearch",

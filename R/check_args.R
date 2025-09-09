@@ -15,6 +15,9 @@
 #' @param score The scoring method to be used (if applicable).
 #' @returns A list containing the distributed arguments for the algorithm, test,
 #' and score.
+#'
+#' @example inst/roxygen-examples/check_args_example.R
+#'
 #' @keywords internal
 check_args_and_distribute_args <- function(search,
                                            args,

@@ -4,6 +4,11 @@
 #' used in the Tetrad Search class.
 #'
 #' @param obj A Java object to be cast.
+#'
+#' @keywords internal
+#'
+#' @example inst/roxygen-examples/cast_obj_example.R
+#'
 #' @return A Java object cast to a superclass that Tetrad takes as input.
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper

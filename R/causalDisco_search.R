@@ -5,6 +5,9 @@
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
 #'
 #' @importFrom R6 R6Class
+#'
+#' @R6example inst/roxygen-examples/causalDisco_search_example.R
+#'
 #' @export causalDiscoSearch
 causalDiscoSearch <- R6::R6Class(
   "causalDiscoSearch",
