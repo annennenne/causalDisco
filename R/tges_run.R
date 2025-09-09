@@ -80,6 +80,11 @@ tges_run <- function(score, verbose = FALSE) {
             y = bgy,
             verbose = verbose
           )
+          if (is.null(amatbg)) {
+            stop("addBgKnowledge() did not return a coercible graph/matrix.",
+              call. = FALSE
+            )
+          }
           no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
           essgraph$.in.edges <- no.forbidden.edges
         }
