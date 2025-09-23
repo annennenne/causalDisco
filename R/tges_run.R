@@ -141,7 +141,7 @@ tges_run <- function(score, verbose = FALSE) {
       }
     }
   }
-
+  essgraph$.nodes <- score$.nodes
   return(essgraph |> discography())
 }
 
@@ -269,7 +269,8 @@ TEssGraph <- setRefClass("TEssGraph",
   contains = "EssGraph",
   methods = list(
     # Performs one greedy step
-    greedy.step = function(direction = c("forward", "backward", "turning"), verbose = FALSE, ...) {
+    greedy.step = function(direction = c("forward", "backward", "turning"),
+                           verbose = FALSE, ...) {
       stopifnot(!is.null(score <- getScore()))
 
       # Cast direction
@@ -470,45 +471,45 @@ TemporalBIC <- setRefClass("TemporalBIC",
       # do not enforce if child or any parent lacks a tier (NA)
       if (is.na(child_t) || any(is.na(parent_ts)) ||
         child_t >= max(c(parent_ts, -Inf))) {
-          # calculate score in R
-          if (.format == "raw") {
-            # calculate score from raw data matrix
-            # response vector for linear regression
-            Y <- pp.dat$data[pp.dat$non.int[[vertex]], vertex]
-            sigma2 <- sum(Y^2)
+        # calculate score in R
+        if (.format == "raw") {
+          # calculate score from raw data matrix
+          # response vector for linear regression
+          Y <- pp.dat$data[pp.dat$non.int[[vertex]], vertex]
+          sigma2 <- sum(Y^2)
 
-            if (length(parents) + pp.dat$intercept != 0) {
-              # get data matrix on which linear regression is based
-              Z <- pp.dat$data[pp.dat$non.int[[vertex]], parents, drop = FALSE]
-              if (pp.dat$intercept) {
-                Z <- cbind(1, Z)
-              }
-
-              # calculate the scaled error covariance using QR decomposition
-              Q <- qr.Q(qr(Z))
-              sigma2 <- sigma2 - sum((Y %*% Q)^2)
-            }
-          } else if (.format == "scatter") {
-            # calculate the score based on pre-calculated scatter matrices
-            # if an intercept is allowed, add a fake parent node
-            parents <- sort(parents)
+          if (length(parents) + pp.dat$intercept != 0) {
+            # get data matrix on which linear regression is based
+            Z <- pp.dat$data[pp.dat$non.int[[vertex]], parents, drop = FALSE]
             if (pp.dat$intercept) {
-              parents <- c(pp.dat$vertex.count + 1, parents)
+              Z <- cbind(1, Z)
             }
 
-            pd.scMat <- pp.dat$scatter[[pp.dat$scatter.index[vertex]]]
-            sigma2 <- pd.scMat[vertex, vertex]
-            if (length(parents) != 0) {
-              b <- pd.scMat[vertex, parents]
-              sigma2 <- sigma2 - as.numeric(b %*% solve(pd.scMat[parents, parents], b))
-            }
+            # calculate the scaled error covariance using QR decomposition
+            Q <- qr.Q(qr(Z))
+            sigma2 <- sigma2 - sum((Y %*% Q)^2)
+          }
+        } else if (.format == "scatter") {
+          # calculate the score based on pre-calculated scatter matrices
+          # if an intercept is allowed, add a fake parent node
+          parents <- sort(parents)
+          if (pp.dat$intercept) {
+            parents <- c(pp.dat$vertex.count + 1, parents)
           }
 
-          # return local score
-          lscore <- -0.5 * pp.dat$data.count[vertex] *
-            (1 + log(sigma2 / pp.dat$data.count[vertex])) -
-            pp.dat$lambda * (1 + length(parents))
-          return(lscore)
+          pd.scMat <- pp.dat$scatter[[pp.dat$scatter.index[vertex]]]
+          sigma2 <- pd.scMat[vertex, vertex]
+          if (length(parents) != 0) {
+            b <- pd.scMat[vertex, parents]
+            sigma2 <- sigma2 - as.numeric(b %*% solve(pd.scMat[parents, parents], b))
+          }
+        }
+
+        # return local score
+        lscore <- -0.5 * pp.dat$data.count[vertex] *
+          (1 + log(sigma2 / pp.dat$data.count[vertex])) -
+          pp.dat$lambda * (1 + length(parents))
+        return(lscore)
       } else {
         skip <- -Inf
         return(skip)
