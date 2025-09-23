@@ -285,7 +285,7 @@ TEssGraph <- setRefClass("TEssGraph",
         .in.edges,
         score$pp.dat,
         alg.name,
-        score$c.fcn,
+        "none",
         causal.inf.options(
           caching = FALSE,
           maxSteps = 1,
@@ -470,7 +470,6 @@ TemporalBIC <- setRefClass("TemporalBIC",
       # do not enforce if child or any parent lacks a tier (NA)
       if (is.na(child_t) || any(is.na(parent_ts)) ||
         child_t >= max(c(parent_ts, -Inf))) {
-        if (c.fcn == "none") {
           # calculate score in R
           if (.format == "raw") {
             # calculate score from raw data matrix
@@ -510,7 +509,6 @@ TemporalBIC <- setRefClass("TemporalBIC",
             (1 + log(sigma2 / pp.dat$data.count[vertex])) -
             pp.dat$lambda * (1 + length(parents))
           return(lscore)
-        }
       } else {
         skip <- -Inf
         return(skip)
