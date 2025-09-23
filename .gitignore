@@ -14,3 +14,4 @@ examples/TESTING.R
 .Rproj.user
 causalDisco*.tar.gz
 causalDisco.Rcheck/
+docker/
