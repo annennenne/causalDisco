@@ -62,8 +62,8 @@ s_tges$set_score("tbic") # Gaussian temporal score
 s_tges$set_alg("tges")
 s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
 s_tges$set_knowledge(kn)
-# res_tges <- s_tges$run_search() # todo: TGES fails sometimes.
-# print(res_tges)
+res_tges <- s_tges$run_search()
+print(res_tges)
 
 # --- Intentional error demonstrations ----------------------------------------
 

@@ -19,4 +19,21 @@ where entry \verb{(i, j) = 1} iff \code{j} is a parent of \code{i}.
 Converts a list of in-edges (parents) per node into a 0/1 adjacency matrix
 with rows and columns ordered by the list names.
 }
+\examples{
+### create_adj_matrix_from_list() and create_list_from_adj_matrix() example ###
+
+# List
+in_edges <- list(
+  X = integer(0),
+  Y = c(1L),
+  Z = c(1L, 2L)
+)
+
+# Adjacency matrix
+adj <- causalDisco:::create_adj_matrix_from_list(in_edges)
+
+# Convert back
+in_edges_back <- causalDisco:::create_list_from_adj_matrix(adj)
+identical(in_edges_back, in_edges) # TRUE
+}
 \keyword{internal}

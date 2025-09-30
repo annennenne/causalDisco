@@ -89,11 +89,10 @@ t_score <- new("TemporalBIC",
   data = simdata
 )
 # Run tges
-# tges_pre <- tges_run(t_score) # currently failing...
+tges_pre <- tges_run(t_score)
 
 # Plot MPDAG
 # plot(tges_pre)
-
 }
 \seealso{
 \code{\link{tges}}

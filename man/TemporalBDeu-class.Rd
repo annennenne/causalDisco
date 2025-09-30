@@ -111,7 +111,6 @@ tges_pre <- tges_run(t_score)
 
 # Plot MPDAG
 # plot(tges_pre)
-
 }
 \seealso{
 \code{\link{tges}}

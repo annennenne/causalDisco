@@ -18,4 +18,21 @@ element lists the parent indices (columns with value 1 in that row).
 Converts a 0/1 adjacency matrix into a list where each element contains the
 integer indices of the parents of the corresponding row/node.
 }
+\examples{
+### create_adj_matrix_from_list() and create_list_from_adj_matrix() example ###
+
+# List
+in_edges <- list(
+  X = integer(0),
+  Y = c(1L),
+  Z = c(1L, 2L)
+)
+
+# Adjacency matrix
+adj <- causalDisco:::create_adj_matrix_from_list(in_edges)
+
+# Convert back
+in_edges_back <- causalDisco:::create_list_from_adj_matrix(adj)
+identical(in_edges_back, in_edges) # TRUE
+}
 \keyword{internal}

@@ -2,17 +2,41 @@
 % Please edit documentation in R/disco.R
 \name{disco}
 \alias{disco}
-\title{disco function}
+\title{Disco!!}
 \usage{
 disco(data, method, knowledge = NULL)
 }
 \arguments{
-\item{data}{a data frame}
+\item{data}{A data frame}
 
-\item{method}{an algorithm/method object}
+\item{method}{An \code{disco_method} object representing a causal discovery
+algorithm.}
 
-\item{knowledge}{a knowledge object}
+\item{knowledge}{A \code{knowledge} object}
+}
+\value{
+A \code{discography} object.
 }
 \description{
-disco function
+Run a causal discovery method on a data frame.
+}
+\examples{
+### disco() example ###
+
+data("tpcExample")
+
+# define background knowledge
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+# use PC (for example)
+my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.01)
+
+disco(data = tpcExample, method = my_pc)
 }
