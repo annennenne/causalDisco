@@ -139,7 +139,7 @@ test_that("disco enforces method type and injects knowledge when provided", {
   expect_null(out$knowledge)
 
   # with knowledge -> set_knowledge() is applied before run
-  kn <- list(ok = "yes")
+  kn <- knowledge()
   out2 <- disco(df, m, knowledge = kn)
   expect_identical(out2$knowledge, kn)
 })
