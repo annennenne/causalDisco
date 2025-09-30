@@ -53,7 +53,11 @@ kn <- knowledge(
 
 ss_cor <- causalDisco:::make_suff_stat(d, type = "corTest")
 wrapped <- causalDisco:::dirTest(causalDisco::corTest, vnames, kn)
-cons <- causalDisco:::.pcalg_constraints_from_knowledge(kn, labels = vnames, directed_as_undirected = TRUE)
+cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+  kn,
+  labels = vnames,
+  directed_as_undirected = TRUE
+)
 
 skel <- pcalg::skeleton(
   suffStat   = ss_cor,

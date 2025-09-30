@@ -12,7 +12,7 @@ kn <- knowledge(
 )
 
 # Recommended path using disco()
-my_tfci <- tfci(engine = "causalDisco", corTest, alpha = 0.05)
+my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
 disco(tpcExample, my_tfci, knowledge = kn)
 

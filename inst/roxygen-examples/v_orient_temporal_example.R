@@ -14,7 +14,11 @@ kn <- knowledge(
 
 ss_cor <- causalDisco:::make_suff_stat(tpcExample, type = "corTest")
 wrapped_test <- causalDisco:::dirTest(causalDisco::corTest, vnames, kn)
-pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(kn, labels = vnames, directed_as_undirected = TRUE)
+pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+  kn,
+  labels = vnames,
+  directed_as_undirected = TRUE
+)
 
 set.seed(1)
 skel <- pcalg::skeleton(
@@ -27,7 +31,7 @@ skel <- pcalg::skeleton(
   fixedEdges = pc_cons$fixedEdges
 )
 
-amat_skel <- pcalg::graph2amat(skel)
+amat_skel <- causalDisco:::graph2amat(skel)
 amat_prune <- causalDisco:::order_restrict_amat_cpdag(amat_skel, kn)
 amat_orient <- causalDisco:::v_orient_temporal(amat_prune, skel@sepset)
 amat_orient[1:6, 1:6]
