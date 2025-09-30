@@ -38,38 +38,7 @@
 #'   \code{edge_type}. The underlying orientation corresponds to a PAG learned by
 #'   TFCI under the supplied temporal background knowledge.
 #'
-#' @examples
-#' # simulate linear Gaussian data with an unobserved variable L1
-#' set.seed(123)
-#' n <- 100
-#' L1 <- rnorm(n)
-#' X1 <- rnorm(n)
-#' X2 <- L1 + X1 + rnorm(n)
-#' X3 <- X1 + rnorm(n)
-#' X4 <- X3 + L1 + rnorm(n)
-#' d <- data.frame(
-#'   p1_X1 = X1,
-#'   p1_X2 = X2,
-#'   p2_X3 = X3,
-#'   p2_X4 = X4
-#' )
-#'
-#' # Build knowledge from tidy tier rules (recommended)
-#' kn <- knowledge(
-#'   d,
-#'   tier(
-#'     p1 ~ tidyselect::starts_with("p1_"),
-#'     p2 ~ tidyselect::starts_with("p2_")
-#'   )
-#' )
-#'
-#' # Use TFCI to recover a PAG (returned as a discography tibble)
-#' tfci_run(d, test = corTest, knowledge = kn)
-#'
-#' # Legacy interface (deprecated): supply order only
-#' \dontrun{
-#' tfci_run(d, test = corTest, order = c("p1", "p2"))
-#' }
+#' @example inst/roxygen-examples/tfci_example.R
 #'
 #' @include tpc_run.R
 #' @importClassesFrom pcalg pcAlgo
@@ -256,6 +225,8 @@ tfci_run <- function(data = NULL,
 #'   (rows/columns named by variable names).
 #' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
 #'
+#' @example inst/roxygen-examples/order_restrict_pag_skel_example.R
+#'
 #' @return The modified adjacency matrix with arrowheads added at the later node
 #'   for cross-tier pairs.
 #' @keywords internal
@@ -287,6 +258,8 @@ order_restrict_pag_skel <- function(amat, knowledge) {
 #' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
 #' @param vnames Character vector of variable names, used to translate indices in
 #'   \code{sepset} into names for tier comparison.
+#'
+#' @example inst/roxygen-examples/order_restrict_sepset_example.R
 #'
 #' @return The input \code{sepset} with any disallowed separating sets replaced by
 #'   \code{NULL}. Emits a warning each time such a set is removed.
@@ -327,6 +300,8 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #'   orientation (see \pkg{pcalg}); may be \code{NULL}.
 #' @param cautious Logical; if \code{TRUE}, remove any separating set that violates
 #'   temporal constraints before orientation.
+#'
+#' @example inst/roxygen-examples/tpag_example.R
 #'
 #' @return A PAG adjacency matrix in pcalg format (integer codes \code{0/1/2/3}).
 #' @keywords internal

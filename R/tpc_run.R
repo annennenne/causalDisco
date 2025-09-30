@@ -81,23 +81,7 @@
 #' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
 #' a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
 #'
-#' @examples
-#' # Using knowledge (preferred)
-#' data(tpcExample)
-#' kn <- knowledge(
-#'   tpcExample,
-#'   tier(
-#'     child ~ tidyselect::starts_with("child"),
-#'     youth ~ tidyselect::starts_with("youth"),
-#'     oldage ~ tidyselect::starts_with("oldage")
-#'   )
-#' )
-#' tpc_run(tpcExample, knowledge = kn, alpha = 0.01)
-#'
-#' # Deprecated: using order prefixes (will warn)
-#' testthat::expect_warning(
-#'   tpc_run(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
-#' )
+#' @example inst/roxygen-examples/tpc_example.R
 #'
 #' @export
 tpc_run <- function(data = NULL,
@@ -259,6 +243,8 @@ tpc_run <- function(data = NULL,
 #' @param vnames Optional character vector of variable names when \code{data}
 #'   is not supplied.
 #'
+#' @example inst/roxygen-examples/dot-build_knowledge_from_order_example.R
+#'
 #' @return A \code{knowledge} object with tiers matching \code{order}.
 #' @keywords internal
 .build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
@@ -325,6 +311,8 @@ tpc_run <- function(data = NULL,
 #' @param amat Square adjacency matrix (from-to convention).
 #' @param sepsets Separation sets as computed by \pkg{pcalg}.
 #'
+#' @example inst/roxygen-examples/v_orient_temporal_example.R
+#'
 #' @return The updated adjacency matrix with additional arrowheads.
 #' @keywords internal
 v_orient_temporal <- function(amat, sepsets) {
@@ -381,6 +369,8 @@ v_orient_temporal <- function(amat, sepsets) {
 #' @param amatrix Square adjacency matrix.
 #' @param index Integer index of the node.
 #'
+#' @example inst/roxygen-examples/find_adjacencies_example.R
+#'
 #' @return Integer vector of adjacent node indices.
 #' @keywords internal
 find_adjacencies <- function(amatrix, index) {
@@ -398,6 +388,8 @@ find_adjacencies <- function(amatrix, index) {
 #'
 #' @param kn A \code{knowledge} object.
 #' @param vnames Character vector of variable names.
+#'
+#' @example inst/roxygen-examples/dot-tier_index_example.R
 #'
 #' @return Named integer vector of the same length as \code{vnames}.
 #' @keywords internal
@@ -421,8 +413,11 @@ find_adjacencies <- function(amatrix, index) {
 #' @param x,y Variable names.
 #' @param knowledge A \code{knowledge} object.
 #'
+#' @example inst/roxygen-examples/is_after_example.R
+#'
 #' @return Logical. \code{TRUE} if \code{x} is in a strictly later tier than
-#'   \code{y}. Returns \code{FALSE} if either variable lacks a tier.
+#' \code{y}. Returns \code{FALSE} if either variable lacks a tier.
+#'
 #' @keywords internal
 is_after <- function(x, y, knowledge) {
   ti <- .tier_index(knowledge, c(x, y))
@@ -443,6 +438,8 @@ is_after <- function(x, y, knowledge) {
 #'   test statistic compatible with \pkg{pcalg}.
 #' @param vnames Character vector of variable names (labels).
 #' @param knowledge A \code{knowledge} object.
+#'
+#' @example inst/roxygen-examples/dirTest_example.R
 #'
 #' @return A function with the same interface as \code{test}.
 #' @keywords internal
@@ -475,6 +472,8 @@ dirTest <- function(test, vnames, knowledge) {
 #' @param kn A \code{knowledge} object.
 #' @param labels Character vector of variable names in the desired order.
 #'
+#' @example inst/roxygen-examples/dot-pcalg_constraints_from_knowledge_example.R
+#'
 #' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
 #' @keywords internal
 .pcalg_constraints_from_knowledge <- function(kn,
@@ -497,6 +496,8 @@ dirTest <- function(test, vnames, knowledge) {
 #'
 #' @param amat Square adjacency matrix (from-to convention).
 #' @param knowledge A \code{knowledge} object with tier labels.
+#'
+#' @example inst/roxygen-examples/order_restrict_amat_cpdag_example.R
 #'
 #' @return The pruned adjacency matrix.
 #' @keywords internal
@@ -528,6 +529,8 @@ order_restrict_amat_cpdag <- function(amat, knowledge) {
 #'
 #' @param skel A \code{\link[pcalg]{pcAlgo-class}} skeleton result.
 #' @param knowledge A \code{knowledge} object with tiers (and optionally edges).
+#'
+#' @example inst/roxygen-examples/tpdag_example.R
 #'
 #' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
 #' @keywords internal
@@ -581,6 +584,8 @@ tpdag <- function(skel, knowledge) {
 #' }
 #'
 #' Any other \code{type} results in an error.
+#'
+#' @example inst/roxygen-examples/make_suff_stat_example.R
 #'
 #' @return A list whose structure depends on \code{type}, suitable for passing
 #'   as \code{suffStat} to the corresponding test.
