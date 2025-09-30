@@ -22,4 +22,18 @@ Helper that converts a character \code{order} of prefixes into a
 \code{knowledge} object by creating one tier per prefix and assigning
 variables with \code{tidyselect::starts_with("<prefix>")}.
 }
+\examples{
+### .build_knowledge_from_order() example ###
+
+data(tpcExample)
+vnames <- names(tpcExample)
+
+# Create knowledge from a given order
+kn_from_order <- causalDisco:::.build_knowledge_from_order(
+  order  = c("child", "youth", "oldage"),
+  vnames = vnames
+)
+
+kn_from_order
+}
 \keyword{internal}

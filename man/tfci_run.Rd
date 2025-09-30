@@ -95,36 +95,28 @@ After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2p
 for details.
 }
 \examples{
-# simulate linear Gaussian data with an unobserved variable L1
-set.seed(123)
-n <- 100
-L1 <- rnorm(n)
-X1 <- rnorm(n)
-X2 <- L1 + X1 + rnorm(n)
-X3 <- X1 + rnorm(n)
-X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(
-  p1_X1 = X1,
-  p1_X2 = X2,
-  p2_X3 = X3,
-  p2_X4 = X4
-)
+### tfci() example ###
 
-# Build knowledge from tidy tier rules (recommended)
+data("tpcExample")
+
 kn <- knowledge(
-  d,
+  tpcExample,
   tier(
-    p1 ~ tidyselect::starts_with("p1_"),
-    p2 ~ tidyselect::starts_with("p2_")
+    child ~ tidyselect::starts_with("child"),
+    youth ~ tidyselect::starts_with("youth"),
+    oldage ~ tidyselect::starts_with("oldage")
   )
 )
 
-# Use TFCI to recover a PAG (returned as a discography tibble)
-tfci_run(d, test = corTest, knowledge = kn)
+# Recommended path using disco()
+my_tfci <- tfci(engine = "causalDisco", corTest, alpha = 0.05)
 
-# Legacy interface (deprecated): supply order only
-\dontrun{
-tfci_run(d, test = corTest, order = c("p1", "p2"))
-}
+disco(tpcExample, my_tfci, knowledge = kn)
 
+# or using my_tfci directly
+my_tfci <- my_tfci |> set_knowledge(kn)
+my_tfci(tpcExample)
+
+# Also possible: using tfci_run()
+tfci_run(tpcExample, test = corTest, knowledge = kn)
 }

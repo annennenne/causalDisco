@@ -18,4 +18,21 @@ Named integer vector of the same length as \code{vnames}.
 Map variable names to their tier ranks according to a \code{knowledge}
 object. Variables without a tier receive \code{NA}.
 }
+\examples{
+### .tier_index() example ###
+
+data(tpcExample)
+
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    youth ~ tidyselect::starts_with("youth"),
+    oldage ~ tidyselect::starts_with("oldage")
+  )
+)
+
+ti <- causalDisco:::.tier_index(kn, names(tpcExample)[1:6])
+ti
+}
 \keyword{internal}

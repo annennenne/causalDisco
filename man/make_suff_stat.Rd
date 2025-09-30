@@ -46,4 +46,15 @@ For \code{type = "corTest"}, the return value is a list with elements:
 
 Any other \code{type} results in an error.
 }
+\examples{
+### make_suff_stat() example ###
+
+data(tpcExample)
+
+ss_cor <- causalDisco:::make_suff_stat(tpcExample, type = "corTest")
+ss_cor
+
+ss_reg <- causalDisco:::make_suff_stat(tpcExample, type = "regTest")
+ss_reg
+}
 \keyword{internal}
