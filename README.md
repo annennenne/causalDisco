@@ -13,6 +13,17 @@
 observational data. It wraps multiple causal discovery backends under a
 common, consistent syntax.
 
+## Motivation
+
+Causal discovery methods exist in many ecosystems, for example in
+`bnlearn`, `pcalg`, or `Tetrad`, but their APIs vary widely.
+
+`causalDisco` unifies them under one clear grammar, making it easy to
+compare results, switch algorithms, and focus on scientific questions
+rather than package quirks.
+
+Time to hit the disco 🪩
+
 ## Installation
 
 ### Install `pak`
@@ -31,7 +42,7 @@ install.packages("pak",
                  )
 ```
 
-## Install `causalDisco`
+### Install `causalDisco`
 
 Once `pak` is installed, run:
 
@@ -94,5 +105,7 @@ disco(data = tpcExample, method = cd_tges, knowledge = kn)
 
 ## Bugs & requests
 
-Bug reports and feature requests are welcome: 👉 [open an
+Bug reports and feature requests are welcome:
+
+👉 [open an
 issue](https://github.com/frederikfabriciusbjerre/causalDisco/issues).
