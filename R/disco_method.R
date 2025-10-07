@@ -10,6 +10,9 @@
 #' Every `disco_method` can be used in combination with `disco`. If you want
 #' to build your own method, you can use this function to create a closure
 #' that will run with `disco`.
+#'
+#' @example inst/roxygen-examples/disco_method_example.R
+#'
 #' @keywords internal
 disco_method <- function(builder, method_class) {
   f <- function(data) {
