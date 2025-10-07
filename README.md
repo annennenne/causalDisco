@@ -1,3 +1,9 @@
+<!-- badges: start -->
+[![codecov](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg?token=8MHGWDUN4R)](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco)
+[![R-CMD-check](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+
 # causalDisco <img src="graphics/hex.png" width="121px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
 
 `causalDisco` is in an R package with tools for causal discovery on observational data.
@@ -89,11 +95,6 @@ plot(thistamat)
 
 The causalDisco webtool provides an overview of R procedures for working with causal discovery in R, including example code. The webtool can be accessed [here](https://shiny.sund.ku.dk/zms499/causalDisco). Source code for the webtool is available in this repository. 
 
-
-## Code coverage
-<!-- badges: start -->
-[![codecov](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg?token=8MHGWDUN4R)](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco)
-<!-- badges: end -->
 
 ## Bugs & requests
 
