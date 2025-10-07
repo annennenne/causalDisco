@@ -22,3 +22,35 @@ class. The function will copy the data into the Java heap, so be careful with
 larger data frames. This function was provided by Joseph Ramsey, and slightly
 modified by Frederik Fabricius-Bjerre.
 }
+\examples{
+### rdata_to_tetrad() / tetrad_data_to_rdata() example ###
+
+# Minimal toy data: one continuous (numeric), one discrete (integer)
+set.seed(42)
+df <- data.frame(
+  cont = rnorm(6),
+  disc = as.integer(sample(0:2, 6, replace = TRUE))
+)
+
+# Ensure JVM is up (causalDisco usually does this on load)
+if (!rJava::.jniInitialized) rJava::.jinit()
+
+# R -> Tetrad (DataSet)
+jds <- rdata_to_tetrad(df)
+rJava::.jinstanceof(jds, "edu/cmu/tetrad/data/DataSet") # should be TRUE
+
+# Tetrad (DataSet) -> R
+df_roundtrip <- tetrad_data_to_rdata(jds)
+str(df_roundtrip)
+
+# Check types are preserved: cont is numeric (double), disc is integer
+stopifnot(is.numeric(df_roundtrip$cont), is.integer(df_roundtrip$disc))
+
+# Values should match (up to numeric tolerance)
+stopifnot(all.equal(df$cont, df_roundtrip$cont))
+stopifnot(identical(df$disc, df_roundtrip$disc))
+
+# Intentional-error demo: a non-numeric column is not allowed
+bad_df <- data.frame(cont = rnorm(3), bad = c("a", "b", "c"))
+try(rdata_to_tetrad(bad_df)) # should error: non-numeric columns are not supported
+}
