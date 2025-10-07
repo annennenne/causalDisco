@@ -46,9 +46,9 @@ jobs:
           use-public-rspm: true
 
       # ensure R knows about this JDK (needed on Linux/macOS)
-      - name: R CMD javareconf
-        if: runner.os != 'Windows'
-        run: R CMD javareconf
+      # - name: R CMD javareconf
+      #   if: runner.os != 'Windows'
+      #   run: R CMD javareconf
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
