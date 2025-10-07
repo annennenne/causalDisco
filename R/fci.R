@@ -68,7 +68,7 @@ fci_tetrad_runner <- function(test, alpha, ...) {
 
   if (length(args_to_pass$test_args) > 0) {
     rlang::exec(search$set_test,
-      test = test, alpha = alpha, !!!args_to_pass$test_args
+      method = test, alpha = alpha, !!!args_to_pass$test_args
     )
   } else {
     search$set_test(method = test, alpha = alpha)

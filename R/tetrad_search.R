@@ -1833,9 +1833,6 @@ TetradSearch <- R6Class(
                                    alpha = 0.01,
                                    cell_table_type = "ad",
                                    use_for_mc = FALSE) {
-      print(floor(min_count) == min_count)
-      print(floor(min_count))
-      print(min_count)
       stopifnot(
         is.numeric(c(min_count, alpha)),
         min_count >= 0,

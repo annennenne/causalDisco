@@ -1,7 +1,10 @@
-#' Class for pcalg search algorithms
+#' @title Class for pcalg search algorithms
 #'
+#' @description
 #' This class implements the search algorithms from the pcalg package.
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
+#'
+#' @R6example inst/roxygen-examples/pcalg_search_example.R
 #'
 #' @importFrom R6 R6Class
 #' @export pcalgSearch

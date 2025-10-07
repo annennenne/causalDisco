@@ -111,7 +111,7 @@ toy_graph_builder <- function(knowledge = NULL) {
 }
 
 # 3) Wrap the builder as a disco method
-toy_method <- disco_method(toy_graph_builder, "toy")
+toy_method <- causalDisco:::disco_method(toy_graph_builder, "toy")
 
 # 4) Use the method
 # Without knowledge: mostly undirected edges
