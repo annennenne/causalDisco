@@ -38,9 +38,15 @@ pc <- function(
   # build a “runner builder” that knows how to make a runner given knowledge
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
-      tetrad  = rlang::exec(pc_tetrad_runner, test, alpha, !!!args),
-      pcalg   = rlang::exec(pc_pcalg_runner, test, alpha, !!!args),
-      bnlearn = rlang::exec(pc_bnlearn_runner, test, alpha, !!!args)
+      tetrad = rlang::exec(pc_tetrad_runner,
+        test = test, alpha = alpha, !!!args
+      ),
+      pcalg = rlang::exec(pc_pcalg_runner,
+        test = test, alpha = alpha, !!!args
+      ),
+      bnlearn = rlang::exec(pc_bnlearn_runner,
+        test = test, alpha = alpha, !!!args
+      )
     )
     runner
   }
@@ -62,10 +68,14 @@ pc_tetrad_runner <- function(test, alpha, ...) {
   args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
 
   if (length(args_to_pass$test_args) > 0) {
-    # splice
-    rlang::exec(search$set_test, test, alpha, !!!args_to_pass$test_args)
+    rlang::exec(
+      search$set_test,
+      method = test,
+      alpha = alpha,
+      !!!args_to_pass$test_args
+    )
   } else {
-    search$set_test(test, alpha)
+    search$set_test(method = test, alpha = alpha)
   }
 
   if (length(args_to_pass$alg_args) > 0) {

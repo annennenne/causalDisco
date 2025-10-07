@@ -37,8 +37,12 @@ fci <- function(
 
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
-      tetrad = rlang::exec(fci_tetrad_runner, test, alpha, !!!args),
-      pcalg = rlang::exec(fci_pcalg_runner, test, alpha, !!!args)
+      tetrad = rlang::exec(fci_tetrad_runner,
+        test = test, alpha = alpha, !!!args
+      ),
+      pcalg = rlang::exec(fci_pcalg_runner,
+        test = test, alpha = alpha, !!!args
+      )
     )
     runner
   }
@@ -63,9 +67,11 @@ fci_tetrad_runner <- function(test, alpha, ...) {
   )
 
   if (length(args_to_pass$test_args) > 0) {
-    rlang::exec(search$set_test, test, alpha, !!!args_to_pass$test_args)
+    rlang::exec(search$set_test,
+      test = test, alpha = alpha, !!!args_to_pass$test_args
+    )
   } else {
-    search$set_test(test, alpha)
+    search$set_test(method = test, alpha = alpha)
   }
 
   if (length(args_to_pass$alg_args) > 0) {
