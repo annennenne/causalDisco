@@ -6,6 +6,8 @@
 #' algorithms from Tetrad, run them on an R data set, and retrieve the
 #' resulting graph or statistics.
 #'
+#' @R6example inst/roxygen-examples/TetradSearch_example.R
+#'
 #' @docType class
 #' @name TetradSearch
 #' @rdname TetradSearch
@@ -1831,6 +1833,9 @@ TetradSearch <- R6Class(
                                    alpha = 0.01,
                                    cell_table_type = "ad",
                                    use_for_mc = FALSE) {
+      print(floor(min_count) == min_count)
+      print(floor(min_count))
+      print(min_count)
       stopifnot(
         is.numeric(c(min_count, alpha)),
         min_count >= 0,
