@@ -1,25 +1,35 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # causalDisco <img src="graphics/hex.png" width="121px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
 
 <!-- badges: start -->
-
 [![codecov](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg?token=8MHGWDUN4R)](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco)
 [![R-CMD-check](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-`causalDisco` provides a unified interface for causal discovery on
-observational data. It wraps multiple causal discovery backends under a
-common, consistent syntax.
 
-## Installation
+`causalDisco` provides a unified interface for causal discovery on observational data.
+It wraps multiple causal discovery backends under a common, consistent syntax. 
 
+## Installation 
 ### Install `pak`
 
 `pak` is the easiest way to install `causalDisco` and its dependencies:
 
-``` r
+```{r, eval=FALSE}
 install.packages("pak", 
                  repos = 
                    sprintf(
@@ -35,35 +45,32 @@ install.packages("pak",
 
 Once `pak` is installed, run:
 
-``` r
+```{r, eval=FALSE}
 pak::pkg_install("github::frederikfabriciusbjerre/causalDisco")
 ```
 
 If needed, you can check and install system dependencies first:
 
-``` r
+```{r, eval=FALSE}
 pak::pkg_sysreqs("github::frederikfabriciusbjerre/causalDisco",
                  dependencies = TRUE, 
                  upgrade = TRUE)
 ```
 
-This will give you a list of system dependencies, which you need to
-install first, if they are not already on your system.
+This will give you a list of system dependencies, which you need to install first, if they are not already on your system. 
 
 ### Installing Java / JDK
 
-Some algorithms require Java. Install JDK 21 or 25 following [this
-guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad),
+Some algorithms require Java.
+Install JDK 21 or 25 following [this guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad),
 
-or use your system’s package manager.
+or use your system's package manager.
 
 ## Example
 
-With `causalDisco` you can currently run causal discovery algorithms
-from the packages `causalDisco` itself, the Java library `Tetrad`,
-`bnlearn`, and `pcalg`.
+With `causalDisco` you can currently run causal discovery algorithms from the packages `causalDisco` itself, the Java library `Tetrad`, `bnlearn`, and `pcalg`. 
 
-``` r
+```{r example, eval=FALSE}
 library(causalDisco)
 
 # load data
@@ -94,5 +101,5 @@ disco(data = tpcExample, method = cd_tges, knowledge = kn)
 
 ## Bugs & requests
 
-Bug reports and feature requests are welcome: 👉 [open an
-issue](https://github.com/frederikfabriciusbjerre/causalDisco/issues).
+Bug reports and feature requests are welcome:
+👉 [open an issue](https://github.com/frederikfabriciusbjerre/causalDisco/issues).

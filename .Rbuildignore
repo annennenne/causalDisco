@@ -15,3 +15,4 @@ README.*
 ^cran-comments\.md$
 CRAN-SUBMISSION
 ^codecov\.yml$
+^README\.Rmd$
