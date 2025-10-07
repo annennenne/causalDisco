@@ -13,6 +13,8 @@
 #' @param ... Additional arguments passed to the chosen engine
 #' (e.g. test or algorithm parameters).
 #'
+#' @example inst/roxygen-examples/fci_example.R
+#'
 #' @return
 #' A function of class \code{"fci"} that takes a single argument \code{data}
 #' (a data frame) and returns an `discography` object.

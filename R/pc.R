@@ -13,6 +13,8 @@
 #' @param alpha Numeric; significance level for the CI tests.
 #' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
 #'
+#' @example inst/roxygen-examples/pc_example.R
+#'
 #' @return
 #' A function of class \code{"pc"} that takes a single argument \code{data}
 #' (a data frame) and returns an `discography` object.
