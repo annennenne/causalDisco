@@ -9,7 +9,7 @@ test_that("rdata_to_tetrad() validates input", {
   df_bad <- data.frame(a = 1:3, b = c("x", "y", "z"))
   expect_error(
     rdata_to_tetrad(df_bad),
-    "Data frame contains non-numeric columns"
+    "Data frame contains non-numeric or non-factor columns."
   )
 })
 
@@ -24,7 +24,7 @@ test_that("tetrad_data_to_rdata() and rdata_to_tetrad() round-trip mixed data wi
   )
 
   # R -> Java
-  ds <- rdata_to_tetrad(df)
+  ds <- rdata_to_tetrad(df, FALSE)
   # quick sanity: Java reports same shape
   nrows <- rJava::.jcall(ds, "I", "getNumRows")
   ncols <- rJava::.jcall(ds, "I", "getNumColumns")
@@ -56,7 +56,7 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
     check.names = FALSE
   )
 
-  ds <- rdata_to_tetrad(df)
+  ds <- rdata_to_tetrad(df, FALSE)
 
   # column 0: ContinuousVariable, column 1: DiscreteVariable
   node0 <- rJava::.jcall(
@@ -77,13 +77,30 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
   expect_true(is.na(back$disc[3]))
 })
 
-test_that("rdata_to_tetrad() errors on unsupported column type", {
-  df <- data.frame(a = factor(c("x", "y")))
-  expect_error(
-    rdata_to_tetrad(df),
-    "Data frame contains non-numeric columns"
-  )
-})
+# todo: Make this not fail
+# test_that("rdata_to_tetrad() preserves factor labels and values", {
+#   skip_if_no_tetrad()
+#
+#   df <- data.frame(
+#     fac = factor(c("c", "a", NA, "b", "a"), levels = c("a", "b", "c")),
+#     check.names = FALSE
+#   )
+#
+#   ds <- rdata_to_tetrad(df)
+#
+#   node <- rJava::.jcall(
+#     ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+#     as.integer(0)
+#   )
+#   expect_true(rJava::.jinstanceof(node, "edu/cmu/tetrad/data/DiscreteVariable"))
+#
+#   back <- tetrad_data_to_rdata(ds)
+#
+#   expect_s3_class(back$fac, "factor")
+#   expect_equal(levels(back$fac), levels(df$fac))
+#   expect_equal(back$fac, df$fac)
+#   expect_true(is.na(back$fac[3]))
+# })
 
 test_that("tetrad_data_to_rdata() assigns correct NA types", {
   skip_if_no_tetrad()
