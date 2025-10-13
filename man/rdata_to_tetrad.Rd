@@ -4,10 +4,15 @@
 \alias{rdata_to_tetrad}
 \title{Tetrad R Data Utilities}
 \usage{
-rdata_to_tetrad(df)
+rdata_to_tetrad(df, int_cols_as_cont = TRUE)
 }
 \arguments{
 \item{df}{A data frame to be converted to a Tetrad Java object.}
+
+\item{int_cols_as_cont}{Logical, if \code{TRUE}, integer columns are treated
+as continuous. Default is \code{TRUE}, meaning integer columns are treated as
+continuous variables, as Tetrad does not support ordinal variables. If set
+to \code{FALSE}, this means that integer columns are treated as unordered factors.}
 }
 \value{
 A Tetrad Java object representing the data frame.

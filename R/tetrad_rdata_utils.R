@@ -9,13 +9,17 @@
 #' modified by Frederik Fabricius-Bjerre.
 #'
 #' @param df A data frame to be converted to a Tetrad Java object.
+#' @param int_cols_as_cont Logical, if `TRUE`, integer columns are treated
+#' as continuous. Default is `TRUE`, meaning integer columns are treated as
+#' continuous variables, as Tetrad does not support ordinal variables. If set
+#' to `FALSE`, this means that integer columns are treated as unordered factors.
 #'
 #' @example inst/roxygen-examples/rdata_to_tetrad_data_example.R
 #'
 #' @return A Tetrad Java object representing the data frame.
 #'
 #' @export
-rdata_to_tetrad <- function(df) {
+rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rJava", "stats"
@@ -40,11 +44,14 @@ rdata_to_tetrad <- function(df) {
   # Sort numetric and integer columns
   numeric_cols <- sapply(df, is.numeric)
   integer_cols <- sapply(df, is.integer)
-  numeric_cols <- !integer_cols & numeric_cols
-  if (!all(numeric_cols | integer_cols)) {
+  factor_cols <- sapply(df, is.factor)
+  if (int_cols_as_cont) {
+    integer_cols <- rep(FALSE, ncols)
+  }
+  numeric_cols <- !(integer_cols | factor_cols) & numeric_cols
+  if (!all(numeric_cols | integer_cols | factor_cols)) {
     stop(
-      "Data frame contains non-numeric columns or something went wrong with",
-      "the identification of discrete columns."
+      "Data frame contains non-numeric or non-factor columns."
     )
   }
   for (j in seq_len(ncols)) {
@@ -70,6 +77,21 @@ rdata_to_tetrad <- function(df) {
       )
       cont_data[[j]] <- rJava::.jnull("[D") # null double[] for continuous
       disc_data[[j]] <- rJava::.jarray(as.integer(col), dispatch = TRUE)
+    } else if (factor_cols[j]) {
+      levels <- levels(col)
+      num_categories <- length(levels)
+      variable <- rJava::.jnew(
+        "edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories)
+      )
+      node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
+      rJava::.jcall(
+        var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object")
+      )
+      # Convert factor levels to integer codes (1-based in R, 0-based in Java)
+      int_col <- as.integer(col)
+      int_col <- int_col - 1L # Convert to 0-based
+      cont_data[[j]] <- rJava::.jnull("[D") # null double[] for continuous
+      disc_data[[j]] <- rJava::.jarray(as.integer(int_col), dispatch = TRUE)
     } else {
       # extra safety precaution
       stop(paste("Unsupported column:", name, "with type: ", class(col))) # nocov

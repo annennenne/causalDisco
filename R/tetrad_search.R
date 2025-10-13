@@ -1370,7 +1370,6 @@ TetradSearch <- R6Class(
       }
       return(self$result |> discography())
     },
-    # NOT TESTED
     #' @description Configures bootstrapping parameters for the Tetrad search.
     #' @param number_resampling (integer) Number of bootstrap samples.
     #' @param percent_resample_size (numeric) Percentage of sample size for each bootstrap.
@@ -1409,7 +1408,10 @@ TetradSearch <- R6Class(
     },
     #' @description Sets or overrides the data used by Tetrad.
     #' @param data (data.frame) The new data to load.
-    set_data = function(data) {
+    #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
+    #' as continuous, since Tetrad does not support ordinal data, but only
+    #' either continuous or nominal data. Default is `TRUE.`
+    set_data = function(data, int_cols_as_cont = TRUE) {
       stopifnot(
         is.data.frame(data)
       )
@@ -1417,7 +1419,7 @@ TetradSearch <- R6Class(
         is.null(self$rdata) ||
         !isTRUE(all.equal(self$rdata, data))) {
         self$rdata <- data
-        self$data <- rdata_to_tetrad(data)
+        self$data <- rdata_to_tetrad(data, int_cols_as_cont)
       }
     },
     #' @description Toggles the verbosity in Tetrad.
