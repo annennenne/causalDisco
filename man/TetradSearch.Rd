@@ -1114,13 +1114,17 @@ Configures bootstrapping parameters for the Tetrad search.
 \subsection{Method \code{set_data()}}{
 Sets or overrides the data used by Tetrad.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_data(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_data(data, int_cols_as_cont = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(data.frame) The new data to load.}
+
+\item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
+as continuous, since Tetrad does not support ordinal data, but only
+either continuous or nominal data. Default is \code{TRUE.}}
 }
 \if{html}{\out{</div>}}
 }
