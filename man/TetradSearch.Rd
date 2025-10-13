@@ -1058,7 +1058,11 @@ Retrieves the argument names of a matching private function.
 \subsection{Method \code{run_search()}}{
 Runs the chosen Tetrad algorithm on the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_search(data = NULL, bootstrap = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_search(
+  data = NULL,
+  bootstrap = FALSE,
+  int_cols_as_cont = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1066,7 +1070,12 @@ Runs the chosen Tetrad algorithm on the data.
 \describe{
 \item{\code{data}}{(optional) If provided, overrides the previously set data.}
 
-\item{\code{bootstrap}}{(logical) If TRUE, bootstrapped graphs will be generated.}
+\item{\code{bootstrap}}{(logical) If TRUE, bootstrapped graphs will be
+generated.}
+
+\item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
+as continuous, since Tetrad does not support ordinal data, but only
+either continuous or nominal data. Default is \code{TRUE.}}
 }
 \if{html}{\out{</div>}}
 }

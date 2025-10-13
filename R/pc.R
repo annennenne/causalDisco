@@ -65,7 +65,9 @@ pc_tetrad_runner <- function(test, alpha, ...) {
 
   search <- TetradSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc", test = test)
+  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc",
+    test = test
+  )
 
   if (length(args_to_pass$test_args) > 0) {
     rlang::exec(

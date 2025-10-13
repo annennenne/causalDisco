@@ -1343,15 +1343,21 @@ TetradSearch <- R6Class(
     },
     #' @description Runs the chosen Tetrad algorithm on the data.
     #' @param data (optional) If provided, overrides the previously set data.
-    #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be generated.
+    #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be
+    #' generated.
+    #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
+    #' as continuous, since Tetrad does not support ordinal data, but only
+    #' either continuous or nominal data. Default is `TRUE.`
     #' @return discography with graph. Also populates \code{self$java}.
-    run_search = function(data = NULL, bootstrap = FALSE) {
+    run_search = function(data = NULL,
+                          bootstrap = FALSE,
+                          int_cols_as_cont = TRUE) {
       stopifnot(
         is.logical(bootstrap),
         length(bootstrap) == 1
       )
       if (!is.null(data)) {
-        self$set_data(data)
+        self$set_data(data, int_cols_as_cont)
       }
       if (is.null(self$data)) {
         stop("No data is set. Use set_data() first or input data directly into run_search().", call. = FALSE)
