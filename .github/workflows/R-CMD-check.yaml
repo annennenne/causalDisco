@@ -25,6 +25,11 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_LIMIT_CORES_: TRUE
+      R_FUTURE_FORK_ENABLE: "false"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
 
     steps:
       - uses: actions/checkout@v4
