@@ -54,27 +54,81 @@
 #' }
 #' @export
 confusion <- function(est_amat, true_amat, type = "adj") {
-  # UseMethod("confusion")
-
-  est_class <- class(est_amat)
-  true_class <- class(true_amat)
-
-  if (any(est_class %in% c("tpdag", "cpdag"))) {
-    est_amat <- amat(est_amat)
-  }
-
-  if (any(true_class %in% c("tpdag", "cpdag"))) {
-    true_amat <- amat(true_amat)
-  }
-
+  est <- .as_tamat_any(est_amat)
+  tru <- .as_tamat_any(true_amat)
+  out <- .align_tamat_nodes(est, tru)
+  est <- out$est
+  tru <- out$tru
   if (type == "adj") {
-    adj_confusion(est_amat, true_amat)
+    adj_confusion(est, tru)
   } else if (type == "dir") {
-    dir_confusion(est_amat, true_amat)
+    dir_confusion(est, tru)
   } else {
-    stop("Type must be either adj or dir.")
+    stop("Type must be either 'adj' or 'dir'.")
   }
 }
+
+# helpers
+
+.as_tamat_any <- function(x) {
+  if (inherits(x, "tamat")) {
+    return(x)
+  }
+
+  if (inherits(x, "discography")) {
+    A <- amat(x)
+    nodes <- rownames(A)
+    if (is.null(nodes)) nodes <- colnames(A)
+    if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(A)))
+    type <- if (inherits(A, "amat.pag")) "ag" else "pdag"
+    return(tamat(A, order = nodes, type = type))
+  }
+
+  if (is.matrix(x)) {
+    nodes <- rownames(x)
+    if (is.null(nodes)) nodes <- colnames(x)
+    if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(x)))
+    if (inherits(x, "amat.pag")) {
+      return(tamat(x, order = nodes, type = "ag"))
+    }
+    if (inherits(x, "amat.cpdag")) {
+      return(tamat(x, order = nodes, type = "pdag"))
+    }
+    vals <- sort(unique(as.integer(x)))
+    if (all(vals %in% c(0L, 1L))) {
+      return(tamat(x, order = nodes, type = "pdag"))
+    }
+    if (all(vals %in% c(0L, 1L, 2L, 3L))) {
+      return(tamat(x, order = nodes, type = "ag"))
+    }
+    stop("Matrix values not recognized as CPDAG or PAG encoding.")
+  }
+
+  d <- try(discography(x), silent = TRUE)
+  if (inherits(d, "try-error")) {
+    stop(
+      "Don't know how to coerce input of class ", paste(class(x), collapse = "/"),
+      " to a 'tamat'. Provide a discography, tamat, or encoded adjacency matrix."
+    )
+  }
+  .as_tamat_any(d)
+}
+
+.align_tamat_nodes <- function(est, tru) {
+  rn_e <- rownames(est)
+  rn_t <- rownames(tru)
+  if (!length(rn_e) || !length(rn_t)) {
+    stop("Both inputs must have row and column names.")
+  }
+  if (!setequal(rn_e, rn_t)) {
+    stop("Inputs must refer to the same node set.")
+  }
+  tru <- tru[rn_e, rn_e, drop = FALSE]
+  list(est = est, tru = tru)
+}
+
+
+
 
 # Changed from generic function to allow for class matching for
 # both of the first two arguments (i.e. compare amat with tpdag)
