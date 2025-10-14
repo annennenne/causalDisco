@@ -57,11 +57,21 @@ pcalgSearch <- R6::R6Class(
     suff_stat = NULL,
 
     #' @field continuous Logical; whether the sufficient statistic is for a
-    #' continuous test.
+    #' continuous test. If both continuous and discrete are `TRUE`, the
+    #' sufficient statistic is build for a mixed test.
     continuous = NULL,
+
+    #' @field discrete Logical; whether the sufficient statistic is for a
+    #' discrete test. If both continuous and discrete are `TRUE`, the sufficient
+    #' statistic is build for a mixed test.
+    discrete = NULL,
 
     #' @field knowledge A list of fixed constraints for the search algorithm.
     knowledge = NULL,
+
+    #' @field adaptDF Logical; whether to adapt the degrees of freedom
+    #' for discrete tests.
+    adaptDF = TRUE,
 
     #' @description
     #' Constructor for the `pcalgSearch` class.
@@ -77,8 +87,9 @@ pcalgSearch <- R6::R6Class(
       self$score <- NULL
       self$test <- NULL
       self$knowledge <- NULL
-      self$params <- NULL
-      self$continuous <- NULL
+      self$params <- list()
+      self$adaptDF <- TRUE
+      self$suff_stat <- NULL
     },
 
     #' @description
@@ -100,52 +111,29 @@ pcalgSearch <- R6::R6Class(
       if (set_suff_stat) {
         self$set_suff_stat()
       }
-
-      # Reset nlevels, used to determine binary (or not) G square test
-      private$nlevels <- 0L
-
-      # todo: Should it be changed or not?
-      # Reset knowledge function
-      # private$knowledge_function <- NULL
     },
 
     #' @description
     #' Sets the sufficient statistic for the data.
     set_suff_stat = function() {
       if (is.null(self$data)) {
-        stop("Data must be set before sufficient statistic.",
-          call. = FALSE
-        )
+        stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
-      if (is.null(self$test)) {
-        stop("Test must be set before sufficient statistic.",
-          call. = FALSE
-        )
+      if (is.null(private$test_key)) {
+        stop("Test must be set before sufficient statistic.", call. = FALSE)
       }
-      if (is.null(self$continuous)) {
-        stop("The pcalgSearch class does not have knowledge on whether the
-             sufficient statistic is for a continuous or discrete test.
-             Please set test using set_test() or set continuous directly
-             by self$continuous <- TRUE/FALSE.",
-          call. = FALSE
-        )
+      if (!is.logical(self$adaptDF)) {
+        stop("adaptDF must be a logical.", call. = FALSE)
       }
-      if (self$continuous) {
-        if (is.matrix(self$data) || is.data.frame(self$data)) {
-          self$suff_stat <- list(C = cor(self$data), n = nrow(self$data))
-        } else {
-          stop("Data must be a matrix or data frame if numeric.",
-            call. = FALSE
-          )
-        }
-      } else if (is.data.frame(self$data)) {
-        self$suff_stat <- list(dm = data.matrix(self$data), adaptDF = FALSE)
-      } else {
-        stop("Unrecognized data format. The data should be either continouos ",
-          "or discrete, and the data should be in a data.frame.",
-          call. = FALSE
-        )
-      }
+      out <- .get_pcalg_test_from_string(
+        method = private$test_key,
+        X = self$data,
+        suff_stat = TRUE,
+        adaptDF = self$adaptDF,
+        nlev = NULL
+      )
+      self$test <- out$method
+      self$suff_stat <- out$suffStat
     },
 
     #' @description
@@ -153,36 +141,26 @@ pcalgSearch <- R6::R6Class(
     #'
     #' @param method A string specifying the type of test to use.
     #' @param alpha Significance level for the test.
-    set_test = function(method,
-                        alpha = NULL) {
+    set_test = function(method, alpha = 0.05) {
       if (!is.null(alpha)) {
         self$params$alpha <- alpha
+      } else {
+        stop("alpha must be set before using tests", call. = FALSE)
       }
+      if (!is.character(method)) {
+        stop("Currently, only method as string is supported.", call. = FALSE)
+      }
+      private$test_key <- tolower(method)
 
-      method <- tolower(method)
-      switch(method,
-        "fisher_z" = {
-          if (is.null(self$params$alpha)) {
-            stop("Alpha must be set before test.",
-              call. = FALSE
-            )
-          }
-          self$test <- pcalg::gaussCItest
-          self$continuous <- TRUE
-        },
-        "g_square" = {
-          if (is.null(self$params$alpha)) {
-            stop("Alpha must be set before test.",
-              call. = FALSE
-            )
-          }
-          self$test <- private$use_g_square()
-          self$continuous <- FALSE
-        },
-        stop("Unknown test type using pcalg engine: ", method,
-          call. = FALSE
+      if (!is.null(self$data)) {
+        self$set_suff_stat()
+      } else {
+        out <- .get_pcalg_test_from_string(
+          method = private$test_key,
+          suff_stat = FALSE
         )
-      )
+        self$test <- out$method
+      }
     },
 
     #' @description
@@ -378,33 +356,8 @@ pcalgSearch <- R6::R6Class(
     }
   ),
   private = list(
-
-    # Function that will be used to determine which G square test to use.
-    # It checks the number of unique values in the sufficient statistic.
-    use_g_square = function() {
-      return(
-        function(x, y, S, suffStat) {
-          if (private$nlevels == 0) {
-            private$nlevels <- self$suff_stat$dm |>
-              as.factor() |>
-              nlevels()
-          }
-          if (private$nlevels < 2) {
-            stop("The data contains less than 2 unique values.",
-              " If this is the case, there is nothing to discover.",
-              call. = FALSE
-            )
-          }
-          if (private$nlevels == 2) {
-            return(pcalg::binCItest(x, y, S, suffStat))
-          } else {
-            return(pcalg::disCItest(x, y, S, suffStat))
-          }
-        }
-      ) # end return
-    },
-    nlevels = 0L,
     knowledge_function = NULL,
-    score_function = NULL
+    score_function = NULL,
+    test_key = NULL
   )
 )
