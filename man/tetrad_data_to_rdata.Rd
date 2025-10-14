@@ -38,7 +38,7 @@ df <- data.frame(
 if (!rJava::.jniInitialized) rJava::.jinit()
 
 # R -> Tetrad (DataSet)
-jds <- rdata_to_tetrad(df)
+jds <- rdata_to_tetrad(df, int_cols_as_cont = FALSE)
 rJava::.jinstanceof(jds, "edu/cmu/tetrad/data/DataSet") # should be TRUE
 
 # Tetrad (DataSet) -> R
@@ -51,8 +51,4 @@ stopifnot(is.numeric(df_roundtrip$cont), is.integer(df_roundtrip$disc))
 # Values should match (up to numeric tolerance)
 stopifnot(all.equal(df$cont, df_roundtrip$cont))
 stopifnot(identical(df$disc, df_roundtrip$disc))
-
-# Intentional-error demo: a non-numeric column is not allowed
-bad_df <- data.frame(cont = rnorm(3), bad = c("a", "b", "c"))
-try(rdata_to_tetrad(bad_df)) # should error: non-numeric columns are not supported
 }
