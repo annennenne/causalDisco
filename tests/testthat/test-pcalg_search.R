@@ -13,7 +13,7 @@ test_that("initialize sets clean defaults", {
   expect_null(s$score)
   expect_null(s$test)
   expect_null(s$knowledge)
-  expect_null(s$params)
+  expect_equal(s$params, list())
   expect_null(s$suff_stat)
   expect_null(s$alg)
   expect_null(s$continuous)
@@ -57,131 +57,103 @@ test_that("set_suff_stat guards and branches", {
     fixed = TRUE
   )
 
-  # error: continuous flag unknown
-  s$set_test("fisher_z", alpha = 0.05)
-  s$continuous <- NULL
-  expect_error(
-    s$set_suff_stat(),
-    "The pcalgSearch class does not have knowledge on whether the
-             sufficient statistic is for a continuous or discrete test.
-             Please set test using set_test() or set continuous directly
-             by self$continuous <- TRUE/FALSE.",
-    fixed = TRUE
-  )
-
-  # continuous = TRUE with good data
-  s$continuous <- TRUE
+  # continuous with good data via getter
+  s <- pcalgSearch$new()
+  s$set_test("fisher_z")
+  s$data <- data.frame(X = rnorm(10), Y = rnorm(10))
   expect_silent(s$set_suff_stat())
   expect_true(is.list(s$suff_stat))
   expect_named(s$suff_stat, c("C", "n"))
 
-  # continuous = TRUE but bad data type
-  s$data <- c(1, 2, 3) # not matrix/data.frame
-  expect_error(
-    s$set_suff_stat(),
-    "Data must be a matrix or data frame if numeric.",
-    fixed = TRUE
+  # discrete via getter, expects dm + nlev + adaptDF
+  s <- pcalgSearch$new()
+  s$set_test("g_square")
+  s$data <- data.frame(
+    A = factor(sample(letters[1:2], 10, TRUE)),
+    B = factor(sample(letters[1:2], 10, TRUE))
   )
-
-  # discrete branch (FALSE) with data.frame
-  s$continuous <- FALSE
-  s$data <- data.frame(A = sample(letters[1:2], 10, TRUE), B = sample(letters[1:2], 10, TRUE))
   expect_silent(s$set_suff_stat())
-  expect_named(s$suff_stat, c("dm", "adaptDF"))
+  expect_named(s$suff_stat, c("dm", "nlev", "adaptDF"))
 })
 
-test_that("set_suff_stat errors on unrecognized data format", {
+test_that("set_suff_stat works on matrix input for g_square", {
   skip_if_not_installed("pcalg")
 
   s <- pcalgSearch$new()
-  s$set_params(list(alpha = 0.05))
-  s$set_test("g_square") # sets continuous = FALSE
-  s$data <- matrix(1L, nrow = 5, ncol = 2) # not a data.frame when discrete
-
-  expect_error(
-    s$set_suff_stat(),
-    "Unrecognized data format. The data should be either continouos or discrete, and the data should be in a data.frame.",
-    fixed = TRUE
-  )
+  s$set_test("g_square")
+  m <- matrix(sample(0:1, 20, TRUE), ncol = 2)
+  colnames(m) <- c("A", "B")
+  expect_silent(s$set_data(m, set_suff_stat = TRUE))
+  expect_named(s$suff_stat, c("dm", "nlev", "adaptDF"))
 })
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # set_test()
 # ──────────────────────────────────────────────────────────────────────────────
-
-test_that("set_test requires alpha for both tests, sets flags, unknown test errors", {
-  s <- pcalgSearch$new()
-
-  # fisher_z requires alpha
-  expect_error(
-    s$set_test("fisher_z"),
-    "Alpha must be set before test.",
-    fixed = TRUE
-  )
-  s$set_params(list())
-  s$set_test("fisher_z", alpha = 0.01)
-  expect_identical(s$test, pcalg::gaussCItest)
-  expect_true(s$continuous)
-
-  # g_square requires alpha and sets continuous = FALSE
-  s <- pcalgSearch$new()
-  expect_error(
-    s$set_test("g_square"),
-    "Alpha must be set before test.",
-    fixed = TRUE
-  )
-  s$set_params(list())
-  s$set_test("g_square", alpha = 0.05)
-  expect_false(s$continuous)
-
-  # unknown test
-  expect_error(
-    s$set_test("not-a-test", alpha = 0.05),
-    "Unknown test type using pcalg engine: not-a-test",
-    fixed = TRUE
-  )
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
-# use_g_square private function
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("private use_g_square picks binCItest/disCItest and low-unique error", {
+test_that("set_test stores key and resolves test in set_suff_stat", {
   skip_if_not_installed("pcalg")
 
-  set.seed(1)
+  s <- pcalgSearch$new()
+  df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
+  colnames(df) <- c("X", "Y")
+  s$set_test("fisher_z")
+  s$set_data(df, set_suff_stat = TRUE)
+  expect_identical(s$test, pcalg::gaussCItest)
 
-  # less than 2 uniques -> error
-  s0 <- pcalgSearch$new()
-  s0$set_params(list(alpha = 0.05))
-  s0$set_test("g_square")
-  s0$data <- data.frame(X = rep(1L, 20), Y = rep(1L, 20)) # one unique value only
-  s0$set_suff_stat()
-  gfun0 <- s0$test
+  s2 <- pcalgSearch$new()
+  ddisc <- data.frame(
+    A = factor(sample(0:1, 50, TRUE)),
+    B = factor(sample(0:1, 50, TRUE))
+  )
+  s2$set_test("g_square")
+  s2$set_data(ddisc, set_suff_stat = TRUE)
+  expect_true(is.function(s2$test))
+})
+
+
+test_that("set_test unknown test errors", {
+  s <- pcalgSearch$new()
+
   expect_error(
-    gfun0(1, 2, integer(), s0$suff_stat),
-    "The data contains less than 2 unique values. If this is the case, there is nothing to discover.",
+    s$set_test("not-a-test"),
+    "Unknown method: not-a-test",
     fixed = TRUE
   )
-
-  # exactly 2 uniques -> binCItest path
-  s2 <- pcalgSearch$new()
-  s2$set_params(list(alpha = 0.05))
-  s2$set_test("g_square")
-  s2$data <- data.frame(X = sample(0:1, 40, TRUE), Y = sample(0:1, 40, TRUE), Z = sample(0:1, 40, TRUE))
-  s2$set_suff_stat()
-  gfun2 <- s2$test
-  expect_silent(gfun2(1, 2, integer(), s2$suff_stat))
-
-  # more than 2 uniques -> disCItest path
-  s3 <- pcalgSearch$new()
-  s3$set_params(list(alpha = 0.05))
-  s3$set_test("g_square")
-  s3$data <- data.frame(X = sample(0:2, 40, TRUE), Y = sample(0:2, 40, TRUE), Z = sample(0:2, 40, TRUE))
-  s3$set_suff_stat()
-  gfun3 <- s3$test
-  expect_silent(gfun3(1, 2, integer(), s3$suff_stat))
 })
+
+# ──────────────────────────────────────────────────────────────────────────────
+# g_square
+# ──────────────────────────────────────────────────────────────────────────────
+test_that("g_square dispatches to binCItest or disCItest", {
+  skip_if_not_installed("pcalg")
+  set.seed(1)
+
+  # binary levels -> binCItest path executes
+  s2 <- pcalgSearch$new()
+  d2 <- data.frame(
+    X = factor(sample(0:1, 80, TRUE)),
+    Y = factor(sample(0:1, 80, TRUE)),
+    Z = factor(sample(0:1, 80, TRUE))
+  )
+  s2$set_test("g_square")
+  s2$set_data(d2, set_suff_stat = TRUE)
+  p2 <- s2$test(1, 2, integer(), s2$suff_stat)
+  expect_type(p2, "double")
+
+  # multi-level -> disCItest path executes
+  s3 <- pcalgSearch$new()
+  d3 <- data.frame(
+    X = factor(sample(0:2, 80, TRUE)),
+    Y = factor(sample(0:2, 80, TRUE)),
+    Z = factor(sample(0:2, 80, TRUE))
+  )
+  s3$set_test("g_square")
+  s3$set_data(d3, set_suff_stat = TRUE)
+  p3 <- s3$test(1, 2, integer(), s3$suff_stat)
+  expect_type(p3, "double")
+})
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # set_score
@@ -335,6 +307,29 @@ test_that("knowledge builder errors if data missing", {
   )
 })
 
+test_that("set_knowledge defers building constraints and validates input", {
+  s_bad <- pcalgSearch$new()
+  expect_error(
+    s_bad$set_knowledge(knowledge_obj = 123),
+    class = "simpleError"
+  )
+  skip_if_not_installed("pcalg")
+
+  df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
+  s <- pcalgSearch$new()
+  kn <- knowledge(
+    df,
+    required(A ~ B),
+    forbidden(B ~ C)
+  )
+  s$set_knowledge(kn, directed_as_undirected = TRUE)
+  s$set_test("fisher_z")
+  s$set_data(df, set_suff_stat = TRUE)
+  s$set_alg("pc")
+  expect_s3_class(s$run_search(), "discography")
+})
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # run_search()
 # ──────────────────────────────────────────────────────────────────────────────
@@ -350,6 +345,7 @@ test_that("run_search errors in correct order and messages", {
 
   df <- matrix(rnorm(30), ncol = 3) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z")
+  s$set_test("fisher_z")
   s$set_data(df, set_suff_stat = FALSE)
 
   expect_error(
@@ -359,7 +355,6 @@ test_that("run_search errors in correct order and messages", {
   )
 
   s$set_params(list(alpha = 0.05))
-  s$set_test("fisher_z")
   s$set_alg("pc")
   expect_error(
     s$run_search(),
@@ -375,23 +370,23 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   df <- matrix(rnorm(100), ncol = 5) |> as.data.frame()
   colnames(df) <- LETTERS[1:5]
 
-  # no score_function path: PC
+  # PC path
   s_pc <- pcalgSearch$new()
-  s_pc$set_params(list(alpha = 0.05, m.max = 1L))
-  s_pc$set_test("fisher_z")
+  s_pc$set_test("fisher_z", alpha = 0.01)
+  s_pc$set_data(df, set_suff_stat = TRUE)
   s_pc$set_alg("pc")
-  res_pc <- s_pc$run_search(df)
+  res_pc <- s_pc$run_search()
   expect_s3_class(res_pc, "discography")
 
-  # score_function path: GES without knowledge
+  # GES without knowledge
   s_ges <- pcalgSearch$new()
   s_ges$set_alg("ges")
   s_ges$set_score("sem_bic")
   res_ges <- s_ges$run_search(df)
   expect_s3_class(res_ges, "discography")
 
-  # score_function path + knowledge with fixedEdges -> explicit warning
-  kn_req <- knowledge(df, required(A ~ B)) # required edge
+  # GES with knowledge warns on fixedEdges
+  kn_req <- knowledge(df, required(A ~ B))
   s_ges2 <- pcalgSearch$new()
   s_ges2$set_alg("ges")
   s_ges2$set_score("sem_bic")
