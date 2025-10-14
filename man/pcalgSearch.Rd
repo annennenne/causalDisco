@@ -80,9 +80,17 @@ The parameters are passed to the test and algorithm functions.}
 sufficient statistic depends on which test is being used.}
 
 \item{\code{continuous}}{Logical; whether the sufficient statistic is for a
-continuous test.}
+continuous test. If both continuous and discrete are \code{TRUE}, the
+sufficient statistic is build for a mixed test.}
+
+\item{\code{discrete}}{Logical; whether the sufficient statistic is for a
+discrete test. If both continuous and discrete are \code{TRUE}, the sufficient
+statistic is build for a mixed test.}
 
 \item{\code{knowledge}}{A list of fixed constraints for the search algorithm.}
+
+\item{\code{adaptDF}}{Logical; whether to adapt the degrees of freedom
+for discrete tests.}
 }
 \if{html}{\out{</div>}}
 }
@@ -164,7 +172,7 @@ Sets the sufficient statistic for the data.
 \subsection{Method \code{set_test()}}{
 Sets the test for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{pcalgSearch$set_test(method, alpha = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{pcalgSearch$set_test(method, alpha = 0.05)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
