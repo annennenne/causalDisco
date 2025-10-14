@@ -10,6 +10,7 @@ meta
 courses
 presentations
 notes
+docker
 ^webtool$
 README.*
 ^cran-comments\.md$
