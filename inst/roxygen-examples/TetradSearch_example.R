@@ -7,9 +7,6 @@
 data("tpcExample")
 
 # Recommended:
-pc(engine = "tetrad", test = "conditional_gaussian")(tpcExample)
-
-# or
 my_pc <- pc(engine = "tetrad", test = "conditional_gaussian")
 my_pc(tpcExample)
 
