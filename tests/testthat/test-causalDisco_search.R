@@ -60,27 +60,11 @@ test_that("set_score internal unsupported method branch errors", {
 # Tests
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("set_test maps names", {
-  s <- causalDiscoSearch$new()
-
-  s$set_test("fisher_z")
-  expect_identical(s$test, corTest)
-
-  s$set_test("reg")
-  expect_identical(s$test, regTest)
-
-  expect_error(
-    s$set_test("nope"),
-    "Unknown test type using causalDisco engine: nope",
-    fixed = TRUE
-  )
-})
-
 test_that("set_test unknown method errors", {
   s <- causalDiscoSearch$new()
   expect_error(
     s$set_test("not-a-test"),
-    "Unknown test type using causalDisco engine: not-a-test",
+    "Unknown method: not-a-test",
     fixed = TRUE
   )
 })
@@ -106,40 +90,6 @@ test_that("initialize sets sensible defaults", {
 # Sufficient Statistics
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("set_suff_stat requires data and test; builds correct suff stats", {
-  s <- causalDiscoSearch$new()
-
-  expect_error(
-    s$set_suff_stat(),
-    "Data must be set before sufficient statistic.",
-    fixed = TRUE
-  )
-
-  s$data <- data.frame(X = rnorm(100), Y = rnorm(100))
-  expect_error(
-    s$set_suff_stat(),
-    "Test must be set before sufficient statistic.",
-    fixed = TRUE
-  )
-
-  s$set_test("reg")
-  expect_silent(s$set_suff_stat())
-  expect_true(is.list(s$suff_stat))
-  expect_true("data" %in% names(s$suff_stat) || "C" %in% names(s$suff_stat) ||
-    "binary" %in% names(s$suff_stat))
-
-  s$set_test("fisher_z")
-  expect_silent(s$set_suff_stat())
-  expect_named(s$suff_stat, c("C", "n"))
-
-  s$data <- c(1, 2, 3)
-  expect_error(
-    s$set_suff_stat(),
-    "Data must be a matrix or data frame.",
-    fixed = TRUE
-  )
-})
-
 test_that("set_suff_stat covers reg, cor and bad-type paths", {
   s <- causalDiscoSearch$new()
   df <- data.frame(X = rnorm(100), Y = rnorm(100))
@@ -155,14 +105,7 @@ test_that("set_suff_stat covers reg, cor and bad-type paths", {
 
   expect_error(
     s$set_test("bad"),
-    "Unknown test type using causalDisco engine: bad",
-    fixed = TRUE
-  )
-
-  s$data <- c(1, 2, 3)
-  expect_error(
-    s$set_suff_stat(),
-    "Data must be a matrix or data frame.",
+    "Unknown method: bad",
     fixed = TRUE
   )
 })
@@ -299,6 +242,8 @@ test_that("run_search errors are thrown in the right order", {
 
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
+
+  s$set_test("fisher_z")
   s$set_data(df, set_suff_stat = FALSE)
 
   expect_error(
@@ -307,7 +252,6 @@ test_that("run_search errors are thrown in the right order", {
     fixed = TRUE
   )
 
-  s$set_test("fisher_z")
   s$set_alg("tpc")
   expect_error(
     s$run_search(),
@@ -452,8 +396,8 @@ test_that("run_search errors when suff_stat missing for constraint-based algs", 
   s <- causalDiscoSearch$new()
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
-  s$set_data(df, set_suff_stat = FALSE)
   s$set_test("fisher_z")
+  s$set_data(df, set_suff_stat = FALSE)
   s$set_alg("tpc")
   expect_error(
     s$run_search(),

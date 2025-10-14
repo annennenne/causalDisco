@@ -212,7 +212,7 @@ Sets the sufficient statistic for the data.
 \subsection{Method \code{set_test()}}{
 Sets the test for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{causalDiscoSearch$set_test(method, alpha = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{causalDiscoSearch$set_test(method, alpha = 0.05)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

@@ -125,26 +125,17 @@ causalDiscoSearch <- R6::R6Class(
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
-      if (is.null(self$test)) {
+      if (is.null(private$test_key)) {
         stop("Test must be set before sufficient statistic.", call. = FALSE)
       }
 
-      switch(private$test_kind,
-        "fisher_z" = {
-          if (!(is.matrix(self$data) || is.data.frame(self$data))) {
-            stop("Data must be a matrix or data frame.", call. = FALSE)
-          }
-          self$suff_stat <- list(
-            C = stats::cor(self$data, use = "pairwise.complete.obs"),
-            n = nrow(self$data)
-          )
-        },
-        "reg" = {
-          self$suff_stat <- make_suff_stat(self$data, type = "regTest")
-        },
-        # extra precaution
-        stop("Internal: unsupported test kind.", call. = FALSE) # nocov
+      out <- .get_pcalg_test_from_string(
+        method    = private$test_key,
+        X         = self$data,
+        suff_stat = TRUE
       )
+      self$test <- out$method
+      self$suff_stat <- out$suffStat
       invisible(self)
     },
 
@@ -153,24 +144,19 @@ causalDiscoSearch <- R6::R6Class(
     #'
     #' @param method A string specifying the type of test to use.
     #' @param alpha Significance level for the test.
-    set_test = function(method, alpha = NULL) {
+    set_test = function(method, alpha = 0.05) {
       method <- tolower(method)
       if (!is.null(alpha)) {
         self$params$alpha <- alpha
       }
-      switch(method,
-        "fisher_z" = {
-          self$test <- corTest
-          private$test_kind <- "fisher_z"
-        },
-        "reg" = {
-          self$test <- regTest
-          private$test_kind <- "reg"
-        },
-        stop("Unknown test type using causalDisco engine: ", method,
-          call. = FALSE
-        )
-      )
+      private$test_key <- method
+
+      if (!is.null(self$data)) {
+        self$set_suff_stat()
+      } else {
+        out <- .get_pcalg_test_from_string(method = private$test_key, suff_stat = FALSE)
+        self$test <- out$method
+      }
       invisible(self)
     },
 
@@ -344,7 +330,7 @@ causalDiscoSearch <- R6::R6Class(
   ),
   private = list(
     alg_method = NULL, # "tpc", "tfci", or "tges"
-    test_kind = NULL, # "fisher_z" or "reg"
+    test_key = NULL,
     directed_as_undirected = FALSE,
     score_method = NULL,
     score_params = NULL,
