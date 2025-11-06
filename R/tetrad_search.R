@@ -1348,7 +1348,8 @@ TetradSearch <- R6Class(
     #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
     #' as continuous, since Tetrad does not support ordinal data, but only
     #' either continuous or nominal data. Default is `TRUE.`
-    #' @return discography with graph. Also populates \code{self$java}.
+    #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+    #' Also populates \code{self$java}.
     run_search = function(data = NULL,
                           bootstrap = FALSE,
                           int_cols_as_cont = TRUE) {
@@ -1374,7 +1375,14 @@ TetradSearch <- R6Class(
       if (bootstrap) {
         self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
       }
-      return(self$result |> knowledgeable_caugi())
+
+      # todo: make a better solution, probably in caugi
+      out <- tryCatch(self$result |> knowledgeable_caugi(),
+        error = function(e) {
+          self$result |> knowledgeable_caugi(class = "PAG")
+        }
+      )
+      out
     },
     #' @description Configures bootstrapping parameters for the Tetrad search.
     #' @param number_resampling (integer) Number of bootstrap samples.
