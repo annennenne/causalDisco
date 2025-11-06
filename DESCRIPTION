@@ -62,6 +62,7 @@ Collate:
     'amat.R'
     'bnlearn_search.R'
     'cast_obj.R'
+    'caugi_with_knowledge.R'
     'causalDisco-package.R'
     'causalDisco_search.R'
     'check_args.R'
