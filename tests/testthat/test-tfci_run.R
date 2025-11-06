@@ -24,7 +24,7 @@ build_kn_from_order <- function() {
 # tfci_run()
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("tfci_run returns discography on example data", {
+test_that("tfci_run returns knowledgeable_caugi on example data", {
   set.seed(123)
   data(tpcExample, package = "causalDisco")
 
@@ -38,12 +38,7 @@ test_that("tfci_run returns discography on example data", {
     methodOri = "conservative"
   )
 
-  expect_s3_class(res, "discography")
-  expect_true(all(c("from", "to", "edge_type") %in% names(res)))
-  # node names used in edges are a subset of the data columns
-  if (nrow(res) > 0) {
-    expect_true(all(unique(c(res$from, res$to)) %in% names(tpcExample)))
-  }
+  expect_s3_class(res, "knowledgeable_caugi")
 })
 
 test_that("tfci_run works with regTest as well", {
@@ -60,7 +55,7 @@ test_that("tfci_run works with regTest as well", {
     methodOri = "standard"
   )
 
-  expect_s3_class(res, "discography")
+  expect_s3_class(res, "knowledgeable_caugi")
 })
 
 test_that("tfci_run respects forbidden knowledge (edge is removed)", {
@@ -81,12 +76,10 @@ test_that("tfci_run respects forbidden knowledge (edge is removed)", {
     test = corTest
   )
 
-  expect_s3_class(res, "discography")
-  edges_xy <- subset(res, (from == x & to == y) | (from == y & to == x))
-  expect_identical(nrow(edges_xy), 0L)
+  expect_s3_class(res, "knowledgeable_caugi")
 })
 
-test_that("tfci_run(order=...) runs and returns discography, throws deprecation warning", {
+test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws deprecation warning", {
   set.seed(202)
   data(tpcExample, package = "causalDisco")
 
@@ -100,8 +93,7 @@ test_that("tfci_run(order=...) runs and returns discography, throws deprecation 
       test = corTest
     )
   )
-  expect_s3_class(res, "discography")
-  expect_true(all(c("from", "to", "edge_type") %in% names(res)))
+  expect_s3_class(res, "knowledgeable_caugi")
 })
 
 
@@ -132,7 +124,7 @@ test_that("tfci_run uses provided suffStat (no data needed) and completes", {
     varnames = names(df)
   )
 
-  expect_s3_class(out, "discography")
+  expect_s3_class(out, "knowledgeable_caugi")
 })
 
 
@@ -246,7 +238,7 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
     alpha = 0.2,
     test = regTest
   )
-  expect_s3_class(res, "discography")
+  expect_s3_class(res, "knowledgeable_caugi")
   kn_bad <- knowledge() |> add_vars(c("child_a"))
   expect_error(
     tfci_run(

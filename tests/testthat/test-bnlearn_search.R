@@ -199,7 +199,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
 
   # run without knowledge first
   g1 <- s$run_search()
-  expect_true(inherits(g1, "discography"))
+  expect_true(inherits(g1, "knowledgeable_caugi"))
 
   # whitelist only
   kn <- knowledge(
@@ -207,7 +207,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
   )
   s$set_knowledge(kn)
   g2 <- s$run_search()
-  expect_true(inherits(g2, "discography"))
+  expect_true(inherits(g2, "knowledgeable_caugi"))
 
   # blacklist only
   kn <- knowledge(
@@ -215,7 +215,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
   )
   s$set_knowledge(kn)
   g3 <- s$run_search()
-  expect_true(inherits(g3, "discography"))
+  expect_true(inherits(g3, "knowledgeable_caugi"))
 
   # both present
   kn <- knowledge(
@@ -224,11 +224,11 @@ test_that("run_search works and covers whitelist/blacklist branches", {
   )
   s$set_knowledge(kn)
   g4 <- s$run_search()
-  expect_true(inherits(g4, "discography"))
+  expect_true(inherits(g4, "knowledgeable_caugi"))
 
   # run with df2
   g5 <- s$run_search(df2)
-  expect_true(inherits(g4, "discography"))
+  expect_true(inherits(g4, "knowledgeable_caugi"))
 })
 
 test_that("set_knowledge delegates to validators (error path covered)", {

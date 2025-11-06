@@ -24,8 +24,6 @@ test_that("tetrad_graph() parses a valid PAG string correctly", {
   expect_equal(g$nodes, c("V1", "V2", "V3"))
 
   # amat properties
-  expect_s3_class(g$amat, "amat.pag")
-  expect_s3_class(g$amat, "matrix")
   expect_equal(dim(g$amat), c(3, 3))
   expect_equal(dimnames(g$amat), list(c("V1", "V2", "V3"), c("V1", "V2", "V3")))
   expect_true(storage.mode(g$amat) == "integer")

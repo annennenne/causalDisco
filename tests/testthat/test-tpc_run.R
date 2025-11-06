@@ -152,7 +152,7 @@ test_that("tpc_run(order=...) runs and returns tpdag, throws deprecation warning
   expect_identical(rownames(A), colnames(A))
 })
 
-test_that("tpc_run supports tskeleton, pcAlgo, and discography outputs", {
+test_that("tpc_run supports tskeleton, pcAlgo, and knowledgeable_caugi outputs", {
   set.seed(707)
   data(tpcExample, package = "causalDisco")
 
@@ -189,10 +189,9 @@ test_that("tpc_run supports tskeleton, pcAlgo, and discography outputs", {
     knowledge = kn,
     alpha = 0.03,
     test = regTest,
-    output = "discography"
+    output = "caugi"
   )
-  expect_s3_class(res_disco, "discography")
-  expect_true(all(c("from", "to", "edge_type") %in% names(res_disco)))
+  expect_s3_class(res_disco, "knowledgeable_caugi")
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -235,7 +234,7 @@ test_that("tpc_run input guards fail fast with clear messages", {
 
   expect_error(
     tpc_run(data = df, knowledge = kn, output = "nope"),
-    "Output must be tpdag, tskeleton, pcAlgo, or discography.",
+    "Output must be tpdag, tskeleton, pcAlgo, or caugi",
     fixed = TRUE
   )
   expect_error(

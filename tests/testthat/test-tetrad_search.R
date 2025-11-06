@@ -584,7 +584,7 @@ test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
   )
 
   # main return type
-  expect_s3_class(res, "discography")
+  expect_s3_class(res, "knowledgeable_caugi")
 
   # java result object exists
   expect_jobj(ts$get_java())
@@ -610,7 +610,7 @@ test_that("run_search(df) works instead of using set_data(df)", {
   res <- ts$run_search(df)
 
   # main return type
-  expect_s3_class(res, "discography")
+  expect_s3_class(res, "knowledgeable_caugi")
 
   # java result object exists
   expect_jobj(ts$get_java())
@@ -635,7 +635,7 @@ test_that("getters work after a run", {
   ts$set_alg("fges")
 
   res <- ts$run_search()
-  expect_s3_class(res, "discography")
+  expect_s3_class(res, "knowledgeable_caugi")
 
   # data + java objects
   expect_jobj(ts$get_data())
