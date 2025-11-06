@@ -48,7 +48,7 @@ s_tpc$set_test("fisher_z", alpha = 0.2)
 s_tpc$set_alg("tpc")
 s_tpc$set_knowledge(kn, directed_as_undirected = TRUE)
 s_tpc$set_data(dat)
-res_tpc <- s_tpc$run_search() # returns a discography-like result
+res_tpc <- s_tpc$run_search()
 print(res_tpc)
 
 # Switch to TFCI on the same object (reuses suff_stat/test)

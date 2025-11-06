@@ -2,17 +2,16 @@
 % Please edit documentation in R/caugi_with_knowledge.R
 \name{knowledgeable_caugi}
 \alias{knowledgeable_caugi}
-\alias{new_knowledgeable_caugi}
 \title{A \code{caugi} with an attached \code{knowledge} object}
 \usage{
-knowledgeable_caugi(graph, kn = knowledge())
-
-new_knowledgeable_caugi(cg, kn)
+knowledgeable_caugi(graph, kn = knowledge(), class = "PDAG")
 }
 \arguments{
 \item{graph}{A causal graph object}
 
 \item{kn}{A \code{knowledge} object. Default is empty knowledge object.}
+
+\item{class}{A string describing the graph class.}
 
 \item{nodes}{Optional character vector all the node names.}
 }

@@ -1077,7 +1077,8 @@ either continuous or nominal data. Default is \code{TRUE.}}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-discography with graph. Also populates \code{self$java}.
+A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
+Also populates \code{self$java}.
 }
 }
 \if{html}{\out{<hr>}}
