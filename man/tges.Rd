@@ -19,7 +19,8 @@ tges(engine = c("causalDisco"), score, ...)
 }
 \value{
 A function of class \code{"tges"} that takes a single argument \code{data}
-(a data frame) and returns an \code{discography} object.
+(a data frame) and returns a \code{caugi} and \code{knowledge} (\code{knowledgeable_caugi})
+object.
 }
 \description{
 Run the Temporal GES algorithm for causal discovery using the causalDisco

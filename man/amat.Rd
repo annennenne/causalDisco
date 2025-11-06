@@ -8,7 +8,7 @@ amat(x)
 }
 \arguments{
 \item{x}{\code{tpdag}, \code{cpdag}, \code{tpag}, \code{pag}, or
-\code{discography} object as obtained from \link{tpc}, \link{pc},
+\code{caugi} object as obtained from \link{tpc}, \link{pc},
 \link{tfci}, or \link{fci}, respectively.}
 }
 \description{

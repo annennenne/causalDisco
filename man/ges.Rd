@@ -15,11 +15,13 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 
 \item{score}{Character; name of the scoring function to use.}
 
-\item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
+\item{...}{Additional arguments passed to the chosen engine (e.g. test or
+algorithm parameters).}
 }
 \value{
 A function of class \code{"ges"} that takes a single argument \code{data}
-(a data frame) and returns an \code{discography} object.
+(a data frame) and returns an \code{caugi} and a \code{knowledge}
+(\code{knowledgeable_caugi}) object.
 }
 \description{
 Run the GES algorithm for causal discovery using one of several engines.

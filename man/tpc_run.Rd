@@ -14,7 +14,7 @@ tpc_run(
   method = "stable.fast",
   methodNA = "none",
   methodOri = "conservative",
-  output = "discography",
+  output = "caugi",
   directed_as_undirected = FALSE,
   varnames = NULL,
   ...
@@ -59,12 +59,12 @@ error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 Currently only the conservative method is available.}
 
 \item{output}{One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
-or \code{"discography"}. If \code{"tskeleton"}, return the temporal
+or \code{"caugi"}. If \code{"tskeleton"}, return the temporal
 skeleton without directions. If \code{"tpdag"} (default), return a
 temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
 return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
-\pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
-\code{discography()}.}
+\pkg{pcalg}. If \code{"caugi"}, return a \code{caugi} and a \code{knowledge}
+(\code{knowledgeable_caugi}) object.}
 
 \item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
 edges in \code{knowledge} as undirected during skeleton learning. This
@@ -82,8 +82,8 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
 \code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
 and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
-\code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
-a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
+\code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "caugi"},
+a \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
 Run a tier-aware variant of the PC algorithm that respects background

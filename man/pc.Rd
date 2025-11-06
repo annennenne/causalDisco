@@ -22,7 +22,7 @@ pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
 \value{
 A function of class \code{"pc"} that takes a single argument \code{data}
-(a data frame) and returns an \code{discography} object.
+(a data frame) and returns an \code{caugi} and a \code{knowledge} object.
 }
 \description{
 Run the PC algorithm for causal discovery using one of several engines.

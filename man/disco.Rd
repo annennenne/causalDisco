@@ -15,7 +15,7 @@ algorithm.}
 \item{knowledge}{A \code{knowledge} object}
 }
 \value{
-A \code{discography} object.
+A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
 Run a causal discovery method on a data frame.

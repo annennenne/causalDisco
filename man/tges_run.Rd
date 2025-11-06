@@ -17,8 +17,7 @@ At the moment only scores supported are
 \item{verbose}{indicates whether debug output should be printed.}
 }
 \value{
-A \code{discography} object (the canonical representation for
-\code{EssGraph}/\code{TEssGraph} results in this package).
+A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
 Perform causal discovery using the temporal greedy equivalence search algorithm.

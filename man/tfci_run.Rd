@@ -72,9 +72,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{\link[pcalg]{skeleton}} during skeleton construction.}
 }
 \value{
-A \code{discography} tibble with columns \code{from}, \code{to}, and
-\code{edge_type}. The underlying orientation corresponds to a PAG learned by
-TFCI under the supplied temporal background knowledge.
+A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
 Use a modification of the FCI algorithm that makes use of background knowledge
