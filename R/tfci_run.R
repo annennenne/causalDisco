@@ -205,7 +205,7 @@ tfci_run <- function(data = NULL,
   # pack up tpag result
   amat <- graph2amat(res, toFrom = FALSE)
   amat <- methods::as(amat, "matrix")
-  cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
+  cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PAG")
   return(knowledgeable_caugi(cg, knowledge))
 }
 
