@@ -31,15 +31,15 @@ Time to hit the disco 🪩
 `pak` is the easiest way to install `causalDisco` and its dependencies:
 
 ``` r
-install.packages("pak", 
-                 repos = 
-                   sprintf(
-                     "https://r-lib.github.io/p/pak/stable/%s/%s/%s", 
-                     .Platform$pkgType, 
-                     R.Version()$os, 
-                     R.Version()$arch
-                           )
-                 )
+install.packages("pak",
+  repos =
+    sprintf(
+      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
+      .Platform$pkgType,
+      R.Version()$os,
+      R.Version()$arch
+    )
+)
 ```
 
 ### Install `causalDisco`
@@ -54,8 +54,9 @@ If needed, you can check and install system dependencies first:
 
 ``` r
 pak::pkg_sysreqs("github::frederikfabriciusbjerre/causalDisco",
-                 dependencies = TRUE, 
-                 upgrade = TRUE)
+  dependencies = TRUE,
+  upgrade = TRUE
+)
 ```
 
 This will give you a list of system dependencies, which you need to
