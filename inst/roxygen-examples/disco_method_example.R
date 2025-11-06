@@ -77,13 +77,13 @@ toy_graph_builder <- function(knowledge = NULL) {
                 k <- k + 1L
                 out[[k]] <- list(
                   from = vi, to = vj,
-                  edge_type = "-->"
+                  edge = "-->"
                 )
               } else {
                 k <- k + 1L
                 out[[k]] <- list(
                   from = vj, to = vi,
-                  edge_type = "-->"
+                  edge = "-->"
                 )
               }
             } else {
@@ -91,20 +91,27 @@ toy_graph_builder <- function(knowledge = NULL) {
               k <- k + 1L
               out[[k]] <- list(
                 from = vi, to = vj,
-                edge_type = "---"
+                edge = "---"
               )
             }
           }
         }
       }
-      # return a discography-like tibble/data.frame
+      # return a data frame
       if (length(out) == 0L) {
-        return(data.frame(
+        cg <- caugi::caugi(
           from = character(), to = character(),
-          edge_type = character()
-        ))
+          edge = character()
+        )
+        return(knowledgeable_caugi(cg))
       }
       do.call(rbind, lapply(out, as.data.frame))
+      cg <- caugi::caugi(
+        from = out$from,
+        to = out$to,
+        edge = out$edge
+      )
+      return(knowledgeable_caugi(cg))
     }
   )
   runner
