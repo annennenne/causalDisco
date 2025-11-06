@@ -19,6 +19,7 @@ SystemRequirements: Java (>= 17). Includes the Tetrad Java library
 Depends: 
     R (>= 4.1.0)
 Imports:
+    caugi,
     dplyr,
     methods,
     pcalg,
