@@ -10,17 +10,20 @@
 #'
 #' @param graph A causal graph object
 #' @param kn A `knowledge` object. Default is empty knowledge object.
-#' @param nodes Optional character vector all the node names.
+#' @param class A string describing the graph class.
 #'
 #' @returns A `caugi` and a `knowledge` object in a list.
 #'
 #' @seealso \code{\link[caugi:caugi]{caugi::caugi()}}
 #' @export
-knowledgeable_caugi <- function(graph, kn = knowledge()) {
+knowledgeable_caugi <- function(graph, kn = knowledge(), class = "PDAG") {
   UseMethod("knowledgeable_caugi")
 }
 
-#' @rdname knowledgeable_caugi
+#' @title Create a new `knowledgeable_caugi` object
+#'
+#' @param cg A `caugi` object
+#' @param kn A `knowledge` object
 #' @export
 new_knowledgeable_caugi <- function(cg, kn) {
   if (!is_knowledge(kn)) {
@@ -32,90 +35,115 @@ new_knowledgeable_caugi <- function(cg, kn) {
       caugi = cg,
       knowledge = kn
     ),
-    class = c("knowledgeable_caugi", "list")
+    class = c("knowledgeable_caugi")
   )
 }
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.default <- function(graph, kn = knowledge()) {
+knowledgeable_caugi.default <- function(graph, kn = knowledge(), class = "PDAG") {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
   if (caugi::is_caugi(graph)) {
     cg <- graph
   } else {
-    cg <- caugi::as_caugi(graph, collapse = TRUE, class = "PDAG")
+    cg <- caugi::as_caugi(graph, collapse = TRUE, class = class)
   }
   new_knowledgeable_caugi(cg, kn)
 }
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.pcAlgo <- function(graph, kn = knowledge()) {
+knowledgeable_caugi.pcAlgo <- function(graph, kn = knowledge(), class = "PDAG") {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
-  cg <- caugi::as_caugi(graph@graph, collapse = TRUE, class = "PDAG")
+  cg <- caugi::as_caugi(graph@graph, collapse = TRUE, class = class)
   new_knowledgeable_caugi(cg, kn)
 }
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.fciAlgo <- function(graph, kn = knowledge()) {
+knowledgeable_caugi.fciAlgo <- function(graph, kn = knowledge(), class = "PAG") {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
   amat <- methods::as(graph, "matrix")
-  cg <- caugi::as_caugi(amat, class = "PAG")
+  cg <- caugi::as_caugi(amat, class = class)
   new_knowledgeable_caugi(cg, kn)
 }
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.tetrad_graph <- function(graph, kn = knowledge()) {
+knowledgeable_caugi.tetrad_graph <- function(graph, kn = knowledge(), class = "PDAG") {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
-  cg <- caugi::as_caugi(graph$amat, collapse = TRUE, class = "PDAG")
+  cg <- caugi::as_caugi(graph$amat, collapse = TRUE, class)
   new_knowledgeable_caugi(cg, kn)
 }
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.EssGraph <- function(graph, kn = knowledge()) {
+knowledgeable_caugi.EssGraph <- function(graph, kn = knowledge(), class = "PDAG") {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
-  parents <- purrr::map2_dfr(
-    seq_along(graph$.in.edges), # numeric child-index
-    graph$.in.edges, # its list of parent-indices
+  nodes <- graph$.nodes
+
+  edges <- purrr::map2_dfr(
+    seq_along(graph$.in.edges),
+    graph$.in.edges,
     \(child_idx, parent_vec) {
       if (length(parent_vec) == 0L) {
-        return(NULL)
+        return(tibble::tibble(from = character(), to = character(), edge = character()))
       }
-
       tibble::tibble(
-        from       = nodes[parent_vec],
-        to         = nodes[child_idx],
-        edge_type  = "-->"
+        from = nodes[parent_vec],
+        to   = rep(nodes[child_idx], length(parent_vec)),
+        edge = rep("-->", length(parent_vec))
       )
     }
   )
-  if (nrow(parents) == 0L) {
-    cg <- caugi(
-      nodes = graph$.nodes,
-      class = "PDAG"
-    )
-  } else {
-    cg <- caugi::caugi(
-      from = lst$from,
-      edge = lst$edges,
-      to = lst$to,
-      nodes = graph$.nodes,
-      class = "PDAG"
-    )
+
+  if (nrow(edges) == 0L) {
+    cg <- caugi::caugi(nodes = nodes, class = "PDAG")
+    return(new_knowledgeable_caugi(cg, kn))
   }
+
+  collapsed <- edges |>
+    dplyr::mutate(
+      canon_from = pmin(from, to),
+      canon_to   = pmax(from, to)
+    ) |>
+    dplyr::group_by(canon_from, canon_to) |>
+    dplyr::summarise(
+      has_fw = any(from == canon_from & to == canon_to),
+      has_bw = any(from == canon_to & to == canon_from),
+      .groups = "drop"
+    ) |>
+    dplyr::transmute(
+      from = dplyr::case_when(
+        has_fw & has_bw ~ canon_from,
+        has_fw ~ canon_from,
+        TRUE ~ canon_to
+      ),
+      to = dplyr::case_when(
+        has_fw & has_bw ~ canon_to,
+        has_fw ~ canon_to,
+        TRUE ~ canon_from
+      ),
+      edge = dplyr::if_else(has_fw & has_bw, "---", "-->")
+    )
+
+  cg <- caugi::caugi(
+    from = collapsed$from,
+    edge = collapsed$edge,
+    to = collapsed$to,
+    nodes = nodes,
+    class = class
+  )
   new_knowledgeable_caugi(cg, kn)
 }
 
