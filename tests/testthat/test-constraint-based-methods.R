@@ -63,7 +63,7 @@ test_that("methods construct disco_method closures and run across engines", {
       expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
 
       res <- m(df)
-      expect_s3_class(res, "discography")
+      expect_s3_class(res, "knowledgeable_caugi")
     }
   }
 })
@@ -84,12 +84,12 @@ test_that("set_knowledge returns a new method and injects knowledge (all engines
       m <- do.call(reg$fn, c(list(engine = engine), args))
 
       res0 <- m(df)
-      expect_s3_class(res0, "discography")
+      expect_s3_class(res0, "knowledgeable_caugi")
 
       m2 <- set_knowledge(m, kn)
       expect_s3_class(m2, c(method_name, "disco_method", "function"))
-      expect_s3_class(m2(df), "discography")
-      expect_s3_class(m(df), "discography")
+      expect_s3_class(m2(df), "knowledgeable_caugi")
+      expect_s3_class(m(df), "knowledgeable_caugi")
     }
   }
 })
@@ -116,7 +116,7 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
       m <- do.call(reg$fn, c(list(engine = engine), args))
 
       res <- disco(df, method = m, knowledge = kn)
-      expect_s3_class(res, "discography")
+      expect_s3_class(res, "knowledgeable_caugi")
     }
   }
 })
@@ -152,7 +152,7 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   runner_t_pc <- pc_tetrad_runner(test = "fisher_z", alpha = 0.05)
   expect_type(runner_t_pc, "list")
   expect_true(is.function(runner_t_pc$run))
-  expect_s3_class(runner_t_pc$run(df), "discography")
+  expect_s3_class(runner_t_pc$run(df), "knowledgeable_caugi")
 
   runner_t_pc2 <- pc_tetrad_runner(
     test = "fisher_z", alpha = 0.05,
@@ -160,7 +160,7 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t_pc2, "list")
   expect_true(is.function(runner_t_pc2$run))
-  expect_s3_class(runner_t_pc2$run(df), "discography")
+  expect_s3_class(runner_t_pc2$run(df), "knowledgeable_caugi")
 
   # pc: pcalg (+ alg args path via m.max)
   runner_p_pc <- pc_pcalg_runner(
@@ -169,19 +169,19 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   )
   expect_type(runner_p_pc, "list")
   expect_true(is.function(runner_p_pc$run))
-  expect_s3_class(runner_p_pc$run(df), "discography")
+  expect_s3_class(runner_p_pc$run(df), "knowledgeable_caugi")
 
   # pc: bnlearn
   runner_b_pc <- pc_bnlearn_runner(test = "fisher_z", alpha = 0.05)
   expect_type(runner_b_pc, "list")
   expect_true(is.function(runner_b_pc$run))
-  expect_s3_class(runner_b_pc$run(df), "discography")
+  expect_s3_class(runner_b_pc$run(df), "knowledgeable_caugi")
 
   # fci: tetrad (incl. extra test/alg params)
   runner_t_fci <- fci_tetrad_runner(test = "fisher_z", alpha = 0.05)
   expect_type(runner_t_fci, "list")
   expect_true(is.function(runner_t_fci$run))
-  expect_s3_class(runner_t_fci$run(df), "discography")
+  expect_s3_class(runner_t_fci$run(df), "knowledgeable_caugi")
 
   runner_t_fci2 <- fci_tetrad_runner(
     test = "fisher_z", alpha = 0.05,
@@ -189,7 +189,7 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t_fci2, "list")
   expect_true(is.function(runner_t_fci2$run))
-  expect_s3_class(runner_t_fci2$run(df), "discography")
+  expect_s3_class(runner_t_fci2$run(df), "knowledgeable_caugi")
 
   # fci: pcalg (+ alg args path)
   runner_p_fci <- fci_pcalg_runner(
@@ -198,5 +198,5 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   )
   expect_type(runner_p_fci, "list")
   expect_true(is.function(runner_p_fci$run))
-  expect_s3_class(runner_p_fci$run(df), "discography")
+  expect_s3_class(runner_p_fci$run(df), "knowledgeable_caugi")
 })
