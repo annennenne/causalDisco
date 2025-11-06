@@ -34,9 +34,7 @@
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See \link[pcalg]{pc} for further details.
 #'
-#' @return A \code{discography} tibble with columns \code{from}, \code{to}, and
-#'   \code{edge_type}. The underlying orientation corresponds to a PAG learned by
-#'   TFCI under the supplied temporal background knowledge.
+#' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
 #' @example inst/roxygen-examples/tfci_example.R
 #'
@@ -205,9 +203,10 @@ tfci_run <- function(data = NULL,
   res <- tpag(fci_skel, knowledge = knowledge, unfVect = unfVect)
 
   # pack up tpag result
-  out <- tamat(amat = res, order = knowledge$tiers$label, type = "ag") |>
-    discography()
-  out
+  amat <- graph2amat(res, toFrom = FALSE)
+  amat <- methods::as(amat, "matrix")
+  cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
+  return(knowledgeable_caugi(cg, knowledge))
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

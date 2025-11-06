@@ -10,7 +10,7 @@
 #'
 #' @example inst/roxygen-examples/disco_example.R
 #'
-#' @returns A `discography` object.
+#' @returns A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
 #' @export
 disco <- function(data, method, knowledge = NULL) {
@@ -30,5 +30,9 @@ disco <- function(data, method, knowledge = NULL) {
       }
     )
   }
-  method(data)
+  out <- method(data)
+  if (!is.null(knowledge)) {
+    out <- set_knowledge(out, knowledge)
+  }
+  out
 }

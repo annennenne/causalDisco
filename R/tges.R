@@ -16,7 +16,8 @@
 #'
 #' @return
 #' A function of class \code{"tges"} that takes a single argument \code{data}
-#' (a data frame) and returns an `discography` object.
+#' (a data frame) and returns a `caugi` and `knowledge` (`knowledgeable_caugi`)
+#' object.
 #'
 #' @export
 tges <- function(

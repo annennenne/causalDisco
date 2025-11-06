@@ -9,13 +9,15 @@
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 #'   }
 #' @param score Character; name of the scoring function to use.
-#' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
+#' @param ... Additional arguments passed to the chosen engine (e.g. test or
+#' algorithm parameters).
 #'
 #' @example inst/roxygen-examples/ges_example.R
 #'
 #' @return
 #' A function of class \code{"ges"} that takes a single argument \code{data}
-#' (a data frame) and returns an `discography` object.
+#' (a data frame) and returns an `caugi` and a `knowledge`
+#' (`knowledgeable_caugi`) object.
 #'
 #' @export
 ges <- function(

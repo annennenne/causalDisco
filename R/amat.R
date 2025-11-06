@@ -15,7 +15,7 @@
 #' mean that i <- j.
 #'
 #' @param x \code{tpdag}, \code{cpdag}, \code{tpag}, \code{pag}, or
-#' \code{discography} object as obtained from \link{tpc}, \link{pc},
+#' \code{caugi} object as obtained from \link{tpc}, \link{pc},
 #' \link{tfci}, or \link{fci}, respectively.
 #'
 #' @export
@@ -26,31 +26,31 @@ amat <- function(x) {
     out <- x$tamat
   } else if (any(c("cpdag", "pag") %in% x_class)) {
     out <- x$amat
-  } else if ("discography" %in% x_class) {
+  } else if ("caugi" %in% x_class) {
     # infer node order
-    nodes <- sort(unique(c(x$from, x$to)))
+    nodes <- x@nodes$name
     n <- length(nodes)
     idx <- stats::setNames(seq_along(nodes), nodes)
 
     # detect PAG-style marks
     pag_marks <- c("<->", "o-o", "--o", "o->")
-    is_pag <- any(x$edge_type %in% pag_marks)
+    is_pag <- any(x@edges$edge %in% pag_marks)
 
     if (!is_pag) {
       # cpdag encoding: 0/1 "from-to"
       A <- matrix(0L, n, n, dimnames = list(nodes, nodes))
       # directed -->
-      dir_rows <- x$edge_type == "-->"
+      dir_rows <- x@edges$edge == "-->"
       if (any(dir_rows)) {
-        fr <- idx[x$from[dir_rows]]
-        to <- idx[x$to[dir_rows]]
+        fr <- idx[x@edges$from[dir_rows]]
+        to <- idx[x@edges$to[dir_rows]]
         A[cbind(to, fr)] <- 1L
       }
       # undirected ---
-      und_rows <- x$edge_type == "---"
+      und_rows <- x@edges$edge == "---"
       if (any(und_rows)) {
-        fr <- idx[x$from[und_rows]]
-        to <- idx[x$to[und_rows]]
+        fr <- idx[x@edges$from[und_rows]]
+        to <- idx[x@edges$to[und_rows]]
         A[cbind(fr, to)] <- 1L
         A[cbind(to, fr)] <- 1L
       }
@@ -71,10 +71,10 @@ amat <- function(x) {
       }
       A <- matrix(0L, n, n, dimnames = list(nodes, nodes))
       for (k in seq_len(nrow(x))) {
-        f <- x$from[[k]]
-        t <- x$to[[k]]
+        f <- x@edges$from[[k]]
+        t <- x@edges$to[[k]]
         if (!nzchar(f) || !nzchar(t) || is.na(f) || is.na(t) || f == t) next
-        codes <- code_pair(x$edge_type[[k]])
+        codes <- code_pair(x@edges$edge[[k]])
         i <- idx[[t]]
         j <- idx[[f]]
         # entry [i, j] is the mark at i on the edge j -> i

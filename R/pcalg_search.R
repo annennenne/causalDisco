@@ -352,7 +352,7 @@ pcalgSearch <- R6::R6Class(
       } else {
         result
       }
-      return(out |> discography())
+      return(out |> knowledgeable_caugi())
     }
   ),
   private = list(

@@ -1374,7 +1374,7 @@ TetradSearch <- R6Class(
       if (bootstrap) {
         self$bootstrap_graphs <- self$alg$getBootstrapGraphs()
       }
-      return(self$result |> discography())
+      return(self$result |> knowledgeable_caugi())
     },
     #' @description Configures bootstrapping parameters for the Tetrad search.
     #' @param number_resampling (integer) Number of bootstrap samples.

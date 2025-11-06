@@ -473,7 +473,7 @@ bnlearnSearch <- R6Class(
       }
 
       result <- do.call(self$alg, arg_list)
-      return(result |> discography())
+      return(result |> knowledgeable_caugi())
     }
   )
 )

@@ -75,15 +75,6 @@ confusion <- function(est_amat, true_amat, type = "adj") {
     return(x)
   }
 
-  if (inherits(x, "discography")) {
-    A <- amat(x)
-    nodes <- rownames(A)
-    if (is.null(nodes)) nodes <- colnames(A)
-    if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(A)))
-    type <- if (inherits(A, "amat.pag")) "ag" else "pdag"
-    return(tamat(A, order = nodes, type = type))
-  }
-
   if (is.matrix(x)) {
     nodes <- rownames(x)
     if (is.null(nodes)) nodes <- colnames(x)
@@ -103,15 +94,6 @@ confusion <- function(est_amat, true_amat, type = "adj") {
     }
     stop("Matrix values not recognized as CPDAG or PAG encoding.")
   }
-
-  d <- try(discography(x), silent = TRUE)
-  if (inherits(d, "try-error")) {
-    stop(
-      "Don't know how to coerce input of class ", paste(class(x), collapse = "/"),
-      " to a 'tamat'. Provide a discography, tamat, or encoded adjacency matrix."
-    )
-  }
-  .as_tamat_any(d)
 }
 
 .align_tamat_nodes <- function(est, tru) {

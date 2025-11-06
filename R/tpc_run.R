@@ -40,12 +40,12 @@
 #' @param methodOri Conflict-handling method when orienting edges.
 #'   Currently only the conservative method is available.
 #' @param output One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
-#'   or \code{"discography"}. If \code{"tskeleton"}, return the temporal
+#'   or \code{"caugi"}. If \code{"tskeleton"}, return the temporal
 #'   skeleton without directions. If \code{"tpdag"} (default), return a
 #'   temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
 #'   return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
-#'   \pkg{pcalg}. If \code{"discography"}, return a tidy tibble of edges via
-#'   \code{discography()}.
+#'   \pkg{pcalg}. If \code{"caugi"}, return a `caugi` and a `knowledge`
+#'   (`knowledgeable_caugi`) object.
 #' @param directed_as_undirected Logical; if \code{TRUE}, treat any directed
 #'   edges in \code{knowledge} as undirected during skeleton learning. This
 #'   is due to the fact that \pkg{pcalg} does not allow directed edges in
@@ -78,8 +78,8 @@
 #' If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
 #' \code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
 #' and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
-#' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "discography"},
-#' a tibble with columns \code{from}, \code{to}, and \code{edge_type}.
+#' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "caugi"},
+#' a `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
 #' @example inst/roxygen-examples/tpc_example.R
 #'
@@ -93,7 +93,7 @@ tpc_run <- function(data = NULL,
                     method = "stable.fast",
                     methodNA = "none",
                     methodOri = "conservative",
-                    output = "discography",
+                    output = "caugi",
                     directed_as_undirected = FALSE,
                     varnames = NULL, ...) {
   .check_if_pkgs_are_installed(
@@ -103,8 +103,8 @@ tpc_run <- function(data = NULL,
     function_name = "tpc"
   )
 
-  if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "discography")) {
-    stop("Output must be tpdag, tskeleton, pcAlgo, or discography.")
+  if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "caugi")) {
+    stop("Output must be tpdag, tskeleton, pcAlgo, or caugi.")
   }
   if (!methodNA %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
@@ -217,13 +217,11 @@ tpc_run <- function(data = NULL,
     return(out)
   } else if (output == "pcAlgo") {
     return(res)
-  } else if (output == "discography") {
-    out <- tamat(
-      amat = graph2amat(res, toFrom = FALSE),
-      order = knowledge$tiers$label
-    ) |>
-      discography()
-    out
+  } else if (output == "caugi") {
+    amat <- graph2amat(res, toFrom = FALSE)
+    amat <- methods::as(amat, "matrix")
+    cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
+    return(knowledgeable_caugi(cg, knowledge))
   }
 }
 

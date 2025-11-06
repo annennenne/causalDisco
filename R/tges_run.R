@@ -17,8 +17,7 @@
 #'
 #' @example inst/roxygen-examples/tges_example.R
 #'
-#' @return A `discography` object (the canonical representation for
-#'   `EssGraph`/`TEssGraph` results in this package).
+#' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
 #' @export
 tges_run <- function(score, verbose = FALSE) {
@@ -143,7 +142,7 @@ tges_run <- function(score, verbose = FALSE) {
     }
   }
   essgraph$.nodes <- score$.nodes
-  return(essgraph |> discography())
+  return(essgraph |> knowledgeable_caugi())
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
