@@ -62,8 +62,10 @@
 #' @importFrom rlang !!
 #'
 #' @example inst/roxygen-examples/knowledge_example.R
-#' @seealso [add_vars()] [add_tier()] [add_to_tier()] [forbid_edge()]
-#' [require_edge()] [add_exogenous()] [forbid_tier_violations()] [seq_tiers()]
+#'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 knowledge <- function(...) {
   .check_if_pkgs_are_installed(
@@ -350,6 +352,9 @@ knowledge <- function(...) {
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 add_vars <- function(.kn, vars) {
   .check_if_pkgs_are_installed(
@@ -389,6 +394,9 @@ add_vars <- function(.kn, vars) {
 #' @returns The updated `knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
@@ -508,6 +516,9 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 add_to_tier <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -603,6 +614,9 @@ add_to_tier <- function(.kn, ...) {
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 forbid_edge <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -634,6 +648,9 @@ forbid_edge <- function(.kn, ...) {
 #' @returns The updated `knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 require_edge <- function(.kn, ...) {
@@ -669,6 +686,9 @@ require_edge <- function(.kn, ...) {
 #'
 #' @example inst/roxygen-examples/knowledge_verbs_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 add_exogenous <- function(.kn, vars) {
   is_knowledge(.kn)
@@ -696,12 +716,36 @@ add_root <- add_exogenous
 #'
 #' @example inst/roxygen-examples/unfreeze_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 unfreeze <- function(.kn) {
   is_knowledge(.kn)
   .kn$frozen <- FALSE
   .kn
 }
+
+#' @title Get tiers
+#'
+#' @description
+#' Get tiers from a `knowledge` object.
+#'
+#' @param kn A `knowledge` object.
+#'
+#' @returns A tibble with the tiers.
+#'
+#' @example inst/roxygen-examples/get_tiers_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
+#'
+#' @export
+get_tiers <- function(kn) {
+  is_knowledge(kn)
+  kn$tiers$label
+}
+
 
 # ────────────────────────────────── Print ─────────────────────────────────────
 #' @title Print a `knowledge` object
@@ -787,6 +831,9 @@ print.knowledge <- function(x, ...) {
 #' @param .kn2 Another `knowledge` object.
 #'
 #' @example inst/roxygen-examples/plus-knowledge_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(.kn1, .kn2) {
@@ -878,6 +925,9 @@ print.knowledge <- function(x, ...) {
 #'
 #' @example inst/roxygen-examples/reorder_tiers_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 reorder_tiers <- function(.kn, order, by_index = FALSE) {
   .check_if_pkgs_are_installed(
@@ -965,6 +1015,9 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
 #'
 #' @example inst/roxygen-examples/reorder_tiers_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 reposition_tier <- function(.kn,
                             tier,
@@ -1040,6 +1093,9 @@ reposition_tier <- function(.kn,
 #'
 #' @example inst/roxygen-examples/is_knowledge_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @keywords internal
 is_knowledge <- function(x) {
   if (!inherits(x, "knowledge")) {
@@ -1061,6 +1117,9 @@ is_knowledge <- function(x) {
 #' @returns An updated `knowledge` object.
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 remove_vars <- function(.kn, ...) {
@@ -1109,6 +1168,9 @@ remove_vars <- function(.kn, ...) {
 #' @returns The updated `knowledge` object.
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 remove_edges <- function(.kn, ...) {
@@ -1160,6 +1222,9 @@ remove_edges <- function(.kn, ...) {
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 remove_tiers <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
@@ -1210,6 +1275,9 @@ remove_tiers <- function(.kn, ...) {
 #' @returns A single string (with newlines) of R code.
 #'
 #' @example inst/roxygen-examples/deparse_knowledge_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 deparse_knowledge <- function(.kn, df_name = NULL) {
@@ -1323,6 +1391,9 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 #'
 #' @example inst/roxygen-examples/as_tetrad_knowledge_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 as_tetrad_knowledge <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1394,6 +1465,9 @@ as_tetrad_knowledge <- function(.kn) {
 #'   symmetrical counterpart. This can only hold for forbidden edges.
 #'
 #' @example inst/roxygen-examples/as_pcalg_constraints_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 as_pcalg_constraints <- function(.kn,
@@ -1516,6 +1590,9 @@ as_pcalg_constraints <- function(.kn,
 #'
 #' @example inst/roxygen-examples/as_bnlearn_knowledge_example.R
 #'
+#' @family knowledge functions
+#' @concept knowledge
+#'
 #' @export
 as_bnlearn_knowledge <- function(.kn) {
   .check_if_pkgs_are_installed(
@@ -1555,6 +1632,9 @@ as_bnlearn_knowledge <- function(.kn) {
 #' @returns The same `knowledge` object with new forbidden edges added.
 #'
 #' @example inst/roxygen-examples/forbid_tier_violations_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 forbid_tier_violations <- function(.kn) {
@@ -1629,6 +1709,9 @@ forbid_tier_violations <- function(.kn) {
 #'   automatically).
 #'
 #' @example inst/roxygen-examples/seq_tiers_example.R
+#'
+#' @family knowledge functions
+#' @concept knowledge
 #'
 #' @export
 seq_tiers <- function(tiers, vars) {

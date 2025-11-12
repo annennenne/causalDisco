@@ -45,3 +45,29 @@ print(kn)
 kn <- remove_tiers(kn, "child")
 print(kn)
 }
+\seealso{
+Other knowledge functions: 
+\code{\link{+.knowledge}()},
+\code{\link{add_exogenous}()},
+\code{\link{add_tier}()},
+\code{\link{add_to_tier}()},
+\code{\link{add_vars}()},
+\code{\link{as_bnlearn_knowledge}()},
+\code{\link{as_pcalg_constraints}()},
+\code{\link{as_tetrad_knowledge}()},
+\code{\link{deparse_knowledge}()},
+\code{\link{forbid_edge}()},
+\code{\link{forbid_tier_violations}()},
+\code{\link{get_tiers}()},
+\code{\link{is_knowledge}()},
+\code{\link{knowledge}()},
+\code{\link{remove_tiers}()},
+\code{\link{remove_vars}()},
+\code{\link{reorder_tiers}()},
+\code{\link{reposition_tier}()},
+\code{\link{require_edge}()},
+\code{\link{seq_tiers}()},
+\code{\link{unfreeze}()}
+}
+\concept{knowledge}
+\concept{knowledge functions}
