@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.4
+Version: 1.0.0
 Authors@R: 
     person("Anne Helby", "Petersen", , "ahpe@sund.ku.dk", role = c("aut", "cre"))
 Description: Various tools for inferring causal models from observational
@@ -17,7 +17,7 @@ SystemRequirements: Java (>= 17). Includes the Tetrad Java library
     Source code: https://github.com/cmu-phil/tetrad
     Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.2.0)
 Imports:
     caugi,
     dplyr,
@@ -63,7 +63,6 @@ Collate:
     'amat.R'
     'bnlearn_search.R'
     'cast_obj.R'
-    'caugi_with_knowledge.R'
     'causalDisco-package.R'
     'causalDisco_search.R'
     'check_args.R'
@@ -72,7 +71,6 @@ Collate:
     'corTest.R'
     'disco.R'
     'disco_method.R'
-    'discography.R'
     'edges.R'
     'engine_registry.R'
     'evaluate.R'
@@ -80,6 +78,7 @@ Collate:
     'gausCorScore.R'
     'ges.R'
     'knowledge.R'
+    'knowledgeable_caugi.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'
