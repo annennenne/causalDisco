@@ -20,6 +20,9 @@ knowledgeable_caugi <- function(graph, kn = knowledge(), class = "PDAG") {
   UseMethod("knowledgeable_caugi")
 }
 
+# delegate field names used by `knowledge` methods
+.knowledge_fields <- c("vars", "tiers", "edges", "frozen")
+
 #' @title Create a new `knowledgeable_caugi` object
 #'
 #' @param cg A `caugi` object
@@ -35,7 +38,7 @@ new_knowledgeable_caugi <- function(cg, kn) {
       caugi = cg,
       knowledge = kn
     ),
-    class = c("knowledgeable_caugi")
+    class = c("knowledgeable_caugi", "knowledge")
   )
 }
 
@@ -154,4 +157,78 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
   }
   method$knowledge <- knowledge
   method
+}
+
+#' @export
+knowledge.knowledgeable_caugi <- function(x) {
+  x$knowledge
+}
+
+#' @title Is it a `knowledgeable_caugi`?
+#'
+#' @param x An object
+#'
+#' @returns `TRUE` if the object is of class `knowledgeable_caugi`, `FALSE` otherwise.
+#' @export
+is_knowledgeable_caugi <- function(x) {
+  inherits(x, "knowledgeable_caugi")
+}
+
+# delegate accessors so `knowledge` verbs operate on the nested object
+
+#' @export
+`$.knowledgeable_caugi` <- function(x, name) {
+  ux <- unclass(x)
+  if (name %in% names(ux)) {
+    return(ux[[name]])
+  }
+  if (name %in% .knowledge_fields) {
+    return(ux$knowledge[[name]])
+  }
+  NULL
+}
+
+#' @export
+`$<-.knowledgeable_caugi` <- function(x, name, value) {
+  ux <- unclass(x)
+  if (name %in% names(ux) && !(name %in% .knowledge_fields)) {
+    ux[[name]] <- value
+    x <- ux
+  } else if (name %in% .knowledge_fields) {
+    ux$knowledge[[name]] <- value
+    x <- ux
+  } else {
+    ux[[name]] <- value
+    x <- ux
+  }
+  class(x) <- c("knowledgeable_caugi", "knowledge")
+  x
+}
+
+#' @export
+`[[.knowledgeable_caugi` <- function(x, name, ...) {
+  ux <- unclass(x)
+  if (is.character(name)) {
+    if (name %in% names(ux)) {
+      return(ux[[name]])
+    }
+    if (name %in% .knowledge_fields) {
+      return(ux$knowledge[[name]])
+    }
+  }
+  ux[[name, ...]]
+}
+
+#' @export
+`[[<-.knowledgeable_caugi` <- function(x, name, value) {
+  ux <- unclass(x)
+  if (is.character(name) && (name %in% .knowledge_fields)) {
+    ux$knowledge[[name]] <- value
+    x <- ux
+  } else {
+    ux[[name]] <- value
+    x <- ux
+  }
+  class(x) <- c("knowledgeable_caugi", "knowledge")
+  x
 }

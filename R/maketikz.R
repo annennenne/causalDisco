@@ -98,6 +98,9 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   } else if ("tamat" %in% class(model)) {
     amat <- model
     order <- attr(model, "order")
+  } else if (is_knowledgeable_caugi(model)) {
+    order <- get_tiers(model)
+    stop("Currently knowledgeable_caugis are not supported")
   } else {
     stop("Input model must be of class tpdag, tskeleton or tamat")
   }
@@ -294,10 +297,6 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
   invisible(out)
 }
-
-
-
-
 
 
 ############################################################################
