@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 1.0.0
+Version: 1.0.0.9000
 Authors@R: 
     person("Anne Helby", "Petersen", , "ahpe@sund.ku.dk", role = c("aut", "cre"))
 Description: Various tools for inferring causal models from observational
@@ -18,8 +18,8 @@ SystemRequirements: Java (>= 17). Includes the Tetrad Java library
     Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
 Depends: 
     R (>= 4.2.0)
+biocViews:
 Imports:
-    caugi,
     dplyr,
     methods,
     pcalg,
