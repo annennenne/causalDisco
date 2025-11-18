@@ -21,10 +21,11 @@
 #'
 #' @export
 pc <- function(
-    engine = c("tetrad", "pcalg", "bnlearn"),
-    test,
-    alpha = 0.05,
-    ...) {
+  engine = c("tetrad", "pcalg", "bnlearn"),
+  test,
+  alpha = 0.05,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"

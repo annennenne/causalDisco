@@ -142,7 +142,6 @@ G1 <- function(confusion) {
 }
 
 
-
 #' Structural hamming distance between adjacency matrices
 #'
 #' Computes the structural hamming distance between two adjacency matrices. This implementation

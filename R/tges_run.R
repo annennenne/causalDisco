@@ -651,7 +651,6 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
         ) - constant
 
 
-
         return(BdeuScore)
       } else {
         skip <- -Inf

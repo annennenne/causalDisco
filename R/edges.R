@@ -38,5 +38,4 @@ edges <- function(amat) {
 }
 
 
-
 ##

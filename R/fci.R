@@ -22,10 +22,11 @@
 #'
 #' @export
 fci <- function(
-    engine = c("tetrad", "pcalg"),
-    test,
-    alpha = 0.05,
-    ...) {
+  engine = c("tetrad", "pcalg"),
+  test,
+  alpha = 0.05,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"

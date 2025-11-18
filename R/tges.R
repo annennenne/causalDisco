@@ -21,9 +21,10 @@
 #'
 #' @export
 tges <- function(
-    engine = c("causalDisco"),
-    score,
-    ...) {
+  engine = c("causalDisco"),
+  score,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"

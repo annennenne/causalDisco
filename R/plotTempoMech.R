@@ -247,7 +247,6 @@ orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
 }
 
 
-
 #' Extract variables that share a prefix
 #'
 #' Generic for selecting variables whose names start with a given prefix.

@@ -17,7 +17,6 @@
 TetradSearch <- R6Class(
   "TetradSearch",
   public = list(
-
     #' @field data Java object that stores the (possibly converted) data set
     #'  used by Tetrad.
     data = NULL,

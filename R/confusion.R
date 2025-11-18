@@ -110,8 +110,6 @@ confusion <- function(est_amat, true_amat, type = "adj") {
 }
 
 
-
-
 # Changed from generic function to allow for class matching for
 # both of the first two arguments (i.e. compare amat with tpdag)
 # #'@export
@@ -204,7 +202,6 @@ dir_confusion <- function(est_amat, true_amat) {
 }
 
 
-
 #' @inherit confusion
 #' @details This is an old version of the function, included for possible
 #' backwards compatibility. Edges are scored as follows: A correctly unoriented edge
@@ -273,11 +270,9 @@ dir_confusion_original <- function(est_amat, true_amat) {
 }
 
 
-
 ###############################################################################################################
 # Not exported below###########################################################################################
 ###############################################################################################################
-
 
 
 adj_fp <- function(est_halfskel, true_halfskel) {

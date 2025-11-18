@@ -21,10 +21,11 @@
 #'
 #' @export
 tpc <- function(
-    engine = c("causalDisco"),
-    test,
-    alpha = 0.05,
-    ...) {
+  engine = c("causalDisco"),
+  test,
+  alpha = 0.05,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"

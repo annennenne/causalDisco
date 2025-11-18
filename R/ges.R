@@ -21,9 +21,10 @@
 #'
 #' @export
 ges <- function(
-    engine = c("tetrad", "pcalg"),
-    score,
-    ...) {
+  engine = c("tetrad", "pcalg"),
+  score,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
