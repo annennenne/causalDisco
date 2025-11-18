@@ -25,7 +25,7 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
     x_amat <- x
     x_order <- attr(x, "order")
     x_psi <- NA
-  } else if ("tskeleton" %in% class(x) | "tpdag" %in% class(x)) {
+  } else if ("tskeleton" %in% class(x) || "tpdag" %in% class(x)) {
     x_amat <- x$tamat
     x_order <- attr(x_amat, "order")
     x_psi <- x$psi
@@ -107,7 +107,7 @@ plotOrderedAmat <- function(amat, order,
     if (ncol < 3) ncol <- 3
     colors <- RColorBrewer::brewer.pal("Dark2", n = ncol)
   }
-  cols <- colors[1:length(order)]
+  cols <- colors[seq_along(order)]
 
   vnames <- colnames(amat)
 
@@ -150,17 +150,19 @@ plotOrderedAmat <- function(amat, order,
       }
     }
   }
-  if (length(makedouble) > 0) {
-    oldedges <- edges
-    thisGraph <- igraph::delete.edges(thisGraph, duplies) # igraph
-    edges <- igraph::as_edgelist(thisGraph) # igraph
-    for (i in 1:length(makedouble)) {
-      thisEdge <- oldedges[makedouble[i], ]
-      for (j in 1:nrow(edges)) {
-        if (identical(thisEdge, edges[j, ])) makedouble_new <- c(makedouble_new, j)
+  oldedges <- edges
+  thisGraph <- igraph::delete.edges(thisGraph, duplies) # igraph
+  edges <- igraph::as_edgelist(thisGraph) # igraph
+
+  for (i in seq_along(makedouble)) {
+    thisEdge <- oldedges[makedouble[i], ]
+    for (j in seq_len(nrow(edges))) {
+      if (identical(thisEdge, edges[j, ])) {
+        makedouble_new <- c(makedouble_new, j)
       }
     }
   }
+
   groupnames <- names(groups)
   nEdges <- nrow(edges) # recalc
   edgecolors <- rep("", nEdges)
@@ -208,7 +210,7 @@ plotOrderedAmat <- function(amat, order,
       cex.axis = 1.5
     )
   }
-  if (!is.null(psi) & addPsi) {
+  if (!is.null(psi) && addPsi) {
     #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
     graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }

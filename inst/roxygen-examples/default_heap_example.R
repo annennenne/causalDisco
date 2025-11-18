@@ -19,5 +19,14 @@ Sys.setenv(JAVA_HEAP_SIZE = "6g")
 causalDisco:::default_heap()
 
 # Restore session state
-if (is.null(op_old)) options(java.heap.size = NULL) else options(java.heap.size = op_old)
-if (is.na(env_old)) Sys.unsetenv("JAVA_HEAP_SIZE") else Sys.setenv(JAVA_HEAP_SIZE = env_old)
+if (is.null(op_old)) {
+  options(java.heap.size = NULL)
+} else {
+  options(java.heap.size = op_old)
+}
+
+if (is.na(env_old)) {
+  Sys.unsetenv("JAVA_HEAP_SIZE")
+} else {
+  Sys.setenv(JAVA_HEAP_SIZE = env_old)
+}

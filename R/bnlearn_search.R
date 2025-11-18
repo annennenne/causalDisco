@@ -336,10 +336,13 @@ bnlearnSearch <- R6Class(
             call. = FALSE
           )
         }
-        if (method %in% need_restrict_maximize ||
-          (is.null(self$maximize_alg) || is.null(self$restrict_alg))) {
-          stop("Both maximize and restrict algorithms must be set for this ",
-            "algorithm.",
+        if (
+          method %in% need_restrict_maximize ||
+            is.null(self$maximize_alg) ||
+            is.null(self$restrict_alg)
+        ) {
+          stop(
+            "Both maximize and restrict algorithms must be set for this algorithm.",
             call. = FALSE
           )
         }
@@ -462,12 +465,17 @@ bnlearnSearch <- R6Class(
 
       # knowledge
       if (!is.null(self$knowledge)) {
-        if (!is.null(self$knowledge$whitelist) &&
-          nrow(self$knowledge$whitelist) > 0) {
+        if (
+          !is.null(self$knowledge$whitelist) &&
+            nrow(self$knowledge$whitelist) > 0
+        ) {
           arg_list$whitelist <- self$knowledge$whitelist
         }
-        if (!is.null(self$knowledge$blacklist) &&
-          nrow(self$knowledge$blacklist) > 0) {
+
+        if (
+          !is.null(self$knowledge$blacklist) &&
+            nrow(self$knowledge$blacklist) > 0
+        ) {
           arg_list$blacklist <- self$knowledge$blacklist
         }
       }

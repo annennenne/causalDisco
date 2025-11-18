@@ -73,7 +73,8 @@ if (requireNamespace("rJava", quietly = TRUE)) {
   # Minimal Tetrad setup: build a search object and distribute PC args.
   search_tetrad <- TetradSearch$new()
 
-  # Example with a common Tetrad CI test; adjust if you use a different test name.
+  # Example with a common Tetrad CI test;
+  # adjust if you use a different test name.
   dist_tetrad <- causalDisco:::check_args_and_distribute_args(
     search = search_tetrad,
     args   = list(verbose = TRUE), # forwarded to search$set_verbose()

@@ -211,7 +211,7 @@ test_that(".check_if_pkgs_are_installed errors with helpful message for missing 
       function_name = "needs_pkgs"
     ),
     "The following packages are required for `needs_pkgs()` but are not installed:",
-    fixed = T
+    fixed = TRUE
   )
 })
 

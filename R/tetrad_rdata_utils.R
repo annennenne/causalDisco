@@ -214,8 +214,10 @@ tetrad_data_to_rdata <- function(data) {
 
       miss_double <- is_double && isTRUE(is.nan(dbl_val))
       miss_integer <- is_integer &&
-        isTRUE(is.na(int_val) ||
-          int_val == .Machine$integer.min)
+        isTRUE(
+          is.na(int_val) ||
+            int_val == .Machine$integer.min
+        )
 
       is_missing <- isTRUE(is_null || miss_double || miss_integer)
 

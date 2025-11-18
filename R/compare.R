@@ -23,7 +23,7 @@ compare <- function(x, y = NULL) {
   } else {
     onlyone <- FALSE
   }
-  if ("tpdag" %in% class(x) & "tpdag" %in% class(y)) {
+  if ("tpdag" %in% class(x) && "tpdag" %in% class(y)) {
     amat1 <- x$tamat
     amat2 <- y$tamat
     psi1 <- x$psi
@@ -31,8 +31,11 @@ compare <- function(x, y = NULL) {
 
     edges1 <- as.numeric(amat1 + t(amat1) > 0)
     edges2 <- as.numeric(amat2 + t(amat2) > 0)
-  } else if (is.numeric(x) & is.numeric(y) &&
-    length(x) == length(y)) {
+  } else if (
+    is.numeric(x) &&
+      is.numeric(y) &&
+      length(x) == length(y)
+  ) {
     psi1 <- NA
     psi2 <- NA
     edges1 <- x

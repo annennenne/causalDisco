@@ -1,3 +1,5 @@
+# causalDisco (development version)
+
 # causalDisco 0.9.3
 * Changed structure of tpdag and tskeleton objects so they include tamat objects
 rather than amat and order slots. This is a major change, not backwards 

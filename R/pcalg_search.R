@@ -201,7 +201,7 @@ pcalgSearch <- R6::R6Class(
             )
           }
         )
-        return(score)
+        score
       }
       private$score_function <- return_pcalg_score
     },

@@ -29,7 +29,10 @@ tges_run <- function(score, verbose = FALSE) {
   }
   if (inherits(score, "TemporalBDeu") &&
     !all(vapply(score$pp.dat$data, is.factor, logical(1)))) {
-    stop("When using TemporalBDeu the data must be factors.", call. = FALSE)
+    stop(
+      "When using TemporalBDeu, the data must be factors.",
+      call. = FALSE
+    )
   }
   if (anyNA(score$pp.dat$data)) {
     stop("Data must not contain missing values.", call. = FALSE)
@@ -91,55 +94,40 @@ tges_run <- function(score, verbose = FALSE) {
       }
     }
 
-    # Backward phase
-    runwhile <- TRUE
-    while (runwhile) {
-      tempstep <- essgraph$greedy.step("backward", verbose = verbose)
-      runwhile <- as.logical(tempstep[1])
-      if (runwhile) {
-        cont <- TRUE
-      } else {
-        break
-      }
+    # Helper function to run a greedy phase
+    run_greedy_phase <- function(phase, essgraph, Forbidden.edges, verbose = TRUE) {
+      repeat {
+        tempstep <- essgraph$greedy.step(phase, verbose = verbose)
+        runwhile <- as.logical(tempstep[[1]])
+        if (!runwhile) break
 
-      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
-        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
-        forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
-        if (length(removed.edges) > 0) {
-          bgx <- rep(as.numeric(i), length(removed.edges))
-          bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
-          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-          essgraph$.in.edges <- no.forbidden.edges
+        for (i in names(tempstep[-1])) {
+          # Run through the nodes that have been changed
+          in.node.edges <- tempstep[[i + 1]] # save the in.node edges of node i
+          forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
+          removed.edges <- intersect(in.node.edges, forbidden.node.edges)
+
+          if (length(removed.edges) > 0) {
+            bgx <- rep(as.numeric(i), length(removed.edges))
+            bgy <- removed.edges
+            amatbg <- pcalg::addBgKnowledge(
+              gInput = create_adj_matrix_from_list(essgraph$.in.edges),
+              x = bgx,
+              y = bgy,
+              verbose = verbose
+            )
+            essgraph$.in.edges <- create_list_from_adj_matrix(amatbg)
+          }
         }
       }
+      essgraph
     }
 
-    # Turning phase
-    runwhile <- TRUE
-    while (runwhile) {
-      tempstep <- essgraph$greedy.step("turning", verbose = verbose)
-      runwhile <- as.logical(tempstep[1])
-      if (runwhile) {
-        cont <- TRUE
-      } else {
-        break
-      }
+    # Run backward phase
+    essgraph <- run_greedy_phase("backward", essgraph, Forbidden.edges, verbose)
 
-      for (i in names(tempstep[-1])) { # Run through the nodes that have been changed
-        in.node.edges <- tempstep[-1][[i]] # save the in.node edges of node i
-        forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] # List of edges to be removed
-        if (length(removed.edges) > 0) {
-          bgx <- rep(as.numeric(i), length(removed.edges))
-          bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = create_adj_matrix_from_list(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
-          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-          essgraph$.in.edges <- no.forbidden.edges
-        }
-      }
-    }
+    # Run turning phase
+    essgraph <- run_greedy_phase("turning", essgraph, Forbidden.edges, verbose)
   }
   essgraph$.nodes <- score$.nodes
   return(essgraph |> knowledgeable_caugi())
@@ -436,7 +424,8 @@ TemporalBIC <- setRefClass("TemporalBIC",
       parent_ts <- ord[parents]
 
       # do not enforce if child or any parent lacks a tier (NA)
-      if (is.na(child_t) || any(is.na(parent_ts)) ||
+      if (is.na(child_t) ||
+        any(is.na(parent_ts)) ||
         child_t >= max(c(parent_ts, -Inf))) {
         # calculate score in R
         if (.format == "raw") {
@@ -476,10 +465,10 @@ TemporalBIC <- setRefClass("TemporalBIC",
         lscore <- -0.5 * pp.dat$data.count[vertex] *
           (1 + log(sigma2 / pp.dat$data.count[vertex])) -
           pp.dat$lambda * (1 + length(parents))
-        return(lscore)
+
+        lscore
       } else {
-        skip <- -Inf
-        return(skip)
+        -Inf
       } # set score to minus infinity if vertex earlier than parents
     }
   ),
@@ -598,7 +587,8 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
       parent_ts <- ord[parents]
 
       # do not enforce if child or any parent lacks a tier (NA)
-      if (is.na(child_t) || any(is.na(parent_ts)) ||
+      if (is.na(child_t) ||
+        any(is.na(parent_ts)) ||
         child_t >= max(c(parent_ts, -Inf))) {
         D <- pp.dat$data[, c(vertex, parents), drop = FALSE]
         pa_nam <- colnames(pp.dat$data)[parents]
@@ -651,10 +641,9 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
         ) - constant
 
 
-        return(BdeuScore)
+        BdeuScore
       } else {
-        skip <- -Inf
-        return(skip)
+        -Inf
       }
     }
   ),

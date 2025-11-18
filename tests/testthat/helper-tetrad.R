@@ -97,12 +97,12 @@ make_knowledge_test_object <- function(df) {
   )
   combi_kn <- tiered_kn + forbidden_kn + required_kn
 
-  return(list(
+  list(
     tiered_kn = tiered_kn,
     forbidden_kn = forbidden_kn,
     required_kn = required_kn,
     combi_kn = combi_kn
-  ))
+  )
 }
 
 # small assertion helper for Java objects

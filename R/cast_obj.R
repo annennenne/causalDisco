@@ -13,12 +13,10 @@
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper
   if (rJava::.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")) {
-    obj <- rJava::.jcast(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")
-    return(obj)
+    rJava::.jcast(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")
     # If the object is a data object, cast it to DataModel
   } else if (rJava::.jinstanceof(obj, "edu/cmu/tetrad/data/DataModel")) {
-    obj <- rJava::.jcast(obj, "edu/cmu/tetrad/data/DataModel")
-    return(obj)
+    rJava::.jcast(obj, "edu/cmu/tetrad/data/DataModel")
     # If the object is a test, cast it to IndependenceWrapper
   } else if (
     rJava::.jinstanceof(
@@ -26,15 +24,13 @@ cast_obj <- function(obj) {
       "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
     )
   ) {
-    obj <- rJava::.jcast(
+    rJava::.jcast(
       obj,
       "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
     )
-    return(obj)
     # If the object is an EdgeListGraph, cast it to Graph
   } else if (rJava::.jinstanceof(obj, "edu/cmu/tetrad/graph/Graph")) {
-    obj <- rJava::.jcast(obj, "edu/cmu/tetrad/graph/Graph")
-    return(obj)
+    rJava::.jcast(obj, "edu/cmu/tetrad/graph/Graph")
   } else {
     # Cast error
     stop("The Java object cannot be cast to a superclass by cast_obj.",

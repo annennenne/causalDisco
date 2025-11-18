@@ -78,7 +78,16 @@ write_roxygen_example_skeletons <- function(file_path) {
   funs <- find_functions(file_path)
   if (length(funs) == 0) {
     if (!requireNamespace("tibble", quietly = TRUE)) {
-      return(structure(list(function_name = character(), path = character()), class = "data.frame", row.names = integer()))
+      return(
+        structure(
+          list(
+            function_name = character(),
+            path = character()
+          ),
+          class = "data.frame",
+          row.names = integer()
+        )
+      )
     }
     return(tibble::tibble(function_name = character(), path = character()))
   }

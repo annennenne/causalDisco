@@ -162,39 +162,39 @@ dir_confusion <- function(est_amat, true_amat) {
   dir_tn <- 0
 
   # count metrics for undirected edges
-  if (length(est_undir) > 0) {
-    for (i in 1:length(est_undir)) {
-      thisedge <- est_undir[i]
-      if (thisedge %in% true_adj) {
-        if (thisedge %in% true_undir) { # is correctly undirected
-          dir_tn <- dir_tn + 2
-        } else if (thisedge %in% c(true_dir, true_revdir)) { # is undirected, should be directed
-          dir_fn <- dir_fn + 1
-          dir_tn <- dir_tn + 1
-        }
+  for (i in seq_along(est_undir)) {
+    thisedge <- est_undir[i]
+
+    if (thisedge %in% true_adj) {
+      if (thisedge %in% true_undir) { # correctly undirected
+        dir_tn <- dir_tn + 2
+      } else if (thisedge %in% c(true_dir, true_revdir)) { # undirected, should be directed
+        dir_fn <- dir_fn + 1
+        dir_tn <- dir_tn + 1
       }
     }
   }
 
   # count metrics for directed edges
-  if (length(est_dir) > 0) {
-    for (i in 1:length(est_dir)) {
-      thisedge <- est_dir[i]
-      if (thisedge %in% true_adj) {
-        if (thisedge %in% true_undir) { # is directed, should be undirected
-          dir_fp <- dir_fp + 1
-          dir_tn <- dir_tn + 1
-        } else if (thisedge %in% true_dir) { # is directed in correct direction
-          dir_tp <- dir_tp + 1
-          dir_tn <- dir_tn + 1
-        }
-        if (thisedge %in% true_revdir) { # is directed in incorrect direction
-          dir_fp <- dir_fp + 1
-          dir_fn <- dir_fn + 1
-        }
+  for (i in seq_along(est_dir)) {
+    thisedge <- est_dir[i]
+
+    if (thisedge %in% true_adj) {
+      if (thisedge %in% true_undir) { # is directed, should be undirected
+        dir_fp <- dir_fp + 1
+        dir_tn <- dir_tn + 1
+      } else if (thisedge %in% true_dir) { # is directed in correct direction
+        dir_tp <- dir_tp + 1
+        dir_tn <- dir_tn + 1
+      }
+
+      if (thisedge %in% true_revdir) { # is directed in incorrect direction
+        dir_fp <- dir_fp + 1
+        dir_fn <- dir_fn + 1
       }
     }
   }
+
   list(
     tp = dir_tp, tn = dir_tn,
     fp = dir_fp, fn = dir_fn
@@ -233,36 +233,37 @@ dir_confusion_original <- function(est_amat, true_amat) {
   dir_tn <- 0
 
   # count metrics for undirected edges
-  if (length(est_undir) > 0) {
-    for (i in 1:length(est_undir)) {
-      thisedge <- est_undir[i]
-      if (thisedge %in% true_adj) {
-        if (thisedge %in% true_undir) { # is correctly undirected
-          dir_tn <- dir_tn + 1
-        } else if (thisedge %in% c(true_dir, true_revdir)) { # is undirected, should be directed
-          dir_fn <- dir_fn + 1
-        }
+  for (i in seq_along(est_undir)) {
+    thisedge <- est_undir[i]
+
+    if (thisedge %in% true_adj) {
+      if (thisedge %in% true_undir) { # correctly undirected
+        dir_tn <- dir_tn + 1
+      } else if (thisedge %in% c(true_dir, true_revdir)) { # should be directed
+        dir_fn <- dir_fn + 1
       }
     }
   }
 
+
   # count metrics for directed edges
-  if (length(est_dir) > 0) {
-    for (i in 1:length(est_dir)) {
-      thisedge <- est_dir[i]
-      if (thisedge %in% true_adj) {
-        if (thisedge %in% true_undir) { # is directed, should be undirected
-          dir_fp <- dir_fp + 1
-        } else if (thisedge %in% true_dir) { # is directed in correct direction
-          dir_tp <- dir_tp + 1
-        }
-        if (thisedge %in% true_revdir) { # is directed in incorrect direction
-          dir_fp <- dir_fp + 1
-          dir_fn <- dir_fn + 1
-        }
+  for (i in seq_along(est_dir)) {
+    thisedge <- est_dir[i]
+
+    if (thisedge %in% true_adj) {
+      if (thisedge %in% true_undir) { # directed, should be undirected
+        dir_fp <- dir_fp + 1
+      } else if (thisedge %in% true_dir) { # directed in correct direction
+        dir_tp <- dir_tp + 1
+      }
+
+      if (thisedge %in% true_revdir) { # directed in incorrect direction
+        dir_fp <- dir_fp + 1
+        dir_fn <- dir_fn + 1
       }
     }
   }
+
   list(
     tp = dir_tp, tn = dir_tn,
     fp = dir_fp, fn = dir_fn

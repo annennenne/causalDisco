@@ -111,7 +111,8 @@ toy_graph_builder <- function(knowledge = NULL) {
         to = out$to,
         edge = out$edge
       )
-      return(knowledgeable_caugi(cg))
+
+      knowledgeable_caugi(cg)
     }
   )
   runner

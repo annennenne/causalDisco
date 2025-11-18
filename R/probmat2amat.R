@@ -28,7 +28,8 @@
 #'
 #' @return A square matrix of probabilities (all entries in \[0,1\]).
 #'
-#' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using supervised machine learning."
+#' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using supervised machine
+#'  learning."
 #' arXiv preprint arXiv:2202.12813 (2022).
 #'
 #' @examples
@@ -76,7 +77,7 @@ probmat2amat <- function(probmat, threshold, method = "cutoff",
 
     badmat <- t(matrix(1:(p^2), p, p))
 
-    while (!new_is_valid & i <= n_nonzero) {
+    while (!new_is_valid && i <= n_nonzero) {
       deleteind <- ord[i]
       new[deleteind] <- 0
       if (deletesym) new[which(badmat == deleteind)] <- 0
@@ -94,7 +95,7 @@ probmat2amat <- function(probmat, threshold, method = "cutoff",
     if (new_is_valid) out <- new
   }
 
-  if (!pcalg::isValidGraph(out, graph_criterion) & method != "cutoff") {
+  if (!pcalg::isValidGraph(out, graph_criterion) && method != "cutoff") {
     warning("The result is not a valid graph!")
   }
 
@@ -129,18 +130,13 @@ getPattern <- function(amat) {
   tmp[tmp == 2] <- 1
   for (i in 1:(length(tmp[1, ]) - 1)) {
     for (j in (i + 1):length(tmp[1, ])) {
-      if ((amat[j, i] == 0) & (amat[i, j] == 0) & (i != j)) {
-        possible.k <- which(amat[, i] != 0 & amat[i, ] ==
-          0)
-        if (length(possible.k) != 0) {
-          for (k in 1:length(possible.k)) {
-            if ((amat[possible.k[k], j] == 1) & (amat[
-              j,
-              possible.k[k]
-            ] == 0)) {
-              tmp[i, possible.k[k]] <- 0
-              tmp[j, possible.k[k]] <- 0
-            }
+      if ((amat[j, i] == 0) && (amat[i, j] == 0) && (i != j)) {
+        possible.k <- which(amat[, i] != 0 & amat[i, ] == 0)
+        for (k in seq_along(possible.k)) {
+          idx <- possible.k[k]
+          if (amat[idx, j] == 1 && amat[j, idx] == 0) {
+            tmp[i, idx] <- 0
+            tmp[j, idx] <- 0
           }
         }
       }

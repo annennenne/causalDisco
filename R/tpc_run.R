@@ -321,7 +321,7 @@ v_orient_temporal <- function(amat, sepsets) {
     function_name = "v_orient_temporal"
   )
 
-  vnames <- rownames(amat)
+  vnames <- rownames(amat) # TODO: not used
   nvar <- nrow(amat)
 
   for (i in 1:nvar) {
@@ -346,10 +346,10 @@ v_orient_temporal <- function(amat, sepsets) {
             sepset2 <- sepsets[[j2]][[j1]]
 
             # if middle node is not a separator of two other nodes
-            if (!(i %in% sepset1) & !(i %in% sepset2)) {
+            if (!(i %in% sepset1) && !(i %in% sepset2)) {
               # if this does not contradict directional information
               # already in the graph
-              if (amat[i, j1] == 1 & amat[i, j2] == 1) {
+              if (amat[i, j1] == 1 && amat[i, j2] == 1) {
                 amat[j1, i] <- 0
                 amat[j2, i] <- 0
               }

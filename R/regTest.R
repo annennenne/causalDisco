@@ -69,7 +69,7 @@ regTestEachDir <- function(x, y, S, suffStat) {
   y <- vnames[y]
   S_bin <- vnames[binS]
   S_num <- vnames[numS]
-  allS <- c(S_bin, S_num)
+  allS <- c(S_bin, S_num) # TODO: Not used
 
   # add spline to num x, factor to binary x
   if (!binx) {
@@ -99,7 +99,7 @@ regTestEachDir <- function(x, y, S, suffStat) {
   m2 <- suppressWarnings(stats::glm(f2, data = data, family = fam))
 
   # if convergence fails, output 0 (corresponds to no sep)
-  if (!m1$converged | !m2$converged) {
+  if (!m1$converged || !m2$converged) {
     return(0)
   }
 

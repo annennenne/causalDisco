@@ -91,7 +91,8 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     function_name = "maketikz"
   )
 
-  if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) |
+  if ("tpdag" %in% class(model) ||
+    "tskeleton" %in% class(model) ||
     "tpag" %in% class(model)) {
     amat <- model$tamat
     order <- attr(amat, "order")
@@ -107,7 +108,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
   istpag <- attr(amat, "tamat_type") == "ag"
 
-  if (istpag | (!is.null(colorAnnotate) & is.null(annotateEdges))) {
+  if (istpag || (!is.null(colorAnnotate) && is.null(annotateEdges))) {
     annotateEdges <- FALSE
   }
 
@@ -145,8 +146,8 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     "[every node/.style={font=\\small, align = center},",
     "every edge/.append style={nodes={font=\\itshape\\scriptsize}}]"
   ))
-  if (annotateEdges & !is.null(annotationLabels)) {
-    for (i in 1:length(annotationLabels)) {
+  if (annotateEdges && !is.null(annotationLabels)) {
+    for (i in seq_along(annotationLabels)) {
       thisAnnotation <- names(annotationLabels)[i]
       thisLab <- annotationLabels[[i]]
       amat[amat == thisAnnotation] <- thisLab
@@ -159,7 +160,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     thisperiod <- periods[i]
     thisvname <- varLabels[i]
     thispno <- which(order == thisperiod)
-    thisptotal <- sum(periods == thisperiod)
+    thispno <- which(order == thisperiod) # TODO: not used
 
     xpos <- (thispno - 1) * xpgap + (thispno - 1) * xjit + (i %% 2) * xjit
     ydist <- floor(maxypos / neachperiod[thispno])
@@ -171,7 +172,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
       sep = ""
     ))
 
-    if (addAxis & pcounters[thispno] == 1) {
+    if (addAxis && pcounters[thispno] == 1) {
       out <- c(out, paste("\\node at (", (thispno - 1) * xpgap + (thispno - 1) * xjit + xjit / 2,
         ",", "-0.5", ") {",
         periodLabels[thispno], "};",
@@ -202,15 +203,18 @@ maketikz <- function(model, xjit = 2, yjit = 2,
         allundir[[i]] <- theseundir
       }
       if (length(thesetruechildren) > 0) {
-        if (!annotateEdges & is.null(colorAnnotate)) {
+        if (!annotateEdges && is.null(colorAnnotate)) {
           out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         }
         if (annotateEdges) {
           #  browser()
-          out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "node [above,sloped] {", amat[thesetruechildren, i],
-            "} (", thesetruechildren, ");",
-            sep = ""
-          ))
+          out <- c(
+            out,
+            paste("\\draw [->] (", i, ") edge", bendstr, "node [above,sloped] {", amat[thesetruechildren, i],
+              "} (", thesetruechildren, ");",
+              sep = ""
+            )
+          )
         }
         if (!is.null(colorAnnotate)) {
           out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]),
@@ -221,21 +225,26 @@ maketikz <- function(model, xjit = 2, yjit = 2,
       }
     }
 
-    n_undir <- length(allundir)
-    if (n_undir > 0) {
-      for (i in 1:length(allundir)) {
-        theseneigh <- allundir[[i]]
-        if (length(theseneigh) > 0) {
-          if (!annotateEdges) {
-            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "(", theseneigh, ");", sep = ""))
-          }
-          if (annotateEdges) {
-            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "node [above,sloped] {", amat[theseneigh, i],
-              "} (", theseneigh, ");",
-              sep = ""
-            ))
-          }
-        }
+    for (i in seq_along(allundir)) {
+      theseneigh <- allundir[[i]]
+
+      if (length(theseneigh) == 0) next
+
+      if (!annotateEdges) {
+        out <- c(
+          out,
+          paste0(
+            "\\draw [-] (", i, ") edge", bendstr, "(", theseneigh, ");"
+          )
+        )
+      } else {
+        out <- c(
+          out,
+          paste0(
+            "\\draw [-] (", i, ") edge", bendstr,
+            "node [above,sloped] {", amat[theseneigh, i], "} (", theseneigh, ");"
+          )
+        )
       }
     }
   }
@@ -247,14 +256,14 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     alledges$tikzedge <- paste(ahead_from[alledges$a1], ahead_to[alledges$a2],
       sep = "-"
     )
-    n_edges <- nrow(alledges)
-    if (n_edges > 0) {
-      for (i in 1:nrow(alledges)) {
-        out <- c(out, paste("\\draw [", alledges$tikzedge[i],
-          "] (", alledges$n1[i], ") edge", bendstr, "(", alledges$n2[i], ");",
-          sep = ""
-        ))
-      }
+    for (i in seq_len(nrow(alledges))) {
+      out <- c(
+        out,
+        paste0(
+          "\\draw [", alledges$tikzedge[i], "] (", alledges$n1[i],
+          ") edge", bendstr, "(", alledges$n2[i], ");"
+        )
+      )
     }
   }
 

@@ -7,13 +7,12 @@
 #' @example inst/roxygen-examples/default_heap_example.R
 #' @keywords internal
 default_heap <- function() {
-  getOption(
+  heap <- getOption(
     "java.heap.size",
     Sys.getenv("JAVA_HEAP_SIZE", unset = NA)
-  ) |>
-    {
-      \(x) if (is.na(x)) "2g" else x
-    }()
+  )
+
+  if (is.na(heap)) "2g" else heap
 }
 
 # nocov start
@@ -194,7 +193,9 @@ is_interactive <- function() {
       call. = FALSE
     )
   }
-  not_installed <- pkgs[!vapply(pkgs, requireNamespace,
+  not_installed <- pkgs[!vapply(
+    pkgs,
+    requireNamespace,
     quietly = TRUE,
     FUN.VALUE = logical(1)
   )]

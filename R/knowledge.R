@@ -99,9 +99,11 @@ knowledge <- function(...) {
     specs <- rlang::list2(...)
 
     # ─────────────────────────── numeric-vector shortcut ──────────────────────
-    if (length(specs) == 1L &&
-      is.numeric(specs[[1]]) &&
-      is.atomic(specs[[1]])) {
+    if (
+      length(specs) == 1L &&
+        is.numeric(specs[[1]]) &&
+        is.atomic(specs[[1]])
+    ) {
       vec_num <- specs[[1]]
       vars <- kn$vars$var
 
@@ -1615,10 +1617,10 @@ as_bnlearn_knowledge <- function(.kn) {
     dplyr::select(from, to) |>
     as.data.frame()
 
-  return(list(
+  list(
     whitelist = whitelist,
     blacklist = blacklist
-  ))
+  )
 }
 
 #' @title Forbid all tier violations
@@ -1727,11 +1729,14 @@ seq_tiers <- function(tiers, vars) {
   vars_expr <- rlang::enexpr(vars)
 
   # guard: placeholder must be present
-  if (!rlang::is_call(vars_expr) &&
-    !identical(vars_expr, quote(i)) &&
-    !grepl("{i}", deparse(vars_expr), fixed = TRUE)) {
+  if (
+    !rlang::is_call(vars_expr) &&
+      !identical(vars_expr, quote(i)) &&
+      !grepl("{i}", deparse(vars_expr), fixed = TRUE)
+  ) {
     stop("`vars` must contain the placeholder `i`.", call. = FALSE)
   }
+
 
   # recursively substitute `i` or "{i}" helper
   replace_i <- function(expr, i_chr) {
