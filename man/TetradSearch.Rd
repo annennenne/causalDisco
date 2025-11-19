@@ -26,7 +26,8 @@ used by Tetrad.}
 \item \code{"sem_bic"} – SEM BIC score.
 \item \code{"ebic"} – Extended BIC score.
 \item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
-\item \code{"basis_function_bic"} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\item \code{"basis_function_bic"} – BIC score for basis-function models.
+This is a generalization of the Degenerate Gaussian score.
 \item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
 \item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
 \item \code{"discrete_bic"} – BIC score for discrete data.
@@ -45,7 +46,8 @@ used by Tetrad.}
 \item \code{"chi_square"} – chi-squared test
 \item \code{"g_square"}   – likelihood-ratio \eqn{G^2} test
 \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate
+probabilistic conditional independence judgments.
 \item \code{"fisher_z"} – Fisher \eqn{Z} (partial correlation) test
 \item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
 \item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
@@ -85,7 +87,8 @@ Recognised values are:
 \item \code{"sp"} – Sparsest Permutation algorithm
 \item \code{"sp_fci"} – Sparsest Permutation using FCI
 \item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
-\item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI, but uses a BIC score to search for a skeleton.
+\item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI,
+but uses a BIC score to search for a skeleton.
 }}
 
 \item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
@@ -159,7 +162,8 @@ Sets the independence test to use in Tetrad.
 \item \code{"chi_square"} – chi-squared test
 \item \code{"g_square"}   – likelihood-ratio \(G^2\) test
 \item \code{"basis_function_lrt"} – basis-function likelihood-ratio
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate probabilistic conditional independence judgments.
+\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate
+probabilistic conditional independence judgments.
 \item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
 \item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
 \item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
@@ -327,7 +331,8 @@ Sets the scoring function to use in Tetrad.
 \item \code{"sem_bic"} – SEM BIC score.
 \item \code{"ebic"} – Extended BIC score.
 \item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
-\item \code{"basis_function_bic"} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\item \code{"basis_function_bic"} – BIC score for basis-function models.
+This is a generalization of the Degenerate Gaussian score.
 \item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
 \item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
 \item \code{"discrete_bic"} – BIC score for discrete data.
@@ -378,7 +383,8 @@ among the cells in the table,
 \item \code{singularity_lambda = 0.0} – Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{basis_function_bic} – BIC score for basis-function models. This is a generalization of the Degenerate Gaussian score.
+\item \code{basis_function_bic} – BIC score for basis-function models.
+This is a generalization of the Degenerate Gaussian score.
 \itemize{
 \item \code{truncation_limit = 3} – Basis functions 1 though this
 number will be used. The Degenerate Gaussian category indicator

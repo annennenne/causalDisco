@@ -1,6 +1,7 @@
 ^causalDisco\.Rproj$
 ^\.github$
 ^\.Rproj\.user$
+^\.lintr$
 .gitignore
 app
 archive

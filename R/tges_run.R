@@ -2,7 +2,6 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-
 #' Estimate the restricted Markov equivalence class using Temporal Greedy Equivalence Search
 #'
 #' Perform causal discovery using the temporal greedy equivalence search algorithm.
@@ -22,13 +21,16 @@
 #' @export
 tges_run <- function(score, verbose = FALSE) {
   if (!inherits(score, c("TemporalBIC", "TemporalBDeu"))) {
-    stop("Score must be of type TemporalBIC or TemporalBDeu, ",
+    stop(
+      "Score must be of type TemporalBIC or TemporalBDeu, ",
       "the only score criteria supported by tges at the moment.",
       call. = FALSE
     )
   }
-  if (inherits(score, "TemporalBDeu") &&
-    !all(vapply(score$pp.dat$data, is.factor, logical(1)))) {
+  if (
+    inherits(score, "TemporalBDeu") &&
+      !all(vapply(score$pp.dat$data, is.factor, logical(1)))
+  ) {
     stop(
       "When using TemporalBDeu, the data must be factors.",
       call. = FALSE
@@ -38,7 +40,8 @@ tges_run <- function(score, verbose = FALSE) {
     stop("Data must not contain missing values.", call. = FALSE)
   }
   node.numbers <- 1:score$pp.dat$vertex.count
-  essgraph <- new("TEssGraph",
+  essgraph <- new(
+    "TEssGraph",
     nodes = as.character(node.numbers),
     score = score
   )
@@ -51,29 +54,25 @@ tges_run <- function(score, verbose = FALSE) {
   for (n in node.numbers) {
     Forbidden.edges[[n]] <- node.numbers[ord[n] < ord]
   }
-
   cont <- TRUE
-  while (cont) {
-    cont <- FALSE
-
-    # Forward phase
+  update_phase <- function(phase, essgraph, Forbidden.edges, verbose) {
     runwhile <- TRUE
     while (runwhile) {
-      tempstep <- essgraph$greedy.step("forward", verbose = verbose)
+      tempstep <- essgraph$greedy.step(phase, verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile) {
-        cont <- TRUE
-      } else {
+
+      if (!runwhile) {
         break
       }
 
-      # Run through the nodes that have been changed
+      # mark that the overall loop should continue
+      cont <<- TRUE
+
       for (i in names(tempstep[-1])) {
-        # save the in.node edges of node i
         in.node.edges <- tempstep[-1][[i]]
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        # List of edges to be removed
         removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
+
         if (length(removed.edges) > 0) {
           bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
@@ -84,51 +83,26 @@ tges_run <- function(score, verbose = FALSE) {
             verbose = verbose
           )
           if (is.null(amatbg)) {
-            stop("addBgKnowledge() did not return a coercible graph/matrix.",
+            stop(
+              "addBgKnowledge() did not return a coercible graph/matrix.",
               call. = FALSE
             )
           }
-          no.forbidden.edges <- create_list_from_adj_matrix(amatbg)
-          essgraph$.in.edges <- no.forbidden.edges
+          essgraph$.in.edges <- create_list_from_adj_matrix(amatbg)
         }
       }
     }
-
-    # Helper function to run a greedy phase
-    run_greedy_phase <- function(phase, essgraph, Forbidden.edges, verbose = TRUE) {
-      repeat {
-        tempstep <- essgraph$greedy.step(phase, verbose = verbose)
-        runwhile <- as.logical(tempstep[[1]])
-        if (!runwhile) break
-
-        for (i in names(tempstep[-1])) {
-          # Run through the nodes that have been changed
-          in.node.edges <- tempstep[[i + 1]] # save the in.node edges of node i
-          forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-          removed.edges <- intersect(in.node.edges, forbidden.node.edges)
-
-          if (length(removed.edges) > 0) {
-            bgx <- rep(as.numeric(i), length(removed.edges))
-            bgy <- removed.edges
-            amatbg <- pcalg::addBgKnowledge(
-              gInput = create_adj_matrix_from_list(essgraph$.in.edges),
-              x = bgx,
-              y = bgy,
-              verbose = verbose
-            )
-            essgraph$.in.edges <- create_list_from_adj_matrix(amatbg)
-          }
-        }
-      }
-      essgraph
-    }
-
-    # Run backward phase
-    essgraph <- run_greedy_phase("backward", essgraph, Forbidden.edges, verbose)
-
-    # Run turning phase
-    essgraph <- run_greedy_phase("turning", essgraph, Forbidden.edges, verbose)
+    essgraph
   }
+
+  # Main loop
+  while (cont) {
+    cont <- FALSE
+    for (phase in c("forward", "backward", "turning")) {
+      essgraph <- update_phase(phase, essgraph, Forbidden.edges, verbose)
+    }
+  }
+
   essgraph$.nodes <- score$.nodes
   return(essgraph |> knowledgeable_caugi())
 }
@@ -136,7 +110,6 @@ tges_run <- function(score, verbose = FALSE) {
 # ──────────────────────────────────────────────────────────────────────────────
 # ──────────────────────────── Helpers  ────────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
-
 
 #' Create adjacency matrix from an in-edge list
 #'
@@ -188,7 +161,11 @@ create_list_from_adj_matrix <- function(adjMatrix) {
   names(resultList) <- rownames(adjMatrix)
   for (i in seq_len(n)) {
     connectedIndices <- as.integer(which(adjMatrix[i, ] == 1))
-    resultList[[i]] <- if (length(connectedIndices) > 0) connectedIndices else integer(0)
+    resultList[[i]] <- if (length(connectedIndices) > 0) {
+      connectedIndices
+    } else {
+      integer(0)
+    }
   }
   resultList
 }
@@ -210,7 +187,8 @@ create_list_from_adj_matrix <- function(adjMatrix) {
 to_adj_mat <- function(obj) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "methods", "pcalg"
+      "methods",
+      "pcalg"
     ),
     function_name = "to_adj_mat"
   )
@@ -257,17 +235,22 @@ to_adj_mat <- function(obj) {
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
 #' @export TEssGraph
-TEssGraph <- setRefClass("TEssGraph",
+TEssGraph <- setRefClass(
+  "TEssGraph",
   contains = "EssGraph",
   methods = list(
     # Performs one greedy step
-    greedy.step = function(direction = c("forward", "backward", "turning"),
-                           verbose = FALSE, ...) {
+    greedy.step = function(
+      direction = c("forward", "backward", "turning"),
+      verbose = FALSE,
+      ...
+    ) {
       stopifnot(!is.null(score <- getScore()))
 
       # Cast direction
       direction <- match.arg(direction)
-      alg.name <- switch(direction,
+      alg.name <- switch(
+        direction,
         forward = "GIES-F",
         backward = "GIES-B",
         turning = "GIES-T"
@@ -295,15 +278,17 @@ TEssGraph <- setRefClass("TEssGraph",
         .in.edges <<- new_graph$in.edges
         names(.in.edges) <<- .nodes
 
-        new_in.edges <- .in.edges[sapply(names(.in.edges), function(x) !identical(.in.edges[[x]], last.edges[[x]]))]
+        new_in.edges <- .in.edges[sapply(names(.in.edges), function(x) {
+          !identical(.in.edges[[x]], last.edges[[x]])
+        })]
       } else {
         new_in.edges <- list()
       }
 
-
       return(c((new_graph$steps == 1), new_in.edges))
     }
-  ), inheritPackage = TRUE
+  ),
+  inheritPackage = TRUE
 )
 
 #' Temporal Bayesian Information Criterion (Score criterion)
@@ -357,22 +342,26 @@ TEssGraph <- setRefClass("TEssGraph",
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
 #' @export TemporalBIC
-TemporalBIC <- setRefClass("TemporalBIC",
+TemporalBIC <- setRefClass(
+  "TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
     .order = "vector"
   ),
   methods = list(
-    initialize = function(data = NULL,
-                          nodes = colnames(data),
-                          lambda = 0.5 * log(nrow(data)),
-                          intercept = TRUE,
-                          format = c("raw", "scatter"),
-                          knowledge = NULL,
-                          order = NULL, # deprecated
-                          ...) {
+    initialize = function(
+      data = NULL,
+      nodes = colnames(data),
+      lambda = 0.5 * log(nrow(data)),
+      intercept = TRUE,
+      format = c("raw", "scatter"),
+      knowledge = NULL,
+      order = NULL, # deprecated
+      ...
+    ) {
       if (!is.null(knowledge) && !is.null(order)) {
-        stop("Both `knowledge` and `order` supplied. ",
+        stop(
+          "Both `knowledge` and `order` supplied. ",
           "Please supply a knowledge object only.",
           call. = FALSE
         )
@@ -390,7 +379,8 @@ TemporalBIC <- setRefClass("TemporalBIC",
             vnames = nodes
           )
         } else {
-          stop("`order` must be either a vector of integers or a vector of ",
+          stop(
+            "`order` must be either a vector of integers or a vector of ",
             "prefixes. Provide a knowledge object instead.",
             call. = FALSE
           )
@@ -424,9 +414,11 @@ TemporalBIC <- setRefClass("TemporalBIC",
       parent_ts <- ord[parents]
 
       # do not enforce if child or any parent lacks a tier (NA)
-      if (is.na(child_t) ||
-        any(is.na(parent_ts)) ||
-        child_t >= max(c(parent_ts, -Inf))) {
+      if (
+        is.na(child_t) ||
+          any(is.na(parent_ts)) ||
+          child_t >= max(c(parent_ts, -Inf))
+      ) {
         # calculate score in R
         if (.format == "raw") {
           # calculate score from raw data matrix
@@ -457,12 +449,14 @@ TemporalBIC <- setRefClass("TemporalBIC",
           sigma2 <- pd.scMat[vertex, vertex]
           if (length(parents) != 0) {
             b <- pd.scMat[vertex, parents]
-            sigma2 <- sigma2 - as.numeric(b %*% solve(pd.scMat[parents, parents], b))
+            sigma2 <- sigma2 -
+              as.numeric(b %*% solve(pd.scMat[parents, parents], b))
           }
         }
 
         # return local score
-        lscore <- -0.5 * pp.dat$data.count[vertex] *
+        lscore <- -0.5 *
+          pp.dat$data.count[vertex] *
           (1 + log(sigma2 / pp.dat$data.count[vertex])) -
           pp.dat$lambda * (1 + length(parents))
 
@@ -523,21 +517,25 @@ TemporalBIC <- setRefClass("TemporalBIC",
 #' @importClassesFrom pcalg Score
 #'
 #' @export TemporalBDeu
-TemporalBDeu <- setRefClass("TemporalBDeu",
+TemporalBDeu <- setRefClass(
+  "TemporalBDeu",
   contains = "DataScore",
   fields = list(
     .order = "vector",
     .iss = "numeric"
   ),
   methods = list(
-    initialize = function(data = matrix(1, 1, 1),
-                          nodes = colnames(data),
-                          iss = 1,
-                          knowledge = NULL,
-                          order = NULL, # deprecated
-                          ...) {
+    initialize = function(
+      data = matrix(1, 1, 1),
+      nodes = colnames(data),
+      iss = 1,
+      knowledge = NULL,
+      order = NULL, # deprecated
+      ...
+    ) {
       if (!is.null(knowledge) && !is.null(order)) {
-        stop("Both `knowledge` and `order` supplied. ",
+        stop(
+          "Both `knowledge` and `order` supplied. ",
           "Please supply a knowledge object only.",
           call. = FALSE
         )
@@ -555,7 +553,8 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
             vnames = nodes
           )
         } else {
-          stop("`order` must be either a vector of integers or a vector of ",
+          stop(
+            "`order` must be either a vector of integers or a vector of ",
             "prefixes. Provide a knowledge object instead.",
             call. = FALSE
           )
@@ -587,9 +586,11 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
       parent_ts <- ord[parents]
 
       # do not enforce if child or any parent lacks a tier (NA)
-      if (is.na(child_t) ||
-        any(is.na(parent_ts)) ||
-        child_t >= max(c(parent_ts, -Inf))) {
+      if (
+        is.na(child_t) ||
+          any(is.na(parent_ts)) ||
+          child_t >= max(c(parent_ts, -Inf))
+      ) {
         D <- pp.dat$data[, c(vertex, parents), drop = FALSE]
         pa_nam <- colnames(pp.dat$data)[parents]
         ve_nam <- colnames(pp.dat$data)[vertex]
@@ -620,14 +621,13 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
 
           alpha_j <- iss / q
 
-          pa_score <- nrow(tab_pa) * lgamma(alpha_j) -
+          pa_score <- nrow(tab_pa) *
+            lgamma(alpha_j) -
             sum(sapply(tab_pa$Freq, function(x) lgamma(alpha_j + x)))
         }
 
-
         # table with number of occurences and state combinations
         tab_D <- as.data.frame(table(D))
-
 
         # uniform prior with alpha according to imaginary sample size (iss)
         alpha_jk <- alpha_j / r
@@ -638,8 +638,8 @@ TemporalBDeu <- setRefClass("TemporalBDeu",
             tab_D$Freq,
             function(x) lgamma(alpha_jk + x)
           )
-        ) - constant
-
+        ) -
+          constant
 
         BdeuScore
       } else {

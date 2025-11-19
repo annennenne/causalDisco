@@ -16,10 +16,12 @@ SystemRequirements: Java (>= 17). Includes the Tetrad Java library
     (see inst/java/LICENSE and inst/java/COPYRIGHT).
     Source code: https://github.com/cmu-phil/tetrad
     Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
+    Cargo (Rust's package manager), rustc >= 1.80.0, xz
 Depends: 
     R (>= 4.2.0)
 biocViews:
 Imports:
+    caugi,
     dplyr,
     methods,
     pcalg,
@@ -52,6 +54,8 @@ Suggests:
     testthat (>= 3.0.0),
     tidyr,
     withr
+Additional_repositories:
+    https://github.com/frederikfabriciusbjerre/caugi
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

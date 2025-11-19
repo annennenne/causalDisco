@@ -66,6 +66,7 @@ probmat2amat(pmat, threshold = 0.5, method = "bpco")
 
 }
 \references{
-Petersen, Anne Helby, et al. "Causal discovery for observational sciences using supervised machine learning."
+Petersen, Anne Helby, et al. "Causal discovery for observational sciences using supervised machine
+learning."
 arXiv preprint arXiv:2202.12813 (2022).
 }
