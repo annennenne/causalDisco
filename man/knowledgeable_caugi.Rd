@@ -25,5 +25,5 @@ The conversion from any graph type to a \code{caugi} is handled by the \code{cau
 package.
 }
 \seealso{
-\code{\link[caugi:caugi]{caugi::caugi()}}
+\code{\link[caugi]{caugi}}
 }

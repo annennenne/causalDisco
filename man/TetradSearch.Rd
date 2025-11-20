@@ -598,8 +598,8 @@ J. Zhang, should be used guaranteeing additional tail completeness.
 \itemize{
 \item \code{conflict_rule = 1} –
 \itemize{
-\item \code{1} – The “overwrite” rule as introduced in the
-\code{\link[pcalg:pc]{pcalg}} R package,
+\item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+\code{\link[pcalg]{pc}},
 \item \code{2} – All collider conflicts using bidirected edges
 should be prioritized,
 \item \code{3} – Existing colliders should be prioritized,
@@ -865,8 +865,8 @@ setting small entries less than this threshold to zero.
 \itemize{
 \item \code{conflict_rule = 1} –
 \itemize{
-\item \code{1} – The “overwrite” rule as introduced in the
-\code{\link[pcalg:pc]{pcalg}} R package,
+\item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+\code{\link[pcalg]{pc}},
 \item \code{2} – All collider conflicts using bidirected edges
 should be prioritized,
 \item \code{3} – Existing colliders should be prioritized,
@@ -883,8 +883,8 @@ a legal CPDAG.
 \itemize{
 \item \code{conflict_rule = 1} –
 \itemize{
-\item \code{1} – The “overwrite” rule as introduced in the
-\code{\link[pcalg:pc]{pcalg}} R package,
+\item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+\code{\link[pcalg]{pc}},
 \item \code{2} – All collider conflicts using bidirected edges
 should be prioritized,
 \item \code{3} – Existing colliders should be prioritized,

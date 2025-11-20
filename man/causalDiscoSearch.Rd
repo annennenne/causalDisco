@@ -31,9 +31,9 @@ See \code{\link{TemporalBDeu}}.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
 \item \code{fisher_z} - Fisher Z test for Gaussian data.
-See \code{\link[corTest]{corTest}}.
+See \code{\link{corTest}}.
 \item \code{reg} - Regression test for discrete or binary data.
-See \code{\link[regTest]{regTest}}.
+See \code{\link{regTest}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
