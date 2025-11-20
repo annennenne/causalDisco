@@ -21,9 +21,9 @@ causalDiscoSearch <- R6::R6Class(
     #'  are:
     #'  \itemize{
     #'     \item \code{tbic} - Temporal BIC score for Gaussian data.
-    #'     See \code{\link[causalDisco:TemporalBIC-class]{TemporalBIC}}
+    #'     See \code{\link{TemporalBIC}}
     #'     \item \code{tbdeu} - Temporal BDeu score for discrete data.
-    #'     See \code{\link[causalDisco:TemporalBDeu-class]{TemporalBDeu}}.
+    #'     See \code{\link{TemporalBDeu}}.
     #'     }
     score = NULL,
 
@@ -31,9 +31,9 @@ causalDiscoSearch <- R6::R6Class(
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
     #'    \item \code{fisher_z} - Fisher Z test for Gaussian data.
-    #'    See \code{\link[causalDisco:corTest]{corTest}}.
+    #'    See \code{\link[corTest]{corTest}}.
     #'    \item \code{reg} - Regression test for discrete or binary data.
-    #'    See \code{\link[causalDisco:regTest]{regTest}}.
+    #'    See \code{\link[regTest]{regTest}}.
     #'    }
     test = NULL,
 
@@ -41,11 +41,11 @@ causalDiscoSearch <- R6::R6Class(
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
     #'   \item \code{tpc}  - TPC algorithm.
-    #'   See \code{\link[causalDisco:tpc]{tpc}}.
+    #'   See \code{\link{tpc}}.
     #'   \item \code{tfci} - TFCI algorithm.
-    #'   See \code{\link[causalDisco:tfci]{tfci}}.
+    #'   See \code{\link{tfci}}.
     #'   \item \code{tges} - TGES algorithm.
-    #'   See \code{\link[causalDisco:tges]{tges}}.
+    #'   See \code{\link{tges}}.
     #'   }
     alg = NULL,
 
@@ -261,10 +261,10 @@ causalDiscoSearch <- R6::R6Class(
     #' @param directed_as_undirected Logical; whether to treat directed edges in
     #' the knowledge as undirected. Default is `FALSE`. This is due to the
     #' nature of how `pcalg` handles background knowledge when using
-    #' \code{\link[pcalg:skeleton]{skeleton}} under the hood in
-    #' \code{\link[causalDisco:tpc]{tpc}} and
-    #' \code{\link[causalDisco:tfci]{tfci}}.
-    #' @seealso \code{\link[causalDisco:knowledge]{knowledge}}.
+    #' \code{\link[pcalg]{skeleton}} under the hood in
+    #' \code{\link{tpc}} and
+    #' \code{\link{tfci}}.
+    #' @seealso \code{\link{knowledge}}.
     set_knowledge = function(kn, directed_as_undirected = FALSE) {
       is_knowledge(kn)
       self$knowledge <- kn

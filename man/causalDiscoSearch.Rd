@@ -9,7 +9,7 @@ package, which wraps and adds temporal order to pcalg algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm.
 }
 \seealso{
-\code{\link[causalDisco:knowledge]{knowledge}}.
+\code{\link{knowledge}}.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -22,29 +22,29 @@ when data is set. Can be set with \code{$set_score()}. Recognized values
 are:
 \itemize{
 \item \code{tbic} - Temporal BIC score for Gaussian data.
-See \code{\link[causalDisco:TemporalBIC-class]{TemporalBIC}}
+See \code{\link{TemporalBIC}}
 \item \code{tbdeu} - Temporal BDeu score for discrete data.
-See \code{\link[causalDisco:TemporalBDeu-class]{TemporalBDeu}}.
+See \code{\link{TemporalBDeu}}.
 }}
 
 \item{\code{test}}{A function that will be used to test independence.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
 \item \code{fisher_z} - Fisher Z test for Gaussian data.
-See \code{\link[causalDisco:corTest]{corTest}}.
+See \code{\link[corTest]{corTest}}.
 \item \code{reg} - Regression test for discrete or binary data.
-See \code{\link[causalDisco:regTest]{regTest}}.
+See \code{\link[regTest]{regTest}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
 \item \code{tpc}  - TPC algorithm.
-See \code{\link[causalDisco:tpc]{tpc}}.
+See \code{\link{tpc}}.
 \item \code{tfci} - TFCI algorithm.
-See \code{\link[causalDisco:tfci]{tfci}}.
+See \code{\link{tfci}}.
 \item \code{tges} - TGES algorithm.
-See \code{\link[causalDisco:tges]{tges}}.
+See \code{\link{tges}}.
 }}
 
 \item{\code{params}}{A list of parameters for the test and algorithm.
@@ -202,9 +202,9 @@ Sets the background knowledge for the search with a \code{knowledge} object.
 \item{\code{directed_as_undirected}}{Logical; whether to treat directed edges in
 the knowledge as undirected. Default is \code{FALSE}. This is due to the
 nature of how \code{pcalg} handles background knowledge when using
-\code{\link[pcalg:skeleton]{skeleton}} under the hood in
-\code{\link[causalDisco:tpc]{tpc}} and
-\code{\link[causalDisco:tfci]{tfci}}.}
+\code{\link[pcalg]{skeleton}} under the hood in
+\code{\link{tpc}} and
+\code{\link{tfci}}.}
 }
 \if{html}{\out{</div>}}
 }
