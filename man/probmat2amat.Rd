@@ -27,7 +27,7 @@ will be preserved in the output.}
 \item{graph_criterion}{Which criterion to check if the output graph fulfills for the bpco
 method. Should be one of \code{"dag"}, \code{"pdag"} or \code{"cpdag"}  or
 \code{NULL}. Choosing \code{NULL} (the default) puts no further restrictions on the output.
-See \code{\link[pcalg]{isValidGraph}} for definitions.}
+See \code{\link[pcalg]{pcalg::isValidGraph}} for definitions.}
 
 \item{deletesym}{If \code{TRUE}, edges are deleted symmetrically in the bcpo method. This means that instead
 of removing arrowheads (setting singular elements to 0), the procedure removes full edges (setting both potential
