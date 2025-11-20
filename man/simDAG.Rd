@@ -9,11 +9,13 @@ simDAG(p, sparsity = NULL, sparsityLim = c(0, 0.8), permute = TRUE)
 \arguments{
 \item{p}{The number of nodes.}
 
-\item{sparsity}{If \code{NULL} (the default), a random edge sparsity
-is sampled from the interval provided in \code{sparsityLim}. Otherwise,
-the sparsity should be provided as a numeric in [0,1].}
+\item{sparsity}{A numeric in [0,1] giving the proportion of possible
+edges that should be removed. If \code{sparsity} is supplied, the value in
+\code{sparsityLim} is ignored.}
 
-\item{sparsityLim}{A vector of two numerics, both must be in [0,1].}
+\item{sparsityLim}{A numeric vector of length 2 giving the interval from
+which a sparsity value is drawn when \code{sparsity = NULL}. Both values
+must lie in [0,1].}
 
 \item{permute}{If \code{FALSE}, the adjacency matrix will include nodes
 in their causal ordering. This is avoided by setting \code{permute = TRUE},
@@ -28,7 +30,7 @@ the provided edge sparsity. The edge sparsity is the percentage of edges
 that are absent, relative to a fully connected DAG.
 }
 \examples{
-# Simulate a DAG adjacency matrix with 5 nodes
-simDAG(5)
+# Simulate a DAG adjacency matrix with 5 nodes and sparsity 0.5
+simDAG(5, sparsity = 0.5)
 
 }

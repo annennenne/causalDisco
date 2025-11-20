@@ -33,7 +33,7 @@ each variable will have its mean subtracted and be divided by its
 standard deviation.}
 }
 \value{
-A data.frame of identically distributed simulated observations.
+A data.frame of identically distributed simulated observations from the DAG.
 }
 \description{
 Simulates a jointly Gaussian dataset given a DAG
