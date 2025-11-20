@@ -62,12 +62,24 @@ pak::pkg_sysreqs("github::frederikfabriciusbjerre/causalDisco",
 This will give you a list of system dependencies, which you need to
 install first, if they are not already on your system.
 
+### Installing Rust
+
+`causalDisco` depends on the package
+[`caugi`](https://github.com/frederikfabriciusbjerre/caugi), which
+requires Rust to be installed on your system. See [this
+guide](https://www.rust-lang.org/tools/install) for instructions on how
+to install Rust.
+
 ### Installing Java / JDK
 
-Some algorithms require Java. Install JDK 21 or 25 following [this
+`causalDisco` provides an interface to the Java library
+[`Tetrad`](https://github.com/cmu-phil/tetrad) for causal discovery
+algorithms. To use this, install JDK 21 or 25 following [this
 guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad),
 
 or use your system’s package manager.
+
+<!-- TODO when implemented?: After installing Java / JDK call the function install_tetrad() to install `Tetrad` -->
 
 ## Example
 
@@ -103,6 +115,8 @@ tetrad_pc(tpcExample)
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco(data = tpcExample, method = cd_tges, knowledge = kn)
 ```
+
+<!-- TODO: Some sort of visualization of the resulting PDAG? -->
 
 ## Bugs & requests
 
