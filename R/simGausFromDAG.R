@@ -1,40 +1,40 @@
 #' Topological ordering of a DAG given its adjacency matrix
 #' @param amat An adjacency matrix.
-#' 
+#'
 #' @return A vector of node indices in topological order.
-#' 
+#'
 #' @keywords internal
 topo_order_mat <- function(amat) {
   p <- nrow(amat)
-  
+
   # 'in-degree' = number of parents = number of 1s in a row
   indeg <- rowSums(amat)
-  
+
   order <- integer(p)
   filled <- 0
-  
+
   used <- rep(FALSE, p)
-  
+
   repeat {
     candidates <- which(indeg == 0 & !used)
-    
+
     if (length(candidates) == 0) {
       if (filled < p) stop("Adjacency matrix contains a cycle.")
       break
     }
-    
+
     i <- candidates[1]
-    
+
     filled <- filled + 1
     order[filled] <- i
     used[i] <- TRUE
-    
+
     affected_children <- which(amat[, i] == 1)
     indeg[affected_children] <- indeg[affected_children] - 1
-    
+
     if (filled == p) break
   }
-  
+
   order
 }
 
@@ -65,7 +65,7 @@ topo_order_mat <- function(amat) {
 #' each variable will have its mean subtracted and be divided by its
 #' standard deviation.
 #'
-#' @return A data.frame of identically distributed simulated observations from the DAG. 
+#' @return A data.frame of identically distributed simulated observations from the DAG.
 #'
 #' @examples
 #' # Simulate DAG adjacency matrix with 6 nodes
@@ -79,55 +79,56 @@ simGausFromDAG <- function(amat, n, regparLim = c(0.5, 2),
                            resSDLim = c(0.1, 1),
                            pnegRegpar = 0.4,
                            standardize = FALSE) {
-  
   .check_if_pkgs_are_installed(
     pkgs = c("stats"),
     function_name = "simGausFromDAG"
   )
-  
+
   orig_names <- colnames(amat)
   if (is.null(orig_names)) orig_names <- paste0("X", seq_len(ncol(amat)))
-  
+
   p <- nrow(amat)
-  
+
   topo <- topo_order_mat(amat)
   amat_sorted <- amat[topo, topo]
-  
+
   parents_list <- lapply(seq_len(p), function(i) which(amat_sorted[i, ] == 1))
-  
+
   data_sorted <- matrix(0, n, p)
-  
+
   residual_sd <- stats::runif(p, min = resSDLim[1], max = resSDLim[2])
-  
+
   # pre-sample coefficients
   regpars <- vector("list", p)
   for (i in seq_len(p)) {
     parents <- parents_list[[i]]
     if (length(parents) > 0) {
-      signs <- sample(c(-1, 1), length(parents), replace = TRUE,
-                      prob = c(pnegRegpar, 1 - pnegRegpar))
+      signs <- sample(c(-1, 1), length(parents),
+        replace = TRUE,
+        prob = c(pnegRegpar, 1 - pnegRegpar)
+      )
       regpars[[i]] <- stats::runif(length(parents), regparLim[1], regparLim[2]) * signs
     }
   }
-  
+
   # simulate exogenous variable
   data_sorted[, 1] <- stats::rnorm(n, sd = residual_sd[1])
-  
+
   # simulate the rest
   for (i in 2:p) {
     parents <- parents_list[[i]]
     if (length(parents) == 0) {
-      x <- rnorm(n, sd = residual_sd[i])
+      x <- stats::rnorm(n, sd = residual_sd[i])
     } else {
       x <- data_sorted[, parents, drop = FALSE] %*% regpars[[i]] +
-        rnorm(n, sd = residual_sd[i])
+        stats::rnorm(n, sd = residual_sd[i])
     }
     if (standardize) x <- (x - mean(x)) / stats::sd(x)
     data_sorted[, i] <- x
   }
-  
+
   data_final <- data_sorted[, order(topo)]
   colnames(data_final) <- orig_names
-  
+
   as.data.frame(data_final)
 }

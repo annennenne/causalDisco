@@ -240,17 +240,14 @@ TEssGraph <- setRefClass(
   contains = "EssGraph",
   methods = list(
     # Performs one greedy step
-    greedy.step = function(
-      direction = c("forward", "backward", "turning"),
-      verbose = FALSE,
-      ...
-    ) {
+    greedy.step = function(direction = c("forward", "backward", "turning"),
+                           verbose = FALSE,
+                           ...) {
       stopifnot(!is.null(score <- getScore()))
 
       # Cast direction
       direction <- match.arg(direction)
-      alg.name <- switch(
-        direction,
+      alg.name <- switch(direction,
         forward = "GIES-F",
         backward = "GIES-B",
         turning = "GIES-T"
@@ -349,16 +346,14 @@ TemporalBIC <- setRefClass(
     .order = "vector"
   ),
   methods = list(
-    initialize = function(
-      data = NULL,
-      nodes = colnames(data),
-      lambda = 0.5 * log(nrow(data)),
-      intercept = TRUE,
-      format = c("raw", "scatter"),
-      knowledge = NULL,
-      order = NULL, # deprecated
-      ...
-    ) {
+    initialize = function(data = NULL,
+                          nodes = colnames(data),
+                          lambda = 0.5 * log(nrow(data)),
+                          intercept = TRUE,
+                          format = c("raw", "scatter"),
+                          knowledge = NULL,
+                          order = NULL, # deprecated
+                          ...) {
       if (!is.null(knowledge) && !is.null(order)) {
         stop(
           "Both `knowledge` and `order` supplied. ",
@@ -525,14 +520,12 @@ TemporalBDeu <- setRefClass(
     .iss = "numeric"
   ),
   methods = list(
-    initialize = function(
-      data = matrix(1, 1, 1),
-      nodes = colnames(data),
-      iss = 1,
-      knowledge = NULL,
-      order = NULL, # deprecated
-      ...
-    ) {
+    initialize = function(data = matrix(1, 1, 1),
+                          nodes = colnames(data),
+                          iss = 1,
+                          knowledge = NULL,
+                          order = NULL, # deprecated
+                          ...) {
       if (!is.null(knowledge) && !is.null(order)) {
         stop(
           "Both `knowledge` and `order` supplied. ",

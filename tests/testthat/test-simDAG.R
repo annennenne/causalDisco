@@ -8,7 +8,7 @@ test_that("simDAG works", {
   ), nrow = 4, byrow = TRUE)
   rownames(expected_amat) <- colnames(expected_amat) <- paste("x", 1:4, sep = "")
   expect_equal(amat, expected_amat)
-  
+
   amat <- simDAG(5, sparsityLim = c(0.5, 0.5))
   # (5 * 5 - 5) / (2 * 2) = 5 edges
   expect_equal(sum(amat), 5)

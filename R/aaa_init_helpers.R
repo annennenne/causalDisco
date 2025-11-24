@@ -56,19 +56,50 @@ ask_heap_size <- function() {
   }
 }
 
-#' @title Find Tetrad .jar files
+#' @title Find Tetrad GUI Launcher JAR
 #'
 #' @description
-#' This function searches for Tetrad JAR files in the package's Java directory.
+#' `find_tetrad_jar()` searches for the Tetrad GUI launcher JAR file for a
+#' specific version in a given directory. By default, it looks in the directory
+#' set by the `tetrad.dir` option or the `TETRAD_DIR` environment variable.
 #'
-#' @returns A character vector of file paths to the JAR files.
+#' @param version Character string specifying the Tetrad version to search for.
+#' Defaults to the package option `causalDisco.tetrad.version`.
+#'   You can override this by setting, for example:
+#'   `options(causalDisco.tetrad.version = "7.6.8")` **before loading the package**.
+#' @param dir Character string specifying the directory to search. Defaults to the value of
+#'   `getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))`.
 #'
-#' @example inst/roxygen-examples/find_tetrad_jars_example.R
+#' @return A character vector of length 1 containing the path to the Tetrad GUI launcher JAR.
+#'   If the file is not found, a warning is issued and an empty vector is returned.
+#'
+#' @examples
+#' \dontrun{
+#' gui_jar <- find_tetrad_jar()
+#' print(gui_jar)
+#' }
+#'
 #' @keywords internal
-find_tetrad_jars <- function() {
-  jar_dir <- system.file("java", package = "causalDisco")
-  list.files(jar_dir, pattern = "\\.jar$", full.names = TRUE)
+find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
+                            dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))) {
+  # Check that directory exists
+  if (!nzchar(dir) || !dir.exists(dir)) {
+    stop("Tetrad directory not found. Please install Tetrad or set the TETRAD_DIR environment variable or tetrad.dir option.")
+  }
+
+  # Build expected filename
+  jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
+  jar_path <- file.path(dir, jar_name)
+
+  # Check if the file exists
+  if (!file.exists(jar_path)) {
+    warning("Tetrad GUI launcher JAR not found: ", jar_path)
+    return(character(0))
+  }
+
+  return(jar_path)
 }
+
 
 #' @title Initialize Java Virtual Machine for causalDisco
 #'
@@ -76,7 +107,7 @@ find_tetrad_jars <- function() {
 #' This function initializes the Java Virtual Machine (JVM) for the causalDisco
 #' package. It sets the heap size and classpath based on the Tetrad JAR files
 #' found. If the JVM is already initialized, it adds the JARs to the classpath.
-#'
+#' TODO: Modify description and code
 #' @param heap A string specifying the heap size for the JVM. "2g" for 2
 #'  gigabytes.
 #'
@@ -89,7 +120,7 @@ init_java <- function(heap = default_heap()) {
     ),
     function_name = "init_java"
   )
-  jars <- find_tetrad_jars()
+  jars <- find_tetrad_jar()
   if (!length(jars)) {
     stop(
       "No Tetrad JARs found in ",

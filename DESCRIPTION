@@ -81,6 +81,7 @@ Collate:
     'fci.R'
     'gausCorScore.R'
     'ges.R'
+    'install_tetrad.R'
     'knowledge.R'
     'knowledgeable_caugi.R'
     'maketikz.R'

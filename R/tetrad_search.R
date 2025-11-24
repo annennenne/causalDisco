@@ -641,7 +641,7 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{conflict_rule = 1} –
     #'      \itemize{
-    #'        \item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+    #'        \item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
     #'         \code{\link[pcalg]{pc}},
     #'        \item \code{2} – All collider conflicts using bidirected edges
     #'         should be prioritized,
@@ -908,7 +908,7 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{conflict_rule = 1} –
     #'      \itemize{
-    #'        \item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+    #'        \item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
     #'         \code{\link[pcalg]{pc}},
     #'        \item \code{2} – All collider conflicts using bidirected edges
     #'         should be prioritized,
@@ -926,7 +926,7 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{conflict_rule = 1} –
     #'      \itemize{
-    #'        \item \code{1} – The “overwrite” rule as introduced in the {pcalg} package, see
+    #'        \item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
     #'         \code{\link[pcalg]{pc}},
     #'        \item \code{2} – All collider conflicts using bidirected edges
     #'         should be prioritized,

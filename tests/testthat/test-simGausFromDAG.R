@@ -7,10 +7,10 @@ test_that("simGausFromDAG respects causal structure", {
     0, 0, 0, 0
   ), nrow = 4, byrow = TRUE)
   rownames(amat) <- colnames(amat) <- paste("x", 1:4, sep = "")
-  
+
   dat <- simGausFromDAG(amat, 1000, pnegRegpar = 0, standardize = TRUE)
   corr_mat <- cor(dat)
-  
+
   # Check that correlations respect the DAG structure
   expect_true(abs(corr_mat[1, 4]) < 0.2)
   expect_true(abs(corr_mat[2, 4]) < 0.2)

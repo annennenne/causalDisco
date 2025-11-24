@@ -58,7 +58,7 @@ test_that("knowledge helper builds tiered/required/forbidden objects and casts t
 test_that("Java and Tetrad JARs are ready", {
   skip_if_no_tetrad()
 
-  jars <- find_tetrad_jars()
+  jars <- find_tetrad_jar()
   expect_true(length(jars) > 0)
   expect_true(all(file.exists(jars)))
 })
@@ -353,7 +353,7 @@ test_that("set_alg() succeeds for score-only algorithms when a score is set and 
     "sp",
     "fask",
     "direct_lingam",
-    "boss_pod"
+    "boss_pod" # this one fails on 7.6.7?
   )
 
   purrr::walk(score_only, \(alg) {

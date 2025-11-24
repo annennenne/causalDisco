@@ -43,7 +43,7 @@
 #'
 #' # Convert to adjacency matrix using BPCO-method (threshold = 0.5)
 #' probmat2amat(pmat, threshold = 0.5, method = "bpco")
-#' 
+#'
 #' @export
 probmat2amat <- function(probmat, threshold, method = "cutoff",
                          keep_vnames = TRUE, graph_criterion = "pdag",

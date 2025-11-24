@@ -14,6 +14,7 @@ gigabytes.}
 This function initializes the Java Virtual Machine (JVM) for the causalDisco
 package. It sets the heap size and classpath based on the Tetrad JAR files
 found. If the JVM is already initialized, it adds the JARs to the classpath.
+TODO: Modify description and code
 }
 \examples{
 ### init_java() example ###

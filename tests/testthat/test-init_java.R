@@ -13,8 +13,8 @@ test_that("init_java starts JVM once and adds jars", {
     file.create(tmp)
 
     # save & stub
-    orig <- get("find_tetrad_jars", envir = ns)
-    assignInNamespace("find_tetrad_jars", function() tmp, pkg)
+    orig <- get("find_tetrad_jar", envir = ns)
+    assignInNamespace("find_tetrad_jar", function() tmp, pkg)
 
     # exercise
     causalDisco:::init_java(heap = "4g")
@@ -22,19 +22,19 @@ test_that("init_java starts JVM once and adds jars", {
     expect_true(tmp %in% .j_state$class_path)
 
     # restore
-    assignInNamespace("find_tetrad_jars", orig, pkg)
+    assignInNamespace("find_tetrad_jar", orig, pkg)
 
     # ---- second stub: return tmp and tmp2 ---------------------------
     tmp2 <- tempfile(fileext = ".jar")
     file.create(tmp2)
-    assignInNamespace("find_tetrad_jars", function() c(tmp, tmp2), pkg)
+    assignInNamespace("find_tetrad_jar", function() c(tmp, tmp2), pkg)
 
     # exercise again
     causalDisco:::init_java(heap = "4g")
     expect_true(all(c(tmp, tmp2) %in% .j_state$class_path))
 
     # final restore (cleanup)
-    assignInNamespace("find_tetrad_jars", orig, pkg)
+    assignInNamespace("find_tetrad_jar", orig, pkg)
   })
 })
 
@@ -42,10 +42,10 @@ test_that("init_java errors when no Tetrad JARs are found", {
   with_mock_rjava({
     pkg <- "causalDisco"
     ns <- asNamespace(pkg)
-    orig <- get("find_tetrad_jars", envir = ns)
-    withr::defer(assignInNamespace("find_tetrad_jars", orig, pkg))
+    orig <- get("find_tetrad_jar", envir = ns)
+    withr::defer(assignInNamespace("find_tetrad_jar", orig, pkg))
 
-    assignInNamespace("find_tetrad_jars", function() character(), pkg)
+    assignInNamespace("find_tetrad_jar", function() character(), pkg)
 
     expect_error(
       causalDisco:::init_java(heap = "2g"),

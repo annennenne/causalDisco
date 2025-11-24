@@ -4,6 +4,10 @@ skip_if_no_tetrad <- function() {
     testthat::skip("rJava not installed")
   }
 
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
+
   ok <- tryCatch(
     {
       init_java()
@@ -19,7 +23,7 @@ skip_if_no_tetrad <- function() {
   # light sanity: at least one jar on classpath from your package
   has_jar <- tryCatch(
     {
-      length(find_tetrad_jars()) > 0
+      length(find_tetrad_jar()) > 0
     },
     error = function(e) FALSE
   )
