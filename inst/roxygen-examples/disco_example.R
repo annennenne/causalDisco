@@ -1,5 +1,5 @@
 ### disco() example ###
-
+\dontrun{
 data("tpcExample")
 
 # define background knowledge
@@ -16,3 +16,4 @@ kn <- knowledge(
 my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.01)
 
 disco(data = tpcExample, method = my_pc)
+}

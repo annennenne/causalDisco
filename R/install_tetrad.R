@@ -36,7 +36,7 @@ create_output <- function(installed, version = NULL, message) {
 #' @param x A tetrad_check object.
 #' @param ... Additional arguments (not used).
 #' @examples
-#' create_output(TRUE, "7.6.7", "Tetrad is installed.") |> print()
+#' causalDisco:::create_output(TRUE, "7.6.7", "Tetrad is installed.") |> print()
 #' @export
 print.tetrad_check <- function(x, ...) {
   cat("Installed:", x$installed, "\n")
@@ -47,6 +47,16 @@ print.tetrad_check <- function(x, ...) {
 # -------------------------------
 # Check Tetrad installation
 # -------------------------------
+#' Check Tetrad Installation
+#' @param version Character. The version of Tetrad to check.
+#'  Default is the value of `getOption("causalDisco.tetrad.version")`.
+#' @return A list with elements:
+#'  - `installed`: Logical, whether Tetrad is installed.
+#'  - `version`: Character or NULL, the installed version if found.
+#'  - `message`: Character, a message describing the status.
+#' @examples
+#' check_tetrad_install()
+#' @export
 check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version")) {
   tetrad_dir <- get_tetrad_dir()
 
@@ -54,7 +64,8 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      message = "Tetrad directory not configured. Call tetrad_install() to install it."
+      message = paste0("Tetrad directory not configured. Call tetrad_install()
+                       to install it.")
     ))
   }
 
@@ -78,7 +89,8 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      message = paste0("Tetrad version ", version, " not found. Please install it using tetrad_install().")
+      message = paste0("Tetrad version ", version, " not found.
+                       Please install it using tetrad_install().")
     ))
   }
 }

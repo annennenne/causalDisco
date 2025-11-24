@@ -1,5 +1,10 @@
 ### get_tiers() example ###
 
-kn <- knowledge(1 ~ V1, 2 ~ V2)
+kn <- knowledge(
+  tier(
+    1 ~ V1 + V2,
+    2 ~ V3
+  )
+)
 
 get_tiers(kn)

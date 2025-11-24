@@ -1,5 +1,5 @@
 ### ges() example ###
-
+\dontrun{
 data("tpcExample")
 
 kn <- knowledge(
@@ -19,3 +19,4 @@ disco(tpcExample, my_ges, knowledge = kn)
 # or using my_ges directly
 my_ges <- my_ges |> set_knowledge(kn)
 my_ges(tpcExample)
+}

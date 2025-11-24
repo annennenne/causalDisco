@@ -4,6 +4,7 @@
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
+\dontrun{
 data("tpcExample")
 
 # Recommended:
@@ -23,3 +24,4 @@ s$set_alg("pc")
 g <- s$run_search()
 
 print(g)
+}

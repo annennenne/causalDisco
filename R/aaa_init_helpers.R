@@ -84,7 +84,10 @@ find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
                             dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))) {
   # Check that directory exists
   if (!nzchar(dir) || !dir.exists(dir)) {
-    stop("Tetrad directory not found. Please install Tetrad or set the TETRAD_DIR environment variable or tetrad.dir option.")
+    stop(paste0(
+      "Tetrad directory not found. Please install Tetrad or set the ",
+      "TETRAD_DIR environment variable or tetrad.dir option."
+    ))
   }
 
   # Build expected filename
@@ -107,7 +110,6 @@ find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
 #' This function initializes the Java Virtual Machine (JVM) for the causalDisco
 #' package. It sets the heap size and classpath based on the Tetrad JAR files
 #' found. If the JVM is already initialized, it adds the JARs to the classpath.
-#' TODO: Modify description and code
 #' @param heap A string specifying the heap size for the JVM. "2g" for 2
 #'  gigabytes.
 #'
@@ -115,23 +117,25 @@ find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
 #' @keywords internal
 init_java <- function(heap = default_heap()) {
   .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rJava"
-    ),
+    pkgs = "rJava",
     function_name = "init_java"
   )
-  jars <- find_tetrad_jar()
-  if (!length(jars)) {
+
+  jar <- find_tetrad_jar()
+  if (!length(jar)) {
     stop(
-      "No Tetrad JARs found in ",
-      system.file("java", package = "causalDisco")
+      "No Tetrad JAR found for version ",
+      getOption("causalDisco.tetrad.version"),
+      " in ", system.file("java", package = "causalDisco")
     )
   }
 
   if (rJava::.jniInitialized) {
-    rJava::.jaddClassPath(setdiff(jars, rJava::.jclassPath()))
+    if (!(jar %in% rJava::.jclassPath())) {
+      rJava::.jaddClassPath(jar)
+    }
   } else {
-    rJava::.jinit(parameters = paste0("-Xmx", heap), classpath = jars)
+    rJava::.jinit(parameters = paste0("-Xmx", heap), classpath = jar)
   }
 }
 

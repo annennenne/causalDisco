@@ -262,6 +262,7 @@ test_that("run_search errors are thrown in the right order", {
 
 test_that("run_search returns knowledgeable_caugi for tpc success path", {
   skip_if_not_installed("tidyselect")
+  skip_if_not_installed("gtools")
   set.seed(1)
   df <- data.frame(
     p1_x = rnorm(100),

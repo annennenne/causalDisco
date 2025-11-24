@@ -1,5 +1,5 @@
 ### rdata_to_tetrad() / tetrad_data_to_rdata() example ###
-
+\dontrun{
 # Minimal toy data: one continuous (numeric), one discrete (integer)
 set.seed(42)
 df <- data.frame(
@@ -24,3 +24,4 @@ stopifnot(is.numeric(df_roundtrip$cont), is.integer(df_roundtrip$disc))
 # Values should match (up to numeric tolerance)
 stopifnot(all.equal(df$cont, df_roundtrip$cont))
 stopifnot(identical(df$disc, df_roundtrip$disc))
+}

@@ -1,5 +1,5 @@
 ### pc() example ###
-
+\dontrun{
 data("tpcExample")
 
 kn <- knowledge(
@@ -19,3 +19,4 @@ disco(tpcExample, my_pc, knowledge = kn)
 # or using my_pc directly
 my_pc <- my_pc |> set_knowledge(kn)
 my_pc(tpcExample)
+}

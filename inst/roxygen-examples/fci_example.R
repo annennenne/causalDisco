@@ -1,5 +1,5 @@
 ### fci() example ###
-
+\dontrun{
 data("tpcExample")
 
 kn <- knowledge(
@@ -19,3 +19,4 @@ disco(tpcExample, my_fci, knowledge = kn)
 # or using my_fci directly
 my_fci <- my_fci |> set_knowledge(kn)
 my_fci(tpcExample)
+}

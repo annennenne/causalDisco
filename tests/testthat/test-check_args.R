@@ -24,7 +24,9 @@ test_that("engine guard in check_args_and_distribute_args() rejects unsupported 
 
 test_that("tetrad: requires either test or score, consumes verbose, and covers score-arg branch", {
   skip_if_not_installed("rJava")
-
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   # neither test nor score
   search_t <- TetradSearch$new()
   expect_error(
@@ -369,6 +371,9 @@ test_that("top-level dispatcher routes to each engine helper", {
   skip_if_not_installed("pcalg")
   skip_if_not_installed("bnlearn")
   skip_if_not_installed("rJava")
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
 
   out_t <- check_args_and_distribute_args(
     search = TetradSearch$new(),

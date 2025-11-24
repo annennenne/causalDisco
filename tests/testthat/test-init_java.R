@@ -2,12 +2,12 @@
 # init_java()
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("init_java starts JVM once and adds jars", {
+test_that("init_java starts JVM once and adds the specific jar", {
   with_mock_rjava({
     pkg <- "causalDisco"
     ns <- asNamespace(pkg)
 
-    # ---- first stub: return only tmp --------------------------------
+    # ---- stub: return only tmp --------------------------------------
     tmp <- tempfile(fileext = ".jar")
     dir.create(dirname(tmp), recursive = TRUE, showWarnings = FALSE)
     file.create(tmp)
@@ -21,22 +21,15 @@ test_that("init_java starts JVM once and adds jars", {
     expect_true(.j_state$started)
     expect_true(tmp %in% .j_state$class_path)
 
-    # restore
-    assignInNamespace("find_tetrad_jar", orig, pkg)
-
-    # ---- second stub: return tmp and tmp2 ---------------------------
-    tmp2 <- tempfile(fileext = ".jar")
-    file.create(tmp2)
-    assignInNamespace("find_tetrad_jar", function() c(tmp, tmp2), pkg)
-
-    # exercise again
+    # exercise again to test adding same jar does not duplicate
     causalDisco:::init_java(heap = "4g")
-    expect_true(all(c(tmp, tmp2) %in% .j_state$class_path))
+    expect_equal(sum(.j_state$class_path == tmp), 1) # only one copy
 
     # final restore (cleanup)
     assignInNamespace("find_tetrad_jar", orig, pkg)
   })
 })
+
 
 test_that("init_java errors when no Tetrad JARs are found", {
   with_mock_rjava({
@@ -49,7 +42,7 @@ test_that("init_java errors when no Tetrad JARs are found", {
 
     expect_error(
       causalDisco:::init_java(heap = "2g"),
-      "No Tetrad JARs found",
+      "No Tetrad JAR found",
       fixed = TRUE
     )
   })

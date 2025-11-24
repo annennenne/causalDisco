@@ -5,6 +5,9 @@ pkg <- "causalDisco"
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that(".onLoad sets default heap when option is absent", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_options(java.heap.size = NULL)
 
   with_mocked_bindings(
@@ -18,8 +21,11 @@ test_that(".onLoad sets default heap when option is absent", {
 })
 
 test_that(".onAttach prompts and sets heap when interactive and option/env missing", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_options(java.heap.size = NULL)
-  withr::local_envvar(JAVA_HEAP_SIZE = "")
+  withr::local_envvar(JAVA_HEAP_SIZE = NULL)
   called <- FALSE
   seen_heap <- NULL
 
@@ -36,7 +42,7 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
     .package = pkg,
     {
       expect_message(
-        .onAttach(libname = "", pkgname = pkg),
+        causalDisco:::.onAttach(libname = "", pkgname = pkg),
         "causalDisco is inintalized with Java heap size 4gb",
         class = "packageStartupMessage"
       )
@@ -48,6 +54,9 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
 })
 
 test_that(".onAttach canonicalises heap option to 'Ng'", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_envvar(JAVA_HEAP_SIZE = "")
   withr::local_options(java.heap.size = "4096m")
 
@@ -69,6 +78,9 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
 })
 
 test_that(".onAttach warns when runtime heap != requested", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_envvar(JAVA_HEAP_SIZE = "")
   withr::local_options(java.heap.size = "2g")
 
@@ -89,6 +101,9 @@ test_that(".onAttach warns when runtime heap != requested", {
 })
 
 test_that(".onAttach does not prompt in non-interactive mode", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_envvar(JAVA_HEAP_SIZE = "")
   withr::local_options(java.heap.size = "3g")
   prompted <- FALSE
@@ -112,6 +127,9 @@ test_that(".onAttach does not prompt in non-interactive mode", {
 })
 
 test_that(".onAttach does not prompt when env var set", {
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
   withr::local_options(java.heap.size = NULL)
   withr::local_envvar(JAVA_HEAP_SIZE = "5g")
   prompted <- FALSE

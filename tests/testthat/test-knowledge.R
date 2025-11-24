@@ -1503,6 +1503,11 @@ test_that("as_tetrad_knowledge() errors when rJava is missing", {
 })
 
 test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
+  skip_if_not_installed("mockery")
+  if (is.null(check_tetrad_install()$version)) {
+    testthat::skip("Tetrad not installed or version unknown")
+  }
+
   kn <- knowledge(
     tibble::tibble(X = 1, Y = 2, Z = 3),
     tier(1 ~ X),
