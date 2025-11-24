@@ -7,9 +7,8 @@
 knowledge(...)
 }
 \arguments{
-\item{...}{Either
-\itemize{
-\item a single \strong{data frame} (first argument) whose column names initialise the
+\item{...}{\itemize{
+\item optionally, a single \strong{data frame} (first argument) whose column names initialise the
 variable set and freeze the knowledge object, followed by
 \item zero or more calls to the mini‑DSL:
 \code{tier()}, \code{forbidden()}, \code{required()}, or \code{exogenous()} (aliases: \code{exo()},

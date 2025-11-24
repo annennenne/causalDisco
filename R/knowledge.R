@@ -40,8 +40,8 @@
 #' The left-hand side of the formula is the *from* variable, and the right-hand
 #' side is the *to* variable.
 #'
-#' @param ... Either
-#'  - a single **data frame** (first argument) whose column names initialise the
+#' @param ...
+#'  - optionally, a single **data frame** (first argument) whose column names initialise the
 #'    variable set and freeze the knowledge object, followed by
 #'  - zero or more calls to the mini‑DSL:
 #'    `tier()`, `forbidden()`, `required()`, or `exogenous()` (aliases: `exo()`,

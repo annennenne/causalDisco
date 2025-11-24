@@ -4,6 +4,6 @@ linters: linters_with_defaults(
     object_name_linter = NULL,
     object_length_linter = NULL,
     indentation_linter = NULL,
-    object_usage_linter
+    object_usage_linter = NULL
   )
 encoding: "UTF-8"
