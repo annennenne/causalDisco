@@ -36,7 +36,7 @@ create_output <- function(installed, version = NULL, message) {
 #' @param x A tetrad_check object.
 #' @param ... Additional arguments (not used).
 #' @examples
-#' causalDisco:::create_output(TRUE, "7.6.7", "Tetrad is installed.") |> print()
+#' causalDisco:::create_output(TRUE, "7.6.8", "Tetrad is installed.") |> print()
 #' @export
 print.tetrad_check <- function(x, ...) {
   cat("Installed:", x$installed, "\n")
@@ -100,7 +100,7 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
 #' This function downloads and installs the Tetrad GUI JAR file to a specified directory.
 #' It also sets the TETRAD_DIR environment variable for future R sessions.
 #'
-#' @param version Character. The version of Tetrad to install. Default is "7.6.7".
+#' @template tetrad_version
 #' @param dir Character. The directory to install Tetrad into. Default is "~/tetrad".
 #' @param set_renviron Logical. Whether to set the TETRAD_DIR in .Renviron. Default is TRUE.
 #' @param force Logical. Whether to force re-download if the file already exists. Default is FALSE.

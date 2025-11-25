@@ -18,3 +18,4 @@ README.*
 CRAN-SUBMISSION
 ^codecov\.yml$
 ^README\.Rmd$
+man-roxygen

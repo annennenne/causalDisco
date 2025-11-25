@@ -1,6 +1,6 @@
 #' Default Tetrad version used in the package
 #' @keywords internal
-.default_tetrad_version <- "7.6.7"
+.default_tetrad_version <- "7.6.8"
 
 .onLoad <- function(libname, pkgname) {
   if (is.null(getOption("java.heap.size"))) {

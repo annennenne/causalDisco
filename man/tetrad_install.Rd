@@ -12,7 +12,8 @@ tetrad_install(
 )
 }
 \arguments{
-\item{version}{Character. The version of Tetrad to install. Default is "7.6.7".}
+\item{version}{Character. The version of Tetrad to install.
+Default is "7.6.8".}
 
 \item{dir}{Character. The directory to install Tetrad into. Default is "~/tetrad".}
 

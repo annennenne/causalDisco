@@ -15,5 +15,5 @@
 Print method for tetrad_check objects.
 }
 \examples{
-causalDisco:::create_output(TRUE, "7.6.7", "Tetrad is installed.") |> print()
+causalDisco:::create_output(TRUE, "7.6.8", "Tetrad is installed.") |> print()
 }

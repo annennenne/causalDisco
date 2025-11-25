@@ -1418,7 +1418,7 @@ TetradSearch <- R6Class(
       )
       self$set_params(
         NUMBER_RESAMPLING = number_resampling,
-        PERCENT_RESAMPLE_SIZE = percent_resample_size,
+        FRACTION_RESAMPLE_SIZE = percent_resample_size,
         ADD_ORIGINAL_DATASET = add_original,
         RESAMPLING_WITH_REPLACEMENT = with_replacement,
         RESAMPLING_ENSEMBLE = resampling_ensemble,
@@ -2608,6 +2608,9 @@ TetradSearch <- R6Class(
                                 use_data_order = TRUE,
                                 num_starts = 1,
                                 complete_rule_set_used = TRUE) {
+      # Early exit if the Java class does not exist
+      class_name <- "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossDot" # TODO: v7.6.9 renames this to BossPod
+
       stopifnot(
         is.numeric(c(num_starts)),
         is.logical(c(
@@ -2627,10 +2630,7 @@ TetradSearch <- R6Class(
         NUM_STARTS = num_starts
       )
 
-      self$alg <- .jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossPod",
-        self$score
-      )
+      self$alg <- .jnew(class_name, self$score)
       self$alg$setKnowledge(self$knowledge)
     },
     set_fcit_alg = function(use_bes = TRUE,
@@ -2880,7 +2880,7 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
 
-      self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
+      self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc") # TODO: v7.6.9 removes this folder. Figure out where new one is
     },
     set_ccd_alg = function(depth = -1,
                            apply_r1 = TRUE) {

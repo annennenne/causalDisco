@@ -14,7 +14,7 @@ test_that(".onLoad sets default heap when option is absent", {
     default_heap = function() "2g",
     .package = pkg,
     {
-      .onLoad(libname = "", pkgname = pkg)
+      causalDisco:::.onLoad(libname = "", pkgname = pkg)
       expect_equal(getOption("java.heap.size"), "2g")
     }
   )
@@ -43,7 +43,7 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
     {
       expect_message(
         causalDisco:::.onAttach(libname = "", pkgname = pkg),
-        "causalDisco is inintalized with Java heap size 4gb",
+        "Java successfully initialized with 4 GB",
         class = "packageStartupMessage"
       )
       expect_true(called)
@@ -68,8 +68,8 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
     .package = pkg,
     {
       expect_message(
-        .onAttach(libname = "", pkgname = pkg),
-        "Java heap size 4gb",
+        causalDisco:::.onAttach(libname = "", pkgname = pkg),
+        "Java heap size requested: 4 GB",
         class = "packageStartupMessage"
       )
       expect_equal(getOption("java.heap.size"), "4g")
@@ -91,9 +91,9 @@ test_that(".onAttach warns when runtime heap != requested", {
     current_heap_gb = function() 6,
     .package = pkg,
     {
-      expect_warning(
-        .onAttach(libname = "", pkgname = pkg),
-        "Java heap is 6 GB but you requested 2 GB",
+      expect_message(
+        causalDisco:::.onAttach(libname = "", pkgname = pkg),
+        "WARNING: Java heap is 6 GB but you requested 2 GB. Restart R to change the heap.",
         fixed = TRUE
       )
     }
@@ -119,7 +119,7 @@ test_that(".onAttach does not prompt in non-interactive mode", {
     current_heap_gb = function() 3,
     .package = pkg,
     {
-      .onAttach(libname = "", pkgname = pkg)
+      causalDisco:::.onAttach(libname = "", pkgname = pkg)
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "3g")
     }
@@ -145,7 +145,7 @@ test_that(".onAttach does not prompt when env var set", {
     current_heap_gb = function() 5,
     .package = pkg,
     {
-      .onAttach(libname = "", pkgname = pkg)
+      causalDisco:::.onAttach(libname = "", pkgname = pkg)
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "5g")
     }

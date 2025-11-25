@@ -159,6 +159,15 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
   method
 }
 
+#' @title Extract the knowledge from a knowledgeable_caugi
+#'
+#' @description
+#' S3 method to extract the `knowledge` object from a `knowledgeable_caugi`.
+#'
+#' @param x A `knowledgeable_caugi` object.
+#'
+#' @return The nested `knowledge` object.
+#'
 #' @export
 knowledge.knowledgeable_caugi <- function(x) {
   x$knowledge
