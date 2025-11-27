@@ -2,16 +2,17 @@
 #' @keywords internal
 .default_tetrad_version <- "7.6.8"
 
-.onLoad <- function(libname, pkgname) {
+.onLoad <- function(...) {
   if (is.null(getOption("java.heap.size"))) {
     options(java.heap.size = default_heap())
   }
   if (is.null(getOption("causalDisco.tetrad.version"))) {
     options(causalDisco.tetrad.version = .default_tetrad_version)
   }
+  S7::methods_register()
 }
 
-.onAttach <- function(libname, pkgname) {
+.onAttach <- function(...) {
   if (is_interactive() &&
     is.null(getOption("java.heap.size")) &&
     !nzchar(Sys.getenv("JAVA_HEAP_SIZE", unset = ""))) {
@@ -65,7 +66,7 @@
   } else if (tetrad_status$installed) {
     msg <- paste0(msg, "  WARNING: Java initialization failed. Check your Java setup.\n")
   } else {
-    msg <- paste0(msg, "  Tetrad is not installed. Run tetrad_install() to install it.\n")
+    msg <- paste0(msg, "  Tetrad is not installed. Run install_tetrad() to install it.\n")
   }
 
   msg <- paste0(

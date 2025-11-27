@@ -82,5 +82,6 @@ tges_causalDisco_runner <- function(score, ...,
       search$run_search(data, set_suff_stat = FALSE)
     }
   )
+
   runner
 }

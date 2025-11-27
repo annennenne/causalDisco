@@ -26,41 +26,13 @@ Time to hit the disco 🪩
 
 ## Installation
 
-### Install `pak`
-
-`pak` is the easiest way to install `causalDisco` and its dependencies:
-
-``` r
-install.packages("pak",
-  repos =
-    sprintf(
-      "https://r-lib.github.io/p/pak/stable/%s/%s/%s",
-      .Platform$pkgType,
-      R.Version()$os,
-      R.Version()$arch
-    )
-)
-```
-
 ### Install `causalDisco`
 
-Once `pak` is installed, run:
+Install the package from GitHub using `pak`:
 
 ``` r
-pak::pkg_install("github::frederikfabriciusbjerre/causalDisco")
+pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
 ```
-
-If needed, you can check and install system dependencies first:
-
-``` r
-pak::pkg_sysreqs("github::frederikfabriciusbjerre/causalDisco",
-  dependencies = TRUE,
-  upgrade = TRUE
-)
-```
-
-This will give you a list of system dependencies, which you need to
-install first, if they are not already on your system.
 
 ### Installing Rust
 
@@ -74,12 +46,18 @@ to install Rust.
 
 `causalDisco` provides an interface to the Java library
 [`Tetrad`](https://github.com/cmu-phil/tetrad) for causal discovery
-algorithms. To use this, install JDK 21 or 25 following [this
+algorithms. To use algorithms from `Tetrad` you need to install JDK 21
+(or newer) by following [this
 guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad),
 
 or use your system’s package manager.
 
-<!-- TODO when implemented?: After installing Java / JDK call the function install_tetrad() to install `Tetrad` -->
+The current supported version of `Tetrad` can then be installed by
+calling
+
+``` r
+install_tetrad()
+```
 
 ## Example
 
@@ -89,6 +67,12 @@ from the packages `causalDisco` itself, the Java library `Tetrad`,
 
 ``` r
 library(causalDisco)
+#> causalDisco startup:
+#>   Java heap size requested: 2 GB
+#>   Tetrad version: 7.6.8
+#>   Java successfully initialized with 2 GB.
+#>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
+#>   Restart R to apply changes.
 
 # load data
 data("tpcExample")
@@ -105,22 +89,54 @@ kn <- knowledge(
 
 # use Tetrad PC algorithm with conditional Gaussian test
 tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
+disco_tetrad_pc <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
 
 # similarly, one could do
 tetrad_pc <- tetrad_pc |> set_knowledge(kn)
-tetrad_pc(tpcExample)
+disco_tetrad_pc_new <- tetrad_pc(tpcExample)
 
 # use causalDisco's own tges algorithm with temporal BIC score
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
-disco(data = tpcExample, method = cd_tges, knowledge = kn)
+disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
 ```
 
-<!-- TODO: Some sort of visualization of the resulting PDAG? -->
+You can visualize the resulting causal graph using the `plot()`
+function:
+
+``` r
+plot(disco_cd_tges)
+```
+
+<img src="man/figures/README-plot-1.png" width="100%" />
+
+## TODO
+
+- Tetrad does not use tier knowledge correctly yet.
+
+- Our tges algorithm does not yet support forbidden/required edges from
+  knowledge objects.
+
+- Piping as done above for Tetrad loses $knowledge$tiers information.
+
+- Improve plot?
+
+- Remove @R6examples and make our own (it doesn’t work)
+
+- Long term: Move to Tetrad v7.6.9 v7.6.9 removes this entire folder
+
+<https://github.com/cmu-phil/tetrad/tree/v7.6.8/tetrad-lib/src/main/java/edu/cmu/tetrad/algcomparison/algorithm/cluster>
+
+Was removed in this commit
+<https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b>
+
+Changelog says “and a generalization of GFFC (Generalized Find Factor
+Clusters) of FOFC and FTFC, providing multiple strategies for
+discovering latent clusterings from measurement data.”
+
+so we need to implement this in causalDisco (help?)
 
 ## Bugs & requests
 
 Bug reports and feature requests are welcome:
 
-👉 [open an
-issue](https://github.com/frederikfabriciusbjerre/causalDisco/issues).
+👉 [open an issue](https://github.com/BjarkeHautop/causalDisco/issues).

@@ -2879,8 +2879,9 @@ TetradSearch <- R6Class(
         INCLUDE_STRUCTURE_MODEL = include_structure_model,
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
-
-      self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc") # TODO: v7.6.9 removes this folder. Figure out where new one is
+      # TODO: v7.6.9 removes this folder. Figure out where new one is
+      # See this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b
+      self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
     },
     set_ccd_alg = function(depth = -1,
                            apply_r1 = TRUE) {

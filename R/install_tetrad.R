@@ -64,7 +64,7 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      message = paste0("Tetrad directory not configured. Call tetrad_install()
+      message = paste0("Tetrad directory not configured. Call install_tetrad()
                        to install it.")
     ))
   }
@@ -90,7 +90,7 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
       installed = FALSE,
       version = NULL,
       message = paste0("Tetrad version ", version, " not found.
-                       Please install it using tetrad_install().")
+                       Please install it using install_tetrad().")
     ))
   }
 }
@@ -108,10 +108,10 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
 #' @return Invisible character string of the path to the downloaded JAR file.
 #' @examples
 #' \dontrun{
-#' tetrad_install()
+#' install_tetrad()
 #' }
 #' @export
-tetrad_install <- function(
+install_tetrad <- function(
   version = getOption("causalDisco.tetrad.version"), dir = NULL, set_renviron = TRUE, force = FALSE
 ) {
   # Default directory

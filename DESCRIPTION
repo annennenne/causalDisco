@@ -23,12 +23,14 @@ biocViews:
 Imports:
     caugi,
     dplyr,
+    igraph,
     methods,
     pcalg,
     purrr,
     R6,
     rJava,
     rlang,
+    S7,
     tibble,
     tidyselect
 Suggests: 
@@ -38,7 +40,6 @@ Suggests:
     glue,
     graph,
     gtools,
-    igraph,
     magick,
     MASS,
     micd,
@@ -93,6 +94,7 @@ Collate:
     'pcalg_type_tests.R'
     'plot.R'
     'plotTempoMech.R'
+    'plot_caugi.R'
     'probmat2amat.R'
     'regTest.R'
     'simDAG.R'
@@ -106,6 +108,7 @@ Collate:
     'tfci_run.R'
     'tges.R'
     'tges_run.R'
+    'tges_run_fixed.R'
     'tpc.R'
     'tplot.R'
     'zzz.R'
