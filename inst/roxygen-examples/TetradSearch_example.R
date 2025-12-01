@@ -3,6 +3,8 @@
 # Generally, we do not recommend using the R6 classes directly, but rather
 # use the disco() or any method function, for example pc(), instead.
 
+# Requires Tetrad to be installed
+\dontrun{
 # Load data
 set.seed(1405)
 data("tpcExample")
@@ -25,3 +27,4 @@ s$set_alg("pc")
 g <- s$run_search()
 
 print(g)
+}
