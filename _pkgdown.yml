@@ -1,0 +1,6 @@
+url: https://bjarkehautop.github.io/causalDisco/
+template:
+  bootstrap: 5
+  math-rendering: katex
+
+logo: man/figures/hex.png

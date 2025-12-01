@@ -12,7 +12,7 @@
 #' that will run with `disco`.
 #'
 #' @example inst/roxygen-examples/disco_method_example.R
-#'
+#' @noRd
 #' @keywords internal
 disco_method <- function(builder, method_class) {
   f <- function(data) {

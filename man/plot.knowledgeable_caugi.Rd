@@ -2,20 +2,40 @@
 % Please edit documentation in R/plot_caugi.R
 \name{plot.knowledgeable_caugi}
 \alias{plot.knowledgeable_caugi}
-\title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object
-This function visualizes a causal graph stored within a \code{caugi} object.}
+\title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object}
 \usage{
 \method{plot}{knowledgeable_caugi}(x, ...)
 }
 \arguments{
 \item{x}{A \code{caugi} object containing the causal graph and knowledge.}
 
-\item{...}{Additional arguments passed to the plot function.}
+\item{...}{Additional arguments passed to igraph \code{plot}.}
 }
 \value{
 A plot of the causal graph.
 }
 \description{
-Plot a Causal Graph from a \code{knowledgeable_caugi} Object
 This function visualizes a causal graph stored within a \code{caugi} object.
+It incorporates background knowledge to highlight required and forbidden edges. The required
+edges are drawn in blue, while forbidden edges are shown in red and are dashed. If tiered
+knowledge is provided, the nodes are arranged according to their tiers; otherwise, a circular
+layout is used.
+}
+\examples{
+data("tpcExample")
+
+kn <- knowledge(
+  tpcExample,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+
+plot(disco_cd_tges)
+
 }

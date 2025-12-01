@@ -18,6 +18,7 @@
 #'
 #' @example inst/roxygen-examples/check_args_example.R
 #'
+#' @noRd
 #' @keywords internal
 check_args_and_distribute_args <- function(search,
                                            args,

@@ -5,6 +5,7 @@
 #' The standard size is 2 gigabytes.
 #'
 #' @example inst/roxygen-examples/default_heap_example.R
+#' @noRd
 #' @keywords internal
 default_heap <- function() {
   heap <- getOption(
@@ -23,6 +24,7 @@ default_heap <- function() {
 #' Only written so we can mock for testing
 #'
 #' @example inst/roxygen-examples/dot-read_line_example.R
+#' @noRd
 #' @keywords internal
 .read_line <- function(prompt) {
   readline(prompt)
@@ -38,6 +40,7 @@ default_heap <- function() {
 #' interactive sessions.
 #'
 #' @example inst/roxygen-examples/ask_heap_size_example.R
+#' @noRd
 #' @keywords internal
 ask_heap_size <- function() {
   prompt <- paste(
@@ -74,11 +77,10 @@ ask_heap_size <- function() {
 #'   If the file is not found, a warning is issued and an empty vector is returned.
 #'
 #' @examples
-#' \dontrun{
 #' gui_jar <- find_tetrad_jar()
 #' print(gui_jar)
-#' }
 #'
+#' @noRd
 #' @keywords internal
 find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
                             dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))) {
@@ -114,6 +116,7 @@ find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
 #'  gigabytes.
 #'
 #' @example inst/roxygen-examples/init_java_example.R
+#' @noRd
 #' @keywords internal
 init_java <- function(heap = default_heap()) {
   .check_if_pkgs_are_installed(
@@ -148,6 +151,7 @@ init_java <- function(heap = default_heap()) {
 #' @returns A numeric value representing the heap size in gigabytes.
 #'
 #' @example inst/roxygen-examples/parse_heap_gb_example.R
+#' @noRd
 #' @keywords internal
 parse_heap_gb <- function(x) {
   stopifnot(length(x) == 1)
@@ -178,6 +182,7 @@ parse_heap_gb <- function(x) {
 #' @returns A numeric value representing the current heap size in gigabytes.
 #'
 #' @example inst/roxygen-examples/current_heap_gb_example.R
+#' @noRd
 #' @keywords internal
 current_heap_gb <- function() {
   .check_if_pkgs_are_installed(
@@ -198,6 +203,7 @@ current_heap_gb <- function() {
 #'
 #' @returns A logical value indicating whether the session is interactive.
 #' @example inst/roxygen-examples/is_interactive_example.R
+#' @noRd
 #' @keywords internal
 is_interactive <- function() {
   interactive()

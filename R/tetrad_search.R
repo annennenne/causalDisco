@@ -1,3 +1,11 @@
+# See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
+#' @title TetradSearch R6 class
+#'
+#' @name TetradSearch
+#'
+#' @example inst/roxygen-examples/TetradSearch_example.R
+NULL
+
 #' @title TetradSearch R6 class
 #'
 #' @description
@@ -5,8 +13,6 @@
 #' library.  The class lets you choose independence tests, scores, and search
 #' algorithms from Tetrad, run them on an R data set, and retrieve the
 #' resulting graph or statistics.
-#'
-#' @R6example inst/roxygen-examples/TetradSearch_example.R
 #'
 #' @docType class
 #' @name TetradSearch

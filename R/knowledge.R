@@ -1097,7 +1097,7 @@ reposition_tier <- function(.kn,
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @noRd
 #' @keywords internal
 is_knowledge <- function(x) {
   if (!inherits(x, "knowledge")) {
@@ -1770,7 +1770,7 @@ seq_tiers <- function(tiers, vars) {
 #' @returns An S3 object of class `"knowledge"`.
 #'
 #' @example inst/roxygen-examples/dot-new_knowledge_example.R
-#'
+#' @noRd
 #' @keywords internal
 .new_knowledge <- function(vars = character(), frozen = FALSE) {
   .check_if_pkgs_are_installed(
@@ -1807,7 +1807,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param tiers A data frame with a column `label` listing tier labels
 #'
 #' @example inst/roxygen-examples/dot-validate_tier_rule_example.R
-#'
+#' @noRd
 #' @keywords internal
 .validate_tier_rule <- function(edges_df, tiers) {
   .check_if_pkgs_are_installed(
@@ -1844,7 +1844,7 @@ seq_tiers <- function(tiers, vars) {
 #'   `tier_from`, and `tier_to`.
 #'
 #' @example inst/roxygen-examples/dot-validate_forbidden_required_example.R
-#'
+#' @noRd
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
   .check_if_pkgs_are_installed(
@@ -1905,7 +1905,7 @@ seq_tiers <- function(tiers, vars) {
 #' @returns The updated `knowledge` object.
 #'
 #' @example inst/roxygen-examples/dot-add_edges_example.R
-#'
+#' @noRd
 #' @keywords internal
 .add_edges <- function(.kn, status, from, to, remove_self_loops = TRUE) {
   .check_if_pkgs_are_installed(
@@ -1961,7 +1961,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param fml A quosure that must wrap a two-sided formula.
 #'
 #' @example inst/roxygen-examples/dot-edge_verb_example.R
-#'
+#' @noRd
 #' @keywords internal
 .edge_verb <- function(.kn, status, fml) {
   .check_if_pkgs_are_installed(
@@ -2015,6 +2015,7 @@ seq_tiers <- function(tiers, vars) {
 #' (Should be unevaluated, i.e. passed with rlang::expr or alike.)
 #'
 #' @example inst/roxygen-examples/dot-vars_from_spec_example.R
+#' @noRd
 #' @keywords internal
 .vars_from_spec <- function(.kn, spec) {
   .check_if_pkgs_are_installed(
@@ -2104,7 +2105,7 @@ seq_tiers <- function(tiers, vars) {
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #'
 #' @example inst/roxygen-examples/dot-formula_vars_example.R
-#'
+#' @noRd
 #' @keywords internal
 .formula_vars <- function(.kn, rhs) {
   vars <- .vars_from_spec(.kn, rhs)

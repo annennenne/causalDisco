@@ -1,14 +1,21 @@
+# See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
+#' @title bnlearnSearch – an R6 front-end for **bnlearn**
+#'
+#' @name bnlearnSearch
+#'
+#' @example inst/roxygen-examples/bnlearn_search_example.R
+NULL
+
 #' @title bnlearnSearch – an R6 front-end for **bnlearn**
 #'
 #' @description A wrapper that lets you drive `bnlearns`’s structure-learning
 #' algorithms within the `causalDisco` framework.
 #'
-#'
 #' @return An R6 object with the methods documented below.
 #'
 #' @importFrom R6 R6Class
 #'
-#' @R6example inst/roxygen-examples/bnlearn_search_example.R
+#' @rdname bnlearnSearch
 #'
 #' @export
 bnlearnSearch <- R6Class(

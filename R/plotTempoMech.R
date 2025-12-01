@@ -76,8 +76,8 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @param ... Further arguments forwarded to \code{\link[igraph]{plot.igraph}}.
 #'
 #' @return Invisibly returns \code{NULL}. Called for its side-effect of plotting.
+#' @noRd
 #' @keywords internal
-#'
 plotOrderedAmat <- function(amat, order,
                             psi = NULL,
                             addTimeAxis = TRUE,
@@ -228,6 +228,7 @@ plotOrderedAmat <- function(amat, order,
 #' @param space Numeric horizontal gap between successive periods.
 #'
 #' @return A numeric matrix with two columns named \code{"x"} and \code{"y"}.
+#' @noRd
 #' @keywords internal
 orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
   outMat <- matrix(NA,
@@ -258,10 +259,12 @@ orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
 #' @param sep Character separator between prefix and remainder of name.
 #'
 #' @return Character vector of matching variable names.
+#' @noRd
 #' @keywords internal
 getvar <- function(x, prefix, sep = "_") UseMethod("getvar")
 
 #' @rdname getvar
+#' @noRd
 #' @keywords internal
 getvar.character <- function(x, prefix, sep = "_") {
   out <- x[sapply(strsplit(x, sep), function(x) x[[1]]) == prefix]
@@ -270,6 +273,7 @@ getvar.character <- function(x, prefix, sep = "_") {
 }
 
 #' @rdname getvar
+#' @noRd
 #' @keywords internal
 getvar.data.frame <- function(x, prefix, sep = "_") {
   getvar(names(x), prefix = prefix, sep = sep)
@@ -286,6 +290,7 @@ getvar.data.frame <- function(x, prefix, sep = "_") {
 #' @param digits Integer number of significant digits for the mantissa.
 #'
 #' @return An \code{expression} (or vector of expressions) for pretty printing.
+#' @noRd
 #' @keywords internal
 sciNotation <- function(x, digits = 1) {
   if (length(x) > 1) {

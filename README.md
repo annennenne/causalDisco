@@ -1,12 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# causalDisco <img src="graphics/hex.png" width="121px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
+# causalDisco <img src="man/figures/hex.png" width="80" height="80" align="right" alt="" />
 
 <!-- badges: start -->
 
-[![codecov](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco/graph/badge.svg?token=8MHGWDUN4R)](https://codecov.io/gh/frederikfabriciusbjerre/causalDisco)
-[![R-CMD-check](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/frederikfabriciusbjerre/causalDisco/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/BjarkeHautop/causalDisco)
+[![R-CMD-check](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
 
 `causalDisco` provides a unified interface for causal discovery on
@@ -47,16 +50,15 @@ to install Rust.
 `causalDisco` provides an interface to the Java library
 [`Tetrad`](https://github.com/cmu-phil/tetrad) for causal discovery
 algorithms. To use algorithms from `Tetrad` you need to install JDK 21
-(or newer) by following [this
-guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad),
-
-or use your system’s package manager.
+(or newer) [here](https://www.oracle.com/java/technologies/downloads/)
+(or look at Tetrad’s [Java setup
+guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad)).
 
 The current supported version of `Tetrad` can then be installed by
 calling
 
 ``` r
-install_tetrad()
+causalDisco::install_tetrad()
 ```
 
 ## Example
@@ -107,7 +109,7 @@ function:
 plot(disco_cd_tges)
 ```
 
-<img src="man/figures/README-plot-1.png" width="100%" />
+<img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
 ## TODO
 
@@ -118,9 +120,21 @@ plot(disco_cd_tges)
 
 - Piping as done above for Tetrad loses $knowledge$tiers information.
 
-- Improve plot?
+- List of available tests for `pc` (and more probably)? Can see
+  “conditional_gaussian”, “mi”, and “fisher_z” exists. What else? I
+  guess the idea was to grab these from the engine dynamically?
 
-- Remove @R6examples and make our own (it doesn’t work)
+- inst/roxygen-examples/TetradSearch_example.R fails for set.seed(16)
+  (works for seed 1-15) with error:
+
+``` r
+# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
+#  java.lang.RuntimeException
+```
+
+Maybe v7.6.9 fixes it?
+
+- Make vignettes
 
 - Long term: Move to Tetrad v7.6.9 v7.6.9 removes this entire folder
 

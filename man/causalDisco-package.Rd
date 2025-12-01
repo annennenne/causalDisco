@@ -6,6 +6,8 @@
 \alias{causalDisco-package}
 \title{Causal Disco package}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Various tools for inferring causal models from observational data. The package includes an implementation of the temporal Peter-Clark (TPC) algorithm. Petersen, Osler and Ekstrøm (2021) \doi{10.1093/aje/kwab087}. It also includes general tools for evaluating differences in adjacency matrices, which can be used for evaluating performance of causal discovery procedures.
 }
 \section{System requirements}{
@@ -18,6 +20,7 @@ Requires Cargo (Rust's package manager), rustc >= 1.80.0, xz
 Useful links:
 \itemize{
   \item \url{https://github.com/annennenne/causalDisco}
+  \item \url{https://bjarkehautop.github.io/causalDisco/}
   \item Report bugs at \url{https://github.com/annennenne/causalDisco/issues}
 }
 

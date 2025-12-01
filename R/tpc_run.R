@@ -245,6 +245,7 @@ tpc_run <- function(data = NULL,
 #'
 #' @return A \code{knowledge} object with tiers matching \code{order}.
 #' @keywords internal
+#' @noRd
 .build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -313,6 +314,7 @@ tpc_run <- function(data = NULL,
 #'
 #' @return The updated adjacency matrix with additional arrowheads.
 #' @keywords internal
+#' @noRd
 v_orient_temporal <- function(amat, sepsets) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -371,6 +373,7 @@ v_orient_temporal <- function(amat, sepsets) {
 #'
 #' @return Integer vector of adjacent node indices.
 #' @keywords internal
+#' @noRd
 find_adjacencies <- function(amatrix, index) {
   union(
     which(as.logical(amatrix[index, ])),
@@ -391,6 +394,7 @@ find_adjacencies <- function(amatrix, index) {
 #'
 #' @return Named integer vector of the same length as \code{vnames}.
 #' @keywords internal
+#' @noRd
 .tier_index <- function(kn, vnames) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -417,6 +421,7 @@ find_adjacencies <- function(amatrix, index) {
 #' \code{y}. Returns \code{FALSE} if either variable lacks a tier.
 #'
 #' @keywords internal
+#' @noRd
 is_after <- function(x, y, knowledge) {
   ti <- .tier_index(knowledge, c(x, y))
   if (any(is.na(ti))) {
@@ -441,6 +446,7 @@ is_after <- function(x, y, knowledge) {
 #'
 #' @return A function with the same interface as \code{test}.
 #' @keywords internal
+#' @noRd
 dirTest <- function(test, vnames, knowledge) {
   function(x, y, S, suffStat) {
     snames <- vnames[S]
@@ -474,6 +480,7 @@ dirTest <- function(test, vnames, knowledge) {
 #'
 #' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
 #' @keywords internal
+#' @noRd
 .pcalg_constraints_from_knowledge <- function(kn,
                                               labels,
                                               directed_as_undirected) {
@@ -499,6 +506,7 @@ dirTest <- function(test, vnames, knowledge) {
 #'
 #' @return The pruned adjacency matrix.
 #' @keywords internal
+#' @noRd
 order_restrict_amat_cpdag <- function(amat, knowledge) {
   p <- nrow(amat)
   vnames <- rownames(amat)
@@ -532,6 +540,7 @@ order_restrict_amat_cpdag <- function(amat, knowledge) {
 #'
 #' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
 #' @keywords internal
+#' @noRd
 tpdag <- function(skel, knowledge) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -589,6 +598,7 @@ tpdag <- function(skel, knowledge) {
 #'   as \code{suffStat} to the corresponding test.
 #'
 #' @keywords internal
+#' @noRd
 make_suff_stat <- function(data, type, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(

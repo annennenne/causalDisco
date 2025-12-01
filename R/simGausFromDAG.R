@@ -4,6 +4,7 @@
 #' @return A vector of node indices in topological order.
 #'
 #' @keywords internal
+#' @noRd
 topo_order_mat <- function(amat) {
   p <- nrow(amat)
 

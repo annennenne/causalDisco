@@ -1,4 +1,4 @@
-﻿.Rproj.user
+.Rproj.user
 .Rhistory
 .RData
 .Ruserdata
@@ -15,3 +15,4 @@ examples/TESTING.R
 causalDisco*.tar.gz
 causalDisco.Rcheck/
 docker/
+docs

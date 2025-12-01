@@ -11,7 +11,7 @@
 #' @param nlev optional integer vector of levels for discrete tests
 #'
 #' @returns `list(method = function, suffStat = object)`
-#'
+#' @noRd
 #' @keywords internal
 .get_pcalg_test_from_string <- function(method,
                                         X = NULL,

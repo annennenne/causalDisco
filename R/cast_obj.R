@@ -4,7 +4,7 @@
 #' used in the Tetrad Search class.
 #'
 #' @param obj A Java object to be cast.
-#'
+#' @noRd
 #' @keywords internal
 #'
 #' @example inst/roxygen-examples/cast_obj_example.R

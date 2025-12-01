@@ -229,6 +229,7 @@ tfci_run <- function(data = NULL,
 #' @return The modified adjacency matrix with arrowheads added at the later node
 #'   for cross-tier pairs.
 #' @keywords internal
+#' @noRd
 order_restrict_pag_skel <- function(amat, knowledge) {
   p <- nrow(amat)
   vnames <- rownames(amat)
@@ -263,6 +264,7 @@ order_restrict_pag_skel <- function(amat, knowledge) {
 #' @return The input \code{sepset} with any disallowed separating sets replaced by
 #'   \code{NULL}. Emits a warning each time such a set is removed.
 #' @keywords internal
+#' @noRd
 order_restrict_sepset <- function(sepset, knowledge, vnames) {
   p <- length(vnames)
 
@@ -304,6 +306,7 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #'
 #' @return A PAG adjacency matrix in pcalg format (integer codes \code{0/1/2/3}).
 #' @keywords internal
+#' @noRd
 tpag <- function(skel, knowledge, unfVect, cautious = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(

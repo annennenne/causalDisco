@@ -127,6 +127,7 @@ tges_run <- function(score, verbose = FALSE) {
 #'   where entry `(i, j) = 1` iff `j` is a parent of `i`.
 #'
 #' @keywords internal
+#' @noRd
 create_adj_matrix_from_list <- function(inputList) {
   n <- length(inputList)
   resultMatrix <- matrix(0, nrow = n, ncol = n)
@@ -156,6 +157,7 @@ create_adj_matrix_from_list <- function(inputList) {
 #'   element lists the parent indices (columns with value 1 in that row).
 #'
 #' @keywords internal
+#' @noRd
 create_list_from_adj_matrix <- function(adjMatrix) {
   n <- nrow(adjMatrix)
   resultList <- vector("list", n)
@@ -185,6 +187,7 @@ create_list_from_adj_matrix <- function(adjMatrix) {
 #' @return A numeric adjacency matrix, or `NULL` if `obj` cannot be normalized.
 #'
 #' @keywords internal
+#' @noRd
 to_adj_mat <- function(obj) {
   .check_if_pkgs_are_installed(
     pkgs = c(

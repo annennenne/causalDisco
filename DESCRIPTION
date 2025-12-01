@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 1.0.0.9000
+Version: 1.0.0.9001
 Authors@R: 
     person("Anne Helby", "Petersen", , "ahpe@sund.ku.dk", role = c("aut", "cre"))
 Description: Various tools for inferring causal models from observational
@@ -10,7 +10,7 @@ Description: Various tools for inferring causal models from observational
     evaluating differences in adjacency matrices, which can be used for
     evaluating performance of causal discovery procedures.
 License: GPL-2
-URL: https://github.com/annennenne/causalDisco
+URL: https://github.com/annennenne/causalDisco, https://bjarkehautop.github.io/causalDisco/
 BugReports: https://github.com/annennenne/causalDisco/issues
 SystemRequirements: Java (>= 21). Includes the Tetrad Java library
     (see inst/java/LICENSE and inst/java/COPYRIGHT).

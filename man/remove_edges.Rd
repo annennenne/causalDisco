@@ -59,7 +59,6 @@ Other knowledge functions:
 \code{\link{forbid_edge}()},
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
-\code{\link{is_knowledge}()},
 \code{\link{knowledge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},

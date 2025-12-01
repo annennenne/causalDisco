@@ -20,13 +20,14 @@ kn <- knowledge(
 
 # Recommended (TPC example):
 my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
-disco(data = dat, method = my_tpc, knowledge = kn)
+result <- disco(data = dat, method = my_tpc, knowledge = kn)
+plot(result)
 
 # or
 my_tpc <- my_tpc |>
   set_knowledge(kn)
-my_tpc(dat)
-
+result <- my_tpc(dat)
+plot(result)
 
 # Using R6 class:
 

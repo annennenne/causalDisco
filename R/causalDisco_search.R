@@ -1,3 +1,11 @@
+# See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
+#' @title causalDiscoSearch -- an R6 class frontend for **causalDisco**
+#'
+#' @name causalDiscoSearch
+#'
+#' @example inst/roxygen-examples/causalDisco_search_example.R
+NULL
+
 #' @title causalDiscoSearch -- an R6 class frontend for **causalDisco**
 #'
 #' @description This class implements the search algorithms from the causalDisco
@@ -6,7 +14,7 @@
 #'
 #' @importFrom R6 R6Class
 #'
-#' @R6example inst/roxygen-examples/causalDisco_search_example.R
+#' @rdname causalDiscoSearch
 #'
 #' @export causalDiscoSearch
 causalDiscoSearch <- R6::R6Class(

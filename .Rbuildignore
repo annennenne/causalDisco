@@ -21,3 +21,6 @@ CRAN-SUBMISSION
 ^codecov\.yml$
 ^README\.Rmd$
 man-roxygen
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
