@@ -28,4 +28,16 @@ Useful links:
 \author{
 \strong{Maintainer}: Anne Helby Petersen \email{ahpe@sund.ku.dk}
 
+Authors:
+\itemize{
+  \item Frederik Fabricius-Bjerre \email{ffb@di.ku.dk}
+  \item Bjarke Hautop Kristensen \email{bjarke.kristensen@sund.ku.dk}
+}
+
+Other contributors:
+\itemize{
+  \item Tobias Ellegaard Larsen \email{tobias.ellegaard@sund.ku.dk} [contributor]
+  \item Claus Thorn Ekstrøm \email{ekstrom@sund.ku.dk} [contributor]
+}
+
 }

@@ -44,9 +44,6 @@ print.tetrad_check <- function(x, ...) {
   cat("Message:", x$message, "\n")
 }
 
-# -------------------------------
-# Check Tetrad installation
-# -------------------------------
 #' Check Tetrad Installation
 #' @param version Character. The version of Tetrad to check.
 #'  Default is the value of `getOption("causalDisco.tetrad.version")`.
@@ -64,22 +61,13 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      message = paste0("Tetrad directory not configured. Call install_tetrad()
-                       to install it.")
+      message = "Tetrad directory not configured. Call install_tetrad() to install it."
     ))
   }
 
-  jars <- list.files(tetrad_dir, pattern = "\\.jar$", full.names = FALSE)
-  if (length(jars) == 0) {
-    return(create_output(
-      installed = FALSE,
-      version = NULL,
-      message = paste("No JAR files found in:", tetrad_dir)
-    ))
-  }
+  gui_jar <- file.path(tetrad_dir, paste0("tetrad-gui-", version, "-launch.jar"))
 
-  gui_jar <- paste0("tetrad-gui-", version, "-launch.jar")
-  if (gui_jar %in% jars) {
+  if (file.exists(gui_jar)) {
     return(create_output(
       installed = TRUE,
       version = version,
@@ -89,8 +77,10 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      message = paste0("Tetrad version ", version, " not found.
-                       Please install it using install_tetrad().")
+      message = paste0(
+        "Tetrad version ", version, " not found. ",
+        "Please install it using install_tetrad()."
+      )
     ))
   }
 }

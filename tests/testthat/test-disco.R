@@ -1,3 +1,6 @@
+# Move to test-tges.R
+# Check the reverse tier knowledge direction
+
 test_that("disco respects tier-based background knowledge", {
   data("tpcExample")
 
