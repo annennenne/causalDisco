@@ -61,7 +61,7 @@ test_that("pc Tetrad disco respects required background knowledge", {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   set.seed(1405)
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
-  edges <- out$caugi@edges
+  edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
@@ -80,7 +80,7 @@ test_that("pc Tetrad disco respects required background knowledge", {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   set.seed(1405)
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
-  edges <- out$caugi@edges
+  edges <- output$caugi@edges
   violations <- causalDisco:::check_edge_constraints(edges, kn)
 
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
@@ -96,7 +96,8 @@ test_that("pc Tetrad disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpcExample,
-    forbidden(child_x1 ~ youth_x3)
+    forbidden(child_x1 ~ youth_x3),
+    forbidden(child_x2 ~ child_x1)
   )
 
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
