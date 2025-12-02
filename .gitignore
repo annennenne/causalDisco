@@ -2,8 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-.gitignore
-causalDisco.Rproj
 meta/
 article/
 archive/
