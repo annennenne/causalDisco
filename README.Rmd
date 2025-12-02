@@ -107,9 +107,7 @@ plot(disco_cd_tges)
 
 ## Questions
 
-- Is required/forbidden directional? E.g. is `required(A ~ B)` the same as `required(B ~ A)`?
-
-Documentation at `?knowledge` seems to suggest it is directional, but it doesn't seem to be implemented that way?
+- ...
 
 ## TODO
 
@@ -122,7 +120,7 @@ Documentation at `?knowledge` seems to suggest it is directional, but it doesn't
 Forbidden seems to work correctly.
 
 - `Tetrad` does not use tier knowledge correctly yet. If giving tier knowledge it still returns undirected edges between
-tiers (see [unit tests for pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L1). 
+tiers (see [unit tests for pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L1)). 
 Could it be because the graph looks like this:
 
 ```{r, eval = FALSE}
@@ -135,11 +133,11 @@ violations <- causalDisco:::check_tier_violations(edges, kn)
 2 oldage_x6 ---   youth_x4         3       2
 ```
 
-And it only tries to fix it form the other way? I.e. if to and from were swapped? More investigation needed ...
+And it only tries to fix it from the other way? I.e. if to and from were swapped? More investigation needed ...
 
 - Some of our algorithms (`tfci`, more?) with engine `causalDisco` does not currently work correctly with tier knowledge
 
-  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [Unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
+  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
   and the example output:
   
 ```{r, eval = FALSE}
@@ -156,11 +154,11 @@ violations <- causalDisco:::check_tier_violations(edges, kn)
 
 Probably just the knowledge not knowing how to handle bi-directional edges (since it works with `tges` on un-directed edges)? 
 
-- All of our algorithms (I think?) does not work with required edges from knowledge objects (see e.g. [Unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
+- All of our algorithms (I think?) does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 Currently does nothing.
 
-- Some of our algorithms does not work with forbidden edges from knowledge objects (see e.g. [Unit tests for tges](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tges.R)).
-It does however work for `tfci` with engine `causalDisco` (see [Unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
+- Some of our algorithms does not work with forbidden edges from knowledge objects (see e.g. [unit tests for tges](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tges.R)).
+It does however work for `tfci` with engine `causalDisco` (see [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 
 - Piping as done above for `Tetrad` loses `$knowledge$tiers` information.
 
