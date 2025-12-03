@@ -152,9 +152,8 @@ And it only tries to fix it from the other way? I.e. if to and from were swapped
 
 - Some of our algorithms (`tfci`, more?) with engine `causalDisco` does not currently work correctly with tier knowledge
 
-  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
-  and the example output:
-  
+  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)):
+
 ```{r, eval = FALSE}
 violations <- causalDisco:::check_tier_violations(edges, kn)
 > violations
@@ -175,7 +174,7 @@ Currently does nothing.
 - Some of our algorithms does not work with forbidden edges from knowledge objects (see e.g. [unit tests for tges](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tges.R)).
 It does however work for `tfci` with engine `causalDisco` (see [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 
-- Piping as done above for `Tetrad` in the example loses `$knowledge$tiers` information.
+- Piping as done above for `Tetrad` in the example section loses `$knowledge$tiers` information.
 
 - `inst/roxygen-examples/TetradSearch_example.R` fails for `set.seed(16)` (works for seed `1-15`) with error:
 
@@ -218,7 +217,7 @@ See how `mlr3` does it, and see their wiki on roxygen R6 guide [here](https://gi
 
 ### Standardization
 
-- We are mixing between different things currently:
+- We are mixing between different things currently (since we rely on `caugi` are it uses `data.frame` and `S7`):
   - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and `disco()$caugi@edges` is `data.frame`)
   - `S3` vs `S7`
   - More maybe?

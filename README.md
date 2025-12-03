@@ -75,8 +75,8 @@ from the packages `causalDisco` itself, the Java library `Tetrad`,
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: not installed
-#>   Tetrad is not installed. Run install_tetrad() to install it.
+#>   Tetrad version: 7.6.8
+#>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 
@@ -175,8 +175,7 @@ swapped? More investigation needed …
 
   - “tier” knowledge gives bidirectional edges that violate the tiers
     (see e.g. [unit tests for
-    tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
-    and the example output:
+    tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)):
 
 ``` r
 violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -205,7 +204,7 @@ edges (since it works with `tges` on un-directed edges)?
   tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 
-- Piping as done above for `Tetrad` in the example loses
+- Piping as done above for `Tetrad` in the example section loses
   `$knowledge$tiers` information.
 
 - `inst/roxygen-examples/TetradSearch_example.R` fails for
@@ -258,7 +257,8 @@ See how `mlr3` does it, and see their wiki on roxygen R6 guide
 
 ### Standardization
 
-- We are mixing between different things currently:
+- We are mixing between different things currently (since we rely on
+  `caugi` are it uses `data.frame` and `S7`):
   - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and
     `disco()$caugi@edges` is `data.frame`)
   - `S3` vs `S7`
