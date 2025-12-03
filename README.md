@@ -31,7 +31,11 @@ Time to hit the disco 🪩
 
 ### Install `causalDisco`
 
-Install the package from GitHub using `pak`:
+To install `causalDisco` ensure you first have installed Rust and
+Java/JDK as described below.
+
+Then you can install the development version of `causalDisco` from
+GitHub using `pak`:
 
 ``` r
 pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
@@ -71,8 +75,8 @@ from the packages `causalDisco` itself, the Java library `Tetrad`,
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.8
-#>   Java successfully initialized with 2 GB.
+#>   Tetrad version: not installed
+#>   Tetrad is not installed. Run install_tetrad() to install it.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 
@@ -119,6 +123,21 @@ plot(disco_cd_tges)
 - …
 
 ## TODO
+
+### Clean up old files
+
+- Remove old files such as `R/amat.R`, `R/compare.R`, `R/confusion.R`, …
+
+### Dependencies
+
+- Currently you can’t install `causalDisco` without having Java/JDK
+  installed. Move all `rJava` stuff to optional and start up only
+  initialize `rJava` if installed?
+
+- Move from `tibble` to `data.table`? See also Standardization
+  subsection.
+
+- Remove old dependencies that are not used anymore (e.g. `MASS`)
 
 ### Bugfixes
 
@@ -186,15 +205,15 @@ edges (since it works with `tges` on un-directed edges)?
   tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 
-- Piping as done above for `Tetrad` loses `$knowledge$tiers`
-  information.
+- Piping as done above for `Tetrad` in the example loses
+  `$knowledge$tiers` information.
 
-- inst/roxygen-examples/TetradSearch_example.R fails for set.seed(16)
-  (works for seed 1-15) with error:
+- `inst/roxygen-examples/TetradSearch_example.R` fails for
+  `set.seed(16)` (works for seed `1-15`) with error:
 
 ``` r
-# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
-#  java.lang.RuntimeException
+Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
+java.lang.RuntimeException
 ```
 
 Maybe v7.6.9 fixes it?
@@ -221,16 +240,21 @@ Maybe v7.6.9 fixes it?
 
 ``` r
 kn <- knowledge(
-    tpcExample,
-    forbidden(child_x1 ~ youth_x3),
-    forbidden(youth_x3 ~ child_x1)
-  )
+  tpcExample,
+  forbidden(child_x1 ~ youth_x3),
+  forbidden(youth_x3 ~ child_x1)
+)
 ```
 
 It’s documented in `?as_pcalg_constaints` but should be more visible.
 
 Maybe make it possible to check documentation of engine via `?pcalg` and
 similar for the rest?
+
+#### Inspiration for documentation
+
+See how `mlr3` does it, and see their wiki on roxygen R6 guide
+[here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
 
 ### Standardization
 

@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
 
-
 `causalDisco` provides a unified interface for causal discovery on observational data.
 It wraps multiple causal discovery backends under a common, consistent syntax. 
 
 ## Motivation
+
 Causal discovery methods exist in many ecosystems, for example in `bnlearn`, `pcalg`, or `Tetrad`, but their APIs vary widely.
 
 `causalDisco` unifies them under one clear grammar, making it easy to compare results, switch algorithms, and focus on scientific questions rather than package quirks.
@@ -36,7 +36,9 @@ Time to hit the disco 🪩
 
 ### Install `causalDisco`
 
-Install the package from GitHub using `pak`:
+To install `causalDisco` ensure you first have installed Rust and Java/JDK as described below.
+
+Then you can install the development version of `causalDisco` from GitHub using `pak`:
 
 ```{r, eval=FALSE}
 pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
@@ -64,7 +66,7 @@ causalDisco::install_tetrad()
 ## Example
 
 With `causalDisco` you can currently run causal discovery algorithms from the packages `causalDisco` itself,
-the Java library `Tetrad`, `bnlearn`, and `pcalg`. 
+the Java library `Tetrad`, `bnlearn`, and `pcalg`.
 
 ```{r example}
 library(causalDisco)
@@ -110,6 +112,19 @@ plot(disco_cd_tges)
 - ...
 
 ## TODO
+
+### Clean up old files
+
+- Remove old files such as `R/amat.R`, `R/compare.R`, `R/confusion.R`, ...
+
+### Dependencies
+
+- Currently you can't install `causalDisco` without having Java/JDK installed. Move all `rJava` stuff to optional and
+start up only initialize `rJava` if installed?
+
+- Move from `tibble` to `data.table`? See also Standardization subsection.
+
+- Remove old dependencies that are not used anymore (e.g. `MASS`)
 
 ### Bugfixes
 
@@ -160,13 +175,13 @@ Currently does nothing.
 - Some of our algorithms does not work with forbidden edges from knowledge objects (see e.g. [unit tests for tges](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tges.R)).
 It does however work for `tfci` with engine `causalDisco` (see [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
 
-- Piping as done above for `Tetrad` loses `$knowledge$tiers` information.
+- Piping as done above for `Tetrad` in the example loses `$knowledge$tiers` information.
 
-- inst/roxygen-examples/TetradSearch_example.R fails for set.seed(16) (works for seed 1-15) with error:
+- `inst/roxygen-examples/TetradSearch_example.R` fails for `set.seed(16)` (works for seed `1-15`) with error:
 
-```{r error Tetrad pc}
-# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
-#  java.lang.RuntimeException
+```{r error Tetrad pc, eval = FALSE}
+Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
+java.lang.RuntimeException
 ```
 
 Maybe v7.6.9 fixes it?
@@ -187,15 +202,19 @@ with forbidden edges from knowledge objects and requires specifying both ways:
 
 ```{r, eval = FALSE}
 kn <- knowledge(
-    tpcExample,
-    forbidden(child_x1 ~ youth_x3),
-    forbidden(youth_x3 ~ child_x1)
-  )
+  tpcExample,
+  forbidden(child_x1 ~ youth_x3),
+  forbidden(youth_x3 ~ child_x1)
+)
 ```
 
 It's documented in `?as_pcalg_constaints` but should be more visible.
 
 Maybe make it possible to check documentation of engine via `?pcalg` and similar for the rest?
+
+#### Inspiration for documentation
+
+See how `mlr3` does it, and see their wiki on roxygen R6 guide [here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
 
 ### Standardization
 
