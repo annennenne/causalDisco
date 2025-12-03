@@ -102,53 +102,66 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
 #' }
 #' @export
 install_tetrad <- function(
-  version = getOption("causalDisco.tetrad.version"), dir = NULL, set_renviron = TRUE, force = FALSE
+  version = getOption("causalDisco.tetrad.version"),
+  dir = NULL,
+  set_renviron = TRUE,
+  force = FALSE
 ) {
-  # Default directory
-  if (is.null(dir)) dir <- file.path(path.expand("~"), "tetrad")
+  safe_download <- function(url, dest_file) {
+    old_timeout <- getOption("timeout")
+    options(timeout = max(300, old_timeout))
+    on.exit(options(timeout = old_timeout), add = TRUE)
 
-  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
+    utils::download.file(url, destfile = dest_file, mode = "wb")
+  }
 
-  # Construct download URL
+  # ------------------------
+  # Determine target dir
+  # ------------------------
+  if (is.null(dir)) {
+    dir <- file.path(path.expand("~"), "tetrad")
+  }
+  if (!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE)
+  }
+
+  # Normalize path (works on macOS/Linux/Windows)
+  dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
+
+  # ------------------------
+  # URL + destination
+  # ------------------------
   base_url <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
   jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
   url <- paste0(base_url, "/", version, "/", jar_name)
 
   dest_file <- file.path(dir, jar_name)
 
-  # Download if missing
-  if (!file.exists(dest_file)) {
-    message("Downloading Tetrad ", version, "...")
+  need_download <- force || !file.exists(dest_file)
+
+  if (need_download) {
+    msg_prefix <- if (force) "Re-downloading" else "Downloading"
+    message(msg_prefix, " Tetrad ", version, "...")
+
     tryCatch(
-      {
-        utils::download.file(url, destfile = dest_file, mode = "wb")
-      },
+      safe_download(url, dest_file),
       error = function(e) stop("Failed to download Tetrad: ", e$message)
     )
+
     message("Downloaded to: ", dest_file)
   } else {
-    if (force) {
-      message("Re-downloading Tetrad ", version, " (force = TRUE)...")
-      tryCatch(
-        {
-          utils::download.file(url, destfile = dest_file, mode = "wb")
-        },
-        error = function(e) stop("Failed to download Tetrad: ", e$message)
-      )
-      message("Downloaded to: ", dest_file)
-    } else {
-      message("Tetrad already exists at: ", dest_file)
-    }
+    message("Tetrad already exists at: ", dest_file)
   }
 
-  # Set for this session
-  #### Does this work on MacOS / Linux ?
-  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
-  dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
+  # ------------------------
+  # Set session option
+  # ------------------------
   options(tetrad.dir = dir)
   message("Tetrad directory set for this session: ", getOption("tetrad.dir"))
 
+  # ------------------------
   # Persist in .Renviron
+  # ------------------------
   if (set_renviron) {
     renviron <- file.path(path.expand("~"), ".Renviron")
     line <- paste0('TETRAD_DIR="', dir, '"')
