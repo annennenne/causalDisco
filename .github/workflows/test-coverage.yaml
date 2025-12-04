@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          distribution: 'oracle'
+          distribution: 'temurin'
           java-version: '21'
 
       - uses: r-lib/actions/setup-r@v2

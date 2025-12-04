@@ -53,9 +53,11 @@ install Rust.
 ### Installing Java / JDK
 
 `causalDisco` provides an interface to the Java library [`Tetrad`](https://github.com/cmu-phil/tetrad) for
-causal discovery algorithms. To use algorithms from `Tetrad` you need to install JDK 21 (or newer)
-[here](https://www.oracle.com/java/technologies/downloads/) (or look at `Tetrad`'s
-[Java setup guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad)).
+causal discovery algorithms. To use algorithms from `Tetrad` you need to install a Java Development Kit (JDK).
+We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net 
+
+You may also refer to `Tetrad`'s
+[Java setup guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad).
 
 The current supported version of `Tetrad` can then be installed by calling
 
