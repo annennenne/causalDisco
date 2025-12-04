@@ -9,10 +9,11 @@ disco(data, method, knowledge = NULL)
 \arguments{
 \item{data}{A data frame}
 
-\item{method}{An \code{disco_method} object representing a causal discovery
+\item{method}{A \code{disco_method} object representing a causal discovery
 algorithm.}
 
-\item{knowledge}{A \code{knowledge} object}
+\item{knowledge}{A \code{knowledge} object to be incorporated into the disco method. If \code{NULL} (default), the method is
+applied without additional knowledge.}
 }
 \value{
 A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.

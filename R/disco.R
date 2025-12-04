@@ -4,9 +4,10 @@
 #' Run a causal discovery method on a data frame.
 #'
 #' @param data A data frame
-#' @param method An `disco_method` object representing a causal discovery
+#' @param method A `disco_method` object representing a causal discovery
 #' algorithm.
-#' @param knowledge A `knowledge` object
+#' @param knowledge A `knowledge` object to be incorporated into the disco method. If `NULL` (default), the method is
+#'   applied without additional knowledge.
 #'
 #' @example inst/roxygen-examples/disco_example.R
 #'
