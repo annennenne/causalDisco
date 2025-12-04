@@ -128,11 +128,41 @@ start up only initialize `rJava` if installed?
 
 ### Bugfixes
 
-- `Tetrad` does not use required knowledge correctly yet. If giving required edges it says 
-`Orienting edge (Knowledge): youth_x3 --> oldage_x5` but doesn't seem to do anything? I can make it return this edge
-`youth_x3 o-o oldage_x5` or simply make it miss the edge entirely. See [unit tests for pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L47)
+#### causalDisco issues
 
-Forbidden seems to work correctly.
+- Some of our algorithms (`tfci`, more?) with engine `causalDisco` does not currently work correctly with tier knowledge
+
+  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)):
+
+```{r}
+data("tpcExample")
+kn <- knowledge(
+  tpcExample,
+  tier(
+    1 ~ starts_with("old"),
+    2 ~ starts_with("youth"),
+    3 ~ starts_with("child")
+  )
+)
+
+my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
+output <- disco(tpcExample, my_tfci, knowledge = kn)
+edges <- output$caugi@edges
+
+violations <- causalDisco:::check_tier_violations(edges, kn)
+violations
+```
+
+Probably just the knowledge not knowing how to handle bi-directional edges (since it works with e.g. `tges` on un-directed edges)? 
+
+- All of our algorithms (I think?) does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)), `tpc`, `tges`, ...
+Currently does nothing.
+
+- Piping as done above for `Tetrad` in the example section loses `$knowledge$tiers` information.
+
+#### Tetrad issues
+
+`Tetrad` v7.6.9 might fix some of these issues?
 
 - `Tetrad` does not use tier knowledge correctly yet. If giving tier knowledge it still returns undirected edges between
 tiers (see [unit tests for pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L1)). 
@@ -150,70 +180,45 @@ violations <- causalDisco:::check_tier_violations(edges, kn)
 
 And it only tries to fix it from the other way? I.e. if to and from were swapped? More investigation needed ...
 
-- Some of our algorithms (`tfci`, more?) with engine `causalDisco` does not currently work correctly with tier knowledge
+It also breaks on required edges if paired with tier knowledge.
 
-  - "tier" knowledge gives bidirectional edges that violate the tiers (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)):
+- Running `Tetrad` engine many times gives java.lang.RuntimeException. Try e.g. to run the code below.
 
 ```{r, eval = FALSE}
-violations <- causalDisco:::check_tier_violations(edges, kn)
-> violations
-# A tibble: 4 × 5
-  from     edge  to        tier_from tier_to
-  <chr>    <chr> <chr>         <int>   <int>
-1 child_x2 <->   oldage_x5         3       1
-2 youth_x3 <->   oldage_x5         2       1
-3 youth_x4 <->   oldage_x5         2       1
-4 youth_x4 <->   oldage_x6         2       1
+data("tpcExample")
+# This erros on my machine with error
+# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
+#  java.lang.RuntimeException
+
+
+# Some memory leakage it seems like - is it our fault?
+
+tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+
+for (i in 1:1000) {
+  kn <- knowledge(
+    tpcExample,
+    required(child_x1 ~ youth_x3)
+  )
+  output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
+}
 ```
-
-Probably just the knowledge not knowing how to handle bi-directional edges (since it works with `tges` on un-directed edges)? 
-
-- All of our algorithms (I think?) does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
-Currently does nothing.
-
-- Some of our algorithms does not work with forbidden edges from knowledge objects (see e.g. [unit tests for tges](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tges.R)).
-It does however work for `tfci` with engine `causalDisco` (see [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)).
-
-- Piping as done above for `Tetrad` in the example section loses `$knowledge$tiers` information.
-
-- `inst/roxygen-examples/TetradSearch_example.R` fails for `set.seed(16)` (works for seed `1-15`) with error:
-
-```{r error Tetrad pc, eval = FALSE}
-Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
-java.lang.RuntimeException
-```
-
-Maybe v7.6.9 fixes it?
 
 ### Documentation 
 
-- List of available tests for `pc` (and more probably)? Can see `"conditional_gaussian"`, `"mi"`, and `"fisher_z"` exists. What else?
+- Structure the documentation better. See See how `mlr3` does it, and see their wiki on roxygen R6 guide [here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
 
-- List in documentation of `tfci`, ... what kind of graph it returns. `tfci` gives a PAG, right? Currently it returns `graph_class: UNKNOWN`
-  - Either wait/help for `caugi` to implement different classes
-  - Or we implement a function that converts `caugi` output to specific graph classes based on algorithm/edges?
-  - Update plotting function to work correctly with different graph classes.
-
-- Make vignettes
-
-- Make it clear somewhere what/how knowledge is supported in which algorithms. E.g. `pc` with engine `pcalg` only works
-with forbidden edges from knowledge objects and requires specifying both ways:
-
-```{r, eval = FALSE}
-kn <- knowledge(
-  tpcExample,
-  forbidden(child_x1 ~ youth_x3),
-  forbidden(youth_x3 ~ child_x1)
-)
-```
-
-It's documented in `?as_pcalg_constaints` but should be more visible.
+  - Make it clear somewhere what/how knowledge is supported in which algorithms. E.g. `pc` with engine `pcalg` only works
+with forbidden edges from knowledge objects and requires specifying both ways. It's documented in `?as_pcalg_constaints` but should be more visible.
 
 Maybe make it possible to check documentation of engine via `?pcalg` and similar for the rest?
 
-#### Inspiration for documentation
+  - List in documentation of `tfci`, ... what kind of graph it returns. `tfci` gives a PAG, right? Currently it returns `graph_class: UNKNOWN`
+    - Either wait/help for `caugi` to implement different classes
+    - Or we implement a function that converts `caugi` output to specific graph classes based on algorithm/edges?
+    - Update plotting function to work correctly with different graph classes.
 
-See how `mlr3` does it, and see their wiki on roxygen R6 guide [here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
+- Make vignettes
 
 ### Standardization
 
@@ -232,18 +237,6 @@ Was removed in this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b8
 "and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC and FTFC, providing multiple strategies for discovering latent clusterings from measurement data."
 
 so we need to implement this in `causalDisco` (help?)
-
-### Features
-
-- Add a `seed` argument to `disco()`?
-
-- Allow `disco()` to not take a knowledge object? Currently for no knowledge you have to pass `knowledge = knowledge()`.
-And this is not allowed in some algorithms (e.g. `pc` with engine `pcalg`).
-
-```{r, eval = FALSE}
-out_no_kn <- disco(data = tpcExample, method = pcalg_pc, knowledge = knowledge())
-Error: `labels` contained variables that were not in the knowledge object: [child_x2, child_x1, youth_x4, youth_x3, oldage_x6, oldage_x5]
-```
 
 ### CRAN TODO
 

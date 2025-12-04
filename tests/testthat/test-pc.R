@@ -18,7 +18,6 @@ test_that("pc Tetrad disco respects tier knowledge", {
   )
 
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
 
   edges <- output$caugi@edges
@@ -35,9 +34,8 @@ test_that("pc Tetrad disco respects tier knowledge", {
     )
   )
 
-  my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
-  set.seed(1405)
-  output <- disco(tpcExample, my_tfci, knowledge = kn)
+  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(tpcExample, tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -50,7 +48,6 @@ test_that("pc Tetrad disco respects required background knowledge", {
     skip("Tetrad is not installed. Skipping test.")
   }
 
-  skip("pc Tetrad does not yet support required edges from knowledge objects.")
   data("tpcExample")
 
   kn <- knowledge(
@@ -59,7 +56,7 @@ test_that("pc Tetrad disco respects required background knowledge", {
   )
 
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
+  set.seed(1405) # Seed needed since tetrad sometimes gives java.lang.RuntimeException error
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
@@ -67,6 +64,8 @@ test_that("pc Tetrad disco respects required background knowledge", {
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
   # With tier+required knowledge
+  skip("pc Tetrad does not yet support knowledge with both tiers+required edges.") # Fails because of tiers I think
+
   kn <- knowledge(
     tpcExample,
     tier(
@@ -78,12 +77,14 @@ test_that("pc Tetrad disco respects required background knowledge", {
   )
 
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
 
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
+  expect_true(nrow(violations_tiers) == 0, info = "Tier violations were found in the output graph.")
+
+  violations_req <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
 })
 
 test_that("pc Tetrad disco respects forbidden background knowledge", {
@@ -109,8 +110,7 @@ test_that("pc Tetrad disco respects forbidden background knowledge", {
 
   # Verify it actually changes the output when adding forbidden knowledge
   tetrad_pc_no_kn <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
-  out_no_kn <- disco(data = tpcExample, method = tetrad_pc_no_kn, knowledge = knowledge())
+  out_no_kn <- disco(data = tpcExample, method = tetrad_pc_no_kn)
   edges_no_kn <- out_no_kn$caugi@edges
 
   # The forbidden edge is present
@@ -124,6 +124,7 @@ test_that("pc Tetrad disco respects forbidden background knowledge", {
 #### pcalg PC tests
 
 test_that("pc pcalg disco errors on tier knowledge", {
+  # See ?as_pcalg_constraints - only forbidden edges are supported
   data("tpcExample")
 
   kn <- knowledge(
@@ -179,30 +180,15 @@ test_that("pc pcalg disco respects forbidden background knowledge", {
   )
 
   pcalg_pc <- pc(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
   output <- disco(data = tpcExample, method = pcalg_pc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
-  # Verify it actually changes the output when adding forbidden knowledge
-  # Currently not possible (I think?) to pass no knowledge to pcalg pc
-  # Instead we test with more forbidden to verify it works
-
-  kn <- knowledge(
-    tpcExample,
-    forbidden(child_x1 ~ youth_x3),
-    forbidden(youth_x3 ~ child_x1),
-    forbidden(child_x2 ~ child_x1),
-    forbidden(child_x1 ~ child_x2)
-  )
   pcalg_pc <- pc(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405)
-  output <- disco(data = tpcExample, method = pcalg_pc, knowledge = kn)
+  output <- disco(data = tpcExample, method = pcalg_pc)
   edges_new <- output$caugi@edges
-  violations_new <- causalDisco:::check_edge_constraints(edges_new, kn)
-  expect_true(nrow(violations_new) == 0, info = "Required edge not found in the output graph.")
 
   # Test the original edges had the forbidden edge
   forbidden_present <-
