@@ -69,7 +69,8 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
       youth ~ B1 + B2,
       old ~ C1
     ),
-    forbidden(A2 ~ B1)
+    forbidden(A2 ~ B1),
+    forbidden(B1 ~ A2)
   )
   plot(kn)
 

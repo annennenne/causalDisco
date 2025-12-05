@@ -1,12 +1,12 @@
 # See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
-#' @title TetradSearch R6 class
+#' @title R6 Interface to Tetrad Search Algorithms
 #'
 #' @name TetradSearch
 #'
 #' @example inst/roxygen-examples/TetradSearch_example.R
 NULL
 
-#' @title TetradSearch R6 class
+#' @title R6 Interface to Tetrad Search Algorithms
 #'
 #' @description
 #' High-level wrapper around the Java-based **Tetrad** causal-discovery

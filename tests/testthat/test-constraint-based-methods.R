@@ -148,7 +148,7 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   skip_if_no_pcalg_bnlearn_tetrad()
   df <- toy_df()
 
-  # pc: tetrad (incl. extra test/alg params)
+  # pc: Tetrad (incl. extra test/alg params)
   runner_t_pc <- pc_tetrad_runner(test = "fisher_z", alpha = 0.05)
   expect_type(runner_t_pc, "list")
   expect_true(is.function(runner_t_pc$run))
@@ -177,7 +177,7 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   expect_true(is.function(runner_b_pc$run))
   expect_s3_class(runner_b_pc$run(df), "knowledgeable_caugi")
 
-  # fci: tetrad (incl. extra test/alg params)
+  # fci: Tetrad (incl. extra test/alg params)
   runner_t_fci <- fci_tetrad_runner(test = "fisher_z", alpha = 0.05)
   expect_type(runner_t_fci, "list")
   expect_true(is.function(runner_t_fci$run))

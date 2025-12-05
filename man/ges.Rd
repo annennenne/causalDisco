@@ -9,7 +9,7 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:
 \describe{
-\item{\code{"tetrad"}}{Tetrad Java library.}
+\item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 }}
 
@@ -20,11 +20,18 @@ algorithm parameters).}
 }
 \value{
 A function of class \code{"ges"} that takes a single argument \code{data}
-(a data frame) and returns an \code{caugi} and a \code{knowledge}
+(a data frame) and returns a \code{caugi} and a \code{knowledge}
 (\code{knowledgeable_caugi}) object.
 }
 \description{
 Run the GES algorithm for causal discovery using one of several engines.
+}
+\details{
+For specific details on the supported scores, tests, and parameters for each engine, see:
+\itemize{
+\item \code{\link{TetradSearch}} for \pkg{Tetrad},
+\item \code{\link{pcalgSearch}} for \pkg{pcalg}.
+}
 }
 \examples{
 ### ges() example ###

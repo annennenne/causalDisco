@@ -1,11 +1,11 @@
-#' @title The Peter-Clark (PC) algorithm for causal discovery
+#' @title The Peter-Clark (PC) Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the PC algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
-#'     \item{\code{"tetrad"}}{Tetrad Java library.}
+#'     \item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 #'     \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
 #'   }
@@ -13,11 +13,19 @@
 #' @param alpha Numeric; significance level for the CI tests.
 #' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
 #'
+#' @details
+#' For specific details on the supported scores, tests, and parameters for each engine, see:
+#' \itemize{
+#'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
+#'  \item \code{\link{pcalgSearch}} for \pkg{pcalg},
+#'  \item \code{\link{bnlearnSearch}} for \pkg{bnlearn}.
+#' }
+#'
 #' @example inst/roxygen-examples/pc_example.R
 #'
 #' @return
 #' A function of class \code{"pc"} that takes a single argument \code{data}
-#' (a data frame) and returns an `caugi` and a `knowledge` object.
+#' (a data frame) and returns a `caugi` and a `knowledge` object.
 #'
 #' @export
 pc <- function(

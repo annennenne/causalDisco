@@ -2,8 +2,7 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Perform causal discovery using the temporal FCI algorithm (TFCI)
-#'
+#' Causal Discovery Using the Temporal FCI (TFCI) Algorithm
 #' Use a modification of the FCI algorithm that makes use of background knowledge
 #' in the format of a partial ordering. This may, for instance, come about when
 #' variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).

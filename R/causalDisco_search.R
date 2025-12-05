@@ -1,12 +1,12 @@
 # See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
-#' @title causalDiscoSearch -- an R6 class frontend for **causalDisco**
+#' @title R6 Interface to causalDisco Search Algorithms
 #'
 #' @name causalDiscoSearch
 #'
 #' @example inst/roxygen-examples/causalDisco_search_example.R
 NULL
 
-#' @title causalDiscoSearch -- an R6 class frontend for **causalDisco**
+#' @title R6 Interface to causalDisco Search Algorithms
 #'
 #' @description This class implements the search algorithms from the causalDisco
 #' package, which wraps and adds temporal order to pcalg algorithms.
@@ -20,8 +20,7 @@ NULL
 causalDiscoSearch <- R6::R6Class(
   "causalDiscoSearch",
   public = list(
-    #' @field data A `data.frame` holding the data set currently attached to the
-    #' search object. Can be set with `set_data()`.
+    #' @template data-field
     data = NULL,
 
     #' @field score A function that will be used to build the score,

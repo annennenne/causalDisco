@@ -12,6 +12,12 @@
 #' @param ... Additional arguments passed to the chosen engine
 #' (e.g. test or algorithm parameters).
 #'
+#' @details
+#' For specific details on the supported scores, tests, and parameters for the engine, see:
+#' \itemize{
+#'  \item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+#' }
+#'
 #' @example inst/roxygen-examples/tges_example.R
 #'
 #' @return

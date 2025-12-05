@@ -27,6 +27,12 @@ object.
 \description{
 Run the temporal FCI algorithm for causal discovery using causalDisco.
 }
+\details{
+For specific details on the supported scores, tests, and parameters for the engine, see:
+\itemize{
+\item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+}
+}
 \examples{
 ### tfci() example ###
 

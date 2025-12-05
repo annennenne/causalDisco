@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.1.9003
+Version: 0.9.1.9004
 Authors@R: 
       c(
         person(
@@ -84,7 +84,8 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tidyr,
-    withr
+    withr,
+    spelling
 Remotes:
     frederikfabriciusbjerre/caugi
 Config/testthat/edition: 3
@@ -143,3 +144,4 @@ Collate:
     'tpc.R'
     'tplot.R'
     'zzz.R'
+Language: en-US

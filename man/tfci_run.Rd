@@ -2,7 +2,10 @@
 % Please edit documentation in R/tfci_run.R
 \name{tfci_run}
 \alias{tfci_run}
-\title{Perform causal discovery using the temporal FCI algorithm (TFCI)}
+\title{Causal Discovery Using the Temporal FCI (TFCI) Algorithm
+Use a modification of the FCI algorithm that makes use of background knowledge
+in the format of a partial ordering. This may, for instance, come about when
+variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).}
 \usage{
 tfci_run(
   data = NULL,
@@ -75,6 +78,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
+Causal Discovery Using the Temporal FCI (TFCI) Algorithm
 Use a modification of the FCI algorithm that makes use of background knowledge
 in the format of a partial ordering. This may, for instance, come about when
 variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).

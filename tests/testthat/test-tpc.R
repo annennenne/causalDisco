@@ -1,6 +1,5 @@
 test_that("tpc causalDisco respects tier knowledge", {
-  skip("tpc causalDisco does not yet work with tier knowledge")
-
+  skip("tpc causalDisco does not yet support tier knowledge.")
   data("tpcExample")
 
   kn <- knowledge(

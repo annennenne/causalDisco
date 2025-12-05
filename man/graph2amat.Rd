@@ -9,10 +9,10 @@ graph2amat(graph, toFrom = TRUE, type = "pdag")
 \arguments{
 \item{graph}{A graphNEL object.}
 
-\item{toFrom}{Logical indicating whether the resulting adjancency
+\item{toFrom}{Logical indicating whether the resulting adjacency
 matrix is "to-from" (default), or "from-to", see details.}
 
-\item{type}{The type of adjancency matrix, must be one of \code{"pdag"} or
+\item{type}{The type of adjacency matrix, must be one of \code{"pdag"} or
 \code{"ag"}. \code{"pdag"} should be used for directed graphs, namely
 DAG, CPDAG, MPDAG, TPDAG and PDAG adjacency matrices, i.e. adjacency matrices
 where A(i,j) = A(j,i) = 1 is interpreted as an undirected edge. \code{"ag"}

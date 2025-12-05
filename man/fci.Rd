@@ -9,7 +9,7 @@ fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:
 \describe{
-\item{\code{"tetrad"}}{Tetrad Java library.}
+\item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 }}
 
@@ -27,6 +27,13 @@ A function of class \code{"fci"} that takes a single argument \code{data}
 }
 \description{
 Run the FCI algorithm for causal discovery using one of several engines.
+}
+\details{
+For specific details on the supported scores, tests, and parameters for each engine, see:
+\itemize{
+\item \code{\link{TetradSearch}} for \pkg{Tetrad},
+\item \code{\link{pcalgSearch}} for \pkg{pcalg}.
+}
 }
 \examples{
 ### fci() example ###

@@ -3,7 +3,7 @@
 \docType{data}
 \name{engine_registry}
 \alias{engine_registry}
-\title{Engine Registry for causalDisco}
+\title{Supported engines for causalDisco}
 \format{
 An object of class \code{list} of length 4.
 }
@@ -11,6 +11,6 @@ An object of class \code{list} of length 4.
 engine_registry
 }
 \description{
-This registry contains the supported engines for causalDisco.
+Available engines: bnlearn, causalDisco, pcalg, tetrad.
 }
 \keyword{datasets}

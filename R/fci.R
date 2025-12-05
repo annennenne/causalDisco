@@ -5,13 +5,20 @@
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
-#'     \item{\code{"tetrad"}}{Tetrad Java library.}
+#'     \item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 #'   }
 #' @param test Character; name of the conditional‐independence test.
 #' @param alpha Numeric; significance level for the CI tests.
 #' @param ... Additional arguments passed to the chosen engine
 #' (e.g. test or algorithm parameters).
+#'
+#' @details
+#' For specific details on the supported scores, tests, and parameters for each engine, see:
+#' \itemize{
+#'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
+#'  \item \code{\link{pcalgSearch}} for \pkg{pcalg}.
+#' }
 #'
 #' @example inst/roxygen-examples/fci_example.R
 #'

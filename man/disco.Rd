@@ -7,10 +7,17 @@
 disco(data, method, knowledge = NULL)
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{A data frame.}
 
 \item{method}{A \code{disco_method} object representing a causal discovery
-algorithm.}
+algorithm. Available methods are
+\itemize{
+\item \code{\link{pc}} - PC algorithm,
+\item \code{\link{fci}} - FCI algorithm,
+\item \code{\link{ges}} - GES algorithm,
+\item \code{\link{tges}} - TGES algorithm,
+\item \code{\link{tpc}} - TPC algorithm.
+}}
 
 \item{knowledge}{A \code{knowledge} object to be incorporated into the disco method. If \code{NULL} (default), the method is
 applied without additional knowledge.}
@@ -21,12 +28,25 @@ A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 \description{
 Run a causal discovery method on a data frame.
 }
+\details{
+For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
+\itemize{
+\item \code{\link{TetradSearch}} for \pkg{Tetrad},
+\item \code{\link{pcalgSearch}} for \pkg{pcalg},
+\item \code{\link{bnlearnSearch}} for \pkg{bnlearn},
+\item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+}
+}
 \examples{
 ### disco() example ###
-\dontrun{
 data("tpcExample")
 
-# define background knowledge
+# use pc with engine bnlearn and test fisher_z
+my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.01)
+pc_bnlearn <- disco(data = tpcExample, method = my_pc)
+plot(pc_bnlearn)
+
+# define tiered background knowledge
 kn <- knowledge(
   tpcExample,
   tier(
@@ -36,9 +56,8 @@ kn <- knowledge(
   )
 )
 
-# use PC (for example)
-my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.01)
-
-disco(data = tpcExample, method = my_pc)
-}
+# use gs with engine bnlearn and test cor and tiered background knowledge
+my_pc_tiered <- pc(engine = "bnlearn", test = "cor", alpha = 0.01)
+pc_tiered_bnlearn <- disco(data = tpcExample, method = my_pc_tiered, knowledge = kn)
+plot(pc_tiered_bnlearn)
 }

@@ -3,7 +3,7 @@
 \docType{class}
 \name{TetradSearch}
 \alias{TetradSearch}
-\title{TetradSearch R6 class}
+\title{R6 Interface to Tetrad Search Algorithms}
 \description{
 High-level wrapper around the Java-based \strong{Tetrad} causal-discovery
 library.  The class lets you choose independence tests, scores, and search

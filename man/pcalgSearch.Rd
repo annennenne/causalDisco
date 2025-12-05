@@ -2,7 +2,7 @@
 % Please edit documentation in R/pcalg_search.R
 \name{pcalgSearch}
 \alias{pcalgSearch}
-\title{Class for pcalg search algorithms}
+\title{R6 Interface to pcalg Search Algorithms}
 \description{
 This class implements the search algorithms from the pcalg package.
 It allows to set the data, sufficient statistics, test, score, and algorithm.

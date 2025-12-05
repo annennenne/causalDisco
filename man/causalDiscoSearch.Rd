@@ -2,7 +2,7 @@
 % Please edit documentation in R/causalDisco_search.R
 \name{causalDiscoSearch}
 \alias{causalDiscoSearch}
-\title{causalDiscoSearch -- an R6 class frontend for \strong{causalDisco}}
+\title{R6 Interface to causalDisco Search Algorithms}
 \description{
 This class implements the search algorithms from the causalDisco
 package, which wraps and adds temporal order to pcalg algorithms.

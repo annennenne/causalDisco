@@ -1582,7 +1582,7 @@ as_pcalg_constraints <- function(.kn,
 #' Converts a `knowledge` object to a list of two data frames, namely
 #' `whitelist` and `blacklist`, which can be used as arguments for
 #' `bnlearn` algorithms. The `whitelist` contains all required edges, and the
-#' `blacklist` containts all forbidden edges. Tiers will be made into forbidden
+#' `blacklist` contains all forbidden edges. Tiers will be made into forbidden
 #' edges before running the conversion.
 #'
 #' @param .kn A \code{knowledge} object.  Must have no tier information.

@@ -17,7 +17,7 @@ frame containing the edges in a \code{from}, \code{to} format.
 Converts a \code{knowledge} object to a list of two data frames, namely
 \code{whitelist} and \code{blacklist}, which can be used as arguments for
 \code{bnlearn} algorithms. The \code{whitelist} contains all required edges, and the
-\code{blacklist} containts all forbidden edges. Tiers will be made into forbidden
+\code{blacklist} contains all forbidden edges. Tiers will be made into forbidden
 edges before running the conversion.
 }
 \examples{

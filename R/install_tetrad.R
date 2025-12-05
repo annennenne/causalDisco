@@ -90,7 +90,7 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
 #' This function downloads and installs the Tetrad GUI JAR file to a specified directory.
 #' It also sets the TETRAD_DIR environment variable for future R sessions.
 #'
-#' @template tetrad_version
+#' @template tetrad-version
 #' @param dir Character. The directory to install Tetrad into. Default is "~/tetrad".
 #' @param set_renviron Logical. Whether to set the TETRAD_DIR in .Renviron. Default is TRUE.
 #' @param force Logical. Whether to force re-download if the file already exists. Default is FALSE.

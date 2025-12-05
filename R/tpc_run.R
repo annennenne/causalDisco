@@ -2,7 +2,7 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Perform causal discovery using the temporal PC algorithm (TPC)
+#' Causal Discovery Using the Temporal PC Algorithm (TPC)
 #'
 #' @description
 #' Run a tier-aware variant of the PC algorithm that respects background

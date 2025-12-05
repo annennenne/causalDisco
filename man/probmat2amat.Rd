@@ -54,7 +54,7 @@ See Petersen et al. 2022 for further details.
 }
 \examples{
 # Make random probability matrix that can be
-# converted into adjancency matrix
+# converted into adjacency matrix
 pmat <- matrix(runif(25, 0, 1), 5, 5)
 diag(pmat) <- 0
 

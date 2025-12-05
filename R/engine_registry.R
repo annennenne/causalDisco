@@ -1,11 +1,8 @@
-#' Engine Registry for causalDisco
+.engines <- c("bnlearn", "causalDisco", "pcalg", "tetrad")
+
+#' Supported engines for causalDisco
 #'
-#' This registry contains the supported engines for causalDisco.
+#' Available engines: `r paste(.engines, collapse = ", ")`.
 #'
 #' @export
-engine_registry <- list(
-  "bnlearn",
-  "causalDisco",
-  "pcalg",
-  "tetrad"
-)
+engine_registry <- as.list(.engines)

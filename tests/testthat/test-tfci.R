@@ -18,7 +18,6 @@ test_that("tfci causalDisco respects tier knowledge", {
   violations <- causalDisco:::check_tier_violations(edges, kn)
   expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
 
-  skip("tfci causalDisco does not yet work with tier knowledge") # Doesn't work yet. The above just worked due to chance.
   kn <- knowledge(
     tpcExample,
     tier(

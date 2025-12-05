@@ -5,7 +5,7 @@
 #' the variables/nodes. Variable names should be prefixed with their
 #' period, e.g. "child_x" for variable "x" at period "child"
 #' @param order A character vector with the periods in their order.
-#' @param type The type of adjancency matrix, must be one of \code{"pdag"} or
+#' @param type The type of adjacency matrix, must be one of \code{"pdag"} or
 #' \code{"ag"}. If \code{NULL} (default), the function first checks for a \code{tamat_type}
 #' attribute in the input object and makes sure the output matches that, and if no
 #' the input does not have this attribute, it is set to \code{"tpdag"}. Otherwise,

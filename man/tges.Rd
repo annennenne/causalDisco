@@ -26,6 +26,12 @@ object.
 Run the Temporal GES algorithm for causal discovery using the causalDisco
 engine.
 }
+\details{
+For specific details on the supported scores, tests, and parameters for the engine, see:
+\itemize{
+\item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+}
+}
 \examples{
 ### tges_run() example ###
 

@@ -2,14 +2,14 @@
 % Please edit documentation in R/pc.R
 \name{pc}
 \alias{pc}
-\title{The Peter-Clark (PC) algorithm for causal discovery}
+\title{The Peter-Clark (PC) Algorithm for Causal Discovery}
 \usage{
 pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:
 \describe{
-\item{\code{"tetrad"}}{Tetrad Java library.}
+\item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
 }}
@@ -22,10 +22,18 @@ pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
 \value{
 A function of class \code{"pc"} that takes a single argument \code{data}
-(a data frame) and returns an \code{caugi} and a \code{knowledge} object.
+(a data frame) and returns a \code{caugi} and a \code{knowledge} object.
 }
 \description{
 Run the PC algorithm for causal discovery using one of several engines.
+}
+\details{
+For specific details on the supported scores, tests, and parameters for each engine, see:
+\itemize{
+\item \code{\link{TetradSearch}} for \pkg{Tetrad},
+\item \code{\link{pcalgSearch}} for \pkg{pcalg},
+\item \code{\link{bnlearnSearch}} for \pkg{bnlearn}.
+}
 }
 \examples{
 ### pc() example ###

@@ -1,4 +1,4 @@
-#' @title Check arguments and distribute them to the appropriate functions
+#' @title Argument Checking and Dispatching
 #'
 #' @description
 #' This function checks if the provided arguments are valid for the specified

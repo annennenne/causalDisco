@@ -23,6 +23,6 @@
 #' @title Causal Disco package
 #' @name causalDisco-package
 #' @section System requirements:
-#' Requires Java (version 21 or newer) to run the bundled Tetrad Java library.
+#' Requires Java (version 21 or newer) to run the Tetrad Java library.
 #' Requires Cargo (Rust's package manager), rustc >= 1.80.0, xz
 "_PACKAGE"
