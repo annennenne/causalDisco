@@ -47,7 +47,7 @@ pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
 ### Installing Rust
 
 `causalDisco` depends on the package [`caugi`](https://github.com/frederikfabriciusbjerre/caugi), which requires Rust to
-be installed on your system. See [this guide](https://www.rust-lang.org/tools/install) for instructions on how to
+be installed on your system. See https://www.rust-lang.org/tools/install for instructions on how to
 install Rust.
 
 ### Installing Java / JDK
@@ -196,12 +196,11 @@ data("tpcExample")
 # Some memory leakage it seems like - is it our fault?
 
 tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-
+kn <- knowledge(
+  tpcExample,
+  required(child_x1 ~ youth_x3)
+)
 for (i in 1:1000) {
-  kn <- knowledge(
-    tpcExample,
-    required(child_x1 ~ youth_x3)
-  )
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
 }
 ```
