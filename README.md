@@ -105,7 +105,6 @@ if (check_tetrad_install()$installed) {
   tetrad_pc <- tetrad_pc |> set_knowledge(kn)
   disco_tetrad_pc_new <- tetrad_pc(tpcExample)
 }
-#> [1] "tetrad"
 
 # use causalDisco's own tges algorithm with temporal BIC score
 cd_tges <- tges(engine = "causalDisco", score = "tbic")

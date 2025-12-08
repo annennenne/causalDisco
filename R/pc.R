@@ -59,7 +59,6 @@ pc <- function(
     )
     runner
   }
-  print(engine)
 
   method <- disco_method(builder, "pc")
   attr(method, "engine") <- engine
