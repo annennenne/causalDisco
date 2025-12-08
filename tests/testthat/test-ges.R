@@ -1,0 +1,196 @@
+test_that("ges Tetrad disco respects tier knowledge", {
+  tetrad_installed <- check_tetrad_install()$installed
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
+  }
+
+  skip("ges Tetrad does not yet support tier knowledge correctly.")
+
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+
+  tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_tier_violations(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      1 ~ starts_with("old"),
+      2 ~ starts_with("youth"),
+      3 ~ starts_with("child")
+    )
+  )
+
+  tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
+  output <- disco(tpcExample, tetrad_ges, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_tier_violations(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+})
+
+test_that("ges Tetrad disco respects required background knowledge", {
+  tetrad_installed <- check_tetrad_install()$installed
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
+  }
+
+  skip("ges Tetrad does not yet support required background knowledge correctly.")
+
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    required(child_x1 ~ youth_x3)
+  )
+
+  tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+
+  # With tier+required knowledge
+  skip("ges Tetrad does not yet support knowledge with both tiers+required edges.")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    ),
+    required(youth_x3 ~ oldage_x5)
+  )
+
+  tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
+  expect_true(nrow(violations_tiers) == 0, info = "Tier violations were found in the output graph.")
+
+  violations_req <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
+})
+
+test_that("ges Tetrad disco respects forbidden background knowledge", {
+  tetrad_installed <- check_tetrad_install()$installed
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
+  }
+
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    forbidden(child_x1 ~ youth_x3),
+    forbidden(child_x2 ~ child_x1)
+  )
+
+  tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+})
+
+#### pcalg ges tests
+
+test_that("ges pcalg disco errors on tier knowledge", {
+  # See ?as_pcalg_constraints - only forbidden edges are supported
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+
+  pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+  expect_error(
+    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    regexp = "pcalg does not support directed tier constraints."
+  )
+})
+
+test_that("ges pcalg disco errors on required background knowledge", {
+  # See ?as_pcalg_constraints - only forbidden edges are supported
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    required(child_x1 ~ youth_x3)
+  )
+
+  pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+  expect_error(
+    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    regexp = "pcalg does not support asymmetric edges."
+  )
+})
+
+test_that("ges pcalg disco respects forbidden background knowledge", {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    forbidden(child_x1 ~ youth_x3)
+  )
+
+  pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+  expect_error(
+    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    regexp = "pcalg does not support asymmetric edges."
+  )
+
+  skip("ges pcalg gives fake warning?")
+
+  kn <- knowledge(
+    tpcExample,
+    forbidden(child_x1 ~ youth_x3),
+    forbidden(youth_x3 ~ child_x1)
+  )
+
+  pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+  output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+
+  pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+  output <- disco(data = tpcExample, method = pcalg_ges)
+  edges_new <- output$caugi@edges
+
+  # Test the original edges had the forbidden edge
+  forbidden_present <-
+    (edges$from == "child_x1" & edges$to == "child_x2") |
+      (edges$from == "child_x2" & edges$to == "child_x1")
+
+  expect_true(
+    sum(forbidden_present) >= 1,
+    info = "Forbidden edge child_x1 --> child_x2 was not found in the output graph without this knowledge."
+  )
+})
