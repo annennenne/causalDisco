@@ -57,7 +57,7 @@ disco <- function(data, method, knowledge = NULL) {
 
   # trigger Java GC if using Tetrad
   if (engine == "tetrad") {
-    if (requireNamespace("rJava", quietly = TRUE)) rJava::.jgc()
+    if (requireNamespace("rJava", quietly = TRUE)) suppressWarnings(rJava::.jgc())
   }
 
   out

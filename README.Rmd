@@ -186,7 +186,7 @@ The algorithm needs to be modified when having required edges, I think.
 
 #### Tetrad issues
 
-`Tetrad` v7.6.9 might fix some of these issues?
+`Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on v7.6.7 and v7.6.9.
 
 - `Tetrad` does not use tier knowledge correctly yet. If giving tier knowledge it still returns undirected edges between
 tiers (see [unit tests for pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L1)). 
@@ -205,28 +205,6 @@ violations <- causalDisco:::check_tier_violations(edges, kn)
 And it only tries to fix it from the other way? I.e. if to and from were swapped? More investigation needed ...
 
 It also breaks on required edges if paired with tier knowledge.
-
-- Running `Tetrad` engine many times gives java.lang.RuntimeException. Try e.g. to run the code below.
-
-```{r, eval = FALSE}
-data("tpcExample")
-# This erros on my machine with error
-# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
-#  java.lang.RuntimeException
-
-
-# Some memory leakage it seems like - is it our fault?
-# Confirmed it also happens on v7.6.7 and v.7.6.9 
-
-tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-kn <- knowledge(
-  tpcExample,
-  required(child_x1 ~ youth_x3)
-)
-for (i in 1:1000) {
-  output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
-}
-```
 
 ### Documentation 
 

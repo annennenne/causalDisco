@@ -173,6 +173,7 @@ parse_heap_gb <- function(x) {
   )
 }
 
+
 #' @title Get current Java heap size in gigabytes
 #'
 #' @description

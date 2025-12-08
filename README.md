@@ -105,6 +105,7 @@ if (check_tetrad_install()$installed) {
   tetrad_pc <- tetrad_pc |> set_knowledge(kn)
   disco_tetrad_pc_new <- tetrad_pc(tpcExample)
 }
+#> [1] "tetrad"
 
 # use causalDisco's own tges algorithm with temporal BIC score
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
@@ -187,7 +188,26 @@ violations
   `tpc`, `tges`, … Currently does nothing. Either make it work or throw
   error/warning if required edges are given.
 
-  - Look into how (if) possible to pass to `pcalg`.
+  - Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving
+    it score -Inf if missing a required edge, but then it runs forever.
+    I.e. adding the following to `local.score`
+
+``` r
+vertex_name <- colnames(pp.dat$data)[vertex]
+req_parents <- kn$edges |>
+dplyr::filter(status == "required", to == vertex_name) |>
+dplyr::pull(from)
+
+parent_names <- colnames(pp.dat$data)[parents]
+missing_required <- !all(req_parents %in% parent_names)
+if (missing_required) {
+  return(-Inf)
+}
+```
+
+The algorithm needs to be modified when having required edges, I think.
+
+- Look into how (if) possible to pass to `pcalg`.
 
 - Piping as done above for `Tetrad` in the example section loses
   `$knowledge$tiers` information due to how builders/closures capture
@@ -197,7 +217,8 @@ violations
 
 #### Tetrad issues
 
-`Tetrad` v7.6.9 might fix some of these issues?
+`Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on
+v7.6.7 and v7.6.9.
 
 - `Tetrad` does not use tier knowledge correctly yet. If giving tier
   knowledge it still returns undirected edges between tiers (see [unit
@@ -219,29 +240,6 @@ And it only tries to fix it from the other way? I.e. if to and from were
 swapped? More investigation needed …
 
 It also breaks on required edges if paired with tier knowledge.
-
-- Running `Tetrad` engine many times gives java.lang.RuntimeException.
-  Try e.g. to run the code below.
-
-``` r
-data("tpcExample")
-# This erros on my machine with error
-# Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl,  : 
-#  java.lang.RuntimeException
-
-
-# Some memory leakage it seems like - is it our fault?
-# Confirmed it also happens on v7.6.7 and v.7.6.9 
-
-tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-kn <- knowledge(
-  tpcExample,
-  required(child_x1 ~ youth_x3)
-)
-for (i in 1:1000) {
-  output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
-}
-```
 
 ### Documentation
 
