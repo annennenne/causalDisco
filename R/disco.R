@@ -31,6 +31,8 @@
 #'
 #' @export
 disco <- function(data, method, knowledge = NULL) {
+  engine <- attr(method, "engine")
+
   if (!inherits(method, "disco_method")) {
     stop("The method must be a disco method object.", call. = FALSE)
   }
@@ -48,8 +50,15 @@ disco <- function(data, method, knowledge = NULL) {
     )
   }
   out <- method(data)
+
   if (!is.null(knowledge)) {
     out <- set_knowledge(out, knowledge)
   }
+
+  # trigger Java GC if using Tetrad
+  if (engine == "tetrad") {
+    if (requireNamespace("rJava", quietly = TRUE)) rJava::.jgc()
+  }
+
   out
 }

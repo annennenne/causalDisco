@@ -46,7 +46,9 @@ tpc <- function(
     runner
   }
 
-  disco_method(builder, "tpc")
+  method <- disco_method(builder, "tpc")
+  attr(method, "engine") <- engine
+  method
 }
 
 #' @keywords internal

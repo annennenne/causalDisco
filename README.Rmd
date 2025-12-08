@@ -158,6 +158,24 @@ violations
 
 - All of our algorithms (I think?) does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)), `tpc`, `tges`, ...
 Currently does nothing. Either make it work or throw error/warning if required edges are given.
+  
+  - Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving it score -Inf if missing a required edge,
+  but then it runs forever. I.e. adding the following to `local.score`
+  
+```{r, eval = FALSE}
+vertex_name <- colnames(pp.dat$data)[vertex]
+req_parents <- kn$edges |>
+dplyr::filter(status == "required", to == vertex_name) |>
+dplyr::pull(from)
+
+parent_names <- colnames(pp.dat$data)[parents]
+missing_required <- !all(req_parents %in% parent_names)
+if (missing_required) {
+  return(-Inf)
+}
+```
+
+The algorithm needs to be modified when having required edges, I think.
 
   - Look into how (if) possible to pass to `pcalg`.
 

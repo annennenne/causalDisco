@@ -52,7 +52,9 @@ tfci <- function(
     runner
   }
 
-  disco_method(builder, "tfci")
+  method <- disco_method(builder, "tfci")
+  attr(method, "engine") <- engine
+  method
 }
 
 #' @keywords internal

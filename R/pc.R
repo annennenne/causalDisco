@@ -59,8 +59,11 @@ pc <- function(
     )
     runner
   }
+  print(engine)
 
-  disco_method(builder, "pc")
+  method <- disco_method(builder, "pc")
+  attr(method, "engine") <- engine
+  method
 }
 
 #' @keywords internal

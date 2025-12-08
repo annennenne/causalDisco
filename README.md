@@ -45,9 +45,9 @@ pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
 
 `causalDisco` depends on the package
 [`caugi`](https://github.com/frederikfabriciusbjerre/caugi), which
-requires Rust to be installed on your system. See [this
-guide](https://www.rust-lang.org/tools/install) for instructions on how
-to install Rust.
+requires Rust to be installed on your system. See
+<https://www.rust-lang.org/tools/install> for instructions on how to
+install Rust.
 
 ### Installing Java / JDK
 
@@ -122,13 +122,23 @@ plot(disco_cd_tges)
 
 ## Questions
 
-- …
+- We say in `?bnlearnSearch` (and implemented in `bnlearn_search`)
+  various algorithms such as `gs`, `iamb`. However, we don’t have a
+  `gs(), iamb()` function exported (similar to how we have a `pc()`
+  function). Should we add these functions?
+
+Is it a work in progress? If so we need to document this in
+`?bnlearnSearch` (and similar for other functions)?.
 
 ## TODO
 
-### Clean up old files
+### Manging exported functions
 
-- Remove old files such as `R/amat.R`, `R/compare.R`, `R/confusion.R`, …
+- Do we need to export the run functions (`tpc_run`, …) if we recommend
+  user to use `disco()` with the method functions (`tpc`, …)?
+
+- Various helper functions: `as_pcalg_constraints`, …,
+  `is_knowledgeable_caugi`, …, `tetrad_graph`
 
 ### Dependencies
 
@@ -136,58 +146,54 @@ plot(disco_cd_tges)
   installed. Move all `rJava` stuff to optional and start up only
   initialize `rJava` if installed?
 
-- Move from `tibble` to `data.table`? See also Standardization
-  subsection.
-
-- Remove old dependencies that are not used anymore (e.g. `MASS`)
-
 ### Bugfixes
 
 #### causalDisco issues
 
-- Some of our algorithms (`tfci`, more?) with engine `causalDisco` does
-  not currently work correctly with tier knowledge
-
-  - “tier” knowledge gives bidirectional edges that violate the tiers
-    (see e.g. [unit tests for
-    tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)):
+- `tpc` with engine `causalDisco` does not currently work correctly with
+  tier knowledge
 
 ``` r
 data("tpcExample")
+
 kn <- knowledge(
   tpcExample,
   tier(
-    1 ~ starts_with("old"),
-    2 ~ starts_with("youth"),
-    3 ~ starts_with("child")
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
   )
 )
 
-my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
-output <- disco(tpcExample, my_tfci, knowledge = kn)
+my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
+
+output <- disco(tpcExample, my_tpc, knowledge = kn)
 edges <- output$caugi@edges
 
 violations <- causalDisco:::check_tier_violations(edges, kn)
 violations
 #> # A tibble: 4 × 5
-#>   from     edge  to        tier_from tier_to
-#>   <chr>    <chr> <chr>         <int>   <int>
-#> 1 child_x2 <->   oldage_x5         3       1
-#> 2 youth_x3 <->   oldage_x5         2       1
-#> 3 youth_x4 <->   oldage_x5         2       1
-#> 4 youth_x4 <->   oldage_x6         2       1
+#>   from      edge  to       tier_from tier_to
+#>   <chr>     <chr> <chr>        <int>   <int>
+#> 1 oldage_x5 -->   child_x2         3       1
+#> 2 oldage_x5 -->   youth_x3         3       2
+#> 3 oldage_x6 -->   youth_x4         3       2
+#> 4 youth_x4  -->   child_x2         2       1
 ```
-
-Probably just the knowledge not knowing how to handle bi-directional
-edges (since it works with e.g. `tges` on un-directed edges)?
 
 - All of our algorithms (I think?) does not work with required edges
   from knowledge objects (see e.g. [unit tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)),
-  `tpc`, `tges`, … Currently does nothing.
+  `tpc`, `tges`, … Currently does nothing. Either make it work or throw
+  error/warning if required edges are given.
+
+  - Look into how (if) possible to pass to `pcalg`.
 
 - Piping as done above for `Tetrad` in the example section loses
-  `$knowledge$tiers` information.
+  `$knowledge$tiers` information due to how builders/closures capture
+  knowledge.
+
+  - Fixing requires refactoring the disco_method builder design I think.
 
 #### Tetrad issues
 
@@ -225,19 +231,21 @@ data("tpcExample")
 
 
 # Some memory leakage it seems like - is it our fault?
+# Confirmed it also happens on v7.6.7 and v.7.6.9 
 
 tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-
+kn <- knowledge(
+  tpcExample,
+  required(child_x1 ~ youth_x3)
+)
 for (i in 1:1000) {
-  kn <- knowledge(
-    tpcExample,
-    required(child_x1 ~ youth_x3)
-  )
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
 }
 ```
 
 ### Documentation
+
+- Make templates.
 
 - Structure the documentation better. See See how `mlr3` does it, and
   see their wiki on roxygen R6 guide

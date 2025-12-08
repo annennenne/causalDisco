@@ -55,7 +55,9 @@ fci <- function(
     )
     runner
   }
-  disco_method(builder, "fci")
+  method <- disco_method(builder, "fci")
+  attr(method, "engine") <- engine
+  method
 }
 
 # Set available engines

@@ -52,7 +52,9 @@ tges <- function(
     runner
   }
 
-  disco_method(builder, "tges")
+  method <- disco_method(builder, "tges")
+  attr(method, "engine") <- engine
+  method
 }
 
 #' @keywords internal

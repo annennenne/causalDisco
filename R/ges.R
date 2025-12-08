@@ -50,7 +50,9 @@ ges <- function(
     runner
   }
 
-  disco_method(builder, "ges")
+  method <- disco_method(builder, "ges")
+  attr(method, "engine") <- engine
+  method
 }
 
 #' @keywords internal
