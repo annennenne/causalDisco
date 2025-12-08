@@ -17,7 +17,6 @@ NULL
 #' @docType class
 #' @name TetradSearch
 #' @rdname TetradSearch
-#' @importFrom rJava .jnew .jcall .jfield .jniInitialized .jinit .jcast
 #' @importFrom R6 R6Class
 #' @export
 TetradSearch <- R6Class(
@@ -140,15 +139,15 @@ TetradSearch <- R6Class(
         function_name = "TetradSearch"
       )
 
-      if (!.jniInitialized) {
+      if (!rJava::.jniInitialized) {
         init_java() # nocov
       }
       self$data <- NULL
       self$score <- NULL
       self$test <- NULL
       self$mc_test <- NULL
-      self$knowledge <- .jnew("edu/cmu/tetrad/data/Knowledge")
-      self$params <- .jnew("edu/cmu/tetrad/util/Parameters")
+      self$knowledge <- rJava::.jnew("edu/cmu/tetrad/data/Knowledge")
+      self$params <- rJava::.jnew("edu/cmu/tetrad/util/Parameters")
       self$bootstrap_graphs <- NULL
       self$set_verbose(FALSE) # Set verbose to FALSE per default.
     },
@@ -1261,28 +1260,28 @@ TetradSearch <- R6Class(
       for (param_name in names(arg_list)) {
         value <- arg_list[[param_name]]
         # Get the key (static field) from Params using the field name.
-        key <- .jfield("edu/cmu/tetrad/util/Params", "S", param_name)
+        key <- rJava::.jfield("edu/cmu/tetrad/util/Params", "S", param_name)
 
         # Wrap the value based on its type.
         wrapped <- if (is.integer(value)) {
-          .jcast(
-            .jnew("java/lang/Integer", as.integer(value)),
+          rJava::.jcast(
+            rJava::.jnew("java/lang/Integer", as.integer(value)),
             "java/lang/Object"
           )
         } else if (is.numeric(value)) {
-          .jcast(
-            .jnew("java/lang/Double", as.double(value)),
+          rJava::.jcast(
+            rJava::.jnew("java/lang/Double", as.double(value)),
             "java/lang/Object"
           )
         } else if (is.logical(value)) {
-          .jcast(
-            .jnew("java/lang/Boolean", as.logical(value)),
+          rJava::.jcast(
+            rJava::.jnew("java/lang/Boolean", as.logical(value)),
             "java/lang/Object"
           )
         } else if (is.character(value)) {
-          .jcast(.jnew("java/lang/String", value), "java/lang/Object")
+          rJava::.jcast(rJava::.jnew("java/lang/String", value), "java/lang/Object")
         } else {
-          .jcast(value, "java/lang/Object") # must already be a Java object
+          rJava::.jcast(value, "java/lang/Object") # must already be a Java object
         }
 
         # Set the parameter using the key and wrapped value.
@@ -1492,9 +1491,9 @@ TetradSearch <- R6Class(
     #' @return (character) The \code{toString()} of that Java object.
     get_string = function(java_obj = NULL) {
       if (is.null(java_obj)) {
-        return(.jcall(self$java, "S", "toString"))
+        return(rJava::.jcall(self$java, "S", "toString"))
       } else {
-        return(.jcall(java_obj, "S", "toString"))
+        return(rJava::.jcall(java_obj, "S", "toString"))
       }
     },
     #' @description Produces a DOT (Graphviz) representation of the graph.
@@ -1503,7 +1502,7 @@ TetradSearch <- R6Class(
     get_dot = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
-        return(.jcall(
+        return(rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToDot",
@@ -1511,7 +1510,7 @@ TetradSearch <- R6Class(
         ))
       } else {
         java_obj <- cast_obj(java_obj)
-        return(.jcall(
+        return(rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToDot",
@@ -1525,7 +1524,7 @@ TetradSearch <- R6Class(
     get_amat = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
-        return(.jcall(
+        return(rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToPcalg",
@@ -1533,7 +1532,7 @@ TetradSearch <- R6Class(
         ))
       } else {
         java_obj <- cast_obj(java_obj)
-        return(.jcall(
+        return(rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToPcalg",
@@ -1566,7 +1565,7 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda,
         DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
-      self$score <- .jnew(
+      self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScore"
       )
       self$score <- cast_obj(self$score)
@@ -1579,7 +1578,7 @@ TetradSearch <- R6Class(
         PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
         STRUCTURE_PRIOR = structure_prior
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
       self$score <- cast_obj(self$score)
     },
     use_conditional_gaussian_score = function(penalty_discount = 1,
@@ -1600,7 +1599,7 @@ TetradSearch <- R6Class(
         DISCRETIZE = discretize,
         NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize
       )
-      self$score <- .jnew(
+      self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/ConditionalGaussianBicScore"
       )
       self$score <- cast_obj(self$score)
@@ -1623,7 +1622,7 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda,
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
-      self$score <- .jnew(
+      self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/DegenerateGaussianBicScore"
       )
       self$score <- cast_obj(self$score)
@@ -1639,7 +1638,7 @@ TetradSearch <- R6Class(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
       self$score <- cast_obj(self$score)
     },
     use_ebic_score = function(gamma = 0.8,
@@ -1658,7 +1657,7 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda
       )
 
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/EbicScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/EbicScore")
       self$score <- cast_obj(self$score)
     },
     use_gic_score = function(penalty_discount = 1,
@@ -1691,7 +1690,7 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
       self$score <- cast_obj(self$score)
     },
     use_mag_degenerate_gaussian_bic_score = function(penalty_discount = 1,
@@ -1709,7 +1708,7 @@ TetradSearch <- R6Class(
         STRUCTURE_PRIOR = structure_prior,
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
       self$score <- cast_obj(self$score)
     },
     use_mixed_variable_polynomial_score = function(structure_prior = 0,
@@ -1728,12 +1727,12 @@ TetradSearch <- R6Class(
       # f_degree is not a static field in Params so we set it manually.
       self$params$set(
         "fDegree",
-        .jcast(
-          .jnew("java/lang/Double", as.double(f_degree)),
+        rJava::.jcast(
+          rJava::.jnew("java/lang/Double", as.double(f_degree)),
           "java/lang/Object"
         )
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
       self$score <- cast_obj(self$score)
     },
     use_poisson_prior_score = function(poission_lambda = 2,
@@ -1751,7 +1750,7 @@ TetradSearch <- R6Class(
         POISSON_LAMBDA = poission_lambda,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      self$score <- .jnew(
+      self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/PoissonPriorScore"
       )
       self$score <- cast_obj(self$score)
@@ -1778,7 +1777,7 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      self$score <- .jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
+      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
       self$score <- cast_obj(self$score)
     },
     use_zhang_shen_bound_score = function(risk_bound = 0.2,
@@ -1796,7 +1795,7 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      self$score <- .jnew(
+      self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/ZhangShenBoundScore"
       )
       self$score <- cast_obj(self$score)
@@ -1823,12 +1822,12 @@ TetradSearch <- R6Class(
         DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew(
+        self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
         )
         self$test <- cast_obj(self$test)
@@ -1847,12 +1846,12 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/FisherZ"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/FisherZ")
+        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/FisherZ")
         self$test <- cast_obj(self$test)
       }
     },
@@ -1883,12 +1882,12 @@ TetradSearch <- R6Class(
         CELL_TABLE_TYPE = cell_table_type_int
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew(
+        self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
         )
         self$test <- cast_obj(self$test)
@@ -1921,12 +1920,12 @@ TetradSearch <- R6Class(
         CELL_TABLE_TYPE = cell_table_type_int
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/GSquare"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/GSquare")
+        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/GSquare")
         self$test <- cast_obj(self$test)
       }
     },
@@ -1956,12 +1955,12 @@ TetradSearch <- R6Class(
         MIN_SAMPLE_SIZE_PER_CELL = min_sample_size_per_cell
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew(
+        self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
         )
         self$test <- cast_obj(self$test)
@@ -1980,12 +1979,12 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew(
+        self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
         )
         self$test <- cast_obj(self$test)
@@ -2009,12 +2008,12 @@ TetradSearch <- R6Class(
         PRIOR_EQUIVALENT_SAMPLE_SIZE = prior_ess
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ProbabilisticTest"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew(
+        self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/ProbabilisticTest"
         )
         self$test <- cast_obj(self$test)
@@ -2071,10 +2070,10 @@ TetradSearch <- R6Class(
         POLYNOMIAL_CONSTANT = polyc
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
+        self$mc_test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
+        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
         self$test <- cast_obj(self$test)
       }
     },
@@ -2116,12 +2115,12 @@ TetradSearch <- R6Class(
         TRUNCATION_LIMIT = truncation_limit
       )
       if (use_for_mc) {
-        self$mc_test <- .jnew(
+        self$mc_test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/CciTest"
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- .jnew("edu/cmu/tetrad/algcomparison/independence/CciTest")
+        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/CciTest")
         self$test <- cast_obj(self$test)
       }
     },
@@ -2145,7 +2144,7 @@ TetradSearch <- R6Class(
         PARALLELIZED = parallelized,
         FAITHFULNESS_ASSUMED = faithfulness_assumed
       )
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Fges",
         self$score
       )
@@ -2188,7 +2187,7 @@ TetradSearch <- R6Class(
         TRIMMING_STYLE = trimming_style_int,
         NUMBER_OF_EXPANSIONS = number_of_expansions
       )
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/FgesMb",
         self$score
       )
@@ -2214,7 +2213,7 @@ TetradSearch <- R6Class(
         OUTPUT_CPDAG = output_cpdag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Boss",
         self$score
       )
@@ -2241,7 +2240,7 @@ TetradSearch <- R6Class(
         ALLOW_INTERNAL_RANDOMNESS = allow_internal_randomness
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/RestrictedBoss",
         self$score
       )
@@ -2302,14 +2301,14 @@ TetradSearch <- R6Class(
         SAMPLE_STYLE = sample_style_int
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Cstar",
         self$test,
         self$score
       )
     },
     set_sp_alg = function() {
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Sp",
         self$score
       )
@@ -2344,7 +2343,7 @@ TetradSearch <- R6Class(
         NUM_STARTS = num_starts
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Grasp",
         self$test,
         self$score
@@ -2373,7 +2372,7 @@ TetradSearch <- R6Class(
         GUARANTEE_CPDAG = guarantee_cpdag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Pc",
         self$test
       )
@@ -2401,7 +2400,7 @@ TetradSearch <- R6Class(
         GUARANTEE_CPDAG = guarantee_cpdag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Cpc",
         self$test
       )
@@ -2434,7 +2433,7 @@ TetradSearch <- R6Class(
         STABLE_FAS = stable_fas
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/PcMax",
         self$test
       )
@@ -2467,7 +2466,7 @@ TetradSearch <- R6Class(
         GUARANTEE_PAG = guarantee_pag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Fci",
         self$test
       )
@@ -2496,7 +2495,7 @@ TetradSearch <- R6Class(
         COMPLETE_RULE_SET_USED = complete_rule_set_used
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Rfci",
         self$test
       )
@@ -2521,7 +2520,7 @@ TetradSearch <- R6Class(
         COMPLETE_RULE_SET_USED = complete_rule_set_used
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Cfci",
         self$test
       )
@@ -2554,7 +2553,7 @@ TetradSearch <- R6Class(
         GUARANTEE_PAG = guarantee_pag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Gfci",
         self$test,
         self$score
@@ -2603,7 +2602,7 @@ TetradSearch <- R6Class(
         NUM_STARTS = num_starts
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossFci",
         self$test,
         self$score
@@ -2636,7 +2635,7 @@ TetradSearch <- R6Class(
         NUM_STARTS = num_starts
       )
 
-      self$alg <- .jnew(class_name, self$score)
+      self$alg <- rJava::.jnew(class_name, self$score)
       self$alg$setKnowledge(self$knowledge)
     },
     set_fcit_alg = function(use_bes = TRUE,
@@ -2682,7 +2681,7 @@ TetradSearch <- R6Class(
         GUARANTEE_PAG = guarantee_pag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Fcit",
         self$test,
         self$score
@@ -2739,7 +2738,7 @@ TetradSearch <- R6Class(
         COMPLETE_RULE_SET_USED = complete_rule_set_used
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/GraspFci",
         self$test,
         self$score
@@ -2768,7 +2767,7 @@ TetradSearch <- R6Class(
         GUARANTEE_PAG = guarantee_pag
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SpFci",
         self$test,
         self$score
@@ -2794,7 +2793,7 @@ TetradSearch <- R6Class(
         THRESHOLD_B = threshold_b
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingam"
       )
     },
@@ -2820,7 +2819,7 @@ TetradSearch <- R6Class(
         THRESHOLD_W = threshold_w
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingD"
       )
     },
@@ -2847,7 +2846,7 @@ TetradSearch <- R6Class(
         SKEW_EDGE_THRESHOLD = skew_edge_threshold
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Fask",
         self$score
       )
@@ -2887,7 +2886,7 @@ TetradSearch <- R6Class(
       )
       # TODO: v7.6.9 removes this folder. Figure out where new one is
       # See this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b
-      self$alg <- .jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
+      self$alg <- rJava::.jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
     },
     set_ccd_alg = function(depth = -1,
                            apply_r1 = TRUE) {
@@ -2909,13 +2908,13 @@ TetradSearch <- R6Class(
         APPLY_R1 = apply_r1
       )
 
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/Ccd",
         self$test
       )
     },
     set_direct_lingam_alg = function() {
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/DirectLingam",
         self$score
       )
@@ -2935,7 +2934,7 @@ TetradSearch <- R6Class(
         W_THRESHOLD = w_threshold,
         CPDAG = cpdag
       )
-      self$alg <- .jnew(
+      self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Dagma"
       )
     },
@@ -2958,16 +2957,16 @@ TetradSearch <- R6Class(
         as.integer(num_lags) # int
       )
 
-      ts_test <- .jnew(
+      ts_test <- rJava::.jnew(
         "edu/cmu/tetrad/search/test/IndTestFisherZ",
         lagged_data,
         0.01
       )
-      ts_test <- .jcast(
+      ts_test <- rJava::.jcast(
         ts_test,
         "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
       )
-      svar_fci <- .jnew(
+      svar_fci <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarFci",
         ts_test
       )
@@ -2995,28 +2994,28 @@ TetradSearch <- R6Class(
         as.integer(num_lags) # int
       )
 
-      ts_test <- .jnew(
+      ts_test <- rJava::.jnew(
         "edu/cmu/tetrad/search/test/IndTestFisherZ",
         lagged_data,
         0.01
       )
-      ts_test <- .jcast(
+      ts_test <- rJava::.jcast(
         ts_test,
         "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
       )
-      ts_score <- .jnew(
+      ts_score <- rJava::.jnew(
         "edu/cmu/tetrad/search/score/SemBicScore",
         lagged_data,
         TRUE
       )
-      ts_score <- .jcast(
+      ts_score <- rJava::.jcast(
         ts_score,
         "edu/cmu/tetrad/algcomparison/score/ScoreWrapper"
       )
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount
       )
-      svar_gfci <- .jnew(
+      svar_gfci <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarGfci",
         ts_test,
         ts_score

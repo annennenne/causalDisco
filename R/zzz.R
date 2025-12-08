@@ -4,16 +4,32 @@
 .default_tetrad_version <- "7.6.8"
 
 .onLoad <- function(...) {
-  if (is.null(getOption("java.heap.size"))) {
-    options(java.heap.size = default_heap())
+  # Only set heap options if rJava is installed
+  if (requireNamespace("rJava", quietly = TRUE)) {
+    if (is.null(getOption("java.heap.size"))) {
+      options(java.heap.size = default_heap())
+    }
   }
+
   if (is.null(getOption("causalDisco.tetrad.version"))) {
     options(causalDisco.tetrad.version = .default_tetrad_version)
   }
+
   S7::methods_register()
 }
 
 .onAttach <- function(...) {
+  has_rJava <- requireNamespace("rJava", quietly = TRUE)
+
+  # If rJava is NOT installed, give a simple message and exit
+  if (!has_rJava) {
+    packageStartupMessage(
+      "causalDisco: rJava is not installed. Java-based features are disabled.\n",
+      "Install rJava and a Java JDK if you want to use Tetrad functionality."
+    )
+    return()
+  }
+
   if (is_interactive() &&
     is.null(getOption("java.heap.size")) &&
     !nzchar(Sys.getenv("JAVA_HEAP_SIZE", unset = ""))) {
@@ -32,7 +48,6 @@
   java_initialized <- FALSE
 
   if (tetrad_status$installed) {
-    # Try initializing Java, fail gracefully if something goes wrong
     try(
       {
         init_java(heap = paste0(heap_gb, "g"))
