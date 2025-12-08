@@ -15,6 +15,8 @@ A list with elements:
 \itemize{
 \item \code{installed}: Logical, whether Tetrad is installed.
 \item \code{version}: Character or NULL, the installed version if found.
+\item \code{java_ok}: Logical, whether Java >= 21.
+\item \code{java_version}: Character, the installed Java version.
 \item \code{message}: Character, a message describing the status.
 }
 }

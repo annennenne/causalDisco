@@ -61,7 +61,7 @@
   # Build startup message
   msg <- paste0(
     "causalDisco startup:\n",
-    "  Java heap size requested: ", heap_gb, " GB\n",
+    "  Java heap size requested: ", round(heap_gb, 2), " GB\n",
     "  Tetrad version: ", tetrad_version, "\n"
   )
 

@@ -44,12 +44,45 @@ print.tetrad_check <- function(x, ...) {
   cat("Message:", x$message, "\n")
 }
 
+
+#' @title Get Java Version
+#' @description Retrieves the installed Java version.
+#' @return A character string representing the Java version, or NA if Java is not found.
+#' @keywords internal
+#' @noRd
+get_java_version <- function() {
+  java <- Sys.which("java")
+  if (!nzchar(java)) {
+    return(NA_character_)
+  }
+
+  ver_lines <- tryCatch(
+    system2(java, "-version", stdout = TRUE, stderr = TRUE),
+    error = function(e) NA_character_
+  )
+
+  if (is.na(ver_lines[1])) {
+    return(NA_character_)
+  }
+
+  ver_line <- ver_lines[1]
+  m <- regmatches(ver_line, regexpr('"[0-9._]+"', ver_line))
+  if (length(m) == 0) {
+    return(NA_character_)
+  }
+
+  gsub('"', "", m)
+}
+
+
 #' Check Tetrad Installation
 #' @param version Character. The version of Tetrad to check.
 #'  Default is the value of `getOption("causalDisco.tetrad.version")`.
 #' @return A list with elements:
 #'  - `installed`: Logical, whether Tetrad is installed.
 #'  - `version`: Character or NULL, the installed version if found.
+#'  - `java_ok`: Logical, whether Java >= 21.
+#'  - `java_version`: Character, the installed Java version.
 #'  - `message`: Character, a message describing the status.
 #' @examples
 #' check_tetrad_install()
@@ -57,32 +90,62 @@ print.tetrad_check <- function(x, ...) {
 check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version")) {
   tetrad_dir <- get_tetrad_dir()
 
+  # Default output helper
+  create_output <- function(installed, version = NULL, java_ok = NA, java_version = NULL, message) {
+    list(
+      installed = installed,
+      version = version,
+      java_ok = java_ok,
+      java_version = java_version,
+      message = message
+    )
+  }
+
+  # Check Tetrad directory / JAR
   if (is.null(tetrad_dir)) {
     return(create_output(
       installed = FALSE,
       version = NULL,
+      java_ok = NA,
+      java_version = NULL,
       message = "Tetrad directory not configured. Call install_tetrad() to install it."
     ))
   }
 
   gui_jar <- file.path(tetrad_dir, paste0("tetrad-gui-", version, "-launch.jar"))
 
-  if (file.exists(gui_jar)) {
-    return(create_output(
-      installed = TRUE,
-      version = version,
-      message = paste0("Tetrad found (version ", version, ").")
-    ))
-  } else {
+  if (!file.exists(gui_jar)) {
     return(create_output(
       installed = FALSE,
       version = NULL,
+      java_ok = NA,
+      java_version = NULL,
       message = paste0(
-        "Tetrad version ", version, " not found. ",
-        "Please install it using install_tetrad()."
+        "Tetrad version ", version, " not found. Please install it using install_tetrad()."
       )
     ))
   }
+
+  java_version <- get_java_version()
+  java_major <- as.integer(sub("\\..*", "", java_version))
+  java_ok <- !is.na(java_major) && java_major >= 21
+
+  msg <- paste0(
+    "Tetrad found (version ", version, "). ",
+    if (!java_ok) {
+      paste0("Java >= 21 required but found ", java_version, ".")
+    } else {
+      paste0("Java version ", java_version, " is OK.")
+    }
+  )
+
+  create_output(
+    installed = TRUE,
+    version = version,
+    java_ok = java_ok,
+    java_version = java_version,
+    message = msg
+  )
 }
 
 #' Install Tetrad GUI
