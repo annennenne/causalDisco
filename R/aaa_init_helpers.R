@@ -158,20 +158,23 @@ parse_heap_gb <- function(x) {
 
   x <- tolower(trimws(as.character(x)))
 
-  if (grepl("^\\d+g(b)?$", x)) {
+  # Match decimal numbers for GB
+  if (grepl("^\\d+(\\.\\d+)?g(b)?$", x)) {
     return(as.double(sub("g(b)?$", "", x)))
   }
 
-  if (grepl("^\\d+m(b)?$", x)) {
+  # Match decimal numbers for MB
+  if (grepl("^\\d+(\\.\\d+)?m(b)?$", x)) {
     return(as.double(sub("m(b)?$", "", x)) / 1024)
   }
 
   stop(
     "Heap string \"", x, "\" not recognised. ",
-    "Specify a whole number followed by 'g' (gigabytes) ",
+    "Specify a number (integer or decimal) followed by 'g' (gigabytes) ",
     "or 'm' (megabytes), e.g. \"4g\" or \"4096m\"."
   )
 }
+
 
 #' @title Get current Java heap size in gigabytes
 #'

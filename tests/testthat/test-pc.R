@@ -1,7 +1,8 @@
 test_that("pc Tetrad disco respects tier knowledge", {
   tetrad_installed <- check_tetrad_install()$installed
-  if (!tetrad_installed) {
-    skip("Tetrad is not installed. Skipping test.")
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
   }
 
   skip("pc Tetrad does not yet support tier knowledge correctly.")
@@ -44,8 +45,9 @@ test_that("pc Tetrad disco respects tier knowledge", {
 
 test_that("pc Tetrad disco respects required background knowledge", {
   tetrad_installed <- check_tetrad_install()$installed
-  if (!tetrad_installed) {
-    skip("Tetrad is not installed. Skipping test.")
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
   }
 
   data("tpcExample")
@@ -56,7 +58,6 @@ test_that("pc Tetrad disco respects required background knowledge", {
   )
 
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  set.seed(1405) # Seed needed since tetrad sometimes gives java.lang.RuntimeException error
   output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
@@ -89,8 +90,9 @@ test_that("pc Tetrad disco respects required background knowledge", {
 
 test_that("pc Tetrad disco respects forbidden background knowledge", {
   tetrad_installed <- check_tetrad_install()$installed
-  if (!tetrad_installed) {
-    skip("Tetrad is not installed. Skipping test.")
+  java_ok <- check_tetrad_install()$java_ok
+  if (!tetrad_installed || !java_ok) {
+    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
   }
 
   data("tpcExample")

@@ -27,6 +27,11 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
   if (is.null(check_tetrad_install()$version)) {
     testthat::skip("Tetrad not installed or version unknown")
   }
+
+  if (!check_tetrad_install()$java_ok) {
+    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
+  }
+
   # neither test nor score
   search_t <- TetradSearch$new()
   expect_error(
@@ -255,7 +260,6 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
 
 test_that("causalDisco: ", {
   skip_if_not_installed("pcalg")
-
 
   # tpc branch
   tpc_formals <- names(formals(tpc))

@@ -1508,6 +1508,10 @@ test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
     testthat::skip("Tetrad not installed or version unknown")
   }
 
+  if (!check_tetrad_install()$java_ok) {
+    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
+  }
+
   kn <- knowledge(
     tibble::tibble(X = 1, Y = 2, Z = 3),
     tier(1 ~ X),

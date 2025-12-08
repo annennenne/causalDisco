@@ -10,6 +10,7 @@ reference:
     desc: "High-level interface for running causal discovery."
     contents:
       - disco
+      - knowledge
 
   - title: "Causal Discovery Algorithms"
     desc: Core search algorithms implemented or wrapped by causalDisco.
@@ -20,6 +21,12 @@ reference:
       - tges
       - tfci
       - tpc
+
+  - title: "Setup for Tetrad Engines"
+    desc: "Functions for installing and verifying the Tetrad Java backend."
+    contents:
+      - install_tetrad
+      - check_tetrad_install
 
   - title: "R6 Classes"
     contents:
@@ -61,12 +68,13 @@ reference:
     contents:
       - starts_with("plot")
       - tplot
+      - maketikz
 
   - title: "Printing"
     contents:
       - starts_with("print")
 
-  - title: "Tiers / Knowledge"
+  - title: "Tiers / Knowledge helpers"
     contents:
       - starts_with("add")
       - starts_with("remove")
@@ -77,7 +85,6 @@ reference:
       - seq_tiers
       - reposition_tier
       - set_knowledge
-      - knowledge
       - as_tetrad_knowledge
       - as_bnlearn_knowledge
       - as_pcalg_constraints
@@ -116,18 +123,12 @@ reference:
       - NPV
       - FOR
 
-  - title: "Testing & Utilities"
-    contents:
-      - corTest
-      - regTest
-      - average_degree
-      - install_tetrad
-      - check_tetrad_install
-      - maketikz
-
   - title: "Miscellaneous"
     contents:
       - causalDisco-package
       - engine_registry
       - tetrad_graph
       - tpcExample
+      - corTest
+      - regTest
+      - average_degree

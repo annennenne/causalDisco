@@ -97,7 +97,7 @@ kn <- knowledge(
 
 # use Tetrad PC algorithm with conditional Gaussian test
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed) {
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   disco_tetrad_pc <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
 
@@ -214,31 +214,118 @@ The algorithm needs to be modified when having required edges, I think.
 
   - Fixing requires refactoring the disco_method builder design I think.
 
+pcalg::ges() gives warning about required edges when we don’t specify
+any?
+
+``` r
+data("tpcExample")
+kn <- knowledge(
+  tpcExample,
+  forbidden(child_x1 ~ youth_x3),
+  forbidden(youth_x3 ~ child_x1)
+)
+
+pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
+output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
+#> Warning: pcalg::ges() does not take required edges as arguments.
+#>   They will not be used here.
+```
+
 #### Tetrad issues
 
 `Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on
 v7.6.7 and v7.6.9.
 
-- `Tetrad` does not use tier knowledge correctly yet. If giving tier
-  knowledge it still returns undirected edges between tiers (see [unit
-  tests for
-  pc](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-pc.R#L1)).
-  Could it be because the graph looks like this:
+- Fixed memory issue from `rJava` by calling garbage collector in disco
+  if using `Tetrad`. However, first call using `Tetrad` now gives
 
 ``` r
-violations <- causalDisco:::check_tier_violations(edges, kn)
-> violations
-# A tibble: 2 × 5
-  from      edge  to       tier_from tier_to
-  <chr>     <chr> <chr>        <int>   <int>
-1 oldage_x5 ---   youth_x3         3       2
-2 oldage_x6 ---   youth_x4         3       2
+Dec 08, 2025 3:33:40 PM java.util.prefs.FileSystemPreferences loadCache
+WARNING: Prefs file removed in background /home/bjarke/.java/.userPrefs/prefs.xml
 ```
 
-And it only tries to fix it from the other way? I.e. if to and from were
-swapped? More investigation needed …
+- `Tetrad` does not use required correctly
 
-It also breaks on required edges if paired with tier knowledge.
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    required(child_x1 ~ youth_x3)
+  )
+  
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x2    o-o  child_x1
+#> 2:  child_x2    o-> oldage_x5
+#> 3:  child_x2    o-o  youth_x4
+#> 4: oldage_x5    --> oldage_x6
+#> 5:  youth_x3    o-> oldage_x5
+#> 6:  youth_x4    --> oldage_x6
+```
+
+and
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    required(child_x1 ~ youth_x3)
+  )
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x1    ---  child_x2
+#> 2:  child_x1    ---  youth_x3
+#> 3:  child_x2    --- oldage_x5
+#> 4:  child_x2    ---  youth_x4
+#> 5: oldage_x5    --- oldage_x6
+#> 6: oldage_x5    ---  youth_x3
+#> 7: oldage_x6    ---  youth_x4
+```
+
+- Was this fine? Undirected edges in tier knowledge?
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+
+  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpcExample, method = tetrad_pc, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x1    ---  child_x2
+#> 2:  child_x2    --- oldage_x5
+#> 3:  child_x2    ---  youth_x4
+#> 4: oldage_x5    --- oldage_x6
+#> 5: oldage_x5    ---  youth_x3
+#> 6: oldage_x6    ---  youth_x4
+```
 
 ### Documentation
 

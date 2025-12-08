@@ -8,6 +8,10 @@ skip_if_no_tetrad <- function() {
     testthat::skip("Tetrad not installed or version unknown")
   }
 
+  if (!check_tetrad_install()$java_ok) {
+    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
+  }
+
   ok <- tryCatch(
     {
       init_java()
@@ -18,18 +22,6 @@ skip_if_no_tetrad <- function() {
 
   if (!ok) {
     testthat::skip("Java/Tetrad not initialized (init_java() failed or no JARs found)")
-  }
-
-  # light sanity: at least one jar on classpath from your package
-  has_jar <- tryCatch(
-    {
-      length(find_tetrad_jar()) > 0
-    },
-    error = function(e) FALSE
-  )
-
-  if (!has_jar) {
-    testthat::skip("No Tetrad JARs discoverable via find_tetrad_jars()")
   }
 }
 
