@@ -8,7 +8,7 @@ archive/
 notes/
 R/tetrad/jdk.tar.gz
 examples/TESTING.R
-
+.Rd2pdf*
 .Rproj.user
 causalDisco*.tar.gz
 causalDisco.Rcheck/

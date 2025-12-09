@@ -5,6 +5,7 @@
 ^\.Rproj\.user$
 ^\.lintr$
 .gitignore
+.Rd2pdf*
 app
 archive
 article
@@ -17,6 +18,7 @@ docker
 ^webtool$
 README.*
 ^cran-comments\.md$
+^README\.Rmd$
 CRAN-SUBMISSION
 ^codecov\.yml$
 ^README\.Rmd$
