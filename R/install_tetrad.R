@@ -18,33 +18,6 @@ get_tetrad_dir <- function() {
   NULL
 }
 
-# -------------------------------
-# Create output object with custom print
-# -------------------------------
-create_output <- function(installed, version = NULL, message) {
-  obj <- list(
-    installed = installed,
-    version = version,
-    message = message
-  )
-  class(obj) <- "tetrad_check"
-  obj
-}
-
-#' @title Print Tetrad check result
-#' @description Print method for tetrad_check objects.
-#' @param x A tetrad_check object.
-#' @param ... Additional arguments (not used).
-#' @examples
-#' causalDisco:::create_output(TRUE, "7.6.8", "Tetrad is installed.") |> print()
-#' @export
-print.tetrad_check <- function(x, ...) {
-  cat("Installed:", x$installed, "\n")
-  cat(paste0("Version: ", ifelse(is.null(x$version), "NULL", x$version)), "\n")
-  cat("Message:", x$message, "\n")
-}
-
-
 #' @title Get Java Version
 #' @description Retrieves the installed Java version.
 #' @return A character string representing the Java version, or NA if Java is not found.
@@ -101,14 +74,43 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     )
   }
 
-  # Check Tetrad directory / JAR
+  # ---- Step 1: Check Java first ----
+  java_version <- get_java_version()
+
+  if (is.null(java_version) || is.na(java_version)) {
+    return(create_output(
+      installed = FALSE,
+      version = NULL,
+      java_ok = FALSE,
+      java_version = NULL,
+      message = "Java was not found. Please install Java >= 21 using install_java()."
+    ))
+  }
+
+  java_major <- as.integer(sub("\\..*", "", java_version))
+  java_ok <- !is.na(java_major) && java_major >= 21
+
+  if (!java_ok) {
+    return(create_output(
+      installed = FALSE,
+      version = NULL,
+      java_ok = FALSE,
+      java_version = java_version,
+      message = paste0(
+        "Java >= 21 is required but found version ", java_version,
+        ". Please update Java or run install_java()."
+      )
+    ))
+  }
+
+  # ---- Step 2: Check Tetrad directory / JAR ----
   if (is.null(tetrad_dir)) {
     return(create_output(
       installed = FALSE,
       version = NULL,
-      java_ok = NA,
-      java_version = NULL,
-      message = "Tetrad directory not configured. Call install_tetrad() to install it."
+      java_ok = TRUE,
+      java_version = java_version,
+      message = "Tetrad directory not configured. Call install_tetrad() to configure it."
     ))
   }
 
@@ -118,31 +120,24 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     return(create_output(
       installed = FALSE,
       version = NULL,
-      java_ok = NA,
-      java_version = NULL,
+      java_ok = TRUE,
+      java_version = java_version,
       message = paste0(
         "Tetrad version ", version, " not found. Please install it using install_tetrad()."
       )
     ))
   }
 
-  java_version <- get_java_version()
-  java_major <- as.integer(sub("\\..*", "", java_version))
-  java_ok <- !is.na(java_major) && java_major >= 21
-
+  # ---- All OK ----
   msg <- paste0(
     "Tetrad found (version ", version, "). ",
-    if (!java_ok) {
-      paste0("Java >= 21 required but found ", java_version, ".")
-    } else {
-      paste0("Java version ", java_version, " is OK.")
-    }
+    "Java version ", java_version, " is OK."
   )
 
   create_output(
     installed = TRUE,
     version = version,
-    java_ok = java_ok,
+    java_ok = TRUE,
     java_version = java_version,
     message = msg
   )
