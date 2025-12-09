@@ -379,6 +379,10 @@ test_that("top-level dispatcher routes to each engine helper", {
     testthat::skip("Tetrad not installed or version unknown")
   }
 
+  if (!check_tetrad_install()$java_ok) {
+    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
+  }
+
   out_t <- check_args_and_distribute_args(
     search = TetradSearch$new(),
     args   = list(verbose = TRUE),
