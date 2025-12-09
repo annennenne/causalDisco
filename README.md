@@ -74,10 +74,11 @@ from the packages `causalDisco` itself, the Java library `Tetrad`,
 `bnlearn`, and `pcalg`.
 
 ``` r
+options(causalDisco.tetrad.version = "7.6.9") # Memory issues are fixed on v7.6.9
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.8
+#>   Tetrad version: 7.6.9
 #>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
@@ -233,16 +234,10 @@ output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
 
 #### Tetrad issues
 
+- v7.6.9 of `Tetrad` seems to fix the memory issues.
+
 `Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on
 v7.6.7 and v7.6.9.
-
-- Fixed memory issue from `rJava` by calling garbage collector in disco
-  if using `Tetrad`. However, first call using `Tetrad` now gives
-
-``` r
-Dec 08, 2025 3:33:40 PM java.util.prefs.FileSystemPreferences loadCache
-WARNING: Prefs file removed in background /home/bjarke/.java/.userPrefs/prefs.xml
-```
 
 - `Tetrad` does not use required correctly
 
@@ -370,9 +365,9 @@ Was removed in this commit
 <https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b>
 
 [Changelog](https://github.com/cmu-phil/tetrad/releases) item 14 says
-"and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC
+“and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC
 and FTFC, providing multiple strategies for discovering latent
-clusterings from measurement data."
+clusterings from measurement data.”
 
 so we need to implement this in `causalDisco` (help?)
 

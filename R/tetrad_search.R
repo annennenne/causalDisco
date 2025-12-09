@@ -444,9 +444,11 @@ TetradSearch <- R6Class(
     #'      \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
     #'      yields sparser graphs,
     #'      \item \code{sem_gic_rule = "bic"} - The following rules are available:
-    #'      \code{"bic"} (ln n), \code{"gic2"} (pn^{1/3}), \code{"ric"} (2 ln pn),
-    #'      \code{"ricc"} (2(ln pn + ln ln pn)), \code{"gic5"} (ln ln n ln pn),
-    #'      \code{"gic6"} (ln n ln pn).
+    #'      \code{"bic"} — \eqn{\ln n},
+    #'      \code{"gic2"} — \eqn{p n^{1/3}},
+    #'      \code{"ric"} — \eqn{2 \ln(p n)},
+    #'      \code{"ricc"} — \eqn{2(\ln(p n) + \ln\ln(p n))},
+    #'      \code{"gic6"} — \eqn{\ln n \ln(p n)}.
     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
