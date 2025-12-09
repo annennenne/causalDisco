@@ -132,4 +132,4 @@ reference:
       - tpcExample
       - corTest
       - regTest
-      # - average_degree
+      - average_degree

@@ -71,7 +71,7 @@ The current supported version of `Tetrad` can then be installed by calling
 causalDisco::install_tetrad()
 ```
 
-To verify everything is set up correctly, run
+To verify everything is set up correctly you can run `check_tetrad_install()`:
 
 ```{r}
 causalDisco::check_tetrad_install()
@@ -79,8 +79,8 @@ causalDisco::check_tetrad_install()
 
 ## Example
 
-With `causalDisco` you can currently run causal discovery algorithms from the packages `causalDisco` itself,
-the Java library `Tetrad`, `bnlearn`, and `pcalg`.
+With `causalDisco` you can currently run causal discovery algorithms from the package `causalDisco` itself,
+the Java library `Tetrad`, the R package `bnlearn`, and the R package `pcalg`.
 
 ```{r example}
 options(causalDisco.tetrad.version = "7.6.9") # Memory issues are fixed on v7.6.9
