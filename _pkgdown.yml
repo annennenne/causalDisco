@@ -15,16 +15,17 @@ reference:
   - title: "Causal Discovery Algorithms"
     desc: Core search algorithms implemented or wrapped by causalDisco.
     contents:
-      - pc
       - fci
       - ges
-      - tges
+      - pc
       - tfci
+      - tges
       - tpc
 
   - title: "Setup for Tetrad Engines"
     desc: "Functions for installing and verifying the Tetrad Java backend."
     contents:
+      - install_java
       - install_tetrad
       - check_tetrad_install
 
@@ -35,9 +36,9 @@ reference:
   - title: "Algorithm Engines"
     desc: "Low-level functions that execute search algorithms."
     contents:
-      - tpc_run
-      - tges_run
       - tfci_run
+      - tges_run
+      - tpc_run
 
   - title: "Score Functions"
     contents:
@@ -131,4 +132,4 @@ reference:
       - tpcExample
       - corTest
       - regTest
-      - average_degree
+      # - average_degree

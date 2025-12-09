@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.1.9007
+Version: 0.9.1.9008
 Authors@R:
       c(
         person(
@@ -112,6 +112,7 @@ Collate:
     'fci.R'
     'gausCorScore.R'
     'ges.R'
+    'install_java.R'
     'install_tetrad.R'
     'knowledge.R'
     'knowledgeable_caugi.R'
