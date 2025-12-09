@@ -44,7 +44,7 @@ pc <- function(
   engine <- match.arg(engine)
   args <- rlang::list2(...)
 
-  # build a “runner builder” that knows how to make a runner given knowledge
+  # build a `runner builder` that knows how to make a runner given knowledge
   builder <- function(knowledge = NULL) {
     runner <- switch(engine,
       tetrad = rlang::exec(pc_tetrad_runner,

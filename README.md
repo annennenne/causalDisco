@@ -370,9 +370,9 @@ Was removed in this commit
 <https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b>
 
 [Changelog](https://github.com/cmu-phil/tetrad/releases) item 14 says
-“and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC
+"and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC
 and FTFC, providing multiple strategies for discovering latent
-clusterings from measurement data.”
+clusterings from measurement data."
 
 so we need to implement this in `causalDisco` (help?)
 

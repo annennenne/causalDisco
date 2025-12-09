@@ -41,7 +41,7 @@ causalDiscoSearch <- R6::R6Class(
     #'    See \code{\link{corTest}}.
     #'    \item \code{reg} - Regression test for discrete or binary data.
     #'    See \code{\link{regTest}}.
-    #'    }
+    #'  }
     test = NULL,
 
     #' @field alg A function that will be used to run the search algorithm.
@@ -53,7 +53,7 @@ causalDiscoSearch <- R6::R6Class(
     #'   See \code{\link{tfci}}.
     #'   \item \code{tges} - TGES algorithm.
     #'   See \code{\link{tges}}.
-    #'   }
+    #' }
     alg = NULL,
 
     #' @field params A list of parameters for the test and algorithm.

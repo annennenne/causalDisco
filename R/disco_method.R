@@ -1,4 +1,4 @@
-#' @title Wrap a runner list into a “disco_method” closure
+#' @title Wrap a runner list into a `disco_method` closure
 #'
 #' @description
 #' A `disco_method` is a closure that wraps a builder function.

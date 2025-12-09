@@ -42,7 +42,7 @@ pcalgSearch <- R6::R6Class(
     #'    \item \code{g_square} - G square test for discrete data.
     #'    See \code{\link[pcalg]{binCItest}} and
     #'    \code{\link[pcalg]{disCItest}}.
-    #'    }
+    #'  }
     test = NULL,
 
     #' @field alg A function that will be used to run the search algorithm.
@@ -51,7 +51,7 @@ pcalgSearch <- R6::R6Class(
     #'   \item \code{pc} - PC algorithm. See \code{\link[pcalg]{pc}}.
     #'   \item \code{fci} - FCI algorithm. See \code{\link[pcalg]{fci}}.
     #'   \item \code{ges} - GES algorithm. See \code{\link[pcalg]{ges}}.
-    #'   }
+    #' }
     alg = NULL,
 
     #' @field params A list of parameters for the test and algorithm.

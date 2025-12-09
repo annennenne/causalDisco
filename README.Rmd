@@ -30,13 +30,7 @@ Causal discovery methods exist in many ecosystems, for example in `bnlearn`, `pc
 
 `causalDisco` unifies them under one clear grammar, making it easy to compare results, switch algorithms, and focus on scientific questions rather than package quirks.
 
-```{r, echo=FALSE, results='asis'}
-if (knitr::is_html_output()) {
-  cat("Time to hit the disco 🪩\n")
-} else {
-  cat("Time to hit the disco\n")  # safe fallback for CRAN PDF
-}
-```
+Time to hit the disco 🪩
 
 ## Installation 
 

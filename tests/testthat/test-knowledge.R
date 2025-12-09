@@ -1224,7 +1224,7 @@ test_that("merge of arbitrary labels concatenates e1 order then new from e2", {
 
   expect_equal(
     kn12$tiers,
-    tiers_tbl("A", "AA", "B") # “B” appended after all of kn1’s labels
+    tiers_tbl("A", "AA", "B") # "B" appended after all of kn1’s labels
   )
 })
 

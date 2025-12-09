@@ -6,7 +6,7 @@
 \title{R6 Interface to Tetrad Search Algorithms}
 \description{
 High-level wrapper around the Java-based \strong{Tetrad} causal-discovery
-library.  The class lets you choose independence tests, scores, and search
+library. The class lets you choose independence tests, scores, and search
 algorithms from Tetrad, run them on an R data set, and retrieve the
 resulting graph or statistics.
 }
@@ -55,19 +55,19 @@ used by Tetrad.}
 \code{set_score()}. Recognised values are:
 
 \itemize{
-\item \code{"sem_bic"} – SEM BIC score.
-\item \code{"ebic"} – Extended BIC score.
-\item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
-\item \code{"basis_function_bic"} – BIC score for basis-function models.
+\item \code{"sem_bic"} - SEM BIC score.
+\item \code{"ebic"} - Extended BIC score.
+\item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
+\item \code{"basis_function_bic"} - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.
-\item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
-\item \code{"discrete_bic"} – BIC score for discrete data.
-\item \code{"gic"} – Generalized Information Criterion (GIC) score.
-\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
-\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
-\item \code{"poisson_prior"} – Poisson prior score.
-\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+\item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
+\item \code{"discrete_bic"} - BIC score for discrete data.
+\item \code{"gic"} - Generalized Information Criterion (GIC) score.
+\item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
+\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+\item \code{"poisson_prior"} - Poisson prior score.
+\item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 }}
 
 \item{\code{test}}{Java object holding the independence test selected with
@@ -75,16 +75,16 @@ This is a generalization of the Degenerate Gaussian score.
 \code{set_test()}. Recognised values are:
 
 \itemize{
-\item \code{"chi_square"} – chi-squared test
-\item \code{"g_square"}   – likelihood-ratio \eqn{G^2} test
-\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate
+\item \code{"chi_square"} - chi-squared test
+\item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test
+\item \code{"basis_function_lrt"} - basis-function likelihood-ratio
+\item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
 probabilistic conditional independence judgments.
-\item \code{"fisher_z"} – Fisher \eqn{Z} (partial correlation) test
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
-\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
-\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
-\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+\item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
+\item \code{"cci"} - Conditional independence of variable in a continuous data set using Daudin's method.
+\item \code{"conditional_gaussian"} - Mixed discrete/continuous test
+\item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
 }}
 
 \item{\code{alg}}{Java object representing the search algorithm.
@@ -92,34 +92,34 @@ Supply one of the method strings for \code{set_alg()}.
 Recognised values are:
 
 \itemize{
-\item \code{"boss"} – BOSS algorithm.
-\item \code{"boss_fci"} – BOSS-FCI algorithm.
-\item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
-\item \code{"ccd"} – Cyclic Causal Discovery.
-\item \code{"cfci"} – Adjusts FCI to use conservative orientation as in CPC.
-\item \code{"cpc"} – Conservative PC algorithm.
-\item \code{"cstar"} – CStaR algorithm (Causal Stability Ranking).
-\item \code{"dagma"} – DAGMA algorithm.
-\item \code{"direct_lingam"} – DirectLiNGAM algorithm.
-\item \code{"fask"} – FASK algorithm.
-\item \code{"fci"} – FCI algorithm.
-\item \code{"fges"} – Fast Greedy Equivalence Search (FGES) algorithm.
-\item \code{"fges_mb"} – Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
-\item \code{"fofc"} – Find One Factor Clusters (FOFC)/MIMBUILD algorithm.
-\item \code{"gfci"} – GFCI algorithm. Combines FGES and FCI.
-\item \code{"grasp"} – GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
-\item \code{"grasp_fci"} – GRaSP-FCI algorithm. Combines GRaSP and FCI.
-\item \code{"ica_lingam"} – ICA LiNGAM algorithm.
-\item \code{"ica_lingd"} – ICA-LiNG-D algorithm
-\item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
-\item \code{"pc"} – Peter-Clark (PC) algorithm
-\item \code{"pc_max"} – PCMax algorithm
-\item \code{"restricted_boss"} – Restricted BOSS algorithm
-\item \code{"rfci"} – Restricted FCI algorithm
-\item \code{"sp"} – Sparsest Permutation algorithm
-\item \code{"sp_fci"} – Sparsest Permutation using FCI
-\item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
-\item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI,
+\item \code{"boss"} - BOSS algorithm.
+\item \code{"boss_fci"} - BOSS-FCI algorithm.
+\item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
+\item \code{"ccd"} - Cyclic Causal Discovery.
+\item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
+\item \code{"cpc"} - Conservative PC algorithm.
+\item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
+\item \code{"dagma"} - DAGMA algorithm.
+\item \code{"direct_lingam"} - DirectLiNGAM algorithm.
+\item \code{"fask"} - FASK algorithm.
+\item \code{"fci"} - FCI algorithm.
+\item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
+\item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
+\item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD algorithm.
+\item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
+\item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
+\item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
+\item \code{"ica_lingam"} - ICA LiNGAM algorithm.
+\item \code{"ica_lingd"} - ICA-LiNG-D algorithm
+\item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm
+\item \code{"pc"} - Peter-Clark (PC) algorithm
+\item \code{"pc_max"} - PCMax algorithm
+\item \code{"restricted_boss"} - Restricted BOSS algorithm
+\item \code{"rfci"} - Restricted FCI algorithm
+\item \code{"sp"} - Sparsest Permutation algorithm
+\item \code{"sp_fci"} - Sparsest Permutation using FCI
+\item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
+\item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
 but uses a BIC score to search for a skeleton.
 }}
 
@@ -191,149 +191,134 @@ Sets the independence test to use in Tetrad.
 \describe{
 \item{\code{method}}{(character) Name of the test method (e.g., "chi_square", "fisher_z").
 \itemize{
-\item \code{"chi_square"} – chi-squared test
-\item \code{"g_square"}   – likelihood-ratio \(G^2\) test
-\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui to calculate
+\item \code{"chi_square"} - chi-squared test
+\item \code{"g_square"}   - likelihood-ratio \(G^2\) test
+\item \code{"basis_function_lrt"} - basis-function likelihood-ratio
+\item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
 probabilistic conditional independence judgments.
-\item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian test as a likelihood ratio test
-\item \code{"cci"} – Conditional independence of variable in a continuous data set using Daudin's method.
-\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
-\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+\item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
+\item \code{"cci"} - Conditional independence of variable in a continuous data set using Daudin's method.
+\item \code{"conditional_gaussian"} - Mixed discrete/continuous test
+\item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
 }}
 
 \item{\code{...}}{Additional arguments passed to the private test-setting methods.
 For the following tests, the following parameters are available:
 \itemize{
-\item \code{"chi_square"} – chi-squared test
+\item \code{"chi_square"} - chi-squared test
 \itemize{
-\item \code{min_count = 1} – Minimum count for the chi-squared
+\item \code{min_count = 1} - Minimum count for the chi-squared
 test per cell. Increasing this can improve accuracy of the test
 estimates,
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 independence test,
-\item \code{cell_table_type = "ad"} – The type of cell table to
-use for optimization:
-\itemize{
-\item \code{"ad"} – AD tree,
-\item \code{"count"} – Count sample.
+\item \code{cell_table_type = "ad"} - The type of cell table to
+use for optimization. Available types are:
+\code{"ad"} - AD tree, \code{"count"} - Count sample.
 }
-}
-\item \code{"g_square"}   – likelihood-ratio \(G^2\) test
+\item \code{"g_square"}   - likelihood-ratio \(G^2\) test
 \itemize{
-\item \code{min_count = 1} – Minimum count for the independence
+\item \code{min_count = 1} - Minimum count for the independence
 test. Increasing this can improve accuracy of chi square
 estimates,
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 chi-squared test,
-\item \code{cell_table_type = "ad"} – The type of cell table to
-use for optimization:
-\itemize{
-\item \code{"ad"} – AD tree,
-\item \code{"count"} – Count sample.
+\item \code{cell_table_type = "ad"} - The type of cell table to
+use for optimization. Available types are:
+\code{"ad"} - AD tree, \code{"count"} - Count sample.
 }
-}
-\item \code{"basis_function_lrt"} – basis-function likelihood-ratio
+\item \code{"basis_function_lrt"} - basis-function likelihood-ratio
 \itemize{
-\item \code{truncation_limit = 3} – Basis functions 1 through
+\item \code{truncation_limit = 3} - Basis functions 1 through
 this number will be used. The Degenerate Gaussian category
 indicator variables for mixed data are also used,
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 likelihood-ratio test,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse,
-\item \code{do_one_equation_only = FALSE} – If TRUE, only one
+\item \code{do_one_equation_only = FALSE} - If TRUE, only one
 equation should be used when expanding the basis.
 }
-\item \code{"probabilistic"} – Uses BCInference by Cooper and Bui
+\item \code{"probabilistic"} - Uses BCInference by Cooper and Bui
 to calculate probabilistic conditional independence judgments.
 \itemize{
-\item \code{threshold = FALSE} – Set to TRUE if using the cutoff
+\item \code{threshold = FALSE} - Set to TRUE if using the cutoff
 threshold for the independence test,
-\item \code{cutoff = 0.5} – Cutoff for the independence test,
-\item \code{prior_ess = 10} – Prior equivalent sample size
+\item \code{cutoff = 0.5} - Cutoff for the independence test,
+\item \code{prior_ess = 10} - Prior equivalent sample size
 for the independence test. This number is added to the sample
 size for each conditional probability table in the model and is
 divided equally among the cells in the table.
 }
-\item \code{"fisher_z"} – Fisher \(Z\) (partial correlation) test
+\item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
 \itemize{
-\item \code{alpha = 0.01} – Significance level
+\item \code{alpha = 0.01} - Significance level
 for the independence test,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian
 likelihood ratio test
 \itemize{
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 independence test,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"cci"} – Conditional independence of variable in a
+\item \code{"cci"} - Conditional independence of variable in a
 continuous data set using Daudin's method.
 \itemize{
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 independence test,
-\item \code{scaling_factor = 2} – For Gaussian kernel: The
+\item \code{scaling_factor = 2} - For Gaussian kernel: The
 scaling factor * Silverman bandwidth.
-\item \code{basis_type = "legendre"} –
-The type of basis function to use.
-\itemize{
-\item \code{"polynomial"},
-\item \code{"hermite1"},
-\item \code{"hermite2"},
-\item \code{"legendre"},
-\item \code{"chebyshev"}
-}
-\item \code{basis_scale = 0.0} – The scale of the basis function.
+\item \code{basis_type = "legendre"} -
+The type of basis function to use. Available types are
+\code{"polynomial"}, \code{"hermite1"}, \code{"hermite2"},
+\code{"legendre"}, or \code{"chebyshev"}.
+\item \code{basis_scale = 0.0} - The scale of the basis function.
 Variables are scaled to \verb{[-b, b]} for this b (0 = standardized).
-\item \code{truncation_limit = 3} – Basis functions 1 through
+\item \code{truncation_limit = 3} - Basis functions 1 through
 this number will be used. The Degenerate Gaussian category
 indicator variables for mixed data are also used.
 }
-\item \code{"conditional_gaussian"} – Mixed discrete/continuous test
+\item \code{"conditional_gaussian"} - Mixed discrete/continuous test
 \itemize{
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 independence test,
-\item \code{discretize = TRUE} – If TRUE for the conditional
+\item \code{discretize = TRUE} - If TRUE for the conditional
 Gaussian likelihood, when scoring X --> D where X is continuous
 and D discrete, one should to simply discretize X for just
 those cases.
 If FALSE, the integration will be exact,
-\item \code{num_categories_to_discretize = 3} – In case the exact
+\item \code{num_categories_to_discretize = 3} - In case the exact
 algorithm is not used for discrete children and continuous
 parents is not used, this parameter gives the number of
 categories to use for this second (discretized) backup copy of
 the continuous variables,
-\item \code{min_sample_size_per_cell = 4} – Minimum sample size
+\item \code{min_sample_size_per_cell = 4} - Minimum sample size
 per cell for the independence test.
 }
-\item \code{"kci"} – Kernel Conditional Independence Test (KCI) by Kun Zhang
+\item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
 \itemize{
-\item \code{alpha = 0.01} – Significance level for the
+\item \code{alpha = 0.01} - Significance level for the
 independence test,
-\item \code{approximate = TRUE} – If TRUE, use the approximate
+\item \code{approximate = TRUE} - If TRUE, use the approximate
 Gamma approximation algorithm. If FALSE, use the exact,
-\item \code{scaling_factor = 1} – For Gaussian kernel: The
+\item \code{scaling_factor = 1} - For Gaussian kernel: The
 scaling factor * Silverman bandwidth.
-\item \code{num_bootstraps = 5000} – Number of bootstrap
+\item \code{num_bootstraps = 5000} - Number of bootstrap
 samples to use for the KCI test.
-\item \code{threshold = 1e-3} – Threshold for the KCI test.
+\item \code{threshold = 1e-3} - Threshold for the KCI test.
 Threshold to determine how many eigenvalues to use --
 the lower the more (0 to 1).
-\item \code{kernel_type = "gaussian"} – The type of kernel to
-use.
-\itemize{
-\item \code{"gaussian"},
-\item \code{"linear"},
-\item \code{"polynomial"},
-}
-\item \code{polyd = 5} – The degree of the polynomial kernel,
+\item \code{kernel_type = "gaussian"} - The type of kernel to
+use. Available types are \code{"gaussian"}, \code{"linear"}, or
+\code{"polynomial"}.
+\item \code{polyd = 5} - The degree of the polynomial kernel,
 if used.
-\item \code{polyc = 1} – The constant of the polynomial kernel,
+\item \code{polyc = 1} - The constant of the polynomial kernel,
 if used.
 }
 }}
@@ -360,176 +345,171 @@ Sets the scoring function to use in Tetrad.
 \describe{
 \item{\code{method}}{(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
 \itemize{
-\item \code{"sem_bic"} – SEM BIC score.
-\item \code{"ebic"} – Extended BIC score.
-\item \code{"bdeu"} – Bayes Dirichlet Equivalent score with uniform priors.
-\item \code{"basis_function_bic"} – BIC score for basis-function models.
+\item \code{"sem_bic"} - SEM BIC score.
+\item \code{"ebic"} - Extended BIC score.
+\item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
+\item \code{"basis_function_bic"} - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.
-\item \code{"conditional_gaussian"} – Mixed discrete/continuous BIC score.
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
-\item \code{"discrete_bic"} – BIC score for discrete data.
-\item \code{"gic"} – Generalized Information Criterion (GIC) score.
-\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
-\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
-\item \code{"poisson_prior"} – Poisson prior score.
-\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+\item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
+\item \code{"discrete_bic"} - BIC score for discrete data.
+\item \code{"gic"} - Generalized Information Criterion (GIC) score.
+\item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
+\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+\item \code{"poisson_prior"} - Poisson prior score.
+\item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 }}
 
 \item{\code{...}}{Additional arguments passed to the private score-setting methods.
 For the following scores, the following parameters are available:
 \itemize{
-\item \code{sem_bic} – SEM BIC score.
+\item \code{sem_bic} - SEM BIC score.
 \itemize{
-\item \code{penalty_discount = 2} – Penalty discount factor used in
+\item \code{penalty_discount = 2} - Penalty discount factor used in
 BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
 graphs,
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-\item \code{sem_bic_rule = 1} – The Chickering Rule uses the
+\item \code{sem_bic_rule = 1} - The Chickering Rule uses the
 difference of BIC scores to add or remove edges. The Nandy et al.
 rule uses a single calculation of a partial correlation in place
 of the likelihood difference,
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse
 }
-\item \code{ebic} – Extended BIC score.
+\item \code{ebic} - Extended BIC score.
 \itemize{
-\item \code{gamma} – The gamma parameter in the EBIC score.
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{gamma} - The gamma parameter in the EBIC score.
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{bdeu} – Bayes Dirichlet Equivalent score with uniform priors.
+\item \code{bdeu} - Bayes Dirichlet Equivalent score with uniform priors.
 \itemize{
-\item \code{sample_prior = 10} – This sets the prior equivalent
+\item \code{sample_prior = 10} - This sets the prior equivalent
 sample size. This number is added to the sample size for each
 conditional probability table in the model and is divided equally
 among the cells in the table,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{basis_function_bic} – BIC score for basis-function models.
+\item \code{basis_function_bic} - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.
 \itemize{
-\item \code{truncation_limit = 3} – Basis functions 1 though this
+\item \code{truncation_limit = 3} - Basis functions 1 though this
 number will be used. The Degenerate Gaussian category indicator
 variables for mixed data are also used,
-\item \code{penalty_discount = 2} – Penalty discount. Higher penalty
+\item \code{penalty_discount = 2} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse,
-\item \code{do_one_equation_only = FALSE} – If TRUE, only one
+\item \code{do_one_equation_only = FALSE} - If TRUE, only one
 equation should be used when expanding the basis.
 }
-\item \code{conditional_gaussian} – Mixed discrete/continuous BIC score.
+\item \code{conditional_gaussian} - Mixed discrete/continuous BIC score.
 \itemize{
-\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+\item \code{penalty_discount = 1} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{discretize = TRUE} – If TRUE for the conditional
+\item \code{discretize = TRUE} - If TRUE for the conditional
 Gaussian likelihood, when scoring X --> D where X is continuous and
 D discrete, one should to simply discretize X for just those cases.
 If FALSE, the integration will be exact,
-\item \code{num_categories_to_discretize = 3} –  In case the exact
+\item \code{num_categories_to_discretize = 3} -  In case the exact
 algorithm is not used for discrete children and continuous parents
 is not used, this parameter gives the number of categories to use
 for this second (discretized) backup copy of the continuous
 variables,
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution.
 }
-\item \code{"degenerate_gaussian"} – Degenerate Gaussian BIC score.
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
 \itemize{
-\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+\item \code{penalty_discount = 1} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data.
 }
-\item \code{"discrete_bic"} – BIC score for discrete data.
+\item \code{"discrete_bic"} - BIC score for discrete data.
 \itemize{
-'item \code{penalty_discount = 2} – Penalty discount. Higher penalty
+'item \code{penalty_discount = 2} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution.
 }
-\item \code{"gic"} – Generalized Information Criterion (GIC) score.
+\item \code{"gic"} - Generalized Information Criterion (GIC) score.
 \itemize{
-\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+\item \code{penalty_discount = 1} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{sem_gic_rule = "bic"} – The following rules are available:
-\itemize{
-\item \code{"bic"} –  ln n,
-\item \code{"gic2"} – pn^1/3,
-\item \code{"ric"} –  2 ln pn,
-\item \code{"ricc"} – 2(ln pn + ln ln pn),
-\item \code{"gic5"} – ln ln n ln pn,
-\item \code{"gic6"} – ln n ln pn
-},
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{sem_gic_rule = "bic"} - The following rules are available:
+\code{"bic"} (ln n), \code{"gic2"} (pn^{1/3}), \code{"ric"} (2 ln pn),
+\code{"ricc"} (2(ln pn + ln ln pn)), \code{"gic5"} (ln ln n ln pn),
+\code{"gic6"} (ln n ln pn).
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"mag_degenerate_gaussian_bic"} – MAG Degenerate Gaussian BIC Score.
+\item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
 \itemize{
-\item \code{penalty_discount = 1} – Penalty discount. Higher penalty
+\item \code{penalty_discount = 1} - Penalty discount. Higher penalty
 yields sparser graphs,
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data.
 }
-\item \code{"mixed_variable_polynomial"} – Mixed variable polynomial BIC score.
+\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
 \itemize{
-\item \code{structure_prior = 0} – The default number of parents
+\item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-\item \code{f_degree = 0} – The f degree.
-\item \code{discretize = FALSE} – If TRUE for the conditional
+\item \code{f_degree = 0} - The f degree.
+\item \code{discretize = FALSE} - If TRUE for the conditional
 Gaussian likelihood, when scoring X --> D where X is continuous and
 D discrete, one should to simply discretize X for just those cases.
 If FALSE, the integration will be exact.
 }
-\item \code{"poisson_prior"} – Poisson prior score.
+\item \code{"poisson_prior"} - Poisson prior score.
 \itemize{
-\item \code{poission_lambda = 2} – Lambda parameter for the Poisson
+\item \code{poission_lambda = 2} - Lambda parameter for the Poisson
 distribution (> 0),
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
-\item \code{"zhang_shen_bound"} – Gaussian Extended BIC score.
+\item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 \itemize{
-\item \code{risk_bound = 0.2} – This is the probability of getting
+\item \code{risk_bound = 0.2} - This is the probability of getting
 the true model if a correct model is discovered. Could underfit.
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
-\item \code{singularity_lambda = 0.0} – Small number >= 0: Add
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
 }}
@@ -559,237 +539,213 @@ Sets the causal discovery algorithm to use in Tetrad.
 methods.
 For the following algorithms, the following parameters are available:
 \itemize{
-\item \code{"boss"} – BOSS algorithm.
+\item \code{"boss"} - BOSS algorithm.
 \itemize{
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
-\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{use_data_order = TRUE} – If TRUE, the data variable
+\item \code{use_data_order = TRUE} - If TRUE, the data variable
 order should be used for the first initial permutation,
-\item \code{output_cpdag = TRUE} – If TRUE, the DAG output of the
+\item \code{output_cpdag = TRUE} - If TRUE, the DAG output of the
 algorithm is converted to a CPDAG.
 }
-\item \code{"boss_fci"} – BOSS-FCI algorithm.
+\item \code{"boss_fci"} - BOSS-FCI algorithm.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set,
 Set to -1 for unlimited,
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
 Set to -1 for unlimited,
-\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{use_heuristic} – If TRUE, use the max p heuristic
+\item \code{use_heuristic} - If TRUE, use the max p heuristic
 version,
-\item \code{complete_rule_set_used = TRUE} –  FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} -  FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal PAG
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal PAG
 (where feasible).
 }
-\item \code{"boss_pod"} – BOSS-POD (BOSS-PAG of DAG) algorithm.
+\item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
 \itemize{
-\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{use_data_order = TRUE} – If TRUE, the data variable
+\item \code{use_data_order = TRUE} - If TRUE, the data variable
 order should be used for the first initial permutation,
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
 }
-\item \code{"ccd"} – Cyclic Causal Discovery.
+\item \code{"ccd"} - Cyclic Causal Discovery.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{apply_r1 = TRUE} – Set this parameter to FALSE if a
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{apply_r1 = TRUE} - Set this parameter to FALSE if a
 chain of directed edges pointing in the same direction, when only
 the first few such orientations are justified based on the data.
 }
-\item \code{"cfci"} – Adjusts FCI to use conservative orientation as in
+\item \code{"cfci"} - Adjusts FCI to use conservative orientation as in
 CPC.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
 }
-\item \code{"cpc"} – Conservative PC algorithm.
+\item \code{"cpc"} - Conservative PC algorithm.
 \itemize{
-\item \code{conflict_rule = 1} –
-\itemize{
-\item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
-\code{\link[pcalg]{pc}},
-\item \code{2} – All collider conflicts using bidirected edges
-should be prioritized,
-\item \code{3} – Existing colliders should be prioritized,
-ignoring subsequent conflicting information,
-}
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{conflict_rule = 1} -
+The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
+corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
+\code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+should be prioritized, while \code{3} means that existing colliders should be prioritized,
+ignoring subsequent conflicting information.
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
-\item \code{guarantee_cpdag = FALSE} – If TRUE, ensure the output is
+\item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
 a legal CPDAG.
 }
-\item \code{"cstar"} – CStaR algorithm (Causal Stability Ranking).
+\item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
 \itemize{
-\item \code{targets = ""} – Target names (comma or space separated),
-\item \code{file_out_path = "cstar_out"} –  Path to a directory in
+\item \code{targets = ""} - Target names (comma or space separated),
+\item \code{file_out_path = "cstar_out"} -  Path to a directory in
 which results can be stored
-\item \code{selection_min_effect = 0.0} – Minimum effect size for
+\item \code{selection_min_effect = 0.0} - Minimum effect size for
 listing effects in the CStaR table
-\item \code{num_subsamples = 50} –  CStaR works by generating
+\item \code{num_subsamples = 50} -  CStaR works by generating
 subsamples and summarizing across them;
 this specifies the number of subsamples to generate.
 Must be >= 1,
-\item \code{top_bracket = 10} – Top bracket to look for causes in,
-\item \code{parallelized = FALSE} – If TRUE, the algorithm should
+\item \code{top_bracket = 10} - Top bracket to look for causes in,
+\item \code{parallelized = FALSE} - If TRUE, the algorithm should
 be parallelized,
-\item \code{cpdag_algorithm = "restricted_boss"} – The CPDAG
-algorithm to use:
-\itemize{
-\item \code{"pc"} – PC Stable,
-\item \code{"fges"},
-\item \code{"boss"},
-\item \code{"restricted_boss"}.
-}
-\item \code{remove_effect_nodes = TRUE} – If TRUE, the effect nodes
+\item \code{cpdag_algorithm = "restricted_boss"} - The CPDAG algorithm to use.
+\code{"pc"} corresponds to PC Stable, \code{"fges"} selects the FGES algorithm,
+\code{"boss"} selects the BOSS algorithm, and \code{"restricted_boss"} selects
+the restricted BOSS variant.
+\item \code{remove_effect_nodes = TRUE} - If TRUE, the effect nodes
 should be removed from possible causes,
-\item \code{sample_style = "subsample"} – The sampling style to use:
-\itemize{
-\item \code{"subsample"},
-\item \code{"bootstrap"}.
+\item \code{sample_style = "subsample"} - The sampling style to use. Available options are
+\code{"subsample"} and \code{"bootstrap"}.
 }
-}
-\item \code{"dagma"} – DAGMA algorithm.
+\item \code{"dagma"} - DAGMA algorithm.
 \itemize{
-\item \code{lambda1 = 0.05} – Tuning parameter for DAGMA,
-\item \code{w_threshold = 0.1} – Second tuning parameter for DAGMA,
-\item \code{cpdag = TRUE} – The algorithm returns a DAG;
+\item \code{lambda1 = 0.05} - Tuning parameter for DAGMA,
+\item \code{w_threshold = 0.1} - Second tuning parameter for DAGMA,
+\item \code{cpdag = TRUE} - The algorithm returns a DAG;
 if this is set to TRUE, this DAG is converted to a CPDAG.
 }
-\item \code{"direct_lingam"} – DirectLiNGAM algorithm. No parameters.
-\item \code{"fask"} – FASK algorithm.
+\item \code{"direct_lingam"} - DirectLiNGAM algorithm. No parameters.
+\item \code{"fask"} - FASK algorithm.
 \itemize{
-\item \code{alpha = 0.05} – Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 independence test,
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{fask_delta = -0.3} – The bias for orienting with
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{fask_delta = -0.3} - The bias for orienting with
 negative coefficients (\code{0} means no bias) for \code{FASK v1},
-\item \code{left_right_rule = 1} – The FASK left right rule v2 is
+\item \code{left_right_rule = 1} - The FASK left right rule v2 is
 default, but two other (related) left-right rules are given for
 relation to the literature, and the v1 FASK rule is included for
 backward compatibility,
-\item \code{skew_edge_threshold = 0.3} – For FASK, this includes an
+\item \code{skew_edge_threshold = 0.3} - For FASK, this includes an
 adjacency X --- Y in the model if
-|corr(X, Y | X > 0) – corr(X, Y | Y > 0)|
+|corr(X, Y | X > 0) - corr(X, Y | Y > 0)|
 exceeds some threshold.
 }
-\item \code{"fci"} – FCI algorithm.
+\item \code{"fci"} - FCI algorithm.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
 }
-\item \code{"fcit"} – FCI Targeted Testing (FCIT) algorithm
+\item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm
 \itemize{
-\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{use_data_order = TRUE} – If TRUE, the data variable
+\item \code{use_data_order = TRUE} - If TRUE, the data variable
 order should be used for the first initial permutation,
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{start_with = "BOSS"} – What algorithm to run first to get
-the initial CPDAG that the rest of the FCIT procedure refines.
-\itemize{
-\item \code{BOSS}
-\item \code{GRaSP}
-\item \code{SP}
-}
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{start_with = "BOSS"} - What algorithm to run first to get
+the initial CPDAG that the rest of the FCIT procedure refines. Available
+options are: \code{"BOSS"}, \code{"GRaSP"}, and \code{"SP"}.
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
 }
-\item \code{"fges"} – Fast Greedy Equivalence Search (FGES) algorithm.
+\item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
 \itemize{
-\item \code{symmetric_first_step = FALSE} – If TRUE, scores for both
+\item \code{symmetric_first_step = FALSE} - If TRUE, scores for both
 X --> Y and X <-- Y will be calculated and the higher score used.
-\item \code{max_degree = -1} – Maximum degree of any node in the
+\item \code{max_degree = -1} - Maximum degree of any node in the
 graph. Set to -1 for unlimited,
-\item \code{parallelized = FALSE} – If TRUE, the algorithm should
+\item \code{parallelized = FALSE} - If TRUE, the algorithm should
 be parallelized,
-\item \code{faithfulness_assumed = FALSE} – If TRUE, assume that if
+\item \code{faithfulness_assumed = FALSE} - If TRUE, assume that if
 \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
 \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
 }
-\item \code{"fges_mb"} – Fast Greedy Equivalence Search with Markov
+\item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov
 Blanket (FGES-MB) algorithm.
 \itemize{
-\item \code{targets = ""} – Target names (comma or space separated),
-\item \code{max_degree = -1} – Maximum degree of any node in the
+\item \code{targets = ""} - Target names (comma or space separated),
+\item \code{max_degree = -1} - Maximum degree of any node in the
 graph. Set to -1 for unlimited,
-\item \code{trimming_style = "mb_dags"} –  'Adjacencies' trims to the
-adjacencies the targets, MB DAGs to the
-Union(MB(targets)) U targets, semidirected trims to nodes with
-semidirected paths to the targets. The trimming style to use:
-\itemize{
-\item \code{"none"} – No trimming,
-\item \code{"adj"} – Adjacencies,
-\item \code{"mb_dags"} – MB DAGs,
-\item \code{"semidir_paths"} – Semidirected paths,
-}
-\item \code{number_of_expansions = 2} – Number of expansions of the
+\item \code{trimming_style = "mb_dags"} - The trimming style to use:
+\code{"none"} applies no trimming. \code{"adj"} trims to the adjacencies
+of the targets. \code{"mb_dags"} trims to Union(MB(targets)) U targets.
+\code{"semidir_paths"} trims to nodes with semidirected paths to the targets.
+\item \code{number_of_expansions = 2} - Number of expansions of the
 algorithm away from the target,
-\item \code{faithfulness_assumed = FALSE} – If TRUE, assume that if
+\item \code{faithfulness_assumed = FALSE} - If TRUE, assume that if
 \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
 \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
 }
-\item \code{"fofc"} – Find One Factor Clusters (FOFC)/MIMBUILD
+\item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD
 algorithm.
 \itemize{
-\item \code{alpha = 0.001} – Cutoff for p values (alpha),
-\item \code{penalty_discount = 2.0} – Penalty discount factor used
+\item \code{alpha = 0.001} - Cutoff for p values (alpha),
+\item \code{penalty_discount = 2.0} - Penalty discount factor used
 in BIC = 2L - ck log N, where c is the penalty. Higher c yields
 sparser graphs,
-\item \code{tetrad_test = "cca"} –  The tetrad test used:
-\itemize{
-\item \code{"cca"} – CCA,
-\item \code{"bt"} – Bollen-Ting,
-\item \code{"wishart"} – Wishart,
-\item \code{"ark"} – Ark,
-}
-\item \code{include_structure_model = TRUE} – If \code{TRUE}
+\item \code{tetrad_test = "cca"} -  The tetrad test used. Available
+options are: \code{"cca"} for CCA, \code{"bt"} for Bollen-Ting,
+\code{"wishart"} for Wishart, and \code{"ark"} for Ark.
+\item \code{include_structure_model = TRUE} - If \code{TRUE}
 FOFC goes beyond the clustering step and calls a MIMBUILD routine
 (PCA or Bollen, chosen via \code{mimbuild_type}) to learn the
 causal relationships \strong{between} the latent factors.
@@ -797,193 +753,187 @@ The returned graph then contains both the measurement model
 (latent --> indicator edges) \emph{and} the latent-level structure.
 When \code{FALSE} FOFC stops after the clustering phase and returns
 only the measurement model.
-\item \code{precompute_covariances = TRUE} – For more than 5000
+\item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data.
 }
-\item \code{"gfci"} – GFCI algorithm. Combines FGES and FCI.
+\item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{max_degree = -1} – Maximum degree of any node in the
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{max_degree = -1} - Maximum degree of any node in the
 graph. Set to -1 for unlimited,
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
 }
-\item \code{"grasp"} – GRaSP (Greedy Relations of Sparsest Permutation)
+\item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation)
 algorithm.
 \itemize{
-\item \code{covered_depth = 4} – The depth of recursion for first
+\item \code{covered_depth = 4} - The depth of recursion for first
 search,
-\item \code{singular_depth = 1} – Recursion depth for singular
+\item \code{singular_depth = 1} - Recursion depth for singular
 tucks,
-\item \code{nonsingular_depth = 1} – Recursion depth for nonsingular
+\item \code{nonsingular_depth = 1} - Recursion depth for nonsingular
 tucks,
-\item \code{ordered_alg = FALSE} – If TRUE, earlier GRaSP stages
+\item \code{ordered_alg = FALSE} - If TRUE, earlier GRaSP stages
 should be performed before later stages,
-\item \code{raskutti_uhler = FALSE} – If TRUE, use Raskutti and
+\item \code{raskutti_uhler = FALSE} - If TRUE, use Raskutti and
 Uhler's DAG-building method (test); if FALSE, use Grow-Shrink
 (score).
-\item \code{use_data_order = TRUE} – If TRUE, the data variable
+\item \code{use_data_order = TRUE} - If TRUE, the data variable
 order should be used for the first initial permutation,
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters.
 }
-\item \code{"grasp_fci"} – GRaSP-FCI algorithm. Combines GRaSP and FCI.
+\item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
-\item \code{covered_depth = 4} – The depth of recursion for first
+\item \code{covered_depth = 4} - The depth of recursion for first
 search,
-\item \code{singular_depth = 1} – Recursion depth for singular
+\item \code{singular_depth = 1} - Recursion depth for singular
 tucks,
-\item \code{nonsingular_depth = 1} – Recursion depth for nonsingular
+\item \code{nonsingular_depth = 1} - Recursion depth for nonsingular
 tucks,
-\item \code{ordered_alg = FALSE} – If TRUE, earlier GRaSP stages
+\item \code{ordered_alg = FALSE} - If TRUE, earlier GRaSP stages
 should be performed before later stages,
-\item \code{raskutti_uhler = FALSE} – If TRUE, use Raskutti and
+\item \code{raskutti_uhler = FALSE} - If TRUE, use Raskutti and
 Uhler's DAG-building method (test); if FALSE, use Grow-Shrink
 (score).
-\item \code{use_data_order = TRUE} – If TRUE, the data variable
+\item \code{use_data_order = TRUE} - If TRUE, the data variable
 order should be used for the first initial permutation,
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
-\item \code{guarantee_pag = FALSE} – If TRUE, ensure the output is a
+\item \code{guarantee_pag = FALSE} - If TRUE, ensure the output is a
 legal PAG (where feasible).
 }
-\item \code{"ica_lingam"} – ICA LiNGAM algorithm.
+\item \code{"ica_lingam"} - ICA LiNGAM algorithm.
 \itemize{
-\item \code{ica_a = 1.1} – The 'a' parameter of Fast ICA
+\item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
 (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
-\item \code{ica_max_iter = 5000} –  Maximum number if iterations of
+\item \code{ica_max_iter = 5000} -  Maximum number if iterations of
 the optimization procedure of ICA.
-\item \code{ica_tolerance = 1e-8} – Fast ICA tolerance parameter.
-\item \code{threshold_b = 0.1} – The estimated B matrix is
+\item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
+\item \code{threshold_b = 0.1} - The estimated B matrix is
 thresholded by setting small entries less than this threshold to
 zero.
 }
-\item \code{"ica_lingd"} – ICA-LiNG-D algorithm
+\item \code{"ica_lingd"} - ICA-LiNG-D algorithm
 \itemize{
-\item \code{ica_a = 1.1} – The 'a' parameter of Fast ICA
+\item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
 (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
-\item \code{ica_max_iter = 5000} –  Maximum number if iterations of
+\item \code{ica_max_iter = 5000} -  Maximum number if iterations of
 the optimization procedure of ICA.
-\item \code{ica_tolerance = 1e-8} – Fast ICA tolerance parameter.
-\item \code{threshold_b = 0.1} – The estimated B matrix is
+\item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
+\item \code{threshold_b = 0.1} - The estimated B matrix is
 thresholded by setting small entries less than this threshold to
 zero.
-\item \code{threshold_w} – The estimated W matrix is thresholded by
+\item \code{threshold_w} - The estimated W matrix is thresholded by
 setting small entries less than this threshold to zero.
 }
 
-\item \code{"pc"} – Peter-Clark (PC) algorithm
+\item \code{"pc"} - Peter-Clark (PC) algorithm
 \itemize{
-\item \code{conflict_rule = 1} –
-\itemize{
-\item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
-\code{\link[pcalg]{pc}},
-\item \code{2} – All collider conflicts using bidirected edges
-should be prioritized,
-\item \code{3} – Existing colliders should be prioritized,
-ignoring subsequent conflicting information,
-}
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{conflict_rule = 1} -
+The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
+corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
+\code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+should be prioritized, while \code{3} means that existing colliders should be prioritized,
+ignoring subsequent conflicting information.
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
-\item \code{guarantee_cpdag = FALSE} – If TRUE, ensure the output is
+\item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
 a legal CPDAG.
 }
-\item \code{"pc_max"} – PCMax algorithm
+\item \code{"pc_max"} - PCMax algorithm
 \itemize{
-\item \code{conflict_rule = 1} –
-\itemize{
-\item \code{1} – The “overwrite” rule as introduced in the \pkg{pcalg} package, see
-\code{\link[pcalg]{pc}},
-\item \code{2} – All collider conflicts using bidirected edges
-should be prioritized,
-\item \code{3} – Existing colliders should be prioritized,
-ignoring subsequent conflicting information,
-}
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{use_heuristic = TRUE} – If TRUE, use the max p heuristic
+\item \code{conflict_rule = 1} -
+The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
+corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
+\code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+should be prioritized, while \code{3} means that existing colliders should be prioritized,
+ignoring subsequent conflicting information.
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{use_heuristic = TRUE} - If TRUE, use the max p heuristic
 version
-\item \code{max_disc_path_length = -1} – The maximum path length to
+\item \code{max_disc_path_length = -1} - The maximum path length to
 use for the max p heuristic version. If -1, no limit is used.
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
 }
-\item \code{"restricted_boss"} – Restricted BOSS algorithm
+\item \code{"restricted_boss"} - Restricted BOSS algorithm
 \itemize{
-\item \code{targets = ""} – Target names (comma or space separated),
-\item \code{use_bes = TRUE} – If TRUE, the algorithm uses the
+\item \code{targets = ""} - Target names (comma or space separated),
+\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{num_starts = 1} – The number of times the algorithm
+\item \code{num_starts = 1} - The number of times the algorithm
 should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters,
-\item \code{allow_internal_randomness = TRUE} –  If TRUE, the
+\item \code{allow_internal_randomness = TRUE} -  If TRUE, the
 algorithm allow the algorithm to use certain heuristic random
 steps. This can improve performance, but may make the algorithm
 non-deterministic.
 }
-\item \code{"rfci"} – Restricted FCI algorithm
+\item \code{"rfci"} - Restricted FCI algorithm
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{stable_fas = TRUE} – If TRUE, the "stable" version of
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
 }
-\item \code{"sp"} – Sparsest Permutation algorithm. No parameters.
-\item \code{"sp_fci"} – Sparsest Permutation using FCI
+\item \code{"sp"} - Sparsest Permutation algorithm. No parameters.
+\item \code{"sp_fci"} - Sparsest Permutation using FCI
 \itemize{
-\item \code{depth = -1} – Maximum size of conditioning set,
-\item \code{max_disc_path_length = -1} – Maximum length for any
+\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{max_disc_path_length = -1} - Maximum length for any
 discriminating path,
-\item \code{complete_rule_set_used = TRUE} – FALSE if the (simpler)
+\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
-\item \code{guarantee_pag = FALSE} – Ensure the output is a legal
+\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
 }
-\item \code{"svar_fci"} – SvarFCI algorithm (for timeseries data)
+\item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
 \itemize{
-\item \code{penalty_discount = 2} – Penalty discount factor used
+\item \code{penalty_discount = 2} - Penalty discount factor used
 in BIC = 2L - ck log N, where c is the penalty. Higher c yields
 sparser graphs.
 }
-\item \code{"svar_gfci"} – SvarGFCI algorithm. Similar to SvarFCI,
+\item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
 but uses a BIC score to search for a skeleton.
 \itemize{
-\item \code{penalty_discount = 2} – Penalty discount factor used
+\item \code{penalty_discount = 2} - Penalty discount factor used
 in BIC = 2L - ck log N, where c is the penalty. Higher c yields
 sparser graphs.
 }
