@@ -23,14 +23,7 @@ test_that("engine guard in check_args_and_distribute_args() rejects unsupported 
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tetrad: requires either test or score, consumes verbose, and covers score-arg branch", {
-  skip_if_not_installed("rJava")
-  if (is.null(check_tetrad_install()$version)) {
-    testthat::skip("Tetrad not installed or version unknown")
-  }
-
-  if (!check_tetrad_install()$java_ok) {
-    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
-  }
+  skip_if_no_tetrad()
 
   # neither test nor score
   search_t <- TetradSearch$new()
@@ -94,8 +87,6 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots warning path", {
-  skip_if_not_installed("pcalg")
-
   # pc branch, known arg passes through
   pc_formals <- names(formals(pcalg::pc))
   known_pc_arg <- if ("m.max" %in% pc_formals) "m.max" else pc_formals[1]
@@ -175,8 +166,6 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
-  skip_if_not_installed("bnlearn")
-
   expect_error(
     check_args_and_distribute_args_bnlearn(
       args = list(),
@@ -259,8 +248,6 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("causalDisco: ", {
-  skip_if_not_installed("pcalg")
-
   # tpc branch
   tpc_formals <- names(formals(tpc))
   args <- stats::setNames(vector("list", length(tpc_formals)), tpc_formals)
@@ -372,16 +359,7 @@ test_that("causalDisco: ", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("top-level dispatcher routes to each engine helper", {
-  skip_if_not_installed("pcalg")
-  skip_if_not_installed("bnlearn")
-  skip_if_not_installed("rJava")
-  if (is.null(check_tetrad_install()$version)) {
-    testthat::skip("Tetrad not installed or version unknown")
-  }
-
-  if (!check_tetrad_install()$java_ok) {
-    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
-  }
+  skip_if_no_tetrad()
 
   out_t <- check_args_and_distribute_args(
     search = TetradSearch$new(),

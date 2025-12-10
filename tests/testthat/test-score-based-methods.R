@@ -14,12 +14,6 @@ ges_args <- function(engine) {
   }
 }
 
-skip_if_no_pcalg_bnlearn_tetrad <- function() {
-  skip_if_no_tetrad()
-  skip_if_not_installed("pcalg")
-  skip_if_not_installed("bnlearn")
-}
-
 toy_df <- function(n = 100) {
   set.seed(7)
   V1 <- rnorm(n)
@@ -46,7 +40,7 @@ toy_knowledge <- function(df) {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("ges(): constructor returns a disco_method and runs across engines", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
   for (engine in ges_registry$ges$engines) {
@@ -61,7 +55,7 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
 })
 
 test_that("ges(): set_knowledge returns a new method and injects knowledge", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
   kn <- toy_knowledge(df)
 
@@ -89,7 +83,7 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
 })
 
 test_that("ges(): disco() injects knowledge and validates method type", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
   kn <- toy_knowledge(df)
 
@@ -116,7 +110,7 @@ test_that("ges(): disco() injects knowledge and validates method type", {
 })
 
 test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
   for (engine in ges_registry$ges$engines) {
@@ -135,7 +129,7 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("ges runners wire arguments correctly for each engine", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
   # tetrad

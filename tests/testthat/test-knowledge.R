@@ -1489,28 +1489,9 @@ test_that("function errors on non-knowledge objects", {
 # ──────────────────────────────────────────────────────────────────────────────
 # as_tetrad_knowledge()
 # ──────────────────────────────────────────────────────────────────────────────
-test_that("as_tetrad_knowledge() errors when rJava is missing", {
-  kn <- knowledge(tibble::tibble(A = 1), tier(1 ~ A))
-
-  # run this branch only when rJava *isn't* installed
-  skip_if(requireNamespace("rJava", quietly = TRUE), "rJava available; skip guard test")
-
-  expect_error(
-    as_tetrad_knowledge(kn),
-    "Package 'rJava' is required for as_tetrad_knowledge\\(\\)\\.",
-    perl = TRUE
-  )
-})
 
 test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
-  skip_if_not_installed("mockery")
-  if (is.null(check_tetrad_install()$version)) {
-    testthat::skip("Tetrad not installed or version unknown")
-  }
-
-  if (!check_tetrad_install()$java_ok) {
-    testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
-  }
+  skip_if_no_tetrad()
 
   kn <- knowledge(
     tibble::tibble(X = 1, Y = 2, Z = 3),

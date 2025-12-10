@@ -38,8 +38,6 @@ test_that("set_params and set_data store values; set_data can skip suff stat", {
 })
 
 test_that("set_suff_stat guards and branches", {
-  skip_if_not_installed("pcalg")
-
   s <- pcalgSearch$new()
 
   # error: no data
@@ -77,8 +75,6 @@ test_that("set_suff_stat guards and branches", {
 })
 
 test_that("set_suff_stat works on matrix input for g_square", {
-  skip_if_not_installed("pcalg")
-
   s <- pcalgSearch$new()
   s$set_test("g_square")
   m <- matrix(sample(0:1, 20, TRUE), ncol = 2)
@@ -92,8 +88,6 @@ test_that("set_suff_stat works on matrix input for g_square", {
 # set_test()
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("set_test stores key and resolves test in set_suff_stat", {
-  skip_if_not_installed("pcalg")
-
   s <- pcalgSearch$new()
   df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
   colnames(df) <- c("X", "Y")
@@ -126,7 +120,6 @@ test_that("set_test unknown test errors", {
 # g_square
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("g_square dispatches to binCItest or disCItest", {
-  skip_if_not_installed("pcalg")
   set.seed(1)
 
   # binary levels -> binCItest path executes
@@ -160,8 +153,6 @@ test_that("g_square dispatches to binCItest or disCItest", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_score builds scorer for obs/int and errors on unknown", {
-  skip_if_not_installed("pcalg")
-
   # obs score
   s1 <- pcalgSearch$new()
   s1$set_score("sem_bic")
@@ -191,8 +182,6 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
 })
 
 test_that("set_score() lazy builder errors if data missing", {
-  skip_if_not_installed("pcalg")
-
   s <- pcalgSearch$new()
   s$set_score("sem_bic") # stores closure only
 
@@ -205,8 +194,6 @@ test_that("set_score() lazy builder errors if data missing", {
 })
 
 test_that("GaussL0penIntScore is constructed when data present", {
-  skip_if_not_installed("pcalg")
-
   df <- data.frame(
     A = as.integer(sample(0:3, 20, TRUE)),
     B = as.integer(sample(0:3, 20, TRUE))
@@ -224,8 +211,6 @@ test_that("GaussL0penIntScore is constructed when data present", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg builds partials and errors on unknown/guard", {
-  skip_if_not_installed("pcalg")
-
   s <- pcalgSearch$new()
 
   # pc and fci requires test
@@ -276,7 +261,6 @@ test_that("set_knowledge defers building constraints and validates input", {
     s_bad$set_knowledge(knowledge_obj = 123),
     class = "simpleError"
   )
-  skip_if_not_installed("pcalg")
 
   df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
   s <- pcalgSearch$new()
@@ -313,7 +297,6 @@ test_that("set_knowledge defers building constraints and validates input", {
     s_bad$set_knowledge(knowledge_obj = 123),
     class = "simpleError"
   )
-  skip_if_not_installed("pcalg")
 
   df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
   s <- pcalgSearch$new()
@@ -364,8 +347,6 @@ test_that("run_search errors in correct order and messages", {
 })
 
 test_that("run_search without score_function (pc) works; with score_function (ges) warns on fixedEdges", {
-  skip_if_not_installed("pcalg")
-
   set.seed(11)
   df <- matrix(rnorm(100), ncol = 5) |> as.data.frame()
   colnames(df) <- LETTERS[1:5]

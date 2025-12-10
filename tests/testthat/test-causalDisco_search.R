@@ -1,10 +1,4 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Skip if these packages are not installed
-# ──────────────────────────────────────────────────────────────────────────────
-
-skip_if_not_installed("pcalg")
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Scores
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -261,8 +255,6 @@ test_that("run_search errors are thrown in the right order", {
 })
 
 test_that("run_search returns knowledgeable_caugi for tpc success path", {
-  skip_if_not_installed("tidyselect")
-  skip_if_not_installed("gtools")
   set.seed(1)
   df <- data.frame(
     p1_x = rnorm(100),
@@ -287,9 +279,6 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
 })
 
 test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
-  skip_on_cran()
-  skip_if_not_installed("tidyselect")
-
   set.seed(1)
   df <- data.frame(
     child_x = rnorm(100),
@@ -326,8 +315,6 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
 })
 
 test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)", {
-  skip_on_cran()
-
   set.seed(11)
   gdf <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(gdf) <- c("p1_A", "p1_B", "p2_C", "p2_D")
@@ -428,8 +415,6 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
 })
 
 test_that("run_search(data=...) takes constraint-based path and computes suff_stat", {
-  skip_if_not_installed("tidyselect")
-
   df <- data.frame(
     p1_x = rnorm(100),
     p1_y = rnorm(100),

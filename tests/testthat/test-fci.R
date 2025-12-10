@@ -1,9 +1,5 @@
 test_that("fci Tetrad disco respects tier knowledge", {
-  tetrad_installed <- check_tetrad_install()$installed
-  java_ok <- check_tetrad_install()$java_ok
-  if (!tetrad_installed || !java_ok) {
-    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
-  }
+  skip_if_no_tetrad()
 
   skip("fci Tetrad does not yet support tier knowledge correctly.")
 
@@ -44,11 +40,7 @@ test_that("fci Tetrad disco respects tier knowledge", {
 })
 
 test_that("fci Tetrad disco respects required background knowledge", {
-  tetrad_installed <- check_tetrad_install()$installed
-  java_ok <- check_tetrad_install()$java_ok
-  if (!tetrad_installed || !java_ok) {
-    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
-  }
+  skip_if_no_tetrad()
 
   skip("fci Tetrad does not yet support required background knowledge correctly.")
 
@@ -91,11 +83,7 @@ test_that("fci Tetrad disco respects required background knowledge", {
 })
 
 test_that("fci Tetrad disco respects forbidden background knowledge", {
-  tetrad_installed <- check_tetrad_install()$installed
-  java_ok <- check_tetrad_install()$java_ok
-  if (!tetrad_installed || !java_ok) {
-    skip("Tetrad is not installed or Java version is insufficient. Skipping test.")
-  }
+  skip_if_no_tetrad()
 
   data("tpcExample")
 

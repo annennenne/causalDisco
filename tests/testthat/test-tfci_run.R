@@ -1,26 +1,4 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Skip if these packages are not installed
-# ──────────────────────────────────────────────────────────────────────────────
-
-skip_if_not_installed("pcalg")
-skip_if_not_installed("gtools")
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Build helper function for knowledge from example data
-# ──────────────────────────────────────────────────────────────────────────────
-
-build_kn_from_order <- function() {
-  knowledge(
-    tpcExample,
-    tier(
-      child ~ child_x2 + child_x1,
-      youth ~ youth_x4 + youth_x3,
-      oldage ~ oldage_x6 + oldage_x5
-    )
-  )
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
 # tfci_run()
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -226,9 +204,6 @@ test_that("tfci_run demands suffStat for non-builtin test functions", {
 })
 
 test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails for bad variables", {
-  skip_if_not_installed("pcalg")
-  skip_if_not_installed("gtools")
-
   # Provide knowledge missing one variable ("oldage_z")
   kn0 <- knowledge() |> add_vars(c("child_x1", "youth_x3"))
 

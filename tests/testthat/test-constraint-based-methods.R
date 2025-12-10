@@ -1,60 +1,13 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers for testing constraint-based methods (pc, fci) across engines
-# ──────────────────────────────────────────────────────────────────────────────
-
-# register methods and the engines they support
-method_registry <- list(
-  pc  = list(fn = pc, engines = c("tetrad", "pcalg", "bnlearn")),
-  fci = list(fn = fci, engines = c("tetrad", "pcalg"))
-)
-
-# per-method arguments (add branches here if a method/engine needs extras)
-method_args <- function(method_name, engine) {
-  args <- list(test = "fisher_z", alpha = 0.05)
-  if (engine == "pcalg") {
-    args$directed_as_undirected_knowledge <- TRUE
-  }
-  args
-}
-
-skip_if_no_pcalg_bnlearn_tetrad <- function() {
-  skip_if_no_tetrad()
-  skip_if_not_installed("pcalg")
-  skip_if_not_installed("bnlearn")
-}
-
-# tiny continuous dataset; fast & stable
-toy_df <- function(n = 60L) {
-  set.seed(69)
-  V1 <- rnorm(n)
-  V3 <- rnorm(n, 0, 0.2)
-  V2 <- 0.6 * V1 + 0.4 * V3 + rnorm(n, 0, 0.05)
-  V4 <- V3 + rnorm(n)
-  V5 <- V3 + rnorm(n)
-  V6 <- 0.7 * V5 + rnorm(n, 0, 0.1)
-  data.frame(V1, V2, V3, V4, V5, V6)
-}
-
-toy_knowledge <- function(df) {
-  knowledge(
-    df,
-    required(
-      V1 ~ V2,
-      V5 ~ V6
-    )
-  )
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Tests for constraint-based methods (pc, fci) across engines
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("methods construct disco_method closures and run across engines", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
-  for (method_name in names(method_registry)) {
-    reg <- method_registry[[method_name]]
+  for (method_name in names(method_registry_constraint)) {
+    reg <- method_registry_constraint[[method_name]]
     for (engine in reg$engines) {
       args <- method_args(method_name, engine)
       m <- do.call(reg$fn, c(list(engine = engine), args))
@@ -73,12 +26,12 @@ test_that("methods construct disco_method closures and run across engines", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_knowledge returns a new method and injects knowledge (all engines)", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
   kn <- toy_knowledge(df)
 
-  for (method_name in names(method_registry)) {
-    reg <- method_registry[[method_name]]
+  for (method_name in names(method_registry_constraint)) {
+    reg <- method_registry_constraint[[method_name]]
     for (engine in reg$engines) {
       args <- method_args(method_name, engine)
       m <- do.call(reg$fn, c(list(engine = engine), args))
@@ -99,7 +52,7 @@ test_that("set_knowledge returns a new method and injects knowledge (all engines
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("disco() injects knowledge and validates method type (pc + fci)", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
   kn <- toy_knowledge(df)
 
@@ -109,8 +62,8 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
     fixed = TRUE
   )
 
-  for (method_name in names(method_registry)) {
-    reg <- method_registry[[method_name]]
+  for (method_name in names(method_registry_constraint)) {
+    reg <- method_registry_constraint[[method_name]]
     for (engine in reg$engines) {
       args <- method_args(method_name, engine)
       m <- do.call(reg$fn, c(list(engine = engine), args))
@@ -122,11 +75,11 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
 })
 
 test_that("disco() forwards knowledge errors from set_knowledge() (pc + fci)", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
-  for (method_name in names(method_registry)) {
-    reg <- method_registry[[method_name]]
+  for (method_name in names(method_registry_constraint)) {
+    reg <- method_registry_constraint[[method_name]]
     for (engine in reg$engines) {
       args <- method_args(method_name, engine)
       m <- do.call(reg$fn, c(list(engine = engine), args))
@@ -145,7 +98,7 @@ test_that("disco() forwards knowledge errors from set_knowledge() (pc + fci)", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("pc and fci runners wire arguments correctly for each engine", {
-  skip_if_no_pcalg_bnlearn_tetrad()
+  skip_if_no_tetrad()
   df <- toy_df()
 
   # pc: Tetrad (incl. extra test/alg params)

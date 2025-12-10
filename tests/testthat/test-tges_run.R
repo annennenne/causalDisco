@@ -1,10 +1,4 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Skip if these packages are not installed
-# ──────────────────────────────────────────────────────────────────────────────
-
-skip_if_not_installed("pcalg")
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Helpers: create_adj_matrix_from_list and create_list_from_matrix
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -47,7 +41,6 @@ test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
   M <- matrix(c(0, 1, 0, 0, 0, 1, 0, 0, 0), nrow = 3, byrow = TRUE)
   expect_identical(to_adj_mat(M), M)
 
-  skip_if_not_installed("graph")
   gnel <- graph::graphNEL(nodes = c("A", "B", "C"), edgemode = "directed")
   gnel <- graph::addEdge("A", "B", gnel)
   gnel <- graph::addEdge("B", "C", gnel)
@@ -144,7 +137,6 @@ test_that("Scores initialize invalid `order` type errors cleanly", {
 })
 
 test_that("TemporalBDeu covers if(length(parents) == 0) part", {
-  skip_if_not_installed("bnlearn")
   data("alarm", package = "bnlearn")
   sc <- new("TemporalBDeu",
     iss = 0.5,

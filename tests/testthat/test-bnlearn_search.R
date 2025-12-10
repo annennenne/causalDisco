@@ -1,10 +1,4 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Skip if these packages are not installed
-# ──────────────────────────────────────────────────────────────────────────────
-
-skip_if_not_installed("bnlearn")
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Initialization
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -80,8 +74,6 @@ test_that("set_score accepts known names and rejects unknown", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg guards fire with exact messages", {
-  skip_if_not_installed("bnlearn")
-
   s <- bnlearnSearch$new()
 
   # args must be a list if provided
@@ -133,8 +125,6 @@ test_that("set_alg guards fire with exact messages", {
 })
 
 test_that("set_alg builds partials for each family when prerequisites satisfied", {
-  skip_if_not_installed("bnlearn")
-
   # constraint-based example: pc (needs test)
   s1 <- bnlearnSearch$new()
   s1$set_test("zf", alpha = 0.05)
@@ -179,8 +169,6 @@ test_that("run_search errors when data/alg missing with exact messages", {
 
 
 test_that("run_search works and covers whitelist/blacklist branches", {
-  skip_if_not_installed("bnlearn")
-
   set.seed(1)
   df <- data.frame(
     X = sample(c(1, 2), 40, replace = TRUE),

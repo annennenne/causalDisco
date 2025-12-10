@@ -118,7 +118,6 @@ test_that("regTestEachDir wraps binary S in factor()", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("corTest matches gaussCItest", {
-  skip_if_not_installed("pcalg")
   set.seed(314)
   p <- 4
   n <- 800
@@ -171,8 +170,6 @@ test_that("as.graphNEL drops tamat class", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("is_pdag and is_cpdag validate graphs", {
-  skip_if_not_installed("pcalg")
-
   # A <- B : valid PDAG; not a CPDAG (orientation not compelled)
   m <- matrix(0L, 2, 2, dimnames = list(c("A", "B"), c("A", "B")))
   m["B", "A"] <- 1L
@@ -190,8 +187,6 @@ test_that("is_pdag and is_cpdag validate graphs", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("graph2amat converts to adjacency matrix", {
-  skip_if_not_installed("graph")
-
   nodes <- c("A", "B", "C")
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "directed")
   g <- graph::addEdge("A", "B", g)
