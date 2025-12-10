@@ -1,5 +1,3 @@
-pkg <- "causalDisco"
-
 # ──────────────────────────────────────────────────────────────────────────────
 # .onLoad() and .onAttach()
 # ──────────────────────────────────────────────────────────────────────────────
@@ -10,9 +8,9 @@ test_that(".onLoad sets default heap when option is absent", {
 
   with_mocked_bindings(
     default_heap = function() "2g",
-    .package = pkg,
+    .package = "causalDisco",
     {
-      causalDisco:::.onLoad(libname = "", pkgname = pkg)
+      causalDisco:::.onLoad(libname = "", pkgname = "causalDisco")
       expect_equal(getOption("java.heap.size"), "2g")
     }
   )
@@ -35,10 +33,10 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
       invisible(NULL)
     },
     current_heap_gb = function() 4,
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = pkg),
+        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
         "Java successfully initialized with 4 GB",
         class = "packageStartupMessage"
       )
@@ -59,10 +57,10 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
     parse_heap_gb = function(x) 4,
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 4,
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = pkg),
+        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
         "Java heap size requested: 4 GB",
         class = "packageStartupMessage"
       )
@@ -81,10 +79,10 @@ test_that(".onAttach warns when runtime heap != requested", {
     parse_heap_gb = function(x) 2,
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 6,
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = pkg),
+        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
         "WARNING: Java heap is 6 GB but you requested 2 GB. Restart R to change the heap.",
         fixed = TRUE
       )
@@ -107,9 +105,9 @@ test_that(".onAttach does not prompt in non-interactive mode", {
     parse_heap_gb = function(x) as.numeric(sub("g$", "", x)),
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 3,
-    .package = pkg,
+    .package = "causalDisco",
     {
-      causalDisco:::.onAttach(libname = "", pkgname = pkg)
+      causalDisco:::.onAttach(libname = "", pkgname = "causalDisco")
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "3g")
     }
@@ -131,9 +129,9 @@ test_that(".onAttach does not prompt when env var set", {
     parse_heap_gb = function(x) 5,
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 5,
-    .package = pkg,
+    .package = "causalDisco",
     {
-      causalDisco:::.onAttach(libname = "", pkgname = pkg)
+      causalDisco:::.onAttach(libname = "", pkgname = "causalDisco")
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "5g")
     }
@@ -147,7 +145,7 @@ test_that(".onAttach does not prompt when env var set", {
 test_that("ask_heap_size returns default on empty input", {
   with_mocked_bindings(
     .read_line = function(prompt) "",
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_equal(ask_heap_size(), "2g")
     }
@@ -157,7 +155,7 @@ test_that("ask_heap_size returns default on empty input", {
 test_that("ask_heap_size returns Ng for numeric input", {
   with_mocked_bindings(
     .read_line = function(prompt) "4",
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_equal(ask_heap_size(), "4g")
     }
@@ -172,7 +170,7 @@ test_that("ask_heap_size reprompts on invalid input and messages once", {
       i <<- i + 1
       answers[[i]]
     },
-    .package = pkg,
+    .package = "causalDisco",
     {
       expect_message(
         {
@@ -222,7 +220,7 @@ test_that(".check_if_pkgs_are_installed errors with helpful message for missing 
 })
 
 test_that(".check_if_pkgs_are_installed errors with helpful message for missing pkgs (class case)", {
-  fake <- "definitelyNotARealPkg_ghijkl"
+  fake <- "definitelyNotARealARealPkg_ghijkl"
   expect_error(
     .check_if_pkgs_are_installed(
       pkgs = c("stats", fake),

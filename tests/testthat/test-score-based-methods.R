@@ -1,47 +1,10 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Helper functions for tests
-# ──────────────────────────────────────────────────────────────────────────────
-
-ges_registry <- list(
-  ges = list(fn = ges, engines = c("tetrad", "pcalg"))
-)
-
-ges_args <- function(engine) {
-  if (engine == "pcalg") {
-    list(score = "sem_bic", directed_as_undirected_knowledge = TRUE)
-  } else {
-    list(score = "sem_bic")
-  }
-}
-
-toy_df <- function(n = 100) {
-  set.seed(7)
-  V1 <- rnorm(n)
-  V3 <- rnorm(n, 0, 0.2)
-  V2 <- 0.6 * V1 + 0.4 * V3 + rnorm(n, 0, 0.05)
-  V4 <- V3 + rnorm(n)
-  V5 <- V3 + rnorm(n)
-  V6 <- 0.7 * V5 + rnorm(n, 0, 0.1)
-  data.frame(V1, V2, V3, V4, V5, V6)
-}
-
-toy_knowledge <- function(df) {
-  knowledge(
-    df,
-    required(
-      V1 ~ V2,
-      V5 ~ V6
-    )
-  )
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
 # ges()
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("ges(): constructor returns a disco_method and runs across engines", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
     m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
@@ -56,7 +19,7 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
 
 test_that("ges(): set_knowledge returns a new method and injects knowledge", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_score()
   kn <- toy_knowledge(df)
 
   for (engine in ges_registry$ges$engines) {
@@ -71,7 +34,7 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
     if (engine == "pcalg") {
       expect_warning(
         m2(df),
-        "pcalg::ges() does not take required edges as arguments.\n  They will not be used here.",
+        "Engine pcalg does not use required edges; ignoring them.",
         fixed = TRUE
       )
     } else {
@@ -84,7 +47,7 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
 
 test_that("ges(): disco() injects knowledge and validates method type", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_score()
   kn <- toy_knowledge(df)
 
   expect_error(
@@ -99,7 +62,7 @@ test_that("ges(): disco() injects knowledge and validates method type", {
     if (engine == "pcalg") {
       expect_warning(
         disco(df, method = m, knowledge = kn),
-        "pcalg::ges() does not take required edges as arguments.\n  They will not be used here.",
+        "Engine pcalg does not use required edges; ignoring them.",
         fixed = TRUE
       )
     } else {
@@ -111,7 +74,7 @@ test_that("ges(): disco() injects knowledge and validates method type", {
 
 test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
     m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
@@ -130,7 +93,7 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
 
 test_that("ges runners wire arguments correctly for each engine", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_score()
 
   # tetrad
   runner_t <- ges_tetrad_runner(

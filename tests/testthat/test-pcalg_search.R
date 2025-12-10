@@ -274,7 +274,13 @@ test_that("set_knowledge defers building constraints and validates input", {
   s$set_params(list(alpha = 0.05))
   s$set_test("fisher_z")
   s$set_alg("pc")
-  expect_s3_class(s$run_search(df), "knowledgeable_caugi")
+
+  expect_warning(
+    out <- s$run_search(df),
+    "Engine pcalg does not use required edges; ignoring them.",
+    fixed = TRUE
+  )
+  expect_s3_class(out, "knowledgeable_caugi")
 })
 
 test_that("knowledge builder errors if data missing", {
@@ -309,7 +315,13 @@ test_that("set_knowledge defers building constraints and validates input", {
   s$set_test("fisher_z")
   s$set_data(df, set_suff_stat = TRUE)
   s$set_alg("pc")
-  expect_s3_class(s$run_search(), "knowledgeable_caugi")
+
+  expect_warning(
+    out <- s$run_search(),
+    "Engine pcalg does not use required edges; ignoring them.",
+    fixed = TRUE
+  )
+  expect_s3_class(out, "knowledgeable_caugi")
 })
 
 
@@ -374,7 +386,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   s_ges2$set_knowledge(kn_req, directed_as_undirected = TRUE)
   expect_warning(
     s_ges2$run_search(df),
-    "pcalg::ges() does not take required edges as arguments.\n  They will not be used here.",
+    "Engine pcalg does not use required edges; ignoring them.",
     fixed = TRUE
   )
 })

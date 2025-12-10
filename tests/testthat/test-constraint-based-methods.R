@@ -4,7 +4,7 @@
 
 test_that("methods construct disco_method closures and run across engines", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_constraint()
 
   for (method_name in names(method_registry_constraint)) {
     reg <- method_registry_constraint[[method_name]]
@@ -27,7 +27,7 @@ test_that("methods construct disco_method closures and run across engines", {
 
 test_that("set_knowledge returns a new method and injects knowledge (all engines)", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_constraint()
   kn <- toy_knowledge(df)
 
   for (method_name in names(method_registry_constraint)) {
@@ -41,7 +41,15 @@ test_that("set_knowledge returns a new method and injects knowledge (all engines
 
       m2 <- set_knowledge(m, kn)
       expect_s3_class(m2, c(method_name, "disco_method", "function"))
-      expect_s3_class(m2(df), "knowledgeable_caugi")
+      if (engine == "pcalg") {
+        expect_warning(
+          m2(df),
+          "Engine pcalg does not use required edges; ignoring them.",
+          fixed = TRUE
+        )
+      } else {
+        expect_s3_class(m2(df), "knowledgeable_caugi")
+      }
       expect_s3_class(m(df), "knowledgeable_caugi")
     }
   }
@@ -53,7 +61,7 @@ test_that("set_knowledge returns a new method and injects knowledge (all engines
 
 test_that("disco() injects knowledge and validates method type (pc + fci)", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_constraint()
   kn <- toy_knowledge(df)
 
   expect_error(
@@ -68,7 +76,15 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
       args <- method_args(method_name, engine)
       m <- do.call(reg$fn, c(list(engine = engine), args))
 
-      res <- disco(df, method = m, knowledge = kn)
+      if (engine == "pcalg") {
+        expect_warning(
+          disco(df, method = m, knowledge = kn),
+          "Engine pcalg does not use required edges; ignoring them.",
+          fixed = TRUE
+        )
+      } else {
+        res <- disco(df, method = m, knowledge = kn)
+      }
       expect_s3_class(res, "knowledgeable_caugi")
     }
   }
@@ -76,7 +92,7 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
 
 test_that("disco() forwards knowledge errors from set_knowledge() (pc + fci)", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_constraint()
 
   for (method_name in names(method_registry_constraint)) {
     reg <- method_registry_constraint[[method_name]]
@@ -99,7 +115,7 @@ test_that("disco() forwards knowledge errors from set_knowledge() (pc + fci)", {
 
 test_that("pc and fci runners wire arguments correctly for each engine", {
   skip_if_no_tetrad()
-  df <- toy_df()
+  df <- toy_df_constraint()
 
   # pc: Tetrad (incl. extra test/alg params)
   runner_t_pc <- pc_tetrad_runner(test = "fisher_z", alpha = 0.05)

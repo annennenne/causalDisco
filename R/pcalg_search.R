@@ -273,10 +273,15 @@ pcalgSearch <- R6::R6Class(
           stop("Data must be set before knowledge.", call. = FALSE)
         }
         labels <- colnames(self$data)
-        as_pcalg_constraints(knowledge_obj,
+        constraints <- as_pcalg_constraints(
+          knowledge_obj,
           labels,
           directed_as_undirected = directed_as_undirected
         )
+        if (any(constraints$fixedEdges)) {
+          warning("Engine pcalg does not use required edges; ignoring them.", call. = FALSE)
+        }
+        constraints
       }
     },
 
@@ -335,13 +340,6 @@ pcalgSearch <- R6::R6Class(
           # to get the fixed constraints.
           self$knowledge <- private$knowledge_function()
           self$score <- private$score_function()
-          if (!is.null(self$knowledge$fixedEdges)) {
-            warning(
-              "pcalg::ges() does not take required edges as arguments.",
-              "\n  They will not be used here.",
-              call. = FALSE
-            )
-          }
           result <- self$alg(
             self$score,
             fixedGaps = self$knowledge$fixedGaps
