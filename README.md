@@ -257,16 +257,11 @@ kn <- knowledge(
 
 pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
 output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
-#> Warning: pcalg::ges() does not take required edges as arguments.
-#>   They will not be used here.
 ```
 
 #### Tetrad issues
 
 - v7.6.9 of `Tetrad` seems to fix the memory issues.
-
-`Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on
-v7.6.7 and v7.6.9.
 
 - `Tetrad` does not use required correctly
 
@@ -355,6 +350,35 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 Added a bunch of `browser()` statements in TetradSearch and the
 knowledge is correctly passed to Tetrad, so not sure what is going on
 here.
+
+Is this expected?
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    forbidden(child_x2 ~ child_x1)
+  )
+
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x2    o-o  child_x1
+#> 2:  child_x2    o-> oldage_x5
+#> 3:  child_x2    o-o  youth_x4
+#> 4: oldage_x5    --> oldage_x6
+#> 5:  youth_x3    o-> oldage_x5
+#> 6:  youth_x4    --> oldage_x6
+```
+
+Or should the edge between `child_x2` and `child_x1` be `--o` instead of
+`o--o`?
 
 ### Documentation
 

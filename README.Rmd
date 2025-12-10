@@ -216,9 +216,6 @@ output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
 
 - v7.6.9 of `Tetrad` seems to fix the memory issues.
 
-
-`Tetrad` v7.6.9 might fix some of these issues? Confirmed same issue on v7.6.7 and v7.6.9.
-
 - `Tetrad` does not use required correctly
 
 ```{r}
@@ -279,6 +276,26 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 Added a bunch of `browser()` statements in TetradSearch and the knowledge is correctly passed to Tetrad, so not sure
 what is going on here.
+
+Is this expected?
+
+```{r}
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpcExample")
+
+  kn <- knowledge(
+    tpcExample,
+    forbidden(child_x2 ~ child_x1)
+  )
+
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+```
+
+Or should the edge between `child_x2` and `child_x1` be `--o` instead of `o--o`?
 
 ### Documentation 
 
