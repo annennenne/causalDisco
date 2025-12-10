@@ -63,7 +63,7 @@ try(
 
 # --- tetrad engine (run only if rJava is available) ---------------------------
 # This block is skipped on systems without rJava and Tetrad to keep examples CRAN-safe.
-if (!is.null(check_tetrad_install()$version) && requireNamespace("rJava", quietly = TRUE)) {
+if ((check_tetrad_install()$installed) && check_tetrad_install()$java_ok) {
   if (!isTRUE(rJava::.jniInitialized)) {
     # Initialize JVM if needed (no-op if already initialized)
     init_java()
