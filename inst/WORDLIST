@@ -1,6 +1,6 @@
 ADMGs
 ARACNE
-Adjacencies
+Adoptium
 BCInference
 BDE
 BDeu
@@ -74,8 +74,6 @@ Raskutti
 Recognised
 Renviron
 Rstudio
-RuntimeException
-Semidirected
 Silverman
 Spirtes
 SvarFCI
@@ -111,7 +109,6 @@ bnlearnSearch
 bnlearns
 bpco
 caugi
-causalDiscoSearch
 cormat
 cpdag
 df
@@ -125,7 +122,7 @@ fciAlgo
 fges
 fixedEdges
 fixedGaps
-frontend
+ges
 graphNEL
 honouring
 igraph
@@ -135,8 +132,6 @@ inout
 interventional
 ith
 kwab
-lang
-ln
 maketikz
 md
 micd
@@ -148,9 +143,10 @@ pc
 pcalg
 pdag
 penalised
-pn
 preprint
 probmat
+rJava
+reinstallation
 rmarkdown
 rmd
 roxygen
