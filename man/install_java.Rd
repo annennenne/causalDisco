@@ -2,21 +2,39 @@
 % Please edit documentation in R/install_java.R
 \name{install_java}
 \alias{install_java}
-\title{Install Temurin JDK 25}
+\title{Install Eclipse Temurin JDK 25 (with JAVA_HOME configuration)}
 \usage{
 install_java(force = FALSE)
 }
 \arguments{
-\item{force}{Logical; if TRUE, forces re-installation even if JDK is already installed.}
+\item{force}{Logical; if \code{TRUE}, forces reinstallation even if the JDK is
+already present.}
 }
 \description{
-This function installs the Eclipse Temurin JDK 25 on the user's system. It works
-on Windows and macOS operating systems. For Linux we assume the user can install
-Java via their package manager.
-The JDK is installed in the user's home directory.
+Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
+the environment so the JDK is immediately available to the current R session.
+
+On \strong{Windows}, this function also sets the \code{JAVA_HOME} environment variable
+(both for the current session and persistently using \code{setx}) to ensure that
+packages such as \strong{rJava} work without additional configuration.
+
+On \strong{macOS}, the JDK is installed under \verb{~/temurin25} and the current R
+session's \code{JAVA_HOME} is updated automatically. macOS users may need to restart
+their terminal or R session for system-wide detection.
+
+This helper function is intended for users who prefer an automated installation
+or who find it inconvenient to manually download and install Java from the
+Adoptium website (\url{https://adoptium.net/temurin/releases}). It ensures the JDK
+is installed in a predictable location and that environment variables such as
+\code{JAVA_HOME} are configured correctly for use in R, including with packages like
+\strong{rJava}.
+
+Linux is not supported by this helper, as Java is typically installed via the
+system package manager.
 }
 \examples{
 \dontrun{
 install_java()
 }
+
 }

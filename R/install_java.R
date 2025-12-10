@@ -62,35 +62,48 @@ install_java_windows <- function(force = FALSE) {
     )
   }
 
+  # Read user JAVA_HOME (registry)
+  get_user_java_home <- function() {
+    tryCatch(
+      system2(
+        "powershell",
+        args = c(
+          "-NoProfile", "-Command",
+          "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')"
+        ),
+        stdout = TRUE
+      ),
+      error = function(e) Sys.getenv("JAVA_HOME")
+    )
+  }
+
   jdk_existing <- detect_jdk_folder(install_dir)
 
-  # --- Already installed ---
+  # -------- Already installed --------
   if (!is.null(jdk_existing) && !force) {
     jdk_bin <- file.path(jdk_existing, "bin")
 
-    # Make Java available immediately in this R session
+    # Set for this session
+    Sys.setenv(JAVA_HOME = jdk_existing)
     Sys.setenv(PATH = paste0(jdk_bin, ";", Sys.getenv("PATH")))
 
     message("JDK already installed at: ", jdk_existing)
-    message("Java is ready to use in this R session.")
-    message("If you want Java available globally, restart R or your terminal.")
-
+    message("JAVA_HOME set for this session: ", jdk_existing)
     return(invisible(jdk_existing))
   }
 
-  # --- Force reinstall ---
+  # -------- Reinstall if forced --------
   if (force && dir.exists(install_dir)) {
     unlink(install_dir, recursive = TRUE, force = TRUE)
   }
   dir.create(install_dir, recursive = TRUE, showWarnings = FALSE)
 
-  # --- Download archive ---
+  # -------- Download JDK --------
   url <- jdk_download_url(arch, "windows")
   message("Downloading JDK from:\n  ", url)
 
   zipfile <- tempfile(fileext = ".zip")
   utils::download.file(url, zipfile, mode = "wb")
-
   utils::unzip(zipfile, exdir = install_dir)
 
   jdk_installed <- detect_jdk_folder(install_dir)
@@ -98,22 +111,33 @@ install_java_windows <- function(force = FALSE) {
 
   jdk_bin <- file.path(jdk_installed, "bin")
 
-  # Add to current R session's PATH
+  # --- CURRENT SESSION ---
+  Sys.setenv(JAVA_HOME = jdk_installed)
   Sys.setenv(PATH = paste0(jdk_bin, ";", Sys.getenv("PATH")))
 
-  # --- Persistent PATH (user scope) ---
+  # --- Persistent PATH ---
   user_path <- get_user_path()
   if (!grepl(jdk_bin, user_path, fixed = TRUE)) {
     system2("setx", c("PATH", shQuote(paste(user_path, jdk_bin, sep = ";"))))
-    message("Added JDK to the user PATH.")
-    message("Restart R or your terminal to make the change global.")
+    message("Added JDK bin directory to the user PATH.")
   }
 
-  message("\nJava in this session:")
+  # --- Persistent JAVA_HOME ---
+  user_java_home <- get_user_java_home()
+  if (!identical(
+    normalizePath(user_java_home, winslash = "/"),
+    normalizePath(jdk_installed, winslash = "/")
+  )) {
+    system2("setx", c("JAVA_HOME", shQuote(jdk_installed)))
+    message("Set persistent JAVA_HOME.")
+  }
+
+  message("\nJava version check (current session):")
   message(system2("java", "-version", stdout = TRUE, stderr = TRUE))
 
   invisible(jdk_installed)
 }
+
 
 # ============================
 #  macOS Installer
@@ -171,18 +195,38 @@ install_java_mac <- function(force = FALSE) {
 #  Unified Entry Point
 # ============================
 
-#' Install Temurin JDK 25
+#' Install Eclipse Temurin JDK 25 (with JAVA_HOME configuration)
 #'
 #' @description
-#' This function installs the Eclipse Temurin JDK 25 on the user's system. It works
-#' on Windows and macOS operating systems. For Linux we assume the user can install
-#' Java via their package manager.
-#' The JDK is installed in the user's home directory.
-#' @param force Logical; if TRUE, forces re-installation even if JDK is already installed.
+#' Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
+#' the environment so the JDK is immediately available to the current R session.
+#'
+#' On **Windows**, this function also sets the `JAVA_HOME` environment variable
+#' (both for the current session and persistently using `setx`) to ensure that
+#' packages such as **rJava** work without additional configuration.
+#'
+#' On **macOS**, the JDK is installed under `~/temurin25` and the current R
+#' session's `JAVA_HOME` is updated automatically. macOS users may need to restart
+#' their terminal or R session for system-wide detection.
+#'
+#' This helper function is intended for users who prefer an automated installation
+#' or who find it inconvenient to manually download and install Java from the
+#' Adoptium website (<https://adoptium.net/temurin/releases>). It ensures the JDK
+#' is installed in a predictable location and that environment variables such as
+#' `JAVA_HOME` are configured correctly for use in R, including with packages like
+#' **rJava**.
+#'
+#' Linux is not supported by this helper, as Java is typically installed via the
+#' system package manager.
+#'
+#' @param force Logical; if `TRUE`, forces reinstallation even if the JDK is
+#'        already present.
+#'
 #' @examples
 #' \dontrun{
 #' install_java()
 #' }
+#'
 #' @export
 install_java <- function(force = FALSE) {
   os <- get_os()
@@ -192,6 +236,6 @@ install_java <- function(force = FALSE) {
   } else if (os == "darwin") {
     install_java_mac(force = force)
   } else {
-    stop("Unsupported OS: ", os)
+    stop("Unsupported OS: ", os, call. = FALSE)
   }
 }
