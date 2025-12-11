@@ -1,4 +1,4 @@
-### dirTest() example ###
+### dir_test() example ###
 
 data(tpc_example)
 vnames <- names(tpc_example)
@@ -14,7 +14,7 @@ kn <- knowledge(
 
 ss_cor <- causalDisco:::make_suff_stat(tpc_example, type = "cor_test")
 
-wrapped_test <- causalDisco:::dirTest(pcalg::gaussCItest, vnames, kn)
+wrapped_test <- causalDisco:::dir_test(pcalg::gaussCItest, vnames, kn)
 
 ix_x <- match("child_x1", vnames)
 ix_y <- match("youth_x3", vnames)

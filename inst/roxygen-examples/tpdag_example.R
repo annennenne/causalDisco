@@ -13,7 +13,7 @@ kn <- knowledge(
 )
 
 ss_cor <- causalDisco:::make_suff_stat(tpc_example, type = "cor_test")
-wrapped_test <- causalDisco:::dirTest(causalDisco::cor_test, vnames, kn)
+wrapped_test <- causalDisco:::dir_test(causalDisco::cor_test, vnames, kn)
 pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,

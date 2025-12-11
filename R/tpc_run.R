@@ -162,13 +162,13 @@ tpc_run <- function(data = NULL,
     )
   }
 
-  indepTest_dir <- dirTest(test, vnames, knowledge)
+  indep_test_dir <- dir_test(test, vnames, knowledge)
 
   if (is.null(suffStat)) {
-    thisTestName <- deparse(substitute(test))
-    if (thisTestName == "reg_test") {
+    this_test_name <- deparse(substitute(test))
+    if (this_test_name == "reg_test") {
       thisSuffStat <- make_suff_stat(data, type = "reg_test")
-    } else if (thisTestName == "cor_test") {
+    } else if (this_test_name == "cor_test") {
       thisSuffStat <- make_suff_stat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
@@ -185,7 +185,7 @@ tpc_run <- function(data = NULL,
 
   skel <- pcalg::skeleton(
     suffStat = thisSuffStat,
-    indepTest = indepTest_dir,
+    indepTest = indep_test_dir,
     alpha = alpha,
     labels = vnames,
     method = method,
@@ -442,12 +442,12 @@ is_after <- function(x, y, knowledge) {
 #' @param vnames Character vector of variable names (labels).
 #' @param knowledge A \code{knowledge} object.
 #'
-#' @example inst/roxygen-examples/dirTest_example.R
+#' @example inst/roxygen-examples/dir_test_example.R
 #'
 #' @return A function with the same interface as \code{test}.
 #' @keywords internal
 #' @noRd
-dirTest <- function(test, vnames, knowledge) {
+dir_test <- function(test, vnames, knowledge) {
   function(x, y, S, suffStat) {
     snames <- vnames[S]
     xname <- vnames[x]

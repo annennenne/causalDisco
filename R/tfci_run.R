@@ -121,7 +121,7 @@ tfci_run <- function(data = NULL,
   }
 
   # CI test that forbids conditioning on future tiers
-  indep_test_dir <- dirTest(test, vnames, knowledge)
+  indep_test_dir <- dir_test(test, vnames, knowledge)
 
   # sufficient statistics (built-ins or user-supplied)
   if (is.null(suffStat)) {
