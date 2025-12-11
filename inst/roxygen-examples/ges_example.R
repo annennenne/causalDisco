@@ -1,9 +1,9 @@
 ### ges() example ###
 \dontrun{
-data("tpcExample")
+data("tpc_example")
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -14,9 +14,9 @@ kn <- knowledge(
 # Recommended path using disco()
 my_ges <- ges(engine = "tetrad", score = "sem_bic")
 
-disco(tpcExample, my_ges, knowledge = kn)
+disco(tpc_example, my_ges, knowledge = kn)
 
 # or using my_ges directly
 my_ges <- my_ges |> set_knowledge(kn)
-my_ges(tpcExample)
+my_ges(tpc_example)
 }

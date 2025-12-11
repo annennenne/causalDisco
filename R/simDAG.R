@@ -19,17 +19,17 @@
 #'
 #' @examples
 #' # Simulate a DAG adjacency matrix with 5 nodes and sparsity 0.5
-#' simDAG(5, sparsity = 0.5)
+#' sim_dag(5, sparsity = 0.5)
 #'
 #' @export
-simDAG <- function(p, sparsity = NULL,
-                   sparsityLim = c(0, 0.8),
-                   permute = TRUE) {
+sim_dag <- function(p, sparsity = NULL,
+                    sparsityLim = c(0, 0.8),
+                    permute = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "stats"
     ),
-    function_name = "simDAG"
+    function_name = "sim_dag"
   )
 
   if (is.null(sparsity)) {

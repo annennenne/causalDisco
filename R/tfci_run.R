@@ -3,6 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 #' Causal Discovery Using the Temporal FCI (TFCI) Algorithm
+#'
 #' Use a modification of the FCI algorithm that makes use of background knowledge
 #' in the format of a partial ordering. This may, for instance, come about when
 #' variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
@@ -44,7 +45,7 @@ tfci_run <- function(data = NULL,
                      knowledge = NULL,
                      order = NULL,
                      alpha = 10^(-1),
-                     test = regTest,
+                     test = reg_test,
                      suffStat = NULL,
                      method = "stable.fast",
                      methodNA = "none",
@@ -125,10 +126,10 @@ tfci_run <- function(data = NULL,
   # sufficient statistics (built-ins or user-supplied)
   if (is.null(suffStat)) {
     thisTestName <- deparse(substitute(test))
-    if (thisTestName == "regTest") {
-      thisSuffStat <- make_suff_stat(data, type = "regTest")
-    } else if (thisTestName == "corTest") {
-      thisSuffStat <- make_suff_stat(data, type = "corTest")
+    if (thisTestName == "reg_test") {
+      thisSuffStat <- make_suff_stat(data, type = "reg_test")
+    } else if (thisTestName == "cor_test") {
+      thisSuffStat <- make_suff_stat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
     }
@@ -202,7 +203,7 @@ tfci_run <- function(data = NULL,
   res <- tpag(fci_skel, knowledge = knowledge, unfVect = unfVect)
 
   # pack up tpag result
-  amat <- graph2amat(res, toFrom = FALSE)
+  amat <- graph_to_amat(res, toFrom = FALSE)
   amat <- methods::as(amat, "matrix")
   cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PAG")
   return(knowledgeable_caugi(cg, knowledge))

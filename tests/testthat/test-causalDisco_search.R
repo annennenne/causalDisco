@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_score builds temporal scores lazily and errors on unknown", {
-  s_bad <- causalDiscoSearch$new()
+  s_bad <- CausalDiscoSearch$new()
   expect_error(
     s_bad$set_score("not-a-score"),
     "Unknown score type using causalDisco engine: not-a-score",
@@ -13,7 +13,7 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
   df_g <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df_g) <- paste0("p1_X", 1:4)
 
-  s_bic <- causalDiscoSearch$new()
+  s_bic <- CausalDiscoSearch$new()
   s_bic$set_data(df_g, set_suff_stat = FALSE)
   s_bic$set_score("tbic")
   sc_bic <- s_bic$.__enclos_env__$private$score_function()
@@ -23,13 +23,13 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
     A = factor(sample(letters[1:3], 100, TRUE)),
     B = factor(sample(letters[1:2], 100, TRUE))
   )
-  s_bdeu <- causalDiscoSearch$new()
+  s_bdeu <- CausalDiscoSearch$new()
   s_bdeu$set_data(df_d, set_suff_stat = FALSE)
   s_bdeu$set_score("tbdeu")
   sc_bdeu <- s_bdeu$.__enclos_env__$private$score_function()
   expect_true(methods::is(sc_bdeu, "TemporalBDeu"))
 
-  s_err <- causalDiscoSearch$new()
+  s_err <- CausalDiscoSearch$new()
   s_err$set_score("tbic")
   expect_error(
     s_err$.__enclos_env__$private$score_function(),
@@ -39,7 +39,7 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
 })
 
 test_that("set_score internal unsupported method branch errors", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_data(data.frame(X = rnorm(100)), set_suff_stat = FALSE)
   s$set_score("tbic")
   s$.__enclos_env__$private$score_method <- "unknown-internal"
@@ -55,7 +55,7 @@ test_that("set_score internal unsupported method branch errors", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_test unknown method errors", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   expect_error(
     s$set_test("not-a-test"),
     "Unknown method: not-a-test",
@@ -68,7 +68,7 @@ test_that("set_test unknown method errors", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("initialize sets sensible defaults", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   expect_null(s$data)
   expect_null(s$score)
   expect_null(s$test)
@@ -85,7 +85,7 @@ test_that("initialize sets sensible defaults", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_suff_stat covers reg, cor and bad-type paths", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   df <- data.frame(X = rnorm(100), Y = rnorm(100))
 
   s$set_test("reg", alpha = 0.01)
@@ -105,7 +105,7 @@ test_that("set_suff_stat covers reg, cor and bad-type paths", {
 })
 
 test_that("set_data triggers set_suff_stat when requested", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   df <- matrix(rnorm(100), ncol = 2) |> as.data.frame()
   colnames(df) <- c("X", "Y")
   s$set_test("fisher_z")
@@ -118,7 +118,7 @@ test_that("set_data triggers set_suff_stat when requested", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_params stores values and respects reserved keys", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
 
   s$set_params(list(alpha = 0.05, method = "stable.fast"))
   expect_identical(s$params$alpha, 0.05)
@@ -132,14 +132,14 @@ test_that("set_params stores values and respects reserved keys", {
 })
 
 test_that("set_params(NULL) is a no-op and returns invisibly", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   before <- s$params
   expect_invisible(s$set_params(NULL))
   expect_identical(s$params, before)
 })
 
 test_that("set_data stores data; can skip suff stat", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
 
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
@@ -150,7 +150,7 @@ test_that("set_data stores data; can skip suff stat", {
 })
 
 test_that("set_knowledge assigns to self$knowledge and validates", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
 
   expect_error(
     s$set_knowledge(knowledge_obj = 123),
@@ -174,7 +174,7 @@ test_that("set_knowledge assigns to self$knowledge and validates", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg builds callables and guards correctly", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
 
   expect_error(
     s$set_alg("tpc"),
@@ -194,7 +194,7 @@ test_that("set_alg builds callables and guards correctly", {
   s$set_alg("tfci")
   expect_true(is.function(s$alg))
 
-  s2 <- causalDiscoSearch$new()
+  s2 <- CausalDiscoSearch$new()
   s2$set_alg("tges")
   expect_true(is.function(s2$alg))
 
@@ -206,7 +206,7 @@ test_that("set_alg builds callables and guards correctly", {
 })
 
 test_that("set_alg builds tpc/tfci callables and unknown errors", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_test("fisher_z")
   s$set_alg("tpc")
   expect_true(is.function(s$alg))
@@ -226,7 +226,7 @@ test_that("set_alg builds tpc/tfci callables and unknown errors", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("run_search errors are thrown in the right order", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
 
   expect_error(
     s$run_search(),
@@ -268,7 +268,7 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
       p2 ~ tidyselect::starts_with("p2")
     )
   )
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_params(list(output = "caugi"))
   s$set_test("fisher_z")
   s$set_knowledge(kn)
@@ -295,7 +295,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
     )
   )
 
-  s_tpc <- causalDiscoSearch$new()
+  s_tpc <- CausalDiscoSearch$new()
   s_tpc$set_params(list(method = "stable.fast", methodNA = "none"))
   s_tpc$set_test("fisher_z")
   s_tpc$set_knowledge(kn)
@@ -304,7 +304,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   res_tpc <- s_tpc$run_search()
   expect_s3_class(res_tpc, "knowledgeable_caugi")
 
-  s_tfci <- causalDiscoSearch$new()
+  s_tfci <- CausalDiscoSearch$new()
   s_tfci$set_params(list(method = "stable.fast", methodNA = "none"))
   s_tfci$set_test("fisher_z")
   s_tfci$set_knowledge(kn)
@@ -327,7 +327,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
     )
   )
 
-  s_g <- causalDiscoSearch$new()
+  s_g <- CausalDiscoSearch$new()
   s_g$set_data(gdf, set_suff_stat = FALSE)
   s_g$set_knowledge(kn_g)
   s_g$set_score("tbic")
@@ -351,7 +351,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
     )
   )
 
-  s_c <- causalDiscoSearch$new()
+  s_c <- CausalDiscoSearch$new()
   s_c$set_data(dfc, set_suff_stat = FALSE)
   s_c$set_knowledge(kn_c)
   s_c$set_score("tbdeu")
@@ -371,7 +371,7 @@ test_that("verbose is accepted via set_params and passed to tges", {
     )
   )
 
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_params(list(verbose = TRUE))
   s$set_data(gdf, set_suff_stat = FALSE)
   s$set_knowledge(kn)
@@ -381,7 +381,7 @@ test_that("verbose is accepted via set_params and passed to tges", {
 })
 
 test_that("run_search errors when suff_stat missing for constraint-based algs", {
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
   s$set_test("fisher_z")
@@ -395,7 +395,7 @@ test_that("run_search errors when suff_stat missing for constraint-based algs", 
 })
 
 test_that("run_search tges errors without score and covers knowledge-NULL branch", {
-  s_err <- causalDiscoSearch$new()
+  s_err <- CausalDiscoSearch$new()
   gdf <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(gdf) <- paste0("X", 1:4)
   s_err$set_data(gdf, set_suff_stat = FALSE)
@@ -406,7 +406,7 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
     fixed = TRUE
   )
 
-  s_ok <- causalDiscoSearch$new()
+  s_ok <- CausalDiscoSearch$new()
   s_ok$set_data(gdf, set_suff_stat = FALSE)
   s_ok$set_score("tbic")
   s_ok$set_alg("tges")
@@ -428,7 +428,7 @@ test_that("run_search(data=...) takes constraint-based path and computes suff_st
     )
   )
 
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_test("fisher_z")
   s$set_knowledge(kn)
   s$set_alg("tpc")
@@ -444,7 +444,7 @@ test_that("run_search(data=...) takes score-based path and skips suff_stat", {
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- paste0("X", 1:4)
 
-  s <- causalDiscoSearch$new()
+  s <- CausalDiscoSearch$new()
   s$set_score("tbic")
   s$set_alg("tges")
 

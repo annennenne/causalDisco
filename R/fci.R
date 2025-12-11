@@ -17,7 +17,7 @@
 #' For specific details on the supported scores, tests, and parameters for each engine, see:
 #' \itemize{
 #'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
-#'  \item \code{\link{pcalgSearch}} for \pkg{pcalg}.
+#'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
 #' }
 #'
 #' @example inst/roxygen-examples/fci_example.R
@@ -107,7 +107,7 @@ fci_pcalg_runner <- function(test, alpha, ...,
     function_name = "fci_pcalg_runner"
   )
   args <- list(...)
-  search <- pcalgSearch$new()
+  search <- PcalgSearch$new()
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "fci",
     test = test
   )

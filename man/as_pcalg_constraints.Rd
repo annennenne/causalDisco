@@ -25,7 +25,7 @@ an undirected constraint.}
 }
 \value{
 A list with two elements, each an \code{n × n} logical matrix
-corresponding to \code{pcalg}'s \code{fixedGaps} and \code{fixedEdges} arguments.
+corresponding to \pkg{pcalg}'s \code{fixedGaps} and \code{fixedEdges} arguments.
 }
 \description{
 pcalg only supports \emph{undirected} (symmetric) background constraints:
@@ -52,10 +52,10 @@ symmetrical counterpart. This can only hold for forbidden edges.
 ### as_pcalg_constraints() example ###
 
 # pcalg supports undirected constraints; build a tierless knowledge and convert
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   forbidden(child_x1 ~ youth_x3),
   forbidden(youth_x3 ~ child_x1)
 )
@@ -66,7 +66,7 @@ print(pc_constraints)
 # error paths
 # using tiers
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),
@@ -79,7 +79,7 @@ try(as_pcalg_constraints(kn), silent = TRUE) # fails due to tiers
 
 # using directed knowledge
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   forbidden(child_x1 ~ youth_x3)
 )
 

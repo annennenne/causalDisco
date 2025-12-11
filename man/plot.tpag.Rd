@@ -35,7 +35,7 @@ d <- data.frame(
 )
 
 # use FCI algorithm to recover PAG
-res <- tfci(d, order = c("p1", "p2"), test = corTest)
+res <- tfci(d, order = c("p1", "p2"), test = cor_test)
 
 # plot
 plot(res)

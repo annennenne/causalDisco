@@ -80,10 +80,10 @@ plot_caugi_graph <- function(g, layout = NULL, curved = TRUE, ...) {
 #' @return A plot of the causal graph.
 #' @method plot knowledgeable_caugi
 #' @examples
-#' data("tpcExample")
+#' data("tpc_example")
 #'
 #' kn <- knowledge(
-#'   tpcExample,
+#'   tpc_example,
 #'   tier(
 #'     child ~ starts_with("child"),
 #'     youth ~ starts_with("youth"),
@@ -92,7 +92,7 @@ plot_caugi_graph <- function(g, layout = NULL, curved = TRUE, ...) {
 #' )
 #'
 #' cd_tges <- tges(engine = "causalDisco", score = "tbic")
-#' disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #'
 #' plot(disco_cd_tges)
 #'
@@ -219,10 +219,10 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' @param ... Additional arguments passed to igraph `plot`.
 #' @return A plot of the knowledge structure.
 #' @examples
-#' data("tpcExample")
+#' data("tpc_example")
 #'
 #' kn <- knowledge(
-#'   tpcExample,
+#'   tpc_example,
 #'   tier(
 #'     child ~ starts_with("child"),
 #'     youth ~ starts_with("youth"),

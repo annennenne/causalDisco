@@ -3,10 +3,10 @@ test_that("fci Tetrad disco respects tier knowledge", {
 
   skip("fci Tetrad does not yet support tier knowledge correctly.")
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -15,7 +15,7 @@ test_that("fci Tetrad disco respects tier knowledge", {
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
 
   edges <- output$caugi@edges
 
@@ -23,7 +23,7 @@ test_that("fci Tetrad disco respects tier knowledge", {
   expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       1 ~ starts_with("old"),
       2 ~ starts_with("youth"),
@@ -32,7 +32,7 @@ test_that("fci Tetrad disco respects tier knowledge", {
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(tpcExample, tetrad_fci, knowledge = kn)
+  output <- disco(tpc_example, tetrad_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -44,15 +44,15 @@ test_that("fci Tetrad disco respects required background knowledge", {
 
   skip("fci Tetrad does not yet support required background knowledge correctly.")
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -62,7 +62,7 @@ test_that("fci Tetrad disco respects required background knowledge", {
   skip("fci Tetrad does not yet support knowledge with both tiers+required edges.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -72,7 +72,7 @@ test_that("fci Tetrad disco respects required background knowledge", {
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
@@ -86,15 +86,15 @@ test_that("fci Tetrad disco respects forbidden background knowledge", {
   skip_if_no_tetrad()
   skip("Ask if the following is the expected behavior (see README)")
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x2 ~ child_x1)
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = tetrad_fci, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -102,7 +102,7 @@ test_that("fci Tetrad disco respects forbidden background knowledge", {
 
   # Verify it actually changes the output when adding forbidden knowledge
   tetrad_fci_no_kn <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  out_no_kn <- disco(data = tpcExample, method = tetrad_fci_no_kn)
+  out_no_kn <- disco(data = tpc_example, method = tetrad_fci_no_kn)
   edges_no_kn <- out_no_kn$caugi@edges
 
   # The forbidden edge is present
@@ -117,10 +117,10 @@ test_that("fci Tetrad disco respects forbidden background knowledge", {
 
 test_that("fci pcalg disco errors on tier knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -130,56 +130,56 @@ test_that("fci pcalg disco errors on tier knowledge", {
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
   expect_error(
-    disco(data = tpcExample, method = pcalg_fci, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_fci, knowledge = kn),
     regexp = "pcalg does not support directed tier constraints."
   )
 })
 
 test_that("fci pcalg disco errors on required background knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
   expect_error(
-    disco(data = tpcExample, method = pcalg_fci, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_fci, knowledge = kn),
     regexp = "pcalg does not support asymmetric edges."
   )
 })
 
 test_that("fci pcalg disco respects forbidden background knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x1 ~ youth_x3)
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
   expect_error(
-    disco(data = tpcExample, method = pcalg_fci, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_fci, knowledge = kn),
     regexp = "pcalg does not support asymmetric edges."
   )
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x1 ~ youth_x3),
     forbidden(youth_x3 ~ child_x1)
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = pcalg_fci, knowledge = kn)
+  output <- disco(data = tpc_example, method = pcalg_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpcExample, method = pcalg_fci)
+  output <- disco(data = tpc_example, method = pcalg_fci)
   edges_new <- output$caugi@edges
 
   # Test the original edges had the forbidden edge

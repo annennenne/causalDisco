@@ -1,10 +1,10 @@
 ### order_restrict_amat_cpdag() example ###
 
-data(tpcExample)
-vnames <- names(tpcExample)
+data(tpc_example)
+vnames <- names(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -12,8 +12,8 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suff_stat(tpcExample, type = "corTest")
-wrapped_test <- causalDisco:::dirTest(causalDisco::corTest, vnames, kn)
+ss_cor <- causalDisco:::make_suff_stat(tpc_example, type = "cor_test")
+wrapped_test <- causalDisco:::dirTest(causalDisco::cor_test, vnames, kn)
 pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,
@@ -31,6 +31,6 @@ skel <- pcalg::skeleton(
   fixedEdges = pc_cons$fixedEdges
 )
 
-amat_skel <- causalDisco:::graph2amat(skel)
+amat_skel <- causalDisco:::graph_to_amat(skel)
 amat_prune <- causalDisco:::order_restrict_amat_cpdag(amat_skel, kn)
 amat_prune[1:6, 1:6]

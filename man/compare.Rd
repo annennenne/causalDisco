@@ -12,8 +12,8 @@ compare(x, y = NULL)
 \item{y}{Second object (optional)}
 }
 \value{
-A list with entries: \code{$nedges1} (the number of
-edges in the first object), \code{$nedges2} (the number of edges
+A list with entries: \code{$n_edges1} (the number of
+edges in the first object), \code{$n_edges2} (the number of edges
 in the second object), \code{$psi1} (the test significance level
 of the first object), \code{$psi2} (the test significance level of
 the second object), \code{$nadded} (the number of additional edges in

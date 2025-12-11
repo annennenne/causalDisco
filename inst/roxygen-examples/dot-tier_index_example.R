@@ -1,9 +1,9 @@
 ### .tier_index() example ###
 
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -11,5 +11,5 @@ kn <- knowledge(
   )
 )
 
-ti <- causalDisco:::.tier_index(kn, names(tpcExample)[1:6])
+ti <- causalDisco:::.tier_index(kn, names(tpc_example)[1:6])
 ti

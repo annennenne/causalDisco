@@ -24,8 +24,8 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suff_stat(d, type = "corTest")
-wrapped <- causalDisco:::dirTest(causalDisco::corTest, vnames, kn)
+ss_cor <- causalDisco:::make_suff_stat(d, type = "cor_test")
+wrapped <- causalDisco:::dirTest(causalDisco::cor_test, vnames, kn)
 cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,

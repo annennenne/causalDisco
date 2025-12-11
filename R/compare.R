@@ -7,8 +7,8 @@
 #' @param x First object
 #' @param y Second object (optional)
 #'
-#' @return A list with entries: \code{$nedges1} (the number of
-#' edges in the first object), \code{$nedges2} (the number of edges
+#' @return A list with entries: \code{$n_edges1} (the number of
+#' edges in the first object), \code{$n_edges2} (the number of edges
 #' in the second object), \code{$psi1} (the test significance level
 #' of the first object), \code{$psi2} (the test significance level of
 #' the second object), \code{$nadded} (the number of additional edges in
@@ -60,7 +60,7 @@ compare <- function(x, y = NULL) {
   }
 
   out <- list(
-    nedges1 = n1, nedges2 = n2,
+    n_edges1 = n1, n_edges2 = n2,
     psi1 = psi1, psi2 = psi2,
     nadded = nadded,
     nremoved = nremoved

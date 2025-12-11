@@ -1,7 +1,7 @@
 # resolve different kinds of specs into character names
-data(tpcExample)
+data(tpc_example)
 kn <- knowledge(
-  head(tpcExample)
+  head(tpc_example)
 )
 
 # character vector

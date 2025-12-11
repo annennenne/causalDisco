@@ -1,7 +1,7 @@
 # add a block of forbidden edges using internal helper
-data(tpcExample)
+data(tpc_example)
 
-kn <- knowledge(tpcExample)
+kn <- knowledge(tpc_example)
 
 # add forbidden edges between youth_* and child_*
 kn <- causalDisco:::.add_edges(kn, "forbidden",

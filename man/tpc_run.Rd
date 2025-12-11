@@ -9,7 +9,7 @@ tpc_run(
   knowledge = NULL,
   order = NULL,
   alpha = 10^(-1),
-  test = regTest,
+  test = reg_test,
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
@@ -38,9 +38,9 @@ each prefix.}
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
-\item{test}{A conditional independence test. The default \code{regTest}
+\item{test}{A conditional independence test. The default \code{reg_test}
 uses a regression-based information-loss test. Another available option is
-\code{corTest} which tests for vanishing partial correlations. User-supplied
+\code{cor_test} which tests for vanishing partial correlations. User-supplied
 functions may also be used; see details for the required interface.}
 
 \item{suffStat}{A sufficient statistic. If supplied, it is passed directly
@@ -95,8 +95,8 @@ future release.
 \details{
 Any independence test implemented in \pkg{pcalg} may be used; see
 \code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
-performed: for \code{corTest}, each pairwise correlation uses complete cases;
-for \code{regTest}, each conditional test performs its own deletion. If you
+performed: for \code{cor_test}, each pairwise correlation uses complete cases;
+for \code{reg_test}, each conditional test performs its own deletion. If you
 supply a user-defined \code{test}, you must also provide \code{suffStat}.
 
 Temporal or tiered knowledge enters in two places:
@@ -114,11 +114,11 @@ The \code{order} argument is deprecated. If provided, it is converted to a
 ### tpc() example ###
 
 # Load data
-data(tpcExample)
+data(tpc_example)
 
 # Build knowledge
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -129,19 +129,19 @@ kn <- knowledge(
 # Recommended route using disco
 my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
-disco(tpcExample, my_tpc, knowledge = kn)
+disco(tpc_example, my_tpc, knowledge = kn)
 
 # or using my_tpc directly
 
 my_tpc <- my_tpc |> set_knowledge(kn)
-my_tpc(tpcExample)
+my_tpc(tpc_example)
 
 # Using tpc_run() directly
 
-tpc_run(tpcExample, knowledge = kn, alpha = 0.01)
+tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
 
 # Deprecated: using order prefixes (will warn)
 testthat::expect_warning(
-  tpc_run(tpcExample, order = c("child", "youth", "oldage"), alpha = 0.01)
+  tpc_run(tpc_example, order = c("child", "youth", "oldage"), alpha = 0.01)
 )
 }

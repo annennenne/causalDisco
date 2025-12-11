@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# pcalgSearch
+# PcalgSearch
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -8,7 +8,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("initialize sets clean defaults", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   expect_null(s$data)
   expect_null(s$score)
   expect_null(s$test)
@@ -24,7 +24,7 @@ test_that("initialize sets clean defaults", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_params and set_data store values; set_data can skip suff stat", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_params(list(alpha = 0.05, m.max = 2L))
   expect_identical(s$params, list(alpha = 0.05, m.max = 2L))
 
@@ -38,7 +38,7 @@ test_that("set_params and set_data store values; set_data can skip suff stat", {
 })
 
 test_that("set_suff_stat guards and branches", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
 
   # error: no data
   expect_error(
@@ -56,7 +56,7 @@ test_that("set_suff_stat guards and branches", {
   )
 
   # continuous with good data via getter
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_test("fisher_z")
   s$data <- data.frame(X = rnorm(10), Y = rnorm(10))
   expect_silent(s$set_suff_stat())
@@ -64,7 +64,7 @@ test_that("set_suff_stat guards and branches", {
   expect_named(s$suff_stat, c("C", "n"))
 
   # discrete via getter, expects dm + nlev + adaptDF
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_test("g_square")
   s$data <- data.frame(
     A = factor(sample(letters[1:2], 10, TRUE)),
@@ -75,7 +75,7 @@ test_that("set_suff_stat guards and branches", {
 })
 
 test_that("set_suff_stat works on matrix input for g_square", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_test("g_square")
   m <- matrix(sample(0:1, 20, TRUE), ncol = 2)
   colnames(m) <- c("A", "B")
@@ -88,14 +88,14 @@ test_that("set_suff_stat works on matrix input for g_square", {
 # set_test()
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("set_test stores key and resolves test in set_suff_stat", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
   colnames(df) <- c("X", "Y")
   s$set_test("fisher_z")
   s$set_data(df, set_suff_stat = TRUE)
   expect_identical(s$test, pcalg::gaussCItest)
 
-  s2 <- pcalgSearch$new()
+  s2 <- PcalgSearch$new()
   ddisc <- data.frame(
     A = factor(sample(0:1, 50, TRUE)),
     B = factor(sample(0:1, 50, TRUE))
@@ -107,7 +107,7 @@ test_that("set_test stores key and resolves test in set_suff_stat", {
 
 
 test_that("set_test unknown test errors", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
 
   expect_error(
     s$set_test("not-a-test"),
@@ -123,7 +123,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
   set.seed(1)
 
   # binary levels -> binCItest path executes
-  s2 <- pcalgSearch$new()
+  s2 <- PcalgSearch$new()
   d2 <- data.frame(
     X = factor(sample(0:1, 80, TRUE)),
     Y = factor(sample(0:1, 80, TRUE)),
@@ -135,7 +135,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
   expect_type(p2, "double")
 
   # multi-level -> disCItest path executes
-  s3 <- pcalgSearch$new()
+  s3 <- PcalgSearch$new()
   d3 <- data.frame(
     X = factor(sample(0:2, 80, TRUE)),
     Y = factor(sample(0:2, 80, TRUE)),
@@ -154,7 +154,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
 
 test_that("set_score builds scorer for obs/int and errors on unknown", {
   # obs score
-  s1 <- pcalgSearch$new()
+  s1 <- PcalgSearch$new()
   s1$set_score("sem_bic")
   # scorer errors if data missing when invoked through run
   expect_error(
@@ -164,7 +164,7 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
   )
 
   # int score
-  s2 <- pcalgSearch$new()
+  s2 <- PcalgSearch$new()
   s2$set_score("sem_bic_int")
   expect_error(
     s2$run_search(data = NULL, set_suff_stat = TRUE),
@@ -173,7 +173,7 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
   )
 
   # unknown
-  s3 <- pcalgSearch$new()
+  s3 <- PcalgSearch$new()
   expect_error(
     s3$set_score("not-a-score"),
     "Unknown score type using pcalg engine: not-a-score",
@@ -182,7 +182,7 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
 })
 
 test_that("set_score() lazy builder errors if data missing", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_score("sem_bic") # stores closure only
 
   # call the stored builder directly to hit the error site
@@ -198,7 +198,7 @@ test_that("GaussL0penIntScore is constructed when data present", {
     A = as.integer(sample(0:3, 20, TRUE)),
     B = as.integer(sample(0:3, 20, TRUE))
   )
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   s$set_data(df, set_suff_stat = FALSE)
   s$set_score("sem_bic_int")
 
@@ -211,7 +211,7 @@ test_that("GaussL0penIntScore is constructed when data present", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg builds partials and errors on unknown/guard", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
 
   # pc and fci requires test
   expect_error(
@@ -231,14 +231,14 @@ test_that("set_alg builds partials and errors on unknown/guard", {
   expect_true(is.function(s$alg))
 
   # fci builds partial even if no test set (it will be passed as NULL)
-  s2 <- pcalgSearch$new()
+  s2 <- PcalgSearch$new()
   s2$set_params(list(alpha = 0.05))
   s2$set_test("fisher_z")
   s2$set_alg("fci")
   expect_true(is.function(s2$alg))
 
   # ges builds partial; score is added in run_search
-  s3 <- pcalgSearch$new()
+  s3 <- PcalgSearch$new()
   s3$set_alg("ges")
   expect_true(is.function(s3$alg))
 
@@ -256,14 +256,14 @@ test_that("set_alg builds partials and errors on unknown/guard", {
 
 test_that("set_knowledge defers building constraints and validates input", {
   # error path from check_knowledge_obj propagated
-  s_bad <- pcalgSearch$new()
+  s_bad <- PcalgSearch$new()
   expect_error(
     s_bad$set_knowledge(knowledge_obj = 123),
     class = "simpleError"
   )
 
   df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   kn <- knowledge(
     df,
     required(A ~ B),
@@ -285,7 +285,7 @@ test_that("set_knowledge defers building constraints and validates input", {
 
 test_that("knowledge builder errors if data missing", {
   # exercise the internal 'Data must be set before knowledge.' stop site
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   df <- data.frame(X = rnorm(5), Y = rnorm(5))
   kn <- knowledge(df, required(X ~ Y))
 
@@ -298,14 +298,14 @@ test_that("knowledge builder errors if data missing", {
 })
 
 test_that("set_knowledge defers building constraints and validates input", {
-  s_bad <- pcalgSearch$new()
+  s_bad <- PcalgSearch$new()
   expect_error(
     s_bad$set_knowledge(knowledge_obj = 123),
     class = "simpleError"
   )
 
   df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
   kn <- knowledge(
     df,
     required(A ~ B),
@@ -330,7 +330,7 @@ test_that("set_knowledge defers building constraints and validates input", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("run_search errors in correct order and messages", {
-  s <- pcalgSearch$new()
+  s <- PcalgSearch$new()
 
   expect_error(
     s$run_search(),
@@ -364,7 +364,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   colnames(df) <- LETTERS[1:5]
 
   # PC path
-  s_pc <- pcalgSearch$new()
+  s_pc <- PcalgSearch$new()
   s_pc$set_test("fisher_z", alpha = 0.01)
   s_pc$set_data(df, set_suff_stat = TRUE)
   s_pc$set_alg("pc")
@@ -372,7 +372,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   expect_s3_class(res_pc, "knowledgeable_caugi")
 
   # GES without knowledge
-  s_ges <- pcalgSearch$new()
+  s_ges <- PcalgSearch$new()
   s_ges$set_alg("ges")
   s_ges$set_score("sem_bic")
   res_ges <- s_ges$run_search(df)
@@ -380,7 +380,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
 
   # GES with knowledge warns on fixedEdges
   kn_req <- knowledge(df, required(A ~ B))
-  s_ges2 <- pcalgSearch$new()
+  s_ges2 <- PcalgSearch$new()
   s_ges2$set_alg("ges")
   s_ges2$set_score("sem_bic")
   s_ges2$set_knowledge(kn_req, directed_as_undirected = TRUE)

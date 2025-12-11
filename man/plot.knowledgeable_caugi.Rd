@@ -22,10 +22,10 @@ knowledge is provided, the nodes are arranged according to their tiers; otherwis
 layout is used.
 }
 \examples{
-data("tpcExample")
+data("tpc_example")
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),
@@ -34,7 +34,7 @@ kn <- knowledge(
 )
 
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
-disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 
 plot(disco_cd_tges)
 

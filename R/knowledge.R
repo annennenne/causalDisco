@@ -1459,7 +1459,7 @@ as_tetrad_knowledge <- function(.kn) {
 #'   an undirected constraint.
 #'
 #' @returns A list with two elements, each an \code{n × n} logical matrix
-#' corresponding to `pcalg`'s `fixedGaps` and `fixedEdges` arguments.
+#' corresponding to \pkg{pcalg}'s `fixedGaps` and `fixedEdges` arguments.
 #'
 #' @section Errors:
 #' * If the knowledge object contains tiered knowledge.
@@ -1581,7 +1581,7 @@ as_pcalg_constraints <- function(.kn,
 #' @description
 #' Converts a `knowledge` object to a list of two data frames, namely
 #' `whitelist` and `blacklist`, which can be used as arguments for
-#' `bnlearn` algorithms. The `whitelist` contains all required edges, and the
+#' \pkg{bnlearn} algorithms. The `whitelist` contains all required edges, and the
 #' `blacklist` contains all forbidden edges. Tiers will be made into forbidden
 #' edges before running the conversion.
 #'

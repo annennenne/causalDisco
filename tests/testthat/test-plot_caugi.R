@@ -80,11 +80,11 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
 })
 
 test_that("disco plotting works", {
-  data("tpcExample")
+  data("tpc_example")
 
   # define background knowledge object
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -94,18 +94,18 @@ test_that("disco plotting works", {
 
   # use causalDisco's own tges algorithm with temporal BIC score
   cd_tges <- tges(engine = "causalDisco", score = "tbic")
-  disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+  disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 
   plot(disco_cd_tges)
   expect_true(TRUE)
 })
 
 test_that("disco plotting with required works", {
-  data("tpcExample")
+  data("tpc_example")
 
   # define background knowledge object
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -116,18 +116,18 @@ test_that("disco plotting with required works", {
 
   # use causalDisco's own tges algorithm with temporal BIC score
   cd_tges <- tges(engine = "causalDisco", score = "tbic")
-  disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+  disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 
   plot(disco_cd_tges)
   expect_true(TRUE)
 })
 
 test_that("disco plotting with forbidden works", {
-  data("tpcExample")
+  data("tpc_example")
 
   # define background knowledge object
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -138,7 +138,7 @@ test_that("disco plotting with forbidden works", {
 
   # use causalDisco's own tges algorithm with temporal BIC score
   cd_tges <- tges(engine = "causalDisco", score = "tbic")
-  disco_cd_tges <- disco(data = tpcExample, method = cd_tges, knowledge = kn)
+  disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 
   plot(disco_cd_tges)
   expect_true(TRUE)

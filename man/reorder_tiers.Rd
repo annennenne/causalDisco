@@ -26,10 +26,10 @@ Reorder all tiers at once
 ### reposition_tier_example.R ###
 
 # move one tier relative to another
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  head(tpcExample),
+  head(tpc_example),
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),

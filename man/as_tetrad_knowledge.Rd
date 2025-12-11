@@ -22,10 +22,10 @@ internally, when using the \code{disco} function with knowledge given.
 ### as_tetrad_knowledge() example ###
 
 # convert to Tetrad Knowledge via rJava
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  head(tpcExample),
+  head(tpc_example),
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),

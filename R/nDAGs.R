@@ -8,14 +8,14 @@
 #' @return A numeric.
 #'
 #' @export
-nDAGs <- function(p) {
+n_dags <- function(p) {
   if (p <= 1) {
     return(1)
   }
 
   dp <- numeric(p + 1)
-  dp[1] <- 1 # nDAGs(0) is 1
-  dp[2] <- 1 # nDAGs(1) is 1
+  dp[1] <- 1 # n_dags(0) is 1
+  dp[2] <- 1 # n_dags(1) is 1
 
   # Compute from 2..p
   for (k in 2:p) {

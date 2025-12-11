@@ -4,7 +4,7 @@
 
 build_kn_from_order <- function() {
   knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ child_x2 + child_x1,
       youth ~ youth_x4 + youth_x3,

@@ -201,14 +201,14 @@ to_adj_mat <- function(obj) {
     return(obj)
   }
   if (inherits(obj, "graphNEL")) {
-    return(graph2amat(obj, toFrom = FALSE))
+    return(graph_to_amat(obj, toFrom = FALSE))
   }
   # pcAlgo-like: unwrap @graph if present
   if (isS4(obj)) {
     if ("graph" %in% methods::slotNames(obj)) {
       g <- methods::slot(obj, "graph")
       if (inherits(g, "graphNEL")) {
-        return(graph2amat(g, toFrom = FALSE))
+        return(graph_to_amat(g, toFrom = FALSE))
       }
     }
   }

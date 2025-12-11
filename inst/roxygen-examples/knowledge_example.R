@@ -1,8 +1,8 @@
 ### knowledge() example ###
 
 # build knowledge from a data frame and a few DSL calls
-data(tpcExample)
-df <- head(tpcExample)
+data(tpc_example)
+df <- head(tpc_example)
 
 # knowledge objects are made with the knowledge() function
 kn <- knowledge()

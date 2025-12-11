@@ -50,7 +50,7 @@
   fun <- switch(method,
     "fisher_z" = pcalg::gaussCItest,
     "g_square" = g_square_switch,
-    "reg" = regTest,
+    "reg" = reg_test,
     "fisher_z_twd" = micd::gaussCItwd,
     "fisher_z_mi" = micd::gaussMItest,
     "conditional_gaussian" = micd::mixCItest,

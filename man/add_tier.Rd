@@ -24,11 +24,11 @@ Add (and position) a tier
 \examples{
 ### knowledge verbs example ###
 
-data(tpcExample)
+data(tpc_example)
 
 # create knowledge object using verbs
 kn1 <- knowledge() |>
-  add_vars(names(tpcExample)) |>
+  add_vars(names(tpc_example)) |>
   add_tier(child) |>
   add_tier(old, after = child) |>
   add_tier(youth, before = old) |>
@@ -46,7 +46,7 @@ kn1$frozen <- TRUE
 
 # create identical knowledge object using DSL
 kn2 <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),

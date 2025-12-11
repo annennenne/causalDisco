@@ -61,7 +61,7 @@ specificity <- function(confusion) {
 #' @return A numeric in \[0,1\].
 #'
 #' @export
-FOR <- function(confusion) {
+false_omission_rate <- function(confusion) {
   fn <- confusion$fn
   tn <- confusion$tn
   ifelse(fn + tn != 0, fn / (fn + tn), 1)
@@ -78,7 +78,7 @@ FOR <- function(confusion) {
 #' @return A numeric in \[0,1\].
 #'
 #' @export
-FDR <- function(confusion) {
+fdr <- function(confusion) {
   fp <- confusion$fp
   tp <- confusion$tp
   ifelse(fp + tp != 0, fp / (fp + tp), 1)
@@ -95,7 +95,7 @@ FDR <- function(confusion) {
 #' @return A numeric in \[0,1\].
 #'
 #' @export
-NPV <- function(confusion) {
+npv <- function(confusion) {
   tn <- confusion$tn
   fn <- confusion$fn
   ifelse(tn + fn != 0, tn / (tn + fn), 1)
@@ -112,7 +112,7 @@ NPV <- function(confusion) {
 #' @return A numeric in \[0,1\].
 #'
 #' @export
-F1 <- function(confusion) {
+f1_score <- function(confusion) {
   tp <- confusion$tp
   fp <- confusion$fp
   fn <- confusion$fn
@@ -134,7 +134,7 @@ F1 <- function(confusion) {
 #' @return A numeric in \[0,1\].
 #'
 #' @export
-G1 <- function(confusion) {
+g1_score <- function(confusion) {
   tn <- confusion$tn
   fn <- confusion$fn
   fp <- confusion$fp

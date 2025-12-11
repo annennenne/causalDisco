@@ -16,9 +16,9 @@
 #' @references Petersen, AH; Osler, M and Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology,
 #'  American Journal of Epidemiology.
 #' @examples
-#' data(tpcExample)
+#' data(tpc_example)
 #'
-"tpcExample"
+"tpc_example"
 
 #' @title Causal Disco package
 #' @name causalDisco-package

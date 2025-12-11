@@ -6,6 +6,7 @@ BDE
 BDeu
 Bjarke
 Bjerre
+BnlearnSearch
 Bollen
 Bugfixes
 Bui
@@ -13,6 +14,7 @@ CMD
 CPC
 CPDAG
 CStaR
+CamelCase
 Changelog
 Chickering
 Codecov
@@ -90,7 +92,9 @@ Tabu
 Temurin
 Terpstra
 Tetrad
+Tetrad's
 TetradSearch
+Tetrad’s
 Tidyselect
 Tobias
 Uhler's
@@ -105,7 +109,6 @@ bdeu
 bic
 bidirected
 bnlearn
-bnlearnSearch
 bnlearns
 bpco
 caugi
@@ -122,7 +125,6 @@ fciAlgo
 fges
 fixedEdges
 fixedGaps
-ges
 graphNEL
 honouring
 igraph
@@ -139,6 +141,7 @@ nDAGs
 nonsingular
 oldage
 pag
+pak
 pc
 pcalg
 pdag

@@ -237,7 +237,7 @@ check_args_and_distribute_args_causalDisco <- function(args,
   ))
 }
 
-#' @title Check arguments for bnlearnSearch class functions
+#' @title Check arguments for BnlearnSearch class functions
 #'
 #' @keywords internal
 check_args_and_distribute_args_bnlearn <- function(args,

@@ -1,7 +1,7 @@
 # See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
 #' @title R6 Interface to bnlearn Search Algorithms
 #'
-#' @name bnlearnSearch
+#' @name BnlearnSearch
 #'
 #' @example inst/roxygen-examples/bnlearn_search_example.R
 NULL
@@ -15,11 +15,11 @@ NULL
 #'
 #' @importFrom R6 R6Class
 #'
-#' @rdname bnlearnSearch
+#' @rdname BnlearnSearch
 #'
 #' @export
-bnlearnSearch <- R6Class(
-  "bnlearnSearch",
+BnlearnSearch <- R6Class(
+  "BnlearnSearch",
   public = list(
     #' @template data-field
     data = NULL,
@@ -157,13 +157,13 @@ bnlearnSearch <- R6Class(
     knowledge = NULL,
 
     #' @description
-    #' Constructor for the `bnlearnSearch` class.
+    #' Constructor for the `BnlearnSearch` class.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
           "bnlearn", "purrr"
         ),
-        class_name = "bnlearnSearch"
+        class_name = "BnlearnSearch"
       )
       self$data <- NULL
       self$score <- NULL

@@ -2,17 +2,14 @@
 % Please edit documentation in R/tfci_run.R
 \name{tfci_run}
 \alias{tfci_run}
-\title{Causal Discovery Using the Temporal FCI (TFCI) Algorithm
-Use a modification of the FCI algorithm that makes use of background knowledge
-in the format of a partial ordering. This may, for instance, come about when
-variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).}
+\title{Causal Discovery Using the Temporal FCI (TFCI) Algorithm}
 \usage{
 tfci_run(
   data = NULL,
   knowledge = NULL,
   order = NULL,
   alpha = 10^(-1),
-  test = regTest,
+  test = reg_test,
   suffStat = NULL,
   method = "stable.fast",
   methodNA = "none",
@@ -41,9 +38,9 @@ both \code{knowledge} and \code{order} is an error.}
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
-\item{test}{A conditional independence test. The default \code{regTest}
+\item{test}{A conditional independence test. The default \code{reg_test}
 uses a regression-based information-loss test. Another available option is
-\code{corTest} which tests for vanishing partial correlations. User-supplied
+\code{cor_test} which tests for vanishing partial correlations. User-supplied
 functions may also be used; see details for the required interface.}
 
 \item{suffStat}{A sufficient statistic. If supplied, it is passed directly
@@ -78,7 +75,6 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
-Causal Discovery Using the Temporal FCI (TFCI) Algorithm
 Use a modification of the FCI algorithm that makes use of background knowledge
 in the format of a partial ordering. This may, for instance, come about when
 variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
@@ -99,10 +95,10 @@ for details.
 \examples{
 ### tfci() example ###
 
-data("tpcExample")
+data("tpc_example")
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -113,12 +109,12 @@ kn <- knowledge(
 # Recommended path using disco()
 my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
-disco(tpcExample, my_tfci, knowledge = kn)
+disco(tpc_example, my_tfci, knowledge = kn)
 
 # or using my_tfci directly
 my_tfci <- my_tfci |> set_knowledge(kn)
-my_tfci(tpcExample)
+my_tfci(tpc_example)
 
 # Also possible: using tfci_run()
-tfci_run(tpcExample, test = corTest, knowledge = kn)
+tfci_run(tpc_example, test = cor_test, knowledge = kn)
 }

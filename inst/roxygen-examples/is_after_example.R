@@ -1,9 +1,9 @@
 ### is_after() example ###
 
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),

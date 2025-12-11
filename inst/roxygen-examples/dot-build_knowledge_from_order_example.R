@@ -1,7 +1,7 @@
 ### .build_knowledge_from_order() example ###
 
-data(tpcExample)
-vnames <- names(tpcExample)
+data(tpc_example)
+vnames <- names(tpc_example)
 
 # Create knowledge from a given order
 kn_from_order <- causalDisco:::.build_knowledge_from_order(

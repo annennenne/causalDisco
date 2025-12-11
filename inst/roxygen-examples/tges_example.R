@@ -2,7 +2,7 @@
 
 # Recommended route using disco:
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),
@@ -12,22 +12,22 @@ kn <- knowledge(
 
 my_tges <- tges(engine = "causalDisco", score = "tbic")
 
-disco(tpcExample, my_tges, knowledge = kn)
+disco(tpc_example, my_tges, knowledge = kn)
 
 # another way to run it
 
 my_tges <- my_tges |>
   set_knowledge(kn)
-my_tges(tpcExample)
+my_tges(tpc_example)
 
 
 # or you can run directly with tges_run()
 
-data("tpcExample")
+data("tpc_example")
 
 score_bic <- new("TemporalBIC",
-  data = tpcExample,
-  nodes = colnames(tpcExample),
+  data = tpc_example,
+  nodes = colnames(tpc_example),
   knowledge = kn
 )
 

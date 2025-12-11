@@ -1,7 +1,7 @@
 # See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
 #' @title R6 Interface to pcalg Search Algorithms
 #'
-#' @name pcalgSearch
+#' @name PcalgSearch
 #'
 #' @example inst/roxygen-examples/pcalg_search_example.R
 NULL
@@ -12,12 +12,12 @@ NULL
 #' This class implements the search algorithms from the pcalg package.
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
 #'
-#' @rdname pcalgSearch
+#' @rdname PcalgSearch
 #'
 #' @importFrom R6 R6Class
-#' @export pcalgSearch
-pcalgSearch <- R6::R6Class(
-  "pcalgSearch",
+#' @export PcalgSearch
+PcalgSearch <- R6::R6Class(
+  "PcalgSearch",
   public = list(
     #' @template data-field
     data = NULL,
@@ -81,13 +81,13 @@ pcalgSearch <- R6::R6Class(
     adaptDF = TRUE,
 
     #' @description
-    #' Constructor for the `pcalgSearch` class.
+    #' Constructor for the `PcalgSearch` class.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
           "pcalg", "purrr", "rlang"
         ),
-        class_name = "pcalgSearch"
+        class_name = "PcalgSearch"
       )
 
       self$data <- NULL

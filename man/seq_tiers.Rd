@@ -36,8 +36,8 @@ template rather than many nearly identical formulas.
 formulas <- seq_tiers(1:2, matches("^child_x{i}$"))
 
 # you can pass this bundle directly to tier() inside knowledge()
-data(tpcExample)
-kn <- knowledge(head(tpcExample), tier(formulas))
+data(tpc_example)
+kn <- knowledge(head(tpc_example), tier(formulas))
 print(kn)
 }
 \seealso{

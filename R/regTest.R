@@ -14,14 +14,14 @@
 #' of \code{x} and \code{y}). The final p-value is the maximum of the two
 #' obtained p-values.
 #'
-#' @inheritParams corTest
+#' @inheritParams cor_test
 #'
 #' @return A numeric, which is the p-value of the test.
 #'
 #' @export
-regTest <- function(x, y, S, suffStat) {
-  p1 <- regTestEachDir(x, y, S, suffStat)
-  p2 <- regTestEachDir(y, x, S, suffStat)
+reg_test <- function(x, y, S, suffStat) {
+  p1 <- reg_test_each_dir(x, y, S, suffStat)
+  p2 <- reg_test_each_dir(y, x, S, suffStat)
 
   max(p1, p2)
 }
@@ -31,12 +31,12 @@ regTest <- function(x, y, S, suffStat) {
 ## Not exported below ######################################################
 ############################################################################
 
-regTestEachDir <- function(x, y, S, suffStat) {
+reg_test_each_dir <- function(x, y, S, suffStat) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "splines", "stats"
     ),
-    function_name = "regTestEachDir"
+    function_name = "reg_test_each_dir"
   )
 
   dfs <- 3

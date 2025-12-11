@@ -1,8 +1,8 @@
 ### .pcalg_constraints_from_knowledge() example ###
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -12,7 +12,7 @@ kn <- knowledge(
 
 pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   kn,
-  labels = names(tpcExample),
+  labels = names(tpc_example),
   directed_as_undirected = TRUE
 )
 pc_cons

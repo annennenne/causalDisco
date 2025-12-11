@@ -2,11 +2,11 @@
 % Please edit documentation in R/check_args.R
 \name{check_args_and_distribute_args_bnlearn}
 \alias{check_args_and_distribute_args_bnlearn}
-\title{Check arguments for bnlearnSearch class functions}
+\title{Check arguments for BnlearnSearch class functions}
 \usage{
 check_args_and_distribute_args_bnlearn(args, alg, allow_dots = FALSE)
 }
 \description{
-Check arguments for bnlearnSearch class functions
+Check arguments for BnlearnSearch class functions
 }
 \keyword{internal}

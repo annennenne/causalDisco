@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("initialize sets clean defaults", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
   expect_null(s$data)
   expect_null(s$score)
   expect_null(s$test)
@@ -17,7 +17,7 @@ test_that("initialize sets clean defaults", {
 
 
 test_that("set_params and set_data store values", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
   s$set_params(list(alpha = 0.1, whatev = 2))
   expect_identical(s$params, list(alpha = 0.1, whatev = 2))
 
@@ -31,7 +31,7 @@ test_that("set_params and set_data store values", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_test validates alpha, maps fisher_z -> zf, and errors on unknown", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
 
   # alpha validation
   expect_error(s$set_test("zf", alpha = -0.1), class = "simpleError")
@@ -57,7 +57,7 @@ test_that("set_test validates alpha, maps fisher_z -> zf, and errors on unknown"
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_score accepts known names and rejects unknown", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
 
   expect_error(
     s$set_score("not-a-score"),
@@ -74,7 +74,7 @@ test_that("set_score accepts known names and rejects unknown", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_alg guards fire with exact messages", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
 
   # args must be a list if provided
   expect_error(
@@ -126,25 +126,25 @@ test_that("set_alg guards fire with exact messages", {
 
 test_that("set_alg builds partials for each family when prerequisites satisfied", {
   # constraint-based example: pc (needs test)
-  s1 <- bnlearnSearch$new()
+  s1 <- BnlearnSearch$new()
   s1$set_test("zf", alpha = 0.05)
   s1$set_alg("pc", args = list()) # also exercises args=list() path
   expect_true(is.function(s1$alg))
 
   # score-based example: hc (needs score)
-  s2 <- bnlearnSearch$new()
+  s2 <- BnlearnSearch$new()
   s2$set_score("bic")
   s2$set_alg("hc")
   expect_true(is.function(s2$alg))
 
   # pairwise learner: chow.liu (needs neither)
-  s3 <- bnlearnSearch$new()
+  s3 <- BnlearnSearch$new()
   s3$set_alg("chow.liu")
   expect_true(is.function(s3$alg))
 })
 
 test_that("run_search errors when data/alg missing with exact messages", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
 
   # missing both data and alg -> first error is data
   expect_error(
@@ -181,7 +181,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
     Z = sample(c(2, 3), 40, replace = TRUE)
   )
   # simplest learner: chow.liu (no test/score needed)
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
   s$set_alg("chow.liu")
   s$set_data(df)
 
@@ -220,7 +220,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
 })
 
 test_that("set_knowledge delegates to validators (error path covered)", {
-  s <- bnlearnSearch$new()
+  s <- BnlearnSearch$new()
   expect_error(
     s$set_knowledge(knowledge_obj = 123),
     class = "simpleError"

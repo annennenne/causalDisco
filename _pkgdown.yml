@@ -22,7 +22,7 @@ reference:
       - tges
       - tpc
 
-  - title: "Setup for Tetrad Engines"
+  - title: "Setup for Tetrad Engine"
     desc: "Functions for installing and verifying the Tetrad Java backend."
     contents:
       - install_java
@@ -36,34 +36,38 @@ reference:
   - title: "Algorithm Engines"
     desc: "Low-level functions that execute search algorithms."
     contents:
-      - tfci_run
-      - tges_run
-      - tpc_run
+      - ends_with("run")
 
-  - title: "Score Functions"
+  - title: "Classes used by algorithms with engine causalDisco"
     contents:
+      - TEssGraph
       - TemporalBIC
       - TemporalBDeu
-      - gausCorScore
+      - gaus_cor_score
+
+  - title: "Test Functions"
+    contents:
+      - ends_with("test")
 
   - title: "Graph Operations"
     contents:
-      - graph2amat
       - amat
-      - essgraph2amat
+      - graph_to_amat
+      - essgraph_to_amat
+      - probmat_to_amat
       - tamat
       - edges
-      - nedges
-      - maxnedges
+      - n_edges
+      - max_edges
       - is_cpdag
       - is_pdag
       - shd
-      - nDAGs
+      - n_dags
 
   - title: "Simulation"
     contents:
-      - simDAG
-      - simGausFromDAG
+      - sim_dag
+      - sim_gaus_from_dag
 
   - title: "Plotting"
     contents:
@@ -102,9 +106,6 @@ reference:
       - rdata_to_tetrad
       - tetrad_data_to_rdata
       - as.graphNEL
-      - probmat2amat
-      - TEssGraph
-      - tplot
 
   - title: "Evaluation & Confusion Metrics"
     contents:
@@ -118,18 +119,16 @@ reference:
       - precision
       - recall
       - specificity
-      - F1
-      - G1
-      - FDR
-      - NPV
-      - FOR
+      - f1_score
+      - g1_score
+      - fdr
+      - npv
+      - false_omission_rate
+      - average_degree
 
   - title: "Miscellaneous"
     contents:
       - causalDisco-package
       - engine_registry
       - tetrad_graph
-      - tpcExample
-      - corTest
-      - regTest
-      - average_degree
+      - tpc_example

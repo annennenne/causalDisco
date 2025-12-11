@@ -24,9 +24,9 @@
 #'   each prefix.
 #' @param alpha The alpha level used as the per-test significance
 #'   threshold for conditional independence testing.
-#' @param test A conditional independence test. The default \code{regTest}
+#' @param test A conditional independence test. The default \code{reg_test}
 #'   uses a regression-based information-loss test. Another available option is
-#'   \code{corTest} which tests for vanishing partial correlations. User-supplied
+#'   \code{cor_test} which tests for vanishing partial correlations. User-supplied
 #'   functions may also be used; see details for the required interface.
 #' @param suffStat A sufficient statistic. If supplied, it is passed directly
 #'   to the test and no statistics are computed from \code{data}. Its structure
@@ -59,8 +59,8 @@
 #' @details
 #' Any independence test implemented in \pkg{pcalg} may be used; see
 #' \code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
-#' performed: for \code{corTest}, each pairwise correlation uses complete cases;
-#' for \code{regTest}, each conditional test performs its own deletion. If you
+#' performed: for \code{cor_test}, each pairwise correlation uses complete cases;
+#' for \code{reg_test}, each conditional test performs its own deletion. If you
 #' supply a user-defined \code{test}, you must also provide \code{suffStat}.
 #'
 #' Temporal or tiered knowledge enters in two places:
@@ -88,7 +88,7 @@ tpc_run <- function(data = NULL,
                     knowledge = NULL,
                     order = NULL,
                     alpha = 10^(-1),
-                    test = regTest,
+                    test = reg_test,
                     suffStat = NULL,
                     method = "stable.fast",
                     methodNA = "none",
@@ -166,10 +166,10 @@ tpc_run <- function(data = NULL,
 
   if (is.null(suffStat)) {
     thisTestName <- deparse(substitute(test))
-    if (thisTestName == "regTest") {
-      thisSuffStat <- make_suff_stat(data, type = "regTest")
-    } else if (thisTestName == "corTest") {
-      thisSuffStat <- make_suff_stat(data, type = "corTest")
+    if (thisTestName == "reg_test") {
+      thisSuffStat <- make_suff_stat(data, type = "reg_test")
+    } else if (thisTestName == "cor_test") {
+      thisSuffStat <- make_suff_stat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
     }
@@ -197,7 +197,7 @@ tpc_run <- function(data = NULL,
 
   if (output == "tskeleton") {
     out <- list(
-      tamat = tamat(amat = graph2amat(skel), order = knowledge$tiers$label),
+      tamat = tamat(amat = graph_to_amat(skel), order = knowledge$tiers$label),
       psi = alpha,
       ntest = ntests
     )
@@ -209,7 +209,7 @@ tpc_run <- function(data = NULL,
 
   if (output == "tpdag") {
     out <- list(
-      tamat = tamat(amat = graph2amat(res, toFrom = FALSE), order = knowledge$tiers$label),
+      tamat = tamat(amat = graph_to_amat(res, toFrom = FALSE), order = knowledge$tiers$label),
       psi = alpha,
       ntests = ntests
     )
@@ -218,7 +218,7 @@ tpc_run <- function(data = NULL,
   } else if (output == "pcAlgo") {
     return(res)
   } else if (output == "caugi") {
-    amat <- graph2amat(res, toFrom = FALSE)
+    amat <- graph_to_amat(res, toFrom = FALSE)
     amat <- methods::as(amat, "matrix")
     cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
     return(knowledgeable_caugi(cg, knowledge))
@@ -549,7 +549,7 @@ tpdag <- function(skel, knowledge) {
     function_name = "tpdag"
   )
 
-  thisAmat <- graph2amat(skel)
+  thisAmat <- graph_to_amat(skel)
   tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge)
   pcalg::addBgKnowledge(
     v_orient_temporal(tempSkelAmat, skel@sepset),
@@ -563,27 +563,27 @@ tpdag <- function(skel, knowledge) {
 #' Build the \emph{sufficient statistic} object expected by the built-in
 #' conditional independence tests. Supports:
 #' \itemize{
-#'   \item \code{type = "regTest"} — returns the original \code{data} and a
+#'   \item \code{type = "reg_test"} — returns the original \code{data} and a
 #'         logical indicator of which variables are binary;
-#'   \item \code{type = "corTest"} — returns a pairwise-complete correlation
+#'   \item \code{type = "cor_test"} — returns a pairwise-complete correlation
 #'         matrix and the sample size \code{n}.
 #' }
 #'
 #' @param data A data frame (or numeric matrix) of variables used by the test.
 #'   Columns are variables; rows are observations.
 #' @param type A string selecting the test family. Must be either
-#'   \code{"regTest"} or \code{"corTest"}.
+#'   \code{"reg_test"} or \code{"cor_test"}.
 #' @param ... currently ignored.
 #'
 #' @details
-#' For \code{type = "regTest"}, the return value is a list with elements:
+#' For \code{type = "reg_test"}, the return value is a list with elements:
 #' \itemize{
 #'   \item \code{data} — the original \code{data} object;
 #'   \item \code{binary} — a logical vector (one per column) indicating whether
 #'         the variable is binary.
 #' }
 #'
-#' For \code{type = "corTest"}, the return value is a list with elements:
+#' For \code{type = "cor_test"}, the return value is a list with elements:
 #' \itemize{
 #'   \item \code{C} — the correlation matrix computed with
 #'         \code{use = "pairwise.complete.obs"};
@@ -607,13 +607,13 @@ make_suff_stat <- function(data, type, ...) {
     function_name = "make_suff_stat"
   )
 
-  if (type == "regTest") {
+  if (type == "reg_test") {
     bin <- unlist(sapply(
       data,
       function(x) length(unique(stats::na.omit(x))) == 2
     ))
     suff <- list(data = data, binary = bin)
-  } else if (type == "corTest") {
+  } else if (type == "cor_test") {
     suff <- list(
       C = stats::cor(data, use = "pairwise.complete.obs"),
       n = nrow(data)

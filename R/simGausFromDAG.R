@@ -70,19 +70,19 @@ topo_order_mat <- function(amat) {
 #'
 #' @examples
 #' # Simulate DAG adjacency matrix with 6 nodes
-#' ex_dag <- simDAG(6)
+#' ex_dag <- sim_dag(6)
 #'
 #' # Simulate Gaussian data (100 iid observations)
-#' ex_data <- simGausFromDAG(ex_dag, n = 100)
+#' ex_data <- sim_gaus_from_dag(ex_dag, n = 100)
 #'
 #' @export
-simGausFromDAG <- function(amat, n, regparLim = c(0.5, 2),
-                           resSDLim = c(0.1, 1),
-                           pnegRegpar = 0.4,
-                           standardize = FALSE) {
+sim_gaus_from_dag <- function(amat, n, regparLim = c(0.5, 2),
+                              resSDLim = c(0.1, 1),
+                              pnegRegpar = 0.4,
+                              standardize = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c("stats"),
-    function_name = "simGausFromDAG"
+    function_name = "sim_gaus_from_dag"
   )
 
   orig_names <- colnames(amat)

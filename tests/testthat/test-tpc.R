@@ -1,9 +1,9 @@
 test_that("tpc causalDisco respects tier knowledge", {
   skip("tpc causalDisco does not yet support tier knowledge.")
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -13,14 +13,14 @@ test_that("tpc causalDisco respects tier knowledge", {
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
 
-  output <- disco(tpcExample, my_tpc, knowledge = kn)
+  output <- disco(tpc_example, my_tpc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
   expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       1 ~ starts_with("old"),
       2 ~ starts_with("youth"),
@@ -29,7 +29,7 @@ test_that("tpc causalDisco respects tier knowledge", {
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  output <- disco(tpcExample, my_tpc, knowledge = kn)
+  output <- disco(tpc_example, my_tpc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -37,15 +37,15 @@ test_that("tpc causalDisco respects tier knowledge", {
 })
 
 test_that("tpc causalDisco respects required background knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tpc, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
 
   edges <- out$caugi@edges
 
@@ -57,13 +57,13 @@ test_that("tpc causalDisco respects required background knowledge", {
   skip("tpc causalDisco does not yet support required edges from knowledge objects.") # Above works due to chance
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3),
     required(child_x2 ~ child_x1)
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tpc, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
 
   edges <- out$caugi@edges
 
@@ -73,15 +73,15 @@ test_that("tpc causalDisco respects required background knowledge", {
 })
 
 test_that("tpc causalDisco respects forbidden background knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x2 ~ oldage_x5)
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tpc, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
 
   edges <- out$caugi@edges
 
@@ -91,13 +91,13 @@ test_that("tpc causalDisco respects forbidden background knowledge", {
 
   # edges contains oldage_x6 -> oldage_x5. Verify graph changes when we forbid oldage_x5 -> oldage_x6.
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x2 ~ oldage_x5),
     forbidden(oldage_x5 ~ oldage_x6)
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tpc, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
   edges <- out$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)

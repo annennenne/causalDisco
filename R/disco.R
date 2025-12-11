@@ -20,9 +20,9 @@
 #' For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
 #' \itemize{
 #'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
-#'  \item \code{\link{pcalgSearch}} for \pkg{pcalg},
-#'  \item \code{\link{bnlearnSearch}} for \pkg{bnlearn},
-#'  \item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+#'  \item \code{\link{PcalgSearch}} for \pkg{pcalg},
+#'  \item \code{\link{BnlearnSearch}} for \pkg{bnlearn},
+#'  \item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
 #' }
 #'
 #' @example inst/roxygen-examples/disco_example.R

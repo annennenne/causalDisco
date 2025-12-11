@@ -1,7 +1,7 @@
 # See https://github.com/r-lib/roxygen2/issues/1158 for why this is needed
 #' @title R6 Interface to causalDisco Search Algorithms
 #'
-#' @name causalDiscoSearch
+#' @name CausalDiscoSearch
 #'
 #' @example inst/roxygen-examples/causalDisco_search_example.R
 NULL
@@ -14,11 +14,11 @@ NULL
 #'
 #' @importFrom R6 R6Class
 #'
-#' @rdname causalDiscoSearch
+#' @rdname CausalDiscoSearch
 #'
-#' @export causalDiscoSearch
-causalDiscoSearch <- R6::R6Class(
-  "causalDiscoSearch",
+#' @export CausalDiscoSearch
+CausalDiscoSearch <- R6::R6Class(
+  "CausalDiscoSearch",
   public = list(
     #' @template data-field
     data = NULL,
@@ -38,9 +38,9 @@ causalDiscoSearch <- R6::R6Class(
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
     #'    \item \code{fisher_z} - Fisher Z test for Gaussian data.
-    #'    See \code{\link{corTest}}.
+    #'    See \code{\link{cor_test}}.
     #'    \item \code{reg} - Regression test for discrete or binary data.
-    #'    See \code{\link{regTest}}.
+    #'    See \code{\link{reg_test}}.
     #'  }
     test = NULL,
 
@@ -70,13 +70,13 @@ causalDiscoSearch <- R6::R6Class(
     knowledge = NULL,
 
     #' @description
-    #' Constructor for the `causalDiscoSearch` class.
+    #' Constructor for the `CausalDiscoSearch` class.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
           "pcalg", "purrr", "R6", "rlang", "stats", "utils"
         ),
-        class_name = "causalDiscoSearch"
+        class_name = "CausalDiscoSearch"
       )
 
       self$data <- NULL
@@ -267,7 +267,7 @@ causalDiscoSearch <- R6::R6Class(
     #' @param kn A `knowledge` object.
     #' @param directed_as_undirected Logical; whether to treat directed edges in
     #' the knowledge as undirected. Default is `FALSE`. This is due to the
-    #' nature of how `pcalg` handles background knowledge when using
+    #' nature of how \pkg{pcalg} handles background knowledge when using
     #' \code{\link[pcalg]{skeleton}} under the hood in
     #' \code{\link{tpc}} and
     #' \code{\link{tfci}}.

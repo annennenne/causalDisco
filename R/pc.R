@@ -17,8 +17,8 @@
 #' For specific details on the supported scores, tests, and parameters for each engine, see:
 #' \itemize{
 #'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
-#'  \item \code{\link{pcalgSearch}} for \pkg{pcalg},
-#'  \item \code{\link{bnlearnSearch}} for \pkg{bnlearn}.
+#'  \item \code{\link{PcalgSearch}} for \pkg{pcalg},
+#'  \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
 #' }
 #'
 #' @example inst/roxygen-examples/pc_example.R
@@ -116,7 +116,7 @@ pc_pcalg_runner <- function(test, alpha, ...,
     function_name = "pc_pcalg_runner"
   )
 
-  search <- pcalgSearch$new()
+  search <- PcalgSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc",
     test = test
@@ -149,7 +149,7 @@ pc_bnlearn_runner <- function(test, alpha, ...) {
   )
 
   args <- list(...)
-  search <- bnlearnSearch$new()
+  search <- BnlearnSearch$new()
   args_to_pass <- check_args_and_distribute_args(
     search,
     args,

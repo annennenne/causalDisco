@@ -16,10 +16,10 @@
 #          with and without using disco()
 
 # 1) Initialize data and knowledge
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -123,11 +123,11 @@ toy_method <- causalDisco:::disco_method(toy_graph_builder, "toy")
 
 # 4) Use the method
 # Without knowledge: mostly undirected edges
-toy_method(tpcExample)
+toy_method(tpc_example)
 
 # Inject knowledge, then run
 toy_with_kn <- set_knowledge(toy_method, kn)
-toy_with_kn(tpcExample)
+toy_with_kn(tpc_example)
 
 # Or use the disco()
-disco(tpcExample, toy_method, knowledge = kn)
+disco(tpc_example, toy_method, knowledge = kn)

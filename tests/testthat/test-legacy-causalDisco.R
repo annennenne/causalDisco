@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# regTest / regTestEachDir
+# reg_test / reg_test_each_dir
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("regTest handles Gaussian (linear) case and finds association", {
+test_that("reg_test handles Gaussian (linear) case and finds association", {
   set.seed(123)
   n <- 400
   Z <- stats::rnorm(n)
@@ -12,12 +12,12 @@ test_that("regTest handles Gaussian (linear) case and finds association", {
   dat <- data.frame(X = X, Y = Y, Z = Z)
   suff <- list(data = dat, binary = setNames(rep(FALSE, 3), names(dat)), order = "t")
 
-  p <- regTest(1, 2, 3, suff)
+  p <- reg_test(1, 2, 3, suff)
   expect_true(is.numeric(p) && length(p) == 1)
   expect_lt(p, 0.01)
 })
 
-test_that("regTest handles Gaussian independence", {
+test_that("reg_test handles Gaussian independence", {
   set.seed(42)
   n <- 500
   Z <- stats::rnorm(n)
@@ -27,11 +27,11 @@ test_that("regTest handles Gaussian independence", {
   dat <- data.frame(X = X, Y = Y, Z = Z)
   suff <- list(data = dat, binary = setNames(rep(FALSE, 3), names(dat)), order = "t")
 
-  p <- regTest(1, 2, 3, suff)
+  p <- reg_test(1, 2, 3, suff)
   expect_gte(p, 0.05)
 })
 
-test_that("regTest handles binomial (logistic) response", {
+test_that("reg_test handles binomial (logistic) response", {
   set.seed(99)
   n <- 600
   Z <- stats::rnorm(n)
@@ -43,11 +43,11 @@ test_that("regTest handles binomial (logistic) response", {
   dat <- data.frame(X = X, Y = Y, Z = Z)
   suff <- list(data = dat, binary = c(X = FALSE, Y = TRUE, Z = FALSE), order = "t")
 
-  p <- regTest(1, 2, 3, suff)
+  p <- reg_test(1, 2, 3, suff)
   expect_lt(p, 0.01)
 })
 
-test_that("regTest is symmetric", {
+test_that("reg_test is symmetric", {
   set.seed(7)
   n <- 300
   Z <- stats::rnorm(n)
@@ -57,13 +57,13 @@ test_that("regTest is symmetric", {
   dat <- data.frame(X = X, Y = Y, Z = Z)
   suff <- list(data = dat, binary = c(X = FALSE, Y = FALSE, Z = FALSE), order = "t")
 
-  p_xy <- regTest(1, 2, 3, suff)
-  p_yx <- regTest(2, 1, 3, suff)
+  p_xy <- reg_test(1, 2, 3, suff)
+  p_yx <- reg_test(2, 1, 3, suff)
 
   expect_equal(p_xy, p_yx, tolerance = 1e-12)
 })
 
-test_that("regTestEachDir removes NAs", {
+test_that("reg_test_each_dir removes NAs", {
   set.seed(2024)
   n <- 300
   Z <- stats::rnorm(n)
@@ -76,11 +76,11 @@ test_that("regTestEachDir removes NAs", {
 
   suff <- list(data = dat, binary = c(X = FALSE, Y = FALSE, Z = FALSE), order = "t")
 
-  p <- regTest(1, 2, 3, suff)
+  p <- reg_test(1, 2, 3, suff)
   expect_true(is.finite(p) && p >= 0 && p <= 1)
 })
 
-test_that("regTestEachDir wraps binary S in factor()", {
+test_that("reg_test_each_dir wraps binary S in factor()", {
   # S contains both a binary and a numeric covariate; y is Gaussian so glm converges
   set.seed(1)
   n <- 50
@@ -99,7 +99,7 @@ test_that("regTestEachDir wraps binary S in factor()", {
   names(suffStat$data) <- c("x_num", "y_num", "s_bin", "s_num")
 
   # x = numeric, y = numeric, S = {binary, numeric}
-  pval <- regTestEachDir(
+  pval <- reg_test_each_dir(
     x = 1L,
     y = 2L,
     S = c(3L, 4L),
@@ -114,10 +114,10 @@ test_that("regTestEachDir wraps binary S in factor()", {
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# corTest
+# cor_test
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("corTest matches gaussCItest", {
+test_that("cor_test matches gaussCItest", {
   set.seed(314)
   p <- 4
   n <- 800
@@ -126,7 +126,7 @@ test_that("corTest matches gaussCItest", {
   Cmat <- stats::cor(X)
   suff <- list(C = Cmat, n = n)
 
-  p1 <- corTest(1, 2, 3, suff)
+  p1 <- cor_test(1, 2, 3, suff)
   p2 <- pcalg::gaussCItest(1, 2, 3, suff)
 
   expect_equal(p1, p2, tolerance = 1e-12)
@@ -183,16 +183,16 @@ test_that("is_pdag and is_cpdag validate graphs", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# graph2amat
+# graph_to_amat
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("graph2amat converts to adjacency matrix", {
+test_that("graph_to_amat converts to adjacency matrix", {
   nodes <- c("A", "B", "C")
   g <- methods::new("graphNEL", nodes = nodes, edgemode = "directed")
   g <- graph::addEdge("A", "B", g)
   g <- graph::addEdge("B", "C", g)
 
-  A_tf <- graph2amat(g, toFrom = TRUE, type = "pdag")
+  A_tf <- graph_to_amat(g, toFrom = TRUE, type = "pdag")
   expect_true(is.matrix(A_tf))
   expect_identical(rownames(A_tf), nodes)
   expect_identical(colnames(A_tf), nodes)
@@ -204,45 +204,45 @@ test_that("graph2amat converts to adjacency matrix", {
   expect_equal(A_tf["C", "B"], 1) # B → C
   expect_equal(A_tf["B", "C"], 0)
 
-  A_ft <- graph2amat(g, toFrom = FALSE, type = "pdag")
+  A_ft <- graph_to_amat(g, toFrom = FALSE, type = "pdag")
   expect_equal(A_ft, t(A_tf))
   expect_identical(attr(A_ft, "tamat_type"), "pdag")
 })
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# maxnedges
+# max_edges
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("maxnedges returns correct counts for small graphs", {
-  expect_equal(maxnedges(1L), 0) # by definition
-  expect_equal(maxnedges(2L), 1) # 1 edge
-  expect_equal(maxnedges(3L), 3) # 3 edges
-  expect_equal(maxnedges(4L), 6) # 6 edges
-  expect_equal(maxnedges(6L), sum(1:5)) # triangular number
+test_that("max_edges returns correct counts for small graphs", {
+  expect_equal(max_edges(1L), 0) # by definition
+  expect_equal(max_edges(2L), 1) # 1 edge
+  expect_equal(max_edges(3L), 3) # 3 edges
+  expect_equal(max_edges(4L), 6) # 6 edges
+  expect_equal(max_edges(6L), sum(1:5)) # triangular number
 })
 
-test_that("maxnedges accepts integerish numerics (e.g., 3.0)", {
-  expect_equal(maxnedges(3.0), 3)
-  expect_equal(maxnedges(10.0), sum(seq_len(9L)))
+test_that("max_edges accepts integerish numerics (e.g., 3.0)", {
+  expect_equal(max_edges(3.0), 3)
+  expect_equal(max_edges(10.0), sum(seq_len(9L)))
 })
 
-test_that("maxnedges rejects non-positive, non-integer, and invalid inputs", {
-  expect_error(maxnedges(0L), "`p` must be a single positive integer")
-  expect_error(maxnedges(-2L), "`p` must be a single positive integer")
-  expect_error(maxnedges(2.5), "`p` must be a single positive integer")
-  expect_error(maxnedges(NA_real_), "`p` must be a single positive integer")
-  expect_error(maxnedges(NaN), "`p` must be a single positive integer")
-  expect_error(maxnedges(Inf), "`p` must be a single positive integer")
-  expect_error(maxnedges("3"), "`p` must be a single positive integer")
-  expect_error(maxnedges(c(3L, 4L)), "`p` must be a single positive integer")
+test_that("max_edges rejects non-positive, non-integer, and invalid inputs", {
+  expect_error(max_edges(0L), "`p` must be a single positive integer")
+  expect_error(max_edges(-2L), "`p` must be a single positive integer")
+  expect_error(max_edges(2.5), "`p` must be a single positive integer")
+  expect_error(max_edges(NA_real_), "`p` must be a single positive integer")
+  expect_error(max_edges(NaN), "`p` must be a single positive integer")
+  expect_error(max_edges(Inf), "`p` must be a single positive integer")
+  expect_error(max_edges("3"), "`p` must be a single positive integer")
+  expect_error(max_edges(c(3L, 4L)), "`p` must be a single positive integer")
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# essgraph2amat
+# essgraph_to_amat
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("essgraph2amat builds adjacency", {
+test_that("essgraph_to_amat builds adjacency", {
   in_edges <- list(
     integer(0),
     1L,
@@ -258,7 +258,7 @@ test_that("essgraph2amat builds adjacency", {
   )
   class(fakeEss) <- "EssGraph"
 
-  A <- essgraph2amat(fakeEss, p = 3)
+  A <- essgraph_to_amat(fakeEss, p = 3)
   expect_equal(dim(A), c(3, 3))
   expect_equal(A[2, 1], 1)
   expect_equal(A[3, 1], 1)
@@ -283,19 +283,19 @@ test_that("average_degree matches manual", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# nedges
+# n_edges
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("nedges counts correctly", {
+test_that("n_edges counts correctly", {
   m <- matrix(0L, 4, 4)
   m[lower.tri(m)] <- 1
   m <- m + t(m)
   m[m > 0] <- 1L
-  expect_equal(nedges(m), 6)
+  expect_equal(n_edges(m), 6)
 
   p4 <- matrix(0L, 4, 4)
   p4[1, 2] <- p4[2, 1] <- 1
   p4[2, 3] <- p4[3, 2] <- 1
   p4[3, 4] <- p4[4, 3] <- 1
-  expect_equal(nedges(p4), 3)
+  expect_equal(n_edges(p4), 3)
 })

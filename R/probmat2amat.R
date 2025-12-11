@@ -39,20 +39,20 @@
 #' diag(pmat) <- 0
 #'
 #' # Convert to adjacency matrix using cutoff-method (threshold = 0.5)
-#' probmat2amat(pmat, threshold = 0.5)
+#' probmat_to_amat(pmat, threshold = 0.5)
 #'
 #' # Convert to adjacency matrix using BPCO-method (threshold = 0.5)
-#' probmat2amat(pmat, threshold = 0.5, method = "bpco")
+#' probmat_to_amat(pmat, threshold = 0.5, method = "bpco")
 #'
 #' @export
-probmat2amat <- function(probmat, threshold, method = "cutoff",
-                         keep_vnames = TRUE, graph_criterion = "pdag",
-                         deletesym = FALSE) {
+probmat_to_amat <- function(probmat, threshold, method = "cutoff",
+                            keep_vnames = TRUE, graph_criterion = "pdag",
+                            deletesym = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
     ),
-    function_name = "probmat2amat"
+    function_name = "probmat_to_amat"
   )
 
   if (keep_vnames) vnames <- rownames(probmat)
@@ -71,7 +71,7 @@ probmat2amat <- function(probmat, threshold, method = "cutoff",
     n_nonzero <- length(ord)
     i <- 1
 
-    new <- probmat2amat(probmat, threshold, "cutoff")
+    new <- probmat_to_amat(probmat, threshold, "cutoff")
     ord <- rev(ord)
     new_is_valid <- pcalg::isValidGraph(new, type = graph_criterion)
 

@@ -15,7 +15,7 @@
 #' @details
 #' For specific details on the supported scores, tests, and parameters for the engine, see:
 #' \itemize{
-#'  \item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+#'  \item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
 #' }
 #'
 #' @example inst/roxygen-examples/tfci_example.R
@@ -67,7 +67,7 @@ tfci_causalDisco_runner <- function(test, alpha, ...,
     function_name = "pc_causalDisco_runner"
   )
 
-  search <- causalDiscoSearch$new()
+  search <- CausalDiscoSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(
     search = search,

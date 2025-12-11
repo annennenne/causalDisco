@@ -22,10 +22,10 @@ any edges that mention them.
 ### remove_vars() example ###
 
 # remove variables and their incident edges
-data(tpcExample)
+data(tpc_example)
 
 kn <- knowledge(
-  head(tpcExample),
+  head(tpc_example),
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),

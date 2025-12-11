@@ -1,9 +1,9 @@
 ### pc() example ###
 \dontrun{
-data("tpcExample")
+data("tpc_example")
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -14,9 +14,9 @@ kn <- knowledge(
 # Recommended path using disco()
 my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
 
-disco(tpcExample, my_pc, knowledge = kn)
+disco(tpc_example, my_pc, knowledge = kn)
 
 # or using my_pc directly
 my_pc <- my_pc |> set_knowledge(kn)
-my_pc(tpcExample)
+my_pc(tpc_example)
 }

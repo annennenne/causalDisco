@@ -69,7 +69,7 @@ plot.tamat <- function(x, ...) {
 #' )
 #'
 #' # use FCI algorithm to recover PAG
-#' res <- fci(d, test = corTest)
+#' res <- fci(d, test = cor_test)
 #'
 #' # plot
 #' plot(res)
@@ -81,7 +81,7 @@ plot.pag <- function(x, ...) {
   thisg <- as.graphNEL(thisamat)
   nn <- graph::nodes(thisg)
   p <- graph::numNodes(thisg)
-  n.edges <- nedges(thisamat)
+  n.edges <- n_edges(thisamat)
   ahs <- ats <- rep("none", n.edges)
   nms <- character(n.edges)
   cmat <- array(
@@ -138,7 +138,7 @@ plot.pag <- function(x, ...) {
 #' )
 #'
 #' # use FCI algorithm to recover PAG
-#' res <- tfci(d, order = c("p1", "p2"), test = corTest)
+#' res <- tfci(d, order = c("p1", "p2"), test = cor_test)
 #'
 #' # plot
 #' plot(res)

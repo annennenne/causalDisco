@@ -42,9 +42,9 @@
 #' @examples
 #'
 #' # Make tikz figure code from tpdag, print code to screen
-#' data(tpcExample)
+#' data(tpc_example)
 #' kn <- knowledge(
-#'   tpcExample,
+#'   tpc_example,
 #'   tier(
 #'     child ~ tidyselect::starts_with("child"),
 #'     youth ~ tidyselect::starts_with("youth"),
@@ -52,16 +52,16 @@
 #'   )
 #' )
 #'
-#' tpdag1 <- tpc_run(tpcExample,
+#' tpdag1 <- tpc_run(tpc_example,
 #'   kn,
 #'   alpha = 0.01,
-#'   test = corTest,
+#'   test = cor_test,
 #'   output = "tpdag"
 #' )
 #' maketikz(tpdag1, clipboard = FALSE)
 #'
 #' # Make tikz figure code from tamat, copy code to clipboard
-#' thisdag <- simDAG(5)
+#' thisdag <- sim_dag(5)
 #' rownames(thisdag) <- colnames(thisdag) <- c(
 #'   "child_x", "child_y",
 #'   "child_z", "adult_x",

@@ -20,8 +20,8 @@ resulting graph or statistics.
 \dontrun{
 # Load data
 set.seed(1405)
-data("tpcExample")
-small_dataset <- tpcExample[1:100, ]
+data("tpc_example")
+small_dataset <- tpc_example[1:100, ]
 
 # Recommended:
 my_pc <- pc(engine = "tetrad", test = "conditional_gaussian")

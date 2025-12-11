@@ -30,16 +30,16 @@ Run the GES algorithm for causal discovery using one of several engines.
 For specific details on the supported scores, tests, and parameters for each engine, see:
 \itemize{
 \item \code{\link{TetradSearch}} for \pkg{Tetrad},
-\item \code{\link{pcalgSearch}} for \pkg{pcalg}.
+\item \code{\link{PcalgSearch}} for \pkg{pcalg}.
 }
 }
 \examples{
 ### ges() example ###
 \dontrun{
-data("tpcExample")
+data("tpc_example")
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -50,10 +50,10 @@ kn <- knowledge(
 # Recommended path using disco()
 my_ges <- ges(engine = "tetrad", score = "sem_bic")
 
-disco(tpcExample, my_ges, knowledge = kn)
+disco(tpc_example, my_ges, knowledge = kn)
 
 # or using my_ges directly
 my_ges <- my_ges |> set_knowledge(kn)
-my_ges(tpcExample)
+my_ges(tpc_example)
 }
 }

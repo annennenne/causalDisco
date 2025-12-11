@@ -1,6 +1,6 @@
 # add a required edge via the internal edge verb using a quosure
-data(tpcExample)
-kn <- knowledge(tpcExample)
+data(tpc_example)
+kn <- knowledge(tpc_example)
 
 # create quosure using global environment
 q <- rlang::quo(child_x1 ~ youth_x3)

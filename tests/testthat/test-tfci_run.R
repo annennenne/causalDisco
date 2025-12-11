@@ -4,32 +4,32 @@
 
 test_that("tfci_run returns knowledgeable_caugi on example data", {
   set.seed(123)
-  data(tpcExample, package = "causalDisco")
+  data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
   res <- tfci_run(
-    data = tpcExample,
+    data = tpc_example,
     knowledge = kn,
     alpha = 0.01,
-    test = corTest,
+    test = cor_test,
     methodOri = "conservative"
   )
 
   expect_s3_class(res, "knowledgeable_caugi")
 })
 
-test_that("tfci_run works with regTest as well", {
+test_that("tfci_run works with reg_test as well", {
   set.seed(777)
-  data(tpcExample, package = "causalDisco")
+  data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
   res <- tfci_run(
-    data = tpcExample,
+    data = tpc_example,
     knowledge = kn,
     alpha = 0.02,
-    test = regTest,
+    test = reg_test,
     methodOri = "standard"
   )
 
@@ -38,20 +38,20 @@ test_that("tfci_run works with regTest as well", {
 
 test_that("tfci_run respects forbidden knowledge (edge is removed)", {
   set.seed(999)
-  data(tpcExample, package = "causalDisco")
+  data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
 
-  vars <- names(tpcExample)
+  vars <- names(tpc_example)
   x <- vars[1]
   y <- vars[2]
   kn_forb <- kn |> forbid_edge(!!as.name(x) ~ !!as.name(y))
 
   res <- tfci_run(
-    data = tpcExample,
+    data = tpc_example,
     knowledge = kn_forb,
     alpha = 0.02,
-    test = corTest
+    test = cor_test
   )
 
   expect_s3_class(res, "knowledgeable_caugi")
@@ -59,16 +59,16 @@ test_that("tfci_run respects forbidden knowledge (edge is removed)", {
 
 test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws deprecation warning", {
   set.seed(202)
-  data(tpcExample, package = "causalDisco")
+  data(tpc_example, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
 
   expect_warning(
     res <- tfci_run(
-      data = tpcExample,
+      data = tpc_example,
       order = ord,
       alpha = 0.01,
-      test = corTest
+      test = cor_test
     )
   )
   expect_s3_class(res, "knowledgeable_caugi")
@@ -91,13 +91,13 @@ test_that("tfci_run uses provided suffStat (no data needed) and completes", {
   )
 
   # Provide suffStat directly to hit the else-branch
-  ss <- make_suff_stat(df, type = "regTest")
+  ss <- make_suff_stat(df, type = "reg_test")
 
   out <- tfci_run(
     data = NULL, # no data path
     knowledge = kn,
     alpha = 0.2,
-    test = regTest,
+    test = reg_test,
     suffStat = ss,
     varnames = names(df)
   )
@@ -112,12 +112,12 @@ test_that("tfci_run uses provided suffStat (no data needed) and completes", {
 
 test_that("tfci_run errors when both knowledge and order are supplied", {
   set.seed(606)
-  data(tpcExample, package = "causalDisco")
+  data(tpc_example, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ tidyselect::starts_with("child"),
       youth ~ tidyselect::starts_with("youth"),
@@ -127,11 +127,11 @@ test_that("tfci_run errors when both knowledge and order are supplied", {
 
   expect_error(
     tfci_run(
-      data = tpcExample,
+      data = tpc_example,
       knowledge = kn,
       order = ord,
       alpha = 0.015,
-      test = corTest
+      test = cor_test
     ),
     "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
     fixed = TRUE
@@ -208,19 +208,19 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
   kn0 <- knowledge() |> add_vars(c("child_x1", "youth_x3"))
 
   res <- tfci_run(
-    data = tpcExample,
+    data = tpc_example,
     knowledge = kn0, # <- triggers the missing_vars path
     alpha = 0.2,
-    test = regTest
+    test = reg_test
   )
   expect_s3_class(res, "knowledgeable_caugi")
   kn_bad <- knowledge() |> add_vars(c("child_a"))
   expect_error(
     tfci_run(
-      data = tpcExample,
+      data = tpc_example,
       knowledge = kn_bad,
       alpha = 0.2,
-      test = regTest
+      test = reg_test
     ),
     "Knowledge contains variables not present in `data`: child_a",
     fixed = TRUE

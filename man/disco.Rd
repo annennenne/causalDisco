@@ -32,23 +32,23 @@ Run a causal discovery method on a data frame.
 For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
 \itemize{
 \item \code{\link{TetradSearch}} for \pkg{Tetrad},
-\item \code{\link{pcalgSearch}} for \pkg{pcalg},
-\item \code{\link{bnlearnSearch}} for \pkg{bnlearn},
-\item \code{\link{causalDiscoSearch}} for \pkg{causalDisco}.
+\item \code{\link{PcalgSearch}} for \pkg{pcalg},
+\item \code{\link{BnlearnSearch}} for \pkg{bnlearn},
+\item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
 }
 }
 \examples{
 ### disco() example ###
-data("tpcExample")
+data("tpc_example")
 
 # use pc with engine bnlearn and test fisher_z
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.01)
-pc_bnlearn <- disco(data = tpcExample, method = my_pc)
+pc_bnlearn <- disco(data = tpc_example, method = my_pc)
 plot(pc_bnlearn)
 
 # define tiered background knowledge
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),
@@ -58,6 +58,6 @@ kn <- knowledge(
 
 # use gs with engine bnlearn and test cor and tiered background knowledge
 my_pc_tiered <- pc(engine = "bnlearn", test = "cor", alpha = 0.01)
-pc_tiered_bnlearn <- disco(data = tpcExample, method = my_pc_tiered, knowledge = kn)
+pc_tiered_bnlearn <- disco(data = tpc_example, method = my_pc_tiered, knowledge = kn)
 plot(pc_tiered_bnlearn)
 }

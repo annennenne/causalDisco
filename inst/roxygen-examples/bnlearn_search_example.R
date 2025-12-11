@@ -4,21 +4,21 @@
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpcExample")
+data("tpc_example")
 
 # Recommended:
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-result <- my_pc(tpcExample)
+result <- my_pc(tpc_example)
 
 # or
-result <- disco(data = tpcExample, method = my_pc)
+result <- disco(data = tpc_example, method = my_pc)
 
 plot(result)
 
 # Using R6 class:
-s <- bnlearnSearch$new()
+s <- BnlearnSearch$new()
 
-s$set_data(tpcExample)
+s$set_data(tpc_example)
 s$set_test(method = "fisher_z", alpha = 0.05)
 s$set_alg("pc")
 

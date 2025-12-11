@@ -1,8 +1,8 @@
 test_that("tfci causalDisco respects tier knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -12,14 +12,14 @@ test_that("tfci causalDisco respects tier knowledge", {
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
 
-  output <- disco(tpcExample, my_tfci, knowledge = kn)
+  output <- disco(tpc_example, my_tfci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
   expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       1 ~ starts_with("old"),
       2 ~ starts_with("youth"),
@@ -28,7 +28,7 @@ test_that("tfci causalDisco respects tier knowledge", {
   )
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
-  output <- disco(tpcExample, my_tfci, knowledge = kn)
+  output <- disco(tpc_example, my_tfci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -37,15 +37,15 @@ test_that("tfci causalDisco respects tier knowledge", {
 
 test_that("tfci causalDisco respects required background knowledge", {
   skip("tfci causalDisco does not yet support required edges from knowledge objects.")
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tfci, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tfci, knowledge = kn)
 
   edges <- out$caugi@edges
 
@@ -55,15 +55,15 @@ test_that("tfci causalDisco respects required background knowledge", {
 })
 
 test_that("tfci causalDisco respects forbidden background knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x2 ~ oldage_x5)
   )
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpcExample, method = my_tfci, knowledge = kn)
+  out <- disco(data = tpc_example, method = my_tfci, knowledge = kn)
 
   edges <- out$caugi@edges
 
@@ -73,7 +73,7 @@ test_that("tfci causalDisco respects forbidden background knowledge", {
 
   # Verify it actually changes the output when adding forbidden knowledge
   my_tfci_no_kn <- tfci(engine = "causalDisco", test = "fisher_z")
-  out_no_kn <- disco(data = tpcExample, method = my_tfci_no_kn, knowledge = knowledge())
+  out_no_kn <- disco(data = tpc_example, method = my_tfci_no_kn, knowledge = knowledge())
   edges_no_kn <- out_no_kn$caugi@edges
 
   # The forbidden edge is present

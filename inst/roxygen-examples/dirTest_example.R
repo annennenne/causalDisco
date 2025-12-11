@@ -1,10 +1,10 @@
 ### dirTest() example ###
 
-data(tpcExample)
-vnames <- names(tpcExample)
+data(tpc_example)
+vnames <- names(tpc_example)
 
 kn <- knowledge(
-  tpcExample,
+  tpc_example,
   tier(
     child ~ tidyselect::starts_with("child"),
     youth ~ tidyselect::starts_with("youth"),
@@ -12,7 +12,7 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suff_stat(tpcExample, type = "corTest")
+ss_cor <- causalDisco:::make_suff_stat(tpc_example, type = "cor_test")
 
 wrapped_test <- causalDisco:::dirTest(pcalg::gaussCItest, vnames, kn)
 

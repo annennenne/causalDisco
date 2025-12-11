@@ -3,10 +3,10 @@ test_that("ges Tetrad disco respects tier knowledge", {
 
   skip("ges Tetrad does not yet support tier knowledge correctly.")
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -15,7 +15,7 @@ test_that("ges Tetrad disco respects tier knowledge", {
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_ges, knowledge = kn)
 
   edges <- output$caugi@edges
 
@@ -23,7 +23,7 @@ test_that("ges Tetrad disco respects tier knowledge", {
   expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       1 ~ starts_with("old"),
       2 ~ starts_with("youth"),
@@ -32,7 +32,7 @@ test_that("ges Tetrad disco respects tier knowledge", {
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
-  output <- disco(tpcExample, tetrad_ges, knowledge = kn)
+  output <- disco(tpc_example, tetrad_ges, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -44,15 +44,15 @@ test_that("ges Tetrad disco respects required background knowledge", {
 
   skip("ges Tetrad does not yet support required background knowledge correctly.")
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_ges, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -62,7 +62,7 @@ test_that("ges Tetrad disco respects required background knowledge", {
   skip("ges Tetrad does not yet support knowledge with both tiers+required edges.")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -72,7 +72,7 @@ test_that("ges Tetrad disco respects required background knowledge", {
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_ges, knowledge = kn)
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
@@ -85,16 +85,16 @@ test_that("ges Tetrad disco respects required background knowledge", {
 test_that("ges Tetrad disco respects forbidden background knowledge", {
   skip_if_no_tetrad()
 
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x1 ~ youth_x3),
     forbidden(child_x2 ~ child_x1)
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpcExample, method = tetrad_ges, knowledge = kn)
+  output <- disco(data = tpc_example, method = tetrad_ges, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -105,10 +105,10 @@ test_that("ges Tetrad disco respects forbidden background knowledge", {
 
 test_that("ges pcalg disco errors on tier knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     tier(
       child ~ starts_with("child"),
       youth ~ starts_with("youth"),
@@ -118,58 +118,58 @@ test_that("ges pcalg disco errors on tier knowledge", {
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
   expect_error(
-    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_ges, knowledge = kn),
     regexp = "pcalg does not support directed tier constraints."
   )
 })
 
 test_that("ges pcalg disco errors on required background knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     required(child_x1 ~ youth_x3)
   )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
   expect_error(
-    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_ges, knowledge = kn),
     regexp = "pcalg does not support asymmetric edges."
   )
 })
 
 test_that("ges pcalg disco respects forbidden background knowledge", {
-  data("tpcExample")
+  data("tpc_example")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x1 ~ youth_x3)
   )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
   expect_error(
-    disco(data = tpcExample, method = pcalg_ges, knowledge = kn),
+    disco(data = tpc_example, method = pcalg_ges, knowledge = kn),
     regexp = "pcalg does not support asymmetric edges."
   )
 
   skip("ges pcalg gives fake warning?")
 
   kn <- knowledge(
-    tpcExample,
+    tpc_example,
     forbidden(child_x1 ~ youth_x3),
     forbidden(youth_x3 ~ child_x1)
   )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
-  output <- disco(data = tpcExample, method = pcalg_ges, knowledge = kn)
+  output <- disco(data = tpc_example, method = pcalg_ges, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
-  output <- disco(data = tpcExample, method = pcalg_ges)
+  output <- disco(data = tpc_example, method = pcalg_ges)
   edges_new <- output$caugi@edges
 
   # Test the original edges had the forbidden edge

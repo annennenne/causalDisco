@@ -16,7 +16,7 @@
 #' without computing confusion matrices first.
 #'
 #' Available metrics to be used with confusion matrices are \link{precision}, \link{recall},
-#' \link{specificity}, \link{FOR}, \link{FDR}, \link{NPV}, \link{F1} and \link{G1}. The user
+#' \link{specificity}, \link{false_omission_rate}, \link{fdr}, \link{npv}, \link{f1_score} and \link{g1_score}. The user
 #' can supply custom metrics as well: They need to have the confusion matrix as their first
 #' argument and should return a numeric.
 #'

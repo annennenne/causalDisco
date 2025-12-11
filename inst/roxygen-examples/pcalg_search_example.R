@@ -4,23 +4,23 @@
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpcExample")
+data("tpc_example")
 
 # Recommended:
-pc(engine = "pcalg", test = "fisher_z")(tpcExample)
+pc(engine = "pcalg", test = "fisher_z")(tpc_example)
 
 # or
 my_pc <- pc(engine = "pcalg", test = "fisher_z")
-my_pc(tpcExample)
+my_pc(tpc_example)
 
 # or
-disco(data = tpcExample, method = my_pc)
+disco(data = tpc_example, method = my_pc)
 
 # Using R6 class:
-s <- pcalgSearch$new()
+s <- PcalgSearch$new()
 
 s$set_test(method = "fisher_z", alpha = 0.05)
-s$set_data(tpcExample)
+s$set_data(tpc_example)
 s$set_alg("pc")
 
 g <- s$run_search()
