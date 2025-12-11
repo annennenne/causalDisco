@@ -31,19 +31,21 @@
 * All datasets have been renamed to **snake_case**:
   - `tpcExample` → `tpc_example`
 
-# causalDisco 0.9.3
 * Changed structure of tpdag and tskeleton objects so they include tamat objects
-rather than amat and order slots. This is a major change, not backwards 
-compatible! 
+rather than amat and order slots.
+
+## Bug fixes
+
+* Fixed bug in maketikz() function so it now works with tpdag and tamat objects,
+  and added examples to the documentation.
+
+## New features for old functions
+
 * tpc now passes ... argument to skeleton() function call 
 * Added functionality in tpc to handle missing information when using built-in
 tests. Three options are now available: complete case analysis, test wise deletion,
 or no handling (i.e., and error is thrown if there are NAs, this is the default and
-it is backwards compatible). 
-
-# causalDisco 0.9.2
-* Fixed bug in maketikz() function so it now works with tpdag and tamat objects,
-  and added examples to the documentation. 
+it is backwards compatible).
 
 # causalDisco 0.9.1
 * Added three new functions: simDAG, simGausFromDAG, nDAGs.
