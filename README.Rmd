@@ -135,6 +135,9 @@ we don't have a `gs(), iamb()` function exported (similar to how we have a `pc()
 
 Is it a work in progress? If so we need to document this in `?BnlearnSearch` (and similar for other functions)?.
 
+- Making arguments and function naming consistent (snake_case). How much do we wanna match the corresponding e.g. pcalg naming? "fixedEdges" vs "fixed_edges", "suffStat" vs "suff_stat", "maj.rule" vs "maj_rule", ... 
+Atm we have a mix of both styles, so hard for user to know which to use (especially if their starting point is our package).
+
 ## TODO
 
 ### Manging exported functions

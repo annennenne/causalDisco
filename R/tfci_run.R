@@ -125,10 +125,10 @@ tfci_run <- function(data = NULL,
 
   # sufficient statistics (built-ins or user-supplied)
   if (is.null(suffStat)) {
-    thisTestName <- deparse(substitute(test))
-    if (thisTestName == "reg_test") {
+    this_test_name <- deparse(substitute(test))
+    if (this_test_name == "reg_test") {
       this_suffStat <- make_suffStat(data, type = "reg_test")
-    } else if (thisTestName == "cor_test") {
+    } else if (this_test_name == "cor_test") {
       this_suffStat <- make_suffStat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
@@ -174,10 +174,10 @@ tfci_run <- function(data = NULL,
 
   # optional conservative / majority-rule orientation info
   conservative <- identical(methodOri, "conservative")
-  maj.rule <- identical(methodOri, "maj.rule")
+  maj_rule <- identical(methodOri, "maj.rule")
   unfVect <- NULL
 
-  if (conservative || maj.rule) {
+  if (conservative || maj_rule) {
     tmp <- methods::new("pcAlgo",
       graph = as.graphNEL(t(fci_skel$G)),
       call = skel@call,
@@ -193,7 +193,7 @@ tfci_run <- function(data = NULL,
       indepTest = indep_test_dir,
       alpha = alpha,
       version.unf = c(1, 1),
-      maj.rule = maj.rule
+      maj.rule = maj_rule
     )
     unfVect <- tmpres$unfTripl
     fci_skel$sepset <- tmpres$sk@sepset

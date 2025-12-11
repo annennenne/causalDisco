@@ -165,6 +165,12 @@ plot(disco_cd_tges)
 Is it a work in progress? If so we need to document this in
 `?BnlearnSearch` (and similar for other functions)?.
 
+- Making arguments and function naming consistent (snake_case). How much
+  do we wanna match the corresponding e.g. pcalg naming? “fixedEdges” vs
+  “fixed_edges”, “suffStat” vs “suff_stat”, “maj.rule” vs “maj_rule”, …
+  Atm we have a mix of both styles, so hard for user to know which to
+  use (especially if their starting point is our package).
+
 ## TODO
 
 ### Manging exported functions
@@ -393,6 +399,11 @@ Or should the edge between `child_x2` and `child_x1` be `--o` instead of
 - List in documentation of `tfci`, … what kind of graph it returns.
 
 - Make vignettes
+
+- Make all function args be snake_case. Note, that modifying these:
+  `fixedGaps`, `fixedEdges`, `suffStat`, `methodOri` breaks tests since
+  they are passed to pcalg. But, can you inside functions rename them to
+  what pcalg expects.
 
 ### Standardization
 
