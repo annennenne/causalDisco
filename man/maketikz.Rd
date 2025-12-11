@@ -6,61 +6,61 @@
 \usage{
 maketikz(
   model,
-  xjit = 2,
-  yjit = 2,
-  markperiods = TRUE,
-  xpgap = 4,
-  annotateEdges = NULL,
-  addAxis = TRUE,
-  varLabels = NULL,
-  periodLabels = NULL,
-  annotationLabels = NULL,
+  x_jit = 2,
+  y_jit = 2,
+  mark_periods = TRUE,
+  period_gap = 4,
+  annotate_edges = NULL,
+  add_axis = TRUE,
+  var_labels = NULL,
+  period_labels = NULL,
+  annotation_labels = NULL,
   clipboard = TRUE,
-  rawout = FALSE,
-  colorAnnotate = NULL,
-  bendedges = FALSE
+  raw_out = FALSE,
+  color_annotate = NULL,
+  bend_edges = FALSE
 )
 }
 \arguments{
 \item{model}{\code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot.}
 
-\item{xjit}{How much should nodes within a period be jittered horizontally.}
+\item{x_jit}{How much should nodes within a period be jittered horizontally.}
 
-\item{yjit}{Vertical distance between nodes within a period.}
+\item{y_jit}{Vertical distance between nodes within a period.}
 
-\item{markperiods}{If \code{TRUE}, gray boxes are drawn behind each period.}
+\item{mark_periods}{If \code{TRUE}, gray boxes are drawn behind each period.}
 
-\item{xpgap}{Horizontal gap between different periods.}
+\item{period_gap}{Horizontal gap between different periods.}
 
-\item{annotateEdges}{If \code{TRUE}, add a text annotation to edges. If \code{annotationlabels}
+\item{annotate_edges}{If \code{TRUE}, add a text annotation to edges. If \code{annotation_labels}
 are supplied, these labels will be used. Otherwise, the value in the inputted adjacency matrix corresponding
 to the edge will be used. Cannot be used for \code{tpag}
 input objects (or \code{ag} amat types).}
 
-\item{addAxis}{If \code{TRUE}, a horizontal axis with period labels are added.}
+\item{add_axis}{If \code{TRUE}, a horizontal axis with period labels are added.}
 
-\item{varLabels}{Optional labels for nodes (variables). Should be given as a named list, where
+\item{var_labels}{Optional labels for nodes (variables). Should be given as a named list, where
 the name is the variable name, and the entry is the label, e.g. \code{list(vname = "Label for vname")}.}
 
-\item{periodLabels}{Optional labels for periods. Should be given as a named list, where
+\item{period_labels}{Optional labels for periods. Should be given as a named list, where
 the name is the period name (as stored in the \code{tamat}), and the entry is the label,
 e.g. \code{list(periodname = "Label for period")}.}
 
-\item{annotationLabels}{Optional labels for edge annotations. Only used if \code{annotateEdges = TRUE}.
+\item{annotation_labels}{Optional labels for edge annotations. Only used if \code{annotate_edges = TRUE}.
 Should be given as a named list, where the name is the edge annotation (as stored in the \code{tamat}),
 and the entry is the label, e.g. \code{list(h = "High")}.}
 
 \item{clipboard}{If \code{TRUE}, the tikz code is not printed, but instead copied to the clipboard,
 so it can easily be pasted into a Latex document.}
 
-\item{rawout}{If \code{TRUE}, the tikz code is only returned as a character vector.}
+\item{raw_out}{If \code{TRUE}, the tikz code is only returned as a character vector.}
 
-\item{colorAnnotate}{Named list of colors to use to mark edge annotations instead of labels. This
-overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
+\item{color_annotate}{Named list of colors to use to mark edge annotations instead of labels. This
+overrules \code{annotate_edges} and both are not available at the same time. The list should be given with
 annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
 input objects (or \code{ag} amat types).}
 
-\item{bendedges}{If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
+\item{bend_edges}{If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
 top of each other.}
 }
 \value{

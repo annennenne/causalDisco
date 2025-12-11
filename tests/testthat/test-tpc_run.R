@@ -60,7 +60,7 @@ test_that("tpc_run returns pcAlgo output", {
     output = "pcAlgo"
   )
 
-  A <- graph_to_amat(res, toFrom = FALSE)
+  A <- graph_to_amat(res, to_from = FALSE)
   expect_true(is.matrix(A))
   expect_identical(rownames(A), colnames(A))
   expect_setequal(rownames(A), names(tpc_example))
@@ -159,7 +159,7 @@ test_that("tpc_run supports tskeleton, pcAlgo, and knowledgeable_caugi outputs",
     test = reg_test,
     output = "pcAlgo"
   )
-  A_pc <- graph_to_amat(res_pc, toFrom = FALSE)
+  A_pc <- graph_to_amat(res_pc, to_from = FALSE)
   expect_true(is.matrix(A_pc))
 
   res_disco <- tpc_run(
@@ -216,7 +216,7 @@ test_that("tpc_run input guards fail fast with clear messages", {
     fixed = TRUE
   )
   expect_error(
-    tpc_run(data = df, knowledge = kn, methodNA = "oops"),
+    tpc_run(data = df, knowledge = kn, na_method = "oops"),
     "Invalid choice of method for handling NA values.",
     fixed = TRUE
   )
@@ -227,12 +227,12 @@ test_that("tpc_run input guards fail fast with clear messages", {
   )
 })
 
-test_that("tpc_run NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
+test_that("tpc_run NA handling: error on NAs with na_method = 'none', cc with zero rows", {
   df1 <- data.frame(a = c(1, NA), b = c(2, NA))
   kn1 <- knowledge() |> add_vars(names(df1))
 
   expect_error(
-    tpc_run(data = df1, knowledge = kn1, methodNA = "none"),
+    tpc_run(data = df1, knowledge = kn1, na_method = "none"),
     "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
     fixed = TRUE
   )
@@ -241,7 +241,7 @@ test_that("tpc_run NA handling: error on NAs with methodNA = 'none', cc with zer
   kn2 <- knowledge() |> add_vars(names(df2))
 
   expect_error(
-    tpc_run(data = df2, knowledge = kn2, methodNA = "cc"),
+    tpc_run(data = df2, knowledge = kn2, na_method = "cc"),
     "contain no complete cases.",
     fixed = TRUE
   )
@@ -279,7 +279,7 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
   )
 
   kn0 <- knowledge() |> add_vars(c("child_x", "youth_y")) # missing oldage_z
-  suff <- make_suff_stat(df, type = "reg_test")
+  suff <- make_suffStat(df, type = "reg_test")
 
   res <- tpc_run(
     data = NULL,
@@ -314,29 +314,29 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers: make_suff_stat()
+# Helpers: make_suffStat()
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-test_that("make_suff_stat() returns correct suffStat for different tests and fails correctly", {
+test_that("make_suffStat() returns correct suffStat for different tests and fails correctly", {
   set.seed(12)
   df <- data.frame(
     child_x = rnorm(40),
     youth_y = rnorm(40),
     oldage_z = rnorm(40)
   )
-  suff <- make_suff_stat(df, type = "reg_test")
+  suff <- make_suffStat(df, type = "reg_test")
   expect_true(is.list(suff))
   expect_true(!is.null(suff$data))
   expect_true(!is.null(suff$bin))
 
-  suff2 <- make_suff_stat(df, type = "cor_test")
+  suff2 <- make_suffStat(df, type = "cor_test")
   expect_true(is.list(suff2))
   expect_true(!is.null(suff2$C))
   expect_true(!is.null(suff2$n))
 
   expect_error(
-    make_suff_stat(df, type = "unknownTest"),
+    make_suffStat(df, type = "unknownTest"),
     "unknownTest is not a supported type for autogenerating a sufficient statistic",
     fixed = TRUE
   )

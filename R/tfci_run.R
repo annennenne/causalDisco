@@ -48,7 +48,7 @@ tfci_run <- function(data = NULL,
                      test = reg_test,
                      suffStat = NULL,
                      method = "stable.fast",
-                     methodNA = "none",
+                     na_method = "none",
                      methodOri = "conservative",
                      directed_as_undirected = FALSE,
                      varnames = NULL,
@@ -60,7 +60,7 @@ tfci_run <- function(data = NULL,
     function_name = "tfci"
   )
 
-  if (!(methodNA %in% c("none", "cc", "twd"))) {
+  if (!(na_method %in% c("none", "cc", "twd"))) {
     stop("Invalid choice of method for handling NA values.")
   }
   if (is.null(data) && is.null(suffStat)) {
@@ -91,9 +91,9 @@ tfci_run <- function(data = NULL,
 
   # NA handling
   if (!is.null(data) && any(is.na(data))) {
-    if (methodNA == "none") {
+    if (na_method == "none") {
       stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
-    } else if (methodNA == "cc") {
+    } else if (na_method == "cc") {
       data <- stats::na.omit(data)
       if (nrow(data) == 0) {
         stop("Complete case analysis chosen, but inputted data contain no complete cases.")
@@ -127,15 +127,15 @@ tfci_run <- function(data = NULL,
   if (is.null(suffStat)) {
     thisTestName <- deparse(substitute(test))
     if (thisTestName == "reg_test") {
-      thisSuffStat <- make_suff_stat(data, type = "reg_test")
+      this_suffStat <- make_suffStat(data, type = "reg_test")
     } else if (thisTestName == "cor_test") {
-      thisSuffStat <- make_suff_stat(data, type = "cor_test")
+      this_suffStat <- make_suffStat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
     }
   } else {
-    thisSuffStat <- suffStat
-    methodNA <- "none"
+    this_suffStat <- suffStat
+    na_method <- "none"
   }
 
   # pcalg background constraints (forbidden/required) from knowledge
@@ -146,7 +146,7 @@ tfci_run <- function(data = NULL,
 
   # learn skeleton
   skel <- pcalg::skeleton(
-    suffStat = thisSuffStat,
+    suffStat = this_suffStat,
     indepTest = indep_test_dir,
     alpha = alpha,
     labels = vnames,
@@ -161,7 +161,7 @@ tfci_run <- function(data = NULL,
   nvar <- length(skel@graph@nodes)
   fci_skel <- pcalg::pdsep(
     skel = skel,
-    suffStat = thisSuffStat,
+    suffStat = this_suffStat,
     indepTest = indep_test_dir,
     p = nvar,
     sepset = skel@sepset,
@@ -189,7 +189,7 @@ tfci_run <- function(data = NULL,
     )
     tmpres <- pcalg::pc.cons.intern(
       tmp,
-      suffStat = thisSuffStat,
+      suffStat = this_suffStat,
       indepTest = indep_test_dir,
       alpha = alpha,
       version.unf = c(1, 1),
@@ -203,10 +203,11 @@ tfci_run <- function(data = NULL,
   res <- tpag(fci_skel, knowledge = knowledge, unfVect = unfVect)
 
   # pack up tpag result
-  amat <- graph_to_amat(res, toFrom = FALSE)
+  amat <- graph_to_amat(res, to_from = FALSE)
   amat <- methods::as(amat, "matrix")
   cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PAG")
-  return(knowledgeable_caugi(cg, knowledge))
+
+  knowledgeable_caugi(cg, knowledge)
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

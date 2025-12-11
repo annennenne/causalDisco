@@ -10,7 +10,7 @@
 \item{x}{tpdag (temporal partially directed acyclic graph) object
 to be plotted (as outputted from \code{\link{tpc}}).}
 
-\item{...}{Further plotting arguments passed along to \code{\link{plotTempoMech}}.}
+\item{...}{Further plotting arguments passed along to \code{\link{plot_tempo_mech}}.}
 }
 \value{
 No return value, the function is called for its side-effects (plotting).

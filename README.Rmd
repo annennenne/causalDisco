@@ -308,6 +308,8 @@ with forbidden edges from knowledge objects and requires specifying both ways. I
 
 - Make vignettes
 
+- Make all function args be snake_case. Note, that modifying these: `fixedGaps`, `fixedEdges`, `suffStat`, `methodOri` breaks tests since they are passed to pcalg. But, can you inside functions rename them to what pcalg expects.
+
 ### Standardization
 
 - We are mixing between different things currently (since we rely on `caugi` are it uses `data.frame` and `S7`):

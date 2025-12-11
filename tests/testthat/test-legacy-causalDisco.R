@@ -192,7 +192,7 @@ test_that("graph_to_amat converts to adjacency matrix", {
   g <- graph::addEdge("A", "B", g)
   g <- graph::addEdge("B", "C", g)
 
-  A_tf <- graph_to_amat(g, toFrom = TRUE, type = "pdag")
+  A_tf <- graph_to_amat(g, to_from = TRUE, type = "pdag")
   expect_true(is.matrix(A_tf))
   expect_identical(rownames(A_tf), nodes)
   expect_identical(colnames(A_tf), nodes)
@@ -204,7 +204,7 @@ test_that("graph_to_amat converts to adjacency matrix", {
   expect_equal(A_tf["C", "B"], 1) # B → C
   expect_equal(A_tf["B", "C"], 0)
 
-  A_ft <- graph_to_amat(g, toFrom = FALSE, type = "pdag")
+  A_ft <- graph_to_amat(g, to_from = FALSE, type = "pdag")
   expect_equal(A_ft, t(A_tf))
   expect_identical(attr(A_ft, "tamat_type"), "pdag")
 })
@@ -248,7 +248,7 @@ test_that("essgraph_to_amat builds adjacency", {
     1L,
     c(1L, 2L)
   )
-  fakeEss <- list(
+  fake_ess <- list(
     field = function(name) {
       if (name == ".in.edges") {
         return(in_edges)
@@ -256,9 +256,9 @@ test_that("essgraph_to_amat builds adjacency", {
       stop("unexpected field")
     }
   )
-  class(fakeEss) <- "EssGraph"
+  class(fake_ess) <- "EssGraph"
 
-  A <- essgraph_to_amat(fakeEss, p = 3)
+  A <- essgraph_to_amat(fake_ess, p = 3)
   expect_equal(dim(A), c(3, 3))
   expect_equal(A[2, 1], 1)
   expect_equal(A[3, 1], 1)

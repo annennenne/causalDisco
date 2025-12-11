@@ -6,30 +6,33 @@
 ## Breaking Changes
 
 * All functions have been renamed to follow **snake_case**:
-  - `graph2amat` → `graph_to_amat`
-  - `essgraph2amat` → `essgraph_to_amat`
-  - `probmat2amat` → `probmat_to_amat`
-  - `nedges` → `n_edges`
-  - `maxnedges` → `max_edges`
-  - `nDAGs` → `n_dags`
-  - `corTest` → `cor_test`
-  - `regTest` → `reg_test`
-  - `F1` → `f1_score`
-  - `G1` → `g1_score`
-  - `FDR` → `fdr`
-  - `NPV` → `npv`
-  - `FOR` → `false_omission_rate`
-  - `simGausFromDAG` → `sim_gaus_from_dag`
-  - `simDAG` → `sim_dag`
-  - `gausCorScore` → `gaus_cor_score`
+  - `graph2amat` to `graph_to_amat`
+  - `essgraph2amat` to `essgraph_to_amat`
+  - `probmat2amat` to `probmat_to_amat`
+  - `nedges` to `n_edges`
+  - `maxnedges` to `max_edges`
+  - `nDAGs` to `n_dags`
+  - `corTest` to `cor_test`
+  - `regTest` to `reg_test`
+  - `F1` to `f1_score`
+  - `G1` to `g1_score`
+  - `FDR` to `fdr`
+  - `NPV` to `npv`
+  - `FOR` to `false_omission_rate`
+  - `simGausFromDAG` to `sim_gaus_from_dag`
+  - `simDAG` to `sim_dag`
+  - `gausCorScore` to `gaus_cor_score`
+  - `plotTempoMech` to `plot_tempo_mech`
 
 * All R6 classes have been renamed to **CamelCase**:
-  - `bnlearnSearch` → `BnlearnSearch`
-  - `causalDiscoSearch` → `CausalDiscoSearch`
-  - `pcalgSearch` → `PcalgSearch`
+  - `bnlearnSearch` to `BnlearnSearch`
+  - `causalDiscoSearch` to `CausalDiscoSearch`
+  - `pcalgSearch` to `PcalgSearch`
 
 * All datasets have been renamed to **snake_case**:
-  - `tpcExample` → `tpc_example`
+  - `tpcExample` to `tpc_example`
+  
+* All functions (WIP) now take **snake_case** arguments.
 
 * Changed structure of tpdag and tskeleton objects so they include tamat objects
 rather than amat and order slots.

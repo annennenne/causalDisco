@@ -8,7 +8,7 @@ test_that("sim_gaus_from_dag respects causal structure", {
   ), nrow = 4, byrow = TRUE)
   rownames(amat) <- colnames(amat) <- paste("x", 1:4, sep = "")
 
-  dat <- sim_gaus_from_dag(amat, 1000, pnegRegpar = 0, standardize = TRUE)
+  dat <- sim_gaus_from_dag(amat, 1000, p_neg_reg_par = 0, standardize = TRUE)
   corr_mat <- cor(dat)
 
   # Check that correlations respect the DAG structure

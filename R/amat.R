@@ -38,24 +38,24 @@ amat <- function(x) {
 
     if (!is_pag) {
       # cpdag encoding: 0/1 "from-to"
-      A <- matrix(0L, n, n, dimnames = list(nodes, nodes))
+      adj_mat <- matrix(0L, n, n, dimnames = list(nodes, nodes))
       # directed -->
       dir_rows <- x@edges$edge == "-->"
       if (any(dir_rows)) {
         fr <- idx[x@edges$from[dir_rows]]
         to <- idx[x@edges$to[dir_rows]]
-        A[cbind(to, fr)] <- 1L
+        adj_mat[cbind(to, fr)] <- 1L
       }
       # undirected ---
       und_rows <- x@edges$edge == "---"
       if (any(und_rows)) {
         fr <- idx[x@edges$from[und_rows]]
         to <- idx[x@edges$to[und_rows]]
-        A[cbind(fr, to)] <- 1L
-        A[cbind(to, fr)] <- 1L
+        adj_mat[cbind(fr, to)] <- 1L
+        adj_mat[cbind(to, fr)] <- 1L
       }
-      class(A) <- c("amat.cpdag", "matrix")
-      out <- A
+      class(adj_mat) <- c("amat.cpdag", "matrix")
+      out <- adj_mat
     } else {
       # pag encoding: 0 none, 1 circle, 2 arrow, 3 tail
       code_pair <- function(type) {
@@ -69,7 +69,7 @@ amat <- function(x) {
           c(0L, 0L)
         )
       }
-      A <- matrix(0L, n, n, dimnames = list(nodes, nodes))
+      adj_mat <- matrix(0L, n, n, dimnames = list(nodes, nodes))
       for (k in seq_len(nrow(x))) {
         f <- x@edges$from[[k]]
         t <- x@edges$to[[k]]
@@ -78,11 +78,11 @@ amat <- function(x) {
         i <- idx[[t]]
         j <- idx[[f]]
         # entry [i, j] is the mark at i on the edge j -> i
-        A[i, j] <- max(A[i, j], codes[1])
-        A[j, i] <- max(A[j, i], codes[2])
+        adj_mat[i, j] <- max(adj_mat[i, j], codes[1])
+        adj_mat[j, i] <- max(adj_mat[j, i], codes[2])
       }
-      class(A) <- c("amat.pag", "matrix")
-      out <- A
+      class(adj_mat) <- c("amat.pag", "matrix")
+      out <- adj_mat
     }
   }
 

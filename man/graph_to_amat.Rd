@@ -4,12 +4,12 @@
 \alias{graph_to_amat}
 \title{Convert graphNEL object to adjacency matrix}
 \usage{
-graph_to_amat(graph, toFrom = TRUE, type = "pdag")
+graph_to_amat(graph, to_from = TRUE, type = "pdag")
 }
 \arguments{
 \item{graph}{A graphNEL object.}
 
-\item{toFrom}{Logical indicating whether the resulting adjacency
+\item{to_from}{Logical indicating whether the resulting adjacency
 matrix is "to-from" (default), or "from-to", see details.}
 
 \item{type}{The type of adjacency matrix, must be one of \code{"pdag"} or

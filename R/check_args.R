@@ -100,11 +100,11 @@ check_args_and_distribute_args_tetrad <- function(search,
       call. = FALSE
     )
   }
-  return(list(
+  list(
     alg_args = args_to_pass_to_engine_alg,
     test_args = args_to_pass_to_engine_test,
     score_args = args_to_pass_to_engine_score
-  ))
+  )
 }
 
 #' Check arguments and distribute them to pcalg class functions
@@ -162,10 +162,10 @@ check_args_and_distribute_args_pcalg <- function(args,
       )
     }
   }
-  return(list(
+  list(
     alg_args = args_to_pass_to_engine_alg,
     score_args = args_to_pass_to_engine_score
-  ))
+  )
 }
 
 #' Check arguments and distribute them to causalDisco class functions
@@ -231,10 +231,10 @@ check_args_and_distribute_args_causalDisco <- function(args,
       # nocov end
     }
   }
-  return(list(
+  list(
     alg_args = args_to_pass_to_engine_alg,
     score_args = args_to_pass_to_engine_score
-  ))
+  )
 }
 
 #' @title Check arguments for BnlearnSearch class functions

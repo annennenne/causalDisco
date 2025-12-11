@@ -104,7 +104,8 @@ tges_run <- function(score, verbose = FALSE) {
   }
 
   essgraph$.nodes <- score$.nodes
-  return(essgraph |> knowledgeable_caugi())
+
+  essgraph |> knowledgeable_caugi()
 }
 
 
@@ -130,17 +131,17 @@ tges_run <- function(score, verbose = FALSE) {
 #' @noRd
 create_adj_matrix_from_list <- function(inputList) {
   n <- length(inputList)
-  resultMatrix <- matrix(0, nrow = n, ncol = n)
+  result_matrix <- matrix(0, nrow = n, ncol = n)
   for (i in seq_along(inputList)) {
     indices <- inputList[[i]]
     validIndices <- indices[indices <= n]
     if (length(validIndices) > 0) {
-      resultMatrix[i, validIndices] <- 1
+      result_matrix[i, validIndices] <- 1
     }
   }
-  rownames(resultMatrix) <- names(inputList)
-  colnames(resultMatrix) <- names(inputList)
-  resultMatrix
+  rownames(result_matrix) <- names(inputList)
+  colnames(result_matrix) <- names(inputList)
+  result_matrix
 }
 
 #' Create in-edge list from an adjacency matrix
@@ -160,17 +161,17 @@ create_adj_matrix_from_list <- function(inputList) {
 #' @noRd
 create_list_from_adj_matrix <- function(adjMatrix) {
   n <- nrow(adjMatrix)
-  resultList <- vector("list", n)
-  names(resultList) <- rownames(adjMatrix)
+  result_list <- vector("list", n)
+  names(result_list) <- rownames(adjMatrix)
   for (i in seq_len(n)) {
     connectedIndices <- as.integer(which(adjMatrix[i, ] == 1))
-    resultList[[i]] <- if (length(connectedIndices) > 0) {
+    result_list[[i]] <- if (length(connectedIndices) > 0) {
       connectedIndices
     } else {
       integer(0)
     }
   }
-  resultList
+  result_list
 }
 
 #' Normalize outputs to an adjacency matrix
@@ -201,14 +202,14 @@ to_adj_mat <- function(obj) {
     return(obj)
   }
   if (inherits(obj, "graphNEL")) {
-    return(graph_to_amat(obj, toFrom = FALSE))
+    return(graph_to_amat(obj, to_from = FALSE))
   }
   # pcAlgo-like: unwrap @graph if present
   if (isS4(obj)) {
     if ("graph" %in% methods::slotNames(obj)) {
       g <- methods::slot(obj, "graph")
       if (inherits(g, "graphNEL")) {
-        return(graph_to_amat(g, toFrom = FALSE))
+        return(graph_to_amat(g, to_from = FALSE))
       }
     }
   }
@@ -286,7 +287,7 @@ TEssGraph <- setRefClass(
         new_in.edges <- list()
       }
 
-      return(c((new_graph$steps == 1), new_in.edges))
+      c((new_graph$steps == 1), new_in.edges)
     }
   ),
   inheritPackage = TRUE

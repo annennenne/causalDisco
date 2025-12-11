@@ -41,7 +41,7 @@ s_tpc$set_data(dat)
 res_tpc <- s_tpc$run_search()
 print(res_tpc)
 
-# Switch to TFCI on the same object (reuses suff_stat/test)
+# Switch to TFCI on the same object (reuses suffStat/test)
 s_tpc$set_alg("tfci")
 res_tfci <- s_tpc$run_search()
 print(res_tfci)
@@ -50,7 +50,7 @@ print(res_tfci)
 s_tges <- CausalDiscoSearch$new()
 s_tges$set_score("tbic") # Gaussian temporal score
 s_tges$set_alg("tges")
-s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
+s_tges$set_data(dat, set_suffStat = FALSE) # suff stat not used for TGES
 s_tges$set_knowledge(kn)
 res_tges <- s_tges$run_search()
 print(res_tges)
@@ -60,11 +60,11 @@ print(res_tges)
 # run_search() without setting an algorithm
 try(CausalDiscoSearch$new()$run_search(dat))
 
-# set_suff_stat() requires data and test first
+# set_suffStat() requires data and test first
 s_err <- CausalDiscoSearch$new()
-try(s_err$set_suff_stat()) # no data & no test
-s_err$set_data(dat, set_suff_stat = FALSE)
-try(s_err$set_suff_stat()) # no test
+try(s_err$set_suffStat()) # no data & no test
+s_err$set_data(dat, set_suffStat = FALSE)
+try(s_err$set_suffStat()) # no test
 
 # unknown test / score / algorithm
 try(CausalDiscoSearch$new()$set_test("not_a_test"))

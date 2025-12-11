@@ -4,7 +4,7 @@
 \alias{evaluate.matrix}
 \title{Evaluate adjacency matrix estimation}
 \usage{
-\method{evaluate}{matrix}(est, true, metrics, list.out = FALSE, ...)
+\method{evaluate}{matrix}(est, true, metrics, list_out = FALSE, ...)
 }
 \arguments{
 \item{est}{Estimated adjacency matrix/matrices.}
@@ -13,16 +13,16 @@
 
 \item{metrics}{List of metrics, see details.}
 
-\item{list.out}{If \code{FALSE} (default), output is returned as a data.frame, otherwise
+\item{list_out}{If \code{FALSE} (default), output is returned as a data.frame, otherwise
 it will be a list.}
 
-\item{...}{Further arguments that depend on input type.  Currently only \code{list.out} is allowed, and
+\item{...}{Further arguments that depend on input type.  Currently only \code{list_out} is allowed, and
 only if the first argument is a matrix (see details under Value).}
 }
 \value{
 A data.frame with one column for each computed metric and one row per evaluated
 matrix pair. Adjacency metrics are prefixed with "adj_", orientation metrics are prefixed
-with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list.out = TRUE}
+with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list_out = TRUE}
 can be used to change the return object to a list instead. This list will contain three lists, where
 adjacency, orientation and other metrics are reported, respectively.
 }

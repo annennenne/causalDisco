@@ -23,7 +23,7 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suff_stat(d, type = "cor_test")
+ss_cor <- causalDisco:::make_suffStat(d, type = "cor_test")
 wrapped <- causalDisco:::dir_test(causalDisco::cor_test, vnames, kn)
 cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   kn,
@@ -32,12 +32,12 @@ cons <- causalDisco:::.pcalg_constraints_from_knowledge(
 )
 
 skel <- pcalg::skeleton(
-  suffStat   = ss_cor,
-  indepTest  = wrapped,
-  alpha      = 0.05,
-  labels     = vnames,
-  method     = "stable.fast",
-  fixedGaps  = cons$fixedGaps,
+  suffStat = ss_cor,
+  indepTest = wrapped,
+  alpha = 0.05,
+  labels = vnames,
+  method = "stable.fast",
+  fixedGaps = cons$fixedGaps,
   fixedEdges = cons$fixedEdges
 )
 

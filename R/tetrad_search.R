@@ -1301,7 +1301,7 @@ TetradSearch <- R6Class(
           call. = FALSE
         )
       }
-      return(names(formals(matched_function, envir = as.environment(private))))
+      names(formals(matched_function, envir = as.environment(private)))
     },
     #' @description Runs the chosen Tetrad algorithm on the data.
     #' @param data (optional) If provided, overrides the previously set data.
@@ -1443,9 +1443,9 @@ TetradSearch <- R6Class(
     #' @return (character) The \code{toString()} of that Java object.
     get_string = function(java_obj = NULL) {
       if (is.null(java_obj)) {
-        return(rJava::.jcall(self$java, "S", "toString"))
+        rJava::.jcall(self$java, "S", "toString")
       } else {
-        return(rJava::.jcall(java_obj, "S", "toString"))
+        rJava::.jcall(java_obj, "S", "toString")
       }
     },
     #' @description Produces a DOT (Graphviz) representation of the graph.
@@ -1454,20 +1454,20 @@ TetradSearch <- R6Class(
     get_dot = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
-        return(rJava::.jcall(
+        rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToDot",
           self$java
-        ))
+        )
       } else {
         java_obj <- cast_obj(java_obj)
-        return(rJava::.jcall(
+        rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToDot",
           java_obj
-        ))
+        )
       }
     },
     #' @description Produces an amat representation of the graph.
@@ -1476,20 +1476,20 @@ TetradSearch <- R6Class(
     get_amat = function(java_obj = NULL) {
       if (is.null(java_obj)) {
         self$java <- cast_obj(self$java)
-        return(rJava::.jcall(
+        rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToPcalg",
           self$java
-        ))
+        )
       } else {
         java_obj <- cast_obj(java_obj)
-        return(rJava::.jcall(
+        rJava::.jcall(
           "edu/cmu/tetrad/graph/GraphSaveLoadUtils",
           "S",
           "graphToPcalg",
           java_obj
-        ))
+        )
       }
     }
   ),

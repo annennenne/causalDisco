@@ -113,7 +113,7 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
     rJava::.jcast(j_disc_data, "[[I")
   )
 
-  return(ds)
+  ds
 }
 
 #' Convert a Tetrad Java DataSet to an R data frame

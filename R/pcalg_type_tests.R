@@ -6,7 +6,7 @@
 #'
 #' @param method Character; name of the CI test.
 #' @param X data.frame, matrix, list of data.frames, or mice::mids.
-#' @param suff_stat logical; if TRUE, compute sufficient statistic from `X`.
+#' @param suffStat logical; if TRUE, compute sufficient statistic from `X`.
 #' @param adaptDF logical for discrete tests
 #' @param nlev optional integer vector of levels for discrete tests
 #'
@@ -15,7 +15,7 @@
 #' @keywords internal
 .get_pcalg_test_from_string <- function(method,
                                         X = NULL,
-                                        suff_stat = FALSE,
+                                        suffStat = FALSE,
                                         adaptDF = TRUE,
                                         nlev = NULL) {
   method <- tolower(method)
@@ -61,13 +61,13 @@
     stop(paste0("Unknown method: ", method), call. = FALSE)
   )
 
-  if (suff_stat == FALSE) {
+  if (suffStat == FALSE) {
     return(list(method = fun, suffStat = NULL))
   }
   if (is.null(X)) {
     stop("X must be provided to compute sufficient statistic.", call. = FALSE)
   }
-  suff <- .get_suff_stat(
+  suff <- .get_suffStat(
     X = X,
     method = method,
     adaptDF = adaptDF,
@@ -79,10 +79,10 @@
 
 #' @title Build sufficient statistic for pcalg/micd/causalDisco tests
 #' @keywords internal
-.get_suff_stat <- function(X,
-                           method,
-                           adaptDF = TRUE,
-                           nlev = NULL) {
+.get_suffStat <- function(X,
+                          method,
+                          adaptDF = TRUE,
+                          nlev = NULL) {
   method <- tolower(method)
   if (inherits(X, "matrix")) X <- as.data.frame(X)
 
@@ -116,7 +116,9 @@
       list(dm = out$dm, adaptDF = adaptDF)
     },
     "g_square_mi" = {
-      if (inherits(X, "mids")) X <- mice::complete(X, action = "all")
+      if (inherits(X, "mids")) {
+        X <- mice::complete(X, action = "all")
+      }
       if (!is.list(X)) {
         stop("disMItest requires a list or a mids object.", call. = FALSE)
       }

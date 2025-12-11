@@ -10,7 +10,7 @@
 \item{x}{tamat (temporal adjacency matrix) object to be plotted
 (as outputted from \code{\link{tamat}}).}
 
-\item{...}{Further plotting arguments passed along to \code{\link{plotTempoMech}}.}
+\item{...}{Further plotting arguments passed along to \code{\link{plot_tempo_mech}}.}
 }
 \value{
 No return value, the function is called for its side-effects (plotting).

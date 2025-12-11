@@ -17,8 +17,8 @@ as.graphNEL <- function(amat) {
     function_name = "as.graphNEL"
   )
 
-  thisClass <- class(amat)
-  if ("tamat" %in% thisClass) {
+  this_class <- class(amat)
+  if ("tamat" %in% this_class) {
     class(amat) <- "matrix"
   }
   methods::as(t(amat), "graphNEL")
@@ -69,7 +69,7 @@ is_cpdag <- function(amat) {
 #' Convert graphNEL object to adjacency matrix
 #'
 #' @param graph A graphNEL object.
-#' @param toFrom Logical indicating whether the resulting adjacency
+#' @param to_from Logical indicating whether the resulting adjacency
 #' matrix is "to-from" (default), or "from-to", see details.
 #' @param type  The type of adjacency matrix, must be one of \code{"pdag"} or
 #' \code{"ag"}. \code{"pdag"} should be used for directed graphs, namely
@@ -93,7 +93,7 @@ is_cpdag <- function(amat) {
 #' See \link{amat} for details about how an \code{ag} adjacency matrix is encoded.
 #'
 #' @export
-graph_to_amat <- function(graph, toFrom = TRUE, type = "pdag") {
+graph_to_amat <- function(graph, to_from = TRUE, type = "pdag") {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods"
@@ -102,7 +102,7 @@ graph_to_amat <- function(graph, toFrom = TRUE, type = "pdag") {
   )
 
   res <- methods::as(graph, "matrix")
-  if (toFrom) res <- t(res)
+  if (to_from) res <- t(res)
   attr(res, "tamat_type") <- type
   res
 }

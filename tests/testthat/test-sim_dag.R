@@ -9,7 +9,7 @@ test_that("sim_dag works", {
   rownames(expected_amat) <- colnames(expected_amat) <- paste("x", 1:4, sep = "")
   expect_equal(amat, expected_amat)
 
-  amat <- sim_dag(5, sparsityLim = c(0.5, 0.5))
+  amat <- sim_dag(5, sparsity_lim = c(0.5, 0.5))
   # (5 * 5 - 5) / (2 * 2) = 5 edges
   expect_equal(sum(amat), 5)
 })

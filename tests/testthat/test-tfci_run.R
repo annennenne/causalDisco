@@ -91,7 +91,7 @@ test_that("tfci_run uses provided suffStat (no data needed) and completes", {
   )
 
   # Provide suffStat directly to hit the else-branch
-  ss <- make_suff_stat(df, type = "reg_test")
+  ss <- make_suffStat(df, type = "reg_test")
 
   out <- tfci_run(
     data = NULL, # no data path
@@ -149,7 +149,7 @@ test_that("tfci_run input guards fail fast with clear messages", {
   )
 
   expect_error(
-    tfci_run(data = df, knowledge = kn, methodNA = "oops"),
+    tfci_run(data = df, knowledge = kn, na_method = "oops"),
     "Invalid choice of method for handling NA values.",
     fixed = TRUE
   )
@@ -161,12 +161,12 @@ test_that("tfci_run input guards fail fast with clear messages", {
   )
 })
 
-test_that("tfci_run NA handling: error on NAs with methodNA = 'none', cc with zero rows", {
+test_that("tfci_run NA handling: error on NAs with na_method = 'none', cc with zero rows", {
   df1 <- data.frame(a = c(1, NA), b = c(2, NA))
   kn1 <- knowledge() |> add_vars(names(df1))
 
   expect_error(
-    tfci_run(data = df1, knowledge = kn1, methodNA = "none"),
+    tfci_run(data = df1, knowledge = kn1, na_method = "none"),
     "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
     fixed = TRUE
   )
@@ -175,7 +175,7 @@ test_that("tfci_run NA handling: error on NAs with methodNA = 'none', cc with ze
   kn2 <- knowledge() |> add_vars(names(df2))
 
   expect_error(
-    tfci_run(data = df2, knowledge = kn2, methodNA = "cc"),
+    tfci_run(data = df2, knowledge = kn2, na_method = "cc"),
     "contain no complete cases.",
     fixed = TRUE
   )

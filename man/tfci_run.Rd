@@ -12,7 +12,7 @@ tfci_run(
   test = reg_test,
   suffStat = NULL,
   method = "stable.fast",
-  methodNA = "none",
+  na_method = "none",
   methodOri = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
@@ -51,7 +51,7 @@ depends on the chosen \code{test}.}
 \code{"original"}, or \code{"stable.fast"} (default). See
 \code{\link[pcalg]{skeleton}} for details.}
 
-\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
+\item{na_method}{Handling of missing values, one of \code{"none"} (default;
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \code{"twd"} (test-wise deletion).}
 

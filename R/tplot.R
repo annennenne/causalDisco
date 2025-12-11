@@ -18,13 +18,13 @@
 #' @param keepfiles If \code{FALSE} (default), temporary files used for making
 #' the plot are deleted, otherwise they are kept and will be placed in the
 #' working directory.
-#' @param bendedges If \code{TRUE} (default), all edges are bent 10 degrees
+#' @param bend_edges If \code{TRUE} (default), all edges are bent 10 degrees
 #' to the right, thereby avoiding edges placed exactly on top of eachother.
 #' @param ... Additional argument passed to \code{\link{maketikz}}.
 #'
 #' @export
 tplot <- function(x, filename = "causaldisco_tplot_temp",
-                  keepfiles = FALSE, bendedges = TRUE, ...) {
+                  keepfiles = FALSE, bend_edges = TRUE, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "magick", "rmarkdown"
@@ -46,22 +46,22 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
   )
 
 
-  tcode <- maketikz(x, rawout = TRUE, bendedges = bendedges, ...)
+  tcode <- maketikz(x, raw_out = TRUE, bend_edges = bend_edges, ...)
   file <- paste(filename, ".rmd", sep = "")
 
-  fileConn <- file(file, "w")
+  file_conn <- file(file, "w")
 
   # wrap in try to ensure connection is closed in the end
   try({
-    writer(headercode, outfile = fileConn)
+    writer(headercode, outfile = file_conn)
 
     # remove first line of tikzcode (comment stating its made by causaldisco)
-    writer(tcode[-1], outfile = fileConn)
+    writer(tcode[-1], outfile = file_conn)
   }) ## Now we should not write anything more to the file - End try.
 
   ## Force flush and close connection
-  flush(fileConn)
-  close(fileConn)
+  flush(file_conn)
+  close(file_conn)
 
   try({
     suppressWarnings(rmarkdown::render(file, quiet = TRUE))

@@ -55,11 +55,11 @@ topo_order_mat <- function(amat) {
 #'
 #' @param amat An adjacency matrix.
 #' @param n The number of observations that should be simulated.
-#' @param regparLim The interval from which regression parameters are
+#' @param regpar_lim The interval from which regression parameters are
 #' sampled.
-#' @param resSDLim The interval from which residual standard deviations
+#' @param res_sd_lim The interval from which residual standard deviations
 #' are sampled.
-#' @param pnegRegpar The probability of sampling a negative regression
+#' @param p_neg_reg_par The probability of sampling a negative regression
 #' parameter.
 #' @param standardize If \code{FALSE} (the default), the raw data are
 #' returned. If \code{TRUE}, the data are first standardized, i.e.,
@@ -76,9 +76,9 @@ topo_order_mat <- function(amat) {
 #' ex_data <- sim_gaus_from_dag(ex_dag, n = 100)
 #'
 #' @export
-sim_gaus_from_dag <- function(amat, n, regparLim = c(0.5, 2),
-                              resSDLim = c(0.1, 1),
-                              pnegRegpar = 0.4,
+sim_gaus_from_dag <- function(amat, n, regpar_lim = c(0.5, 2),
+                              res_sd_lim = c(0.1, 1),
+                              p_neg_reg_par = 0.4,
                               standardize = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c("stats"),
@@ -97,7 +97,7 @@ sim_gaus_from_dag <- function(amat, n, regparLim = c(0.5, 2),
 
   data_sorted <- matrix(0, n, p)
 
-  residual_sd <- stats::runif(p, min = resSDLim[1], max = resSDLim[2])
+  residual_sd <- stats::runif(p, min = res_sd_lim[1], max = res_sd_lim[2])
 
   # pre-sample coefficients
   regpars <- vector("list", p)
@@ -106,9 +106,9 @@ sim_gaus_from_dag <- function(amat, n, regparLim = c(0.5, 2),
     if (length(parents) > 0) {
       signs <- sample(c(-1, 1), length(parents),
         replace = TRUE,
-        prob = c(pnegRegpar, 1 - pnegRegpar)
+        prob = c(p_neg_reg_par, 1 - p_neg_reg_par)
       )
-      regpars[[i]] <- stats::runif(length(parents), regparLim[1], regparLim[2]) * signs
+      regpars[[i]] <- stats::runif(length(parents), regpar_lim[1], regpar_lim[2]) * signs
     }
   }
 

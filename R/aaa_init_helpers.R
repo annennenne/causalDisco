@@ -102,7 +102,7 @@ find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
     return(character(0))
   }
 
-  return(jar_path)
+  jar_path
 }
 
 

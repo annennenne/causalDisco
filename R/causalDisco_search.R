@@ -62,9 +62,9 @@ CausalDiscoSearch <- R6::R6Class(
     #' Use with caution.
     params = NULL,
 
-    #' @field suff_stat Sufficient statistic. The format and contents of the
+    #' @field suffStat Sufficient statistic. The format and contents of the
     #' sufficient statistic depends on which test is being used.
-    suff_stat = NULL,
+    suffStat = NULL,
 
     #' @field knowledge A `knowledge` object holding background knowledge.
     knowledge = NULL,
@@ -84,7 +84,7 @@ CausalDiscoSearch <- R6::R6Class(
       self$test <- NULL
       self$knowledge <- NULL
       self$params <- list(
-        methodNA = "none"
+        na_method = "none"
       )
     },
 
@@ -107,7 +107,7 @@ CausalDiscoSearch <- R6::R6Class(
           call. = FALSE
         )
       }
-      # allow overriding default output/methodNA/verbose/etc.
+      # allow overriding default output/na_method/verbose/etc.
       self$params <- utils::modifyList(self$params, params)
       invisible(self)
     },
@@ -116,11 +116,11 @@ CausalDiscoSearch <- R6::R6Class(
     #' Sets the data for the search algorithm.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suff_stat Logical; whether to set the sufficient statistic.
-    set_data = function(data, set_suff_stat = TRUE) {
+    #' @param set_suffStat Logical; whether to set the sufficient statistic.
+    set_data = function(data, set_suffStat = TRUE) {
       self$data <- data
-      if (set_suff_stat) {
-        self$set_suff_stat()
+      if (set_suffStat) {
+        self$set_suffStat()
       }
 
       invisible(self)
@@ -128,7 +128,7 @@ CausalDiscoSearch <- R6::R6Class(
 
     #' @description
     #' Sets the sufficient statistic for the data.
-    set_suff_stat = function() {
+    set_suffStat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
@@ -137,12 +137,12 @@ CausalDiscoSearch <- R6::R6Class(
       }
 
       out <- .get_pcalg_test_from_string(
-        method    = private$test_key,
-        X         = self$data,
-        suff_stat = TRUE
+        method = private$test_key,
+        X = self$data,
+        suffStat = TRUE
       )
       self$test <- out$method
-      self$suff_stat <- out$suffStat
+      self$suffStat <- out$suffStat
       invisible(self)
     },
 
@@ -159,9 +159,9 @@ CausalDiscoSearch <- R6::R6Class(
       private$test_key <- method
 
       if (!is.null(self$data)) {
-        self$set_suff_stat()
+        self$set_suffStat()
       } else {
-        out <- .get_pcalg_test_from_string(method = private$test_key, suff_stat = FALSE)
+        out <- .get_pcalg_test_from_string(method = private$test_key, suffStat = FALSE)
         self$test <- out$method
       }
       invisible(self)
@@ -283,13 +283,13 @@ CausalDiscoSearch <- R6::R6Class(
     #' Runs the search algorithm on the data.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suff_stat Logical; whether to set the sufficient statistic
-    run_search = function(data = NULL, set_suff_stat = TRUE) {
+    #' @param set_suffStat Logical; whether to set the sufficient statistic
+    run_search = function(data = NULL, set_suffStat = TRUE) {
       if (!is.null(data)) {
         if (is.null(private$score_function)) {
-          self$set_data(data, set_suff_stat = set_suff_stat)
+          self$set_data(data, set_suffStat = set_suffStat)
         } else {
-          self$set_data(data, set_suff_stat = FALSE)
+          self$set_data(data, set_suffStat = FALSE)
         }
       }
       if (is.null(self$data)) {
@@ -304,7 +304,7 @@ CausalDiscoSearch <- R6::R6Class(
 
       # constraint-based path
       if (!identical(private$alg_method, "tges")) {
-        if (is.null(self$suff_stat) && set_suff_stat) {
+        if (is.null(self$suffStat) && set_suffStat) {
           stop("No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
@@ -312,9 +312,9 @@ CausalDiscoSearch <- R6::R6Class(
         res <- self$alg(
           data = self$data,
           knowledge = self$knowledge,
-          suffStat = self$suff_stat
+          suffStat = self$suffStat
         )
-        return(res)
+        res
       } else {
         # score-based path (tges)
         if (is.null(private$score_function)) {
@@ -331,7 +331,7 @@ CausalDiscoSearch <- R6::R6Class(
             score = self$score
           )
         }
-        return(res)
+        res
       }
     }
   ),

@@ -8,7 +8,7 @@ tplot(
   x,
   filename = "causaldisco_tplot_temp",
   keepfiles = FALSE,
-  bendedges = TRUE,
+  bend_edges = TRUE,
   ...
 )
 }
@@ -25,7 +25,7 @@ these files will automatically be deleted again.}
 the plot are deleted, otherwise they are kept and will be placed in the
 working directory.}
 
-\item{bendedges}{If \code{TRUE} (default), all edges are bent 10 degrees
+\item{bend_edges}{If \code{TRUE} (default), all edges are bent 10 degrees
 to the right, thereby avoiding edges placed exactly on top of eachother.}
 
 \item{...}{Additional argument passed to \code{\link{maketikz}}.}

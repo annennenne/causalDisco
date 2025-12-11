@@ -40,7 +40,7 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   )
 
   dfs <- 3
-  dfString <- paste(", df = ", dfs, ")", sep = "")
+  df_string <- paste(", df = ", dfs, ")", sep = "")
 
   # Unpack suffStat
   data <- suffStat$data
@@ -73,14 +73,14 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
 
   # add spline to num x, factor to binary x
   if (!binx) {
-    if (dfs > 0) x <- paste("splines::ns(", x, dfString, sep = "")
+    if (dfs > 0) x <- paste("splines::ns(", x, df_string, sep = "")
   } else {
     x <- paste("factor(", x, ")", sep = "")
   }
 
   # add spline to num S, factor to binary s
   if (length(S_num > 0)) {
-    S_num <- paste("splines::ns(", S_num, dfString, sep = "")
+    S_num <- paste("splines::ns(", S_num, df_string, sep = "")
   }
   if (length(S_bin > 0)) S_bin <- paste("factor(", S_bin, ")", sep = "")
   S <- c(S_bin, S_num, "1")

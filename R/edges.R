@@ -10,11 +10,11 @@
 #' @export
 edges <- function(amat) {
   p <- nrow(amat)
-  edgeL <- lapply(split(amat, rep(1:p, each = p)), function(x) which(x == 1))
+  edge_list <- lapply(split(amat, rep(1:p, each = p)), function(x) which(x == 1))
 
   out <- list()
   for (i in 1:p) {
-    children <- edgeL[[i]]
+    children <- edge_list[[i]]
     nchild <- length(children)
     if (nchild > 0) {
       for (j in 1:nchild) {

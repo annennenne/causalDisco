@@ -7,31 +7,31 @@
 #' \code{\\usepackage{pgfplots}}
 #'
 #' @param model \code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot.
-#' @param xjit How much should nodes within a period be jittered horizontally.
-#' @param yjit Vertical distance between nodes within a period.
-#' @param markperiods If \code{TRUE}, gray boxes are drawn behind each period.
-#' @param xpgap Horizontal gap between different periods.
-#' @param annotateEdges If \code{TRUE}, add a text annotation to edges. If \code{annotationlabels}
+#' @param x_jit How much should nodes within a period be jittered horizontally.
+#' @param y_jit Vertical distance between nodes within a period.
+#' @param mark_periods If \code{TRUE}, gray boxes are drawn behind each period.
+#' @param period_gap Horizontal gap between different periods.
+#' @param annotate_edges If \code{TRUE}, add a text annotation to edges. If \code{annotation_labels}
 #' are supplied, these labels will be used. Otherwise, the value in the inputted adjacency matrix corresponding
 #' to the edge will be used. Cannot be used for \code{tpag}
 #' input objects (or \code{ag} amat types).
-#' @param addAxis If \code{TRUE}, a horizontal axis with period labels are added.
-#' @param varLabels Optional labels for nodes (variables). Should be given as a named list, where
+#' @param add_axis If \code{TRUE}, a horizontal axis with period labels are added.
+#' @param var_labels Optional labels for nodes (variables). Should be given as a named list, where
 #' the name is the variable name, and the entry is the label, e.g. \code{list(vname = "Label for vname")}.
-#' @param periodLabels Optional labels for periods. Should be given as a named list, where
+#' @param period_labels Optional labels for periods. Should be given as a named list, where
 #' the name is the period name (as stored in the \code{tamat}), and the entry is the label,
 #' e.g. \code{list(periodname = "Label for period")}.
-#' @param annotationLabels Optional labels for edge annotations. Only used if \code{annotateEdges = TRUE}.
+#' @param annotation_labels Optional labels for edge annotations. Only used if \code{annotate_edges = TRUE}.
 #' Should be given as a named list, where the name is the edge annotation (as stored in the \code{tamat}),
 #' and the entry is the label, e.g. \code{list(h = "High")}.
 #' @param clipboard If \code{TRUE}, the tikz code is not printed, but instead copied to the clipboard,
 #' so it can easily be pasted into a Latex document.
-#' @param rawout If \code{TRUE}, the tikz code is only returned as a character vector.
-#' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This
-#' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
+#' @param raw_out If \code{TRUE}, the tikz code is only returned as a character vector.
+#' @param color_annotate Named list of colors to use to mark edge annotations instead of labels. This
+#' overrules \code{annotate_edges} and both are not available at the same time. The list should be given with
 #' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
 #' input objects (or \code{ag} amat types).
-#' @param bendedges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
+#' @param bend_edges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
 #' top of each other.
 #'
 #' @return Silently returns a character vector with lines of tikz code. The function
@@ -73,17 +73,17 @@
 #' }
 #'
 #' @export
-maketikz <- function(model, xjit = 2, yjit = 2,
-                     markperiods = TRUE, xpgap = 4,
-                     annotateEdges = NULL,
-                     addAxis = TRUE,
-                     varLabels = NULL,
-                     periodLabels = NULL,
-                     annotationLabels = NULL,
+maketikz <- function(model, x_jit = 2, y_jit = 2,
+                     mark_periods = TRUE, period_gap = 4,
+                     annotate_edges = NULL,
+                     add_axis = TRUE,
+                     var_labels = NULL,
+                     period_labels = NULL,
+                     annotation_labels = NULL,
                      clipboard = TRUE,
-                     rawout = FALSE,
-                     colorAnnotate = NULL,
-                     bendedges = FALSE) {
+                     raw_out = FALSE,
+                     color_annotate = NULL,
+                     bend_edges = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "clipr"
@@ -108,16 +108,16 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
   istpag <- attr(amat, "tamat_type") == "ag"
 
-  if (istpag || (!is.null(colorAnnotate) && is.null(annotateEdges))) {
-    annotateEdges <- FALSE
+  if (istpag || (!is.null(color_annotate) && is.null(annotate_edges))) {
+    annotate_edges <- FALSE
   }
 
-  if (is.null(annotateEdges)) {
-    annotateEdges <- !all(amat %in% c(0, 1))
+  if (is.null(annotate_edges)) {
+    annotate_edges <- !all(amat %in% c(0, 1))
   }
 
   bendstr <- " "
-  if (bendedges) bendstr <- " [bend right=10] "
+  if (bend_edges) bendstr <- " [bend right=10] "
 
   vars <- colnames(amat)
   nvar <- length(vars)
@@ -128,16 +128,16 @@ maketikz <- function(model, xjit = 2, yjit = 2,
   vnames <- sapply(vparts, function(x) paste(x[-1], collapse = "\\_"))
   neachperiod <- as.numeric(table(periods)[order])
   maxpvar <- max(neachperiod)[1]
-  maxypos <- maxpvar * yjit
+  maxypos <- maxpvar * y_jit
 
-  if (is.null(varLabels)) {
-    varLabels <- vnames
+  if (is.null(var_labels)) {
+    var_labels <- vnames
   } else {
-    varLabels <- unlist(varLabels[rownames(amat)])
+    var_labels <- unlist(var_labels[rownames(amat)])
   }
 
-  if (is.null(periodLabels)) {
-    periodLabels <- order
+  if (is.null(period_labels)) {
+    period_labels <- order
   }
 
   out <- c("%TIKZ FIG MADE BY CAUSALDISCO", "\\begin{tikzpicture}")
@@ -146,11 +146,11 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     "[every node/.style={font=\\small, align = center},",
     "every edge/.append style={nodes={font=\\itshape\\scriptsize}}]"
   ))
-  if (annotateEdges && !is.null(annotationLabels)) {
-    for (i in seq_along(annotationLabels)) {
-      thisAnnotation <- names(annotationLabels)[i]
-      thisLab <- annotationLabels[[i]]
-      amat[amat == thisAnnotation] <- thisLab
+  if (annotate_edges && !is.null(annotation_labels)) {
+    for (i in seq_along(annotation_labels)) {
+      this_annotation <- names(annotation_labels)[i]
+      this_lab <- annotation_labels[[i]]
+      amat[amat == this_annotation] <- this_lab
     }
   }
 
@@ -158,11 +158,11 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
   for (i in 1:nvar) {
     thisperiod <- periods[i]
-    thisvname <- varLabels[i]
+    thisvname <- var_labels[i]
     thispno <- which(order == thisperiod)
     thispno <- which(order == thisperiod) # TODO: not used
 
-    xpos <- (thispno - 1) * xpgap + (thispno - 1) * xjit + (i %% 2) * xjit
+    xpos <- (thispno - 1) * period_gap + (thispno - 1) * x_jit + (i %% 2) * x_jit
     ydist <- floor(maxypos / neachperiod[thispno])
     ypos <- (maxypos - ((neachperiod[thispno] - 1) * ydist)) / 2 +
       ydist * (pcounters[thispno] - 1)
@@ -172,10 +172,10 @@ maketikz <- function(model, xjit = 2, yjit = 2,
       sep = ""
     ))
 
-    if (addAxis && pcounters[thispno] == 1) {
-      out <- c(out, paste("\\node at (", (thispno - 1) * xpgap + (thispno - 1) * xjit + xjit / 2,
+    if (add_axis && pcounters[thispno] == 1) {
+      out <- c(out, paste("\\node at (", (thispno - 1) * period_gap + (thispno - 1) * x_jit + x_jit / 2,
         ",", "-0.5", ") {",
-        periodLabels[thispno], "};",
+        period_labels[thispno], "};",
         sep = ""
       ))
     }
@@ -203,10 +203,10 @@ maketikz <- function(model, xjit = 2, yjit = 2,
         allundir[[i]] <- theseundir
       }
       if (length(thesetruechildren) > 0) {
-        if (!annotateEdges && is.null(colorAnnotate)) {
+        if (!annotate_edges && is.null(color_annotate)) {
           out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         }
-        if (annotateEdges) {
+        if (annotate_edges) {
           #  browser()
           out <- c(
             out,
@@ -216,8 +216,8 @@ maketikz <- function(model, xjit = 2, yjit = 2,
             )
           )
         }
-        if (!is.null(colorAnnotate)) {
-          out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]),
+        if (!is.null(color_annotate)) {
+          out <- c(out, paste("\\draw [->, ", unlist(color_annotate[amat[thesetruechildren, i]]),
             "] (", i, ") edge", bendstr, "(", thesetruechildren, ");",
             sep = ""
           ))
@@ -230,7 +230,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
       if (length(theseneigh) == 0) next
 
-      if (!annotateEdges) {
+      if (!annotate_edges) {
         out <- c(
           out,
           paste0(
@@ -267,22 +267,22 @@ maketikz <- function(model, xjit = 2, yjit = 2,
     }
   }
 
-  if (addAxis) {
-    max_xpos <- (nperiod - 1) * xpgap + xjit * nperiod
+  if (add_axis) {
+    max_xpos <- (nperiod - 1) * period_gap + x_jit * nperiod
     out <- c(out, paste("\\draw [-] (-1,0) edge (", max_xpos + 1, ",0);", sep = ""))
   }
 
-  if (markperiods) {
+  if (mark_periods) {
     out <- c(
       out, "\\begin{pgfonlayer}{background}",
       "\\filldraw [join=round,black!10]"
     )
 
     for (j in 1:nperiod) {
-      xpos_1 <- (j - 1) * xpgap + (j - 1) * xjit
+      xpos_1 <- (j - 1) * period_gap + (j - 1) * x_jit
       ypos_1 <- 0
-      xpos_2 <- xpos_1 + xjit
-      ypos_2 <- (maxpvar) * yjit
+      xpos_2 <- xpos_1 + x_jit
+      ypos_2 <- (maxpvar) * y_jit
 
       out <- c(out, paste("(", xpos_1, ",", ypos_1, ") rectangle (",
         xpos_2, ",", ypos_2, ")",
@@ -294,7 +294,7 @@ maketikz <- function(model, xjit = 2, yjit = 2,
 
   out <- c(out, "\\end{tikzpicture}")
 
-  if (rawout) {
+  if (raw_out) {
     return(out)
   }
 

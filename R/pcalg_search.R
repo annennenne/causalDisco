@@ -59,9 +59,9 @@ PcalgSearch <- R6::R6Class(
     #' The parameters are passed to the test and algorithm functions.
     params = NULL,
 
-    #' @field suff_stat Sufficient statistic. The format and contents of the
+    #' @field suffStat Sufficient statistic. The format and contents of the
     #' sufficient statistic depends on which test is being used.
-    suff_stat = NULL,
+    suffStat = NULL,
 
     #' @field continuous Logical; whether the sufficient statistic is for a
     #' continuous test. If both continuous and discrete are `TRUE`, the
@@ -96,7 +96,7 @@ PcalgSearch <- R6::R6Class(
       self$knowledge <- NULL
       self$params <- list()
       self$adaptDF <- TRUE
-      self$suff_stat <- NULL
+      self$suffStat <- NULL
     },
 
     #' @description
@@ -111,18 +111,18 @@ PcalgSearch <- R6::R6Class(
     #' Sets the data for the search algorithm.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suff_stat Logical; whether to set the sufficient statistic.
+    #' @param set_suffStat Logical; whether to set the sufficient statistic.
     #' for the data.
-    set_data = function(data, set_suff_stat = TRUE) {
+    set_data = function(data, set_suffStat = TRUE) {
       self$data <- data
-      if (set_suff_stat) {
-        self$set_suff_stat()
+      if (set_suffStat) {
+        self$set_suffStat()
       }
     },
 
     #' @description
     #' Sets the sufficient statistic for the data.
-    set_suff_stat = function() {
+    set_suffStat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
@@ -135,12 +135,12 @@ PcalgSearch <- R6::R6Class(
       out <- .get_pcalg_test_from_string(
         method = private$test_key,
         X = self$data,
-        suff_stat = TRUE,
+        suffStat = TRUE,
         adaptDF = self$adaptDF,
         nlev = NULL
       )
       self$test <- out$method
-      self$suff_stat <- out$suffStat
+      self$suffStat <- out$suffStat
     },
 
     #' @description
@@ -160,11 +160,11 @@ PcalgSearch <- R6::R6Class(
       private$test_key <- tolower(method)
 
       if (!is.null(self$data)) {
-        self$set_suff_stat()
+        self$set_suffStat()
       } else {
         out <- .get_pcalg_test_from_string(
           method = private$test_key,
-          suff_stat = FALSE
+          suffStat = FALSE
         )
         self$test <- out$method
       }
@@ -289,13 +289,13 @@ PcalgSearch <- R6::R6Class(
     #' Runs the search algorithm on the data.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suff_stat Logical; whether to set the sufficient statistic
-    run_search = function(data = NULL, set_suff_stat = TRUE) {
+    #' @param set_suffStat Logical; whether to set the sufficient statistic
+    run_search = function(data = NULL, set_suffStat = TRUE) {
       if (!is.null(data)) {
         if (is.null(private$score_function)) {
-          self$set_data(data, set_suff_stat = set_suff_stat)
+          self$set_data(data, set_suffStat = set_suffStat)
         } else {
-          self$set_data(data, set_suff_stat = FALSE)
+          self$set_data(data, set_suffStat = FALSE)
         }
       }
       if (is.null(self$data)) {
@@ -312,7 +312,7 @@ PcalgSearch <- R6::R6Class(
 
       # If score_function is NULL, then we are not using a score-based algorithm
       if (is.null(private$score_function)) {
-        if (is.null(self$suff_stat) && set_suff_stat) {
+        if (is.null(self$suffStat) && set_suffStat) {
           stop("No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
@@ -322,14 +322,14 @@ PcalgSearch <- R6::R6Class(
           # to get the fixed constraints.
           self$knowledge <- private$knowledge_function()
           result <- self$alg(
-            suffStat = self$suff_stat,
+            suffStat = self$suffStat,
             labels = colnames(self$data),
             fixedGaps = self$knowledge$fixedGaps,
             fixedEdges = self$knowledge$fixedEdges
           )
         } else {
           result <- self$alg(
-            suffStat = self$suff_stat,
+            suffStat = self$suffStat,
             labels = colnames(self$data)
           )
         }
@@ -357,7 +357,7 @@ PcalgSearch <- R6::R6Class(
       } else {
         result
       }
-      return(out |> knowledgeable_caugi())
+      out |> knowledgeable_caugi()
     }
   ),
   private = list(

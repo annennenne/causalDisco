@@ -488,7 +488,7 @@ BnlearnSearch <- R6Class(
       }
 
       result <- do.call(self$alg, arg_list)
-      return(result |> knowledgeable_caugi())
+      result |> knowledgeable_caugi()
     }
   )
 )

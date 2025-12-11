@@ -7,9 +7,9 @@
 sim_gaus_from_dag(
   amat,
   n,
-  regparLim = c(0.5, 2),
-  resSDLim = c(0.1, 1),
-  pnegRegpar = 0.4,
+  regpar_lim = c(0.5, 2),
+  res_sd_lim = c(0.1, 1),
+  p_neg_reg_par = 0.4,
   standardize = FALSE
 )
 }
@@ -18,13 +18,13 @@ sim_gaus_from_dag(
 
 \item{n}{The number of observations that should be simulated.}
 
-\item{regparLim}{The interval from which regression parameters are
+\item{regpar_lim}{The interval from which regression parameters are
 sampled.}
 
-\item{resSDLim}{The interval from which residual standard deviations
+\item{res_sd_lim}{The interval from which residual standard deviations
 are sampled.}
 
-\item{pnegRegpar}{The probability of sampling a negative regression
+\item{p_neg_reg_par}{The probability of sampling a negative regression
 parameter.}
 
 \item{standardize}{If \code{FALSE} (the default), the raw data are

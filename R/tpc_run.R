@@ -34,7 +34,7 @@
 #' @param method Skeleton construction method, one of \code{"stable"},
 #'   \code{"original"}, or \code{"stable.fast"} (default). See
 #'   \code{\link[pcalg]{skeleton}} for details.
-#' @param methodNA Handling of missing values, one of \code{"none"} (default;
+#' @param na_method Handling of missing values, one of \code{"none"} (default;
 #'   error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 #'   \code{"twd"} (test-wise deletion).
 #' @param methodOri Conflict-handling method when orienting edges.
@@ -58,7 +58,7 @@
 #'
 #' @details
 #' Any independence test implemented in \pkg{pcalg} may be used; see
-#' \code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
+#' \code{\link[pcalg]{pc}}. When \code{na_method = "twd"}, test-wise deletion is
 #' performed: for \code{cor_test}, each pairwise correlation uses complete cases;
 #' for \code{reg_test}, each conditional test performs its own deletion. If you
 #' supply a user-defined \code{test}, you must also provide \code{suffStat}.
@@ -91,7 +91,7 @@ tpc_run <- function(data = NULL,
                     test = reg_test,
                     suffStat = NULL,
                     method = "stable.fast",
-                    methodNA = "none",
+                    na_method = "none",
                     methodOri = "conservative",
                     output = "caugi",
                     directed_as_undirected = FALSE,
@@ -106,7 +106,7 @@ tpc_run <- function(data = NULL,
   if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "caugi")) {
     stop("Output must be tpdag, tskeleton, pcAlgo, or caugi.")
   }
-  if (!methodNA %in% c("none", "cc", "twd")) {
+  if (!na_method %in% c("none", "cc", "twd")) {
     stop("Invalid choice of method for handling NA values.")
   }
   if (is.null(data) && is.null(suffStat)) {
@@ -135,9 +135,9 @@ tpc_run <- function(data = NULL,
   is_knowledge(knowledge)
 
   if (!is.null(data) && any(is.na(data))) {
-    if (methodNA == "none") {
+    if (na_method == "none") {
       stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
-    } else if (methodNA == "cc") {
+    } else if (na_method == "cc") {
       data <- stats::na.omit(data)
       if (nrow(data) == 0) {
         stop("Complete case analysis chosen, but inputted data contain no complete cases.")
@@ -167,15 +167,15 @@ tpc_run <- function(data = NULL,
   if (is.null(suffStat)) {
     this_test_name <- deparse(substitute(test))
     if (this_test_name == "reg_test") {
-      thisSuffStat <- make_suff_stat(data, type = "reg_test")
+      this_suffStat <- make_suffStat(data, type = "reg_test")
     } else if (this_test_name == "cor_test") {
-      thisSuffStat <- make_suff_stat(data, type = "cor_test")
+      this_suffStat <- make_suffStat(data, type = "cor_test")
     } else {
       stop("suffStat needs to be supplied when using a non-builtin test.")
     }
   } else {
-    thisSuffStat <- suffStat
-    methodNA <- "none"
+    this_suffStat <- suffStat
+    na_method <- "none"
   }
 
   constraints <- .pcalg_constraints_from_knowledge(knowledge,
@@ -184,7 +184,7 @@ tpc_run <- function(data = NULL,
   )
 
   skel <- pcalg::skeleton(
-    suffStat = thisSuffStat,
+    suffStat = this_suffStat,
     indepTest = indep_test_dir,
     alpha = alpha,
     labels = vnames,
@@ -209,19 +209,19 @@ tpc_run <- function(data = NULL,
 
   if (output == "tpdag") {
     out <- list(
-      tamat = tamat(amat = graph_to_amat(res, toFrom = FALSE), order = knowledge$tiers$label),
+      tamat = tamat(amat = graph_to_amat(res, to_from = FALSE), order = knowledge$tiers$label),
       psi = alpha,
       ntests = ntests
     )
     class(out) <- "tpdag"
-    return(out)
+    out
   } else if (output == "pcAlgo") {
-    return(res)
+    res
   } else if (output == "caugi") {
-    amat <- graph_to_amat(res, toFrom = FALSE)
+    amat <- graph_to_amat(res, to_from = FALSE)
     amat <- methods::as(amat, "matrix")
     cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
-    return(knowledgeable_caugi(cg, knowledge))
+    knowledgeable_caugi(cg, knowledge)
   }
 }
 
@@ -592,19 +592,19 @@ tpdag <- function(skel, knowledge) {
 #'
 #' Any other \code{type} results in an error.
 #'
-#' @example inst/roxygen-examples/make_suff_stat_example.R
+#' @example inst/roxygen-examples/make_suffStat_example.R
 #'
 #' @return A list whose structure depends on \code{type}, suitable for passing
 #'   as \code{suffStat} to the corresponding test.
 #'
 #' @keywords internal
 #' @noRd
-make_suff_stat <- function(data, type, ...) {
+make_suffStat <- function(data, type, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "stats"
     ),
-    function_name = "make_suff_stat"
+    function_name = "make_suffStat"
   )
 
   if (type == "reg_test") {

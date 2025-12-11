@@ -3,12 +3,12 @@
 #' Plots tpdag, tskeleton and tamat objects.
 #'
 #' @param x The tpdag/tskeleton or tamat to plot.
-#' @param addTimeAxis Logical indicating whether a time axis should be
+#' @param add_time_axis Logical indicating whether a time axis should be
 #' added to the plot.
-#' @param addPsi Logical indicating whether the sparsity level should be
+#' @param add_psi Logical indicating whether the sparsity level should be
 #' added to the plot.
-#' @param varLabels A named list of variable labels.
-#' @param periodLabels A character vector with labels for periods.
+#' @param var_labels A named list of variable labels.
+#' @param period_labels A character vector with labels for periods.
 #' @param colors A character vector with colors to use for marking periods.
 #' Should have at least as many elements as the numbers of periods.
 #' @param ... Additional arguments passed to \code{\link[igraph]{plot.igraph}}.
@@ -16,11 +16,11 @@
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #' @export
-plotTempoMech <- function(x, addTimeAxis = TRUE,
-                          addPsi = TRUE,
-                          varLabels = NULL,
-                          periodLabels = NULL,
-                          colors = NULL, ...) {
+plot_tempo_mech <- function(x, add_time_axis = TRUE,
+                            add_psi = TRUE,
+                            var_labels = NULL,
+                            period_labels = NULL,
+                            colors = NULL, ...) {
   if ("tamat" %in% class(x)) {
     x_amat <- x
     x_order <- attr(x, "order")
@@ -34,15 +34,15 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
   }
 
   if (is.na(x_psi)) {
-    addPsi <- FALSE
+    add_psi <- FALSE
   }
 
-  plotOrderedAmat(x_amat,
+  plot_ordered_amat(x_amat,
     order = x_order, psi = x_psi,
-    addTimeAxis = addTimeAxis,
-    addPsi = addPsi,
-    varLabels = varLabels,
-    periodLabels = periodLabels,
+    add_time_axis = add_time_axis,
+    add_psi = add_psi,
+    var_labels = var_labels,
+    period_labels = period_labels,
     colors = colors, ...
   )
 }
@@ -59,12 +59,12 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @param amat Square binary matrix giving directed edges (rows cause columns).
 #' @param order Character vector of period prefixes in temporal order.
 #' @param psi Numeric sparsity level to annotate above the plot (optional).
-#' @param addTimeAxis Logical indicating whether to draw a time axis.
-#' @param addPsi Logical indicating whether to draw \eqn{\psi}.
+#' @param add_time_axis Logical indicating whether to draw a time axis.
+#' @param add_psi Logical indicating whether to draw \eqn{\psi}.
 #' @param CPDAG Logical; ignored here but retained for back-compatibility.
-#' @param varLabels Named character vector for vertex labels. Defaults to
+#' @param var_labels Named character vector for vertex labels. Defaults to
 #'   \code{colnames(amat)}.
-#' @param periodLabels Character vector of axis labels for periods.
+#' @param period_labels Character vector of axis labels for periods.
 #' @param vertex.size Positive numeric vertex size passed to igraph.
 #' @param jitter Numeric offset separating vertices within a period.
 #' @param space Numeric horizontal gap between periods.
@@ -78,29 +78,29 @@ plotTempoMech <- function(x, addTimeAxis = TRUE,
 #' @return Invisibly returns \code{NULL}. Called for its side-effect of plotting.
 #' @noRd
 #' @keywords internal
-plotOrderedAmat <- function(amat, order,
-                            psi = NULL,
-                            addTimeAxis = TRUE,
-                            addPsi = TRUE,
-                            CPDAG = TRUE,
-                            varLabels = NULL, periodLabels = NULL,
-                            vertex.size = 6, jitter = 5,
-                            space = 5,
-                            mark.border = NA,
-                            edge.arrow.size = 0.5,
-                            edge.width = 2,
-                            edge.curved = TRUE,
-                            sep = "_",
-                            colors = NULL,
-                            ...) {
+plot_ordered_amat <- function(amat, order,
+                              psi = NULL,
+                              add_time_axis = TRUE,
+                              add_psi = TRUE,
+                              CPDAG = TRUE,
+                              var_labels = NULL, period_labels = NULL,
+                              vertex.size = 6, jitter = 5,
+                              space = 5,
+                              mark.border = NA,
+                              edge.arrow.size = 0.5,
+                              edge.width = 2,
+                              edge.curved = TRUE,
+                              sep = "_",
+                              colors = NULL,
+                              ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "graphics", "igraph", "RColorBrewer", "scales"
     ),
-    function_name = "plotOrderedAmat"
+    function_name = "plot_ordered_amat"
   )
 
-  if (is.null(periodLabels)) periodLabels <- order
+  if (is.null(period_labels)) period_labels <- order
 
   ncol <- length(order)
   if (is.null(colors)) {
@@ -111,11 +111,11 @@ plotOrderedAmat <- function(amat, order,
 
   vnames <- colnames(amat)
 
-  # make sure varLabels is in the correct order
-  if (is.null(varLabels)) {
-    varLabels <- vnames
+  # make sure var_labels is in the correct order
+  if (is.null(var_labels)) {
+    var_labels <- vnames
   } else {
-    varLabels <- varLabels[vnames]
+    var_labels <- var_labels[vnames]
   }
 
   thisGraph <- igraph::graph_from_adjacency_matrix(t(amat)) # igraph
@@ -124,7 +124,7 @@ plotOrderedAmat <- function(amat, order,
 
 
   #  browser()
-  mat <- orderedLayout(vnames, order, sep = sep, jitter = jitter, space = space)
+  mat <- ordered_layout(vnames, order, sep = sep, jitter = jitter, space = space)
   edges <- igraph::as_edgelist(thisGraph) # igraph
 
   # drop one copy of double edges
@@ -199,18 +199,18 @@ plotOrderedAmat <- function(amat, order,
     vertex.color = "grey",
     vertex.frame.color = NA,
     vertex.label.color = "black",
-    vertex.label = varLabels,
+    vertex.label = var_labels,
     edge.lty = ltys,
     vertex.label.family = "sans",
     ...
   ) # igraph
-  if (addTimeAxis) {
-    graphics::axis(1, seq(-1, 1, 2 / (length(periodLabels) - 1)),
-      periodLabels,
+  if (add_time_axis) {
+    graphics::axis(1, seq(-1, 1, 2 / (length(period_labels) - 1)),
+      period_labels,
       cex.axis = 1.5
     )
   }
-  if (!is.null(psi) && addPsi) {
+  if (!is.null(psi) && add_psi) {
     #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
     graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }
@@ -230,7 +230,7 @@ plotOrderedAmat <- function(amat, order,
 #' @return A numeric matrix with two columns named \code{"x"} and \code{"y"}.
 #' @noRd
 #' @keywords internal
-orderedLayout <- function(vnames, order, sep = "_", jitter, space) {
+ordered_layout <- function(vnames, order, sep = "_", jitter, space) {
   outMat <- matrix(NA,
     nrow = length(vnames), ncol = 2,
     dimnames = list(vnames, c("x", "y"))

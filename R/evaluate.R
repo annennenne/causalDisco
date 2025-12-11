@@ -28,12 +28,12 @@
 #' @param est Estimated adjacency matrix/matrices.
 #' @param true True adjacency matrix/matrices.
 #' @param metrics List of metrics, see details.
-#' @param ... Further arguments that depend on input type.  Currently only \code{list.out} is allowed, and
+#' @param ... Further arguments that depend on input type.  Currently only \code{list_out} is allowed, and
 #' only if the first argument is a matrix (see details under Value).
 #'
 #' @return A data.frame with one column for each computed metric and one row per evaluated
 #' matrix pair. Adjacency metrics are prefixed with "adj_", orientation metrics are prefixed
-#' with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list.out = TRUE}
+#' with "dir_", other metrics do not get a prefix. If the first argument is a matrix, \code{list_out = TRUE}
 #' can be used to change the return object to a list instead. This list will contain three lists, where
 #' adjacency, orientation and other metrics are reported, respectively.
 #'
@@ -45,12 +45,11 @@ evaluate <- function(est, true, metrics, ...) {
 
 #' @inherit evaluate
 #'
-#' @param  list.out If \code{FALSE} (default), output is returned as a data.frame, otherwise
+#' @param  list_out If \code{FALSE} (default), output is returned as a data.frame, otherwise
 #' it will be a list.
 #'
 #' @export
-evaluate.matrix <- function(est, true, metrics, list.out = FALSE, ...) {
-  # browser()
+evaluate.matrix <- function(est, true, metrics, list_out = FALSE, ...) {
   adj <- metrics$adj
   dir <- metrics$dir
   other <- metrics$other
@@ -85,15 +84,15 @@ evaluate.matrix <- function(est, true, metrics, list.out = FALSE, ...) {
     }
     other_names <- other
   }
-  if (!list.out) {
+  if (!list_out) {
     out <- unlist(c(adj_metrics, dir_metrics, other_metrics))
     names(out) <- c(adj_names, dir_names, other_names)
-    return(as.data.frame(as.list(out))) # return(out)
+    as.data.frame(as.list(out))
   } else {
     names(adj_metrics) <- adj
     names(dir_metrics) <- dir
     names(other_metrics) <- other
-    return(list(adj = adj_metrics, dir = dir_metrics, other = other_metrics))
+    list(adj = adj_metrics, dir = dir_metrics, other = other_metrics)
   }
 }
 

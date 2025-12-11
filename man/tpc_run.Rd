@@ -12,7 +12,7 @@ tpc_run(
   test = reg_test,
   suffStat = NULL,
   method = "stable.fast",
-  methodNA = "none",
+  na_method = "none",
   methodOri = "conservative",
   output = "caugi",
   directed_as_undirected = FALSE,
@@ -51,7 +51,7 @@ depends on the chosen \code{test}.}
 \code{"original"}, or \code{"stable.fast"} (default). See
 \code{\link[pcalg]{skeleton}} for details.}
 
-\item{methodNA}{Handling of missing values, one of \code{"none"} (default;
+\item{na_method}{Handling of missing values, one of \code{"none"} (default;
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \code{"twd"} (test-wise deletion).}
 
@@ -94,7 +94,7 @@ future release.
 }
 \details{
 Any independence test implemented in \pkg{pcalg} may be used; see
-\code{\link[pcalg]{pc}}. When \code{methodNA = "twd"}, test-wise deletion is
+\code{\link[pcalg]{pc}}. When \code{na_method = "twd"}, test-wise deletion is
 performed: for \code{cor_test}, each pairwise correlation uses complete cases;
 for \code{reg_test}, each conditional test performs its own deletion. If you
 supply a user-defined \code{test}, you must also provide \code{suffStat}.

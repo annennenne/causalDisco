@@ -2,14 +2,14 @@
 #'
 #' @param x tpdag (temporal partially directed acyclic graph) object
 #'  to be plotted (as outputted from \code{\link{tpc}}).
-#' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
+#' @param ... Further plotting arguments passed along to \code{\link{plot_tempo_mech}}.
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #'
 #' @export
 plot.tpdag <- function(x, ...) {
-  plotTempoMech(x, ...)
+  plot_tempo_mech(x, ...)
 }
 
 
@@ -17,28 +17,28 @@ plot.tpdag <- function(x, ...) {
 #'
 #' @param x tskeleton (temporal skeleton) object to be plotted
 #' (as outputted from \code{\link{tpc}}).
-#' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
+#' @param ... Further plotting arguments passed along to \code{\link{plot_tempo_mech}}.
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #'
 #' @export
 plot.tskeleton <- function(x, ...) {
-  plotTempoMech(x, ...)
+  plot_tempo_mech(x, ...)
 }
 
 #' Plot adjacency matrix with order information
 #'
 #' @param x tamat (temporal adjacency matrix) object to be plotted
 #' (as outputted from \code{\link{tamat}}).
-#' @param ... Further plotting arguments passed along to \code{\link{plotTempoMech}}.
+#' @param ... Further plotting arguments passed along to \code{\link{plot_tempo_mech}}.
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #'
 #' @export
 plot.tamat <- function(x, ...) {
-  plotTempoMech(x, ...)
+  plot_tempo_mech(x, ...)
 }
 
 #' Plot partial ancestral graph (PAG)
@@ -81,9 +81,9 @@ plot.pag <- function(x, ...) {
   thisg <- as.graphNEL(thisamat)
   nn <- graph::nodes(thisg)
   p <- graph::numNodes(thisg)
-  n.edges <- n_edges(thisamat)
-  ahs <- ats <- rep("none", n.edges)
-  nms <- character(n.edges)
+  n_edges <- n_edges(thisamat)
+  ahs <- ats <- rep("none", n_edges)
+  nms <- character(n_edges)
   cmat <- array(
     c(
       "0" = "none", "1" = "odot",
@@ -91,16 +91,16 @@ plot.pag <- function(x, ...) {
     )[as.character(thisamat)],
     dim = dim(thisamat), dimnames = dimnames(thisamat)
   )
-  iE <- 0L
+  edge_index <- 0L
   for (i in seq_len(p - 1)) {
     x <- nn[i]
     for (j in (i + 1):p) {
       y <- nn[j]
       if (thisamat[x, y] != 0) {
-        iE <- iE + 1L
-        ahs[[iE]] <- cmat[x, y]
-        ats[[iE]] <- cmat[y, x]
-        nms[[iE]] <- paste0(x, "~", y)
+        edge_index <- edge_index + 1L
+        ahs[[edge_index]] <- cmat[x, y]
+        ats[[edge_index]] <- cmat[y, x]
+        nms[[edge_index]] <- paste0(x, "~", y)
       }
     }
   }

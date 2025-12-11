@@ -4,16 +4,16 @@
 \alias{sim_dag}
 \title{Simulate a random DAG}
 \usage{
-sim_dag(p, sparsity = NULL, sparsityLim = c(0, 0.8), permute = TRUE)
+sim_dag(p, sparsity = NULL, sparsity_lim = c(0, 0.8), permute = TRUE)
 }
 \arguments{
 \item{p}{The number of nodes.}
 
 \item{sparsity}{A numeric in [0,1] giving the proportion of possible
 edges that should be removed. If \code{sparsity} is supplied, the value in
-\code{sparsityLim} is ignored.}
+\code{sparsity_lim} is ignored.}
 
-\item{sparsityLim}{A numeric vector of length 2 giving the interval from
+\item{sparsity_lim}{A numeric vector of length 2 giving the interval from
 which a sparsity value is drawn when \code{sparsity = NULL}. Both values
 must lie in [0,1].}
 
