@@ -337,6 +337,26 @@ knowledge <- function(...) {
     }
     eval(expr, envir = environment())
   }
+
+  # Sort tiers only if all labels are numeric-coercible
+  suppressWarnings({
+    tier_num_tiers <- as.numeric(kn$tiers$label)
+  })
+
+  if (!any(is.na(tier_num_tiers))) {
+    # Sort kn$tiers
+    kn$tiers <- kn$tiers |>
+      dplyr::mutate(.tier_num = tier_num_tiers) |>
+      dplyr::arrange(.data$.tier_num) |>
+      dplyr::select(-.data$.tier_num)
+
+    # Sort kn$vars by numeric tier
+    kn$vars <- kn$vars |>
+      dplyr::mutate(.tier_num = as.numeric(.data$tier)) |>
+      dplyr::arrange(.data$.tier_num, .data$var) |>
+      dplyr::select(-.data$.tier_num)
+  }
+
   kn
 }
 
@@ -1472,9 +1492,11 @@ as_tetrad_knowledge <- function(.kn) {
 #' @concept knowledge
 #'
 #' @export
-as_pcalg_constraints <- function(.kn,
-                                 labels = .kn$vars$var,
-                                 directed_as_undirected = FALSE) {
+as_pcalg_constraints <- function(
+  .kn,
+  labels = .kn$vars$var,
+  directed_as_undirected = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr", "pcalg", "rlang"

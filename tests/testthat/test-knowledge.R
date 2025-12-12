@@ -125,6 +125,35 @@ test_that("tier generation with negative numeric tiers errors", {
   )
 })
 
+######### Tier sorting works correctly ###########
+
+test_that("tier sorts if all numeric", {
+  kn <- knowledge(
+    tier(
+      3 ~ V1 + V2,
+      1 ~ V3,
+      2 ~ V4 + V5
+    )
+  )
+  expect_equal(kn$tiers, tibble::tibble(
+    label = c("1", "2", "3")
+  ))
+  expect_equal(kn$vars$tier, c("1", "2", "2", "3", "3"))
+
+
+  kn <- knowledge(
+    tier(
+      10 ~ V1 + V2,
+      1 ~ V3,
+      2 ~ V4 + V5
+    )
+  )
+  expect_equal(kn$tiers, tibble::tibble(
+    label = c("1", "2", "10")
+  ))
+  expect_equal(kn$vars$tier, c("1", "2", "2", "10", "10"))
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Tiers using verbs only
 # ──────────────────────────────────────────────────────────────────────────────
