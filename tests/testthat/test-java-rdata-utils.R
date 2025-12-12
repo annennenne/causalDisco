@@ -78,29 +78,28 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
 })
 
 # todo: Make this not fail
-# test_that("rdata_to_tetrad() preserves factor labels and values", {
-#   skip_if_no_tetrad()
-#
-#   df <- data.frame(
-#     fac = factor(c("c", "a", NA, "b", "a"), levels = c("a", "b", "c")),
-#     check.names = FALSE
-#   )
-#
-#   ds <- rdata_to_tetrad(df)
-#
-#   node <- rJava::.jcall(
-#     ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
-#     as.integer(0)
-#   )
-#   expect_true(rJava::.jinstanceof(node, "edu/cmu/tetrad/data/DiscreteVariable"))
-#
-#   back <- tetrad_data_to_rdata(ds)
-#
-#   expect_s3_class(back$fac, "factor")
-#   expect_equal(levels(back$fac), levels(df$fac))
-#   expect_equal(back$fac, df$fac)
-#   expect_true(is.na(back$fac[3]))
-# })
+test_that("rdata_to_tetrad() preserves factor labels and values", {
+  skip_if_no_tetrad()
+  skip("rdata_to_tetrad() does not yet preserve factor levels")
+  df <- data.frame(
+    fac = factor(c("c", "a", NA, "b", "a"), levels = c("a", "b", "c")),
+    check.names = FALSE
+  )
+
+  ds <- rdata_to_tetrad(df)
+  node <- rJava::.jcall(
+    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    as.integer(0)
+  )
+  expect_true(rJava::.jinstanceof(node, "edu/cmu/tetrad/data/DiscreteVariable"))
+
+  back <- tetrad_data_to_rdata(ds)
+
+  expect_s3_class(back$fac, "factor")
+  expect_equal(levels(back$fac), levels(df$fac))
+  expect_equal(back$fac, df$fac)
+  expect_true(is.na(back$fac[3]))
+})
 
 test_that("tetrad_data_to_rdata() assigns correct NA types", {
   skip_if_no_tetrad()

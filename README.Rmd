@@ -201,20 +201,6 @@ The algorithm needs to be modified when having required edges, I think.
 
   - Fixing requires refactoring the disco_method builder design I think.
 
-`ges()` with engine pcalg gives warning about required edges when we don't specify any?
-
-```{r}
-data("tpc_example")
-kn <- knowledge(
-  tpc_example,
-  forbidden(child_x1 ~ youth_x3),
-  forbidden(youth_x3 ~ child_x1)
-)
-
-pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
-output <- disco(data = tpc_example, method = pcalg_ges, knowledge = kn)
-```
-
 #### Tetrad issues
 
 - v7.6.9 of Tetrad seems to fix the memory issues.
