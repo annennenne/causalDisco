@@ -19,7 +19,7 @@
 }
 
 .onAttach <- function(...) {
-  has_rJava <- requireNamespace("rJava", quietly = TRUE)
+  has_rJava <- requireNamespace("rJava", quietly = TRUE) # nolint: object_name_linter.
 
   # If rJava is NOT installed, give a simple message and exit
   if (!has_rJava) {

@@ -13,11 +13,13 @@
 #' @returns `list(method = function, suffStat = object)`
 #' @noRd
 #' @keywords internal
-.get_pcalg_test_from_string <- function(method,
-                                        X = NULL,
-                                        suffStat = FALSE,
-                                        adaptDF = TRUE,
-                                        nlev = NULL) {
+.get_pcalg_test_from_string <- function(
+  method,
+  X = NULL,
+  suffStat = FALSE,
+  adaptDF = TRUE,
+  nlev = NULL
+) {
   method <- tolower(method)
 
   if (method %in% c(

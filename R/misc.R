@@ -9,7 +9,7 @@
 #' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
 #'
 #' @export
-as.graphNEL <- function(amat) {
+as.graphNEL <- function(amat) { # nolint: object_name_linter.
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods"

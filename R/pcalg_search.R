@@ -16,7 +16,7 @@ NULL
 #'
 #' @importFrom R6 R6Class
 #' @export PcalgSearch
-PcalgSearch <- R6::R6Class(
+PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
   "PcalgSearch",
   public = list(
     #' @template data-field

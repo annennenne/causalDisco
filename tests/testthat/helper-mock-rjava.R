@@ -10,7 +10,7 @@ fake_jinit <- function(parameters, classpath) {
   # reflect JVM-started in rJava namespace
   ns <- asNamespace("rJava")
   unlockBinding(".jniInitialized", ns)
-  assign(".jniInitialized", TRUE, ns)
+  assign(".jniInitialized", TRUE, ns) # nolint: object_name_linter.
   lockBinding(".jniInitialized", ns)
   invisible(NULL)
 }
@@ -32,11 +32,11 @@ with_mock_rjava <- function(code) {
   unlockBinding(".jinit", ns)
   assign(".jinit", fake_jinit, ns)
   unlockBinding(".jaddClassPath", ns)
-  assign(".jaddClassPath", fake_jadd, ns)
+  assign(".jaddClassPath", fake_jadd, ns) # nolint: object_name_linter.
   unlockBinding(".jclassPath", ns)
-  assign(".jclassPath", fake_jcp, ns)
+  assign(".jclassPath", fake_jcp, ns) # nolint: object_name_linter.
   unlockBinding(".jniInitialized", ns)
-  assign(".jniInitialized", FALSE, ns)
+  assign(".jniInitialized", FALSE, ns) # nolint: object_name_linter.
   lockBinding(".jinit", ns)
   lockBinding(".jaddClassPath", ns)
   lockBinding(".jclassPath", ns)

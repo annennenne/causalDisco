@@ -69,13 +69,13 @@ tges_run <- function(score, verbose = FALSE) {
       cont <<- TRUE
 
       for (i in names(tempstep[-1])) {
-        in.node.edges <- tempstep[-1][[i]]
-        forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
-        removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges]
+        in_node_edges <- tempstep[-1][[i]]
+        forbidden_node_edges <- Forbidden.edges[[as.numeric(i)]]
+        removed_edges <- in_node_edges[in_node_edges %in% forbidden_node_edges]
 
-        if (length(removed.edges) > 0) {
-          bgx <- rep(as.numeric(i), length(removed.edges))
-          bgy <- removed.edges
+        if (length(removed_edges) > 0) {
+          bgx <- rep(as.numeric(i), length(removed_edges))
+          bgy <- removed_edges
           amatbg <- pcalg::addBgKnowledge(
             gInput = create_adj_matrix_from_list(essgraph$.in.edges),
             x = bgx,
@@ -134,9 +134,9 @@ create_adj_matrix_from_list <- function(inputList) {
   result_matrix <- matrix(0, nrow = n, ncol = n)
   for (i in seq_along(inputList)) {
     indices <- inputList[[i]]
-    validIndices <- indices[indices <= n]
-    if (length(validIndices) > 0) {
-      result_matrix[i, validIndices] <- 1
+    valid_indices <- indices[indices <= n]
+    if (length(valid_indices) > 0) {
+      result_matrix[i, valid_indices] <- 1
     }
   }
   rownames(result_matrix) <- names(inputList)
@@ -149,7 +149,7 @@ create_adj_matrix_from_list <- function(inputList) {
 #' Converts a 0/1 adjacency matrix into a list where each element contains the
 #' integer indices of the parents of the corresponding row/node.
 #'
-#' @param adjMatrix A square numeric matrix with row and column names giving
+#' @param adj_matrix A square numeric matrix with row and column names giving
 #'   node labels. Entry `(i, j) = 1` indicates an edge `j -> i`.
 #'
 #' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj_example.R
@@ -159,14 +159,14 @@ create_adj_matrix_from_list <- function(inputList) {
 #'
 #' @keywords internal
 #' @noRd
-create_list_from_adj_matrix <- function(adjMatrix) {
-  n <- nrow(adjMatrix)
+create_list_from_adj_matrix <- function(adj_matrix) {
+  n <- nrow(adj_matrix)
   result_list <- vector("list", n)
-  names(result_list) <- rownames(adjMatrix)
+  names(result_list) <- rownames(adj_matrix)
   for (i in seq_len(n)) {
-    connectedIndices <- as.integer(which(adjMatrix[i, ] == 1))
-    result_list[[i]] <- if (length(connectedIndices) > 0) {
-      connectedIndices
+    connected_indices <- as.integer(which(adj_matrix[i, ] == 1))
+    result_list[[i]] <- if (length(connected_indices) > 0) {
+      connected_indices
     } else {
       integer(0)
     }
@@ -252,7 +252,7 @@ TEssGraph <- setRefClass(
 
       # Cast direction
       direction <- match.arg(direction)
-      alg.name <- switch(direction,
+      alg_name <- switch(direction,
         forward = "GIES-F",
         backward = "GIES-B",
         turning = "GIES-T"
@@ -262,7 +262,7 @@ TEssGraph <- setRefClass(
         causalInference,
         .in.edges,
         score$pp.dat,
-        alg.name,
+        alg_name,
         "none",
         causal.inf.options(
           caching = FALSE,
@@ -344,7 +344,7 @@ TEssGraph <- setRefClass(
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
 #' @export TemporalBIC
-TemporalBIC <- setRefClass(
+TemporalBIC <- setRefClass( # nolint: object_name_linter.
   "TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(

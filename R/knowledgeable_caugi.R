@@ -169,7 +169,7 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
 #' @return The nested `knowledge` object.
 #'
 #' @export
-knowledge.knowledgeable_caugi <- function(x) {
+knowledge.knowledgeable_caugi <- function(x) { # nolint: object_name_linter.
   x$knowledge
 }
 

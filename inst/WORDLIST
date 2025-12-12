@@ -1,6 +1,7 @@
 ADMGs
 ARACNE
 Adoptium
+Atm
 BCInference
 BDE
 BDeu
@@ -89,6 +90,7 @@ TPAGs
 TPC
 TPDAG
 Tabu
+TeTrAd
 Temurin
 Terpstra
 Tetrad
@@ -113,6 +115,7 @@ bidirected
 bnlearn
 bnlearns
 bpco
+casesensitive
 caugi
 cormat
 cpdag
@@ -126,7 +129,6 @@ fci
 fciAlgo
 fges
 fixedEdges
-fixedGaps
 graphNEL
 honouring
 igraph
@@ -136,6 +138,7 @@ inout
 interventional
 ith
 kwab
+maj
 maketikz
 md
 micd
@@ -160,11 +163,14 @@ sem
 semidirected
 simDAG
 simGausFromDAG
+suff
+suffStat
 tamat
 tetrad
 tfci
 tibble
 tidyselect
+tierred
 tikz
 tpag
 tpc

@@ -56,7 +56,7 @@ data("tpc_example")
 head(tpc_example)
 ```
 
-We can pass the dataset to knowledge(), which also checks that the specified variables exist:
+We can pass the dataset to `knowledge`, which also checks that the specified variables exist:
 
 ```{r}
 kn <- knowledge(

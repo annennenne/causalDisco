@@ -54,5 +54,5 @@ fci_skel <- pcalg::pdsep(
 )
 
 # Orient to a PAG (matrix with codes 0/1/2/3)
-pag <- causalDisco:::tpag(fci_skel, knowledge = kn, unfVect = NULL, cautious = TRUE)
+pag <- causalDisco:::tpag(fci_skel, knowledge = kn, unfaithful_triples = NULL, cautious = TRUE)
 pag
