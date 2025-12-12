@@ -24,10 +24,7 @@ their terminal or R session for system-wide detection.
 
 This helper function is intended for users who prefer an automated installation
 or who find it inconvenient to manually download and install Java from the
-Adoptium website (\url{https://adoptium.net/temurin/releases}). It ensures the JDK
-is installed in a predictable location and that environment variables such as
-\code{JAVA_HOME} are configured correctly for use in R, including with packages like
-\strong{rJava}.
+Adoptium website (\url{https://adoptium.net/temurin/releases}).
 
 Linux is not supported by this helper, as Java is typically installed via the
 system package manager.

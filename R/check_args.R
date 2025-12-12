@@ -20,12 +20,14 @@
 #'
 #' @noRd
 #' @keywords internal
-check_args_and_distribute_args <- function(search,
-                                           args,
-                                           engine,
-                                           alg,
-                                           test = NULL,
-                                           score = NULL) {
+check_args_and_distribute_args <- function(
+  search,
+  args,
+  engine,
+  alg,
+  test = NULL,
+  score = NULL
+) {
   # Check if the engine is supported
   if (!(engine %in% engine_registry)) {
     stop(
@@ -59,11 +61,13 @@ check_args_and_distribute_args <- function(search,
 #' Check arguments and distribute them to TetradSearch class functions
 #'
 #' @keywords internal
-check_args_and_distribute_args_tetrad <- function(search,
-                                                  args,
-                                                  alg,
-                                                  test = NULL,
-                                                  score = NULL) {
+check_args_and_distribute_args_tetrad <- function(
+  search,
+  args,
+  alg,
+  test = NULL,
+  score = NULL
+) {
   if (is.null(test) && is.null(score)) {
     stop("Neither test or score is specified.", call. = FALSE)
   }
@@ -110,10 +114,12 @@ check_args_and_distribute_args_tetrad <- function(search,
 #' Check arguments and distribute them to pcalg class functions
 #'
 #' @keywords internal
-check_args_and_distribute_args_pcalg <- function(args,
-                                                 alg,
-                                                 test = NULL,
-                                                 score = NULL) {
+check_args_and_distribute_args_pcalg <- function(
+  args,
+  alg,
+  test = NULL,
+  score = NULL
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods", "pcalg"
@@ -242,9 +248,11 @@ check_args_and_distribute_args_causalDisco <- function(
 #' @title Check arguments for BnlearnSearch class functions
 #'
 #' @keywords internal
-check_args_and_distribute_args_bnlearn <- function(args,
-                                                   alg,
-                                                   allow_dots = FALSE) {
+check_args_and_distribute_args_bnlearn <- function(
+  args,
+  alg,
+  allow_dots = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "bnlearn"
