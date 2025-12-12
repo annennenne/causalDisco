@@ -172,10 +172,15 @@ Is it a work in progress? If so we need to document this in
   use (especially if their starting point is our package). We decided to
   use our own naming (snake_case).
 
+- Allow user to specify engines without being casesensitive? E.g.
+  “TETRAD”, “tetrad”, “TeTrAd” should all work.
+
 ## TODO
 
 Rewrite knowledge required + forbidden to use caugi style with `%-->%`
 instead of `~` (and also `%<--%`).
+
+Automatically scale plot elements to fit the available plot size.
 
 ### Manging exported functions
 

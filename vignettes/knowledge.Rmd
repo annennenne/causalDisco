@@ -29,7 +29,9 @@ variables, which in turn precede `old` variables. To do this, we use the `tier` 
 
 ## Creating a tierred knowledge object
 
-Here is an example:
+A tier knowledge object can be created by specifying tiers and their associated variables. If using numeric tiers, lower
+numbers indicate earlier tiers, while otherwise it's based on the order of appearance.
+Thus, the below specifies different ways to encode the same tier knowledge:
 
 ```{r}
 kn <- knowledge(
@@ -37,6 +39,34 @@ kn <- knowledge(
     1 ~ c(A1, A2),
     2 ~ c(B1, B2),
     3 ~ c(C1, C2)
+  )
+)
+
+# Same object, since it gets ordered numerically by tier number
+kn_same <- knowledge(
+  tier(
+    1 ~ c(A1, A2),
+    3 ~ c(C1, C2),
+    2 ~ c(B1, B2)
+  )
+)
+
+# Not actually the same object (since kn_almost$vars lists the tiers, and thus says 10, 20, 30. But
+# it functions the same as kn in causal discovery)
+kn_almost <- knowledge(
+  tier(
+    10 ~ c(A1, A2),
+    30 ~ c(C1, C2),
+    20 ~ c(B1, B2)
+  )
+)
+
+# Again, not actually the same object, but functions the same.
+kn_also_almost <- knowledge(
+  tier(
+    A ~ c(A1, A2),
+    B ~ c(B1, B2),
+    C ~ c(C1, C2)
   )
 )
 ```

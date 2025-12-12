@@ -144,6 +144,8 @@ Atm we have a mix of both styles, so hard for user to know which to use (especia
 
 Rewrite knowledge required + forbidden to use caugi style with `%-->%` instead of `~` (and also `%<--%`).
 
+Automatically scale plot elements to fit the available plot size.
+
 ### Manging exported functions
 
 - Do we need to export the run functions (`tpc_run`, ...) if we recommend user to use `disco()` with the method functions (`tpc`, ...)?

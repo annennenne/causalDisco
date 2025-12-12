@@ -347,14 +347,14 @@ knowledge <- function(...) {
     # Sort kn$tiers
     kn$tiers <- kn$tiers |>
       dplyr::mutate(.tier_num = tier_num_tiers) |>
-      dplyr::arrange(.data$.tier_num) |>
-      dplyr::select(-.data$.tier_num)
+      dplyr::arrange(.tier_num) |>
+      dplyr::select(-.tier_num)
 
     # Sort kn$vars by numeric tier
     kn$vars <- kn$vars |>
-      dplyr::mutate(.tier_num = as.numeric(.data$tier)) |>
-      dplyr::arrange(.data$.tier_num, .data$var) |>
-      dplyr::select(-.data$.tier_num)
+      dplyr::mutate(.tier_num = as.numeric(tier)) |>
+      dplyr::arrange(.tier_num, var) |>
+      dplyr::select(-.tier_num)
   }
 
   kn
