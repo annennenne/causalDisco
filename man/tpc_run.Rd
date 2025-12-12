@@ -13,7 +13,7 @@ tpc_run(
   suffStat = NULL,
   method = "stable.fast",
   na_method = "none",
-  methodOri = "conservative",
+  orientation_method = "conservative",
   output = "caugi",
   directed_as_undirected = FALSE,
   varnames = NULL,
@@ -55,7 +55,7 @@ depends on the chosen \code{test}.}
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \code{"twd"} (test-wise deletion).}
 
-\item{methodOri}{Conflict-handling method when orienting edges.
+\item{orientation_method}{Conflict-handling method when orienting edges.
 Currently only the conservative method is available.}
 
 \item{output}{One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},

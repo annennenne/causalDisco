@@ -37,7 +37,7 @@
 #' @param na_method Handling of missing values, one of \code{"none"} (default;
 #'   error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 #'   \code{"twd"} (test-wise deletion).
-#' @param methodOri Conflict-handling method when orienting edges.
+#' @param orientation_method Conflict-handling method when orienting edges.
 #'   Currently only the conservative method is available.
 #' @param output One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
 #'   or \code{"caugi"}. If \code{"tskeleton"}, return the temporal
@@ -92,7 +92,7 @@ tpc_run <- function(data = NULL,
                     suffStat = NULL,
                     method = "stable.fast",
                     na_method = "none",
-                    methodOri = "conservative",
+                    orientation_method = "conservative",
                     output = "caugi",
                     directed_as_undirected = FALSE,
                     varnames = NULL, ...) {

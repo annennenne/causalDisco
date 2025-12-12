@@ -13,7 +13,7 @@ test_that("tfci_run returns knowledgeable_caugi on example data", {
     knowledge = kn,
     alpha = 0.01,
     test = cor_test,
-    methodOri = "conservative"
+    orientation_method = "conservative"
   )
 
   expect_s3_class(res, "knowledgeable_caugi")
@@ -30,7 +30,7 @@ test_that("tfci_run works with reg_test as well", {
     knowledge = kn,
     alpha = 0.02,
     test = reg_test,
-    methodOri = "standard"
+    orientation_method = "standard"
   )
 
   expect_s3_class(res, "knowledgeable_caugi")
@@ -155,7 +155,7 @@ test_that("tfci_run input guards fail fast with clear messages", {
   )
 
   expect_error(
-    tfci_run(data = df, knowledge = kn, methodOri = "funky"),
+    tfci_run(data = df, knowledge = kn, orientation_method = "funky"),
     "Orientation method must be one of standard, conservative or maj.rule.",
     fixed = TRUE
   )

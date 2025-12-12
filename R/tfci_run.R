@@ -30,7 +30,7 @@
 #'   is \code{NULL}), a temporary \code{knowledge} object is constructed using
 #'   [tidyselect::starts_with] for each prefix. Supplying
 #'   both \code{knowledge} and \code{order} is an error.
-#' @param methodOri Method for handling conflicting separating sets when orienting
+#' @param orientation_method Method for handling conflicting separating sets when orienting
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See \link[pcalg]{pc} for further details.
 #'
@@ -41,18 +41,20 @@
 #' @include tpc_run.R
 #' @importClassesFrom pcalg pcAlgo
 #' @export
-tfci_run <- function(data = NULL,
-                     knowledge = NULL,
-                     order = NULL,
-                     alpha = 10^(-1),
-                     test = reg_test,
-                     suffStat = NULL,
-                     method = "stable.fast",
-                     na_method = "none",
-                     methodOri = "conservative",
-                     directed_as_undirected = FALSE,
-                     varnames = NULL,
-                     ...) {
+tfci_run <- function(
+  data = NULL,
+  knowledge = NULL,
+  order = NULL,
+  alpha = 10^(-1),
+  test = reg_test,
+  suffStat = NULL,
+  method = "stable.fast",
+  na_method = "none",
+  orientation_method = "conservative",
+  directed_as_undirected = FALSE,
+  varnames = NULL,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods", "pcalg", "stats", "tidyselect"
@@ -66,7 +68,7 @@ tfci_run <- function(data = NULL,
   if (is.null(data) && is.null(suffStat)) {
     stop("Either data or sufficient statistic must be supplied.")
   }
-  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
+  if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
     stop("Orientation method must be one of standard, conservative or maj.rule.")
   }
 
@@ -173,9 +175,9 @@ tfci_run <- function(data = NULL,
   ntests <- ntests + nextratests
 
   # optional conservative / majority-rule orientation info
-  conservative <- identical(methodOri, "conservative")
-  maj_rule <- identical(methodOri, "maj.rule")
-  unfVect <- NULL
+  conservative <- identical(orientation_method, "conservative")
+  maj_rule <- identical(orientation_method, "maj.rule")
+  unfaithful_triples <- NULL
 
   if (conservative || maj_rule) {
     tmp <- methods::new("pcAlgo",
@@ -195,12 +197,12 @@ tfci_run <- function(data = NULL,
       version.unf = c(1, 1),
       maj.rule = maj_rule
     )
-    unfVect <- tmpres$unfTripl
+    unfaithful_triples <- tmpres$unfTripl
     fci_skel$sepset <- tmpres$sk@sepset
   }
 
   # orient into a PAG using knowledge tiers
-  res <- tpag(fci_skel, knowledge = knowledge, unfVect = unfVect)
+  res <- tpag(fci_skel, knowledge = knowledge, unfaithful_triples = unfaithful_triples)
 
   # pack up tpag result
   amat <- graph_to_amat(res, to_from = FALSE)
@@ -271,11 +273,11 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 
   for (i in seq_len(p)) {
     for (j in seq_len(p)) {
-      thisSS <- sepset[[i]][[j]]
-      if (length(thisSS) > 0) {
-        for (k in seq_along(thisSS)) {
-          if (is_after(vnames[thisSS[k]], vnames[i], knowledge) &&
-            is_after(vnames[thisSS[k]], vnames[j], knowledge)) {
+      sep_set <- sepset[[i]][[j]]
+      if (length(sep_set) > 0) {
+        for (k in seq_along(sep_set)) {
+          if (is_after(vnames[sep_set[k]], vnames[i], knowledge) &&
+            is_after(vnames[sep_set[k]], vnames[j], knowledge)) {
             sepset[[i]][[j]] <- NULL
             warning("Found sepset that was not allowed due to temporal order!")
             break
@@ -298,8 +300,8 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #'   containing \code{$G} (adjacency), \code{$sepset}, \code{$pMax}, and
 #'   \code{$max.ord}.
 #' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
-#' @param unfVect Optional vector of unfaithful triples from conservative/majority-rule
-#'   orientation (see \pkg{pcalg}); may be \code{NULL}.
+#' @param unfaithful_triples Optional vector of unfaithful triples from conservative/majority-rule
+#'   orientation (see \pkg{pcalg} under \code{unfVect}); may be \code{NULL}.
 #' @param cautious Logical; if \code{TRUE}, remove any separating set that violates
 #'   temporal constraints before orientation.
 #'
@@ -308,7 +310,7 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #' @return A PAG adjacency matrix in pcalg format (integer codes \code{0/1/2/3}).
 #' @keywords internal
 #' @noRd
-tpag <- function(skel, knowledge, unfVect, cautious = TRUE) {
+tpag <- function(skel, knowledge, unfaithful_triples, cautious = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
@@ -336,6 +338,6 @@ tpag <- function(skel, knowledge, unfVect, cautious = TRUE) {
     amat,
     sepset = sepsets,
     rules = userules,
-    unfVect = unfVect
+    unfVect = unfaithful_triples
   )
 }

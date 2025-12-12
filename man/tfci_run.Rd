@@ -13,7 +13,7 @@ tfci_run(
   suffStat = NULL,
   method = "stable.fast",
   na_method = "none",
-  methodOri = "conservative",
+  orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
   ...
@@ -55,7 +55,7 @@ depends on the chosen \code{test}.}
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \code{"twd"} (test-wise deletion).}
 
-\item{methodOri}{Method for handling conflicting separating sets when orienting
+\item{orientation_method}{Method for handling conflicting separating sets when orienting
 edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 \code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
 
