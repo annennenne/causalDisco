@@ -119,7 +119,7 @@ ges_pcalg_runner <- function(score, ...,
       )
     },
     run = function(data) {
-      search$run_search(data, set_suffStat = FALSE)
+      search$run_search(data, set_suff_stat = FALSE)
     }
   )
   runner

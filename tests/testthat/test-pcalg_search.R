@@ -20,7 +20,7 @@ test_that("initialize sets clean defaults", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# set_params, set_data, set_suffStat
+# set_params, set_data, set_suff_stat
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("set_params and set_data store values; set_data can skip suff stat", {
@@ -32,17 +32,17 @@ test_that("set_params and set_data store values; set_data can skip suff stat", {
   colnames(df) <- c("X", "Y", "Z")
 
   # skipping suff stat path
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
   expect_identical(s$data, df)
   expect_null(s$suffStat)
 })
 
-test_that("set_suffStat guards and branches", {
+test_that("set_suff_stat guards and branches", {
   s <- PcalgSearch$new()
 
   # error: no data
   expect_error(
-    s$set_suffStat(),
+    s$set_suff_stat(),
     "Data must be set before sufficient statistic.",
     fixed = TRUE
   )
@@ -50,7 +50,7 @@ test_that("set_suffStat guards and branches", {
   # error: no test
   s$data <- data.frame(X = rnorm(5), Y = rnorm(5))
   expect_error(
-    s$set_suffStat(),
+    s$set_suff_stat(),
     "Test must be set before sufficient statistic.",
     fixed = TRUE
   )
@@ -59,7 +59,7 @@ test_that("set_suffStat guards and branches", {
   s <- PcalgSearch$new()
   s$set_test("fisher_z")
   s$data <- data.frame(X = rnorm(10), Y = rnorm(10))
-  expect_silent(s$set_suffStat())
+  expect_silent(s$set_suff_stat())
   expect_true(is.list(s$suffStat))
   expect_named(s$suffStat, c("C", "n"))
 
@@ -70,16 +70,16 @@ test_that("set_suffStat guards and branches", {
     A = factor(sample(letters[1:2], 10, TRUE)),
     B = factor(sample(letters[1:2], 10, TRUE))
   )
-  expect_silent(s$set_suffStat())
+  expect_silent(s$set_suff_stat())
   expect_named(s$suffStat, c("dm", "nlev", "adaptDF"))
 })
 
-test_that("set_suffStat works on matrix input for g_square", {
+test_that("set_suff_stat works on matrix input for g_square", {
   s <- PcalgSearch$new()
   s$set_test("g_square")
   m <- matrix(sample(0:1, 20, TRUE), ncol = 2)
   colnames(m) <- c("A", "B")
-  expect_silent(s$set_data(m, set_suffStat = TRUE))
+  expect_silent(s$set_data(m, set_suff_stat = TRUE))
   expect_named(s$suffStat, c("dm", "nlev", "adaptDF"))
 })
 
@@ -87,12 +87,12 @@ test_that("set_suffStat works on matrix input for g_square", {
 # ──────────────────────────────────────────────────────────────────────────────
 # set_test()
 # ──────────────────────────────────────────────────────────────────────────────
-test_that("set_test stores key and resolves test in set_suffStat", {
+test_that("set_test stores key and resolves test in set_suff_stat", {
   s <- PcalgSearch$new()
   df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
   colnames(df) <- c("X", "Y")
   s$set_test("fisher_z")
-  s$set_data(df, set_suffStat = TRUE)
+  s$set_data(df, set_suff_stat = TRUE)
   expect_identical(s$test, pcalg::gaussCItest)
 
   s2 <- PcalgSearch$new()
@@ -101,7 +101,7 @@ test_that("set_test stores key and resolves test in set_suffStat", {
     B = factor(sample(0:1, 50, TRUE))
   )
   s2$set_test("g_square")
-  s2$set_data(ddisc, set_suffStat = TRUE)
+  s2$set_data(ddisc, set_suff_stat = TRUE)
   expect_true(is.function(s2$test))
 })
 
@@ -130,7 +130,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
     Z = factor(sample(0:1, 80, TRUE))
   )
   s2$set_test("g_square")
-  s2$set_data(d2, set_suffStat = TRUE)
+  s2$set_data(d2, set_suff_stat = TRUE)
   p2 <- s2$test(1, 2, integer(), s2$suffStat)
   expect_type(p2, "double")
 
@@ -142,7 +142,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
     Z = factor(sample(0:2, 80, TRUE))
   )
   s3$set_test("g_square")
-  s3$set_data(d3, set_suffStat = TRUE)
+  s3$set_data(d3, set_suff_stat = TRUE)
   p3 <- s3$test(1, 2, integer(), s3$suffStat)
   expect_type(p3, "double")
 })
@@ -158,7 +158,7 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
   s1$set_score("sem_bic")
   # scorer errors if data missing when invoked through run
   expect_error(
-    s1$run_search(data = NULL, set_suffStat = TRUE),
+    s1$run_search(data = NULL, set_suff_stat = TRUE),
     "No data is set. Use set_data() first or input data directly into run_search().",
     fixed = TRUE
   )
@@ -167,7 +167,7 @@ test_that("set_score builds scorer for obs/int and errors on unknown", {
   s2 <- PcalgSearch$new()
   s2$set_score("sem_bic_int")
   expect_error(
-    s2$run_search(data = NULL, set_suffStat = TRUE),
+    s2$run_search(data = NULL, set_suff_stat = TRUE),
     "No data is set. Use set_data() first or input data directly into run_search().",
     fixed = TRUE
   )
@@ -199,7 +199,7 @@ test_that("GaussL0penIntScore is constructed when data present", {
     B = as.integer(sample(0:3, 20, TRUE))
   )
   s <- PcalgSearch$new()
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
   s$set_score("sem_bic_int")
 
   sc <- s$.__enclos_env__$private$score_function()
@@ -313,7 +313,7 @@ test_that("set_knowledge defers building constraints and validates input", {
   )
   s$set_knowledge(kn, directed_as_undirected = TRUE)
   s$set_test("fisher_z")
-  s$set_data(df, set_suffStat = TRUE)
+  s$set_data(df, set_suff_stat = TRUE)
   s$set_alg("pc")
 
   expect_warning(
@@ -341,7 +341,7 @@ test_that("run_search errors in correct order and messages", {
   df <- matrix(rnorm(30), ncol = 3) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z")
   s$set_test("fisher_z")
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
 
   expect_error(
     s$run_search(),
@@ -366,7 +366,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   # PC path
   s_pc <- PcalgSearch$new()
   s_pc$set_test("fisher_z", alpha = 0.01)
-  s_pc$set_data(df, set_suffStat = TRUE)
+  s_pc$set_data(df, set_suff_stat = TRUE)
   s_pc$set_alg("pc")
   res_pc <- s_pc$run_search()
   expect_s3_class(res_pc, "knowledgeable_caugi")

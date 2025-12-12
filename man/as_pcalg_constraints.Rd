@@ -25,13 +25,13 @@ an undirected constraint.}
 }
 \value{
 A list with two elements, each an \code{n × n} logical matrix
-corresponding to \pkg{pcalg}'s \code{fixedGaps} and \code{fixedEdges} arguments.
+corresponding to \pkg{pcalg}'s \code{fixed_gaps} and \code{fixed_edges} arguments.
 }
 \description{
 pcalg only supports \emph{undirected} (symmetric) background constraints:
 \itemize{
-\item \strong{fixedGaps}  — forbidding edges (zeros enforced)
-\item \strong{fixedEdges} — requiring edges (ones enforced)
+\item \strong{fixed_gaps}  — forbidding edges (zeros enforced)
+\item \strong{fixed_edges} — requiring edges (ones enforced)
 }
 }
 \details{

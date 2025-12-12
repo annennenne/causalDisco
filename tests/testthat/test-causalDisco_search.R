@@ -14,7 +14,7 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
   colnames(df_g) <- paste0("p1_X", 1:4)
 
   s_bic <- CausalDiscoSearch$new()
-  s_bic$set_data(df_g, set_suffStat = FALSE)
+  s_bic$set_data(df_g, set_suff_stat = FALSE)
   s_bic$set_score("tbic")
   sc_bic <- s_bic$.__enclos_env__$private$score_function()
   expect_true(methods::is(sc_bic, "TemporalBIC"))
@@ -24,7 +24,7 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
     B = factor(sample(letters[1:2], 100, TRUE))
   )
   s_bdeu <- CausalDiscoSearch$new()
-  s_bdeu$set_data(df_d, set_suffStat = FALSE)
+  s_bdeu$set_data(df_d, set_suff_stat = FALSE)
   s_bdeu$set_score("tbdeu")
   sc_bdeu <- s_bdeu$.__enclos_env__$private$score_function()
   expect_true(methods::is(sc_bdeu, "TemporalBDeu"))
@@ -40,7 +40,7 @@ test_that("set_score builds temporal scores lazily and errors on unknown", {
 
 test_that("set_score internal unsupported method branch errors", {
   s <- CausalDiscoSearch$new()
-  s$set_data(data.frame(X = rnorm(100)), set_suffStat = FALSE)
+  s$set_data(data.frame(X = rnorm(100)), set_suff_stat = FALSE)
   s$set_score("tbic")
   s$.__enclos_env__$private$score_method <- "unknown-internal"
   expect_error(
@@ -84,17 +84,17 @@ test_that("initialize sets sensible defaults", {
 # Sufficient Statistics
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("set_suffStat covers reg, cor and bad-type paths", {
+test_that("set_suff_stat covers reg, cor and bad-type paths", {
   s <- CausalDiscoSearch$new()
   df <- data.frame(X = rnorm(100), Y = rnorm(100))
 
   s$set_test("reg", alpha = 0.01)
-  s$set_data(df, set_suffStat = TRUE)
+  s$set_data(df, set_suff_stat = TRUE)
   expect_true(is.list(s$suffStat))
 
   s$set_test("fisher_z", alpha = 0.01)
-  s$set_data(df, set_suffStat = FALSE)
-  expect_silent(s$set_suffStat())
+  s$set_data(df, set_suff_stat = FALSE)
+  expect_silent(s$set_suff_stat())
   expect_named(s$suffStat, c("C", "n"))
 
   expect_error(
@@ -104,12 +104,12 @@ test_that("set_suffStat covers reg, cor and bad-type paths", {
   )
 })
 
-test_that("set_data triggers set_suffStat when requested", {
+test_that("set_data triggers set_suff_stat when requested", {
   s <- CausalDiscoSearch$new()
   df <- matrix(rnorm(100), ncol = 2) |> as.data.frame()
   colnames(df) <- c("X", "Y")
   s$set_test("fisher_z")
-  expect_silent(s$set_data(df, set_suffStat = TRUE))
+  expect_silent(s$set_data(df, set_suff_stat = TRUE))
   expect_named(s$suffStat, c("C", "n"))
 })
 
@@ -144,7 +144,7 @@ test_that("set_data stores data; can skip suff stat", {
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
 
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
   expect_identical(s$data, df)
   expect_null(s$suffStat)
 })
@@ -238,7 +238,7 @@ test_that("run_search errors are thrown in the right order", {
   colnames(df) <- c("X", "Y", "Z", "W")
 
   s$set_test("fisher_z")
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
 
   expect_error(
     s$run_search(),
@@ -273,7 +273,7 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
   s$set_test("fisher_z")
   s$set_knowledge(kn)
   s$set_alg("tpc")
-  s$set_data(df, set_suffStat = TRUE)
+  s$set_data(df, set_suff_stat = TRUE)
   res <- s$run_search()
   expect_s3_class(res, "knowledgeable_caugi")
 })
@@ -300,7 +300,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tpc$set_test("fisher_z")
   s_tpc$set_knowledge(kn)
   s_tpc$set_alg("tpc")
-  s_tpc$set_data(df, set_suffStat = TRUE)
+  s_tpc$set_data(df, set_suff_stat = TRUE)
   res_tpc <- s_tpc$run_search()
   expect_s3_class(res_tpc, "knowledgeable_caugi")
 
@@ -309,7 +309,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tfci$set_test("fisher_z")
   s_tfci$set_knowledge(kn)
   s_tfci$set_alg("tfci")
-  s_tfci$set_data(df, set_suffStat = TRUE)
+  s_tfci$set_data(df, set_suff_stat = TRUE)
   res_tfci <- s_tfci$run_search()
   expect_s3_class(res_tfci, "knowledgeable_caugi")
 })
@@ -328,7 +328,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
   )
 
   s_g <- CausalDiscoSearch$new()
-  s_g$set_data(gdf, set_suffStat = FALSE)
+  s_g$set_data(gdf, set_suff_stat = FALSE)
   s_g$set_knowledge(kn_g)
   s_g$set_score("tbic")
   s_g$set_alg("tges")
@@ -352,7 +352,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
   )
 
   s_c <- CausalDiscoSearch$new()
-  s_c$set_data(dfc, set_suffStat = FALSE)
+  s_c$set_data(dfc, set_suff_stat = FALSE)
   s_c$set_knowledge(kn_c)
   s_c$set_score("tbdeu")
   s_c$set_alg("tges")
@@ -373,7 +373,7 @@ test_that("verbose is accepted via set_params and passed to tges", {
 
   s <- CausalDiscoSearch$new()
   s$set_params(list(verbose = TRUE))
-  s$set_data(gdf, set_suffStat = FALSE)
+  s$set_data(gdf, set_suff_stat = FALSE)
   s$set_knowledge(kn)
   s$set_score("tbic")
   s$set_alg("tges")
@@ -385,7 +385,7 @@ test_that("run_search errors when suffStat missing for constraint-based algs", {
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
   s$set_test("fisher_z")
-  s$set_data(df, set_suffStat = FALSE)
+  s$set_data(df, set_suff_stat = FALSE)
   s$set_alg("tpc")
   expect_error(
     s$run_search(),
@@ -398,7 +398,7 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
   s_err <- CausalDiscoSearch$new()
   gdf <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(gdf) <- paste0("X", 1:4)
-  s_err$set_data(gdf, set_suffStat = FALSE)
+  s_err$set_data(gdf, set_suff_stat = FALSE)
   s_err$set_alg("tges")
   expect_error(
     s_err$run_search(),
@@ -407,7 +407,7 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
   )
 
   s_ok <- CausalDiscoSearch$new()
-  s_ok$set_data(gdf, set_suffStat = FALSE)
+  s_ok$set_data(gdf, set_suff_stat = FALSE)
   s_ok$set_score("tbic")
   s_ok$set_alg("tges")
   out <- s_ok$run_search()
@@ -433,7 +433,7 @@ test_that("run_search(data=...) takes constraint-based path and computes suffSta
   s$set_knowledge(kn)
   s$set_alg("tpc")
 
-  out <- s$run_search(data = df, set_suffStat = TRUE)
+  out <- s$run_search(data = df, set_suff_stat = TRUE)
 
   expect_false(is.null(s$suffStat))
   expect_named(s$suffStat, c("C", "n"))
@@ -448,7 +448,7 @@ test_that("run_search(data=...) takes score-based path and skips suffStat", {
   s$set_score("tbic")
   s$set_alg("tges")
 
-  out <- s$run_search(data = df, set_suffStat = TRUE)
+  out <- s$run_search(data = df, set_suff_stat = TRUE)
 
   expect_null(s$suffStat)
   expect_s3_class(out, "knowledgeable_caugi")

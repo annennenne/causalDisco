@@ -100,7 +100,7 @@ for discrete tests.}
 \item \href{#method-PcalgSearch-new}{\code{PcalgSearch$new()}}
 \item \href{#method-PcalgSearch-set_params}{\code{PcalgSearch$set_params()}}
 \item \href{#method-PcalgSearch-set_data}{\code{PcalgSearch$set_data()}}
-\item \href{#method-PcalgSearch-set_suffStat}{\code{PcalgSearch$set_suffStat()}}
+\item \href{#method-PcalgSearch-set_suff_stat}{\code{PcalgSearch$set_suff_stat()}}
 \item \href{#method-PcalgSearch-set_test}{\code{PcalgSearch$set_test()}}
 \item \href{#method-PcalgSearch-set_score}{\code{PcalgSearch$set_score()}}
 \item \href{#method-PcalgSearch-set_alg}{\code{PcalgSearch$set_alg()}}
@@ -142,7 +142,7 @@ Sets the parameters for the test and algorithm.
 \subsection{Method \code{set_data()}}{
 Sets the data for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_data(data, set_suffStat = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_data(data, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -150,19 +150,19 @@ Sets the data for the search algorithm.
 \describe{
 \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
 
-\item{\code{set_suffStat}}{Logical; whether to set the sufficient statistic.
+\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic.
 for the data.}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PcalgSearch-set_suffStat"></a>}}
-\if{latex}{\out{\hypertarget{method-PcalgSearch-set_suffStat}{}}}
-\subsection{Method \code{set_suffStat()}}{
+\if{html}{\out{<a id="method-PcalgSearch-set_suff_stat"></a>}}
+\if{latex}{\out{\hypertarget{method-PcalgSearch-set_suff_stat}{}}}
+\subsection{Method \code{set_suff_stat()}}{
 Sets the sufficient statistic for the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_suffStat()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_suff_stat()}\if{html}{\out{</div>}}
 }
 
 }
@@ -249,7 +249,7 @@ done when data is provided.
 \subsection{Method \code{run_search()}}{
 Runs the search algorithm on the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$run_search(data = NULL, set_suffStat = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$run_search(data = NULL, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -257,7 +257,7 @@ Runs the search algorithm on the data.
 \describe{
 \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
 
-\item{\code{set_suffStat}}{Logical; whether to set the sufficient statistic}
+\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic}
 }
 \if{html}{\out{</div>}}
 }

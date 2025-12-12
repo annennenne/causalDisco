@@ -61,7 +61,7 @@ print(res_tfci)
 s_tges <- CausalDiscoSearch$new()
 s_tges$set_score("tbic") # Gaussian temporal score
 s_tges$set_alg("tges")
-s_tges$set_data(dat, set_suffStat = FALSE) # suff stat not used for TGES
+s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
 s_tges$set_knowledge(kn)
 res_tges <- s_tges$run_search()
 print(res_tges)
@@ -71,11 +71,11 @@ print(res_tges)
 # run_search() without setting an algorithm
 try(CausalDiscoSearch$new()$run_search(dat))
 
-# set_suffStat() requires data and test first
+# set_suff_stat() requires data and test first
 s_err <- CausalDiscoSearch$new()
-try(s_err$set_suffStat()) # no data & no test
-s_err$set_data(dat, set_suffStat = FALSE)
-try(s_err$set_suffStat()) # no test
+try(s_err$set_suff_stat()) # no data & no test
+s_err$set_data(dat, set_suff_stat = FALSE)
+try(s_err$set_suff_stat()) # no test
 
 # unknown test / score / algorithm
 try(CausalDiscoSearch$new()$set_test("not_a_test"))
@@ -142,7 +142,7 @@ sufficient statistic depends on which test is being used.}
 \item \href{#method-CausalDiscoSearch-new}{\code{CausalDiscoSearch$new()}}
 \item \href{#method-CausalDiscoSearch-set_params}{\code{CausalDiscoSearch$set_params()}}
 \item \href{#method-CausalDiscoSearch-set_data}{\code{CausalDiscoSearch$set_data()}}
-\item \href{#method-CausalDiscoSearch-set_suffStat}{\code{CausalDiscoSearch$set_suffStat()}}
+\item \href{#method-CausalDiscoSearch-set_suff_stat}{\code{CausalDiscoSearch$set_suff_stat()}}
 \item \href{#method-CausalDiscoSearch-set_test}{\code{CausalDiscoSearch$set_test()}}
 \item \href{#method-CausalDiscoSearch-set_score}{\code{CausalDiscoSearch$set_score()}}
 \item \href{#method-CausalDiscoSearch-set_alg}{\code{CausalDiscoSearch$set_alg()}}
@@ -184,7 +184,7 @@ Sets the parameters for the test and algorithm.
 \subsection{Method \code{set_data()}}{
 Sets the data for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_data(data, set_suffStat = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_data(data, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -192,18 +192,18 @@ Sets the data for the search algorithm.
 \describe{
 \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
 
-\item{\code{set_suffStat}}{Logical; whether to set the sufficient statistic.}
+\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic.}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CausalDiscoSearch-set_suffStat"></a>}}
-\if{latex}{\out{\hypertarget{method-CausalDiscoSearch-set_suffStat}{}}}
-\subsection{Method \code{set_suffStat()}}{
+\if{html}{\out{<a id="method-CausalDiscoSearch-set_suff_stat"></a>}}
+\if{latex}{\out{\hypertarget{method-CausalDiscoSearch-set_suff_stat}{}}}
+\subsection{Method \code{set_suff_stat()}}{
 Sets the sufficient statistic for the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_suffStat()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_suff_stat()}\if{html}{\out{</div>}}
 }
 
 }
@@ -292,7 +292,7 @@ nature of how \pkg{pcalg} handles background knowledge when using
 \subsection{Method \code{run_search()}}{
 Runs the search algorithm on the data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$run_search(data = NULL, set_suffStat = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$run_search(data = NULL, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -300,7 +300,7 @@ Runs the search algorithm on the data.
 \describe{
 \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
 
-\item{\code{set_suffStat}}{Logical; whether to set the sufficient statistic}
+\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic}
 }
 \if{html}{\out{</div>}}
 }

@@ -111,18 +111,18 @@ PcalgSearch <- R6::R6Class(
     #' Sets the data for the search algorithm.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suffStat Logical; whether to set the sufficient statistic.
+    #' @param set_suff_stat Logical; whether to set the sufficient statistic.
     #' for the data.
-    set_data = function(data, set_suffStat = TRUE) {
+    set_data = function(data, set_suff_stat = TRUE) {
       self$data <- data
-      if (set_suffStat) {
-        self$set_suffStat()
+      if (set_suff_stat) {
+        self$set_suff_stat()
       }
     },
 
     #' @description
     #' Sets the sufficient statistic for the data.
-    set_suffStat = function() {
+    set_suff_stat = function() {
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
@@ -160,7 +160,7 @@ PcalgSearch <- R6::R6Class(
       private$test_key <- tolower(method)
 
       if (!is.null(self$data)) {
-        self$set_suffStat()
+        self$set_suff_stat()
       } else {
         out <- .get_pcalg_test_from_string(
           method = private$test_key,
@@ -289,13 +289,13 @@ PcalgSearch <- R6::R6Class(
     #' Runs the search algorithm on the data.
     #'
     #' @param data A `data.frame` or a `matrix` containing the data.
-    #' @param set_suffStat Logical; whether to set the sufficient statistic
-    run_search = function(data = NULL, set_suffStat = TRUE) {
+    #' @param set_suff_stat Logical; whether to set the sufficient statistic
+    run_search = function(data = NULL, set_suff_stat = TRUE) {
       if (!is.null(data)) {
         if (is.null(private$score_function)) {
-          self$set_data(data, set_suffStat = set_suffStat)
+          self$set_data(data, set_suff_stat = set_suff_stat)
         } else {
-          self$set_data(data, set_suffStat = FALSE)
+          self$set_data(data, set_suff_stat = FALSE)
         }
       }
       if (is.null(self$data)) {
@@ -312,7 +312,7 @@ PcalgSearch <- R6::R6Class(
 
       # If score_function is NULL, then we are not using a score-based algorithm
       if (is.null(private$score_function)) {
-        if (is.null(self$suffStat) && set_suffStat) {
+        if (is.null(self$suffStat) && set_suff_stat) {
           stop("No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )

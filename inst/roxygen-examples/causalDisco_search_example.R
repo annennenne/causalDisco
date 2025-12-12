@@ -50,7 +50,7 @@ print(res_tfci)
 s_tges <- CausalDiscoSearch$new()
 s_tges$set_score("tbic") # Gaussian temporal score
 s_tges$set_alg("tges")
-s_tges$set_data(dat, set_suffStat = FALSE) # suff stat not used for TGES
+s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
 s_tges$set_knowledge(kn)
 res_tges <- s_tges$run_search()
 print(res_tges)
@@ -60,11 +60,11 @@ print(res_tges)
 # run_search() without setting an algorithm
 try(CausalDiscoSearch$new()$run_search(dat))
 
-# set_suffStat() requires data and test first
+# set_suff_stat() requires data and test first
 s_err <- CausalDiscoSearch$new()
-try(s_err$set_suffStat()) # no data & no test
-s_err$set_data(dat, set_suffStat = FALSE)
-try(s_err$set_suffStat()) # no test
+try(s_err$set_suff_stat()) # no data & no test
+s_err$set_data(dat, set_suff_stat = FALSE)
+try(s_err$set_suff_stat()) # no test
 
 # unknown test / score / algorithm
 try(CausalDiscoSearch$new()$set_test("not_a_test"))
