@@ -14,3 +14,7 @@ causalDisco*.tar.gz
 causalDisco.Rcheck/
 docker/
 docs
+inst/doc
+.httr-oauth
+.DS_Store
+.quarto

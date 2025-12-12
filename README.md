@@ -169,9 +169,13 @@ Is it a work in progress? If so we need to document this in
   do we wanna match the corresponding e.g. pcalg naming? “fixedEdges” vs
   “fixed_edges”, “suffStat” vs “suff_stat”, “maj.rule” vs “maj_rule”, …
   Atm we have a mix of both styles, so hard for user to know which to
-  use (especially if their starting point is our package).
+  use (especially if their starting point is our package). We decided to
+  use our own naming (snake_case).
 
 ## TODO
+
+Rewrite knowledge required + forbidden to use caugi style with `%-->%`
+instead of `~` (and also `%<--%`).
 
 ### Manging exported functions
 
@@ -341,7 +345,7 @@ Added a bunch of `browser()` statements in TetradSearch and the
 knowledge is correctly passed to Tetrad, so not sure what is going on
 here.
 
-Is this expected?
+V7.6.9 gives this:
 
 ``` r
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
@@ -367,8 +371,41 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 #> 6:  youth_x4    --> oldage_x6
 ```
 
-Or should the edge between `child_x2` and `child_x1` be `--o` instead of
-`o--o`?
+But v6.7.8 gives this (which is correct?):
+
+``` r
+detach("package:causalDisco", unload = TRUE)
+options(causalDisco.tetrad.version = "7.6.8")
+library(causalDisco)
+#> causalDisco startup:
+#>   Java heap size requested: 2 GB
+#>   Tetrad version: 7.6.8
+#>   Java successfully initialized with 2 GB.
+#>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
+#>   Restart R to apply changes.
+
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+
+  kn <- knowledge(
+    tpc_example,
+    forbidden(child_x2 ~ child_x1)
+  )
+
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x2    o-o  child_x1
+#> 2:  child_x2    o-> oldage_x5
+#> 3:  child_x2    o-o  youth_x4
+#> 4: oldage_x5    --> oldage_x6
+#> 5:  youth_x3    o-> oldage_x5
+#> 6:  youth_x4    --> oldage_x6
+```
 
 ### Documentation
 

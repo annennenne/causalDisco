@@ -189,8 +189,8 @@ tpc_run <- function(data = NULL,
     alpha = alpha,
     labels = vnames,
     method = method,
-    fixedGaps = constraints$fixedGaps,
-    fixedEdges = constraints$fixedEdges,
+    fixedGaps = constraints$fixed_gaps,
+    fixedEdges = constraints$fixed_edges,
     ...
   )
   ntests <- sum(skel@n.edgetests)

@@ -118,32 +118,32 @@ plot_ordered_amat <- function(amat, order,
     var_labels <- var_labels[vnames]
   }
 
-  thisGraph <- igraph::graph_from_adjacency_matrix(t(amat)) # igraph
+  this_graph <- igraph::graph_from_adjacency_matrix(t(amat)) # igraph
 
   groups <- sapply(order, function(x) getvar(vnames, x), simplify = FALSE)
 
 
   #  browser()
   mat <- ordered_layout(vnames, order, sep = sep, jitter = jitter, space = space)
-  edges <- igraph::as_edgelist(thisGraph) # igraph
+  edges <- igraph::as_edgelist(this_graph) # igraph
 
   # drop one copy of double edges
   makedouble <- NULL
   makedouble_new <- NULL
   duplies <- NULL
-  nEdges <- nrow(edges)
-  indexes <- 1:nEdges
-  dontcheck <- NULL
+  n_edges <- nrow(edges)
+  indexes <- 1:n_edges
+  dont_check <- NULL
 
   #  if (type != "pdag") {
-  #  dontcheck <- indexes
+  #  dont_check <- indexes
   # }
-  if (nEdges > 0) {
+  if (n_edges > 0) {
     for (i in indexes) {
-      thisOne <- edges[i, ]
-      dontcheck <- c(dontcheck, i)
-      for (j in indexes[-dontcheck]) {
-        if (all(edges[j, c(2, 1)] == thisOne)) {
+      this_one <- edges[i, ]
+      dont_check <- c(dont_check, i)
+      for (j in indexes[-dont_check]) {
+        if (all(edges[j, c(2, 1)] == this_one)) {
           duplies <- c(duplies, j)
           makedouble <- c(makedouble, i)
         }
@@ -151,26 +151,26 @@ plot_ordered_amat <- function(amat, order,
     }
   }
   oldedges <- edges
-  thisGraph <- igraph::delete.edges(thisGraph, duplies) # igraph
-  edges <- igraph::as_edgelist(thisGraph) # igraph
+  this_graph <- igraph::delete.edges(this_graph, duplies) # igraph
+  edges <- igraph::as_edgelist(this_graph) # igraph
 
   for (i in seq_along(makedouble)) {
-    thisEdge <- oldedges[makedouble[i], ]
+    this_edge <- oldedges[makedouble[i], ]
     for (j in seq_len(nrow(edges))) {
-      if (identical(thisEdge, edges[j, ])) {
+      if (identical(this_edge, edges[j, ])) {
         makedouble_new <- c(makedouble_new, j)
       }
     }
   }
 
   groupnames <- names(groups)
-  nEdges <- nrow(edges) # recalc
-  edgecolors <- rep("", nEdges)
-  arrowmodes <- rep(">", nEdges)
+  n_edges <- nrow(edges) # recalc
+  edgecolors <- rep("", n_edges)
+  arrowmodes <- rep(">", n_edges)
 
-  ltys <- rep(1, nEdges)
-  if (nEdges > 0) {
-    for (i in 1:nEdges) {
+  ltys <- rep(1, n_edges)
+  if (n_edges > 0) {
+    for (i in 1:n_edges) {
       # browser()
       thisVar <- edges[i, 1]
       thisPrefix <- unlist(strsplit(thisVar, "_", 1))[1]
@@ -186,7 +186,7 @@ plot_ordered_amat <- function(amat, order,
   }
 
 
-  igraph::plot.igraph(thisGraph,
+  igraph::plot.igraph(this_graph,
     mark.groups = groups,
     edge.color = edgecolors,
     edge.arrow.mode = arrowmodes,
@@ -211,7 +211,7 @@ plot_ordered_amat <- function(amat, order,
     )
   }
   if (!is.null(psi) && add_psi) {
-    #  mtext(bquote(psi == .(sciNotation(psi))), side = 3, line = 2)
+    #  mtext(bquote(psi == .(sci_notation(psi))), side = 3, line = 2)
     graphics::mtext(bquote(psi == .(psi)), side = 3, line = 2)
   }
 }
@@ -231,22 +231,22 @@ plot_ordered_amat <- function(amat, order,
 #' @noRd
 #' @keywords internal
 ordered_layout <- function(vnames, order, sep = "_", jitter, space) {
-  outMat <- matrix(NA,
+  out_mat <- matrix(NA,
     nrow = length(vnames), ncol = 2,
     dimnames = list(vnames, c("x", "y"))
   )
-  nPfs <- length(order)
+  n_pfs <- length(order)
 
   j <- 1
-  for (i in 1:nPfs) {
-    theseVar <- getvar(vnames, order[i])
-    nThese <- length(theseVar)
-    theseJitter <- rep(c(j, j + jitter), ceiling(nThese / 2))[1:nThese]
-    outMat[theseVar, 1] <- theseJitter
-    outMat[theseVar, 2] <- c(-floor(nThese / 2):floor(nThese / 2))[1:nThese]
+  for (i in 1:n_pfs) {
+    these_var <- getvar(vnames, order[i])
+    n_these <- length(these_var)
+    jitter_vals <- rep(c(j, j + jitter), ceiling(n_these / 2))[1:n_these]
+    out_mat[these_var, 1] <- jitter_vals
+    out_mat[these_var, 2] <- c(-floor(n_these / 2):floor(n_these / 2))[1:n_these]
     j <- j + 2 * jitter + space
   }
-  outMat
+  out_mat
 }
 
 
@@ -292,9 +292,9 @@ getvar.data.frame <- function(x, prefix, sep = "_") {
 #' @return An \code{expression} (or vector of expressions) for pretty printing.
 #' @noRd
 #' @keywords internal
-sciNotation <- function(x, digits = 1) {
+sci_notation <- function(x, digits = 1) {
   if (length(x) > 1) {
-    return(append(sciNotation(x[1]), sciNotation(x[-1])))
+    return(append(sci_notation(x[1]), sci_notation(x[-1])))
   }
   if (!x) {
     return(0)

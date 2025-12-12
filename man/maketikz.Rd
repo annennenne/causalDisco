@@ -60,8 +60,8 @@ overrules \code{annotate_edges} and both are not available at the same time. The
 annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
 input objects (or \code{ag} amat types).}
 
-\item{bend_edges}{If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
-top of each other.}
+\item{bend_edges}{If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly
+on top of each other.}
 }
 \value{
 Silently returns a character vector with lines of tikz code. The function

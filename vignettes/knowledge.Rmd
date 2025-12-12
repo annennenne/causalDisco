@@ -1,0 +1,152 @@
+---
+title: "knowledge"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{knowledge}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(causalDisco)
+```
+
+This vignette demonstrates how to use the `knowledge` function to incorporate prior knowledge into causal discovery
+algorithms.
+
+# Tier knowledge
+
+We can define tier knowledge to specify temporal or logical ordering among variables. For example, consider a dataset
+with three groups of variables: `child`, `youth`, and `old`. We can specify that `child` variables precede `youth`
+variables, which in turn precede `old` variables. To do this, we use the `tier` function within `knowledge`.
+
+## Creating a tierred knowledge object
+
+Here is an example:
+
+```{r}
+kn <- knowledge(
+  tier(
+    1 ~ c(A1, A2),
+    2 ~ c(B1, B2),
+    3 ~ c(C1, C2)
+  )
+)
+```
+
+We can visualize the tiers using:
+
+```{r}
+plot(kn)
+```
+
+## Using tier knowledge with a dataset
+
+Suppose we want to use the `tpc_example` dataset from the causalDisco package:
+
+```{r}
+data("tpc_example")
+head(tpc_example)
+```
+
+We can pass the dataset to knowledge(), which also checks that the specified variables exist:
+
+```{r}
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ c(child_x1, child_x2),
+    youth ~ c(youth_x3, youth_x4)
+    old ~ c(old_x5, old_x6)
+  )
+)
+```
+
+### Simplifying variable selection
+
+To make specifying variables easier, you can use tidyselect helpers such as `starts_with`:
+
+```{r}
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+```
+
+We can plot the knowledge to visualize the tiers:
+
+```{r}
+plot(kn)
+```
+
+## Using tier knowledge with causal discovery
+
+Now that we have defined our knowledge, we can use it with causal discovery algorithms such as the temporal GES
+algorithm `tges` with engine `causalDisco` and score temporal BIC (`tbic`):
+
+```{r}
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+```
+
+The causal discovery algorithms respects the provided knowledge, and we can plot the resulting causal graph. 
+
+```{r}
+plot(disco_cd_tges)
+```
+
+# Required and forbidden knowledge
+
+WIP and syntax changes coming soon.
+
+
+# Engine specific information about knowledge
+
+## bnlearn
+
+Tier, required and forbidden knowledge are all supported with bnlearn engines. Note, that you can get a
+harmless(?) warning from bnlearn when using required knowledge.
+
+```{r}
+data("tpc_example")
+
+kn <- knowledge(
+  tpc_example,
+  required(child_x1 ~ youth_x3)
+)
+
+bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+```
+
+But the resulting causal graph respects the knowledge correctly nevertheless.
+
+```{r}
+plot(output)
+```
+
+## causalDisco
+
+WIP. Currently causalDisco only works correctly with tier and required knowledge.
+
+## pcalg
+
+Note, that pcalg only supports forbidden edge knowledge. See `?as_pcalg_constraints` for details.
+
+## Tetrad
+
+WIP. Currently only implemented correctly for forbidden knowledge.
+
+
+

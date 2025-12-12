@@ -1441,8 +1441,8 @@ as_tetrad_knowledge <- function(.kn) {
 #' Convert background knowledge to pcalg constraint matrices
 #'
 #' pcalg only supports _undirected_ (symmetric) background constraints:
-#' * **fixedGaps**  — forbidding edges (zeros enforced)
-#' * **fixedEdges** — requiring edges (ones enforced)
+#' * **fixed_gaps**  — forbidding edges (zeros enforced)
+#' * **fixed_edges** — requiring edges (ones enforced)
 #'
 #' This function takes a \code{knowledge} object (with only forbidden/required
 #' edges, no tiers) and returns the two logical matrices in the exact
@@ -1459,7 +1459,7 @@ as_tetrad_knowledge <- function(.kn) {
 #'   an undirected constraint.
 #'
 #' @returns A list with two elements, each an \code{n × n} logical matrix
-#' corresponding to \pkg{pcalg}'s `fixedGaps` and `fixedEdges` arguments.
+#' corresponding to \pkg{pcalg}'s `fixed_gaps` and `fixed_edges` arguments.
 #'
 #' @section Errors:
 #' * If the knowledge object contains tiered knowledge.
@@ -1526,8 +1526,8 @@ as_pcalg_constraints <- function(.kn,
   }
 
   p <- length(labels)
-  fixedGaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
-  fixedEdges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+  fixed_gaps <- matrix(FALSE, p, p, dimnames = list(labels, labels))
+  fixed_edges <- matrix(FALSE, p, p, dimnames = list(labels, labels))
   idx <- rlang::set_names(seq_along(labels), labels)
 
   if (!directed_as_undirected) {
@@ -1556,8 +1556,8 @@ as_pcalg_constraints <- function(.kn,
     if (is.na(i) || is.na(j)) {
       stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
     }
-    fixedGaps[i, j] <- TRUE
-    if (directed_as_undirected) fixedGaps[j, i] <- TRUE
+    fixed_gaps[i, j] <- TRUE
+    if (directed_as_undirected) fixed_gaps[j, i] <- TRUE
   }
 
   # fill required
@@ -1569,11 +1569,11 @@ as_pcalg_constraints <- function(.kn,
     if (is.na(i) || is.na(j)) {
       stop("Forbidden edge refers to unknown variable(s).", call. = FALSE)
     }
-    fixedEdges[i, j] <- TRUE
-    if (directed_as_undirected) fixedEdges[j, i] <- TRUE
+    fixed_edges[i, j] <- TRUE
+    if (directed_as_undirected) fixed_edges[j, i] <- TRUE
   }
 
-  list(fixedGaps = fixedGaps, fixedEdges = fixedEdges)
+  list(fixed_gaps = fixed_gaps, fixed_edges = fixed_edges)
 }
 
 #' Convert background knowledge to bnlearns white- and blacklists

@@ -278,7 +278,7 @@ PcalgSearch <- R6::R6Class(
           labels,
           directed_as_undirected = directed_as_undirected
         )
-        if (any(constraints$fixedEdges)) {
+        if (any(constraints$fixed_edges)) {
           warning("Engine pcalg does not use required edges; ignoring them.", call. = FALSE)
         }
         constraints
@@ -324,8 +324,8 @@ PcalgSearch <- R6::R6Class(
           result <- self$alg(
             suffStat = self$suffStat,
             labels = colnames(self$data),
-            fixedGaps = self$knowledge$fixedGaps,
-            fixedEdges = self$knowledge$fixedEdges
+            fixedGaps = self$knowledge$fixed_gaps,
+            fixedEdges = self$knowledge$fixed_edges
           )
         } else {
           result <- self$alg(

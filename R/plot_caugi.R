@@ -173,15 +173,15 @@ plot.knowledgeable_caugi <- function(x, ...) {
   ## --------------------------
   ## Edge styling
   ## --------------------------
-  E <- igraph::E(g)
+  edges <- igraph::E(g)
 
-  edge_colors <- ifelse(E$forbidden, "red",
-    ifelse(E$required, "blue", "black")
+  edge_colors <- ifelse(edges$forbidden, "red",
+    ifelse(edges$required, "blue", "black")
   )
-  edge_lwd <- ifelse(E$forbidden, 2,
-    ifelse(E$required, 3, 1)
+  edge_lwd <- ifelse(edges$forbidden, 2,
+    ifelse(edges$required, 3, 1)
   )
-  edge_lty <- ifelse(E$forbidden, 2, 1)
+  edge_lty <- ifelse(edges$forbidden, 2, 1)
 
   ## --------------------------
   ## Auto-scale vertex sizes to fit labels
@@ -200,7 +200,7 @@ plot.knowledgeable_caugi <- function(x, ...) {
     edge.color = edge_colors,
     edge.width = edge_lwd,
     edge.lty = edge_lty,
-    edge.arrow.mode = E$arrow.mode,
+    edge.arrow.mode = edges$arrow.mode,
     edge.curved = curved,
     vertex.color = "lightblue",
     vertex.label.color = "black",
@@ -275,19 +275,19 @@ plot.knowledge <- function(x, ...) {
   layout_matrix <- cbind(x_coords, y_coords)
 
   # ----- Edge styling -----
-  E <- igraph::E(g)
+  edges <- igraph::E(g)
 
-  edge_colors <- ifelse(E$forbidden, "red",
-    ifelse(E$required, "blue",
+  edge_colors <- ifelse(edges$forbidden, "red",
+    ifelse(edges$required, "blue",
       "black"
     )
   )
 
-  edge_lwd <- ifelse(E$forbidden, 2,
-    ifelse(E$required, 3, 1)
+  edge_lwd <- ifelse(edges$forbidden, 2,
+    ifelse(edges$required, 3, 1)
   )
 
-  edge_lty <- ifelse(E$forbidden, 2, 1)
+  edge_lty <- ifelse(edges$forbidden, 2, 1)
 
   ## --------------------------
   ## Auto-scale vertex sizes to fit labels

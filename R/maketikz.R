@@ -31,8 +31,8 @@
 #' overrules \code{annotate_edges} and both are not available at the same time. The list should be given with
 #' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
 #' input objects (or \code{ag} amat types).
-#' @param bend_edges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
-#' top of each other.
+#' @param bend_edges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly
+#' on top of each other.
 #'
 #' @return Silently returns a character vector with lines of tikz code. The function
 #' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz

@@ -171,10 +171,12 @@ check_args_and_distribute_args_pcalg <- function(args,
 #' Check arguments and distribute them to causalDisco class functions
 #'
 #' @keywords internal
-check_args_and_distribute_args_causalDisco <- function(args,
-                                                       alg,
-                                                       test = NULL,
-                                                       score = NULL) {
+check_args_and_distribute_args_causalDisco <- function(
+  args,
+  alg,
+  test = NULL,
+  score = NULL
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods", "pcalg"

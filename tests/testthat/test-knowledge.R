@@ -1603,11 +1603,11 @@ test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
     directed_as_undirected = TRUE
   )
   # forbidden should be symmetric
-  expect_true(cons$fixedGaps["X1", "X2"])
-  expect_true(cons$fixedGaps["X2", "X1"])
+  expect_true(cons$fixed_gaps["X1", "X2"])
+  expect_true(cons$fixed_gaps["X2", "X1"])
   # required should be symmetric
-  expect_true(cons$fixedEdges["Y", "X1"])
-  expect_true(cons$fixedEdges["X1", "Y"])
+  expect_true(cons$fixed_edges["Y", "X1"])
+  expect_true(cons$fixed_edges["X1", "Y"])
 })
 
 test_that("works when forbidden edges are fully symmetric via DSL", {
@@ -1621,14 +1621,14 @@ test_that("works when forbidden edges are fully symmetric via DSL", {
     labels = c("X1", "X2", "Y")
   )
 
-  # fixedGaps should have exactly the two symmetric entries
-  expect_true(cons$fixedGaps["X1", "X2"])
-  expect_true(cons$fixedGaps["X2", "X1"])
+  # fixed_gaps should have exactly the two symmetric entries
+  expect_true(cons$fixed_gaps["X1", "X2"])
+  expect_true(cons$fixed_gaps["X2", "X1"])
   # no other forbidden pairs
-  expect_equal(sum(cons$fixedGaps), 2)
+  expect_equal(sum(cons$fixed_gaps), 2)
 
-  # fixedEdges should be entirely FALSE
-  expect_false(any(cons$fixedEdges))
+  # fixed_edges should be entirely FALSE
+  expect_false(any(cons$fixed_edges))
 })
 
 test_that("result has correct dimnames and dimensions", {
@@ -1639,10 +1639,10 @@ test_that("result has correct dimnames and dimensions", {
     required(C ~ D)
   )
   cons <- as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE)
-  expect_equal(dim(cons$fixedGaps), c(4L, 4L))
-  expect_equal(dimnames(cons$fixedGaps), list(labels, labels))
-  expect_equal(dim(cons$fixedEdges), c(4L, 4L))
-  expect_equal(dimnames(cons$fixedEdges), list(labels, labels))
+  expect_equal(dim(cons$fixed_gaps), c(4L, 4L))
+  expect_equal(dimnames(cons$fixed_gaps), list(labels, labels))
+  expect_equal(dim(cons$fixed_edges), c(4L, 4L))
+  expect_equal(dimnames(cons$fixed_edges), list(labels, labels))
 })
 test_that("create pcalg cons without providing labels", {
   kn <- knowledge(

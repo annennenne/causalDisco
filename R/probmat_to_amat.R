@@ -119,8 +119,8 @@ correspondingCpdag <- function(amat) {
   )
 
   patt <- getPattern(amat)
-  corresp.cpdag <- pcalg::addBgKnowledge(patt, checkInput = FALSE)
-  corresp.cpdag
+  corresp_cpdag <- pcalg::addBgKnowledge(patt, checkInput = FALSE)
+  corresp_cpdag
 }
 
 # Internal function from pcalg: pcalg:::getPattern
