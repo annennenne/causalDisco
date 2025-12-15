@@ -241,6 +241,7 @@ plot.knowledge <- function(x, ...) {
   g <- igraph::make_empty_graph(directed = TRUE)
   g <- igraph::add_vertices(g, nrow(vars), name = vars$var)
 
+  # ----- Required edges -----
   req <- edges[edges$status == "required", ]
   if (nrow(req) > 0) {
     req_list <- as.vector(t(req[, c("from", "to")]))
@@ -250,54 +251,56 @@ plot.knowledge <- function(x, ...) {
     igraph::E(g)$required <- FALSE
   }
 
-  # Forbidden edges (same direction rule)
+  # ----- Forbidden edges -----
   forb <- edges[edges$status == "forbidden", ]
   if (nrow(forb) > 0) {
     forb_list <- as.vector(t(forb[, c("from", "to")]))
     g <- igraph::add_edges(g, forb_list)
-    # Mark only the newly added edges
-    igraph::E(g)$forbidden <- FALSE
     new_edges <- (igraph::ecount(g) - nrow(forb) + 1):igraph::ecount(g)
+    igraph::E(g)$forbidden <- FALSE
     igraph::E(g)$forbidden[new_edges] <- TRUE
   } else {
     igraph::E(g)$forbidden <- FALSE
   }
 
-  tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
-  x_pos <- tier_index[vars$tier]
-  names(x_pos) <- vars$var
+  # ----- Layout -----
+  if (length(tiers$label) > 0) {
+    tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
+    x_pos <- tier_index[vars$tier]
+    names(x_pos) <- vars$var
 
-  nodes <- igraph::V(g)$name
-  x_coords <- x_pos[nodes]
+    nodes <- igraph::V(g)$name
+    x_coords <- x_pos[nodes]
 
-  y_coords <- stats::ave(seq_along(nodes), vars$tier[match(nodes, vars$var)], FUN = seq_along)
+    y_coords <- stats::ave(seq_along(nodes),
+      vars$tier[match(nodes, vars$var)],
+      FUN = seq_along
+    )
 
-  layout_matrix <- cbind(x_coords, y_coords)
+    layout_matrix <- cbind(x_coords, y_coords)
+    curved <- FALSE
+  } else {
+    layout_matrix <- igraph::layout_in_circle(g)
+    igraph::E(g)$curved <- igraph::curve_multiple(g)
+    curved <- TRUE
+  }
 
   # ----- Edge styling -----
   edges <- igraph::E(g)
-
   edge_colors <- ifelse(edges$forbidden, "red",
-    ifelse(edges$required, "blue",
-      "black"
-    )
+    ifelse(edges$required, "blue", "black")
   )
-
   edge_lwd <- ifelse(edges$forbidden, 2,
     ifelse(edges$required, 3, 1)
   )
-
   edge_lty <- ifelse(edges$forbidden, 2, 1)
 
-  ## --------------------------
-  ## Auto-scale vertex sizes to fit labels
-  ## --------------------------
+  # ----- Vertex sizes -----
   labels <- igraph::V(g)$name
-
   widths_in <- graphics::strwidth(labels, units = "inches", cex = 0.9)
   vertex_sizes <- widths_in * 72 + 10 # inches → points
 
-  # ----- Final plot -----
+  # ----- Plot -----
   plot(
     g,
     layout = layout_matrix,
@@ -311,6 +314,7 @@ plot.knowledge <- function(x, ...) {
     ...
   )
 }
+
 
 #
 # Plots a `caugi` object using `igraph`

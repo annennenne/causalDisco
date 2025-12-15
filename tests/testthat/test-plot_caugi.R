@@ -32,7 +32,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
+test_that("Plotting knowledgeable_caugi and knowledge objects with tier+required", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -55,7 +55,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
+test_that("Plotting knowledgeable_caugi and knowledge objects with tier+forbidden", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -69,6 +69,43 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
       youth ~ B1 + B2,
       old ~ C1
     ),
+    forbidden(A2 ~ B1),
+    forbidden(B1 ~ A2)
+  )
+  plot(kn)
+
+  kcg <- knowledgeable_caugi(cg, kn)
+  plot(kcg)
+  expect_true(TRUE)
+})
+
+test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
+  cg <- caugi::caugi(class = "PDAG")
+
+  cg <- cg |>
+    caugi::add_nodes(c("A1", "A2", "B1", "B2", "C1")) |>
+    caugi::add_edges(A1 %-->% B1 %-->% C1) |>
+    caugi::set_edges(B2 %---% C1)
+
+  kn <- knowledge(
+    required(A2 ~ B1)
+  )
+  plot(kn)
+
+  kcg <- knowledgeable_caugi(cg, kn)
+  plot(kcg)
+  expect_true(TRUE)
+})
+
+test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
+  cg <- caugi::caugi(class = "PDAG")
+
+  cg <- cg |>
+    caugi::add_nodes(c("A1", "A2", "B1", "B2", "C1")) |>
+    caugi::add_edges(A1 %-->% B1 %-->% C1) |>
+    caugi::set_edges(B2 %---% C1)
+
+  kn <- knowledge(
     forbidden(A2 ~ B1),
     forbidden(B1 ~ A2)
   )
