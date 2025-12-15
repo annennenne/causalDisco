@@ -164,6 +164,12 @@ kn <- knowledge(
   data.frame(A = 1, B = 2, C = 3),
   exogenous(A)
 )
+kn$edges
+#> # A tibble: 2 × 5
+#>   status    from  to    tier_from tier_to
+#>   <chr>     <chr> <chr> <chr>     <chr>  
+#> 1 forbidden B     A     <NA>      <NA>   
+#> 2 forbidden C     A     <NA>      <NA>
 ```
 
 ## TODO
@@ -261,7 +267,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
   
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -269,9 +275,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
-#> Warning: `required()` is deprecated and will be removed in a future version.
-#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
-#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1
@@ -355,7 +358,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ child_x1)
+    child_x2 %--x% child_x1
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -363,9 +366,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
-#> Warning: `forbidden()` is deprecated and will be removed in a future version.
-#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
-#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1
@@ -394,7 +394,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ child_x1)
+    child_x2 %--x% child_x1
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -402,9 +402,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
-#> Warning: `forbidden()` is deprecated and will be removed in a future version.
-#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
-#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1

@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -40,13 +40,13 @@ To install causalDisco ensure you first have installed Rust as described below.
 
 Then you can install the development version of causalDisco from GitHub using pak:
 
-```{r, eval=FALSE}
+```{r install, eval=FALSE}
 pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
 ```
 
 or with all suggested packages (note that this requires a valid Java / JDK installation for rJava as described below):
 
-```{r, eval=FALSE}
+```{r install w depend, eval=FALSE}
 pak::pkg_install("https://github.com/BjarkeHautop/causalDisco", dependencies = TRUE)
 ```
 
@@ -64,7 +64,7 @@ We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net for al
 
 We provide a helper function to install Temurin JDK 25 on macOS and Windows:
 
-```{r, eval=FALSE}
+```{r install java, eval=FALSE}
 causalDisco::install_java()
 ```
 
@@ -73,13 +73,13 @@ You may also refer to Tetrad's
 
 The current supported version of Tetrad can then be installed by calling
 
-```{r, eval=FALSE}
+```{r install tetrad, eval=FALSE}
 causalDisco::install_tetrad()
 ```
 
 To verify everything is set up correctly you can run `check_tetrad_install()`:
 
-```{r}
+```{r check tetrad install}
 causalDisco::check_tetrad_install()
 ```
 
@@ -132,15 +132,13 @@ plot(disco_cd_tges)
 
 - Should we keep the current exogenous/root as it is?
 
-```{r}
+```{r question}
 kn <- knowledge(
   data.frame(A = 1, B = 2, C = 3),
   exogenous(A)
 )
+kn$edges
 ```
-
-
-
 
 ## TODO
 
@@ -160,7 +158,7 @@ Automatically scale plot elements to fit the available plot size.
 
 - `tpc` with engine `"causalDisco"` does not currently work correctly with tier knowledge
 
-```{r}
+```{r tier knowledge bug tpc}
 data("tpc_example")
 
 kn <- knowledge(
@@ -187,7 +185,7 @@ Currently does nothing. Either make it work or throw error/warning if required e
   - Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving it score -Inf if missing a required edge,
   but then it runs forever. I.e. adding the following to `local.score`
   
-```{r, eval = FALSE}
+```{r attempted fix, eval = FALSE}
 vertex_name <- colnames(pp.dat$data)[vertex]
 req_parents <- kn$edges |>
 dplyr::filter(status == "required", to == vertex_name) |>
@@ -215,13 +213,13 @@ The algorithm needs to be modified when having required edges, I think.
 
 - Tetrad does not use required correctly
 
-```{r}
+```{r tetrad required bug}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
   
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -233,7 +231,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 The required edge is missing. Furthermore, in `pc` it gives undirected edges between the required edges.
 
-```{r}
+```{r tetrad required bug pc}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
 
@@ -251,7 +249,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 - Also gives undirected edges in tier knowledge?
 
-```{r}
+```{r tetrad tier bug}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
 
@@ -276,13 +274,13 @@ what is going on here.
 
 V7.6.9 gives this:
 
-```{r}
+```{r v7.6.9 tetrad forbidden bug}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ child_x1)
+    child_x2 %--x% child_x1
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -294,7 +292,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 But v6.7.8 gives this (which is correct?):
 
-```{r}
+```{r v7.6.8 tetrad works}
 detach("package:causalDisco", unload = TRUE)
 options(causalDisco.tetrad.version = "7.6.8")
 library(causalDisco)
@@ -304,7 +302,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ child_x1)
+    child_x2 %--x% child_x1
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -352,7 +350,7 @@ so we need to implement this in `causalDisco` (help?)
 
 This also doesn't work on 7.6.9
 
-```{r, eval=FALSE}
+```{r v7.6.9 another bug, eval=FALSE}
 > load_all()
 ℹ Loading causalDisco
 causalDisco startup:

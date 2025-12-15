@@ -19,7 +19,7 @@ library(causalDisco)
 ```
 
 This vignette demonstrates how to use the `knowledge` function to incorporate prior knowledge into causal discovery
-algorithms.
+algorithms. The different supported knowledge types are explained below, along with examples of how to create knowledge objects and use them with causal discovery methods. They can of course be combined as needed.
 
 # Tier knowledge
 
@@ -33,7 +33,7 @@ A tier knowledge object can be created by specifying tiers and their associated 
 numbers indicate earlier tiers, while otherwise it's based on the order of appearance.
 Thus, the below specifies different ways to encode the same tier knowledge:
 
-```{r}
+```{r tier knowledge}
 kn <- knowledge(
   tier(
     1 ~ c(A1, A2),
@@ -73,22 +73,24 @@ kn_also_almost <- knowledge(
 
 We can visualize the tiers using:
 
-```{r}
+```{r plot tier knowledge}
 plot(kn)
 ```
+
+The plot then shows the tiers as layers, with the earliest tiers to the left and latest to the right.
 
 ## Using tier knowledge with a dataset
 
 Suppose we want to use the `tpc_example` dataset from the causalDisco package:
 
-```{r}
+```{r dataset}
 data("tpc_example")
 head(tpc_example)
 ```
 
 We can pass the dataset to `knowledge`, which also checks that the specified variables exist:
 
-```{r}
+```{r tier knowledge with data}
 kn <- knowledge(
   tpc_example,
   tier(
@@ -103,7 +105,7 @@ kn <- knowledge(
 
 To make specifying variables easier, you can use tidyselect helpers such as `starts_with`:
 
-```{r}
+```{r tier knowledge with tidyselect}
 kn <- knowledge(
   tpc_example,
   tier(
@@ -114,9 +116,11 @@ kn <- knowledge(
 )
 ```
 
+Note, that you don't have to specify knowledge for all variables in the dataset. Variables not included in any tier are considered unrestricted and can have edges to/from any other variable.
+
 We can plot the knowledge to visualize the tiers:
 
-```{r}
+```{r plot tier knowledge with data}
 plot(kn)
 ```
 
@@ -125,21 +129,54 @@ plot(kn)
 Now that we have defined our knowledge, we can use it with causal discovery algorithms such as the temporal GES
 algorithm `tges` with engine `causalDisco` and score temporal BIC (`tbic`):
 
-```{r}
+```{r causal discovery with tier knowledge}
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 ```
 
 The causal discovery algorithms respects the provided knowledge, and we can plot the resulting causal graph. 
 
-```{r}
+```{r plot causal discovery with tier knowledge}
 plot(disco_cd_tges)
 ```
 
 # Required and forbidden knowledge
 
-WIP and syntax changes coming soon.
+You can specify required and forbidden edges using the `%-->%` and `%--x%` operators, respectively. For example, to require an edge from `child_x1` to `youth_x3` and forbid an edge from `child_x2` to `oldage_x5`, you can do:
 
+```{r required and forbidden knowledge}
+kn <- knowledge(
+  tpc_example,
+  child_x1 %-->% youth_x3,
+  child_x2 %--x% oldage_x5
+)
+```
+
+This knowledge object can also be visualized:
+
+```{r plot required and forbidden knowledge}
+plot(kn)
+```
+
+The blue solid edges represents required edges, while the red dashed edges represent forbidden edges.
+
+Just like tier supported tidyselect helpers, you can also use them for specifying required and forbidden edges:
+
+```{r required and forbidden knowledge with tidyselect}
+kn <- knowledge(
+  tpc_example,
+  starts_with("child") %-->% starts_with("youth"),
+  starts_with("oldage") %--x% starts_with("youth")
+)
+```
+
+This means, that all variables starting with "child" are required to have edges to all variables starting with "youth", and no variables starting with "oldage" can have edges to any variables starting with "youth". We can visualize this:
+
+```{r plot required and forbidden knowledge with tidyselect}
+plot(kn)
+```
+
+You can then use this knowledge object with causal discovery algorithms similarly as before.
 
 # Engine specific information about knowledge
 
@@ -148,7 +185,7 @@ WIP and syntax changes coming soon.
 Tier, required and forbidden knowledge are all supported with bnlearn engines. Note, that you can get a
 harmless(?) warning from bnlearn when using required knowledge.
 
-```{r}
+```{r bnlearn}
 data("tpc_example")
 
 kn <- knowledge(
@@ -162,7 +199,7 @@ output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 
 But the resulting causal graph respects the knowledge correctly nevertheless.
 
-```{r}
+```{r plot bnlearn}
 plot(output)
 ```
 
