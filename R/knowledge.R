@@ -2,14 +2,23 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Knowledge Mini-DSL constructor (`tier()`, `forbidden()`, `required()`)
+#' Knowledge Mini-DSL Constructor
+#'
+#' Create a `knowledge` object using a concise mini-DSL with `tier()`, `forbidden()`,
+#' `required()`, `exogenous()` and infix edge operators `%-->%` and `%--x%`.
 #'
 #' @description
-#' Accepts an optional data frame followed by calls built from **formulas**:
+#' Constructs a `knowledge` object optionally initialized with a data frame and
+#' extended with variable relationships expressed via formulas, selectors, or infix operators:
 #'
-#' * `tier( 1 ~ V1 + V2, exposure ~ E )`
-#' * `forbidden( V1 ~ V4, V2 ~ V4)`
-#' * `required ( V1 ~ V2 )`
+#' ```r
+#' tier(1 ~ V1 + V2, exposure ~ E)
+#' forbidden(V1 ~ V4, V2 ~ V4)
+#' required(V1 ~ V2)
+#' V1 %-->% V3    # infix syntax for required edges
+#' V2 %--x% V3    # infix syntax for forbidden edges
+#' exogenous(V1, V2)
+#' ```
 #'
 #' @details
 #' The first argument can be a data frame, which will be used to populate the
@@ -18,43 +27,36 @@
 #' be *frozen*. You can unfreeze a knowledge object by using the function
 #' `unfreeze(knowledge)`.
 #'
-#' If no data frame is provided, the
-#' `knowledge` object will be empty until variables are added with `tier()`,
-#' `forbidden()`, or `required()`. You can also populate the object with
-#' the `add_vars()` verb.
+#' If no data frame is provided, the object is initially empty. Variables can
+#' then be added via `tier()`, `forbidden()`, `required()`, infix operators, or `add_vars()`.
 #'
-#' `tier()` assigns variables to tiers. Tiers are internally numbered, starting
-#' with 1. If you provide a numeric literal, it will be used as the tier index.
-#' If you provide a symbol or string, it will be used as a label. The order of
-#' the provided tiers will be used as the order of the tiers in the object,
-#' unless tiers are specified with numeric literals. This function takes
-#' formulas as input. The left-hand side of the formula is the *tier* and the
-#' right-hand side is the *variables*. You can also use tidyselect syntax to
-#' specify the variables. For example, `tier(1 ~ starts_with("V"))` will assign
-#' all variables starting with "V" to tier 1.
+#' - `tier()`: Assigns variables to tiers. Tiers may be numeric or string labels.
+#'   The left-hand side (LHS) of the formula is the tier; the right-hand side (RHS)
+#'   specifies variables. Variables can also be selected using **tidyselect** syntax:
+#'   `tier(1 ~ starts_with("V"))`.
 #'
-#' The `forbidden()` and `required()` functions add edges to the knowledge
-#' object. The edges are added as directed edges by default, currently there is
-#' no theoretical support for other edge types than these.
-#' These functions also take formulas as input.
-#' The left-hand side of the formula is the *from* variable, and the right-hand
-#' side is the *to* variable.
+#' - `forbidden()` / `required()`: Add directed edges between variables.
+#'   LHS is the source, RHS is the target. Both sides support tidyselect syntax.
 #'
-#' @param ...
-#'  - optionally, a single **data frame** (first argument) whose column names initialise the
-#'    variable set and freeze the knowledge object, followed by
-#'  - zero or more calls to the mini‑DSL:
-#'    `tier()`, `forbidden()`, `required()`, or `exogenous()` (aliases: `exo()`,
-#'    `root()`).
+#' - `%-->%` and `%--x%`: Infix alternatives for `required()` and `forbidden()`.
+#'   Example: `V1 %-->% V3` is equivalent to `required(V1 ~ V3)`.
 #'
-#'  For `tier()` you may pass one or more two‑sided **formulas**
-#'  (`tier(1 ~ x + y)`, `tier("baseline" ~ starts_with("V"))`) or a single
-#'  numeric vector shortcut matching the number of variables to set tiers by
-#'  index. `forbidden()`/`required()` take one or more two‑sided formulas
-#'  (`from ~ to`), where each side can use tidyselect semantics to select
-#'  multiple variables. `exogenous()`/`exo()`/`root()` take variable selectors
-#'  (names or tidyselect), possibly multiple. Arguments are evaluated in order;
-#'  only these calls are allowed.
+#' - `exogenous()` / `exo()` / `root()`: Mark variables as exogenous (root nodes).
+#'
+#' - Numeric vector shortcut for `tier()`:
+#'   `tier(c(1, 2, 1))` assigns tiers by index to all existing variables.
+#'
+#' @param ... Arguments to define the knowledge object:
+#'   * Optionally, a single data frame (first argument) whose column names
+#'     initialize and freeze the variable set.
+#'   * Zero or more mini-DSL calls:
+#'     `tier()`, `forbidden()`, `required()`, `exogenous()`, `exo()`, `root()`,
+#'     or infix operators `%-->%` and `%--x%`.
+#'     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a numeric vector.
+#'     - `forbidden()` / `required()`: One or more two-sided formulas (`from ~ to`).
+#'     - `exogenous()` / `exo()` / `root()`: Variable names or tidyselect selectors.
+#'     Arguments are evaluated in order; only these calls are allowed.
+#'
 #' @returns A populated `knowledge` object.
 #'
 #' @importFrom tidyselect eval_select everything starts_with ends_with
@@ -255,6 +257,36 @@ knowledge <- function(...) {
     kn
   }
 
+  add_edge_infix <- function(expr, status) {
+    # Evaluate infix call to get lhs/rhs expressions
+    obj <- eval(expr, envir = parent.frame())
+    from_vars <- .formula_vars(kn, obj$lhs)
+    to_vars <- .formula_vars(kn, obj$rhs)
+
+    lhs_text <- paste0("'", paste(deparse(obj$lhs), collapse = ""), "'")
+    rhs_text <- paste0("'", paste(deparse(obj$rhs), collapse = ""), "'")
+
+    if (!length(from_vars)) {
+      stop(sprintf(
+        "%s edge: no variables matched %s from the left-hand side.",
+        status,
+        lhs_text
+      ), call. = FALSE)
+    }
+
+    if (!length(to_vars)) {
+      stop(sprintf(
+        "%s edge: no variables matched %s from the right-hand side.",
+        status,
+        rhs_text
+      ), call. = FALSE)
+    }
+
+    kn <<- add_vars(kn, c(from_vars, to_vars))
+    kn <<- .add_edges(kn, status, from_vars, to_vars)
+  }
+
+
   edge_helper <- function(status, ...) {
     specs <- rlang::list2(...)
     if (!length(specs)) {
@@ -292,7 +324,10 @@ knowledge <- function(...) {
         )
       }
 
-      # insert every combination of from × to
+      # Add missing variables
+      kn <<- add_vars(kn, c(from_vars, to_vars))
+
+      # Add edges
       kn <<- .add_edges(kn, status, from_vars, to_vars)
     }
   }
@@ -327,16 +362,43 @@ knowledge <- function(...) {
 
   # evaluate the call list
   allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
+
   for (expr in dots) {
+    # Infix required
+    if (is.call(expr) && identical(expr[[1]], as.name("%-->%"))) {
+      add_edge_infix(expr, "required")
+      next
+    }
+
+    # Infix forbidden
+    if (is.call(expr) && identical(expr[[1]], as.name("%--x%"))) {
+      add_edge_infix(expr, "forbidden")
+      next
+    }
+
+    if (inherits(expr, "required_edge")) {
+      add_edge_infix(expr, "required")
+      next
+    }
+    if (inherits(expr, "forbidden_edge")) {
+      add_edge_infix(expr, "forbidden")
+      next
+    }
+
+    # Standard function calls
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
-      stop("Only tier(), forbidden(), required(), and exogenous()",
-        "(as well as exo() and root() as synonyms) calls are allowed.\n",
-        "The expression that triggered this error was: ", deparse(expr),
+      stop(
+        "Only tier(), forbidden(), required(), exogenous(), ",
+        "and infix edge operators (%-->%, %--x%) are allowed.\n",
+        "The expression that triggered this error was: ",
+        deparse(expr),
         call. = FALSE
       )
     }
+
     eval(expr, envir = environment())
   }
+
 
   # Sort tiers only if all labels are numeric-coercible
   suppressWarnings({
@@ -358,6 +420,38 @@ knowledge <- function(...) {
   }
 
   kn
+}
+
+#' @title Infix operator for required edges
+#' @description
+#' Creates a required edge between two variables or sets of variables.
+#'
+#' @param lhs Left-hand side variable(s).
+#' @param rhs Right-hand side variable(s).
+#' @returns An object of class `required_edge`.
+#' @keywords internal
+#' @noRd
+`%-->%` <- function(lhs, rhs) {
+  structure(
+    list(lhs = substitute(lhs), rhs = substitute(rhs)),
+    class = "required_edge"
+  )
+}
+
+#' @title Infix operator for forbidden edges
+#' @description
+#' Creates a forbidden edge between two variables or sets of variables.
+#'
+#' @param lhs Left-hand side variable(s).
+#' @param rhs Right-hand side variable(s).
+#' @returns An object of class `forbidden_edge`.
+#' @keywords internal
+#' @noRd
+`%--x%` <- function(lhs, rhs) {
+  structure(
+    list(lhs = substitute(lhs), rhs = substitute(rhs)),
+    class = "forbidden_edge"
+  )
 }
 
 # ────────────────────────────────── Verbs ─────────────────────────────────────

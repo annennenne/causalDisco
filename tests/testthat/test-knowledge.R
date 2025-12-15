@@ -439,6 +439,60 @@ test_that("add_to_tier() works as expected with mini-DSL", {
   ))
 })
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Infix operators do the same as functions
+# ──────────────────────────────────────────────────────────────────────────────
+test_that("required() and %-->% produce the same edges", {
+  kn_req <- knowledge(
+    required(V1 ~ V2)
+  )
+  kn_dsl <- knowledge(
+    V1 %-->% V2
+  )
+  expect_equal(kn_req$edges, kn_dsl$edges)
+})
+
+test_that("forbidden() and %--x% produce the same edges", {
+  kn_req <- knowledge(
+    forbidden(V1 ~ V2)
+  )
+  kn_dsl <- knowledge(
+    V1 %--x% V2
+  )
+  expect_equal(kn_req$edges, kn_dsl$edges)
+})
+
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Infix operators errors if df and variables don't match
+# ──────────────────────────────────────────────────────────────────────────────
+test_that("%-->% and %--x% errors if df and variables don't match", {
+  df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
+  expect_error(
+    knowledge(df, 1 %-->% V2),
+    "required edge: no variables matched '1' from the left-hand side.",
+    fixed = TRUE
+  )
+  expect_error(
+    knowledge(df, V2 %-->% 1),
+    "required edge: no variables matched '1' from the right-hand side.",
+    fixed = TRUE
+  )
+
+  expect_error(
+    knowledge(df, 1 %--x% V2),
+    "forbidden edge: no variables matched '1' from the left-hand side.",
+    fixed = TRUE
+  )
+  expect_error(
+    knowledge(df, V2 %--x% 1),
+    "forbidden edge: no variables matched '1' from the right-hand side.",
+    fixed = TRUE
+  )
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Edge errors
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1146,14 +1200,14 @@ test_that("knowledge() throws error when using another function than tier(), for
       df,
       musthave(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required(), and exogenous()",
+    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
     fixed = TRUE
   )
   expect_error(
     knowledge(
       makingmistakes(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required(), and exogenous()",
+    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
     fixed = TRUE
   )
 })
@@ -1446,7 +1500,7 @@ test_that("knowledge() errors when required edges are bidirectional", {
 test_that("knowledge() rejects unknown top-level calls", {
   expect_error(
     knowledge(foo(V1)),
-    "Only tier(), forbidden(), required(), and exogenous()",
+    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
     fixed = TRUE
   )
 })

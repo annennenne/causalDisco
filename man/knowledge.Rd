@@ -2,67 +2,66 @@
 % Please edit documentation in R/knowledge.R
 \name{knowledge}
 \alias{knowledge}
-\title{Knowledge Mini-DSL constructor (\code{tier()}, \code{forbidden()}, \code{required()})}
+\title{Knowledge Mini-DSL Constructor}
 \usage{
 knowledge(...)
 }
 \arguments{
-\item{...}{\itemize{
-\item optionally, a single \strong{data frame} (first argument) whose column names initialise the
-variable set and freeze the knowledge object, followed by
-\item zero or more calls to the mini‑DSL:
-\code{tier()}, \code{forbidden()}, \code{required()}, or \code{exogenous()} (aliases: \code{exo()},
-\code{root()}).
+\item{...}{Arguments to define the knowledge object:
+\itemize{
+\item Optionally, a single data frame (first argument) whose column names
+initialize and freeze the variable set.
+\item Zero or more mini-DSL calls:
+\code{tier()}, \code{forbidden()}, \code{required()}, \code{exogenous()}, \code{exo()}, \code{root()},
+or infix operators \verb{\%-->\%} and \verb{\%--x\%}.
+\itemize{
+\item \code{tier()}: One or more two-sided formulas (\code{tier(1 ~ x + y)}), or a numeric vector.
+\item \code{forbidden()} / \code{required()}: One or more two-sided formulas (\code{from ~ to}).
+\item \code{exogenous()} / \code{exo()} / \code{root()}: Variable names or tidyselect selectors.
+Arguments are evaluated in order; only these calls are allowed.
 }
-
-For \code{tier()} you may pass one or more two‑sided \strong{formulas}
-(\code{tier(1 ~ x + y)}, \code{tier("baseline" ~ starts_with("V"))}) or a single
-numeric vector shortcut matching the number of variables to set tiers by
-index. \code{forbidden()}/\code{required()} take one or more two‑sided formulas
-(\code{from ~ to}), where each side can use tidyselect semantics to select
-multiple variables. \code{exogenous()}/\code{exo()}/\code{root()} take variable selectors
-(names or tidyselect), possibly multiple. Arguments are evaluated in order;
-only these calls are allowed.}
+}}
 }
 \value{
 A populated \code{knowledge} object.
 }
 \description{
-Accepts an optional data frame followed by calls built from \strong{formulas}:
-\itemize{
-\item \code{tier( 1 ~ V1 + V2, exposure ~ E )}
-\item \code{forbidden( V1 ~ V4, V2 ~ V4)}
-\item \code{required ( V1 ~ V2 )}
-}
+Constructs a \code{knowledge} object optionally initialized with a data frame and
+extended with variable relationships expressed via formulas, selectors, or infix operators:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{tier(1 ~ V1 + V2, exposure ~ E)
+forbidden(V1 ~ V4, V2 ~ V4)
+required(V1 ~ V2)
+V1 \%-->\% V3    # infix syntax for required edges
+V2 \%--x\% V3    # infix syntax for forbidden edges
+exogenous(V1, V2)
+}\if{html}{\out{</div>}}
 }
 \details{
+Create a \code{knowledge} object using a concise mini-DSL with \code{tier()}, \code{forbidden()},
+\code{required()}, \code{exogenous()} and infix edge operators \verb{\%-->\%} and \verb{\%--x\%}.
+
 The first argument can be a data frame, which will be used to populate the
 \code{knowledge} object with variable names. If you later add variables with
 add_* verbs, this will throw a warning, since the knowledge object will
 be \emph{frozen}. You can unfreeze a knowledge object by using the function
 \code{unfreeze(knowledge)}.
 
-If no data frame is provided, the
-\code{knowledge} object will be empty until variables are added with \code{tier()},
-\code{forbidden()}, or \code{required()}. You can also populate the object with
-the \code{add_vars()} verb.
-
-\code{tier()} assigns variables to tiers. Tiers are internally numbered, starting
-with 1. If you provide a numeric literal, it will be used as the tier index.
-If you provide a symbol or string, it will be used as a label. The order of
-the provided tiers will be used as the order of the tiers in the object,
-unless tiers are specified with numeric literals. This function takes
-formulas as input. The left-hand side of the formula is the \emph{tier} and the
-right-hand side is the \emph{variables}. You can also use tidyselect syntax to
-specify the variables. For example, \code{tier(1 ~ starts_with("V"))} will assign
-all variables starting with "V" to tier 1.
-
-The \code{forbidden()} and \code{required()} functions add edges to the knowledge
-object. The edges are added as directed edges by default, currently there is
-no theoretical support for other edge types than these.
-These functions also take formulas as input.
-The left-hand side of the formula is the \emph{from} variable, and the right-hand
-side is the \emph{to} variable.
+If no data frame is provided, the object is initially empty. Variables can
+then be added via \code{tier()}, \code{forbidden()}, \code{required()}, infix operators, or \code{add_vars()}.
+\itemize{
+\item \code{tier()}: Assigns variables to tiers. Tiers may be numeric or string labels.
+The left-hand side (LHS) of the formula is the tier; the right-hand side (RHS)
+specifies variables. Variables can also be selected using \strong{tidyselect} syntax:
+\code{tier(1 ~ starts_with("V"))}.
+\item \code{forbidden()} / \code{required()}: Add directed edges between variables.
+LHS is the source, RHS is the target. Both sides support tidyselect syntax.
+\item \verb{\%-->\%} and \verb{\%--x\%}: Infix alternatives for \code{required()} and \code{forbidden()}.
+Example: \code{V1 \%-->\% V3} is equivalent to \code{required(V1 ~ V3)}.
+\item \code{exogenous()} / \code{exo()} / \code{root()}: Mark variables as exogenous (root nodes).
+\item Numeric vector shortcut for \code{tier()}:
+\code{tier(c(1, 2, 1))} assigns tiers by index to all existing variables.
+}
 }
 \examples{
 ### knowledge() example ###
