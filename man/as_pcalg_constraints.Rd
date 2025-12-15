@@ -72,7 +72,7 @@ kn <- knowledge(
     youth ~ starts_with("youth"),
     oldage ~ starts_with("old")
   ),
-  required(child_x1 ~ youth_x3)
+  child_x1 \%-->\% youth_x3
 )
 
 try(as_pcalg_constraints(kn), silent = TRUE) # fails due to tiers

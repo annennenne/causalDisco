@@ -80,8 +80,8 @@ kn <- knowledge(
     1 ~ V1 + V2,
     2 ~ V3
   ),
-  required(V1 ~ V2),
-  forbidden(V3 ~ V1)
+  V1 \%-->\% V2,
+  V3 \%--x\% V1
 )
 
 # if a data frame is provided, variable names are checked against it
@@ -129,8 +129,8 @@ kn <- knowledge(
 # There is also required and forbidden edges, which are specified like so
 kn <- knowledge(
   df,
-  required(child_x1 ~ youth_x3),
-  forbidden(oldage_x6 ~ child_x1)
+  child_x1 \%-->\% youth_x3,
+  oldage_x6 \%--x\% child_x1
 )
 
 # You can also add exogenous variables
@@ -183,7 +183,7 @@ kn <- knowledge(
       ends_with("_{i}")
     )
   ),
-  required(X_1 ~ X_2)
+  X_1 \%-->\% X_2
 )
 
 df <- data.frame(

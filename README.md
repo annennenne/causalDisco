@@ -269,6 +269,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
+#> Warning: `required()` is deprecated and will be removed in a future version.
+#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
+#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1
@@ -296,6 +299,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
+#> Warning: `required()` is deprecated and will be removed in a future version.
+#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
+#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x1    ---  child_x2
@@ -357,6 +363,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
+#> Warning: `forbidden()` is deprecated and will be removed in a future version.
+#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
+#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1
@@ -393,6 +402,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
+#> Warning: `forbidden()` is deprecated and will be removed in a future version.
+#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
+#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x2    o-o  child_x1

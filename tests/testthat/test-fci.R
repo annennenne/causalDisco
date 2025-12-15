@@ -48,7 +48,7 @@ test_that("fci Tetrad disco respects required background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -68,7 +68,7 @@ test_that("fci Tetrad disco respects required background knowledge", {
       youth ~ starts_with("youth"),
       old ~ starts_with("old")
     ),
-    required(youth_x3 ~ oldage_x5)
+    youth_x3 %-->% oldage_x5
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -141,7 +141,7 @@ test_that("fci pcalg disco errors on required background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
@@ -156,7 +156,7 @@ test_that("fci pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x1 ~ youth_x3)
+    child_x1 %--x% youth_x3
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
@@ -167,8 +167,8 @@ test_that("fci pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x1 ~ youth_x3),
-    forbidden(youth_x3 ~ child_x1)
+    child_x1 %--x% youth_x3,
+    youth_x3 %--x% child_x1
   )
 
   pcalg_fci <- fci(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)

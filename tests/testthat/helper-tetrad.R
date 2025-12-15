@@ -81,11 +81,11 @@ make_knowledge_test_object <- function(df) {
   # forbid a tier violation
   forbidden_kn <- knowledge(
     df,
-    forbidden(X2 ~ X1)
+    X2 %--x% X1
   )
   required_kn <- knowledge(
     df,
-    required(X1 ~ X2)
+    X1 %-->% X2
   )
   combi_kn <- tiered_kn + forbidden_kn + required_kn
 

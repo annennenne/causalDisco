@@ -258,6 +258,11 @@ knowledge <- function(...) {
   }
 
   add_edge_infix <- function(expr, status) {
+    status_cap <- paste0(
+      toupper(substr(status, 1L, 1L)),
+      substr(status, 2L, nchar(status))
+    )
+
     # Evaluate infix call to get lhs/rhs expressions
     obj <- eval(expr, envir = parent.frame())
     from_vars <- .formula_vars(kn, obj$lhs)
@@ -269,7 +274,7 @@ knowledge <- function(...) {
     if (!length(from_vars)) {
       stop(sprintf(
         "%s edge: no variables matched %s from the left-hand side.",
-        status,
+        status_cap,
         lhs_text
       ), call. = FALSE)
     }
@@ -277,7 +282,7 @@ knowledge <- function(...) {
     if (!length(to_vars)) {
       stop(sprintf(
         "%s edge: no variables matched %s from the right-hand side.",
-        status,
+        status_cap,
         rhs_text
       ), call. = FALSE)
     }
@@ -362,8 +367,24 @@ knowledge <- function(...) {
 
   # evaluate the call list
   allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
+  deprecated <- c("forbidden", "required")
 
   for (expr in dots) {
+    if (is.call(expr)) {
+      fun <- as.character(expr[[1]])
+
+      if (fun %in% deprecated) {
+        warning(
+          sprintf(
+            "`%s()` is deprecated and will be removed in a future version. ",
+            fun
+          ),
+          "Please use the infix operators `%--x%` (forbidden) and `%-->%` (required) instead.",
+          call. = FALSE
+        )
+      }
+    }
+
     # Infix required
     if (is.call(expr) && identical(expr[[1]], as.name("%-->%"))) {
       add_edge_infix(expr, "required")

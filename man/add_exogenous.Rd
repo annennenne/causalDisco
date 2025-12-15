@@ -56,8 +56,8 @@ kn2 <- knowledge(
     youth ~ starts_with("youth"),
     old ~ starts_with("oldage")
   ),
-  required(child_x1 ~ youth_x3),
-  forbidden(child_x2 ~ youth_x4),
+  child_x1 \%-->\% youth_x3,
+  child_x2 \%--x\% youth_x4,
   exo(child_x1) # synonyms: exogenous(), root()
 )
 

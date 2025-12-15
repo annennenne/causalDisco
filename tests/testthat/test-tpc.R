@@ -41,7 +41,7 @@ test_that("tpc causalDisco respects required background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
@@ -58,8 +58,8 @@ test_that("tpc causalDisco respects required background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ youth_x3),
-    required(child_x2 ~ child_x1)
+    child_x1 %-->% youth_x3,
+    child_x2 %-->% child_x1
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
@@ -77,7 +77,7 @@ test_that("tpc causalDisco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ oldage_x5)
+    child_x2 %--x% oldage_x5
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
@@ -92,8 +92,8 @@ test_that("tpc causalDisco respects forbidden background knowledge", {
   # edges contains oldage_x6 -> oldage_x5. Verify graph changes when we forbid oldage_x5 -> oldage_x6.
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ oldage_x5),
-    forbidden(oldage_x5 ~ oldage_x6)
+    child_x2 %--x% oldage_x5,
+    oldage_x5 %--x% oldage_x6
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")

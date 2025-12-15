@@ -153,7 +153,7 @@ data("tpc_example")
 
 kn <- knowledge(
   tpc_example,
-  required(child_x1 ~ youth_x3)
+  child_x1 %-->% youth_x3
 )
 
 bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)

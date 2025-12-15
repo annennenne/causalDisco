@@ -30,7 +30,7 @@ kn <- knowledge(
     youth ~ starts_with("youth"),
     oldage ~ starts_with("old")
   ),
-  required(child_x1 ~ youth_x3)
+  child_x1 \%-->\% youth_x3
 )
 print(kn)
 

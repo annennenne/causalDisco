@@ -46,7 +46,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with tier+required
       youth ~ B1 + B2,
       old ~ C1
     ),
-    required(A2 ~ B1)
+    A2 %-->% B1
   )
   plot(kn)
 
@@ -69,8 +69,8 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with tier+forbidde
       youth ~ B1 + B2,
       old ~ C1
     ),
-    forbidden(A2 ~ B1),
-    forbidden(B1 ~ A2)
+    A2 %--x% B1,
+    B1 %--x% A2
   )
   plot(kn)
 
@@ -88,7 +88,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
     caugi::set_edges(B2 %---% C1)
 
   kn <- knowledge(
-    required(A2 ~ B1)
+    A2 %-->% B1
   )
   plot(kn)
 
@@ -106,8 +106,8 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
     caugi::set_edges(B2 %---% C1)
 
   kn <- knowledge(
-    forbidden(A2 ~ B1),
-    forbidden(B1 ~ A2)
+    A2 %--x% B1,
+    B1 %--x% A2
   )
   plot(kn)
 
@@ -148,7 +148,7 @@ test_that("disco plotting with required works", {
       youth ~ starts_with("youth"),
       old ~ starts_with("old")
     ),
-    required(child_x1 ~ youth_x3)
+    child_x1 %-->% youth_x3
   )
 
   # use causalDisco's own tges algorithm with temporal BIC score
@@ -170,7 +170,7 @@ test_that("disco plotting with forbidden works", {
       youth ~ starts_with("youth"),
       old ~ starts_with("old")
     ),
-    forbidden(child_x1 ~ youth_x3)
+    child_x1 %--x% youth_x3
   )
 
   # use causalDisco's own tges algorithm with temporal BIC score

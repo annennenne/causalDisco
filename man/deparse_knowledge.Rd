@@ -32,7 +32,7 @@ kn <- knowledge(
     youth ~ starts_with("youth"),
     old ~ starts_with("old")
   ),
-  required(child_x1 ~ youth_x3),
+  child_x1 \%-->\% youth_x3,
   forbidden(oldage_x6 ~ child_x1)
 )
 

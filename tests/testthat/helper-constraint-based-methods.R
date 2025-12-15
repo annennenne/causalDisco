@@ -32,9 +32,7 @@ toy_df_constraint <- function(n = 60L) {
 toy_knowledge <- function(df) {
   knowledge(
     df,
-    required(
-      V1 ~ V2,
-      V5 ~ V6
-    )
+    V1 %-->% V2,
+    V5 %-->% V6
   )
 }

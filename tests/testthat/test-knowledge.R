@@ -12,8 +12,9 @@ test_that("knowledge object is created correctly using mini-DSL", {
         2 ~ V3,
         3 ~ c(V4, V5)
       ),
-      forbidden(V1 ~ V3),
-      required(V1 ~ V2, V2 ~ V3)
+      V1 %--x% V3,
+      V1 %-->% V2,
+      V2 %-->% V3
     )
   expect_equal(kn$vars, tibble::tibble(
     var = c("V1", "V2", "V3", "V4", "V5"),
@@ -41,17 +42,17 @@ test_that("seeding knowledge object with a df, matrix, or tibble works", {
     knowledge(
       df,
       tier(1 ~ X1, 2 ~ X2 + X3),
-      required(X1 ~ X2)
+      X1 %-->% X2
     )
   kn_tbl <- knowledge(
     tbl,
     tier(1 ~ X1, 2 ~ X2 + X3),
-    required(X1 ~ X2)
+    X1 %-->% X2
   )
   kn_mat <- knowledge(
     mat,
     tier(1 ~ X1, 2 ~ X2 + X3),
-    required(X1 ~ X2)
+    X1 %-->% X2
   )
   expect_equal(kn, kn_tbl)
   expect_equal(kn, kn_mat)
@@ -73,8 +74,9 @@ test_that("tier generation with named tiers using character names", {
       "Two" ~ V3,
       "Three" ~ V4 + V5
     ),
-    forbidden(V1 ~ V3),
-    required(V1 ~ V2, V2 ~ V3)
+    V1 %--x% V3,
+    V1 %-->% V2,
+    V2 %-->% V3
   )
   expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
@@ -88,8 +90,9 @@ test_that("tier generation with named tiers using symbols/expression", {
       Two ~ V3,
       Three ~ V4 + V5
     ),
-    forbidden(V1 ~ V3),
-    required(V1 ~ V2, V2 ~ V3)
+    V1 %--x% V3,
+    V1 %-->% V2,
+    V2 %-->% V3
   )
   expect_equal(kn$tiers, tibble::tibble(
     label = c("One", "Two", "Three")
@@ -105,8 +108,9 @@ test_that("tier generation with named tiers using mix of integers, chars, and sy
       "Four" ~ V6,
       Five ~ V7 + V8 + V9
     ),
-    forbidden(V1 ~ V3),
-    required(V1 ~ V2, V2 ~ V3)
+    V1 %--x% V3,
+    V1 %-->% V2,
+    V2 %-->% V3
   )
   expect_equal(kn$tiers, tibble::tibble(
     label = c("1", "Two", "3", "Four", "Five")
@@ -335,7 +339,7 @@ test_that("tier generation using seq_tiers", {
         ends_with("_{i}")
       )
     ),
-    required(X_1 ~ X_2)
+    X_1 %-->% X_2
   )
   expect_equal(kn$tiers, tibble::tibble(
     label = 1:10 |> as.character()
@@ -444,9 +448,9 @@ test_that("add_to_tier() works as expected with mini-DSL", {
 # Infix operators do the same as functions
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("required() and %-->% produce the same edges", {
-  kn_req <- knowledge(
+  expect_warning(kn_req <- knowledge(
     required(V1 ~ V2)
-  )
+  ))
   kn_dsl <- knowledge(
     V1 %-->% V2
   )
@@ -454,15 +458,14 @@ test_that("required() and %-->% produce the same edges", {
 })
 
 test_that("forbidden() and %--x% produce the same edges", {
-  kn_req <- knowledge(
+  expect_warning(kn_req <- knowledge(
     forbidden(V1 ~ V2)
-  )
+  ))
   kn_dsl <- knowledge(
     V1 %--x% V2
   )
   expect_equal(kn_req$edges, kn_dsl$edges)
 })
-
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -472,23 +475,23 @@ test_that("%-->% and %--x% errors if df and variables don't match", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(df, 1 %-->% V2),
-    "required edge: no variables matched '1' from the left-hand side.",
+    "Required edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
   expect_error(
     knowledge(df, V2 %-->% 1),
-    "required edge: no variables matched '1' from the right-hand side.",
+    "Required edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
 
   expect_error(
     knowledge(df, 1 %--x% V2),
-    "forbidden edge: no variables matched '1' from the left-hand side.",
+    "Forbidden edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
   expect_error(
     knowledge(df, V2 %--x% 1),
-    "forbidden edge: no variables matched '1' from the right-hand side.",
+    "Forbidden edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
 })
@@ -499,9 +502,9 @@ test_that("%-->% and %--x% errors if df and variables don't match", {
 
 test_that("forbidden() errors when called without any formulas", {
   expect_error(
-    knowledge(
+    expect_warning(knowledge(
       forbidden()
-    ),
+    )),
     "forbidden() needs at least one two-sided formula.",
     fixed = TRUE
   )
@@ -509,68 +512,68 @@ test_that("forbidden() errors when called without any formulas", {
 
 test_that("required() errors when called without any formulas", {
   expect_error(
-    knowledge(
+    expect_warning(knowledge(
       required()
-    ),
+    )),
     "required() needs at least one two-sided formula.",
     fixed = TRUE
   )
 })
 test_that("forbidden() errors when called with a non-formula", {
   expect_error(
-    knowledge(
+    expect_warning(knowledge(
       forbidden(1)
-    ),
+    )),
     "Arguments must be two-sided formulas.",
     fixed = TRUE
   )
 })
 test_that("required() errors when called with a non-formula", {
   expect_error(
-    knowledge(
+    expect_warning(knowledge(
       required(1)
-    ),
+    )),
     "Arguments must be two-sided formulas.",
     fixed = TRUE
   )
 })
 
-test_that("forbidden() and required() errors when no from vars matched", {
+test_that("forbidden and required errors when no from vars matched", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
       df,
-      forbidden(1 ~ V1)
+      1 %--x% V1
     ),
-    "Edge selection `1 ~ V1` matched no variables on the left-hand side of the formula.",
+    "Forbidden edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
   expect_error(
     knowledge(
       df,
-      required(1 ~ V1)
+      1 %-->% V1
     ),
-    "Edge selection `1 ~ V1` matched no variables on the left-hand side of the formula.",
+    "Required edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
 })
 
-test_that("forbidden() and required() errors when no to vars matched", {
+test_that("forbidden and required errors when no to vars matched", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
       df,
-      forbidden(V1 ~ 1)
+      V1 %--x% 1
     ),
-    "Edge selection `V1 ~ 1` matched no variables on the right-hand side of the formula.",
+    "Forbidden edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
   expect_error(
     knowledge(
       df,
-      required(V1 ~ 1)
+      V1 %-->% 1
     ),
-    "Edge selection `V1 ~ 1` matched no variables on the right-hand side of the formula.",
+    "Required edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
 })
@@ -1133,7 +1136,7 @@ test_that("reordering respects tier-violation rules", {
   # only forbidden edge → any reorder is fine
   kn <- knowledge(
     tier(One ~ V1, Two ~ V2, Three ~ V3),
-    forbidden(V2 ~ V3)
+    V2 %--x% V3
   )
   expect_silent(reorder_tiers(kn, c("Three", "One", "Two")))
   expect_silent(reposition_tier(kn, Three, before = One))
@@ -1141,7 +1144,7 @@ test_that("reordering respects tier-violation rules", {
   # required edge → illegal uphill move must error
   kn2 <- knowledge(
     tier(One ~ V1, Two ~ V2, Three ~ V3),
-    required(V2 ~ V3) # V2 must stay *before* V1
+    V2 %-->% V3 # V2 must stay *before* V1
   )
 
   expect_error(reposition_tier(kn2, Three, after = One),
@@ -1159,7 +1162,7 @@ test_that("reordering respects tier-violation rules", {
 test_that("adding tier after required edge is provided will trigger tier violation error", {
   expect_error(
     knowledge(
-      required(V2 ~ V1)
+      V2 %-->% V1
     ) |>
       add_tier(1) |>
       add_tier(2, after = 1) |>
@@ -1223,7 +1226,7 @@ test_that("print.knowledge() snapshot", {
       tibble::tibble(V1 = 1, V2 = 2),
       tier(1 ~ V1),
       tier(2 ~ V2),
-      forbidden(V1 ~ V2)
+      V1 %--x% V2
     )
 
     expect_snapshot_output(print(kn), cran = FALSE)
@@ -1315,7 +1318,7 @@ test_that("merge errors if resulting tiers violate required-edge order", {
   kn_left <- knowledge(tier(One ~ V1))
   kn_right <- knowledge(
     tier(Two ~ V2),
-    required(V2 ~ V1)
+    V2 %-->% V1
   )
 
   expect_error(
@@ -1337,12 +1340,12 @@ test_that("merge errors if tiers overlap", {
 
 test_that("merge errors if required and forbidden edges overlap", {
   kn1 <- knowledge(
-    forbidden(V1 ~ V2),
-    forbidden(V2 ~ V3)
+    V1 %--x% V2,
+    V2 %--x% V3
   )
   kn2 <- knowledge(
-    required(V1 ~ V2),
-    required(V2 ~ V3)
+    V1 %-->% V2,
+    V2 %-->% V3
   )
 
   expect_error(
@@ -1440,8 +1443,8 @@ test_that("forbidden() and required() inside knowledge() create edges", {
       B ~ V2,
       C ~ Y
     ),
-    forbidden(starts_with("V") ~ Y),
-    required(V1 ~ V2)
+    starts_with("V") %--x% Y,
+    V1 %-->% V2
   )
   expect_equal(
     kn$edges$status,
@@ -1461,8 +1464,8 @@ test_that("forbidden() and required() inside knowledge() create edges", {
       B ~ V2,
       C ~ V3
     ),
-    forbidden(starts_with("V") ~ V3), # will not forbid self loop
-    required(V1 ~ V2)
+    starts_with("V") %--x% V3, # will not forbid self loop
+    V1 %-->% V2
   )
   expect_equal(
     kn$edges$status,
@@ -1481,8 +1484,8 @@ test_that("forbidden() and required() inside knowledge() create edges", {
 test_that("knowledge() errors on forbidden + required clash", {
   expect_error(
     knowledge(
-      forbidden(V1 ~ V2),
-      required(V1 ~ V2)
+      V1 %--x% V2,
+      V1 %-->% V2
     ),
     "appear as both forbidden and required",
     fixed = TRUE
@@ -1491,7 +1494,10 @@ test_that("knowledge() errors on forbidden + required clash", {
 
 test_that("knowledge() errors when required edges are bidirectional", {
   expect_error(
-    knowledge(required(V1 ~ V2, V2 ~ V1)),
+    knowledge(
+      V1 %-->% V2,
+      V2 %-->% V1
+    ),
     "required in both directions",
     fixed = TRUE
   )
@@ -1580,8 +1586,8 @@ test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
     tibble::tibble(X = 1, Y = 2, Z = 3),
     tier(1 ~ X),
     tier(2 ~ Y + Z),
-    forbidden(Y ~ X),
-    required(X ~ Z)
+    Y %--x% X,
+    X %-->% Z
   )
 
   fake <- rlang::env(
@@ -1632,7 +1638,7 @@ test_that("as_bnlearn_knowledge() returns correct whitelist and blacklist", {
     tibble::tibble(A = 1, B = 2),
     tier(1 ~ A),
     tier(2 ~ B),
-    required(A ~ B) # whitelist candidate
+    A %-->% B
   )
 
   # tier rule makes B -> A a forbidden edge
@@ -1666,7 +1672,7 @@ test_that("errors if any tiers are present", {
 test_that("errors on asymmetric edges when directed_as_undirected = FALSE", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2),
-    forbidden(X1 ~ X2) # only one direction
+    X1 %--x% X2 # only one direction
   )
   expect_error(
     as_pcalg_constraints(kn, labels = c("X1", "X2")),
@@ -1677,8 +1683,8 @@ test_that("errors on asymmetric edges when directed_as_undirected = FALSE", {
 test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
-    forbidden(X1 ~ X2),
-    required(Y ~ X1)
+    X1 %--x% X2,
+    Y %-->% X1
   )
   cons <- as_pcalg_constraints(
     kn,
@@ -1696,7 +1702,8 @@ test_that("symmetrical counterpart edges when directed_as_undirected = TRUE", {
 test_that("works when forbidden edges are fully symmetric via DSL", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
-    forbidden(X1 ~ X2, X2 ~ X1)
+    X1 %--x% X2,
+    X2 %--x% X1
   )
 
   cons <- as_pcalg_constraints(
@@ -1718,8 +1725,8 @@ test_that("result has correct dimnames and dimensions", {
   labels <- c("A", "B", "C", "D")
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
-    forbidden(A ~ B),
-    required(C ~ D)
+    A %--x% B,
+    C %-->% D
   )
   cons <- as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE)
   expect_equal(dim(cons$fixed_gaps), c(4L, 4L))
@@ -1730,8 +1737,8 @@ test_that("result has correct dimnames and dimensions", {
 test_that("create pcalg cons without providing labels", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
-    forbidden(A ~ B),
-    required(C ~ D)
+    A %--x% B,
+    C %-->% D
   )
   labels <- kn$vars$var
   expect_equal(
@@ -1743,8 +1750,8 @@ test_that("create pcalg cons without providing labels", {
 test_that("labels errors are thrown for pcalg constraints conversion", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
-    forbidden(A ~ B),
-    required(C ~ D)
+    A %--x% B,
+    C %-->% D
   )
   labels <- NULL
   expect_error(
@@ -1772,7 +1779,7 @@ test_that("labels errors are thrown for pcalg constraints conversion", {
 test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
   kn_forb <- knowledge(
     tibble::tibble(A = 1, B = 2),
-    forbidden(A ~ B)
+    A %--x% B
   )
   kn_forb$edges$to[1] <- "X" # X not in vars or labels
 
@@ -1787,7 +1794,7 @@ test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
 
   kn_req <- knowledge(
     tibble::tibble(A = 1, B = 2),
-    required(A ~ B)
+    A %-->% B
   )
   kn_req$edges$to[1] <- "Y"
 
@@ -1935,7 +1942,7 @@ test_that("exogenous() errors when it conflicts with required()", {
   expect_error(
     knowledge(
       data.frame(A = 1, B = 2),
-      required(B ~ A),
+      B %-->% A,
       exogenous(A)
     ),
     "appear as both forbidden and required"
@@ -1964,8 +1971,8 @@ test_that("remove_edges() drops forbidden and required edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
-    forbidden(A ~ C, B ~ D),
-    required(B ~ C, C ~ D)
+    A %--x% C, B %--x% D,
+    B %-->% C, C %-->% D
   )
   # check edges present
   expect_true(any(kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"))
@@ -1983,7 +1990,7 @@ test_that("remove_edges() drops forbidden and required edges", {
 test_that("remove_edges() errors when called with no formulas", {
   kn <- knowledge(
     tibble::tibble(A = 1, B = 2),
-    forbidden(A ~ B)
+    A %--x% B
   )
 
   expect_error(
@@ -1997,8 +2004,8 @@ test_that("remove_edges() supports multiple formulas and tidyselect", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
     tier(1 ~ X1 + X2, 2 ~ Y),
-    forbidden(X1 ~ Y, X2 ~ Y),
-    required(X2 ~ X1)
+    X1 %--x% Y, X2 %--x% Y,
+    X2 %-->% X1
   )
 
   # remove both X1→Y and X2→Y in one call
@@ -2013,7 +2020,7 @@ test_that("remove_edges() supports multiple formulas and tidyselect", {
 test_that("remove_edges() warns if no edges matched", {
   kn <- knowledge(
     data.frame(A = 1, B = 2),
-    forbidden(A ~ B)
+    A %--x% B
   )
   expect_error(
     remove_edges(kn, B ~ C),
@@ -2025,8 +2032,8 @@ test_that("remove_edges() warns if no edges matched", {
 test_that("remove_vars() drops vars and associated edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3),
-    forbidden(A ~ B),
-    required(B ~ C)
+    A %--x% B,
+    B %-->% C
   )
   expect_true("B" %in% kn$vars$var)
   expect_true(any(kn$edges$to == "B" | kn$edges$from == "B"))
@@ -2038,8 +2045,8 @@ test_that("remove_vars() drops vars and associated edges", {
 test_that("remove_vars() accepts tidyselect and character vector", {
   kn <- knowledge(
     data.frame(foo = 1, bar = 2, baz = 3),
-    forbidden(foo ~ bar),
-    forbidden(bar ~ baz)
+    foo %--x% bar,
+    bar %--x% baz
   )
   kn2 <- remove_vars(kn, starts_with("ba"))
   expect_false(any(grepl("^ba", kn2$vars$var)))
@@ -2091,8 +2098,8 @@ test_that("chaining remove_* works together", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
-    forbidden(A ~ C),
-    required(B ~ D)
+    A %--x% C,
+    B %-->% D
   )
   kn2 <- kn |>
     remove_edges(A ~ C) |>
@@ -2144,7 +2151,9 @@ test_that("deparse_knowledge() collapses forbidden edges by source", {
   df <- data.frame(A = 1, B = 2, C = 3, D = 4)
   kn <- knowledge(
     df,
-    forbidden(A ~ C, A ~ D, B ~ C)
+    A %--x% C,
+    A %--x% D,
+    B %--x% C
   )
   code <- deparse_knowledge(kn, "df")
   # should have a single forbidden() call with two formulas:
@@ -2162,7 +2171,8 @@ test_that("deparse_knowledge() collapses required edges by source", {
   df <- data.frame(P = 1, Q = 2, R = 3)
   kn <- knowledge(
     df,
-    required(P ~ Q, P ~ R)
+    P %-->% Q,
+    P %-->% R
   )
   code <- deparse_knowledge(kn, "df")
   expect_true(
@@ -2175,10 +2185,14 @@ test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", 
   kn <- knowledge(
     df,
     tier(1 ~ A + B, 2 ~ C),
-    forbidden(A ~ C),
-    required(B ~ A)
+    A %--x% C,
+    B %-->% A
   )
   code <- deparse_knowledge(kn, "df")
-  kn2 <- eval(parse(text = code))
+  expect_warning(
+    expect_warning(
+      kn2 <- eval(parse(text = code))
+    )
+  )
   expect_equal(kn2, kn)
 })

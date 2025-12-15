@@ -266,9 +266,10 @@ test_that("set_knowledge defers building constraints and validates input", {
   s <- PcalgSearch$new()
   kn <- knowledge(
     df,
-    required(A ~ B),
-    forbidden(B ~ C)
+    A %-->% B,
+    B %--x% C
   )
+
   s$set_knowledge(kn, directed_as_undirected = TRUE)
   # knowledge_function is deferred; becomes a concrete list during run_search()
   s$set_params(list(alpha = 0.05))
@@ -287,7 +288,7 @@ test_that("knowledge builder errors if data missing", {
   # exercise the internal 'Data must be set before knowledge.' stop site
   s <- PcalgSearch$new()
   df <- data.frame(X = rnorm(5), Y = rnorm(5))
-  kn <- knowledge(df, required(X ~ Y))
+  kn <- knowledge(df, X %-->% Y)
 
   s$set_knowledge(kn)
   expect_error(
@@ -308,8 +309,8 @@ test_that("set_knowledge defers building constraints and validates input", {
   s <- PcalgSearch$new()
   kn <- knowledge(
     df,
-    required(A ~ B),
-    forbidden(B ~ C)
+    A %-->% B,
+    B %--x% C
   )
   s$set_knowledge(kn, directed_as_undirected = TRUE)
   s$set_test("fisher_z")
@@ -379,7 +380,7 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   expect_s3_class(res_ges, "knowledgeable_caugi")
 
   # GES with knowledge warns on fixedEdges
-  kn_req <- knowledge(df, required(A ~ B))
+  kn_req <- knowledge(df, A %-->% B)
   s_ges2 <- PcalgSearch$new()
   s_ges2$set_alg("ges")
   s_ges2$set_score("sem_bic")
