@@ -150,15 +150,20 @@ plot.knowledgeable_caugi <- function(x, ...) {
     vars <- x_knowledge$vars
 
     tier_index <- stats::setNames(seq_along(tiers), tiers)
+
+    # Assign untiered variables to a new tier
+    max_tier <- max(tier_index)
     x_pos <- tier_index[vars$tier]
+    x_pos[is.na(x_pos)] <- max_tier + 1
     names(x_pos) <- vars$var
 
     nodes <- igraph::V(g)$name
     x_coords <- x_pos[nodes]
 
+    # Use x_coords (not vars$tier) to group y positions
     y_coords <- stats::ave(
       seq_along(nodes),
-      vars$tier[match(nodes, vars$var)],
+      x_coords,
       FUN = seq_along
     )
 
@@ -266,14 +271,19 @@ plot.knowledge <- function(x, ...) {
   # ----- Layout -----
   if (length(tiers$label) > 0) {
     tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
+
+    # Assign untiered variables to a new tier
+    max_tier <- max(tier_index)
     x_pos <- tier_index[vars$tier]
+    x_pos[is.na(x_pos)] <- max_tier + 1
     names(x_pos) <- vars$var
 
     nodes <- igraph::V(g)$name
     x_coords <- x_pos[nodes]
 
-    y_coords <- stats::ave(seq_along(nodes),
-      vars$tier[match(nodes, vars$var)],
+    y_coords <- stats::ave(
+      seq_along(nodes),
+      x_coords,
       FUN = seq_along
     )
 

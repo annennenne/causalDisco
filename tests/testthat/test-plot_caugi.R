@@ -32,6 +32,29 @@ test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   expect_true(TRUE)
 })
 
+test_that("Plotting knowledgeable_caugi and knowledge objects with only some of variables in tiers works", {
+  cg <- caugi::caugi(class = "PDAG")
+
+  cg <- cg |>
+    caugi::add_nodes(c("A", "B", "C")) |>
+    caugi::add_edges(A %-->% B) |>
+    caugi::set_edges(B %---% C)
+
+  kn <- knowledge(
+    data.frame(A = 1, B = 2, C = 3),
+    tier(
+      first ~ A,
+      second ~ B
+    )
+  )
+
+  plot(kn)
+
+  kcg <- knowledgeable_caugi(cg, kn)
+  plot(kcg)
+  expect_true(TRUE)
+})
+
 test_that("Plotting knowledgeable_caugi and knowledge objects with tier+required", {
   cg <- caugi::caugi(class = "PDAG")
 
