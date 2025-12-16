@@ -284,3 +284,60 @@ test_that("pc bnlearn disco respects required background knowledge", {
   violations_req <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
 })
+
+
+test_that("pc bnlearn disco respects forbidden background knowledge", {
+  data("tpc_example")
+
+  kn <- knowledge(
+    tpc_example,
+    child_x1 %--x% youth_x3
+  )
+
+  bnlearn_pc <- pc(engine = "bnlearn", test = "cor", alpha = 0.05)
+  output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+
+  kn <- knowledge(
+    tpc_example,
+    child_x1 %--x% youth_x3,
+    youth_x3 %--x% child_x1
+  )
+
+  bnlearn_pc <- pc(engine = "bnlearn", test = "cor", alpha = 0.05)
+  output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+
+
+  # Test that if we forbid first edge from edges it's not present anymore (test it actually does something)
+  op <- paste0("%", edges$edge[1], "%")
+
+  edge_expr <- as.call(list(
+    as.name(op),
+    as.name(edges$from[1]),
+    as.name(edges$to[1])
+  ))
+
+  kn <- do.call(
+    knowledge,
+    list(
+      tpc_example,
+      child_x1 %--x% youth_x3,
+      youth_x3 %--x% child_x1,
+      edge_expr
+    )
+  )
+
+  bnlearn_pc <- pc(engine = "bnlearn", test = "cor", alpha = 0.05)
+  output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+  edges <- output$caugi@edges
+
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+})

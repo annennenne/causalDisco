@@ -143,12 +143,12 @@ kn$edges
 - What should plot knowledge do if only some variables have a tier? Currently just made it plot the missing tiers
 as it's own tier to the right, but this is misleading?
 
-```{r}
+```{r knowledge plot question}
 kn <- knowledge(
-  data.frame(A = 1, B = 2, C = 3),
+  data.frame(A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6),
   tier(
-    first ~ A,
-    second ~ B
+    first ~ starts_with("A"),
+    second ~ starts_with("B")
   )
 )
 
@@ -157,7 +157,7 @@ plot(kn)
 
 ## TODO
 
-Rewrite knowledge required + forbidden to use caugi style with `%-->%` instead of `~` (and also `%<--%`).
+Allow `%<--%` and `%x--%` also?
 
 Automatically scale plot elements to fit the available plot size.
 
@@ -343,8 +343,6 @@ with forbidden edges from knowledge objects and requires specifying both ways. I
 
 - Make vignettes
 
-- Make all function args be snake_case. Note, that modifying these: `fixedGaps`, `fixedEdges`, `suffStat`, `methodOri` breaks tests since they are passed to pcalg. But, can you inside functions rename them to what pcalg expects.
-
 ### Standardization
 
 - We are mixing between different things currently (since we rely on `caugi` are it uses `data.frame` and `S7`):
@@ -363,7 +361,7 @@ Was removed in this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b8
 
 so we need to implement this in `causalDisco` (help?)
 
-This also doesn't work on 7.6.9
+This also doesn't work on 7.6.9:
 
 ```{r v7.6.9 another bug, eval=FALSE}
 > load_all()
@@ -374,6 +372,10 @@ causalDisco startup:
   Java successfully initialized with 2 GB.
   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
   Restart R to apply changes.
+  
+> var1 <- c(1.2, 2.3, 3.1, 4.5)
+> var2 <- c(5.1, 6.2, 7.3, 8.4)
+> df <- data.frame(var1, var2)
 > tetrad_data <- rdata_to_tetrad(df)
 Error in rdata_to_tetrad(df) : 
   java.lang.ClassNotFoundException: edu/cmu/tetrad/data/DiscreteVariable

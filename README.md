@@ -178,22 +178,21 @@ kn$edges
 
 ``` r
 kn <- knowledge(
-  data.frame(A = 1, B = 2, C = 3),
+  data.frame(A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6),
   tier(
-    first ~ A,
-    second ~ B
+    first ~ starts_with("A"),
+    second ~ starts_with("B")
   )
 )
 
 plot(kn)
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-1.png" width="100%" />
+<img src="man/figures/README-knowledge plot question-1.png" width="100%" />
 
 ## TODO
 
-Rewrite knowledge required + forbidden to use caugi style with `%-->%`
-instead of `~` (and also `%<--%`).
+Allow `%<--%` and `%x--%` also?
 
 Automatically scale plot elements to fit the available plot size.
 
@@ -451,11 +450,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 - Make vignettes
 
-- Make all function args be snake_case. Note, that modifying these:
-  `fixedGaps`, `fixedEdges`, `suffStat`, `methodOri` breaks tests since
-  they are passed to pcalg. But, can you inside functions rename them to
-  what pcalg expects.
-
 ### Standardization
 
 - We are mixing between different things currently (since we rely on
@@ -480,7 +474,7 @@ clusterings from measurement data.”
 
 so we need to implement this in `causalDisco` (help?)
 
-This also doesn’t work on 7.6.9
+This also doesn’t work on 7.6.9:
 
 ``` r
 > load_all()
@@ -491,6 +485,10 @@ causalDisco startup:
   Java successfully initialized with 2 GB.
   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
   Restart R to apply changes.
+  
+> var1 <- c(1.2, 2.3, 3.1, 4.5)
+> var2 <- c(5.1, 6.2, 7.3, 8.4)
+> df <- data.frame(var1, var2)
 > tetrad_data <- rdata_to_tetrad(df)
 Error in rdata_to_tetrad(df) : 
   java.lang.ClassNotFoundException: edu/cmu/tetrad/data/DiscreteVariable
