@@ -6,6 +6,12 @@ template:
 logo: man/figures/hex.png
 
 reference:
+
+  - title: "Overview"
+    desc: >
+      Package overview
+    contents:
+      - causalDisco-package
   - title: "Main User Function"
     desc: "High-level interface for running causal discovery."
     contents:
@@ -128,7 +134,6 @@ reference:
 
   - title: "Miscellaneous"
     contents:
-      - causalDisco-package
       - engine_registry
       - tetrad_graph
       - tpc_example
