@@ -89,6 +89,10 @@ tfci_run <- function(
     knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
   }
 
+  if (is.null(knowledge)) {
+    knowledge <- knowledge()
+  }
+
   is_knowledge(knowledge)
 
   # NA handling
@@ -141,7 +145,8 @@ tfci_run <- function(
   }
 
   # pcalg background constraints (forbidden/required) from knowledge
-  constraints <- .pcalg_constraints_from_knowledge(knowledge,
+  constraints <- .pcalg_constraints_from_knowledge(
+    knowledge,
     labels = vnames,
     directed_as_undirected = directed_as_undirected
   )
@@ -323,8 +328,8 @@ tpag <- function(skel, knowledge, unfaithful_triples, cautious = TRUE) {
   sepsets <- skel$sepset
 
   # orientation rules to use (skip 5–7: selection bias rules)
-  userules <- rep(TRUE, 10)
-  userules[5:7] <- FALSE
+  use_rules <- rep(TRUE, 10)
+  use_rules[5:7] <- FALSE
 
   if (cautious) {
     sepsets <- order_restrict_sepset(
@@ -337,7 +342,7 @@ tpag <- function(skel, knowledge, unfaithful_triples, cautious = TRUE) {
   pcalg::udag2pag(
     amat,
     sepset = sepsets,
-    rules = userules,
+    rules = use_rules,
     unfVect = unfaithful_triples
   )
 }

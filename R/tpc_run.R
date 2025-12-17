@@ -178,7 +178,8 @@ tpc_run <- function(data = NULL,
     na_method <- "none"
   }
 
-  constraints <- .pcalg_constraints_from_knowledge(knowledge,
+  constraints <- .pcalg_constraints_from_knowledge(
+    knowledge,
     labels = vnames,
     directed_as_undirected = directed_as_undirected
   )

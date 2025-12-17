@@ -1,3 +1,13 @@
+test_that("tfci causalDisco works with no knowledge", {
+  data("tpc_example")
+
+  my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
+
+  output <- disco(tpc_example, my_tfci)
+  expect_true(TRUE)
+})
+
+
 test_that("tfci causalDisco respects tier knowledge", {
   data("tpc_example")
 

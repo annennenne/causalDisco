@@ -157,9 +157,14 @@ plot(kn)
 
 ## TODO
 
-Allow `%<--%` and `%x--%` also?
+- Allow `%<--%` and `%x--%` also?
 
-Automatically scale plot elements to fit the available plot size.
+- Automatically scale plot elements to fit the available plot size.
+
+- Refactor `_run` functions (a lot of copy-paste).
+
+- Currently impossible to set arguments to our `_run` functions through the high-level interface `tpc`, ... It's handled by `check_args_and_distribute_args` which calls `check_args_and_distribute_args_causalDisco`. 
+So fix this...
 
 ### Manging exported functions
 
