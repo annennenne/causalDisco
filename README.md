@@ -155,6 +155,15 @@ plot(disco_cd_tges)
 
 <img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
+## Questions
+
+- `tpc` and `tfci` have default $\alpha = 0.05$, but the underlying
+  `tpc_run` and `tfci_run` have $\alpha = 0.1$.
+
+- Shouldn’t we just list all possible arguments to `tpc`, `tfci`, and
+  `tges` instead of `...` and forcing the user to look at the underlying
+  `_run` functions? Then also make the `_run` functions not exported?
+
 ## TODO
 
 - Automatically scale plot elements to fit the available plot size.
@@ -164,10 +173,10 @@ plot(disco_cd_tges)
 
 - Refactor `_run` functions (a lot of copy-paste).
 
-- Currently impossible to set arguments to our `_run` functions through
-  the high-level interface `tpc`, … It’s handled by
-  `check_args_and_distribute_args` which calls
-  `check_args_and_distribute_args_causalDisco`. So fix this…
+- Make required work for our algorithms. It breaks when it internally
+  calls `tpdag`, so look into that…
+
+- Figure out when and why tier knowledge breaks for `tpc`.
 
 ### Manging exported functions
 
