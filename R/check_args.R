@@ -192,14 +192,38 @@ check_args_and_distribute_args_causalDisco <- function(
 
   # Note that the causalDisco package does not have args that are sent
   # directly to the test itself
+  # Determine main algorithm function and corresponding _run function
   switch(alg,
-    tpc = engine_args_alg <- names(formals(tpc)),
-    tfci = engine_args_alg <- names(formals(tfci)),
-    tges = engine_args_alg <- names(formals(tges)),
+    tpc = {
+      engine_fun <- tpc
+      engine_run_fun <- tpc_run
+    },
+    tfci = {
+      engine_fun <- tfci
+      engine_run_fun <- tfci_run
+    },
+    tges = {
+      engine_fun <- tges
+      engine_run_fun <- tges_run
+    },
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
+  # Get arguments of the top-level function
+  engine_args_alg <- names(formals(engine_fun))
+
+  # Initialize list of args to pass
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
+
+  # If ... is in top-level args, we need to also check _run function args
+  if ("..." %in% engine_args_alg) {
+    engine_args_run <- names(formals(engine_run_fun))
+    extra_args <- args[!(names(args) %in% engine_args_alg) &
+      (names(args) %in% engine_args_run)]
+    args_to_pass_to_engine_alg <- c(args_to_pass_to_engine_alg, extra_args)
+  }
+
+  # Score-related args
   engine_args_score <- list()
   if (!is.null(score)) {
     score <- tolower(score)
@@ -214,11 +238,13 @@ check_args_and_distribute_args_causalDisco <- function(
   } else {
     args_to_pass_to_engine_score <- list()
   }
-  # Check if any arguments are not in engine args
+
+  # Check for unused arguments
   args_not_in_engine_args <- setdiff(
     names(args),
-    c(engine_args_alg, engine_args_score)
+    c(names(args_to_pass_to_engine_alg), engine_args_score)
   )
+
   # If '...' in given algorithm/test is an argument, it will throw a warning
   # rather than an error.
   if (length(args_not_in_engine_args) > 0) {

@@ -1,3 +1,12 @@
+test_that("tpc causalDisco arguments to tfci_run can be passed along correctly", {
+  # Just test no warning given
+  data("tpc_example")
+
+  my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", method = "stable")
+
+  expect_no_warning(disco(tpc_example, my_tpc))
+})
+
 test_that("tpc causalDisco respects tier knowledge", {
   skip("tpc causalDisco does not yet support tier knowledge.")
   data("tpc_example")

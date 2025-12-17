@@ -1,3 +1,17 @@
+test_that("tges causalDisco arguments to tfci_run can be passed along correctly", {
+  # Just test no warning given
+  data("tpc_example")
+
+  my_tges <- tges(engine = "causalDisco", score = "tbic", verbose = TRUE)
+
+  output <- capture.output(
+    expect_no_warning(disco(tpc_example, my_tges))
+  )
+  # Verify verbose works
+  expect_true(any(grepl("Casting graph", output)))
+})
+
+
 test_that("TGES causalDisco respects tier-based background knowledge", {
   data("tpc_example")
 

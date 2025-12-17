@@ -7,6 +7,15 @@ test_that("tfci causalDisco works with no knowledge", {
   expect_true(TRUE)
 })
 
+test_that("tfci causalDisco arguments to tfci_run can be passed along correctly", {
+  # Just test no warning given
+  data("tpc_example")
+
+  my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", method = "stable")
+
+  expect_no_warning(disco(tpc_example, my_tfci))
+})
+
 
 test_that("tfci causalDisco respects tier knowledge", {
   data("tpc_example")
