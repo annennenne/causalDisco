@@ -128,38 +128,11 @@ You can visualize the resulting causal graph using the `plot()` function:
 plot(disco_cd_tges)
 ```
 
-## Questions
-
-- Should we keep the current exogenous/root as it is?
-
-```{r question}
-kn <- knowledge(
-  data.frame(A = 1, B = 2, C = 3),
-  exogenous(A)
-)
-kn$edges
-```
-
-- What should plot knowledge do if only some variables have a tier? Currently just made it plot the missing tiers
-as it's own tier to the right, but this is misleading?
-
-```{r knowledge plot question}
-kn <- knowledge(
-  data.frame(A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6),
-  tier(
-    first ~ starts_with("A"),
-    second ~ starts_with("B")
-  )
-)
-
-plot(kn)
-```
-
 ## TODO
 
-- Allow `%<--%` and `%x--%` also?
-
 - Automatically scale plot elements to fit the available plot size.
+
+- If only some variables have tier knowledge color the tiers and place the rest somewhere else when plotting.
 
 - Refactor `_run` functions (a lot of copy-paste).
 

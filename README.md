@@ -155,46 +155,12 @@ plot(disco_cd_tges)
 
 <img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
-## Questions
-
-- Should we keep the current exogenous/root as it is?
-
-``` r
-kn <- knowledge(
-  data.frame(A = 1, B = 2, C = 3),
-  exogenous(A)
-)
-kn$edges
-#> # A tibble: 2 × 5
-#>   status    from  to    tier_from tier_to
-#>   <chr>     <chr> <chr> <chr>     <chr>  
-#> 1 forbidden B     A     <NA>      <NA>   
-#> 2 forbidden C     A     <NA>      <NA>
-```
-
-- What should plot knowledge do if only some variables have a tier?
-  Currently just made it plot the missing tiers as it’s own tier to the
-  right, but this is misleading?
-
-``` r
-kn <- knowledge(
-  data.frame(A1 = 1, A2 = 2, B1 = 3, B2 = 4, C1 = 5, C2 = 6),
-  tier(
-    first ~ starts_with("A"),
-    second ~ starts_with("B")
-  )
-)
-
-plot(kn)
-```
-
-<img src="man/figures/README-knowledge plot question-1.png" width="100%" />
-
 ## TODO
 
-- Allow `%<--%` and `%x--%` also?
-
 - Automatically scale plot elements to fit the available plot size.
+
+- If only some variables have tier knowledge color the tiers and place
+  the rest somewhere else when plotting.
 
 - Refactor `_run` functions (a lot of copy-paste).
 
