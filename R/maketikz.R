@@ -207,7 +207,6 @@ maketikz <- function(model, x_jit = 2, y_jit = 2,
           out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         }
         if (annotate_edges) {
-          #  browser()
           out <- c(
             out,
             paste("\\draw [->] (", i, ") edge", bendstr, "node [above,sloped] {", amat[thesetruechildren, i],

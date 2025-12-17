@@ -84,18 +84,20 @@
 #' @example inst/roxygen-examples/tpc_example.R
 #'
 #' @export
-tpc_run <- function(data = NULL,
-                    knowledge = NULL,
-                    order = NULL,
-                    alpha = 10^(-1),
-                    test = reg_test,
-                    suffStat = NULL,
-                    method = "stable.fast",
-                    na_method = "none",
-                    orientation_method = "conservative",
-                    output = "caugi",
-                    directed_as_undirected = FALSE,
-                    varnames = NULL, ...) {
+tpc_run <- function(
+  data = NULL,
+  knowledge = NULL,
+  order = NULL,
+  alpha = 10^(-1),
+  test = reg_test,
+  suffStat = NULL,
+  method = "stable.fast",
+  na_method = "none",
+  orientation_method = "conservative",
+  output = "caugi",
+  directed_as_undirected = FALSE,
+  varnames = NULL, ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg", "stats", "tidyselect"

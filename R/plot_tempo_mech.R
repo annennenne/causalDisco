@@ -123,7 +123,6 @@ plot_ordered_amat <- function(amat, order,
   groups <- sapply(order, function(x) getvar(vnames, x), simplify = FALSE)
 
 
-  #  browser()
   mat <- ordered_layout(vnames, order, sep = sep, jitter = jitter, space = space)
   edges <- igraph::as_edgelist(this_graph) # igraph
 
@@ -171,7 +170,6 @@ plot_ordered_amat <- function(amat, order,
   ltys <- rep(1, n_edges)
   if (n_edges > 0) {
     for (i in 1:n_edges) {
-      # browser()
       thisVar <- edges[i, 1]
       thisPrefix <- unlist(strsplit(thisVar, "_", 1))[1]
       edgecolors[i] <- cols[which(thisPrefix == groupnames)]

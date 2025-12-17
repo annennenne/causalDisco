@@ -127,7 +127,6 @@ confusion <- function(est_amat, true_amat, type = "adj") {
 #' @inherit confusion
 #' @export
 adj_confusion <- function(est_amat, true_amat) {
-  # browser()
   est_halfskel <- halfskel(est_amat)
   true_halfskel <- halfskel(true_amat)
 
