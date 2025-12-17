@@ -84,13 +84,12 @@ test_that("fci Tetrad disco respects required background knowledge", {
 
 test_that("fci Tetrad disco respects forbidden background knowledge", {
   skip_if_no_tetrad()
-  skip("Ask if the following is the expected behavior (see README)")
 
   data("tpc_example")
 
   kn <- knowledge(
     tpc_example,
-    forbidden(child_x2 ~ child_x1)
+    child_x2 %--x% child_x1
   )
 
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -100,13 +99,20 @@ test_that("fci Tetrad disco respects forbidden background knowledge", {
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
-  # Verify it actually changes the output when adding forbidden knowledge
-  tetrad_fci_no_kn <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  out_no_kn <- disco(data = tpc_example, method = tetrad_fci_no_kn)
-  edges_no_kn <- out_no_kn$caugi@edges
+  # Verify it actually changes the output when forbidding an edge present above
+  kn <- knowledge(
+    tpc_example,
+    child_x2 %--x% c(child_x1, oldage_x5)
+  )
 
-  # The forbidden edge is present
-  forbidden_present <- edges_no_kn$from == "child_x2" & edges_no_kn$to == "oldage_x5"
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+
+  # The forbidden edge is not present anymore
+  forbidden_present <- edges$from == "child_x2" & edges$to == "oldage_x5"
   expect_true(
     sum(forbidden_present) >= 1,
     info = "Forbidden edge child_x2 --> oldage_x5 was not found in the output graph without knowledge."

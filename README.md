@@ -108,11 +108,11 @@ the package causalDisco itself, the Java library Tetrad, the R package
 bnlearn, and the R package pcalg.
 
 ``` r
-options(causalDisco.tetrad.version = "7.6.9") # Memory issues are fixed on v7.6.9
+# options(causalDisco.tetrad.version = "7.6.9") # Memory issues are fixed on v7.6.9
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.9
+#>   Tetrad version: 7.6.8
 #>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
@@ -311,7 +311,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
   kn <- knowledge(
     tpc_example,
-    required(child_x1 ~ oldage_x5)
+    child_x1 %-->% oldage_x5
   )
   
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
@@ -319,9 +319,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   edges <- output$caugi@edges
   edges
 }
-#> Warning: `required()` is deprecated and will be removed in a future version.
-#> Please use the infix operators `%--x%` (forbidden) and `%-->%` (required)
-#> instead.
 #>         from   edge        to
 #>       <char> <char>    <char>
 #> 1:  child_x1    ---  child_x2
@@ -367,7 +364,7 @@ Added a bunch of `browser()` statements in TetradSearch and the
 knowledge is correctly passed to Tetrad, so not sure what is going on
 here.
 
-V7.6.9 gives this:
+Also this:
 
 ``` r
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
@@ -385,45 +382,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 }
 #>         from   edge        to
 #>       <char> <char>    <char>
-#> 1:  child_x2    o-o  child_x1
-#> 2:  child_x2    o-> oldage_x5
-#> 3:  child_x2    o-o  youth_x4
-#> 4: oldage_x5    --> oldage_x6
-#> 5:  youth_x3    o-> oldage_x5
-#> 6:  youth_x4    --> oldage_x6
-```
-
-But v6.7.8 gives this (which is correct?):
-
-``` r
-detach("package:causalDisco", unload = TRUE)
-options(causalDisco.tetrad.version = "7.6.8")
-library(causalDisco)
-#> causalDisco startup:
-#>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.8
-#>   Java successfully initialized with 2 GB.
-#>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
-#>   Restart R to apply changes.
-
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  kn <- knowledge(
-    tpc_example,
-    child_x2 %--x% child_x1
-  )
-
-  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
-}
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x2    o-o  child_x1
-#> 2:  child_x2    o-> oldage_x5
-#> 3:  child_x2    o-o  youth_x4
+#> 1:  child_x1    o->  child_x2
+#> 2:  child_x2    --> oldage_x5
+#> 3:  child_x2    -->  youth_x4
 #> 4: oldage_x5    --> oldage_x6
 #> 5:  youth_x3    o-> oldage_x5
 #> 6:  youth_x4    --> oldage_x6

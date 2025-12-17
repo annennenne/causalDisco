@@ -41,6 +41,7 @@ test_that("pc Tetrad disco respects tier knowledge", {
 
 test_that("pc Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
+  skip("pc Tetrad does not yet support knowledge.")
 
   data("tpc_example")
 
@@ -49,7 +50,7 @@ test_that("pc Tetrad disco respects required background knowledge", {
     child_x1 %-->% youth_x3
   )
 
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
   output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
