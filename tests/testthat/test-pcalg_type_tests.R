@@ -1,48 +1,48 @@
-test_that(".get_pcalg_test_from_string error if computing suffStat without X", {
+test_that(".get_pcalg_test_from_string error if computing suff_stat without X", {
   expect_error(
-    .get_pcalg_test_from_string("g_square", suffStat = TRUE),
+    .get_pcalg_test_from_string("g_square", suff_stat = TRUE),
     "X must be provided to compute sufficient statistic."
   )
 })
 
-test_that(".get_suffStat works", {
+test_that(".get_suff_stat works", {
   X <- data.frame(
     V1 = rnorm(10),
     V2 = rnorm(10)
   )
-  suffStat <- .get_suffStat(X, method = "fisher_z_twd")
-  expect_true(is.matrix(suffStat))
+  suff_stat <- .get_suff_stat(X, method = "fisher_z_twd")
+  expect_true(is.matrix(suff_stat))
 
   expect_error(
-    .get_suffStat("a", method = "fisher_z_mi"),
+    .get_suff_stat("a", method = "fisher_z_mi"),
     "gaussMItest requires a list or a mids object."
   )
 
-  suffStat <- .get_suffStat(list(X), method = "fisher_z_mi")
-  expect_equal(suffStat[2][[1]], 10)
+  suff_stat <- .get_suff_stat(list(X), method = "fisher_z_mi")
+  expect_equal(suff_stat[2][[1]], 10)
 
-  suffStat <- .get_suffStat(X, method = "g_square_twd")
-  expect_equal(names(suffStat), c("dm", "adaptDF"))
+  suff_stat <- .get_suff_stat(X, method = "g_square_twd")
+  expect_equal(names(suff_stat), c("dm", "adaptDF"))
 
   expect_error(
-    .get_suffStat("a", method = "g_square_mi"),
+    .get_suff_stat("a", method = "g_square_mi"),
     "disMItest requires a list or a mids object."
   )
-  suffStat <- .get_suffStat(X, method = "g_square_mi")
-  expect_equal(class(suffStat), "data.frame")
+  suff_stat <- .get_suff_stat(X, method = "g_square_mi")
+  expect_equal(class(suff_stat), "data.frame")
 
-  suffStat <- .get_suffStat(X, method = "conditional_gaussian_twd")
-  expect_equal(class(suffStat), "data.frame")
+  suff_stat <- .get_suff_stat(X, method = "conditional_gaussian_twd")
+  expect_equal(class(suff_stat), "data.frame")
 
   expect_error(
-    .get_suffStat("a", method = "conditional_gaussian_mi"),
+    .get_suff_stat("a", method = "conditional_gaussian_mi"),
     "mixMItest requires a list or a mids object."
   )
-  suffStat <- .get_suffStat(X, method = "conditional_gaussian_mi")
-  expect_equal(class(suffStat), "data.frame")
+  suff_stat <- .get_suff_stat(X, method = "conditional_gaussian_mi")
+  expect_equal(class(suff_stat), "data.frame")
 
   expect_error(
-    .get_suffStat(X, method = "unknown_method"),
+    .get_suff_stat(X, method = "unknown_method"),
     "Unknown method: unknown_method"
   )
 })

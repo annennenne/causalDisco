@@ -28,7 +28,7 @@
 #'   uses a regression-based information-loss test. Another available option is
 #'   \code{cor_test} which tests for vanishing partial correlations. User-supplied
 #'   functions may also be used; see details for the required interface.
-#' @param suffStat A sufficient statistic. If supplied, it is passed directly
+#' @param suff_stat A sufficient statistic. If supplied, it is passed directly
 #'   to the test and no statistics are computed from \code{data}. Its structure
 #'   depends on the chosen \code{test}.
 #' @param method Skeleton construction method, one of \code{"stable"},
@@ -52,7 +52,7 @@
 #'   \code{fixedEdges} or \code{fixedGaps}. Default is \code{FALSE}.
 #' @param varnames Character vector of variable names. Only needed when
 #'   \code{data} is not supplied and all information is passed via
-#'   \code{suffStat}.
+#'   \code{suff_stat}.
 #' @param ... Additional arguments passed to
 #'   \code{\link[pcalg]{skeleton}} during skeleton construction.
 #'
@@ -61,7 +61,7 @@
 #' \code{\link[pcalg]{pc}}. When \code{na_method = "twd"}, test-wise deletion is
 #' performed: for \code{cor_test}, each pairwise correlation uses complete cases;
 #' for \code{reg_test}, each conditional test performs its own deletion. If you
-#' supply a user-defined \code{test}, you must also provide \code{suffStat}.
+#' supply a user-defined \code{test}, you must also provide \code{suff_stat}.
 #'
 #' Temporal or tiered knowledge enters in two places:
 #' \itemize{
@@ -90,7 +90,7 @@ tpc_run <- function(
   order = NULL,
   alpha = 10^(-1),
   test = reg_test,
-  suffStat = NULL,
+  suff_stat = NULL,
   method = "stable.fast",
   na_method = "none",
   orientation_method = "conservative",
@@ -105,7 +105,7 @@ tpc_run <- function(
     varnames = varnames,
     na_method = na_method,
     test = test,
-    suffStat = suffStat,
+    suff_stat = suff_stat,
     directed_as_undirected = directed_as_undirected,
     function_name = "tpc"
   )
@@ -114,9 +114,10 @@ tpc_run <- function(
   data <- prep$data
   knowledge <- prep$knowledge
   vnames <- prep$vnames
-  suffStat <- prep$suffStat
+  suff_stat <- prep$suff_stat
   na_method <- prep$na_method
   directed_as_undirected <- prep$directed_as_undirected
+  test <- prep$internal_test # Ensure we use the internal test with camelCase so it works downstream with pcalg
 
   # check output argument
   if (!output %in% c("tpdag", "tskeleton", "pcAlgo", "caugi")) {
@@ -140,7 +141,7 @@ tpc_run <- function(
 
   # learn skeleton
   skel <- pcalg::skeleton(
-    suffStat = suffStat,
+    suffStat = suff_stat,
     indepTest = indep_test_dir,
     alpha = alpha,
     labels = vnames,
@@ -399,7 +400,7 @@ is_after <- function(x, y, knowledge) {
 #' strictly after both endpoints are rejected, implementing the temporal
 #' restriction during skeleton learning.
 #'
-#' @param test A function \code{f(x, y, S, suffStat)} returning a p-value or
+#' @param test A function \code{f(x, y, S, suff_stat)} returning a p-value or
 #'   test statistic compatible with \pkg{pcalg}.
 #' @param vnames Character vector of variable names (labels).
 #' @param knowledge A \code{knowledge} object.
@@ -561,19 +562,19 @@ tpdag <- function(skel, knowledge, from_to) {
 #'
 #' Any other \code{type} results in an error.
 #'
-#' @example inst/roxygen-examples/make_suffStat_example.R
+#' @example inst/roxygen-examples/make_suff_stat_example.R
 #'
 #' @return A list whose structure depends on \code{type}, suitable for passing
-#'   as \code{suffStat} to the corresponding test.
+#'   as \code{suff_stat} to the corresponding test.
 #'
 #' @keywords internal
 #' @noRd
-make_suffStat <- function(data, type, ...) {
+make_suff_stat <- function(data, type, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "stats"
     ),
-    function_name = "make_suffStat"
+    function_name = "make_suff_stat"
   )
 
   if (type == "reg_test") {

@@ -8,7 +8,7 @@
 #'  \item{data}{The (possibly modified) data frame.}
 #'  \item{knowledge}{The knowledge object.}
 #'  \item{vnames}{The variable names.}
-#'  \item{suffStat}{The sufficient statistics.}
+#'  \item{suff_stat}{The sufficient statistics.}
 #'  \item{na_method}{The method for handling NAs.}
 #' @keywords internal
 #' @noRd
@@ -19,7 +19,7 @@ constraint_based_prepare_inputs <- function(
   varnames = NULL,
   na_method = "none",
   test = reg_test,
-  suffStat = NULL,
+  suff_stat = NULL,
   directed_as_undirected = FALSE,
   function_name
 ) {
@@ -33,7 +33,7 @@ constraint_based_prepare_inputs <- function(
   if (!(na_method %in% c("none", "cc", "twd"))) {
     stop("Invalid choice of method for handling NA values.")
   }
-  if (is.null(data) && is.null(suffStat)) {
+  if (is.null(data) && is.null(suff_stat)) {
     stop("Either data or sufficient statistic must be supplied.")
   }
 
@@ -81,16 +81,25 @@ constraint_based_prepare_inputs <- function(
   }
 
   # sufficient statistics
-  if (is.null(suffStat)) {
+  if (is.null(suff_stat)) {
     if (identical(test, reg_test)) {
-      suffStat <- make_suffStat(data, type = "reg_test")
+      suff_stat <- make_suff_stat(data, type = "reg_test")
     } else if (identical(test, cor_test)) {
-      suffStat <- make_suffStat(data, type = "cor_test")
+      suff_stat <- make_suff_stat(data, type = "cor_test")
     } else {
-      stop("suffStat needs to be supplied when using a non-builtin test.")
+      stop("suff_stat needs to be supplied when using a non-builtin test.")
     }
   } else {
     na_method <- "none"
+  }
+
+  # Wrap test function to ensure it has camelCase argument for pcalg
+  internal_test <- test
+  if ("suff_stat" %in% names(formals(test))) {
+    # wrap snake_case -> camelCase
+    internal_test <- function(x, y, S, suffStat) {
+      test(x, y, S, suff_stat = suffStat)
+    }
   }
 
 
@@ -98,7 +107,8 @@ constraint_based_prepare_inputs <- function(
     data = data,
     knowledge = knowledge,
     vnames = vnames,
-    suffStat = suffStat,
-    na_method = na_method
+    suff_stat = suff_stat,
+    na_method = na_method,
+    internal_test = internal_test
   )
 }

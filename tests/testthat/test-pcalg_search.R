@@ -14,7 +14,7 @@ test_that("initialize sets clean defaults", {
   expect_null(s$test)
   expect_null(s$knowledge)
   expect_equal(s$params, list())
-  expect_null(s$suffStat)
+  expect_null(s$suff_stat)
   expect_null(s$alg)
   expect_null(s$continuous)
 })
@@ -34,7 +34,7 @@ test_that("set_params and set_data store values; set_data can skip suff stat", {
   # skipping suff stat path
   s$set_data(df, set_suff_stat = FALSE)
   expect_identical(s$data, df)
-  expect_null(s$suffStat)
+  expect_null(s$suff_stat)
 })
 
 test_that("set_suff_stat guards and branches", {
@@ -60,8 +60,8 @@ test_that("set_suff_stat guards and branches", {
   s$set_test("fisher_z")
   s$data <- data.frame(X = rnorm(10), Y = rnorm(10))
   expect_silent(s$set_suff_stat())
-  expect_true(is.list(s$suffStat))
-  expect_named(s$suffStat, c("C", "n"))
+  expect_true(is.list(s$suff_stat))
+  expect_named(s$suff_stat, c("C", "n"))
 
   # discrete via getter, expects dm + nlev + adaptDF
   s <- PcalgSearch$new()
@@ -71,7 +71,7 @@ test_that("set_suff_stat guards and branches", {
     B = factor(sample(letters[1:2], 10, TRUE))
   )
   expect_silent(s$set_suff_stat())
-  expect_named(s$suffStat, c("dm", "nlev", "adaptDF"))
+  expect_named(s$suff_stat, c("dm", "nlev", "adaptDF"))
 })
 
 test_that("set_suff_stat works on matrix input for g_square", {
@@ -80,7 +80,7 @@ test_that("set_suff_stat works on matrix input for g_square", {
   m <- matrix(sample(0:1, 20, TRUE), ncol = 2)
   colnames(m) <- c("A", "B")
   expect_silent(s$set_data(m, set_suff_stat = TRUE))
-  expect_named(s$suffStat, c("dm", "nlev", "adaptDF"))
+  expect_named(s$suff_stat, c("dm", "nlev", "adaptDF"))
 })
 
 
@@ -131,7 +131,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
   )
   s2$set_test("g_square")
   s2$set_data(d2, set_suff_stat = TRUE)
-  p2 <- s2$test(1, 2, integer(), s2$suffStat)
+  p2 <- s2$test(1, 2, integer(), s2$suff_stat)
   expect_type(p2, "double")
 
   # multi-level -> disCItest path executes
@@ -143,7 +143,7 @@ test_that("g_square dispatches to binCItest or disCItest", {
   )
   s3$set_test("g_square")
   s3$set_data(d3, set_suff_stat = TRUE)
-  p3 <- s3$test(1, 2, integer(), s3$suffStat)
+  p3 <- s3$test(1, 2, integer(), s3$suff_stat)
   expect_type(p3, "double")
 })
 

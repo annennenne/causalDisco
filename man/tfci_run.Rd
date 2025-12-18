@@ -10,7 +10,7 @@ tfci_run(
   order = NULL,
   alpha = 10^(-1),
   test = reg_test,
-  suffStat = NULL,
+  suff_stat = NULL,
   method = "stable.fast",
   na_method = "none",
   orientation_method = "conservative",
@@ -43,7 +43,7 @@ uses a regression-based information-loss test. Another available option is
 \code{cor_test} which tests for vanishing partial correlations. User-supplied
 functions may also be used; see details for the required interface.}
 
-\item{suffStat}{A sufficient statistic. If supplied, it is passed directly
+\item{suff_stat}{A sufficient statistic. If supplied, it is passed directly
 to the test and no statistics are computed from \code{data}. Its structure
 depends on the chosen \code{test}.}
 
@@ -66,7 +66,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 
 \item{varnames}{Character vector of variable names. Only needed when
 \code{data} is not supplied and all information is passed via
-\code{suffStat}.}
+\code{suff_stat}.}
 
 \item{...}{Additional arguments passed to
 \code{\link[pcalg]{skeleton}} during skeleton construction.}

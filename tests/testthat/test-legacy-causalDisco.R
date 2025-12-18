@@ -91,19 +91,19 @@ test_that("reg_test_each_dir wraps binary S in factor()", {
     s_num = rnorm(n)
   )
 
-  # suffStat the function expects
-  suffStat <- list(
+  # suff_stat the function expects
+  suff_stat <- list(
     data = dat,
     binary = c(FALSE, FALSE, TRUE, FALSE)
   )
-  names(suffStat$data) <- c("x_num", "y_num", "s_bin", "s_num")
+  names(suff_stat$data) <- c("x_num", "y_num", "s_bin", "s_num")
 
   # x = numeric, y = numeric, S = {binary, numeric}
   pval <- reg_test_each_dir(
     x = 1L,
     y = 2L,
     S = c(3L, 4L),
-    suffStat = suffStat
+    suffStat = suff_stat
   )
 
   # a real p-value should come back and not error

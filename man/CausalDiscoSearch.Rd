@@ -129,7 +129,7 @@ Can be set with \code{$set_params()}.
 TODO: not secure yet in terms of distributing arguments.
 Use with caution.}
 
-\item{\code{suffStat}}{Sufficient statistic. The format and contents of the
+\item{\code{suff_stat}}{Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.}
 
 \item{\code{knowledge}}{A \code{knowledge} object holding background knowledge.}

@@ -58,8 +58,10 @@ tfci <- function(
 }
 
 #' @keywords internal
-tfci_causalDisco_runner <- function(test, alpha, ...,
-                                    directed_as_undirected_knowledge = FALSE) {
+tfci_causalDisco_runner <- function(
+  test, alpha, ...,
+  directed_as_undirected_knowledge = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"

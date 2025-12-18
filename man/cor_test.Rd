@@ -4,7 +4,7 @@
 \alias{cor_test}
 \title{Test for vanishing partial correlations}
 \usage{
-cor_test(x, y, S, suffStat)
+cor_test(x, y, S, suff_stat)
 }
 \arguments{
 \item{x}{Index of x variable}
@@ -13,7 +13,7 @@ cor_test(x, y, S, suffStat)
 
 \item{S}{Index of S variable(s), possibly NULL}
 
-\item{suffStat}{Sufficient statistic; list with data,
+\item{suff_stat}{Sufficient statistic; list with data,
 binary variables and order.}
 }
 \value{

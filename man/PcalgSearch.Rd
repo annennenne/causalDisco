@@ -76,7 +76,7 @@ Can be set with \code{$set_alg()}. Recognized values are:
 Can be set with \code{$set_params()}.
 The parameters are passed to the test and algorithm functions.}
 
-\item{\code{suffStat}}{Sufficient statistic. The format and contents of the
+\item{\code{suff_stat}}{Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.}
 
 \item{\code{continuous}}{Logical; whether the sufficient statistic is for a

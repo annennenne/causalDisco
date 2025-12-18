@@ -4,7 +4,7 @@
 \alias{reg_test}
 \title{Regression-based information loss test}
 \usage{
-reg_test(x, y, S, suffStat)
+reg_test(x, y, S, suff_stat)
 }
 \arguments{
 \item{x}{Index of x variable}
@@ -13,7 +13,7 @@ reg_test(x, y, S, suffStat)
 
 \item{S}{Index of S variable(s), possibly NULL}
 
-\item{suffStat}{Sufficient statistic; list with data,
+\item{suff_stat}{Sufficient statistic; list with data,
 binary variables and order.}
 }
 \value{

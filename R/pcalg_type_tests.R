@@ -1,4 +1,4 @@
-#' @title Resolve CI test and build suffStat
+#' @title Resolve CI test and build sufficient statistic
 #'
 #' @description
 #' Map a string identifier to the CI test function and compute the matching
@@ -6,17 +6,17 @@
 #'
 #' @param method Character; name of the CI test.
 #' @param X data.frame, matrix, list of data.frames, or mice::mids.
-#' @param suffStat logical; if TRUE, compute sufficient statistic from `X`.
+#' @param suff_stat logical; if TRUE, compute sufficient statistic from `X`.
 #' @param adaptDF logical for discrete tests
 #' @param nlev optional integer vector of levels for discrete tests
 #'
-#' @returns `list(method = function, suffStat = object)`
+#' @returns `list(method = function, suff_stat = object)`
 #' @noRd
 #' @keywords internal
 .get_pcalg_test_from_string <- function(
   method,
   X = NULL,
-  suffStat = FALSE,
+  suff_stat = FALSE,
   adaptDF = TRUE,
   nlev = NULL
 ) {
@@ -33,19 +33,19 @@
     )
   }
 
-  g_square_switch <- function(x, y, S, suffStat) {
-    dm <- suffStat$dm
-    if (is.null(dm)) stop("g_square requires suffStat$dm.", call. = FALSE)
+  g_square_switch <- function(x, y, S, suff_stat) {
+    dm <- suff_stat$dm
+    if (is.null(dm)) stop("g_square requires suff_stat$dm.", call. = FALSE)
     cols <- c(x, y, S)
-    lev <- if (!is.null(suffStat$nlev)) {
-      suffStat$nlev[cols]
+    lev <- if (!is.null(suff_stat$nlev)) {
+      suff_stat$nlev[cols]
     } else {
       vapply(cols, function(j) length(unique(dm[, j])), integer(1))
     }
     if (all(lev == 2L)) {
-      pcalg::binCItest(x, y, S, suffStat)
+      pcalg::binCItest(x, y, S, suff_stat)
     } else {
-      pcalg::disCItest(x, y, S, suffStat)
+      pcalg::disCItest(x, y, S, suff_stat)
     }
   }
 
@@ -63,28 +63,30 @@
     stop(paste0("Unknown method: ", method), call. = FALSE)
   )
 
-  if (suffStat == FALSE) {
-    return(list(method = fun, suffStat = NULL))
+  if (suff_stat == FALSE) {
+    return(list(method = fun, suff_stat = NULL))
   }
   if (is.null(X)) {
     stop("X must be provided to compute sufficient statistic.", call. = FALSE)
   }
-  suff <- .get_suffStat(
+  suff <- .get_suff_stat(
     X = X,
     method = method,
     adaptDF = adaptDF,
     nlev = nlev
   )
 
-  list(method = fun, suffStat = suff)
+  list(method = fun, suff_stat = suff)
 }
 
 #' @title Build sufficient statistic for pcalg/micd/causalDisco tests
 #' @keywords internal
-.get_suffStat <- function(X,
-                          method,
-                          adaptDF = TRUE,
-                          nlev = NULL) {
+.get_suff_stat <- function(
+  X,
+  method,
+  adaptDF = TRUE,
+  nlev = NULL
+) {
   method <- tolower(method)
   if (inherits(X, "matrix")) X <- as.data.frame(X)
 

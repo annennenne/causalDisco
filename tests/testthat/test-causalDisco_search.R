@@ -75,7 +75,7 @@ test_that("initialize sets sensible defaults", {
   expect_null(s$knowledge)
   expect_type(s$params, "list")
   expect_identical(s$params$na_method, "none")
-  expect_null(s$suffStat)
+  expect_null(s$suff_stat)
   expect_null(s$alg)
   expect_null(s$continuous)
 })
@@ -90,12 +90,12 @@ test_that("set_suff_stat covers reg, cor and bad-type paths", {
 
   s$set_test("reg", alpha = 0.01)
   s$set_data(df, set_suff_stat = TRUE)
-  expect_true(is.list(s$suffStat))
+  expect_true(is.list(s$suff_stat))
 
   s$set_test("fisher_z", alpha = 0.01)
   s$set_data(df, set_suff_stat = FALSE)
   expect_silent(s$set_suff_stat())
-  expect_named(s$suffStat, c("C", "n"))
+  expect_named(s$suff_stat, c("C", "n"))
 
   expect_error(
     s$set_test("bad"),
@@ -110,7 +110,7 @@ test_that("set_data triggers set_suff_stat when requested", {
   colnames(df) <- c("X", "Y")
   s$set_test("fisher_z")
   expect_silent(s$set_data(df, set_suff_stat = TRUE))
-  expect_named(s$suffStat, c("C", "n"))
+  expect_named(s$suff_stat, c("C", "n"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ test_that("set_data stores data; can skip suff stat", {
 
   s$set_data(df, set_suff_stat = FALSE)
   expect_identical(s$data, df)
-  expect_null(s$suffStat)
+  expect_null(s$suff_stat)
 })
 
 test_that("set_knowledge assigns to self$knowledge and validates", {
@@ -380,7 +380,7 @@ test_that("verbose is accepted via set_params and passed to tges", {
   expect_s3_class(s$run_search(), "knowledgeable_caugi")
 })
 
-test_that("run_search errors when suffStat missing for constraint-based algs", {
+test_that("run_search errors when suff_stat missing for constraint-based algs", {
   s <- CausalDiscoSearch$new()
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- c("X", "Y", "Z", "W")
@@ -414,7 +414,7 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
   expect_s3_class(out, "knowledgeable_caugi")
 })
 
-test_that("run_search(data=...) takes constraint-based path and computes suffStat", {
+test_that("run_search(data=...) takes constraint-based path and computes suff_stat", {
   df <- data.frame(
     p1_x = rnorm(100),
     p1_y = rnorm(100),
@@ -435,12 +435,12 @@ test_that("run_search(data=...) takes constraint-based path and computes suffSta
 
   out <- s$run_search(data = df, set_suff_stat = TRUE)
 
-  expect_false(is.null(s$suffStat))
-  expect_named(s$suffStat, c("C", "n"))
+  expect_false(is.null(s$suff_stat))
+  expect_named(s$suff_stat, c("C", "n"))
   expect_s3_class(out, "knowledgeable_caugi")
 })
 
-test_that("run_search(data=...) takes score-based path and skips suffStat", {
+test_that("run_search(data=...) takes score-based path and skips suff_stat", {
   df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(df) <- paste0("X", 1:4)
 
@@ -450,6 +450,6 @@ test_that("run_search(data=...) takes score-based path and skips suffStat", {
 
   out <- s$run_search(data = df, set_suff_stat = TRUE)
 
-  expect_null(s$suffStat)
+  expect_null(s$suff_stat)
   expect_s3_class(out, "knowledgeable_caugi")
 })

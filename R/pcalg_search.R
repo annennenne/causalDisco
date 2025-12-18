@@ -59,9 +59,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #' The parameters are passed to the test and algorithm functions.
     params = NULL,
 
-    #' @field suffStat Sufficient statistic. The format and contents of the
+    #' @field suff_stat Sufficient statistic. The format and contents of the
     #' sufficient statistic depends on which test is being used.
-    suffStat = NULL,
+    suff_stat = NULL,
 
     #' @field continuous Logical; whether the sufficient statistic is for a
     #' continuous test. If both continuous and discrete are `TRUE`, the
@@ -96,7 +96,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       self$knowledge <- NULL
       self$params <- list()
       self$adaptDF <- TRUE
-      self$suffStat <- NULL
+      self$suff_stat <- NULL
     },
 
     #' @description
@@ -135,12 +135,12 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       out <- .get_pcalg_test_from_string(
         method = private$test_key,
         X = self$data,
-        suffStat = TRUE,
+        suff_stat = TRUE,
         adaptDF = self$adaptDF,
         nlev = NULL
       )
       self$test <- out$method
-      self$suffStat <- out$suffStat
+      self$suff_stat <- out$suff_stat
     },
 
     #' @description
@@ -164,7 +164,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       } else {
         out <- .get_pcalg_test_from_string(
           method = private$test_key,
-          suffStat = FALSE
+          suff_stat = FALSE
         )
         self$test <- out$method
       }
@@ -312,7 +312,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
 
       # If score_function is NULL, then we are not using a score-based algorithm
       if (is.null(private$score_function)) {
-        if (is.null(self$suffStat) && set_suff_stat) {
+        if (is.null(self$suff_stat) && set_suff_stat) {
           stop("No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
@@ -322,14 +322,14 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
           # to get the fixed constraints.
           self$knowledge <- private$knowledge_function()
           result <- self$alg(
-            suffStat = self$suffStat,
+            suffStat = self$suff_stat,
             labels = colnames(self$data),
             fixedGaps = self$knowledge$fixed_gaps,
             fixedEdges = self$knowledge$fixed_edges
           )
         } else {
           result <- self$alg(
-            suffStat = self$suffStat,
+            suffStat = self$suff_stat,
             labels = colnames(self$data)
           )
         }

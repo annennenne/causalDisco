@@ -221,7 +221,7 @@ test_that("tpc_run input guards fail fast with clear messages", {
     fixed = TRUE
   )
   expect_error(
-    tpc_run(data = NULL, suffStat = NULL, knowledge = knowledge()),
+    tpc_run(data = NULL, suff_stat = NULL, knowledge = knowledge()),
     "Either data or sufficient statistic must be supplied.",
     fixed = TRUE
   )
@@ -247,30 +247,30 @@ test_that("tpc_run NA handling: error on NAs with na_method = 'none', cc with ze
   )
 })
 
-test_that("tpc_run errors when varnames are unknown with suffStat-only usage", {
+test_that("tpc_run errors when varnames are unknown with suff_stat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tpc_run(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
+    tpc_run(data = NULL, suff_stat = suff, knowledge = knowledge(), varnames = NULL),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )
 })
 
-test_that("tpc_run demands suffStat for non-builtin test functions", {
+test_that("tpc_run demands suff_stat for non-builtin test functions", {
   set.seed(1)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
-  strange_test <- function(x, y, S, suffStat) 0
+  strange_test <- function(x, y, S, suff_stat) 0
 
   expect_error(
     tpc_run(data = df, knowledge = kn, test = strange_test),
-    "suffStat needs to be supplied when using a non-builtin test.",
+    "suff_stat needs to be supplied when using a non-builtin test.",
     fixed = TRUE
   )
 })
 
 
-test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (tskeleton path)", {
+test_that("tpc_run adds missing vars to knowledge and uses provided suff_stat (tskeleton path)", {
   set.seed(11)
   df <- data.frame(
     child_x = rnorm(40),
@@ -279,14 +279,14 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
   )
 
   kn0 <- knowledge() |> add_vars(c("child_x", "youth_y")) # missing oldage_z
-  suff <- make_suffStat(df, type = "reg_test")
+  suff <- make_suff_stat(df, type = "reg_test")
 
   res <- tpc_run(
     data = NULL,
     knowledge = kn0,
     alpha = 0.1,
     test = reg_test,
-    suffStat = suff,
+    suff_stat = suff,
     output = "tskeleton",
     varnames = names(df)
   )
@@ -305,7 +305,7 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
       knowledge = kn_bad,
       alpha = 0.1,
       test = reg_test,
-      suffStat = suff,
+      suff_stat = suff,
       output = "tskeleton",
       varnames = names(df)
     ),
@@ -314,29 +314,29 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suffStat (ts
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers: make_suffStat()
+# Helpers: make_suff_stat()
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-test_that("make_suffStat() returns correct suffStat for different tests and fails correctly", {
+test_that("make_suff_stat() returns correct suff_stat for different tests and fails correctly", {
   set.seed(12)
   df <- data.frame(
     child_x = rnorm(40),
     youth_y = rnorm(40),
     oldage_z = rnorm(40)
   )
-  suff <- make_suffStat(df, type = "reg_test")
+  suff <- make_suff_stat(df, type = "reg_test")
   expect_true(is.list(suff))
   expect_true(!is.null(suff$data))
   expect_true(!is.null(suff$bin))
 
-  suff2 <- make_suffStat(df, type = "cor_test")
+  suff2 <- make_suff_stat(df, type = "cor_test")
   expect_true(is.list(suff2))
   expect_true(!is.null(suff2$C))
   expect_true(!is.null(suff2$n))
 
   expect_error(
-    make_suffStat(df, type = "unknownTest"),
+    make_suff_stat(df, type = "unknownTest"),
     "unknownTest is not a supported type for autogenerating a sufficient statistic",
     fixed = TRUE
   )

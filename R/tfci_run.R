@@ -47,7 +47,7 @@ tfci_run <- function(
   order = NULL,
   alpha = 10^(-1),
   test = reg_test,
-  suffStat = NULL,
+  suff_stat = NULL,
   method = "stable.fast",
   na_method = "none",
   orientation_method = "conservative",
@@ -62,7 +62,7 @@ tfci_run <- function(
     varnames = varnames,
     na_method = na_method,
     test = test,
-    suffStat = suffStat,
+    suff_stat = suff_stat,
     directed_as_undirected = directed_as_undirected,
     function_name = "tfci"
   )
@@ -71,9 +71,10 @@ tfci_run <- function(
   data <- prep$data
   knowledge <- prep$knowledge
   vnames <- prep$vnames
-  suffStat <- prep$suffStat
+  suffStat <- prep$suff_stat
   na_method <- prep$na_method
   directed_as_undirected <- prep$directed_as_undirected
+  test <- prep$internal_test # Ensure we use the internal test with camelCase so it works downstream with pcalg
 
   # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {

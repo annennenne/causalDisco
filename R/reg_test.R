@@ -19,13 +19,12 @@
 #' @return A numeric, which is the p-value of the test.
 #'
 #' @export
-reg_test <- function(x, y, S, suffStat) {
-  p1 <- reg_test_each_dir(x, y, S, suffStat)
-  p2 <- reg_test_each_dir(y, x, S, suffStat)
+reg_test <- function(x, y, S, suff_stat) {
+  p1 <- reg_test_each_dir(x, y, S, suff_stat)
+  p2 <- reg_test_each_dir(y, x, S, suff_stat)
 
   max(p1, p2)
 }
-
 
 ############################################################################
 ## Not exported below ######################################################

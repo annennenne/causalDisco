@@ -75,7 +75,7 @@ test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws depr
 })
 
 
-test_that("tfci_run uses provided suffStat (no data needed) and completes", {
+test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
   set.seed(2)
   df <- data.frame(
     p1_A = rnorm(25),
@@ -90,15 +90,15 @@ test_that("tfci_run uses provided suffStat (no data needed) and completes", {
     )
   )
 
-  # Provide suffStat directly to hit the else-branch
-  ss <- make_suffStat(df, type = "reg_test")
+  # Provide suff_stat directly to hit the else-branch
+  ss <- make_suff_stat(df, type = "reg_test")
 
   out <- tfci_run(
     data = NULL, # no data path
     knowledge = kn,
     alpha = 0.2,
     test = reg_test,
-    suffStat = ss,
+    suff_stat = ss,
     varnames = names(df)
   )
 
@@ -143,7 +143,7 @@ test_that("tfci_run input guards fail fast with clear messages", {
   kn <- knowledge() |> add_vars(names(df))
 
   expect_error(
-    tfci_run(data = NULL, suffStat = NULL, knowledge = knowledge()),
+    tfci_run(data = NULL, suff_stat = NULL, knowledge = knowledge()),
     "Either data or sufficient statistic must be supplied.",
     fixed = TRUE
   )
@@ -181,24 +181,24 @@ test_that("tfci_run NA handling: error on NAs with na_method = 'none', cc with z
   )
 })
 
-test_that("tfci_run errors when varnames are unknown with suffStat-only usage", {
+test_that("tfci_run errors when varnames are unknown with suff_stat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tfci_run(data = NULL, suffStat = suff, knowledge = knowledge(), varnames = NULL),
+    tfci_run(data = NULL, suff_stat = suff, knowledge = knowledge(), varnames = NULL),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )
 })
 
-test_that("tfci_run demands suffStat for non-builtin test functions", {
+test_that("tfci_run demands suff_stat for non-builtin test functions", {
   set.seed(1)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
-  strange_test <- function(x, y, S, suffStat) 0
+  strange_test <- function(x, y, S, suff_stat) 0
 
   expect_error(
     tfci_run(data = df, knowledge = kn, test = strange_test),
-    "suffStat needs to be supplied when using a non-builtin test.",
+    "suff_stat needs to be supplied when using a non-builtin test.",
     fixed = TRUE
   )
 })

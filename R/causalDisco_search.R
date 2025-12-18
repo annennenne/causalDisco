@@ -62,9 +62,9 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
     #' Use with caution.
     params = NULL,
 
-    #' @field suffStat Sufficient statistic. The format and contents of the
+    #' @field suff_stat Sufficient statistic. The format and contents of the
     #' sufficient statistic depends on which test is being used.
-    suffStat = NULL,
+    suff_stat = NULL,
 
     #' @field knowledge A `knowledge` object holding background knowledge.
     knowledge = NULL,
@@ -97,7 +97,7 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
         return(invisible(self))
       }
       reserved <- c(
-        "data", "suffStat", "knowledge", "score", "test", "labels"
+        "data", "suff_stat", "knowledge", "score", "test", "labels"
       )
       bad <- intersect(names(params), reserved)
       if (length(bad)) {
@@ -139,10 +139,10 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       out <- .get_pcalg_test_from_string(
         method = private$test_key,
         X = self$data,
-        suffStat = TRUE
+        suff_stat = TRUE
       )
       self$test <- out$method
-      self$suffStat <- out$suffStat
+      self$suff_stat <- out$suff_stat
       invisible(self)
     },
 
@@ -161,7 +161,7 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       if (!is.null(self$data)) {
         self$set_suff_stat()
       } else {
-        out <- .get_pcalg_test_from_string(method = private$test_key, suffStat = FALSE)
+        out <- .get_pcalg_test_from_string(method = private$test_key, suff_stat = FALSE)
         self$test <- out$method
       }
       invisible(self)
@@ -304,7 +304,7 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
 
       # constraint-based path
       if (!identical(private$alg_method, "tges")) {
-        if (is.null(self$suffStat) && set_suff_stat) {
+        if (is.null(self$suff_stat) && set_suff_stat) {
           stop("No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
@@ -312,7 +312,7 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
         res <- self$alg(
           data = self$data,
           knowledge = self$knowledge,
-          suffStat = self$suffStat
+          suff_stat = self$suff_stat
         )
         res
       } else {
