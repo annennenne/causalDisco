@@ -188,41 +188,8 @@ plot(disco_cd_tges)
 
 ### Bugfixes
 
-#### causalDisco issues
-
-- `tpc` with engine `"causalDisco"` does not currently work correctly
-  with tier knowledge
-
-``` r
-data("tpc_example")
-
-kn <- knowledge(
-  tpc_example,
-  tier(
-    child ~ starts_with("child"),
-    youth ~ starts_with("youth"),
-    old ~ starts_with("old")
-  )
-)
-
-my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-
-output <- disco(tpc_example, my_tpc, knowledge = kn)
-edges <- output$caugi@edges
-
-violations <- causalDisco:::check_tier_violations(edges, kn)
-violations
-#> # A tibble: 4 × 5
-#>   from      edge  to       tier_from tier_to
-#>   <chr>     <chr> <chr>        <int>   <int>
-#> 1 oldage_x5 -->   child_x2         3       1
-#> 2 oldage_x5 -->   youth_x3         3       2
-#> 3 oldage_x6 -->   youth_x4         3       2
-#> 4 youth_x4  -->   child_x2         2       1
-```
-
-- All of our algorithms (I think?) does not work with required edges
-  from knowledge objects (see e.g. [unit tests for
+- All of our algorithm does not work with required edges from knowledge
+  objects (see e.g. [unit tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)),
   `tpc`, `tges`, … Currently does nothing. Either make it work or throw
   error/warning if required edges are given.
@@ -245,6 +212,11 @@ if (missing_required) {
 ```
 
 The algorithm needs to be modified when having required edges, I think.
+
+Should be easier to fix for test based algorithms? Just check if
+required edges are present after skeleton phase and add them if missing?
+(and forbid them from being removed in orientation phase). Look at
+fixedEdges in pcalg.
 
 - Look into how (if) possible to pass to pcalg.
 

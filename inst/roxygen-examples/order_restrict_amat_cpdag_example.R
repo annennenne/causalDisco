@@ -32,5 +32,5 @@ skel <- pcalg::skeleton(
 )
 
 amat_skel <- causalDisco:::graph_to_amat(skel)
-amat_prune <- causalDisco:::order_restrict_amat_cpdag(amat_skel, kn)
+amat_prune <- causalDisco:::order_restrict_amat_cpdag(amat_skel, kn, from_to = FALSE)
 amat_prune[1:6, 1:6]

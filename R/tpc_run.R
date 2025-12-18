@@ -208,7 +208,13 @@ tpc_run <- function(
     return(out)
   }
 
-  res <- tpdag(skel, knowledge = knowledge)
+  if (output %in% c("caugi")) {
+    from_to <- TRUE
+  } else {
+    from_to <- FALSE
+  }
+
+  res <- tpdag(skel, knowledge = knowledge, from_to = from_to)
 
   if (output == "tpdag") {
     out <- list(
@@ -223,6 +229,8 @@ tpc_run <- function(
   } else if (output == "caugi") {
     amat <- graph_to_amat(res, to_from = FALSE)
     amat <- methods::as(amat, "matrix")
+    # as_caugi assumes rows are the "from" nodes and columns the "to" nodes. The amat we get is swapped.
+    # TODO: make a better fix
     cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
     knowledgeable_caugi(cg, knowledge)
   }
@@ -504,13 +512,15 @@ dir_test <- function(test, vnames, knowledge) {
 #'
 #' @param amat Square adjacency matrix (from-to convention).
 #' @param knowledge A \code{knowledge} object with tier labels.
+#' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
+#' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
 #' @example inst/roxygen-examples/order_restrict_amat_cpdag_example.R
 #'
 #' @return The pruned adjacency matrix.
 #' @keywords internal
 #' @noRd
-order_restrict_amat_cpdag <- function(amat, knowledge) {
+order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
   p <- nrow(amat)
   vnames <- rownames(amat)
   tr <- .tier_index(knowledge, vnames)
@@ -522,7 +532,11 @@ order_restrict_amat_cpdag <- function(amat, knowledge) {
   for (i in seq_len(p)) {
     for (j in seq_len(p)) {
       if (!is.na(tr[i]) && !is.na(tr[j]) && tr[i] > tr[j]) {
-        amat[j, i] <- 0
+        if (from_to) {
+          amat[i, j] <- 0
+        } else {
+          amat[j, i] <- 0
+        }
       }
     }
   }
@@ -538,22 +552,23 @@ order_restrict_amat_cpdag <- function(amat, knowledge) {
 #'
 #' @param skel A \code{\link[pcalg]{pcAlgo-class}} skeleton result.
 #' @param knowledge A \code{knowledge} object with tiers (and optionally edges).
+#' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
+#' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
 #' @example inst/roxygen-examples/tpdag_example.R
 #'
 #' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
 #' @keywords internal
 #' @noRd
-tpdag <- function(skel, knowledge) {
+tpdag <- function(skel, knowledge, from_to) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
     ),
     function_name = "tpdag"
   )
-
   thisAmat <- graph_to_amat(skel)
-  tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge)
+  tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge, from_to = from_to)
   pcalg::addBgKnowledge(
     v_orient_temporal(tempSkelAmat, skel@sepset),
     checkInput = FALSE

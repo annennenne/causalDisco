@@ -8,7 +8,6 @@ test_that("tpc causalDisco arguments to tfci_run can be passed along correctly",
 })
 
 test_that("tpc causalDisco respects tier knowledge", {
-  skip("tpc causalDisco does not yet support tier knowledge.")
   data("tpc_example")
 
   kn <- knowledge(
