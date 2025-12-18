@@ -89,7 +89,7 @@ statistic is build for a mixed test.}
 
 \item{\code{knowledge}}{A list of fixed constraints for the search algorithm.}
 
-\item{\code{adaptDF}}{Logical; whether to adapt the degrees of freedom
+\item{\code{adapt_df}}{Logical; whether to adapt the degrees of freedom
 for discrete tests.}
 }
 \if{html}{\out{</div>}}

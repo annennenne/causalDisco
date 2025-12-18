@@ -76,9 +76,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #' @field knowledge A list of fixed constraints for the search algorithm.
     knowledge = NULL,
 
-    #' @field adaptDF Logical; whether to adapt the degrees of freedom
+    #' @field adapt_df Logical; whether to adapt the degrees of freedom
     #' for discrete tests.
-    adaptDF = TRUE,
+    adapt_df = TRUE,
 
     #' @description
     #' Constructor for the `PcalgSearch` class.
@@ -95,7 +95,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       self$test <- NULL
       self$knowledge <- NULL
       self$params <- list()
-      self$adaptDF <- TRUE
+      self$adapt_df <- TRUE
       self$suff_stat <- NULL
     },
 
@@ -129,14 +129,14 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       if (is.null(private$test_key)) {
         stop("Test must be set before sufficient statistic.", call. = FALSE)
       }
-      if (!is.logical(self$adaptDF)) {
-        stop("adaptDF must be a logical.", call. = FALSE)
+      if (!is.logical(self$adapt_df)) {
+        stop("adapt_df must be a logical.", call. = FALSE)
       }
       out <- .get_pcalg_test_from_string(
         method = private$test_key,
         X = self$data,
         suff_stat = TRUE,
-        adaptDF = self$adaptDF,
+        adaptDF = self$adapt_df,
         nlev = NULL
       )
       self$test <- out$method
