@@ -98,7 +98,7 @@ constraint_based_prepare_inputs <- function(
   if ("suff_stat" %in% names(formals(test))) {
     # wrap snake_case -> camelCase
     internal_test <- function(x, y, S, suffStat) {
-      test(x, y, S, suff_stat = suffStat)
+      test(x, y, conditioning_set = S, suff_stat = suffStat)
     }
   }
 

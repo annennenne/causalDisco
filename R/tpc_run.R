@@ -96,7 +96,8 @@ tpc_run <- function(
   orientation_method = "conservative",
   output = "caugi",
   directed_as_undirected = FALSE,
-  varnames = NULL, ...
+  varnames = NULL,
+  ...
 ) {
   prep <- constraint_based_prepare_inputs(
     data = data,

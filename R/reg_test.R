@@ -1,12 +1,12 @@
 #' Regression-based information loss test
 #'
 #' We test whether \code{x} and \code{y} are associated, given
-#' \code{S} using a generalized linear model.
+#' \code{conditioning_set} using a generalized linear model.
 #'
 #' @details All included variables should be either numeric or binary. If
 #' \code{y} is binary, a logistic regression model is fitted. If \code{y} is numeric,
-#' a linear regression model is fitted. \code{x} and \code{S} are included as
-#' explanatory variables. Any numeric variables among \code{x} and \code{S} are
+#' a linear regression model is fitted. \code{x} and \code{conditioning_set} are included as
+#' explanatory variables. Any numeric variables among \code{x} and \code{conditioning_set} are
 #' modeled with spline expansions (natural splines, 3 df). This model is tested
 #' against a numeric where \code{x} (including a possible spline expansion) has
 #' been left out using a likelihood ratio test.
@@ -19,9 +19,9 @@
 #' @return A numeric, which is the p-value of the test.
 #'
 #' @export
-reg_test <- function(x, y, S, suff_stat) {
-  p1 <- reg_test_each_dir(x, y, S, suff_stat)
-  p2 <- reg_test_each_dir(y, x, S, suff_stat)
+reg_test <- function(x, y, conditioning_set, suff_stat) {
+  p1 <- reg_test_each_dir(x, y, conditioning_set, suff_stat)
+  p2 <- reg_test_each_dir(y, x, conditioning_set, suff_stat)
 
   max(p1, p2)
 }

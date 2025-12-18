@@ -3,9 +3,9 @@
 #' This function simply calls the \code{\link[pcalg]{gaussCItest}}
 #' function from the \code{pcalg} package.
 #'
-#' @param x Index of x variable
-#' @param y Index of y variable
-#' @param conditioning_set Index vector of conditioning variable(s), possibly `NULL`
+#' @param x Index of x variable.
+#' @param y Index of y variable.
+#' @param conditioning_set Index vector of conditioning variable(s), possibly `NULL`.
 #' @param suff_stat Sufficient statistic; list with data,
 #' binary variables and order.
 #'

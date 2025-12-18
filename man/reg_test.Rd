@@ -4,12 +4,14 @@
 \alias{reg_test}
 \title{Regression-based information loss test}
 \usage{
-reg_test(x, y, S, suff_stat)
+reg_test(x, y, conditioning_set, suff_stat)
 }
 \arguments{
-\item{x}{Index of x variable}
+\item{x}{Index of x variable.}
 
-\item{y}{Index of y variable}
+\item{y}{Index of y variable.}
+
+\item{conditioning_set}{Index vector of conditioning variable(s), possibly \code{NULL}.}
 
 \item{suff_stat}{Sufficient statistic; list with data,
 binary variables and order.}
@@ -19,13 +21,13 @@ A numeric, which is the p-value of the test.
 }
 \description{
 We test whether \code{x} and \code{y} are associated, given
-\code{S} using a generalized linear model.
+\code{conditioning_set} using a generalized linear model.
 }
 \details{
 All included variables should be either numeric or binary. If
 \code{y} is binary, a logistic regression model is fitted. If \code{y} is numeric,
-a linear regression model is fitted. \code{x} and \code{S} are included as
-explanatory variables. Any numeric variables among \code{x} and \code{S} are
+a linear regression model is fitted. \code{x} and \code{conditioning_set} are included as
+explanatory variables. Any numeric variables among \code{x} and \code{conditioning_set} are
 modeled with spline expansions (natural splines, 3 df). This model is tested
 against a numeric where \code{x} (including a possible spline expansion) has
 been left out using a likelihood ratio test.

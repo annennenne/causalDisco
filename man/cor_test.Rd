@@ -7,11 +7,11 @@
 cor_test(x, y, conditioning_set, suff_stat)
 }
 \arguments{
-\item{x}{Index of x variable}
+\item{x}{Index of x variable.}
 
-\item{y}{Index of y variable}
+\item{y}{Index of y variable.}
 
-\item{conditioning_set}{Index vector of conditioning variable(s), possibly \code{NULL}}
+\item{conditioning_set}{Index vector of conditioning variable(s), possibly \code{NULL}.}
 
 \item{suff_stat}{Sufficient statistic; list with data,
 binary variables and order.}
