@@ -171,12 +171,11 @@ plot(disco_cd_tges)
 - If only some variables have tier knowledge color the tiers and place
   the rest somewhere else when plotting.
 
-- Refactor `_run` functions (a lot of copy-paste).
-
 - Make required work for our algorithms. It breaks when it internally
   calls `tpdag`, so look into that…
 
-- Figure out when and why tier knowledge breaks for `tpc`.
+- Make score/test/alg names consistent. Currently a mix of snake_case,
+  kebab-case, and period.case.
 
 ### Manging exported functions
 

@@ -135,7 +135,6 @@ plot(disco_cd_tges)
 - Shouldn't we just list all possible arguments to `tpc`, `tfci`, and `tges` instead of `...` and forcing the user
 to look at the underlying `_run` functions? Then also make the `_run` functions not exported?
 
-
 ## TODO
 
 - Automatically scale plot elements to fit the available plot size.
