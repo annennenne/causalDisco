@@ -55,94 +55,33 @@ tfci_run <- function(
   varnames = NULL,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "methods", "pcalg", "stats", "tidyselect"
-    ),
+  prep <- constraint_based_prepare_inputs(
+    data = data,
+    knowledge = knowledge,
+    order = order,
+    varnames = varnames,
+    na_method = na_method,
+    test = test,
+    suffStat = suffStat,
+    directed_as_undirected = directed_as_undirected,
     function_name = "tfci"
   )
 
-  if (!(na_method %in% c("none", "cc", "twd"))) {
-    stop("Invalid choice of method for handling NA values.")
-  }
-  if (is.null(data) && is.null(suffStat)) {
-    stop("Either data or sufficient statistic must be supplied.")
-  }
+  # unpack returned values
+  data <- prep$data
+  knowledge <- prep$knowledge
+  vnames <- prep$vnames
+  suffStat <- prep$suffStat
+  na_method <- prep$na_method
+  directed_as_undirected <- prep$directed_as_undirected
+
+  # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
     stop("Orientation method must be one of standard, conservative or maj.rule.")
   }
 
-  if (!is.null(knowledge) && !is.null(order)) {
-    stop(
-      "Both `knowledge` and `order` supplied. ",
-      "Please supply a knowledge object."
-    )
-  }
-
-  # legacy order support (deprecated)
-  if (is.null(knowledge) && !is.null(order)) {
-    warning(
-      "`order` is deprecated in version 1.0.0 and will be removed in a ",
-      "future version. Please supply a `knowledge` object instead."
-    )
-    vnames0 <- if (is.null(data)) varnames else names(data)
-    knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
-  }
-
-  if (is.null(knowledge)) {
-    knowledge <- knowledge()
-  }
-
-  is_knowledge(knowledge)
-
-  # NA handling
-  if (!is.null(data) && any(is.na(data))) {
-    if (na_method == "none") {
-      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
-    } else if (na_method == "cc") {
-      data <- stats::na.omit(data)
-      if (nrow(data) == 0) {
-        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
-      }
-    }
-  }
-
-  # variable names
-  vnames <- if (is.null(data)) varnames else names(data)
-  if (is.null(vnames) || !length(vnames)) {
-    stop("Could not determine variable names. Supply `data` or `varnames`.")
-  }
-
-  # ensure all vars appear in knowledge
-  missing_vars <- setdiff(vnames, knowledge$vars$var)
-  if (length(missing_vars)) {
-    knowledge <- add_vars(knowledge, missing_vars)
-  }
-  bad_vars <- setdiff(knowledge$vars$var, vnames)
-  if (length(bad_vars)) {
-    stop(
-      "Knowledge contains variables not present in `data`: ",
-      paste(bad_vars, collapse = ", ")
-    )
-  }
-
   # CI test that forbids conditioning on future tiers
   indep_test_dir <- dir_test(test, vnames, knowledge)
-
-  # sufficient statistics (built-ins or user-supplied)
-  if (is.null(suffStat)) {
-    this_test_name <- deparse(substitute(test))
-    if (this_test_name == "reg_test") {
-      this_suffStat <- make_suffStat(data, type = "reg_test")
-    } else if (this_test_name == "cor_test") {
-      this_suffStat <- make_suffStat(data, type = "cor_test")
-    } else {
-      stop("suffStat needs to be supplied when using a non-builtin test.")
-    }
-  } else {
-    this_suffStat <- suffStat
-    na_method <- "none"
-  }
 
   # pcalg background constraints (forbidden/required) from knowledge
   constraints <- .pcalg_constraints_from_knowledge(
@@ -153,7 +92,7 @@ tfci_run <- function(
 
   # learn skeleton
   skel <- pcalg::skeleton(
-    suffStat = this_suffStat,
+    suffStat = suffStat,
     indepTest = indep_test_dir,
     alpha = alpha,
     labels = vnames,
@@ -168,7 +107,7 @@ tfci_run <- function(
   nvar <- length(skel@graph@nodes)
   fci_skel <- pcalg::pdsep(
     skel = skel,
-    suffStat = this_suffStat,
+    suffStat = suffStat,
     indepTest = indep_test_dir,
     p = nvar,
     sepset = skel@sepset,
@@ -196,7 +135,7 @@ tfci_run <- function(
     )
     tmpres <- pcalg::pc.cons.intern(
       tmp,
-      suffStat = this_suffStat,
+      suffStat = suffStat,
       indepTest = indep_test_dir,
       alpha = alpha,
       version.unf = c(1, 1),

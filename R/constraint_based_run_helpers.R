@@ -1,0 +1,104 @@
+#' Prepare inputs for constraint-based algorithms
+#' @description
+#' Internal function to prepare and validate inputs for constraint-based algorithms.
+#'
+#' @inheritParams tpc_run
+#' @param function_name Name of the calling function (for error messages).
+#' @return A list containing the prepared inputs:
+#'  \item{data}{The (possibly modified) data frame.}
+#'  \item{knowledge}{The knowledge object.}
+#'  \item{vnames}{The variable names.}
+#'  \item{suffStat}{The sufficient statistics.}
+#'  \item{na_method}{The method for handling NAs.}
+#' @keywords internal
+#' @noRd
+constraint_based_prepare_inputs <- function(
+  data = NULL,
+  knowledge = NULL,
+  order = NULL,
+  varnames = NULL,
+  na_method = "none",
+  test = reg_test,
+  suffStat = NULL,
+  directed_as_undirected = FALSE,
+  function_name
+) {
+  # check required packages
+  .check_if_pkgs_are_installed(
+    pkgs = c("methods", "pcalg", "stats", "tidyselect"),
+    function_name = function_name
+  )
+
+  # NA method validation
+  if (!(na_method %in% c("none", "cc", "twd"))) {
+    stop("Invalid choice of method for handling NA values.")
+  }
+  if (is.null(data) && is.null(suffStat)) {
+    stop("Either data or sufficient statistic must be supplied.")
+  }
+
+  # knowledge/order validation
+  if (!is.null(knowledge) && !is.null(order)) {
+    stop("Both `knowledge` and `order` supplied. Please supply a knowledge object.")
+  }
+
+  if (is.null(knowledge) && !is.null(order)) {
+    warning(
+      "`order` is deprecated in version 1.0.0 and will be removed in a future version. ",
+      "Please supply a `knowledge` object instead."
+    )
+    vnames0 <- if (is.null(data)) varnames else names(data)
+    knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
+  }
+
+  if (is.null(knowledge)) knowledge <- knowledge()
+  is_knowledge(knowledge)
+
+  # NA handling
+  if (!is.null(data) && any(is.na(data))) {
+    if (na_method == "none") {
+      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
+    } else if (na_method == "cc") {
+      data <- stats::na.omit(data)
+      if (nrow(data) == 0) {
+        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
+      }
+    }
+  }
+
+  # variable names
+  vnames <- if (is.null(data)) varnames else names(data)
+  if (is.null(vnames) || !length(vnames)) {
+    stop("Could not determine variable names. Supply `data` or `varnames`.")
+  }
+
+  # ensure all vars appear in knowledge
+  missing_vars <- setdiff(vnames, knowledge$vars$var)
+  if (length(missing_vars)) knowledge <- add_vars(knowledge, missing_vars)
+  bad_vars <- setdiff(knowledge$vars$var, vnames)
+  if (length(bad_vars)) {
+    stop("Knowledge contains variables not present in `data`: ", paste(bad_vars, collapse = ", "))
+  }
+
+  # sufficient statistics
+  if (is.null(suffStat)) {
+    if (identical(test, reg_test)) {
+      suffStat <- make_suffStat(data, type = "reg_test")
+    } else if (identical(test, cor_test)) {
+      suffStat <- make_suffStat(data, type = "cor_test")
+    } else {
+      stop("suffStat needs to be supplied when using a non-builtin test.")
+    }
+  } else {
+    na_method <- "none"
+  }
+
+
+  list(
+    data = data,
+    knowledge = knowledge,
+    vnames = vnames,
+    suffStat = suffStat,
+    na_method = na_method
+  )
+}

@@ -104,6 +104,7 @@ Collate:
     'check_knowledge_violations.R'
     'compare.R'
     'confusion.R'
+    'constraint_based_run_helpers.R'
     'cor_test.R'
     'disco.R'
     'disco_method.R'
