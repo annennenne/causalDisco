@@ -11,8 +11,6 @@ reg_test(x, y, S, suff_stat)
 
 \item{y}{Index of y variable}
 
-\item{S}{Index of S variable(s), possibly NULL}
-
 \item{suff_stat}{Sufficient statistic; list with data,
 binary variables and order.}
 }

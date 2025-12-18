@@ -44,12 +44,11 @@ reference:
     contents:
       - ends_with("run")
 
-  - title: "Classes used by algorithms with engine causalDisco"
+  - title: "Temporal Graph and Score Classes Extending pcalg"
     contents:
       - TEssGraph
       - TemporalBIC
       - TemporalBDeu
-      - gaus_cor_score
 
   - title: "Test Functions"
     contents:
@@ -137,3 +136,4 @@ reference:
       - engine_registry
       - tetrad_graph
       - tpc_example
+      - gaus_cor_score

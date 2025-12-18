@@ -58,7 +58,7 @@ tges_run <- function(score, verbose = FALSE) {
   update_phase <- function(phase, essgraph, Forbidden.edges, verbose) {
     runwhile <- TRUE
     while (runwhile) {
-      tempstep <- essgraph$greedy.step(phase, verbose = verbose)
+      tempstep <- essgraph$greedy_step(phase, verbose = verbose)
       runwhile <- as.logical(tempstep[1])
 
       if (!runwhile) {
@@ -220,23 +220,23 @@ to_adj_mat <- function(obj) {
 # ───────────────────────── Graph / Score  ─────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Temporal EssGraph class with greedy steps
-#'
+#' @title Temporal EssGraph class with greedy steps
+#' @description
 #' A `RefClass` extending `EssGraph` that exposes a single-step greedy move
-#' (`forward`, `backward`, or `turning`) through `greedy.step()`. Used by
-#' [tges_run()] to iterate GIES one step at a time and interleave background
+#' (`forward`, `backward`, or `turning`) through `greedy_step()`. Used by
+#' [tges_run] to iterate GIES one step at a time and interleave background
 #' knowledge enforcement.
 #'
 #' @section Methods:
-#' \describe{
-#'   \item{greedy.step(direction = c("forward","backward","turning"), verbose = FALSE, ...)}{
-#'     Performs a single improving step in the requested phase. Returns a named
-#'     vector/list where the first element indicates whether a step happened,
-#'     followed by any nodes whose in-edges changed.
-#'   }
+#' `greedy_step(direction = c("forward", "backward", "turning"), verbose = FALSE, ...)`
+#' \itemize{
+#'  \item `direction` Character; one of `"forward"`, `"backward"`, or `"turning"`,
+#'   indicating which phase of GIES to perform a single step of.
+#'  \item `verbose` Logical; indicates whether debug output should be printed.
+#'  \item `...` Additional arguments passed to the underlying C++ function causalInference from pcalg.
 #' }
 #'
-#' @seealso [tges_run()], [TemporalBIC], [TemporalBDeu]
+#' @seealso [tges_run], [TemporalBIC], [TemporalBDeu]
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
 #' @export TEssGraph
@@ -245,9 +245,11 @@ TEssGraph <- setRefClass(
   contains = "EssGraph",
   methods = list(
     # Performs one greedy step
-    greedy.step = function(direction = c("forward", "backward", "turning"),
-                           verbose = FALSE,
-                           ...) {
+    greedy_step = function(
+      direction = c("forward", "backward", "turning"),
+      verbose = FALSE,
+      ...
+    ) {
       stopifnot(!is.null(score <- getScore()))
 
       # Cast direction
@@ -316,12 +318,14 @@ TEssGraph <- setRefClass(
 #'
 #' @section Constructor:
 #' \preformatted{
-#' new("TemporalBIC",
-#'   data = matrix(1, 1, 1),
-#'   order =  rep(1,ncol(data)),
-#'   lambda = 0.5 * log(nrow(data)),
-#'   intercept = TRUE,
-#'   ...)
+#' new(
+#'  "TemporalBIC",
+#'  data = matrix(1, 1, 1),
+#'  order =  rep(1,ncol(data)),
+#'  lambda = 0.5 * log(nrow(data)),
+#'  intercept = TRUE,
+#'  ...
+#' )
 #' }
 #'
 #' @param data A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
@@ -351,14 +355,16 @@ TemporalBIC <- setRefClass( # nolint: object_name_linter.
     .order = "vector"
   ),
   methods = list(
-    initialize = function(data = NULL,
-                          nodes = colnames(data),
-                          lambda = 0.5 * log(nrow(data)),
-                          intercept = TRUE,
-                          format = c("raw", "scatter"),
-                          knowledge = NULL,
-                          order = NULL, # deprecated
-                          ...) {
+    initialize = function(
+      data = NULL,
+      nodes = colnames(data),
+      lambda = 0.5 * log(nrow(data)),
+      intercept = TRUE,
+      format = c("raw", "scatter"),
+      knowledge = NULL,
+      order = NULL, # deprecated
+      ...
+    ) {
       if (!is.null(knowledge) && !is.null(order)) {
         stop(
           "Both `knowledge` and `order` supplied. ",
@@ -487,11 +493,13 @@ TemporalBIC <- setRefClass( # nolint: object_name_linter.
 #'
 #' @section Constructor:
 #' \preformatted{
-#' new("TemporalBdeu",
-#'   data = matrix(1, 1, 1),
-#'   order =  rep(1,ncol(data)),
-#'   iss = 1
-#'   ...)
+#' new(
+#'  "TemporalBdeu",
+#'  data = matrix(1, 1, 1),
+#'  order =  rep(1,ncol(data)),
+#'  iss = 1
+#'  ...
+#' )
 #' }
 #'
 #'

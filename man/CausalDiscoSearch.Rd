@@ -98,29 +98,29 @@ search object. Can be set with \code{set_data()}.}
 when data is set. Can be set with \code{$set_score()}. Recognized values
 are:
 \itemize{
-\item \code{tbic} - Temporal BIC score for Gaussian data.
+\item \code{"tbic"} - Temporal BIC score for Gaussian data.
 See \code{\link{TemporalBIC}}
-\item \code{tbdeu} - Temporal BDeu score for discrete data.
+\item \code{"tbdeu"} - Temporal BDeu score for discrete data.
 See \code{\link{TemporalBDeu}}.
 }}
 
 \item{\code{test}}{A function that will be used to test independence.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
-\item \code{fisher_z} - Fisher Z test for Gaussian data.
+\item \code{"fisher_z"} - Fisher Z test for Gaussian data.
 See \code{\link{cor_test}}.
-\item \code{reg} - Regression test for discrete or binary data.
+\item \code{"reg"} - Regression test for discrete or binary data.
 See \code{\link{reg_test}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
-\item \code{tpc}  - TPC algorithm.
+\item \code{"tpc"}  - TPC algorithm.
 See \code{\link{tpc}}.
-\item \code{tfci} - TFCI algorithm.
+\item \code{"tfci"} - TFCI algorithm.
 See \code{\link{tfci}}.
-\item \code{tges} - TGES algorithm.
+\item \code{"tges"} - TGES algorithm.
 See \code{\link{tges}}.
 }}
 

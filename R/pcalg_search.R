@@ -26,9 +26,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #'  when data is set. Can be set with \code{$set_score()}. Recognized values
     #'  are:
     #'  \itemize{
-    #'     \item \code{sem_bic} - BIC score for Gaussian observed data.
+    #'     \item \code{"sem_bic"} - BIC score for Gaussian observed data.
     #'     See \code{\link[pcalg]{GaussL0penObsScore-class}}.
-    #'     \item \code{sem_bic_int} - BIC score for Gaussian data from jointly
+    #'     \item \code{"sem_bic_int"} - BIC score for Gaussian data from jointly
     #'     interventional and observational Gaussian data.
     #'     See \code{\link[pcalg]{GaussL0penIntScore-class}}.
     #'     }
@@ -37,9 +37,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #' @field test A function that will be used to test independence.
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
-    #'    \item \code{fisher_z} - Fisher Z test for Gaussian data.
+    #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
     #'    See \code{\link[pcalg]{gaussCItest}}.
-    #'    \item \code{g_square} - G square test for discrete data.
+    #'    \item \code{"g_square"} - G square test for discrete data.
     #'    See \code{\link[pcalg]{binCItest}} and
     #'    \code{\link[pcalg]{disCItest}}.
     #'  }
@@ -48,9 +48,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #' @field alg A function that will be used to run the search algorithm.
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
-    #'   \item \code{pc} - PC algorithm. See \code{\link[pcalg]{pc}}.
-    #'   \item \code{fci} - FCI algorithm. See \code{\link[pcalg]{fci}}.
-    #'   \item \code{ges} - GES algorithm. See \code{\link[pcalg]{ges}}.
+    #'   \item \code{"pc"} - PC algorithm. See \code{\link[pcalg]{pc}}.
+    #'   \item \code{"fci"} - FCI algorithm. See \code{\link[pcalg]{fci}}.
+    #'   \item \code{"ges"} - GES algorithm. See \code{\link[pcalg]{ges}}.
     #' }
     alg = NULL,
 

@@ -29,8 +29,10 @@
 #' pcalg::ges(gaus_cor_score(cmat, n = 100))
 #'
 #' @export
-gaus_cor_score <- function(cormat, n, p = NULL,
-                           lambda = NULL, ...) {
+gaus_cor_score <- function(
+  cormat, n, p = NULL,
+  lambda = NULL, ...
+) {
   if (is.null(lambda)) lambda <- log(n) / 2
 
   if (is.null(p)) p <- dim(cormat)[1]

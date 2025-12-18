@@ -7,22 +7,22 @@
 \title{Temporal EssGraph class with greedy steps}
 \description{
 A \code{RefClass} extending \code{EssGraph} that exposes a single-step greedy move
-(\code{forward}, \code{backward}, or \code{turning}) through \code{greedy.step()}. Used by
-\code{\link[=tges_run]{tges_run()}} to iterate GIES one step at a time and interleave background
+(\code{forward}, \code{backward}, or \code{turning}) through \code{greedy_step()}. Used by
+\link{tges_run} to iterate GIES one step at a time and interleave background
 knowledge enforcement.
 }
 
 \section{Methods}{
 
-\describe{
-\item{greedy.step(direction = c("forward","backward","turning"), verbose = FALSE, ...)}{
-Performs a single improving step in the requested phase. Returns a named
-vector/list where the first element indicates whether a step happened,
-followed by any nodes whose in-edges changed.
-}
+\code{greedy_step(direction = c("forward", "backward", "turning"), verbose = FALSE, ...)}
+\itemize{
+\item \code{direction} Character; one of \code{"forward"}, \code{"backward"}, or \code{"turning"},
+indicating which phase of GIES to perform a single step of.
+\item \code{verbose} Logical; indicates whether debug output should be printed.
+\item \code{...} Additional arguments passed to the underlying C++ function causalInference from pcalg.
 }
 }
 
 \seealso{
-\code{\link[=tges_run]{tges_run()}}, \link{TemporalBIC}, \link{TemporalBDeu}
+\link{tges_run}, \link{TemporalBIC}, \link{TemporalBDeu}
 }
