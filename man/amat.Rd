@@ -13,7 +13,7 @@ amat(x)
 }
 \description{
 If the input is a tpdag or cpdag, the resulting adjacency matrix A is
-"from-to" matrix encoded as follows:
+"to-from" matrix encoded as follows:
 \itemize{
 \item A(i,j) = 1 and A(j,i) = 0 means there is an edge j -> i.
 \item A(j,i) = 1 and A(i,j) = 0 means there is an edge i -> j.
