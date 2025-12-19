@@ -137,9 +137,8 @@ to look at the underlying `_run` functions? Then also make the `_run` functions 
 
 ## TODO
 
-- Automatically scale plot elements to fit the available plot size.
-
-- If only some variables have tier knowledge color the tiers and place the rest somewhere else when plotting.
+- Improve plot
+  - Add some of the arguments from plot_tempo_mech (such as time_axis, ...)
 
 - Make required work for our algorithms. It breaks when it internally calls `tpdag`, so look into that...
 

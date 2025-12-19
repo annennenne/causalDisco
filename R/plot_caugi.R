@@ -76,7 +76,7 @@ plot_caugi_graph <- function(g, layout = NULL, curved = TRUE, ...) {
 #' layout is used.
 #'
 #' @param x A `caugi` object containing the causal graph and knowledge.
-#' @param ... Additional arguments passed to igraph `plot`.
+#' @param ... Additional arguments passed to igraph `plot` and `plot.knowledge`.
 #' @return A plot of the causal graph.
 #' @method plot knowledgeable_caugi
 #' @examples
@@ -104,7 +104,7 @@ plot.knowledgeable_caugi <- function(x, ...) {
   # --------------------------
   # 1. Plot the knowledge graph first
   # --------------------------
-  k_info <- plot.knowledge(x_knowledge, ...)
+  k_info <- .plot_knowledge_internal(x_knowledge, ...)
   g <- k_info$graph
 
   # --------------------------
@@ -278,6 +278,16 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #'
 #' @export
 plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
+  .plot_knowledge_internal(x, x_jitter, vertex_size_scale, return_info = FALSE, ...)
+}
+
+#' Internal function to plot knowledge objects
+#' @inheritParams plot.knowledge
+#' @param return_info Logical indicating whether to return plotting info.
+#' @return If `return_info` is `TRUE`, a list containing plotting information.
+#' @keywords internal
+#' @noRd
+.plot_knowledge_internal <- function(x, x_jitter = 0, vertex_size_scale = 1, return_info = TRUE, ...) {
   vars <- x$vars
   edges_df <- x$edges
   tiers <- x$tiers
@@ -290,7 +300,6 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
     for (status in c("required", "forbidden")) {
       sub_edges <- edges_df[edges_df$status == status, ]
       if (nrow(sub_edges) > 0) {
-        # Swap from/to to match igraph direction
         edge_list <- as.vector(t(sub_edges[, c("to", "from")]))
         g <- igraph::add_edges(g, edge_list)
         edges_to_mark <- (igraph::ecount(g) - nrow(sub_edges) + 1):igraph::ecount(g)
@@ -301,19 +310,15 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
   if (is.null(igraph::E(g)$required)) igraph::E(g)$required <- FALSE
   if (is.null(igraph::E(g)$forbidden)) igraph::E(g)$forbidden <- FALSE
 
-  # ----- Layout: tiered with jitter and NA nodes around groups -----
+  # ----- Layout -----
   nodes <- igraph::V(g)$name
-  layout_matrix <- matrix(NA,
-    nrow = length(nodes), ncol = 2,
-    dimnames = list(nodes, c("x", "y"))
-  )
+  layout_matrix <- matrix(NA, nrow = length(nodes), ncol = 2, dimnames = list(nodes, c("x", "y")))
 
   if (length(tiers$label) > 0) {
     tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
     x_pos <- sapply(vars$tier, function(t) if (is.na(t)) NA else tier_index[t])
     names(x_pos) <- vars$var
 
-    # Tiered nodes layout
     for (tier in unique(x_pos[!is.na(x_pos)])) {
       tier_vars <- nodes[!is.na(x_pos[nodes]) & x_pos[nodes] == tier]
       n_tier <- length(tier_vars)
@@ -321,7 +326,6 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
       layout_matrix[tier_vars, 2] <- c(-floor(n_tier / 2):floor(n_tier / 2))[1:n_tier]
     }
 
-    # NA nodes around center
     na_vars <- nodes[is.na(x_pos[nodes])]
     if (length(na_vars) > 0) {
       center_x <- mean(layout_matrix[!is.na(layout_matrix[, 1]), 1])
@@ -343,14 +347,11 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
   } else {
     groups <- NULL
     layout_matrix <- igraph::layout_in_circle(g)
-    rownames(layout_matrix) <- nodes # ensure rownames exist
+    rownames(layout_matrix) <- nodes
     curved <- TRUE
   }
 
   # ----- Edge styling -----
-  if (is.null(igraph::E(g)$required)) igraph::E(g)$required <- rep(FALSE, igraph::ecount(g))
-  if (is.null(igraph::E(g)$forbidden)) igraph::E(g)$forbidden <- rep(FALSE, igraph::ecount(g))
-
   edge_colors <- ifelse(igraph::E(g)$forbidden, "red",
     ifelse(igraph::E(g)$required, "blue", "black")
   )
@@ -384,22 +385,23 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
     ...
   )
 
-  # TODO refactor to make internal function that returns, so public one doesn't ...
-  # ----- Return full info including rownames for robust use -----
-  return(list(
-    graph = g,
-    layout = layout_matrix,
-    nodes = nodes,
-    edge_colors = edge_colors,
-    edge_lwd = edge_lwd,
-    edge_lty = edge_lty,
-    edge_arrow = edge_arrow,
-    vertex_sizes = vertex_sizes,
-    groups = groups,
-    curved = curved
-  ))
+  if (return_info) {
+    return(list(
+      graph = g,
+      layout = layout_matrix,
+      nodes = nodes,
+      edge_colors = edge_colors,
+      edge_lwd = edge_lwd,
+      edge_lty = edge_lty,
+      edge_arrow = edge_arrow,
+      vertex_sizes = vertex_sizes,
+      groups = groups,
+      curved = curved
+    ))
+  } else {
+    invisible(NULL)
+  }
 }
-
 
 #
 # Plots a `caugi` object using `igraph`
