@@ -111,7 +111,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
     caugi::set_edges(B2 %---% C1)
 
   kn <- knowledge(
-    A2 %-->% B1
+    A1 %-->% B1
   )
   plot(kn)
 

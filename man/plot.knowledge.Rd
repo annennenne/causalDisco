@@ -4,16 +4,16 @@
 \alias{plot.knowledge}
 \title{Plot a Knowledge Object}
 \usage{
-\method{plot}{knowledge}(x, jitter = 0, space = 5, vertex_size_scale = 1, ...)
+\method{plot}{knowledge}(x, x_jitter = 0, vertex_size_scale = 1, ...)
 }
 \arguments{
 \item{x}{A \code{knowledge} object.}
 
-\item{jitter}{Amount of horizontal jitter to apply to tiers (default 0).}
+\item{x_jitter}{Amount of jitter to apply to x positions of tiered nodes (default 0).}
+
+\item{vertex_size_scale}{Scaling factor for vertex sizes (default 1).}
 
 \item{...}{Additional arguments passed to igraph \code{plot}.}
-
-\item{vertex_sizes}{Base size for vertices (default 1).}
 }
 \value{
 A plot of the knowledge structure.

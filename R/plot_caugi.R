@@ -98,119 +98,156 @@ plot_caugi_graph <- function(g, layout = NULL, curved = TRUE, ...) {
 #'
 #' @export
 plot.knowledgeable_caugi <- function(x, ...) {
-  x_caugi <- x$caugi
   x_knowledge <- x$knowledge
+  x_caugi <- x$caugi
 
-  g <- build_caugi_igraph(x_caugi)
+  # --------------------------
+  # 1. Plot the knowledge graph first
+  # --------------------------
+  k_info <- plot.knowledge(x_knowledge, ...)
+  g <- k_info$graph
 
-  ## --------------------------
-  ## Forbidden edges
-  ## --------------------------
-  igraph::E(g)$forbidden <- rep(FALSE, igraph::ecount(g)) # initialize
-
-  forb <- x_knowledge$edges[x_knowledge$edges$status == "forbidden", ]
-
-  if (nrow(forb) > 0) {
-    # Apply same directional reversal as normal edges:
-    forb_list <- unlist(apply(forb, 1, function(row) {
-      from <- row[["from"]]
-      to <- row[["to"]]
-      c(to, from) # same swap as "-->"
-    }))
-
-    old_n <- igraph::ecount(g)
-    g <- g |> igraph::add_edges(forb_list)
-    new_ids <- (old_n + 1):igraph::ecount(g)
-
-    # Mark forbidden edges
-    igraph::E(g)$forbidden[new_ids] <- TRUE
-    igraph::E(g)$required[new_ids] <- FALSE
-    igraph::E(g)$arrow.mode[new_ids] <- 1
+  # --------------------------
+  # 2. Add all caugi nodes (if missing)
+  # --------------------------
+  caugi_nodes <- x_caugi@nodes$name
+  missing_nodes <- setdiff(caugi_nodes, igraph::V(g)$name)
+  if (length(missing_nodes) > 0) {
+    g <- igraph::add_vertices(g, length(missing_nodes), name = missing_nodes)
   }
 
-  ## --------------------------
-  ## Required edges
-  ## --------------------------
-  igraph::E(g)$required <- rep(FALSE, igraph::ecount(g))
+  # --------------------------
+  # 3. Extend layout for new caugi nodes
+  # --------------------------
+  all_nodes <- igraph::V(g)$name
+  new_nodes <- setdiff(all_nodes, rownames(k_info$layout))
 
-  req <- x_knowledge$edges[x_knowledge$edges$status == "required", ]
-  if (nrow(req) > 0) {
-    req_pairs <- paste(req$to, req$from, sep = "->")
-    g_pairs <- apply(igraph::as_edgelist(g), 1, function(x) paste(x, collapse = "->"))
-    igraph::E(g)$required <- g_pairs %in% req_pairs
-  } else {
-    igraph::E(g)$required <- FALSE
-  }
+  if (length(new_nodes) > 0) {
+    # Center of existing knowledge layout
+    center_x <- mean(k_info$layout[, 1])
+    center_y <- mean(k_info$layout[, 2])
+    radius <- 1 # adjust if needed
 
-  ## --------------------------
-  ## Layout: tiers vs circle
-  ## --------------------------
-  if (length(x_knowledge$tiers$label) > 0) {
-    tiers <- x_knowledge$tiers$label
-    vars <- x_knowledge$vars
-
-    tier_index <- stats::setNames(seq_along(tiers), tiers)
-
-    # Assign untiered variables to a new tier
-    max_tier <- max(tier_index)
-    x_pos <- tier_index[vars$tier]
-    x_pos[is.na(x_pos)] <- max_tier + 1
-    names(x_pos) <- vars$var
-
-    nodes <- igraph::V(g)$name
-    x_coords <- x_pos[nodes]
-
-    # Use x_coords (not vars$tier) to group y positions
-    y_coords <- stats::ave(
-      seq_along(nodes),
-      x_coords,
-      FUN = seq_along
+    angles <- seq(0, 2 * pi, length.out = length(new_nodes) + 1)[-1]
+    new_layout <- matrix(NA,
+      nrow = length(new_nodes), ncol = 2,
+      dimnames = list(new_nodes, c("x", "y"))
     )
+    new_layout[, 1] <- center_x + radius * cos(angles)
+    new_layout[, 2] <- center_y + radius * sin(angles)
 
-    layout_matrix <- cbind(x_coords, y_coords)
-    curved <- FALSE
+    layout_matrix <- rbind(k_info$layout, new_layout)
   } else {
-    layout_matrix <- igraph::layout_in_circle(g)
-    igraph::E(g)$curved <- igraph::curve_multiple(g)
-    curved <- TRUE
+    layout_matrix <- k_info$layout
   }
 
-  ## --------------------------
-  ## Edge styling
-  ## --------------------------
-  edges <- igraph::E(g)
+  # --------------------------
+  # 4. Add caugi edges (unstyled), skipping required edges
+  # --------------------------
+  if (!is.null(x_caugi@edges) && nrow(x_caugi@edges) > 0) {
+    req_edges <- x_knowledge$edges[x_knowledge$edges$status == "required", ]
+    req_pairs <- paste(req_edges$from, req_edges$to, sep = "->")
 
-  edge_colors <- ifelse(edges$forbidden, "red",
-    ifelse(edges$required, "blue", "black")
-  )
-  edge_lwd <- ifelse(edges$forbidden, 2,
-    ifelse(edges$required, 3, 1)
-  )
-  edge_lty <- ifelse(edges$forbidden, 2, 1)
+    for (i in seq_len(nrow(x_caugi@edges))) {
+      row <- x_caugi@edges[i, ]
+      from <- row$from
+      to <- row$to
+      edge_type <- row$edge
 
-  ## --------------------------
-  ## Auto-scale vertex sizes to fit labels
-  ## --------------------------
-  labels <- igraph::V(g)$name
+      # Skip if already required
+      if (paste(from, to, sep = "->") %in% req_pairs) next
 
-  widths_in <- graphics::strwidth(labels, units = "inches", cex = 0.9)
-  vertex_sizes <- widths_in * 72 + 10 # inches → points
+      # Swap from/to to match knowledge graph convention
+      g <- igraph::add_edges(g, c(to, from))
+      eid <- igraph::ecount(g)
 
-  ## --------------------------
-  ## Final plot
-  ## --------------------------
-  plot(
+      if (edge_type == "-->") {
+        igraph::E(g)$arrow.mode[eid] <- 1
+        igraph::E(g)$lty[eid] <- 1
+        igraph::E(g)$color[eid] <- "black"
+        igraph::E(g)$width[eid] <- 1.5
+      } else if (edge_type == "---") {
+        igraph::E(g)$arrow.mode[eid] <- 0
+        igraph::E(g)$lty[eid] <- 2
+        igraph::E(g)$color[eid] <- "black"
+        igraph::E(g)$width[eid] <- 1.5
+      }
+    }
+  }
+
+  # --------------------------
+  # 5. Robustly extend layout to include any new nodes
+  # --------------------------
+  all_nodes <- igraph::V(g)$name
+  layout_matrix <- k_info$layout
+  if (is.null(rownames(layout_matrix))) rownames(layout_matrix) <- k_info$nodes
+
+  missing_nodes <- setdiff(all_nodes, rownames(layout_matrix))
+  if (length(missing_nodes) > 0) {
+    # Bounding box of existing layout
+    x_range <- range(layout_matrix[, 1], na.rm = TRUE)
+    y_range <- range(layout_matrix[, 2], na.rm = TRUE)
+
+    # Compute radius: max spread + padding
+    radius <- max(diff(x_range), diff(y_range)) + 1
+    if (radius == 0) radius <- 1.5 # fallback for tiny graphs
+
+    # Center of existing nodes
+    center_x <- mean(x_range)
+    center_y <- mean(y_range)
+
+    # Angles for new nodes
+    angles <- seq(0, 2 * pi, length.out = length(missing_nodes) + 1)[-1]
+
+    # Create layout for missing nodes
+    new_layout <- matrix(NA,
+      nrow = length(missing_nodes), ncol = 2,
+      dimnames = list(missing_nodes, c("x", "y"))
+    )
+    new_layout[, 1] <- center_x + radius * cos(angles)
+    new_layout[, 2] <- center_y + radius * sin(angles)
+
+    if (length(missing_nodes) <= 3) {
+      new_layout[, 1] <- new_layout[, 1] + runif(length(missing_nodes), -0.1, 0.1)
+      new_layout[, 2] <- new_layout[, 2] + runif(length(missing_nodes), -0.1, 0.1)
+    }
+
+    layout_matrix <- rbind(layout_matrix, new_layout)
+  }
+
+  # Reorder to match g vertices exactly
+  layout_matrix <- layout_matrix[all_nodes, , drop = FALSE]
+
+
+  # --------------------------
+  # 5. Final plot
+  # --------------------------
+  igraph::plot.igraph(
     g,
     layout = layout_matrix,
-    edge.color = edge_colors,
-    edge.width = edge_lwd,
-    edge.lty = edge_lty,
-    edge.arrow.mode = edges$arrow.mode,
-    edge.curved = curved,
+    edge.color = c(
+      k_info$edge_colors,
+      igraph::E(g)$color[(length(k_info$edge_colors) + 1):igraph::ecount(g)]
+    ),
+    edge.width = c(
+      k_info$edge_lwd,
+      igraph::E(g)$width[(length(k_info$edge_lwd) + 1):igraph::ecount(g)]
+    ),
+    edge.lty = c(
+      k_info$edge_lty,
+      igraph::E(g)$lty[(length(k_info$edge_lty) + 1):igraph::ecount(g)]
+    ),
+    edge.arrow.mode = c(
+      k_info$edge_arrow,
+      igraph::E(g)$arrow.mode[(length(k_info$edge_arrow) + 1):igraph::ecount(g)]
+    ),
+    edge.curved = k_info$curved,
     vertex.color = "lightblue",
+    vertex.frame.color = NA,
+    vertex.label = igraph::V(g)$name,
     vertex.label.color = "black",
     vertex.label.cex = 0.9,
-    vertex.size = vertex_sizes,
+    mark.groups = k_info$groups,
     ...
   )
 }
@@ -221,8 +258,8 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' Plot a knowledge object (tiers + required + forbidden)
 #'
 #' @param x A `knowledge` object.
-#' @param jitter Amount of horizontal jitter to apply to tiers (default 0).
-#' @param vertex_sizes Base size for vertices (default 1).
+#' @param x_jitter Amount of jitter to apply to x positions of tiered nodes (default 0).
+#' @param vertex_size_scale Scaling factor for vertex sizes (default 1).
 #' @param ... Additional arguments passed to igraph `plot`.
 #' @return A plot of the knowledge structure.
 #' @examples
@@ -240,7 +277,7 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' plot(kn)
 #'
 #' @export
-plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...) {
+plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
   vars <- x$vars
   edges_df <- x$edges
   tiers <- x$tiers
@@ -253,59 +290,67 @@ plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...)
     for (status in c("required", "forbidden")) {
       sub_edges <- edges_df[edges_df$status == status, ]
       if (nrow(sub_edges) > 0) {
-        edge_list <- as.vector(t(sub_edges[, c("from", "to")]))
+        # Swap from/to to match igraph direction
+        edge_list <- as.vector(t(sub_edges[, c("to", "from")]))
         g <- igraph::add_edges(g, edge_list)
-        igraph::E(g)[(igraph::ecount(g) - nrow(sub_edges) + 1):igraph::ecount(g)][[status]] <- TRUE
+        edges_to_mark <- (igraph::ecount(g) - nrow(sub_edges) + 1):igraph::ecount(g)
+        g <- igraph::set_edge_attr(g, name = status, value = TRUE, index = edges_to_mark)
       }
     }
   }
   if (is.null(igraph::E(g)$required)) igraph::E(g)$required <- FALSE
   if (is.null(igraph::E(g)$forbidden)) igraph::E(g)$forbidden <- FALSE
 
-  # ----- Layout: tiered with jitter -----
+  # ----- Layout: tiered with jitter and NA nodes around groups -----
+  nodes <- igraph::V(g)$name
+  layout_matrix <- matrix(NA,
+    nrow = length(nodes), ncol = 2,
+    dimnames = list(nodes, c("x", "y"))
+  )
+
   if (length(tiers$label) > 0) {
-    # Map tier labels to numbers
     tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
-    max_tier <- max(tier_index)
-
-    # Build groups only from non-NA tiers
-    groups <- lapply(unique(vars$tier[!is.na(vars$tier)]), function(t) {
-      group_vars <- vars$var[vars$tier == t]
-      group_vars[group_vars %in% igraph::V(g)$name]
-    })
-
-    # Assign numeric x positions for layout
-    x_pos <- sapply(vars$tier, function(t) {
-      if (is.na(t)) {
-        max_tier + 1 # untiered go to extra tier
-      } else {
-        tier_index[t] # map tier label to number
-      }
-    })
+    x_pos <- sapply(vars$tier, function(t) if (is.na(t)) NA else tier_index[t])
     names(x_pos) <- vars$var
 
-    nodes <- igraph::V(g)$name
-    layout_matrix <- matrix(NA,
-      nrow = length(nodes), ncol = 2,
-      dimnames = list(nodes, c("x", "y"))
-    )
-
-    for (tier in unique(x_pos)) {
-      tier_vars <- nodes[x_pos[nodes] == tier]
+    # Tiered nodes layout
+    for (tier in unique(x_pos[!is.na(x_pos)])) {
+      tier_vars <- nodes[!is.na(x_pos[nodes]) & x_pos[nodes] == tier]
       n_tier <- length(tier_vars)
-      layout_matrix[tier_vars, 1] <- rep(c(tier, tier + jitter), ceiling(n_tier / 2))[1:n_tier]
+      layout_matrix[tier_vars, 1] <- rep(c(tier, tier + x_jitter), ceiling(n_tier / 2))[1:n_tier]
       layout_matrix[tier_vars, 2] <- c(-floor(n_tier / 2):floor(n_tier / 2))[1:n_tier]
     }
 
+    # NA nodes around center
+    na_vars <- nodes[is.na(x_pos[nodes])]
+    if (length(na_vars) > 0) {
+      center_x <- mean(layout_matrix[!is.na(layout_matrix[, 1]), 1])
+      center_y <- mean(layout_matrix[!is.na(layout_matrix[, 2]), 2])
+      radius <- max(
+        diff(range(layout_matrix[!is.na(layout_matrix[, 1]), 1])),
+        diff(range(layout_matrix[!is.na(layout_matrix[, 2]), 2]))
+      ) / 2 + 1
+      angles <- seq(0, 2 * pi, length.out = length(na_vars) + 1)[-1]
+      layout_matrix[na_vars, 1] <- center_x + radius * cos(angles)
+      layout_matrix[na_vars, 2] <- center_y + radius * sin(angles)
+    }
+
+    groups <- lapply(unique(vars$tier[!is.na(vars$tier)]), function(t) {
+      group_vars <- vars$var[vars$tier == t]
+      group_vars[group_vars %in% nodes]
+    })
     curved <- FALSE
   } else {
     groups <- NULL
     layout_matrix <- igraph::layout_in_circle(g)
-    igraph::E(g)$curved <- igraph::curve_multiple(g)
+    rownames(layout_matrix) <- nodes # ensure rownames exist
     curved <- TRUE
   }
 
   # ----- Edge styling -----
+  if (is.null(igraph::E(g)$required)) igraph::E(g)$required <- rep(FALSE, igraph::ecount(g))
+  if (is.null(igraph::E(g)$forbidden)) igraph::E(g)$forbidden <- rep(FALSE, igraph::ecount(g))
+
   edge_colors <- ifelse(igraph::E(g)$forbidden, "red",
     ifelse(igraph::E(g)$required, "blue", "black")
   )
@@ -315,8 +360,8 @@ plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...)
   edge_lty <- ifelse(igraph::E(g)$forbidden, 2, 1)
   edge_arrow <- ifelse(igraph::E(g)$required, 1, 0)
 
-  # ----- Vertex labels / sizes -----
-  labels <- igraph::V(g)$name
+  # ----- Vertex sizes -----
+  labels <- nodes
   widths_in <- graphics::strwidth(labels, units = "inches", cex = 0.9)
   vertex_sizes <- (widths_in * 72 + 10) * vertex_size_scale
 
@@ -327,7 +372,6 @@ plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...)
     edge.color = edge_colors,
     edge.width = edge_lwd,
     edge.lty = edge_lty,
-    edge.arrow.size = 0.5,
     edge.arrow.mode = edge_arrow,
     edge.curved = curved,
     vertex.color = "lightblue",
@@ -339,6 +383,21 @@ plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...)
     mark.groups = groups,
     ...
   )
+
+  # TODO refactor to make internal function that returns, so public one doesn't ...
+  # ----- Return full info including rownames for robust use -----
+  return(list(
+    graph = g,
+    layout = layout_matrix,
+    nodes = nodes,
+    edge_colors = edge_colors,
+    edge_lwd = edge_lwd,
+    edge_lty = edge_lty,
+    edge_arrow = edge_arrow,
+    vertex_sizes = vertex_sizes,
+    groups = groups,
+    curved = curved
+  ))
 }
 
 
