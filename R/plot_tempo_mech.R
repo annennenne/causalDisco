@@ -16,11 +16,15 @@
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #' @export
-plot_tempo_mech <- function(x, add_time_axis = TRUE,
-                            add_psi = TRUE,
-                            var_labels = NULL,
-                            period_labels = NULL,
-                            colors = NULL, ...) {
+plot_tempo_mech <- function(
+  x,
+  add_time_axis = TRUE,
+  add_psi = TRUE,
+  var_labels = NULL,
+  period_labels = NULL,
+  colors = NULL,
+  ...
+) {
   if ("tamat" %in% class(x)) {
     x_amat <- x
     x_order <- attr(x, "order")
@@ -78,21 +82,24 @@ plot_tempo_mech <- function(x, add_time_axis = TRUE,
 #' @return Invisibly returns \code{NULL}. Called for its side-effect of plotting.
 #' @noRd
 #' @keywords internal
-plot_ordered_amat <- function(amat, order,
-                              psi = NULL,
-                              add_time_axis = TRUE,
-                              add_psi = TRUE,
-                              CPDAG = TRUE,
-                              var_labels = NULL, period_labels = NULL,
-                              vertex.size = 6, jitter = 5,
-                              space = 5,
-                              mark.border = NA,
-                              edge.arrow.size = 0.5,
-                              edge.width = 2,
-                              edge.curved = TRUE,
-                              sep = "_",
-                              colors = NULL,
-                              ...) {
+plot_ordered_amat <- function(
+  amat,
+  order,
+  psi = NULL,
+  add_time_axis = TRUE,
+  add_psi = TRUE,
+  CPDAG = TRUE,
+  var_labels = NULL, period_labels = NULL,
+  vertex.size = 6, jitter = 5,
+  space = 5,
+  mark.border = NA,
+  edge.arrow.size = 0.5,
+  edge.width = 2,
+  edge.curved = TRUE,
+  sep = "_",
+  colors = NULL,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "graphics", "igraph", "RColorBrewer", "scales"
@@ -184,7 +191,8 @@ plot_ordered_amat <- function(amat, order,
   }
 
 
-  igraph::plot.igraph(this_graph,
+  igraph::plot.igraph(
+    this_graph,
     mark.groups = groups,
     edge.color = edgecolors,
     edge.arrow.mode = arrowmodes,

@@ -221,6 +221,8 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' Plot a knowledge object (tiers + required + forbidden)
 #'
 #' @param x A `knowledge` object.
+#' @param jitter Amount of horizontal jitter to apply to tiers (default 0).
+#' @param vertex_sizes Base size for vertices (default 1).
 #' @param ... Additional arguments passed to igraph `plot`.
 #' @return A plot of the knowledge structure.
 #' @examples
@@ -238,89 +240,103 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' plot(kn)
 #'
 #' @export
-plot.knowledge <- function(x, ...) {
+plot.knowledge <- function(x, jitter = 0, space = 5, vertex_size_scale = 1, ...) {
   vars <- x$vars
-  edges <- x$edges
+  edges_df <- x$edges
   tiers <- x$tiers
 
   g <- igraph::make_empty_graph(directed = TRUE)
   g <- igraph::add_vertices(g, nrow(vars), name = vars$var)
 
-  # ----- Required edges -----
-  req <- edges[edges$status == "required", ]
-  if (nrow(req) > 0) {
-    req_list <- as.vector(t(req[, c("from", "to")]))
-    g <- igraph::add_edges(g, req_list)
-    igraph::E(g)$required <- TRUE
-  } else {
-    igraph::E(g)$required <- FALSE
+  # ----- Add required / forbidden edges -----
+  if (nrow(edges_df) > 0) {
+    for (status in c("required", "forbidden")) {
+      sub_edges <- edges_df[edges_df$status == status, ]
+      if (nrow(sub_edges) > 0) {
+        edge_list <- as.vector(t(sub_edges[, c("from", "to")]))
+        g <- igraph::add_edges(g, edge_list)
+        igraph::E(g)[(igraph::ecount(g) - nrow(sub_edges) + 1):igraph::ecount(g)][[status]] <- TRUE
+      }
+    }
   }
+  if (is.null(igraph::E(g)$required)) igraph::E(g)$required <- FALSE
+  if (is.null(igraph::E(g)$forbidden)) igraph::E(g)$forbidden <- FALSE
 
-  # ----- Forbidden edges -----
-  forb <- edges[edges$status == "forbidden", ]
-  if (nrow(forb) > 0) {
-    forb_list <- as.vector(t(forb[, c("from", "to")]))
-    g <- igraph::add_edges(g, forb_list)
-    new_edges <- (igraph::ecount(g) - nrow(forb) + 1):igraph::ecount(g)
-    igraph::E(g)$forbidden <- FALSE
-    igraph::E(g)$forbidden[new_edges] <- TRUE
-  } else {
-    igraph::E(g)$forbidden <- FALSE
-  }
-
-  # ----- Layout -----
+  # ----- Layout: tiered with jitter -----
   if (length(tiers$label) > 0) {
+    # Map tier labels to numbers
     tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
-
-    # Assign untiered variables to a new tier
     max_tier <- max(tier_index)
-    x_pos <- tier_index[vars$tier]
-    x_pos[is.na(x_pos)] <- max_tier + 1
+
+    # Build groups only from non-NA tiers
+    groups <- lapply(unique(vars$tier[!is.na(vars$tier)]), function(t) {
+      group_vars <- vars$var[vars$tier == t]
+      group_vars[group_vars %in% igraph::V(g)$name]
+    })
+
+    # Assign numeric x positions for layout
+    x_pos <- sapply(vars$tier, function(t) {
+      if (is.na(t)) {
+        max_tier + 1 # untiered go to extra tier
+      } else {
+        tier_index[t] # map tier label to number
+      }
+    })
     names(x_pos) <- vars$var
 
     nodes <- igraph::V(g)$name
-    x_coords <- x_pos[nodes]
-
-    y_coords <- stats::ave(
-      seq_along(nodes),
-      x_coords,
-      FUN = seq_along
+    layout_matrix <- matrix(NA,
+      nrow = length(nodes), ncol = 2,
+      dimnames = list(nodes, c("x", "y"))
     )
 
-    layout_matrix <- cbind(x_coords, y_coords)
+    for (tier in unique(x_pos)) {
+      tier_vars <- nodes[x_pos[nodes] == tier]
+      n_tier <- length(tier_vars)
+      layout_matrix[tier_vars, 1] <- rep(c(tier, tier + jitter), ceiling(n_tier / 2))[1:n_tier]
+      layout_matrix[tier_vars, 2] <- c(-floor(n_tier / 2):floor(n_tier / 2))[1:n_tier]
+    }
+
     curved <- FALSE
   } else {
+    groups <- NULL
     layout_matrix <- igraph::layout_in_circle(g)
     igraph::E(g)$curved <- igraph::curve_multiple(g)
     curved <- TRUE
   }
 
   # ----- Edge styling -----
-  edges <- igraph::E(g)
-  edge_colors <- ifelse(edges$forbidden, "red",
-    ifelse(edges$required, "blue", "black")
+  edge_colors <- ifelse(igraph::E(g)$forbidden, "red",
+    ifelse(igraph::E(g)$required, "blue", "black")
   )
-  edge_lwd <- ifelse(edges$forbidden, 2,
-    ifelse(edges$required, 3, 1)
+  edge_lwd <- ifelse(igraph::E(g)$forbidden, 2,
+    ifelse(igraph::E(g)$required, 3, 1)
   )
-  edge_lty <- ifelse(edges$forbidden, 2, 1)
+  edge_lty <- ifelse(igraph::E(g)$forbidden, 2, 1)
+  edge_arrow <- ifelse(igraph::E(g)$required, 1, 0)
 
-  # ----- Vertex sizes -----
+  # ----- Vertex labels / sizes -----
   labels <- igraph::V(g)$name
   widths_in <- graphics::strwidth(labels, units = "inches", cex = 0.9)
-  vertex_sizes <- widths_in * 72 + 10 # inches → points
+  vertex_sizes <- (widths_in * 72 + 10) * vertex_size_scale
 
   # ----- Plot -----
-  plot(
+  igraph::plot.igraph(
     g,
     layout = layout_matrix,
     edge.color = edge_colors,
     edge.width = edge_lwd,
     edge.lty = edge_lty,
+    edge.arrow.size = 0.5,
+    edge.arrow.mode = edge_arrow,
+    edge.curved = curved,
     vertex.color = "lightblue",
+    vertex.frame.color = NA,
+    vertex.label = labels,
     vertex.label.color = "black",
     vertex.label.cex = 0.9,
     vertex.size = vertex_sizes,
+    mark.groups = groups,
     ...
   )
 }
