@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{caugi} object containing the causal graph and knowledge.}
 
-\item{...}{Additional arguments passed to igraph \code{plot}.}
+\item{...}{Additional arguments passed to igraph \code{plot} and \code{plot.knowledge}.}
 }
 \value{
 A plot of the causal graph.

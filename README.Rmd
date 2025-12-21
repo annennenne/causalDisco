@@ -138,7 +138,7 @@ to look at the underlying `_run` functions? Then also make the `_run` functions 
 ## TODO
 
 - Improve plot
-  - Add some of the arguments from plot_tempo_mech (such as time_axis, ...)
+  - Add some of the arguments from `plot_tempo_mech` (such as time_axis, ...)
 
 - Make required work for our algorithms. It breaks when it internally calls `tpdag`, so look into that...
 

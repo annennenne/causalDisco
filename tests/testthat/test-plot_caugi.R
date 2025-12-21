@@ -10,6 +10,37 @@ test_that("Plotting caugi objects work", {
   expect_true(TRUE)
 })
 
+test_that("Plotting knowledge with empty works", {
+  kn <- knowledge()
+  cg <- caugi::caugi(class = "PDAG")
+
+  cg <- cg |>
+    caugi::add_nodes(c("A1", "A2", "B1", "B2", "C1")) |>
+    caugi::add_edges(A1 %-->% B1 %-->% C1) |>
+    caugi::set_edges(B2 %---% C1)
+  kcg <- knowledgeable_caugi(cg, kn)
+  plot(kcg)
+  expect_true(TRUE)
+})
+
+
+test_that("Plotting knowledgeable_caugi with empty knowledge works", {
+  kn <- knowledge()
+  plot(kn)
+  expect_true(TRUE)
+})
+
+test_that("Plotting knowledge objects with required+forbidden works", {
+  data("tpc_example")
+  kn <- knowledge(
+    tpc_example,
+    child_x1 %-->% youth_x3,
+    child_x2 %--x% oldage_x5
+  )
+  plot(kn)
+  expect_true(TRUE)
+})
+
 test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   cg <- caugi::caugi(class = "PDAG")
 

@@ -1,7 +1,6 @@
 ADMGs
 ARACNE
 Adoptium
-Atm
 BCInference
 BDE
 BDeu
@@ -90,7 +89,6 @@ TPAGs
 TPC
 TPDAG
 Tabu
-TeTrAd
 Temurin
 Terpstra
 Tetrad
@@ -105,9 +103,9 @@ Zhang
 adjacencies
 aje
 al
+alg
 algcomparison
 amat
-args
 bcpo
 bdeu
 bic
@@ -115,8 +113,9 @@ bidirected
 bnlearn
 bnlearns
 bpco
-casesensitive
+camelCase
 caugi
+causalInference
 cormat
 cpdag
 df
@@ -132,15 +131,14 @@ fixedEdges
 graphNEL
 honouring
 igraph
-initialise
 initializations
 inout
 interventional
 ith
 kwab
-maj
 maketikz
 md
+mech
 micd
 nDAGs
 nonsingular
@@ -163,8 +161,6 @@ sem
 semidirected
 simDAG
 simGausFromDAG
-suff
-suffStat
 tamat
 tetrad
 tfci

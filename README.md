@@ -168,7 +168,7 @@ plot(disco_cd_tges)
 
 - Improve plot
 
-  - Add some of the arguments from plot_tempo_mech (such as time_axis,
+  - Add some of the arguments from `plot_tempo_mech` (such as time_axis,
     …)
 
 - Make required work for our algorithms. It breaks when it internally
