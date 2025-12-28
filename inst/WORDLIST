@@ -138,7 +138,6 @@ ith
 kwab
 maketikz
 md
-mech
 micd
 nDAGs
 nonsingular
@@ -162,11 +161,12 @@ semidirected
 simDAG
 simGausFromDAG
 tamat
+tbic
 tetrad
 tfci
+tges
 tibble
 tidyselect
-tierred
 tikz
 tpag
 tpc

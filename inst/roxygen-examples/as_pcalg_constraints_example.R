@@ -5,8 +5,8 @@ data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
-  forbidden(child_x1 ~ youth_x3),
-  forbidden(youth_x3 ~ child_x1)
+  child_x1 %--x% youth_x3,
+  youth_x3 %--x% child_x1
 )
 
 pc_constraints <- as_pcalg_constraints(kn, directed_as_undirected = FALSE)
@@ -29,7 +29,7 @@ try(as_pcalg_constraints(kn), silent = TRUE) # fails due to tiers
 # using directed knowledge
 kn <- knowledge(
   tpc_example,
-  forbidden(child_x1 ~ youth_x3)
+  child_x1 %--x% youth_x3
 )
 
 try(as_pcalg_constraints(kn), silent = TRUE) # fails due to directed knowledge

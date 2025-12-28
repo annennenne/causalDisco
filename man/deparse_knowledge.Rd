@@ -33,7 +33,7 @@ kn <- knowledge(
     old ~ starts_with("old")
   ),
   child_x1 \%-->\% youth_x3,
-  forbidden(oldage_x6 ~ child_x1)
+  oldage_x6 \%--x\% child_x1
 )
 
 kn <- forbid_tier_violations(kn)
