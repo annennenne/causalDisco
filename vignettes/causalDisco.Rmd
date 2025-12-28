@@ -1,0 +1,97 @@
+---
+title: "causalDisco"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{causalDisco}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(causalDisco)
+```
+
+This vignette provides an overview of the `causalDisco` package, which offers tools for causal discovery from
+observational data. It covers the main features of the package, including various causal discovery algorithms,
+knowledge incorporation, and result visualization.
+
+# Simple example of causal discovery
+
+The example discussed in this section is inspired by the Julia package CausalDiscovery.jl with their PC algorithm
+example, which can be found here [PC algorithm example in CausalDiscovery.jl](https://mschauer.github.io/CausalInference.jl/latest/examples/pc_basic_examples/).
+
+We will consider data from the following DAG, which is also discussed in chapter 2 of Judea Pearl's book.
+
+![DAG example](dag.png)
+
+We create data from a linear Gaussian model corresponding to the above DAG:
+
+```{r simple causal discovery}
+set.seed(1405)
+n <- 1000
+x <- rnorm(n)
+v <- x + rnorm(n)*0.5
+w <- x + rnorm(n)*0.5
+z <- v + w + rnorm(n)*0.5
+s <- z + rnorm(n)*0.5
+
+data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
+head(data_simple)
+```
+
+We can use the PC algorithm from either the "tetrad", "pcalg", or "bnlearn" engine to discover the causal structure.
+Below, we set up the PC method with Fisher's Z test and a significance level of 0.05 and "pcalg" and "bnlearn" engines.
+
+```{r pc algorithm simple}
+pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+
+pc_result_pcalg <- disco(data_simple, method = pc_pcalg)
+pc_result_bnlearn <- disco(data_simple, method = pc_bnlearn)
+```
+
+We can visualize the results from each engine:
+
+```{r plot pc results simple}
+par(mfrow = c(1, 2))
+plot(pc_result_pcalg, main = "PC (pcalg)")
+plot(pc_result_bnlearn, main = "PC (bnlearn)")
+par(mfrow = c(1, 1))
+```
+
+(Ignore that PC bnlearn doesn't work correctly for now)
+
+The first notable feature of this plot is that some edges have arrows, while others do not. For instance, the edge from 
+`v` to `z` is directed, indicating that `v` influences `z`, but not vice versa. In contrast, the edge between 
+`x` and `w` has no arrows at either end (and with dashed lines), showing that the direction of causal influence cannot be determined from the data alone. Both directions; `x` to `w` and `w` to `x`,
+are consistent with the observed data. We can demonstrate this by reversing the direction of influence in the
+data-generating process above and applying the PC algorithm to the new data set:
+
+```{r pc algorithm reversed}
+set.seed(1405)
+n <- 1000
+v <- rnorm(n)
+x <- x + rnorm(n)*0.5
+w <- x + rnorm(n)*0.5
+z <- v + w + rnorm(n)*0.5
+s <- z + rnorm(n)*0.5
+
+data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
+
+pc_pcalg_reversed <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_result_reversed <- disco(data_simple, method = pc_pcalg_reversed)
+plot(pc_result_reversed, main = "PC (pcalg) reversed")
+```
+
+We learn the same causal structure as before, demonstrating that the direction of influence between `x` and `w` cannot be determined from the data alone.
+
+# Incorporating prior knowledge
+
+To be continued...

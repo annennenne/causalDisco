@@ -342,3 +342,83 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 })
+
+
+# All engines can learn collider structure (A -> B <- C):
+test_that("pc disco learns colliders with all engines", {
+  set.seed(1405)
+  n <- 10000
+  A <- rnorm(n)
+  C <- rnorm(n)
+  B <- 0.8 * A + 0.5 * C + rnorm(n)
+  data_simple <- data.frame(A, B, C)
+
+  if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+    tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+    output_tetrad <- disco(data = data_simple, method = tetrad_pc)
+    edges_tetrad <- output_tetrad$caugi@edges
+    edges_tetrad
+  }
+
+  pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+  output_pcalg <- disco(data = data_simple, method = pc_pcalg)
+  edges_pcalg <- output_pcalg$caugi@edges
+  edges_pcalg
+
+  pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+  output_bnlearn <- disco(data = data_simple, method = pc_bnlearn)
+  edges_bnlearn <- output_bnlearn$caugi@edges
+  edges_bnlearn
+
+  expect_true(
+    any(edges_pcalg$from == "A" & edges_pcalg$to == "B" & edges_pcalg$edge == "-->") &
+      any(edges_pcalg$from == "C" & edges_pcalg$to == "B" & edges_pcalg$edge == "-->"),
+    info = "pcalg PC did not learn the collider structure A -> B <- C"
+  )
+
+  expect_true(
+    any(edges_bnlearn$from == "A" & edges_bnlearn$to == "B" & edges_bnlearn$edge == "-->") &
+      any(edges_bnlearn$from == "C" & edges_bnlearn$to == "B" & edges_bnlearn$edge == "-->"),
+    info = "bnlearn PC did not learn the collider structure A -> B <- C"
+  )
+
+  skip("Tetrad pc does not yet learn colliders correctly.")
+  expect_true(
+    any(edges_tetrad$from == "A" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->") &
+      any(edges_tetrad$from == "C" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->"),
+    info = "tetrad PC did not learn the collider structure A -> B <- C"
+  )
+})
+
+
+# All engines learn the same DAG structure on a slightly more complex example
+test_that("pc disco learns same structure with all engines", {
+  set.seed(1405)
+  n <- 1000
+  x <- rnorm(n)
+  v <- x + rnorm(n) * 0.5
+  w <- x + rnorm(n) * 0.5
+  z <- v + w + rnorm(n) * 0.5
+  s <- z + rnorm(n) * 0.5
+
+  data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
+
+  pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+  pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+
+  pc_result_pcalg <- disco(data_simple, method = pc_pcalg)
+  pc_result_bnlearn <- disco(data_simple, method = pc_bnlearn)
+
+  edges_pcalg <- pc_result_pcalg$caugi@edges
+  edges_bnlearn <- pc_result_bnlearn$caugi@edges
+
+  skip("bnlearn PC does not yet learn the structure correctly.")
+
+  expect_equal(
+    sort(paste(edges_pcalg$from, edges_pcalg$edge, edges_pcalg$to)),
+    sort(paste(edges_bnlearn$from, edges_bnlearn$edge, edges_bnlearn$to)),
+    info = "pcalg and bnlearn PC did not learn the same structure"
+  )
+
+  skip("Tetrad pc does not yet learn the structure correctly.")
+})

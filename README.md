@@ -187,6 +187,53 @@ plot(disco_cd_tges)
 
 ### Bugfixes
 
+- bnlearn engine doesn’t learn undirected edges for pc algorithm?
+
+``` r
+set.seed(1405)
+n <- 1000
+x <- rnorm(n)
+v <- x + rnorm(n)*0.5
+w <- x + rnorm(n)*0.5
+z <- v + w + rnorm(n)*0.5
+s <- z + rnorm(n)*0.5
+
+data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
+head(data_simple)
+#>            x           v          w          z          s
+#> 1  0.2724785  0.07687489  1.2131219  1.4542158  0.2649549
+#> 2  0.3572619  0.81022383  0.4049109  1.5767672  1.5394264
+#> 3 -0.8616620 -0.68388923 -0.3195188 -1.1415913 -1.2647045
+#> 4  0.8083350  1.61458098  1.2132504  3.0666677  3.0334703
+#> 5  0.6127352  0.42484707  0.4253022  0.7889983  0.7937421
+#> 6 -0.6240686 -0.23225274 -0.7201852 -0.4876655 -0.7977492
+
+pc_method_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_method_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+
+pc_result_pcalg <- disco(data_simple, method = pc_method_pcalg)
+pc_result_bnlearn <- disco(data_simple, method = pc_method_bnlearn)
+
+par(mfrow = c(1, 2))
+plot(pc_result_pcalg$caugi, main = "PC (pcalg)")
+plot(pc_result_bnlearn$caugi, main = "PC (bnlearn)")
+```
+
+<img src="man/figures/README-bnlearn pc undirected bug-1.png" alt="" width="100%" />
+
+``` r
+par(mfrow = c(1, 1))
+```
+
+It works if calling `bnlearn::pc.stable` directly:
+
+``` r
+pc_bn <- bnlearn::pc.stable(data_simple, test = "zf", alpha = 0.05)
+plot(pc_bn)
+```
+
+<img src="man/figures/README-bnlearn pc undirected fix-1.png" alt="" width="100%" />
+
 - All of our algorithm does not work with required edges from knowledge
   objects (see e.g. [unit tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)),
@@ -228,6 +275,50 @@ fixedEdges in pcalg.
 #### Tetrad issues
 
 - v7.6.9 of Tetrad seems to fix the memory issues.
+
+- Tetrad can’t correctly learn DAG using pc algorithm with a collider
+  structure (A -\> B \<- C):
+
+``` r
+set.seed(1405)
+n <- 10000
+A <- rnorm(n)
+C <- rnorm(n)
+B <- 0.8*A + 0.5*C + rnorm(n)
+data_simple <- data.frame(A, B, C)
+
+# Should be easy to learn even for much smaller samples (pcalg and bnlearn get it right even for n = 100)
+
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  output_tetrad <- disco(data = data_simple, method = tetrad_pc)
+  edges_tetrad <- output_tetrad$caugi@edges
+  edges_tetrad
+}
+#>      from   edge     to
+#>    <char> <char> <char>
+#> 1:      A    ---      B
+#> 2:      B    ---      C
+
+# Both pcalg and bnlearn get it right:
+pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+output_pcalg <- disco(data = data_simple, method = pc_pcalg)
+edges_pcalg <- output_pcalg$caugi@edges
+edges_pcalg
+#>      from   edge     to
+#>    <char> <char> <char>
+#> 1:      A    -->      B
+#> 2:      C    -->      B
+
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+output_bnlearn <- disco(data = data_simple, method = pc_bnlearn)
+edges_bnlearn <- output_bnlearn$caugi@edges
+edges_bnlearn
+#>      from   edge     to
+#>    <char> <char> <char>
+#> 1:      A    -->      B
+#> 2:      C    -->      B
+```
 
 - Tetrad does not use required correctly
 
