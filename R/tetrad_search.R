@@ -1339,12 +1339,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       }
 
       # todo: make a better solution, probably in caugi
-      out <- tryCatch(self$result |> knowledgeable_caugi(),
-        error = function(e) {
-          self$result |> knowledgeable_caugi(class = "PAG")
-        }
-      )
-      out
+
+      # Always call with class = "PAG"?
+      # Old code:
+      # out <- tryCatch(self$result |> knowledgeable_caugi(),
+      #   error = function(e) {
+      #     self$result |> knowledgeable_caugi(class = "PAG")
+      #   }
+      # )
+      # But gives incorrect edges for PC algorithm?
+      self$result |> knowledgeable_caugi(class = "PAG")
     },
     #' @description Configures bootstrapping parameters for the Tetrad search.
     #' @param number_resampling (integer) Number of bootstrap samples.
