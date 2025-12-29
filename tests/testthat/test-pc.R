@@ -1,8 +1,6 @@
 test_that("pc Tetrad disco respects tier knowledge", {
   skip_if_no_tetrad()
 
-  skip("pc Tetrad does not yet support tier knowledge correctly.")
-
   data("tpc_example")
 
   kn <- knowledge(
@@ -41,7 +39,6 @@ test_that("pc Tetrad disco respects tier knowledge", {
 
 test_that("pc Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
-  skip("pc Tetrad does not yet support knowledge.")
 
   data("tpc_example")
 
@@ -56,9 +53,6 @@ test_that("pc Tetrad disco respects required background knowledge", {
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
-
-  # With tier+required knowledge
-  skip("pc Tetrad does not yet support knowledge with both tiers+required edges.") # Fails because of tiers I think
 
   kn <- knowledge(
     tpc_example,
@@ -382,7 +376,6 @@ test_that("pc disco learns colliders with all engines", {
     info = "bnlearn PC did not learn the collider structure A -> B <- C"
   )
 
-  skip("Tetrad pc does not yet learn colliders correctly.")
   expect_true(
     any(edges_tetrad$from == "A" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->") &
       any(edges_tetrad$from == "C" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->"),
@@ -412,13 +405,38 @@ test_that("pc disco learns same structure with all engines", {
   edges_pcalg <- pc_result_pcalg$caugi@edges
   edges_bnlearn <- pc_result_bnlearn$caugi@edges
 
-  skip("bnlearn PC does not yet learn the structure correctly.")
+  skip("bnlearn PC does not yet learn the structure correctly.") # Fixed in PR 149 in caugi
+
+  # Function to normalize undirected edges for comparison (so a --- b and b --- a are the same, and sorted)
+  normalize_edges <- function(dt) {
+    dt_norm <- data.table::copy(dt)
+    is_undirected <- dt_norm$edge == "---"
+    dt_norm[is_undirected, `:=`(
+      from = pmin(from, to),
+      to   = pmax(from, to)
+    )]
+    dt_norm[order(from, edge, to)]
+  }
+
+  edges_pcalg_norm <- normalize_edges(edges_pcalg)
+  edges_bnlearn_norm <- normalize_edges(edges_bnlearn)
+
 
   expect_equal(
-    sort(paste(edges_pcalg$from, edges_pcalg$edge, edges_pcalg$to)),
-    sort(paste(edges_bnlearn$from, edges_bnlearn$edge, edges_bnlearn$to)),
+    edges_pcalg_norm,
+    edges_bnlearn_norm,
     info = "pcalg and bnlearn PC did not learn the same structure"
   )
 
-  skip("Tetrad pc does not yet learn the structure correctly.")
+  skip_if_no_tetrad()
+  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  pc_result_tetrad <- disco(data_simple, method = tetrad_pc)
+  edges_tetrad <- pc_result_tetrad$caugi@edges
+  edges_tetrad_norm <- normalize_edges(edges_tetrad)
+
+  expect_equal(
+    edges_tetrad_norm,
+    edges_pcalg_norm,
+    info = "tetrad and pcalg PC did not learn the same structure"
+  )
 })

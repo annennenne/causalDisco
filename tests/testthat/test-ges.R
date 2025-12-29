@@ -1,8 +1,6 @@
 test_that("ges Tetrad disco respects tier knowledge", {
   skip_if_no_tetrad()
 
-  skip("ges Tetrad does not yet support tier knowledge correctly.")
-
   data("tpc_example")
 
   kn <- knowledge(
@@ -42,8 +40,6 @@ test_that("ges Tetrad disco respects tier knowledge", {
 test_that("ges Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
 
-  skip("ges Tetrad does not yet support required background knowledge correctly.")
-
   data("tpc_example")
 
   kn <- knowledge(
@@ -59,7 +55,6 @@ test_that("ges Tetrad disco respects required background knowledge", {
   expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
 
   # With tier+required knowledge
-  skip("ges Tetrad does not yet support knowledge with both tiers+required edges.")
 
   kn <- knowledge(
     tpc_example,

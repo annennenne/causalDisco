@@ -234,6 +234,10 @@ plot(pc_bn)
 
 <img src="man/figures/README-bnlearn pc undirected fix-1.png" alt="" width="100%" />
 
+Problem is `knowledgeable_caugi()` incorrectly converts the `bnlearn`
+object to `caugi` object, losing the undirected edges. Fixed in PR \#149
+in caugi.
+
 - All of our algorithm does not work with required edges from knowledge
   objects (see e.g. [unit tests for
   tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)),
@@ -276,51 +280,7 @@ fixedEdges in pcalg.
 
 - v7.6.9 of Tetrad seems to fix the memory issues.
 
-- Tetrad can’t correctly learn DAG using pc algorithm with a collider
-  structure (A -\> B \<- C):
-
-``` r
-set.seed(1405)
-n <- 10000
-A <- rnorm(n)
-C <- rnorm(n)
-B <- 0.8*A + 0.5*C + rnorm(n)
-data_simple <- data.frame(A, B, C)
-
-# Should be easy to learn even for much smaller samples (pcalg and bnlearn get it right even for n = 100)
-
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
-  output_tetrad <- disco(data = data_simple, method = tetrad_pc)
-  edges_tetrad <- output_tetrad$caugi@edges
-  edges_tetrad
-}
-#>      from   edge     to
-#>    <char> <char> <char>
-#> 1:      A    ---      B
-#> 2:      B    ---      C
-
-# Both pcalg and bnlearn get it right:
-pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-output_pcalg <- disco(data = data_simple, method = pc_pcalg)
-edges_pcalg <- output_pcalg$caugi@edges
-edges_pcalg
-#>      from   edge     to
-#>    <char> <char> <char>
-#> 1:      A    -->      B
-#> 2:      C    -->      B
-
-pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-output_bnlearn <- disco(data = data_simple, method = pc_bnlearn)
-edges_bnlearn <- output_bnlearn$caugi@edges
-edges_bnlearn
-#>      from   edge     to
-#>    <char> <char> <char>
-#> 1:      A    -->      B
-#> 2:      C    -->      B
-```
-
-- Tetrad does not use required correctly
+- Tetrad does not use required correctly in `fci` algorithm
 
 ``` r
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
@@ -346,67 +306,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 #> 6:  youth_x4    --> oldage_x6
 ```
 
-The required edge is missing. Furthermore, in `pc` it gives undirected
-edges between the required edges.
-
-``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %-->% oldage_x5
-  )
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
-}
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x1    ---  child_x2
-#> 2:  child_x1    --- oldage_x5
-#> 3:  child_x2    --- oldage_x5
-#> 4:  child_x2    ---  youth_x4
-#> 5: oldage_x5    --- oldage_x6
-#> 6: oldage_x5    ---  youth_x3
-#> 7: oldage_x6    ---  youth_x4
-```
-
-- Also gives undirected edges in tier knowledge?
-
-``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ starts_with("child"),
-      youth ~ starts_with("youth"),
-      old ~ starts_with("old")
-    )
-  )
-
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
-}
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x1    ---  child_x2
-#> 2:  child_x2    --- oldage_x5
-#> 3:  child_x2    ---  youth_x4
-#> 4: oldage_x5    --- oldage_x6
-#> 5: oldage_x5    ---  youth_x3
-#> 6: oldage_x6    ---  youth_x4
-```
-
-Added a bunch of `browser()` statements in TetradSearch and the
-knowledge is correctly passed to Tetrad, so not sure what is going on
-here.
+The required edge is missing.
 
 Also this:
 
