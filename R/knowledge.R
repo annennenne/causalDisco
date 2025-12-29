@@ -2212,10 +2212,10 @@ seq_tiers <- function(tiers, vars) {
 
   # fall back to tidyselect
   vars <- tryCatch(
-    names(tidyselect::eval_select(q, rlang::set_names(
-      seq_along(.kn$vars$var),
-      .kn$vars$var
-    ))),
+    names(tidyselect::eval_select(
+      rlang::expr(all_of(!!q)), # !!q unquotes the symbol/variable
+      rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
+    )),
     error = function(e) character(0)
   )
   if (length(vars)) {
