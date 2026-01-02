@@ -259,32 +259,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 The required edge is missing.
 
-Also this:
-
-``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  kn <- knowledge(
-    tpc_example,
-    child_x2 %--x% child_x1
-  )
-
-  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
-}
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x1    o->  child_x2
-#> 2:  child_x2    --> oldage_x5
-#> 3:  child_x2    -->  youth_x4
-#> 4: oldage_x5    --> oldage_x6
-#> 5:  youth_x3    o-> oldage_x5
-#> 6:  youth_x4    --> oldage_x6
-```
-
 - Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and
   `"mixed_variable_polynomial"`:
 
@@ -299,7 +273,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: Unrecognized basis type: 4
+#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
 ```
 
 ``` r

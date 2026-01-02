@@ -208,24 +208,6 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 
 The required edge is missing.
 
-Also this:
-
-```{r tetrad forbidden bug}
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  kn <- knowledge(
-    tpc_example,
-    child_x2 %--x% child_x1
-  )
-
-  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
-}
-```
-
 - Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and `"mixed_variable_polynomial"`:
 
 ```{r tetrad non-working arg cci, error = TRUE}
