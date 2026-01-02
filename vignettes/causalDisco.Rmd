@@ -66,7 +66,7 @@ plot(pc_result_bnlearn, main = "PC (bnlearn)")
 par(mfrow = c(1, 1))
 ```
 
-(Ignore that PC bnlearn doesn't work correctly for now)
+(Note, that it doesn't work correctly for bnlearn, since `as_caugi` in caugi had a bug. I fixed it in PR #149, so it will work in the next release of caugi.)
 
 The first notable feature of this plot is that some edges have arrows, while others do not. For instance, the edge from 
 `v` to `z` is directed, indicating that `v` influences `z`, but not vice versa. In contrast, the edge between 
