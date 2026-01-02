@@ -334,6 +334,33 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 #> 6:  youth_x4    --> oldage_x6
 ```
 
+- Non-working Tetrad test arguments `cci` and `probalistic`
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+
+  tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
+  output <- disco(data = tpc_example, method = tetrad_pc)
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+#> Error in `.jcall()`:
+#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
+```
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+#> Error in `private$use_probabilistic_test()`:
+#> ! unused argument (alpha = 0.05)
+```
+
 ### Documentation
 
 - Make it clear in `?BnlearnSearch` (and similar for the others) that
@@ -398,6 +425,10 @@ causalDisco startup:
 Error in rdata_to_tetrad(df) : 
   java.lang.ClassNotFoundException: edu/cmu/tetrad/data/DiscreteVariable
 ```
+
+KCI test from Tetrad in pc algorithm gives wrong graph in getting
+started vignette (non-linear data) when version is 7.6.9? Works
+correctly in 7.6.8.
 
 ### CRAN TODO
 

@@ -188,7 +188,6 @@ plot(pc_bn)
 Problem is `knowledgeable_caugi()` incorrectly converts the `bnlearn` object to `caugi` object,
 losing the undirected edges. Fixed in PR #149 in caugi.
 
-
 - All of our algorithm does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)), `tpc`, `tges`, ...
 Currently does nothing. Either make it work or throw error/warning if required edges are given.
   
@@ -261,6 +260,29 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 }
 ```
 
+- Non-working Tetrad test arguments `cci` and `probalistic`
+
+```{r tetrad non-working arg cci, error = TRUE}
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+
+  tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
+  output <- disco(data = tpc_example, method = tetrad_pc)
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+```
+
+```{r tetrad non-working arg probabilistic, error = TRUE}
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+```
+
 ### Documentation 
 
 - Make it clear in `?BnlearnSearch` (and similar for the others) that all algorithms aren't currently fully supported.
@@ -313,6 +335,9 @@ causalDisco startup:
 Error in rdata_to_tetrad(df) : 
   java.lang.ClassNotFoundException: edu/cmu/tetrad/data/DiscreteVariable
 ```
+
+KCI test from Tetrad in pc algorithm gives wrong graph in getting started vignette (non-linear data) when
+version is 7.6.9? Works correctly in 7.6.8.
 
 ### CRAN TODO
 
