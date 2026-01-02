@@ -118,7 +118,7 @@ plot(pc_result_nonlinear, main = "PC (pcalg) non-linear")
 
 As expected, the PC algorithm with Fisher's Z test does not recover the correct causal structure in this non-linear setting. To handle non-linear relationships, we can for instance use the Kernel Conditional Independence Test (KCI) in Tetrad.
 
-```{r pc algorithm non-linear mi}
+```{r pc algorithm non-linear kci, eval = FALSE}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   pc_bnlearn_nonlinear <- pc(engine = "tetrad", test = "kci")
   pc_result_nonlinear_mi <- disco(data_nonlinear, method = pc_bnlearn_nonlinear)
@@ -126,7 +126,9 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 }
 ```
 
-The result of the PC algorithm using the KCI test again look like what we'd expect to see. Note, that this test
+![Graph output](nonlinear-tetrad-kci.png)
+
+The result of the PC algorithm using the KCI test look like what we'd expect to see. Note, that this test
 is much more demanding than using Fisher's Z test.
 
 # Incorporating prior knowledge
