@@ -132,7 +132,7 @@ kn <- knowledge(
 
 # use Tetrad PC algorithm with conditional Gaussian test
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 
@@ -234,7 +234,7 @@ fixedEdges in pcalg.
 - Tetrad does not use required correctly in `fci` algorithm
 
 ``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   kn <- knowledge(
@@ -263,13 +263,10 @@ The required edge is missing.
   `"mixed_variable_polynomial"`:
 
 ``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc)
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
@@ -277,25 +274,25 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 ```
 
 ``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
-#> Error in `private$use_probabilistic_test()`:
-#> ! unused argument (alpha = 0.05)
+#> Error in `.jcall()`:
+#> ! java.lang.IllegalArgumentException: Sorry, I was expecting a discrete data set.
 ```
 
 ``` r
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_ges <- ges(engine = "tetrad", score = "mixed_variable_polynomial")
-  output <- disco(data = tpc_example, method = tetrad_pc)
+  output <- disco(data = tpc_example, method = tetrad_ges)
 }
-#> Error in `private$use_probabilistic_test()`:
-#> ! unused argument (alpha = 0.05)
+#> Error in `.jcall()`:
+#> ! java.lang.IllegalArgumentException: Variables list must not be null or empty.
 ```
 
 ### Documentation

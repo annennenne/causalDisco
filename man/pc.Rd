@@ -65,7 +65,7 @@ pc_bnlearn(tpc_example)
 
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(

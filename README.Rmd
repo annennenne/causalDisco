@@ -107,7 +107,7 @@ kn <- knowledge(
 
 # use Tetrad PC algorithm with conditional Gaussian test
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 
@@ -191,7 +191,7 @@ Should be easier to fix for test based algorithms? Just check if required edges 
 - Tetrad does not use required correctly in `fci` algorithm
 
 ```{r tetrad required bug}
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   kn <- knowledge(
@@ -211,19 +211,16 @@ The required edge is missing.
 - Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and `"mixed_variable_polynomial"`:
 
 ```{r tetrad non-working arg cci, error = TRUE}
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc)
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 ```
 
 ```{r tetrad non-working arg probabilistic, error = TRUE}
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
@@ -232,11 +229,11 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 ```
 
 ```{r tetrad non-working arg mixed_variable_polynomial, error = TRUE}
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_ges <- ges(engine = "tetrad", score = "mixed_variable_polynomial")
-  output <- disco(data = tpc_example, method = tetrad_pc)
+  output <- disco(data = tpc_example, method = tetrad_ges)
 }
 ```
 

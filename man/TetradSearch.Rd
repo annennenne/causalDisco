@@ -17,7 +17,7 @@ resulting graph or statistics.
 # use the disco() or any method function, for example pc(), instead.
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   # Recommended:
