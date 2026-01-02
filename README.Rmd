@@ -135,6 +135,8 @@ plot(disco_cd_tges)
 - Shouldn't we just list all possible arguments to `tpc`, `tfci`, and `tges` instead of `...` and forcing the user
 to look at the underlying `_run` functions? Then also make the `_run` functions not exported?
 
+- What I wrote in Tetrad FCI required under Tetrad issues - discuss?
+
 ## TODO
 
 - Improve plot
@@ -206,7 +208,13 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 ```
 
-The required edge is missing.
+The required edge is missing. This is maybe not a bug? Tetrad behaves the same way. Found this paper:
+[On the Completeness of Causal Discovery in the Presence of Latent
+Confounding with Tiered Background Knowledge](https://proceedings.mlr.press/v108/andrews20a/andrews20a.pdf)
+where it says "In fact, it is straightforward to show that FCI is
+not complete with background knowledge that specifies one variable as the cause of another." and continues with an example illustrating why.
+
+Should we add some warning about this in the documentation and if user tries to do it?
 
 - Non-working Tetrad test/score arguments `"cci"` and `"mixed_variable_polynomial"`:
 
