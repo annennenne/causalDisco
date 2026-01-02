@@ -152,41 +152,7 @@ to look at the underlying `_run` functions? Then also make the `_run` functions 
 
 ### Bugfixes
 
-- bnlearn engine doesn't learn undirected edges for pc algorithm?
-
-```{r bnlearn pc undirected bug}
-set.seed(1405)
-n <- 1000
-x <- rnorm(n)
-v <- x + rnorm(n)*0.5
-w <- x + rnorm(n)*0.5
-z <- v + w + rnorm(n)*0.5
-s <- z + rnorm(n)*0.5
-
-data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
-head(data_simple)
-
-pc_method_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_method_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-
-pc_result_pcalg <- disco(data_simple, method = pc_method_pcalg)
-pc_result_bnlearn <- disco(data_simple, method = pc_method_bnlearn)
-
-par(mfrow = c(1, 2))
-plot(pc_result_pcalg$caugi, main = "PC (pcalg)")
-plot(pc_result_bnlearn$caugi, main = "PC (bnlearn)")
-par(mfrow = c(1, 1))
-```
-
-It works if calling `bnlearn::pc.stable` directly:
-
-```{r bnlearn pc undirected fix}
-pc_bn <- bnlearn::pc.stable(data_simple, test = "zf", alpha = 0.05)
-plot(pc_bn)
-```
-
-Problem is `knowledgeable_caugi()` incorrectly converts the `bnlearn` object to `caugi` object,
-losing the undirected edges. Fixed in PR #149 in caugi.
+- bnlearn has bug for old version of caugi. Fixed in PR #149 in caugi.
 
 - All of our algorithm does not work with required edges from knowledge objects (see e.g. [unit tests for tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)), `tpc`, `tges`, ...
 Currently does nothing. Either make it work or throw error/warning if required edges are given.
@@ -260,7 +226,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 }
 ```
 
-- Non-working Tetrad test arguments `cci` and `probalistic`
+- Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and `"mixed_variable_polynomial"`:
 
 ```{r tetrad non-working arg cci, error = TRUE}
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
@@ -279,6 +245,15 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+```
+
+```{r tetrad non-working arg mixed_variable_polynomial, error = TRUE}
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+  
+  tetrad_ges <- ges(engine = "tetrad", score = "mixed_variable_polynomial")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 ```

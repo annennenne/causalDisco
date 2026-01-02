@@ -187,56 +187,7 @@ plot(disco_cd_tges)
 
 ### Bugfixes
 
-- bnlearn engine doesn’t learn undirected edges for pc algorithm?
-
-``` r
-set.seed(1405)
-n <- 1000
-x <- rnorm(n)
-v <- x + rnorm(n)*0.5
-w <- x + rnorm(n)*0.5
-z <- v + w + rnorm(n)*0.5
-s <- z + rnorm(n)*0.5
-
-data_simple <- data.frame(x = x, v = v, w = w, z = z, s = s)
-head(data_simple)
-#>            x           v          w          z          s
-#> 1  0.2724785  0.07687489  1.2131219  1.4542158  0.2649549
-#> 2  0.3572619  0.81022383  0.4049109  1.5767672  1.5394264
-#> 3 -0.8616620 -0.68388923 -0.3195188 -1.1415913 -1.2647045
-#> 4  0.8083350  1.61458098  1.2132504  3.0666677  3.0334703
-#> 5  0.6127352  0.42484707  0.4253022  0.7889983  0.7937421
-#> 6 -0.6240686 -0.23225274 -0.7201852 -0.4876655 -0.7977492
-
-pc_method_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_method_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-
-pc_result_pcalg <- disco(data_simple, method = pc_method_pcalg)
-pc_result_bnlearn <- disco(data_simple, method = pc_method_bnlearn)
-
-par(mfrow = c(1, 2))
-plot(pc_result_pcalg$caugi, main = "PC (pcalg)")
-plot(pc_result_bnlearn$caugi, main = "PC (bnlearn)")
-```
-
-<img src="man/figures/README-bnlearn pc undirected bug-1.png" alt="" width="100%" />
-
-``` r
-par(mfrow = c(1, 1))
-```
-
-It works if calling `bnlearn::pc.stable` directly:
-
-``` r
-pc_bn <- bnlearn::pc.stable(data_simple, test = "zf", alpha = 0.05)
-plot(pc_bn)
-```
-
-<img src="man/figures/README-bnlearn pc undirected fix-1.png" alt="" width="100%" />
-
-Problem is `knowledgeable_caugi()` incorrectly converts the `bnlearn`
-object to `caugi` object, losing the undirected edges. Fixed in PR \#149
-in caugi.
+- bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
 
 - All of our algorithm does not work with required edges from knowledge
   objects (see e.g. [unit tests for
@@ -334,7 +285,8 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
 #> 6:  youth_x4    --> oldage_x6
 ```
 
-- Non-working Tetrad test arguments `cci` and `probalistic`
+- Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and
+  `"mixed_variable_polynomial"`:
 
 ``` r
 if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
@@ -347,7 +299,7 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
+#> ! java.lang.RuntimeException: Unrecognized basis type: 4
 ```
 
 ``` r
@@ -355,6 +307,17 @@ if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
   data("tpc_example")
   
   tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
+  output <- disco(data = tpc_example, method = tetrad_pc)
+}
+#> Error in `private$use_probabilistic_test()`:
+#> ! unused argument (alpha = 0.05)
+```
+
+``` r
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  data("tpc_example")
+  
+  tetrad_ges <- ges(engine = "tetrad", score = "mixed_variable_polynomial")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `private$use_probabilistic_test()`:
