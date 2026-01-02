@@ -259,7 +259,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 
 The required edge is missing.
 
-- Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and
+- Non-working Tetrad test/score arguments `"cci"` and
   `"mixed_variable_polynomial"`:
 
 ``` r
@@ -270,18 +270,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
-```
-
-``` r
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
-  output <- disco(data = tpc_example, method = tetrad_pc)
-}
-#> Error in `.jcall()`:
-#> ! java.lang.IllegalArgumentException: Sorry, I was expecting a discrete data set.
+#> ! java.lang.RuntimeException: Unrecognized basis type: 4
 ```
 
 ``` r

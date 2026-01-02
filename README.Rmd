@@ -208,22 +208,13 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 
 The required edge is missing.
 
-- Non-working Tetrad test/score arguments `"cci"`, `"probalistic"`, and `"mixed_variable_polynomial"`:
+- Non-working Tetrad test/score arguments `"cci"` and `"mixed_variable_polynomial"`:
 
 ```{r tetrad non-working arg cci, error = TRUE}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data("tpc_example")
 
   tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc)
-}
-```
-
-```{r tetrad non-working arg probabilistic, error = TRUE}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "probabilistic")
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 ```

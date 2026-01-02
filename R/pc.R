@@ -91,14 +91,28 @@ pc_tetrad_runner <- function(test, alpha, ...) {
   )
 
   if (length(args_to_pass$test_args) > 0) {
-    rlang::exec(
-      search$set_test,
-      method = test,
-      alpha = alpha,
-      !!!args_to_pass$test_args
-    )
+    if (test == "probabilistic") {
+      # probabilistic test in Tetrad does not use alpha
+      rlang::exec(
+        search$set_test,
+        method = test,
+        !!!args_to_pass$test_args
+      )
+    } else {
+      rlang::exec(
+        search$set_test,
+        method = test,
+        alpha = alpha,
+        !!!args_to_pass$test_args
+      )
+    }
   } else {
-    search$set_test(method = test, alpha = alpha)
+    if (test == "probabilistic") {
+      # probabilistic test in Tetrad does not use alpha
+      search$set_test(method = test)
+    } else {
+      search$set_test(method = test, alpha = alpha)
+    }
   }
 
   if (length(args_to_pass$alg_args) > 0) {

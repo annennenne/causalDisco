@@ -15,7 +15,7 @@ test_that("tetrad test argument works (discrete)", {
     "chi_square",
     "g_square",
     "basis_function_lrt",
-    # "probabilistic", # Currently doesn't work
+    "probabilistic",
     "degenerate_gaussian",
     "conditional_gaussian"
   )
@@ -35,7 +35,6 @@ test_that("tetrad test argument works (continious)", {
   }
 
   tests <- c(
-    # "probabilistic", # Currently doesn't work
     "fisher_z",
     # "cci",      # Currently doesn't work
     "kci"
@@ -47,7 +46,7 @@ test_that("tetrad test argument works (continious)", {
 
 test_that("tetrad score argument works", {
   skip_if_no_tetrad()
-  # Continious
+  # Continuous
   data("tpc_example")
   run_ges_test <- function(data, score) {
     print(score)
