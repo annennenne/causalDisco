@@ -20,7 +20,6 @@ NULL
 #' @importFrom R6 R6Class
 #' @export
 TetradSearch <- R6Class(
-  # nolint: object_name_linter.
   "TetradSearch",
   public = list(
     #' @field data Java object that stores the (possibly converted) data set

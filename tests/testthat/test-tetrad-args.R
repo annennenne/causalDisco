@@ -8,7 +8,7 @@ test_that("tetrad test argument works (discrete)", {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
     expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
-    return(pc_result)
+    pc_result
   }
 
   tests <- c(
@@ -31,7 +31,7 @@ test_that("tetrad test argument works (continious)", {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
     expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
-    return(pc_result)
+    pc_result
   }
 
   tests <- c(
@@ -54,7 +54,7 @@ test_that("tetrad score argument works", {
     ges_method <- ges(engine = "tetrad", score = score)
     ges_result <- disco(data, method = ges_method)
     expect_equal(class(ges_result), c("knowledgeable_caugi", "knowledge"))
-    return(ges_result)
+    ges_result
   }
 
   tests <- c(

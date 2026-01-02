@@ -37,10 +37,10 @@ We create data from a linear Gaussian model corresponding to the above DAG:
 set.seed(1405)
 n <- 1000
 x <- rnorm(n)
-v <- x + rnorm(n)*0.5
-w <- x + rnorm(n)*0.5
-z <- v + w + rnorm(n)*0.5
-s <- z + rnorm(n)*0.5
+v <- x + rnorm(n) * 0.5
+w <- x + rnorm(n) * 0.5
+z <- v + w + rnorm(n) * 0.5
+s <- z + rnorm(n) * 0.5
 
 data_linear <- data.frame(x = x, v = v, w = w, z = z, s = s)
 head(data_linear)
@@ -99,10 +99,10 @@ Here, we simulate data the same DAG structure as above, but with non-linear rela
 ```{r non-linear causal discovery}
 set.seed(1405)
 n <- 1000
-x <- runif(n, min = 0, max = 2*pi)
+x <- runif(n, min = 0, max = 2 * pi)
 v <- sin(x) + rnorm(n) * 0.25
 w <- cos(x) + rnorm(n) * 0.25
-z <- 3 * v^2 - w + rnorm(n) * 0.25 
+z <- 3 * v^2 - w + rnorm(n) * 0.25
 s <- z^2 + rnorm(n) * 0.25
 
 data_nonlinear <- data.frame(x = x, v = v, w = w, z = z, s = s)

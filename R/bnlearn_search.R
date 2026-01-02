@@ -19,7 +19,6 @@ NULL
 #'
 #' @export
 BnlearnSearch <- R6Class(
-  # nolint: object_name_linter.
   "BnlearnSearch",
   public = list(
     #' @template data-field

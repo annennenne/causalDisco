@@ -18,7 +18,6 @@ NULL
 #'
 #' @export CausalDiscoSearch
 CausalDiscoSearch <- R6::R6Class(
-  # nolint: object_name_linter.
   "CausalDiscoSearch",
   public = list(
     #' @template data-field

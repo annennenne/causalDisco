@@ -418,14 +418,14 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
   )
 
   if (return_info) {
-    return(list(
+    list(
       graph = g,
       layout = layout_matrix,
       nodes = nodes,
       vertex_sizes = vertex_sizes,
       groups = groups,
       curved = curved
-    ))
+    )
   } else {
     invisible(NULL)
   }

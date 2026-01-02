@@ -39,10 +39,10 @@ tges_run <- function(score, verbose = FALSE) {
   if (anyNA(score$pp.dat$data)) {
     stop("Data must not contain missing values.", call. = FALSE)
   }
-  node.numbers <- 1:score$pp.dat$vertex.count
+  node_numers <- 1:score$pp.dat$vertex.count
   essgraph <- new(
     "TEssGraph",
-    nodes = as.character(node.numbers),
+    nodes = as.character(node_numers),
     score = score
   )
   Forbidden.edges <- essgraph$.in.edges # all with integer(0) entry (list)
@@ -51,8 +51,8 @@ tges_run <- function(score, verbose = FALSE) {
   num.directed <- 0
 
   ord <- score$.order
-  for (n in node.numbers) {
-    Forbidden.edges[[n]] <- node.numbers[ord[n] < ord]
+  for (n in node_numers) {
+    Forbidden.edges[[n]] <- node_numers[ord[n] < ord]
   }
   cont <- TRUE
   update_phase <- function(phase, essgraph, Forbidden.edges, verbose) {
@@ -118,29 +118,29 @@ tges_run <- function(score, verbose = FALSE) {
 #' Converts a list of in-edges (parents) per node into a 0/1 adjacency matrix
 #' with rows and columns ordered by the list names.
 #'
-#' @param inputList A named list of integer vectors; each element `inputList[[i]]`
+#' @param input_list A named list of integer vectors; each element `input_list[[i]]`
 #'   contains the indices of the parents of node `i`. Names must be the node
 #'   labels in order.
 #'
 #' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj_example.R
 #'
-#' @return A numeric matrix with row and column names equal to `names(inputList)`,
+#' @return A numeric matrix with row and column names equal to `names(input_list)`,
 #'   where entry `(i, j) = 1` iff `j` is a parent of `i`.
 #'
 #' @keywords internal
 #' @noRd
-create_adj_matrix_from_list <- function(inputList) {
-  n <- length(inputList)
+create_adj_matrix_from_list <- function(input_list) {
+  n <- length(input_list)
   result_matrix <- matrix(0, nrow = n, ncol = n)
-  for (i in seq_along(inputList)) {
-    indices <- inputList[[i]]
+  for (i in seq_along(input_list)) {
+    indices <- input_list[[i]]
     valid_indices <- indices[indices <= n]
     if (length(valid_indices) > 0) {
       result_matrix[i, valid_indices] <- 1
     }
   }
-  rownames(result_matrix) <- names(inputList)
-  colnames(result_matrix) <- names(inputList)
+  rownames(result_matrix) <- names(input_list)
+  colnames(result_matrix) <- names(input_list)
   result_matrix
 }
 
