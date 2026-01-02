@@ -166,7 +166,8 @@ kn <-
 
 # Using seq_tiers for larger datasets
 df <- as.data.frame(
-  matrix(runif(100), # 100 random numbers in (0,1)
+  matrix(
+    runif(100), # 100 random numbers in (0,1)
     nrow = 1,
     ncol = 100,
     byrow = TRUE

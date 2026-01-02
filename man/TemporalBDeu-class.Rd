@@ -85,7 +85,11 @@ p_C_given_A_B <- list(
 )
 
 # Sample C based on A and B
-C <- mapply(function(a, b) sample(1:2, 1, prob = p_C_given_A_B[[paste(a, b, sep = "_")]]), A, B)
+C <- mapply(
+  function(a, b) sample(1:2, 1, prob = p_C_given_A_B[[paste(a, b, sep = "_")]]),
+  A,
+  B
+)
 
 # Create dataset
 simdata <- data.frame(as.factor(A), as.factor(B), as.factor(C))
@@ -104,10 +108,7 @@ kn <- knowledge(
 )
 
 # Define TemporalBDeu score
-t_score <- new("TemporalBDeu",
-  knowledge = kn,
-  data = simdata
-)
+t_score <- new("TemporalBDeu", knowledge = kn, data = simdata)
 # Run tges
 tges_pre <- tges_run(t_score)
 
