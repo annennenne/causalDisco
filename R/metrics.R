@@ -176,7 +176,6 @@ shd <- function(est_amat, true_amat) {
   shd + sum((d + t(d)) > 0) / 2
 }
 
-
 # shd.tamat <- function(est_amat, true_amat) {
 #   shd.default(est_amat$amat, true_amat)
 # }

@@ -33,7 +33,8 @@ reg_test <- function(x, y, conditioning_set, suff_stat) {
 reg_test_each_dir <- function(x, y, S, suffStat) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "splines", "stats"
+      "splines",
+      "stats"
     ),
     function_name = "reg_test_each_dir"
   )
@@ -81,7 +82,9 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   if (length(S_num > 0)) {
     S_num <- paste("splines::ns(", S_num, df_string, sep = "")
   }
-  if (length(S_bin > 0)) S_bin <- paste("factor(", S_bin, ")", sep = "")
+  if (length(S_bin > 0)) {
+    S_bin <- paste("factor(", S_bin, ")", sep = "")
+  }
   S <- c(S_bin, S_num, "1")
 
   # wrap factor around binary f

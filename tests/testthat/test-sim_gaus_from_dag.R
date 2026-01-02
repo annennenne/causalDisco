@@ -1,11 +1,27 @@
 test_that("sim_gaus_from_dag respects causal structure", {
   set.seed(1405)
-  amat <- matrix(c(
-    0, 0, 1, 0,
-    0, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 0, 0
-  ), nrow = 4, byrow = TRUE)
+  amat <- matrix(
+    c(
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ),
+    nrow = 4,
+    byrow = TRUE
+  )
   rownames(amat) <- colnames(amat) <- paste("x", 1:4, sep = "")
 
   dat <- sim_gaus_from_dag(amat, 1000, p_neg_reg_par = 0, standardize = TRUE)

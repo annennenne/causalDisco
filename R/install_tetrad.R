@@ -60,11 +60,19 @@ get_java_version <- function() {
 #' @examples
 #' check_tetrad_install()
 #' @export
-check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version")) {
+check_tetrad_install <- function(
+  version = getOption("causalDisco.tetrad.version")
+) {
   tetrad_dir <- get_tetrad_dir()
 
   # Default output helper
-  create_output <- function(installed, version = NULL, java_ok = NA, java_version = NULL, message) {
+  create_output <- function(
+    installed,
+    version = NULL,
+    java_ok = NA,
+    java_version = NULL,
+    message
+  ) {
     list(
       installed = installed,
       version = version,
@@ -97,7 +105,8 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
       java_ok = FALSE,
       java_version = java_version,
       message = paste0(
-        "Java >= 21 is required but found version ", java_version,
+        "Java >= 21 is required but found version ",
+        java_version,
         ". Please update Java or run install_java()."
       )
     ))
@@ -114,7 +123,10 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
     ))
   }
 
-  gui_jar <- file.path(tetrad_dir, paste0("tetrad-gui-", version, "-launch.jar"))
+  gui_jar <- file.path(
+    tetrad_dir,
+    paste0("tetrad-gui-", version, "-launch.jar")
+  )
 
   if (!file.exists(gui_jar)) {
     return(create_output(
@@ -123,15 +135,21 @@ check_tetrad_install <- function(version = getOption("causalDisco.tetrad.version
       java_ok = TRUE,
       java_version = java_version,
       message = paste0(
-        "Tetrad version ", version, " not found. Please install it using install_tetrad()."
+        "Tetrad version ",
+        version,
+        " not found. Please install it using install_tetrad()."
       )
     ))
   }
 
   # ---- All OK ----
   msg <- paste0(
-    "Tetrad found (version ", version, "). ",
-    "Java version ", java_version, " is OK."
+    "Tetrad found (version ",
+    version,
+    "). ",
+    "Java version ",
+    java_version,
+    " is OK."
   )
 
   create_output(
@@ -230,7 +248,9 @@ install_tetrad <- function(
         write(line, file = renviron, append = TRUE)
         message("Added TETRAD_DIR to .Renviron")
       } else {
-        message("TETRAD_DIR already exists in .Renviron, update manually if needed")
+        message(
+          "TETRAD_DIR already exists in .Renviron, update manually if needed"
+        )
       }
     } else {
       write(line, file = renviron)

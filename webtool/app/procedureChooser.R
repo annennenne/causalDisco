@@ -15,12 +15,12 @@ procedureChooser <- function(inProps) {
     #convert to numeric (otherwise read as int)
     thisProp <- as.numeric(inProps[[i]])
     if (!is.null(inProps)) {
-      if (identical(thisProp,1)) {
-        validProcedures <- props[sapply(props[,i+1],
-                                        function(x) identical(as.numeric(x), 1)),
-                                 "ID"]
+      if (identical(thisProp, 1)) {
+        validProcedures <- props[
+          sapply(props[, i + 1], function(x) identical(as.numeric(x), 1)),
+          "ID"
+        ]
         procedures <- intersect(procedures, validProcedures)
-
       }
     }
     i <- i + 1
@@ -28,4 +28,3 @@ procedureChooser <- function(inProps) {
 
   procedures
 }
-

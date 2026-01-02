@@ -226,7 +226,9 @@ test_that(".check_if_pkgs_are_installed errors with helpful message for missing 
       pkgs = c("stats", fake),
       class_name = "CoolR6Class"
     ),
-    paste0("The following packages are required for the R6 class `CoolR6Class` but are not installed"),
+    paste0(
+      "The following packages are required for the R6 class `CoolR6Class` but are not installed"
+    ),
     fixed = FALSE
   )
 })

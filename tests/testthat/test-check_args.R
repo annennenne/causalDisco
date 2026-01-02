@@ -6,12 +6,14 @@ test_that("engine guard in check_args_and_distribute_args() rejects unsupported 
   reg <- engine_registry
   expect_error(
     check_args_and_distribute_args(
-      args   = list(),
+      args = list(),
       engine = "not-an-engine",
-      alg    = "pc"
+      alg = "pc"
     ),
     paste0(
-      "Engine ", "not-an-engine", " is not supported. Supported engines are: ",
+      "Engine ",
+      "not-an-engine",
+      " is not supported. Supported engines are: ",
       paste(reg, collapse = ", ")
     ),
     fixed = TRUE
@@ -30,10 +32,10 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
   expect_error(
     check_args_and_distribute_args_tetrad(
       search = search_t,
-      args   = list(),
-      alg    = "pc",
-      test   = NULL,
-      score  = NULL
+      args = list(),
+      alg = "pc",
+      test = NULL,
+      score = NULL
     ),
     "Neither test or score is specified.",
     fixed = TRUE
@@ -43,10 +45,10 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
   search_t <- TetradSearch$new()
   out <- check_args_and_distribute_args_tetrad(
     search = search_t,
-    args   = list(verbose = TRUE),
-    alg    = "pc",
-    test   = "fisher_z",
-    score  = NULL
+    args = list(verbose = TRUE),
+    alg = "pc",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out, c("alg_args", "test_args", "score_args"))
   expect_length(out$alg_args, 0)
@@ -58,10 +60,10 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
   expect_error(
     check_args_and_distribute_args_tetrad(
       search = search_t,
-      args   = list(.totally_unused = 1),
-      alg    = "pc",
-      test   = "fisher_z",
-      score  = NULL
+      args = list(.totally_unused = 1),
+      alg = "pc",
+      test = "fisher_z",
+      score = NULL
     ),
     "The following arguments are not used in Tetrad algorithm, test, or score: .totally_unused",
     fixed = TRUE
@@ -71,10 +73,10 @@ test_that("tetrad: requires either test or score, consumes verbose, and covers s
   search_t <- TetradSearch$new()
   out_score <- check_args_and_distribute_args_tetrad(
     search = search_t,
-    args   = list(), # empty args is fine; we only need to hit get_parameters_for_function(score = TRUE)
-    alg    = "fges",
-    test   = NULL,
-    score  = "sem_bic"
+    args = list(), # empty args is fine; we only need to hit get_parameters_for_function(score = TRUE)
+    alg = "fges",
+    test = NULL,
+    score = "sem_bic"
   )
   expect_named(out_score, c("alg_args", "test_args", "score_args"))
   expect_length(out_score$alg_args, 0)
@@ -94,10 +96,10 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
   args_pc[[known_pc_arg]] <- if (known_pc_arg %in% c("m.max")) 1L else NULL
 
   out_pc <- check_args_and_distribute_args_pcalg(
-    args   = args_pc,
-    alg    = "pc",
-    test   = "fisher_z",
-    score  = NULL
+    args = args_pc,
+    alg = "pc",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_pc, c("alg_args", "score_args"))
   expect_true(known_pc_arg %in% names(out_pc$alg_args))
@@ -106,22 +108,26 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
   fci_formals <- names(formals(pcalg::fci))
   known_fci_arg <- if ("na.more" %in% fci_formals) "na.more" else fci_formals[1]
   args_fci <- list()
-  args_fci[[known_fci_arg]] <- if (known_fci_arg %in% c("na.more")) TRUE else NULL
+  args_fci[[known_fci_arg]] <- if (known_fci_arg %in% c("na.more")) {
+    TRUE
+  } else {
+    NULL
+  }
 
   out_fci <- check_args_and_distribute_args_pcalg(
-    args   = list(),
-    alg    = "fci",
-    test   = "fisher_z",
-    score  = NULL
+    args = list(),
+    alg = "fci",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_fci, c("alg_args", "score_args"))
 
   # ges + score path covered; no score args provided, but branch executes
   out_ges <- check_args_and_distribute_args_pcalg(
-    args   = list(),
-    alg    = "ges",
-    test   = NULL,
-    score  = "sem_bic_int"
+    args = list(),
+    alg = "ges",
+    test = NULL,
+    score = "sem_bic_int"
   )
   expect_named(out_ges, c("alg_args", "score_args"))
 
@@ -129,20 +135,20 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
 
   expect_warning(
     check_args_and_distribute_args_pcalg(
-      args   = args_unused,
-      alg    = "ges",
-      test   = NULL,
-      score  = "sem_bic_int"
+      args = args_unused,
+      alg = "ges",
+      test = NULL,
+      score = "sem_bic_int"
     ),
     "The following arguments are not used in pcalg::ges: bogus_arg",
     fixed = TRUE
   )
   expect_error(
     check_args_and_distribute_args_pcalg(
-      args   = args_unused,
-      alg    = "pc",
-      test   = "fisher_z",
-      score  = NULL
+      args = args_unused,
+      alg = "pc",
+      test = "fisher_z",
+      score = NULL
     ),
     "The following arguments are not used in pcalg::pc: bogus_arg",
     fixed = TRUE
@@ -151,10 +157,10 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
   # unsupported alg exact message
   expect_error(
     check_args_and_distribute_args_pcalg(
-      args   = list(),
-      alg    = "not-an-alg",
-      test   = NULL,
-      score  = NULL
+      args = list(),
+      alg = "not-an-alg",
+      test = NULL,
+      score = NULL
     ),
     "Unsupported algorithm: not-an-alg",
     fixed = TRUE
@@ -177,9 +183,22 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
   )
 
   candidates <- c(
-    "pc.stable", "gs", "iamb", "fast.iamb", "inter.iamb", "iamb.fdr",
-    "mmpc", "si.hiton.pc", "hpc", "hc", "tabu", "mmhc", "rsmax2", "h2pc",
-    "chow.liu", "aracne"
+    "pc.stable",
+    "gs",
+    "iamb",
+    "fast.iamb",
+    "inter.iamb",
+    "iamb.fdr",
+    "mmpc",
+    "si.hiton.pc",
+    "hpc",
+    "hc",
+    "tabu",
+    "mmhc",
+    "rsmax2",
+    "h2pc",
+    "chow.liu",
+    "aracne"
   )
   has_fun <- vapply(
     candidates,
@@ -187,7 +206,9 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
     logical(1)
   )
   candidates <- candidates[has_fun]
-  formals_list <- lapply(candidates, function(a) names(formals(get(a, envir = asNamespace("bnlearn")))))
+  formals_list <- lapply(candidates, function(a) {
+    names(formals(get(a, envir = asNamespace("bnlearn"))))
+  })
   names(formals_list) <- candidates
 
   no_dots <- names(Filter(function(x) !("..." %in% x), formals_list))
@@ -201,7 +222,11 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
         alg = nd,
         allow_dots = FALSE
       ),
-      paste0("The following arguments are not valid for bnlearn::", nd, ": unused_extra"),
+      paste0(
+        "The following arguments are not valid for bnlearn::",
+        nd,
+        ": unused_extra"
+      ),
       fixed = TRUE
     )
   }
@@ -215,7 +240,9 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
         allow_dots = FALSE
       ),
       paste0(
-        "bnlearn::", wd, " has a '...' formal, but these arguments are not ",
+        "bnlearn::",
+        wd,
+        " has a '...' formal, but these arguments are not ",
         "recognised: unclaimed",
         ".  Set allow_dots = TRUE if you really want to forward them."
       ),
@@ -252,10 +279,10 @@ test_that("causalDisco: ", {
   tpc_formals <- names(formals(tpc))
   args <- stats::setNames(vector("list", length(tpc_formals)), tpc_formals)
   out_tpc <- check_args_and_distribute_args_causalDisco(
-    args   = args,
-    alg    = "tpc",
-    test   = "fisher_z",
-    score  = NULL
+    args = args,
+    alg = "tpc",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_tpc, c("alg_args", "score_args"))
   expect_true(all(tpc_formals %in% names(out_tpc$alg_args)))
@@ -264,23 +291,22 @@ test_that("causalDisco: ", {
   tfci_formals <- names(formals(tfci))
   args <- stats::setNames(vector("list", length(tfci_formals)), tfci_formals)
   out_tfci <- check_args_and_distribute_args_causalDisco(
-    args   = args,
-    alg    = "tfci",
-    test   = "fisher_z",
-    score  = NULL
+    args = args,
+    alg = "tfci",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_tfci, c("alg_args", "score_args"))
   expect_true(all(tfci_formals %in% names(out_tfci$alg_args)))
 
   # ges + score path covered; no score args provided, but branch executes
   out_tges <- check_args_and_distribute_args_causalDisco(
-    args   = list(),
-    alg    = "tges",
-    test   = NULL,
-    score  = "tbic"
+    args = list(),
+    alg = "tges",
+    test = NULL,
+    score = "tbic"
   )
   expect_named(out_tges, c("alg_args", "score_args"))
-
 
   # ges + score path with args
   # tbic
@@ -291,10 +317,10 @@ test_that("causalDisco: ", {
     c(ges_formals, score_formals)
   )
   out_tges2 <- check_args_and_distribute_args_causalDisco(
-    args   = args,
-    alg    = "tges",
-    test   = NULL,
-    score  = "tbic"
+    args = args,
+    alg = "tges",
+    test = NULL,
+    score = "tbic"
   )
 
   expect_named(out_tges2, c("alg_args", "score_args"))
@@ -308,10 +334,10 @@ test_that("causalDisco: ", {
     c(ges_formals, score_formals2)
   )
   out_tges3 <- check_args_and_distribute_args_causalDisco(
-    args   = args2,
-    alg    = "tges",
-    test   = NULL,
-    score  = "tbdeu"
+    args = args2,
+    alg = "tges",
+    test = NULL,
+    score = "tbdeu"
   )
   expect_named(out_tges3, c("alg_args", "score_args"))
   expect_true(all(ges_formals %in% names(out_tges3$alg_args)))
@@ -322,20 +348,20 @@ test_that("causalDisco: ", {
 
   expect_warning(
     check_args_and_distribute_args_causalDisco(
-      args   = args_unused,
-      alg    = "tges",
-      test   = NULL,
-      score  = "tbic"
+      args = args_unused,
+      alg = "tges",
+      test = NULL,
+      score = "tbic"
     ),
     "The following arguments are not used in causalDisco::tges: bogus_arg",
     fixed = TRUE
   )
   expect_warning(
     check_args_and_distribute_args_causalDisco(
-      args   = args_unused,
-      alg    = "tpc",
-      test   = "fisher_z",
-      score  = NULL
+      args = args_unused,
+      alg = "tpc",
+      test = "fisher_z",
+      score = NULL
     ),
     "The following arguments are not used in causalDisco::tpc: bogus_arg",
     fixed = TRUE
@@ -344,10 +370,10 @@ test_that("causalDisco: ", {
   # unsupported alg exact message
   expect_error(
     check_args_and_distribute_args_causalDisco(
-      args   = list(),
-      alg    = "not-an-alg",
-      test   = NULL,
-      score  = NULL
+      args = list(),
+      alg = "not-an-alg",
+      test = NULL,
+      score = NULL
     ),
     "Unsupported algorithm: not-an-alg",
     fixed = TRUE
@@ -363,47 +389,47 @@ test_that("top-level dispatcher routes to each engine helper", {
 
   out_t <- check_args_and_distribute_args(
     search = TetradSearch$new(),
-    args   = list(verbose = TRUE),
+    args = list(verbose = TRUE),
     engine = "tetrad",
-    alg    = "pc",
-    test   = "fisher_z",
-    score  = NULL
+    alg = "pc",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_t, c("alg_args", "test_args", "score_args"))
   expect_error(
     check_args_and_distribute_args(
       search = NULL,
-      args   = list(verbose = TRUE),
+      args = list(verbose = TRUE),
       engine = "tetrad",
-      alg    = "pc",
-      test   = "fisher_z",
-      score  = NULL
+      alg = "pc",
+      test = "fisher_z",
+      score = NULL
     )
   )
 
   out_p <- check_args_and_distribute_args(
     search = NULL,
-    args   = list(m.max = 1L),
+    args = list(m.max = 1L),
     engine = "pcalg",
-    alg    = "pc",
-    test   = "fisher_z",
-    score  = NULL
+    alg = "pc",
+    test = "fisher_z",
+    score = NULL
   )
   expect_named(out_p, c("alg_args", "score_args"))
 
   out_b <- check_args_and_distribute_args(
     search = NULL,
-    args   = list(),
+    args = list(),
     engine = "bnlearn",
-    alg    = "pc"
+    alg = "pc"
   )
   expect_identical(out_b, list())
 
   out_c <- check_args_and_distribute_args(
     search = NULL,
-    args   = list(),
+    args = list(),
     engine = "causalDisco",
-    alg    = "tpc"
+    alg = "tpc"
   )
   expect_named(out_c, c("alg_args", "score_args"))
 })

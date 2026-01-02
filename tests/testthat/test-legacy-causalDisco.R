@@ -10,7 +10,11 @@ test_that("reg_test handles Gaussian (linear) case and finds association", {
   Y <- 0.8 * X + 0.2 * Z + stats::rnorm(n, sd = 0.5)
 
   dat <- data.frame(X = X, Y = Y, Z = Z)
-  suff <- list(data = dat, binary = setNames(rep(FALSE, 3), names(dat)), order = "t")
+  suff <- list(
+    data = dat,
+    binary = setNames(rep(FALSE, 3), names(dat)),
+    order = "t"
+  )
 
   p <- reg_test(1, 2, 3, suff)
   expect_true(is.numeric(p) && length(p) == 1)
@@ -25,7 +29,11 @@ test_that("reg_test handles Gaussian independence", {
   Y <- 2 * Z + stats::rnorm(n)
 
   dat <- data.frame(X = X, Y = Y, Z = Z)
-  suff <- list(data = dat, binary = setNames(rep(FALSE, 3), names(dat)), order = "t")
+  suff <- list(
+    data = dat,
+    binary = setNames(rep(FALSE, 3), names(dat)),
+    order = "t"
+  )
 
   p <- reg_test(1, 2, 3, suff)
   expect_gte(p, 0.05)
@@ -41,7 +49,11 @@ test_that("reg_test handles binomial (logistic) response", {
   Y <- stats::rbinom(n, size = 1, prob = pr)
 
   dat <- data.frame(X = X, Y = Y, Z = Z)
-  suff <- list(data = dat, binary = c(X = FALSE, Y = TRUE, Z = FALSE), order = "t")
+  suff <- list(
+    data = dat,
+    binary = c(X = FALSE, Y = TRUE, Z = FALSE),
+    order = "t"
+  )
 
   p <- reg_test(1, 2, 3, suff)
   expect_lt(p, 0.01)
@@ -55,7 +67,11 @@ test_that("reg_test is symmetric", {
   Y <- 0.5 * X + 0.2 * Z + stats::rnorm(n)
 
   dat <- data.frame(X = X, Y = Y, Z = Z)
-  suff <- list(data = dat, binary = c(X = FALSE, Y = FALSE, Z = FALSE), order = "t")
+  suff <- list(
+    data = dat,
+    binary = c(X = FALSE, Y = FALSE, Z = FALSE),
+    order = "t"
+  )
 
   p_xy <- reg_test(1, 2, 3, suff)
   p_yx <- reg_test(2, 1, 3, suff)
@@ -74,7 +90,11 @@ test_that("reg_test_each_dir removes NAs", {
   dat$X[sample.int(n, 30)] <- NA
   dat$Z[sample.int(n, 20)] <- NA
 
-  suff <- list(data = dat, binary = c(X = FALSE, Y = FALSE, Z = FALSE), order = "t")
+  suff <- list(
+    data = dat,
+    binary = c(X = FALSE, Y = FALSE, Z = FALSE),
+    order = "t"
+  )
 
   p <- reg_test(1, 2, 3, suff)
   expect_true(is.finite(p) && p >= 0 && p <= 1)

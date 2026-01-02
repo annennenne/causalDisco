@@ -127,7 +127,9 @@ tpc_run <- function(
 
   # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
-    stop("Orientation method must be one of standard, conservative or maj.rule.")
+    stop(
+      "Orientation method must be one of standard, conservative or maj.rule."
+    )
   }
 
   # CI test that forbids conditioning on future tiers
@@ -173,7 +175,10 @@ tpc_run <- function(
 
   if (output == "tpdag") {
     out <- list(
-      tamat = tamat(amat = graph_to_amat(res, to_from = FALSE), order = knowledge$tiers$label),
+      tamat = tamat(
+        amat = graph_to_amat(res, to_from = FALSE),
+        order = knowledge$tiers$label
+      ),
       psi = alpha,
       ntests = ntests
     )
@@ -213,7 +218,9 @@ tpc_run <- function(
 .build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rlang", "tidyselect", "utils"
+      "rlang",
+      "tidyselect",
+      "utils"
     ),
     function_name = ".build_knowledge_from_order"
   )
@@ -419,8 +426,10 @@ dir_test <- function(test, vnames, knowledge) {
 
     if (length(snames)) {
       for (s in snames) {
-        if (isTRUE(is_after(s, xname, knowledge)) &&
-          isTRUE(is_after(s, yname, knowledge))) {
+        if (
+          isTRUE(is_after(s, xname, knowledge)) &&
+            isTRUE(is_after(s, yname, knowledge))
+        ) {
           return(0)
         }
       }
@@ -445,9 +454,11 @@ dir_test <- function(test, vnames, knowledge) {
 #' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
 #' @keywords internal
 #' @noRd
-.pcalg_constraints_from_knowledge <- function(kn,
-                                              labels,
-                                              directed_as_undirected) {
+.pcalg_constraints_from_knowledge <- function(
+  kn,
+  labels,
+  directed_as_undirected
+) {
   kn_undirected <- kn
   kn_undirected$vars$tier <- NA_character_
   as_pcalg_constraints(
@@ -521,7 +532,11 @@ tpdag <- function(skel, knowledge, from_to) {
     function_name = "tpdag"
   )
   thisAmat <- graph_to_amat(skel)
-  tempSkelAmat <- order_restrict_amat_cpdag(thisAmat, knowledge = knowledge, from_to = from_to)
+  tempSkelAmat <- order_restrict_amat_cpdag(
+    thisAmat,
+    knowledge = knowledge,
+    from_to = from_to
+  )
   pcalg::addBgKnowledge(
     v_orient_temporal(tempSkelAmat, skel@sepset),
     checkInput = FALSE
@@ -591,7 +606,8 @@ make_suff_stat <- function(data, type, ...) {
     )
   } else {
     stop(paste(
-      type, "is not a supported type for autogenerating a sufficient statistic."
+      type,
+      "is not a supported type for autogenerating a sufficient statistic."
     ))
   }
   suff

@@ -17,7 +17,9 @@ skip_if_no_tetrad <- function() {
   )
 
   if (!ok) {
-    testthat::skip("Java/Tetrad not initialized (init_java() failed or no JARs found)")
+    testthat::skip(
+      "Java/Tetrad not initialized (init_java() failed or no JARs found)"
+    )
   }
 }
 
@@ -60,7 +62,8 @@ make_disc_test_data <- function(n = 300, k = 3, seed = 2) {
       breaks = quantile(col, probs = seq(0, 1, length.out = k + 1)),
       include.lowest = TRUE,
       labels = FALSE
-    ) - 1L # zero-based integers
+    ) -
+      1L # zero-based integers
   })
 
   as.data.frame(disc) |>

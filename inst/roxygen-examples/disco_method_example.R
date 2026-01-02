@@ -64,7 +64,9 @@ toy_graph_builder <- function(knowledge = NULL) {
       k <- 0L
       for (i in seq_along(vnames)) {
         for (j in (i + 1L):length(vnames)) {
-          if (j > length(vnames)) next
+          if (j > length(vnames)) {
+            next
+          }
           cij <- C[i, j]
           if (!is.na(cij) && abs(cij) >= state$thr) {
             vi <- vnames[i]
@@ -76,13 +78,15 @@ toy_graph_builder <- function(knowledge = NULL) {
               if (ri < rj) {
                 k <- k + 1L
                 out[[k]] <- list(
-                  from = vi, to = vj,
+                  from = vi,
+                  to = vj,
                   edge = "-->"
                 )
               } else {
                 k <- k + 1L
                 out[[k]] <- list(
-                  from = vj, to = vi,
+                  from = vj,
+                  to = vi,
                   edge = "-->"
                 )
               }
@@ -90,7 +94,8 @@ toy_graph_builder <- function(knowledge = NULL) {
               # same/unknown tier: undirected
               k <- k + 1L
               out[[k]] <- list(
-                from = vi, to = vj,
+                from = vi,
+                to = vj,
                 edge = "---"
               )
             }
@@ -100,7 +105,8 @@ toy_graph_builder <- function(knowledge = NULL) {
       # return a data frame
       if (length(out) == 0L) {
         cg <- caugi::caugi(
-          from = character(), to = character(),
+          from = character(),
+          to = character(),
           edge = character()
         )
         return(knowledgeable_caugi(cg))

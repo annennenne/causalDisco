@@ -19,7 +19,8 @@ NULL
 #' @rdname TetradSearch
 #' @importFrom R6 R6Class
 #' @export
-TetradSearch <- R6Class( # nolint: object_name_linter.
+TetradSearch <- R6Class(
+  # nolint: object_name_linter.
   "TetradSearch",
   public = list(
     #' @field data Java object that stores the (possibly converted) data set
@@ -293,7 +294,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         length(mc) == 1
       )
       method <- tolower(method)
-      switch(method,
+      switch(
+        method,
         "chi_square" = {
           private$use_chi_square_test(..., use_for_mc = mc)
         },
@@ -504,7 +506,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
     #' @return Invisibly returns \code{self}.
     set_score = function(method, ...) {
       method <- tolower(method)
-      switch(method,
+      switch(
+        method,
         "sem_bic" = {
           private$use_sem_bic_score(...)
         },
@@ -542,7 +545,9 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
           private$use_zhang_shen_bound_score(...)
         },
         {
-          stop("Unknown score type using tetrad engine: ", method,
+          stop(
+            "Unknown score type using tetrad engine: ",
+            method,
             call. = FALSE
           )
         }
@@ -959,7 +964,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
     #' @return Invisibly returns \code{self}.
     set_alg = function(method, ...) {
       method <- tolower(method)
-      switch(method,
+      switch(
+        method,
         "fges" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
@@ -999,7 +1005,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               " This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1110,7 +1117,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         },
         "ica_lingam" = {
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1119,7 +1127,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         },
         "ica_lingd" = {
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1134,7 +1143,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         },
         "fofc" = {
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1146,7 +1156,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1161,7 +1172,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1170,7 +1182,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         },
         "dagma" = {
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1179,7 +1192,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         },
         "svar_gfci" = {
           if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning("Background knowledge is set.",
+            warning(
+              "Background knowledge is set.",
               "This algorithm does not use background knowledge.",
               call. = FALSE
             )
@@ -1187,7 +1201,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
           private$set_svar_gfci_alg(...)
         },
         {
-          stop("Unknown method type using tetrad engine: ", method, call. = FALSE)
+          stop(
+            "Unknown method type using tetrad engine: ",
+            method,
+            call. = FALSE
+          )
         }
       )
       invisible(self)
@@ -1231,7 +1249,10 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
             "java/lang/Object"
           )
         } else if (is.character(value)) {
-          rJava::.jcast(rJava::.jnew("java/lang/String", value), "java/lang/Object")
+          rJava::.jcast(
+            rJava::.jnew("java/lang/String", value),
+            "java/lang/Object"
+          )
         } else {
           rJava::.jcast(value, "java/lang/Object") # must already be a Java object
         }
@@ -1247,10 +1268,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
     #' @param test If TRUE, retrieves parameters for a test function.
     #' @param alg If TRUE, retrieves parameters for an algorithm.
     #' @return (character) The names of the parameters.
-    get_parameters_for_function = function(fn_pattern,
-                                           score = FALSE,
-                                           test = FALSE,
-                                           alg = FALSE) {
+    get_parameters_for_function = function(
+      fn_pattern,
+      score = FALSE,
+      test = FALSE,
+      alg = FALSE
+    ) {
       stopifnot(
         is.character(fn_pattern),
         is.logical(c(score, test, alg)),
@@ -1261,7 +1284,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       # Check if exclusively one of score, etst, or alg is TRUE
       if (sum(c(score, test, alg)) != 1) {
         stop(
-          "Score is: ", score, ", test is: ", test, ", and alg is: ", alg,
+          "Score is: ",
+          score,
+          ", test is: ",
+          test,
+          ", and alg is: ",
+          alg,
           ". (Exclusively) one of them should be TRUE.",
           call. = FALSE
         )
@@ -1294,9 +1322,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         }
         stop(
           paste0(
-            "There is ", length(matched_function), " matches to the function pattern: ",
-            fn_pattern, "\n  This is probably a misspecification of either a algorithm, test, or score.",
-            "\n  There should be (only) a single match.", error_message_suffix
+            "There is ",
+            length(matched_function),
+            " matches to the function pattern: ",
+            fn_pattern,
+            "\n  This is probably a misspecification of either a algorithm, test, or score.",
+            "\n  There should be (only) a single match.",
+            error_message_suffix
           ),
           call. = FALSE
         )
@@ -1312,9 +1344,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
     #' either continuous or nominal data. Default is `TRUE.`
     #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
     #' Also populates \code{self$java}.
-    run_search = function(data = NULL,
-                          bootstrap = FALSE,
-                          int_cols_as_cont = TRUE) {
+    run_search = function(
+      data = NULL,
+      bootstrap = FALSE,
+      int_cols_as_cont = TRUE
+    ) {
       stopifnot(
         is.logical(bootstrap),
         length(bootstrap) == 1
@@ -1323,7 +1357,10 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$set_data(data, int_cols_as_cont)
       }
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or input data directly into run_search().", call. = FALSE)
+        stop(
+          "No data is set. Use set_data() first or input data directly into run_search().",
+          call. = FALSE
+        )
       }
       if (is.null(self$alg)) {
         stop("No algorithm is set. Use set_alg() first.", call. = FALSE)
@@ -1357,12 +1394,14 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
     #' @param with_replacement (logical) If TRUE, sampling is done with replacement.
     #' @param resampling_ensemble (integer) How the resamples are used or aggregated.
     #' @param seed (integer) Random seed, or -1 for none.
-    set_bootstrapping = function(number_resampling = 0,
-                                 percent_resample_size = 100,
-                                 add_original = TRUE,
-                                 with_replacement = TRUE,
-                                 resampling_ensemble = 1,
-                                 seed = -1) {
+    set_bootstrapping = function(
+      number_resampling = 0,
+      percent_resample_size = 100,
+      add_original = TRUE,
+      with_replacement = TRUE,
+      resampling_ensemble = 1,
+      seed = -1
+    ) {
       stopifnot(
         is.numeric(number_resampling),
         floor(number_resampling) == number_resampling,
@@ -1395,9 +1434,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       stopifnot(
         is.data.frame(data)
       )
-      if (is.null(self$data) ||
-        is.null(self$rdata) ||
-        !isTRUE(all.equal(self$rdata, data))) {
+      if (
+        is.null(self$data) ||
+          is.null(self$rdata) ||
+          !isTRUE(all.equal(self$rdata, data))
+      ) {
         self$rdata <- data
         self$data <- rdata_to_tetrad(data, int_cols_as_cont)
       }
@@ -1502,10 +1543,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
   # and should be this should be done through set_score() and set_test().
   private = list(
     # Scores
-    use_basis_function_bic_score = function(truncation_limit = 3,
-                                            penalty_discount = 2,
-                                            singularity_lambda = 0.0,
-                                            do_one_equation_only = FALSE) {
+    use_basis_function_bic_score = function(
+      truncation_limit = 3,
+      penalty_discount = 2,
+      singularity_lambda = 0.0,
+      do_one_equation_only = FALSE
+    ) {
       stopifnot(
         is.numeric(c(truncation_limit, penalty_discount, singularity_lambda)),
         truncation_limit >= 0,
@@ -1537,10 +1580,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/BdeuScore")
       self$score <- cast_obj(self$score)
     },
-    use_conditional_gaussian_score = function(penalty_discount = 1,
-                                              discretize = TRUE,
-                                              num_categories_to_discretize = 3,
-                                              structure_prior = 0) {
+    use_conditional_gaussian_score = function(
+      penalty_discount = 1,
+      discretize = TRUE,
+      num_categories_to_discretize = 3,
+      structure_prior = 0
+    ) {
       stopifnot(
         is.numeric(c(penalty_discount, num_categories_to_discretize)),
         penalty_discount >= 0,
@@ -1560,10 +1605,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$score <- cast_obj(self$score)
     },
-    use_degenerate_gaussian_score = function(penalty_discount = 1,
-                                             structure_prior = 0,
-                                             singularity_lambda = 0.0,
-                                             precompute_covariances = TRUE) {
+    use_degenerate_gaussian_score = function(
+      penalty_discount = 1,
+      structure_prior = 0,
+      singularity_lambda = 0.0,
+      precompute_covariances = TRUE
+    ) {
       stopifnot(
         is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
         penalty_discount >= 0,
@@ -1583,8 +1630,10 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$score <- cast_obj(self$score)
     },
-    use_discrete_bic_score = function(penalty_discount = 2,
-                                      structure_prior = 0) {
+    use_discrete_bic_score = function(
+      penalty_discount = 2,
+      structure_prior = 0
+    ) {
       stopifnot(
         is.numeric(c(penalty_discount, structure_prior)),
         penalty_discount >= 0,
@@ -1594,12 +1643,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior
       )
-      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/DiscreteBicScore")
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/DiscreteBicScore"
+      )
       self$score <- cast_obj(self$score)
     },
-    use_ebic_score = function(gamma = 0.8,
-                              precompute_covariances = TRUE,
-                              singularity_lambda = 0.0) {
+    use_ebic_score = function(
+      gamma = 0.8,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0
+    ) {
       stopifnot(
         is.numeric(c(gamma, singularity_lambda)),
         gamma >= 0,
@@ -1616,17 +1669,20 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/EbicScore")
       self$score <- cast_obj(self$score)
     },
-    use_gic_score = function(penalty_discount = 1,
-                             sem_gic_rule = "bic",
-                             precompute_covariances = TRUE,
-                             singularity_lambda = 0.0) {
+    use_gic_score = function(
+      penalty_discount = 1,
+      sem_gic_rule = "bic",
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0
+    ) {
       stopifnot(
         is.numeric(c(penalty_discount, singularity_lambda)),
         penalty_discount >= 0,
         singularity_lambda >= 0,
         is.character(sem_gic_rule)
       )
-      sem_gic_rule_int <- switch(sem_gic_rule,
+      sem_gic_rule_int <- switch(
+        sem_gic_rule,
         "bic" = 1L,
         "gic2" = 2L,
         "ric" = 3L,
@@ -1634,7 +1690,9 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         "gic5" = 5L,
         "gic6" = 6L,
         stop(
-          "Unsupported `sem_gic_rule` input:", sem_gic_rule, "\n",
+          "Unsupported `sem_gic_rule` input:",
+          sem_gic_rule,
+          "\n",
           "Supported values are: 'bic', 'gic2', 'ric', 'ricc', 'gic5', and ",
           "'gic6'.",
           call. = FALSE
@@ -1649,9 +1707,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/GicScores")
       self$score <- cast_obj(self$score)
     },
-    use_mag_degenerate_gaussian_bic_score = function(penalty_discount = 1,
-                                                     structure_prior = 0,
-                                                     precompute_covariances = TRUE) {
+    use_mag_degenerate_gaussian_bic_score = function(
+      penalty_discount = 1,
+      structure_prior = 0,
+      precompute_covariances = TRUE
+    ) {
       stopifnot(
         is.numeric(c(penalty_discount, structure_prior)),
         penalty_discount >= 0,
@@ -1664,12 +1724,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         STRUCTURE_PRIOR = structure_prior,
         PRECOMPUTE_COVARIANCES = precompute_covariances
       )
-      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/MagDgBicScore")
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/MagDgBicScore"
+      )
       self$score <- cast_obj(self$score)
     },
-    use_mixed_variable_polynomial_score = function(structure_prior = 0,
-                                                   f_degree = 0,
-                                                   discretize = FALSE) {
+    use_mixed_variable_polynomial_score = function(
+      structure_prior = 0,
+      f_degree = 0,
+      discretize = FALSE
+    ) {
       stopifnot(
         is.numeric(c(structure_prior, f_degree)),
         floor(f_degree) == f_degree,
@@ -1688,12 +1752,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
           "java/lang/Object"
         )
       )
-      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/MVPBicScore")
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/MVPBicScore"
+      )
       self$score <- cast_obj(self$score)
     },
-    use_poisson_prior_score = function(poission_lambda = 2,
-                                       precompute_covariances = TRUE,
-                                       singularity_lambda = 0.0) {
+    use_poisson_prior_score = function(
+      poission_lambda = 2,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0
+    ) {
       stopifnot(
         is.numeric(c(poission_lambda, singularity_lambda)),
         poission_lambda >= 0,
@@ -1711,11 +1779,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$score <- cast_obj(self$score)
     },
-    use_sem_bic_score = function(penalty_discount = 2,
-                                 structure_prior = 0,
-                                 sem_bic_rule = 1,
-                                 precompute_covariances = TRUE,
-                                 singularity_lambda = 0.0) {
+    use_sem_bic_score = function(
+      penalty_discount = 2,
+      structure_prior = 0,
+      sem_bic_rule = 1,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0
+    ) {
       stopifnot(
         is.numeric(singularity_lambda),
         singularity_lambda >= 0,
@@ -1733,12 +1803,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      self$score <- rJava::.jnew("edu/cmu/tetrad/algcomparison/score/SemBicScore")
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/SemBicScore"
+      )
       self$score <- cast_obj(self$score)
     },
-    use_zhang_shen_bound_score = function(risk_bound = 0.2,
-                                          precompute_covariances = TRUE,
-                                          singularity_lambda = 0.0) {
+    use_zhang_shen_bound_score = function(
+      risk_bound = 0.2,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0
+    ) {
       stopifnot(
         is.numeric(c(risk_bound, singularity_lambda)),
         risk_bound >= 0,
@@ -1757,11 +1831,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       self$score <- cast_obj(self$score)
     },
     # Tests
-    use_basis_function_lrt_test = function(truncation_limit = 3,
-                                           alpha = 0.01,
-                                           singularity_lambda = 0.0,
-                                           do_one_equation_only = FALSE,
-                                           use_for_mc = FALSE) {
+    use_basis_function_lrt_test = function(
+      truncation_limit = 3,
+      alpha = 0.01,
+      singularity_lambda = 0.0,
+      do_one_equation_only = FALSE,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(truncation_limit, alpha, singularity_lambda)),
         truncation_limit >= 0,
@@ -1789,9 +1865,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$test <- cast_obj(self$test)
       }
     },
-    use_fisher_z_test = function(alpha = 0.01,
-                                 singularity_lambda = 0.0,
-                                 use_for_mc = FALSE) {
+    use_fisher_z_test = function(
+      alpha = 0.01,
+      singularity_lambda = 0.0,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(alpha, singularity_lambda)),
         alpha >= 0,
@@ -1807,14 +1885,18 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/FisherZ")
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/FisherZ"
+        )
         self$test <- cast_obj(self$test)
       }
     },
-    use_chi_square_test = function(min_count = 1,
-                                   alpha = 0.01,
-                                   cell_table_type = "ad",
-                                   use_for_mc = FALSE) {
+    use_chi_square_test = function(
+      min_count = 1,
+      alpha = 0.01,
+      cell_table_type = "ad",
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(min_count, alpha)),
         min_count >= 0,
@@ -1823,11 +1905,14 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         is.character(cell_table_type),
         is.logical(use_for_mc)
       )
-      cell_table_type_int <- switch(tolower(cell_table_type),
+      cell_table_type_int <- switch(
+        tolower(cell_table_type),
         ad = 1L,
         count = 2L,
         stop(
-          "Unsupported `cell_table_type` input: ", cell_table_type, "\n",
+          "Unsupported `cell_table_type` input: ",
+          cell_table_type,
+          "\n",
           "Supported values are: 'ad' and 'count'.",
           call. = FALSE
         )
@@ -1849,10 +1934,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$test <- cast_obj(self$test)
       }
     },
-    use_g_square_test = function(min_count = 1,
-                                 alpha = 0.01,
-                                 cell_table_type = "ad",
-                                 use_for_mc = FALSE) {
+    use_g_square_test = function(
+      min_count = 1,
+      alpha = 0.01,
+      cell_table_type = "ad",
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(min_count, alpha)),
         min_count >= 0,
@@ -1861,11 +1948,14 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         is.character(cell_table_type),
         is.logical(use_for_mc)
       )
-      cell_table_type_int <- switch(tolower(cell_table_type),
+      cell_table_type_int <- switch(
+        tolower(cell_table_type),
         ad = 1L,
         count = 2L,
         stop(
-          "Unsupported `cell_table_type` input: ", cell_table_type, "\n",
+          "Unsupported `cell_table_type` input: ",
+          cell_table_type,
+          "\n",
           "Supported values are: 'ad' and 'count'.",
           call. = FALSE
         )
@@ -1881,15 +1971,19 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/GSquare")
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/GSquare"
+        )
         self$test <- cast_obj(self$test)
       }
     },
-    use_conditional_gaussian_test = function(alpha = 0.01,
-                                             discretize = TRUE,
-                                             num_categories_to_discretize = 3,
-                                             min_sample_size_per_cell = 4,
-                                             use_for_mc = FALSE) {
+    use_conditional_gaussian_test = function(
+      alpha = 0.01,
+      discretize = TRUE,
+      num_categories_to_discretize = 3,
+      min_sample_size_per_cell = 4,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(
           alpha,
@@ -1922,9 +2016,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$test <- cast_obj(self$test)
       }
     },
-    use_degenerate_gaussian_test = function(alpha = 0.01,
-                                            singularity_lambda = 0.0,
-                                            use_for_mc = FALSE) {
+    use_degenerate_gaussian_test = function(
+      alpha = 0.01,
+      singularity_lambda = 0.0,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(alpha, singularity_lambda)),
         alpha >= 0,
@@ -1946,10 +2042,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$test <- cast_obj(self$test)
       }
     },
-    use_probabilistic_test = function(threshold = FALSE,
-                                      cutoff = 0.5,
-                                      prior_ess = 10,
-                                      use_for_mc = FALSE) {
+    use_probabilistic_test = function(
+      threshold = FALSE,
+      cutoff = 0.5,
+      prior_ess = 10,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.logical(c(threshold, use_for_mc)),
         length(threshold) == 1,
@@ -1975,19 +2073,25 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$test <- cast_obj(self$test)
       }
     },
-    use_kci_test = function(alpha = 0.01,
-                            approximate = TRUE,
-                            scaling_factor = 1,
-                            num_bootstraps = 5000,
-                            threshold = 1e-3,
-                            kernel_type = "gaussian",
-                            polyd = 5,
-                            polyc = 1,
-                            use_for_mc = FALSE) {
+    use_kci_test = function(
+      alpha = 0.01,
+      approximate = TRUE,
+      scaling_factor = 1,
+      num_bootstraps = 5000,
+      threshold = 1e-3,
+      kernel_type = "gaussian",
+      polyd = 5,
+      polyc = 1,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(
-          alpha, scaling_factor, num_bootstraps, threshold,
-          polyd, polyc
+          alpha,
+          scaling_factor,
+          num_bootstraps,
+          threshold,
+          polyd,
+          polyc
         )),
         alpha >= 0,
         scaling_factor >= 0,
@@ -2004,12 +2108,15 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         polyc >= 0
       )
 
-      kernel_type_int <- switch(kernel_type,
+      kernel_type_int <- switch(
+        kernel_type,
         gaussian = 1L,
         linear = 2L,
         polynomial = 3L,
         stop(
-          "Unsupported `kernel_type` input: ", kernel_type, "\n",
+          "Unsupported `kernel_type` input: ",
+          kernel_type,
+          "\n",
           "Supported values are: 'gaussian', 'linear', and 'polynomial'.",
           call. = FALSE
         )
@@ -2026,19 +2133,25 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         POLYNOMIAL_CONSTANT = polyc
       )
       if (use_for_mc) {
-        self$mc_test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Kci"
+        )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/Kci")
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Kci"
+        )
         self$test <- cast_obj(self$test)
       }
     },
-    use_cci_test = function(alpha = 0.01,
-                            scaling_factor = 2,
-                            basis_type = "legendre",
-                            basis_scale = 0.0,
-                            truncation_limit = 3,
-                            use_for_mc = FALSE) {
+    use_cci_test = function(
+      alpha = 0.01,
+      scaling_factor = 2,
+      basis_type = "legendre",
+      basis_scale = 0.0,
+      truncation_limit = 3,
+      use_for_mc = FALSE
+    ) {
       stopifnot(
         is.numeric(c(alpha, scaling_factor, truncation_limit)),
         alpha >= 0,
@@ -2050,14 +2163,17 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         is.character(basis_type),
         basis_scale >= 0
       )
-      basis_type_int <- switch(tolower(basis_type),
+      basis_type_int <- switch(
+        tolower(basis_type),
         polynomial = 1L,
         hermite1 = 2L,
         hermite2 = 3L,
         legendre = 4L,
         chebyshev = 5L,
         stop(
-          "Unsupported `basis_type` input: ", basis_type, "\n",
+          "Unsupported `basis_type` input: ",
+          basis_type,
+          "\n",
           "Supported values are: 'polynomial', 'hermite1', 'hermite2', ",
           "'legendre', and 'chebyshev'.",
           call. = FALSE
@@ -2076,15 +2192,19 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         )
         self$mc_test <- cast_obj(self$mc_test)
       } else {
-        self$test <- rJava::.jnew("edu/cmu/tetrad/algcomparison/independence/CciTest")
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/CciTest"
+        )
         self$test <- cast_obj(self$test)
       }
     },
     # Algorithms
-    set_fges_alg = function(symmetric_first_step = FALSE,
-                            max_degree = -1,
-                            parallelized = FALSE,
-                            faithfulness_assumed = FALSE) {
+    set_fges_alg = function(
+      symmetric_first_step = FALSE,
+      max_degree = -1,
+      parallelized = FALSE,
+      faithfulness_assumed = FALSE
+    ) {
       stopifnot(
         is.logical(symmetric_first_step),
         length(symmetric_first_step) == 1,
@@ -2108,11 +2228,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       # Set the knowledge object
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fges_mb_alg = function(targets = "",
-                               max_degree = -1,
-                               trimming_style = "mb_dags",
-                               number_of_expansions = 2,
-                               faithfulness_assumed = FALSE) {
+    set_fges_mb_alg = function(
+      targets = "",
+      max_degree = -1,
+      trimming_style = "mb_dags",
+      number_of_expansions = 2,
+      faithfulness_assumed = FALSE
+    ) {
       stopifnot(
         is.character(targets),
         length(targets) == 1,
@@ -2125,13 +2247,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         is.logical(faithfulness_assumed),
         length(faithfulness_assumed) == 1
       )
-      trimming_style_int <- switch(tolower(trimming_style),
+      trimming_style_int <- switch(
+        tolower(trimming_style),
         none = 1L,
         adj = 2L,
         mb_dags = 3L,
         semdir_paths = 4L,
         stop(
-          "Unsupported `trimming_style` input: ", trimming_style, "\n",
+          "Unsupported `trimming_style` input: ",
+          trimming_style,
+          "\n",
           "Supported values are: 'none', 'adj', 'mb_dags' or 'semdir_paths'.",
           call. = FALSE
         )
@@ -2149,10 +2274,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss_alg = function(num_starts = 1,
-                            use_bes = TRUE,
-                            use_data_order = TRUE,
-                            output_cpdag = TRUE) {
+    set_boss_alg = function(
+      num_starts = 1,
+      use_bes = TRUE,
+      use_data_order = TRUE,
+      output_cpdag = TRUE
+    ) {
       stopifnot(
         is.numeric(num_starts),
         floor(num_starts) == num_starts,
@@ -2175,10 +2302,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_restricted_boss_alg = function(targets = "",
-                                       use_bes = TRUE,
-                                       num_starts = 1,
-                                       allow_internal_randomness = TRUE) {
+    set_restricted_boss_alg = function(
+      targets = "",
+      use_bes = TRUE,
+      num_starts = 1,
+      allow_internal_randomness = TRUE
+    ) {
       stopifnot(
         is.character(targets),
         length(targets) == 1,
@@ -2201,15 +2330,17 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$score
       )
     },
-    set_cstar_alg = function(targets = "",
-                             file_out_path = "cstar-out",
-                             selection_min_effect = 0.0,
-                             num_subsamples = 50,
-                             top_bracket = 10,
-                             parallelized = FALSE,
-                             cpdag_algorithm = "restricted_boss",
-                             remove_effect_nodes = TRUE,
-                             sample_style = "subsample") {
+    set_cstar_alg = function(
+      targets = "",
+      file_out_path = "cstar-out",
+      selection_min_effect = 0.0,
+      num_subsamples = 50,
+      top_bracket = 10,
+      parallelized = FALSE,
+      cpdag_algorithm = "restricted_boss",
+      remove_effect_nodes = TRUE,
+      sample_style = "subsample"
+    ) {
       stopifnot(
         is.character(targets),
         is.character(sample_style),
@@ -2225,22 +2356,28 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         length(parallelized) == 1,
         length(remove_effect_nodes) == 1
       )
-      sample_style_int <- switch(tolower(sample_style),
+      sample_style_int <- switch(
+        tolower(sample_style),
         subsample = 1L,
         bootstrap = 2L,
         stop(
-          "Unsupported `sample_style` input: ", sample_style, "\n",
+          "Unsupported `sample_style` input: ",
+          sample_style,
+          "\n",
           "Supported values are: 'subsample' or 'bootstrap'.",
           call. = FALSE
         )
       )
-      cpdag_algorithm_int <- switch(tolower(cpdag_algorithm),
+      cpdag_algorithm_int <- switch(
+        tolower(cpdag_algorithm),
         pc = 1L,
         fges = 2L,
         boss = 3L,
         restricted_boss = 4L,
         stop(
-          "Unsupported `cpdag_algorithm` input: ", cpdag_algorithm, "\n",
+          "Unsupported `cpdag_algorithm` input: ",
+          cpdag_algorithm,
+          "\n",
           "Supported values are: 'pc', 'fges', 'boss', or 'restricted_boss'.",
           call. = FALSE
         )
@@ -2269,13 +2406,15 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$score
       )
     },
-    set_grasp_alg = function(covered_depth = 4,
-                             singular_depth = 1,
-                             nonsingular_depth = 1,
-                             ordered_alg = FALSE,
-                             raskutti_uhler = FALSE,
-                             use_data_order = TRUE,
-                             num_starts = 1) {
+    set_grasp_alg = function(
+      covered_depth = 4,
+      singular_depth = 1,
+      nonsingular_depth = 1,
+      ordered_alg = FALSE,
+      raskutti_uhler = FALSE,
+      use_data_order = TRUE,
+      num_starts = 1
+    ) {
       stopifnot(
         is.numeric(c(covered_depth, singular_depth, nonsingular_depth)),
         floor(covered_depth) == covered_depth,
@@ -2306,10 +2445,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_pc_alg = function(conflict_rule = 1,
-                          depth = -1,
-                          stable_fas = TRUE,
-                          guarantee_cpdag = FALSE) {
+    set_pc_alg = function(
+      conflict_rule = 1,
+      depth = -1,
+      stable_fas = TRUE,
+      guarantee_cpdag = FALSE
+    ) {
       stopifnot(
         is.numeric(conflict_rule),
         length(conflict_rule) == 1,
@@ -2334,10 +2475,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_cpc_alg = function(conflict_rule = 1,
-                           depth = -1,
-                           stable_fas = TRUE,
-                           guarantee_cpdag = FALSE) {
+    set_cpc_alg = function(
+      conflict_rule = 1,
+      depth = -1,
+      stable_fas = TRUE,
+      guarantee_cpdag = FALSE
+    ) {
       stopifnot(
         is.numeric(conflict_rule),
         length(conflict_rule) == 1,
@@ -2362,11 +2505,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_pc_max_alg = function(conflict_rule = 1,
-                              depth = -1,
-                              use_heuristic = TRUE,
-                              max_disc_path_length = -1,
-                              stable_fas = TRUE) {
+    set_pc_max_alg = function(
+      conflict_rule = 1,
+      depth = -1,
+      use_heuristic = TRUE,
+      max_disc_path_length = -1,
+      stable_fas = TRUE
+    ) {
       stopifnot(
         is.numeric(conflict_rule),
         length(conflict_rule) == 1,
@@ -2395,11 +2540,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fci_alg = function(depth = -1,
-                           stable_fas = TRUE,
-                           max_disc_path_length = -1,
-                           complete_rule_set_used = TRUE,
-                           guarantee_pag = FALSE) {
+    set_fci_alg = function(
+      depth = -1,
+      stable_fas = TRUE,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE,
+      guarantee_pag = FALSE
+    ) {
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
@@ -2428,10 +2575,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_rfci_alg = function(depth = -1,
-                            stable_fas = TRUE,
-                            max_disc_path_length = -1,
-                            complete_rule_set_used = TRUE) {
+    set_rfci_alg = function(
+      depth = -1,
+      stable_fas = TRUE,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE
+    ) {
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
@@ -2457,9 +2606,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_cfci_alg = function(depth = -1,
-                            max_disc_path_length = -1,
-                            complete_rule_set_used = TRUE) {
+    set_cfci_alg = function(
+      depth = -1,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE
+    ) {
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
@@ -2482,11 +2633,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_gfci_alg = function(depth = -1,
-                            max_degree = -1,
-                            max_disc_path_length = -1,
-                            complete_rule_set_used = TRUE,
-                            guarantee_pag = FALSE) {
+    set_gfci_alg = function(
+      depth = -1,
+      max_degree = -1,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE,
+      guarantee_pag = FALSE
+    ) {
       stopifnot(
         is.numeric(depth),
         length(depth) == 1,
@@ -2516,14 +2669,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss_fci_alg = function(use_bes = TRUE,
-                                max_disc_path_length = -1,
-                                complete_rule_set_used = TRUE,
-                                depth = -1,
-                                num_threads = 0,
-                                guarantee_pag = FALSE,
-                                use_heuristic = FALSE,
-                                num_starts = 1) {
+    set_boss_fci_alg = function(
+      use_bes = TRUE,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE,
+      depth = -1,
+      num_threads = 0,
+      guarantee_pag = FALSE,
+      use_heuristic = FALSE,
+      num_starts = 1
+    ) {
       stopifnot(
         is.numeric(c(
           max_disc_path_length,
@@ -2565,10 +2720,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_boss_pod_alg = function(use_bes = TRUE,
-                                use_data_order = TRUE,
-                                num_starts = 1,
-                                complete_rule_set_used = TRUE) {
+    set_boss_pod_alg = function(
+      use_bes = TRUE,
+      use_data_order = TRUE,
+      num_starts = 1,
+      complete_rule_set_used = TRUE
+    ) {
       # Early exit if the Java class does not exist
       class_name <- "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossDot" # TODO: v7.6.9 renames this to BossPod
 
@@ -2594,19 +2751,23 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       self$alg <- rJava::.jnew(class_name, self$score)
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fcit_alg = function(use_bes = TRUE,
-                            use_data_order = TRUE,
-                            num_starts = 1,
-                            max_disc_path_length = -1,
-                            start_with = "boss",
-                            complete_rule_set_used = TRUE,
-                            depth = -1,
-                            guarantee_pag = FALSE) {
+    set_fcit_alg = function(
+      use_bes = TRUE,
+      use_data_order = TRUE,
+      num_starts = 1,
+      max_disc_path_length = -1,
+      start_with = "boss",
+      complete_rule_set_used = TRUE,
+      depth = -1,
+      guarantee_pag = FALSE
+    ) {
       stopifnot(
         is.numeric(c(num_starts, depth)),
         is.logical(c(
-          use_bes, use_data_order,
-          complete_rule_set_used, guarantee_pag
+          use_bes,
+          use_data_order,
+          complete_rule_set_used,
+          guarantee_pag
         )),
         floor(num_starts) == num_starts,
         floor(depth) == depth,
@@ -2616,12 +2777,15 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         length(guarantee_pag) == 1,
         is.character(start_with)
       )
-      start_with_int <- switch(tolower(start_with),
+      start_with_int <- switch(
+        tolower(start_with),
         boss = 1L,
         grasp = 2L,
         sp = 3L,
         stop(
-          "Unsupported `start_with` input: ", start_with, "\n",
+          "Unsupported `start_with` input: ",
+          start_with,
+          "\n",
           "Supported values are: 'boss', 'grasp', or 'sp'.",
           call. = FALSE
         )
@@ -2644,29 +2808,40 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_grasp_fci_alg = function(depth = -1,
-                                 stable_fas = TRUE,
-                                 max_disc_path_length = -1,
-                                 complete_rule_set_used = TRUE,
-                                 covered_depth = 4,
-                                 singular_depth = 1,
-                                 nonsingular_depth = 1,
-                                 ordered_alg = FALSE,
-                                 raskutti_uhler = FALSE,
-                                 use_data_order = TRUE,
-                                 num_starts = 1,
-                                 guarantee_pag = FALSE) {
+    set_grasp_fci_alg = function(
+      depth = -1,
+      stable_fas = TRUE,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE,
+      covered_depth = 4,
+      singular_depth = 1,
+      nonsingular_depth = 1,
+      ordered_alg = FALSE,
+      raskutti_uhler = FALSE,
+      use_data_order = TRUE,
+      num_starts = 1,
+      guarantee_pag = FALSE
+    ) {
       stopifnot(
         is.numeric(c(
-          depth, max_disc_path_length, covered_depth,
-          singular_depth, nonsingular_depth
+          depth,
+          max_disc_path_length,
+          covered_depth,
+          singular_depth,
+          nonsingular_depth
         )),
         floor(depth) == depth,
         floor(max_disc_path_length) == max_disc_path_length,
         floor(covered_depth) == covered_depth,
         floor(singular_depth) == singular_depth,
         floor(nonsingular_depth) == nonsingular_depth,
-        is.logical(c(stable_fas, ordered_alg, raskutti_uhler, use_data_order, guarantee_pag)),
+        is.logical(c(
+          stable_fas,
+          ordered_alg,
+          raskutti_uhler,
+          use_data_order,
+          guarantee_pag
+        )),
         length(stable_fas) == 1,
         length(ordered_alg) == 1,
         length(raskutti_uhler) == 1,
@@ -2701,10 +2876,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_sp_fci_alg = function(depth = -1,
-                              max_disc_path_length = -1,
-                              complete_rule_set_used = TRUE,
-                              guarantee_pag = FALSE) {
+    set_sp_fci_alg = function(
+      depth = -1,
+      max_disc_path_length = -1,
+      complete_rule_set_used = TRUE,
+      guarantee_pag = FALSE
+    ) {
       stopifnot(
         is.numeric(c(max_disc_path_length, depth)),
         length(max_disc_path_length) == 1,
@@ -2730,10 +2907,12 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_ica_lingam_alg = function(ica_a = 1.1,
-                                  ica_max_iter = 5000,
-                                  ica_tolerance = 1e-8,
-                                  threshold_b = 0.1) {
+    set_ica_lingam_alg = function(
+      ica_a = 1.1,
+      ica_max_iter = 5000,
+      ica_tolerance = 1e-8,
+      threshold_b = 0.1
+    ) {
       stopifnot(
         is.numeric(c(ica_a, ica_max_iter, ica_tolerance, threshold_b)),
         ica_a >= 0,
@@ -2753,13 +2932,21 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingam"
       )
     },
-    set_ica_lingd_alg = function(ica_a = 1.1,
-                                 ica_max_iter = 5000,
-                                 ica_tolerance = 1e-8,
-                                 threshold_b = 0.1,
-                                 threshold_w = 0.1) {
+    set_ica_lingd_alg = function(
+      ica_a = 1.1,
+      ica_max_iter = 5000,
+      ica_tolerance = 1e-8,
+      threshold_b = 0.1,
+      threshold_w = 0.1
+    ) {
       stopifnot(
-        is.numeric(c(ica_a, ica_max_iter, ica_tolerance, threshold_b, threshold_w)),
+        is.numeric(c(
+          ica_a,
+          ica_max_iter,
+          ica_tolerance,
+          threshold_b,
+          threshold_w
+        )),
         ica_a >= 0,
         ica_max_iter >= 0,
         floor(ica_max_iter) == ica_max_iter,
@@ -2779,11 +2966,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/IcaLingD"
       )
     },
-    set_fask_alg = function(alpha = 0.05,
-                            depth = -1,
-                            fask_delta = -0.3,
-                            left_right_rule = 1,
-                            skew_edge_threshold = 0.3) {
+    set_fask_alg = function(
+      alpha = 0.05,
+      depth = -1,
+      fask_delta = -0.3,
+      left_right_rule = 1,
+      skew_edge_threshold = 0.3
+    ) {
       stopifnot(
         is.numeric(c(alpha, depth, fask_delta, skew_edge_threshold)),
         alpha >= 0,
@@ -2808,11 +2997,13 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       self$alg$setKnowledge(self$knowledge)
     },
-    set_fofc_alg = function(alpha = 0.001,
-                            penalty_discount = 2.0,
-                            tetrad_test = "cca",
-                            include_structure_model = TRUE,
-                            precompute_covariances = TRUE) {
+    set_fofc_alg = function(
+      alpha = 0.001,
+      penalty_discount = 2.0,
+      tetrad_test = "cca",
+      include_structure_model = TRUE,
+      precompute_covariances = TRUE
+    ) {
       stopifnot(
         is.numeric(c(alpha, penalty_discount)),
         alpha >= 0,
@@ -2822,13 +3013,16 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         length(include_structure_model) == 1,
         length(precompute_covariances) == 1
       )
-      tetrad_test_int <- switch(tolower(tetrad_test),
+      tetrad_test_int <- switch(
+        tolower(tetrad_test),
         cca = 1L,
         bt = 2L,
         wishart = 3L,
         ark = 4L,
         stop(
-          "Unsupported `tetrad_test` input: ", tetrad_test, "\n",
+          "Unsupported `tetrad_test` input: ",
+          tetrad_test,
+          "\n",
           "Supported values are: 'cca', 'bt', 'wishart' or 'ark'.",
           call. = FALSE
         )
@@ -2842,10 +3036,11 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
       # TODO: v7.6.9 removes this folder. Figure out where new one is
       # See this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b
-      self$alg <- rJava::.jnew("edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc")
+      self$alg <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc"
+      )
     },
-    set_ccd_alg = function(depth = -1,
-                           apply_r1 = TRUE) {
+    set_ccd_alg = function(depth = -1, apply_r1 = TRUE) {
       stopifnot(
         is.numeric(c(depth)),
         depth >= -1,
@@ -2875,9 +3070,7 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
         self$score
       )
     },
-    set_dagma_alg = function(lambda1 = 0.05,
-                             w_threshold = 0.1,
-                             cpdag = TRUE) {
+    set_dagma_alg = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
       stopifnot(
         is.numeric(c(lambda1, w_threshold)),
         lambda1 >= 0,
@@ -2937,7 +3130,8 @@ TetradSearch <- R6Class( # nolint: object_name_linter.
       )
 
       if (is.null(self$data)) {
-        stop("Data must be set before using `set_svar_gfci_alg`.",
+        stop(
+          "Data must be set before using `set_svar_gfci_alg`.",
           call. = FALSE
         )
       }

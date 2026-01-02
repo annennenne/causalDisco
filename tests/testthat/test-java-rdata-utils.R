@@ -60,16 +60,26 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
 
   # column 0: ContinuousVariable, column 1: DiscreteVariable
   node0 <- rJava::.jcall(
-    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    ds,
+    "Ledu/cmu/tetrad/graph/Node;",
+    "getVariable",
     as.integer(0)
   )
   node1 <- rJava::.jcall(
-    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    ds,
+    "Ledu/cmu/tetrad/graph/Node;",
+    "getVariable",
     as.integer(1)
   )
 
-  expect_true(rJava::.jinstanceof(node0, "edu/cmu/tetrad/data/ContinuousVariable"))
-  expect_true(rJava::.jinstanceof(node1, "edu/cmu/tetrad/data/DiscreteVariable"))
+  expect_true(rJava::.jinstanceof(
+    node0,
+    "edu/cmu/tetrad/data/ContinuousVariable"
+  ))
+  expect_true(rJava::.jinstanceof(
+    node1,
+    "edu/cmu/tetrad/data/DiscreteVariable"
+  ))
 
   # back conversion keeps NA conventions
   back <- tetrad_data_to_rdata(ds)
@@ -88,7 +98,9 @@ test_that("rdata_to_tetrad() preserves factor labels and values", {
 
   ds <- rdata_to_tetrad(df)
   node <- rJava::.jcall(
-    ds, "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+    ds,
+    "Ledu/cmu/tetrad/graph/Node;",
+    "getVariable",
     as.integer(0)
   )
   expect_true(rJava::.jinstanceof(node, "edu/cmu/tetrad/data/DiscreteVariable"))
@@ -126,7 +138,11 @@ test_that("tetrad_data_to_rdata() assigns correct NA types", {
   expect_true(is.na(out_c$cont[1]))
 
   # discrete with NA -> NA_integer_
-  dvar <- rJava::.jnew("edu/cmu/tetrad/data/DiscreteVariable", "disc", as.integer(3))
+  dvar <- rJava::.jnew(
+    "edu/cmu/tetrad/data/DiscreteVariable",
+    "disc",
+    as.integer(3)
+  )
   vlist2 <- rJava::.jnew("java/util/ArrayList")
   rJava::.jcall(vlist2, "Z", "add", rJava::.jcast(dvar, "java/lang/Object"))
 

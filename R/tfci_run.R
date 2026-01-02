@@ -78,7 +78,9 @@ tfci_run <- function(
 
   # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
-    stop("Orientation method must be one of standard, conservative or maj.rule.")
+    stop(
+      "Orientation method must be one of standard, conservative or maj.rule."
+    )
   }
 
   # CI test that forbids conditioning on future tiers
@@ -125,10 +127,12 @@ tfci_run <- function(
   unfaithful_triples <- NULL
 
   if (conservative || maj_rule) {
-    tmp <- methods::new("pcAlgo",
+    tmp <- methods::new(
+      "pcAlgo",
       graph = as.graphNEL(t(fci_skel$G)),
       call = skel@call,
-      n = integer(0), max.ord = as.integer(fci_skel$max.ord),
+      n = integer(0),
+      max.ord = as.integer(fci_skel$max.ord),
       n.edgetests = nextratests,
       sepset = fci_skel$sepset,
       pMax = fci_skel$pMax,
@@ -147,7 +151,11 @@ tfci_run <- function(
   }
 
   # orient into a PAG using knowledge tiers
-  res <- tpag(fci_skel, knowledge = knowledge, unfaithful_triples = unfaithful_triples)
+  res <- tpag(
+    fci_skel,
+    knowledge = knowledge,
+    unfaithful_triples = unfaithful_triples
+  )
 
   # pack up tpag result
   amat <- graph_to_amat(res, to_from = FALSE)
@@ -221,8 +229,10 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
       sep_set <- sepset[[i]][[j]]
       if (length(sep_set) > 0) {
         for (k in seq_along(sep_set)) {
-          if (is_after(vnames[sep_set[k]], vnames[i], knowledge) &&
-            is_after(vnames[sep_set[k]], vnames[j], knowledge)) {
+          if (
+            is_after(vnames[sep_set[k]], vnames[i], knowledge) &&
+              is_after(vnames[sep_set[k]], vnames[j], knowledge)
+          ) {
             sepset[[i]][[j]] <- NULL
             warning("Found sepset that was not allowed due to temporal order!")
             break

@@ -176,7 +176,6 @@ test_that("tpc_run supports tskeleton, pcAlgo, and knowledgeable_caugi outputs",
 # tpc_run() guards and errors
 # ──────────────────────────────────────────────────────────────────────────────
 
-
 test_that("tpc_run errors when both knowledge and order are supplied", {
   set.seed(606)
   data(tpc_example, package = "causalDisco")
@@ -250,7 +249,12 @@ test_that("tpc_run NA handling: error on NAs with na_method = 'none', cc with ze
 test_that("tpc_run errors when varnames are unknown with suff_stat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tpc_run(data = NULL, suff_stat = suff, knowledge = knowledge(), varnames = NULL),
+    tpc_run(
+      data = NULL,
+      suff_stat = suff,
+      knowledge = knowledge(),
+      varnames = NULL
+    ),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )
@@ -317,7 +321,6 @@ test_that("tpc_run adds missing vars to knowledge and uses provided suff_stat (t
 # Helpers: make_suff_stat()
 # ──────────────────────────────────────────────────────────────────────────────
 
-
 test_that("make_suff_stat() returns correct suff_stat for different tests and fails correctly", {
   set.seed(12)
   df <- data.frame(
@@ -383,7 +386,11 @@ test_that(".build_knowledge_from_order returns merged knowledge when data is pre
 
 test_that(".build_knowledge_from_order errors when data is NULL and vnames missing", {
   expect_error(
-    .build_knowledge_from_order(order = c("T1", "T2"), data = NULL, vnames = NULL),
+    .build_knowledge_from_order(
+      order = c("T1", "T2"),
+      data = NULL,
+      vnames = NULL
+    ),
     "`data` is NULL, so `vnames` should be provided.",
     fixed = TRUE
   )
@@ -391,7 +398,11 @@ test_that(".build_knowledge_from_order errors when data is NULL and vnames missi
 
 test_that(".build_knowledge_from_order builds tiers in declared order (vnames path)", {
   vnames <- c("T1_x", "T1_y", "T2_a", "zzz")
-  kn <- .build_knowledge_from_order(order = c("T1", "T2"), data = NULL, vnames = vnames)
+  kn <- .build_knowledge_from_order(
+    order = c("T1", "T2"),
+    data = NULL,
+    vnames = vnames
+  )
 
   expect_s3_class(kn, "knowledge")
   expect_identical(kn$tiers$label, c("T1", "T2"))
@@ -412,7 +423,11 @@ test_that(".build_knowledge_from_order does not overwrite earlier tier assignmen
   # x1a matches both "x" and "x1"; since we declare order = c("x", "x1"),
   # "x" must win and x1a should stay in tier "x"
   vnames <- c("x", "x1a", "x1b", "other")
-  kn <- .build_knowledge_from_order(order = c("x", "x1"), data = NULL, vnames = vnames)
+  kn <- .build_knowledge_from_order(
+    order = c("x", "x1"),
+    data = NULL,
+    vnames = vnames
+  )
 
   expect_identical(kn$tiers$label, c("x", "x1"))
 
@@ -430,7 +445,11 @@ test_that(".build_knowledge_from_order does not overwrite earlier tier assignmen
 test_that(".build_knowledge_from_order respects order even with empty-hit tiers", {
   # Include a tier label that matches no variables; it should still appear
   vnames <- c("A_1", "B_2")
-  kn <- .build_knowledge_from_order(order = c("A", "NOHIT", "B"), data = NULL, vnames = vnames)
+  kn <- .build_knowledge_from_order(
+    order = c("A", "NOHIT", "B"),
+    data = NULL,
+    vnames = vnames
+  )
 
   expect_identical(kn$tiers$label, c("A", "NOHIT", "B"))
   expect_setequal(kn$vars$var[kn$vars$tier == "A"], "A_1")
@@ -457,11 +476,19 @@ test_that("order_restrict_amat_cpdag returns input matrix when all tier ranks ar
   labs <- c("V1", "V2", "V3")
   amat <- matrix(
     c(
-      0, 1, 0,
-      0, 0, 1,
-      1, 0, 0
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0
     ),
-    nrow = 3, byrow = TRUE, dimnames = list(labs, labs)
+    nrow = 3,
+    byrow = TRUE,
+    dimnames = list(labs, labs)
   )
   kn <- knowledge() |> add_vars(labs)
 

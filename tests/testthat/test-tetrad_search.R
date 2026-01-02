@@ -37,7 +37,9 @@ test_that("knowledge helper builds tiered/required/forbidden objects and casts t
   kn <- make_knowledge_test_object(df)
 
   expect_true(is.list(kn))
-  expect_true(all(c("tiered_kn", "forbidden_kn", "required_kn", "combi_kn") %in% names(kn)))
+  expect_true(all(
+    c("tiered_kn", "forbidden_kn", "required_kn", "combi_kn") %in% names(kn)
+  ))
 
   # should cast to a Java Knowledge via your package API
   tk <- as_tetrad_knowledge(kn$combi_kn)
@@ -91,7 +93,6 @@ test_that("TetradSearch constructor sets defaults correctly", {
 # ──────────────────────────────────────────────────────────────────────────────
 # Setters
 # ──────────────────────────────────────────────────────────────────────────────
-
 
 test_that("set_test accepts known tests and rejects unknown; mc path sets mc_test", {
   skip_if_no_tetrad()
@@ -264,7 +265,6 @@ test_that("set_params() accepts pre-wrapped Java objects (else-branch coverage)"
 # ──────────────────────────────────────────────────────────────────────────────
 # Scores, tests, and algorithms
 # ──────────────────────────────────────────────────────────────────────────────
-
 
 test_that("all known scores can be set without error", {
   skip_if_no_tetrad()
@@ -539,18 +539,12 @@ test_that("run_search() errors when pieces are missing", {
   ts <- TetradSearch$new()
   ts$set_score("sem_bic")
   ts$set_alg("fges")
-  expect_error(ts$run_search(),
-    "No data is set",
-    fixed = TRUE
-  )
+  expect_error(ts$run_search(), "No data is set", fixed = TRUE)
 
   # data but no algorithm
   ts2 <- TetradSearch$new()
   ts2$set_data(make_cont_test_data(n = 150))
-  expect_error(ts2$run_search(),
-    "No algorithm is set",
-    fixed = TRUE
-  )
+  expect_error(ts2$run_search(), "No algorithm is set", fixed = TRUE)
 })
 
 test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
@@ -565,12 +559,12 @@ test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
 
   # keep bootstrap light so CI stays snappy
   ts$set_bootstrapping(
-    number_resampling       = 5L,
-    percent_resample_size   = 50,
-    add_original            = TRUE,
-    with_replacement        = TRUE,
-    resampling_ensemble     = 1L,
-    seed                    = 1L
+    number_resampling = 5L,
+    percent_resample_size = 50,
+    add_original = TRUE,
+    with_replacement = TRUE,
+    resampling_ensemble = 1L,
+    seed = 1L
   )
 
   res <- ts$run_search(

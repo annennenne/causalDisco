@@ -20,7 +20,9 @@ topo_order_mat <- function(amat) {
     candidates <- which(indeg == 0 & !used)
 
     if (length(candidates) == 0) {
-      if (filled < p) stop("Adjacency matrix contains a cycle.")
+      if (filled < p) {
+        stop("Adjacency matrix contains a cycle.")
+      }
       break
     }
 
@@ -76,17 +78,23 @@ topo_order_mat <- function(amat) {
 #' ex_data <- sim_gaus_from_dag(ex_dag, n = 100)
 #'
 #' @export
-sim_gaus_from_dag <- function(amat, n, regpar_lim = c(0.5, 2),
-                              res_sd_lim = c(0.1, 1),
-                              p_neg_reg_par = 0.4,
-                              standardize = FALSE) {
+sim_gaus_from_dag <- function(
+  amat,
+  n,
+  regpar_lim = c(0.5, 2),
+  res_sd_lim = c(0.1, 1),
+  p_neg_reg_par = 0.4,
+  standardize = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c("stats"),
     function_name = "sim_gaus_from_dag"
   )
 
   orig_names <- colnames(amat)
-  if (is.null(orig_names)) orig_names <- paste0("X", seq_len(ncol(amat)))
+  if (is.null(orig_names)) {
+    orig_names <- paste0("X", seq_len(ncol(amat)))
+  }
 
   p <- nrow(amat)
 
@@ -104,11 +112,18 @@ sim_gaus_from_dag <- function(amat, n, regpar_lim = c(0.5, 2),
   for (i in seq_len(p)) {
     parents <- parents_list[[i]]
     if (length(parents) > 0) {
-      signs <- sample(c(-1, 1), length(parents),
+      signs <- sample(
+        c(-1, 1),
+        length(parents),
         replace = TRUE,
         prob = c(p_neg_reg_par, 1 - p_neg_reg_par)
       )
-      regpars[[i]] <- stats::runif(length(parents), regpar_lim[1], regpar_lim[2]) * signs
+      regpars[[i]] <- stats::runif(
+        length(parents),
+        regpar_lim[1],
+        regpar_lim[2]
+      ) *
+        signs
     }
   }
 
@@ -121,10 +136,13 @@ sim_gaus_from_dag <- function(amat, n, regpar_lim = c(0.5, 2),
     if (length(parents) == 0) {
       x <- stats::rnorm(n, sd = residual_sd[i])
     } else {
-      x <- data_sorted[, parents, drop = FALSE] %*% regpars[[i]] +
+      x <- data_sorted[, parents, drop = FALSE] %*%
+        regpars[[i]] +
         stats::rnorm(n, sd = residual_sd[i])
     }
-    if (standardize) x <- (x - mean(x)) / stats::sd(x)
+    if (standardize) {
+      x <- (x - mean(x)) / stats::sd(x)
+    }
     data_sorted[, i] <- x
   }
 

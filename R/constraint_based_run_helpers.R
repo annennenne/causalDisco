@@ -39,7 +39,9 @@ constraint_based_prepare_inputs <- function(
 
   # knowledge/order validation
   if (!is.null(knowledge) && !is.null(order)) {
-    stop("Both `knowledge` and `order` supplied. Please supply a knowledge object.")
+    stop(
+      "Both `knowledge` and `order` supplied. Please supply a knowledge object."
+    )
   }
 
   if (is.null(knowledge) && !is.null(order)) {
@@ -48,20 +50,30 @@ constraint_based_prepare_inputs <- function(
       "Please supply a `knowledge` object instead."
     )
     vnames0 <- if (is.null(data)) varnames else names(data)
-    knowledge <- .build_knowledge_from_order(order, data = data, vnames = vnames0)
+    knowledge <- .build_knowledge_from_order(
+      order,
+      data = data,
+      vnames = vnames0
+    )
   }
 
-  if (is.null(knowledge)) knowledge <- knowledge()
+  if (is.null(knowledge)) {
+    knowledge <- knowledge()
+  }
   is_knowledge(knowledge)
 
   # NA handling
   if (!is.null(data) && any(is.na(data))) {
     if (na_method == "none") {
-      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
+      stop(
+        "Inputted data contain NA values, but no method for handling missing NAs was supplied."
+      )
     } else if (na_method == "cc") {
       data <- stats::na.omit(data)
       if (nrow(data) == 0) {
-        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
+        stop(
+          "Complete case analysis chosen, but inputted data contain no complete cases."
+        )
       }
     }
   }
@@ -74,10 +86,15 @@ constraint_based_prepare_inputs <- function(
 
   # ensure all vars appear in knowledge
   missing_vars <- setdiff(vnames, knowledge$vars$var)
-  if (length(missing_vars)) knowledge <- add_vars(knowledge, missing_vars)
+  if (length(missing_vars)) {
+    knowledge <- add_vars(knowledge, missing_vars)
+  }
   bad_vars <- setdiff(knowledge$vars$var, vnames)
   if (length(bad_vars)) {
-    stop("Knowledge contains variables not present in `data`: ", paste(bad_vars, collapse = ", "))
+    stop(
+      "Knowledge contains variables not present in `data`: ",
+      paste(bad_vars, collapse = ", ")
+    )
   }
 
   # sufficient statistics
@@ -101,7 +118,6 @@ constraint_based_prepare_inputs <- function(
       test(x, y, conditioning_set = S, suff_stat = suffStat)
     }
   }
-
 
   list(
     data = data,

@@ -11,7 +11,8 @@
 tetrad_graph <- function(x) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "readr", "stringr"
+      "readr",
+      "stringr"
     ),
     function_name = "tetrad_graph"
   )
@@ -28,7 +29,8 @@ tetrad_graph <- function(x) {
 
   mat_text <- paste(parts[-1], collapse = "\n")
 
-  amat <- readr::read_csv(mat_text,
+  amat <- readr::read_csv(
+    mat_text,
     col_names = FALSE,
     show_col_types = FALSE
   ) |>
@@ -41,7 +43,5 @@ tetrad_graph <- function(x) {
   }
   dimnames(amat) <- list(nodes, nodes)
 
-  structure(list(nodes = nodes, amat = amat),
-    class = "tetrad_graph"
-  )
+  structure(list(nodes = nodes, amat = amat), class = "tetrad_graph")
 }

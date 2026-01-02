@@ -15,7 +15,6 @@ test_that("initialize sets clean defaults", {
 # Setting params
 # ──────────────────────────────────────────────────────────────────────────────
 
-
 test_that("set_params and set_data store values", {
   s <- BnlearnSearch$new()
   s$set_params(list(alpha = 0.1, whatev = 2))
@@ -166,7 +165,6 @@ test_that("run_search errors when data/alg missing with exact messages", {
 # ──────────────────────────────────────────────────────────────────────────────
 # Knowledge
 # ──────────────────────────────────────────────────────────────────────────────
-
 
 test_that("run_search works and covers whitelist/blacklist branches", {
   set.seed(1)

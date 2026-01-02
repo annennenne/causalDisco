@@ -18,5 +18,9 @@ kn <- knowledge(
 
 # use gs with engine bnlearn and test cor and tiered background knowledge
 my_pc_tiered <- pc(engine = "bnlearn", test = "cor", alpha = 0.01)
-pc_tiered_bnlearn <- disco(data = tpc_example, method = my_pc_tiered, knowledge = kn)
+pc_tiered_bnlearn <- disco(
+  data = tpc_example,
+  method = my_pc_tiered,
+  knowledge = kn
+)
 plot(pc_tiered_bnlearn)

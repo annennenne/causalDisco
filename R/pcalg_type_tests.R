@@ -22,11 +22,18 @@
 ) {
   method <- tolower(method)
 
-  if (method %in% c(
-    "fisher_z_twd", "fisher_z_mi", "conditional_gaussian",
-    "conditional_gaussian_twd", "conditional_gaussian_mi",
-    "g_square_twd", "g_square_mi"
-  )) {
+  if (
+    method %in%
+      c(
+        "fisher_z_twd",
+        "fisher_z_mi",
+        "conditional_gaussian",
+        "conditional_gaussian_twd",
+        "conditional_gaussian_mi",
+        "g_square_twd",
+        "g_square_mi"
+      )
+  ) {
     .check_if_pkgs_are_installed(
       pkgs = c("micd"),
       function_name = ".get_pcalg_test_from_string"
@@ -35,7 +42,9 @@
 
   g_square_switch <- function(x, y, S, suff_stat) {
     dm <- suff_stat$dm
-    if (is.null(dm)) stop("g_square requires suff_stat$dm.", call. = FALSE)
+    if (is.null(dm)) {
+      stop("g_square requires suff_stat$dm.", call. = FALSE)
+    }
     cols <- c(x, y, S)
     lev <- if (!is.null(suff_stat$nlev)) {
       suff_stat$nlev[cols]
@@ -49,7 +58,8 @@
     }
   }
 
-  fun <- switch(method,
+  fun <- switch(
+    method,
     "fisher_z" = pcalg::gaussCItest,
     "g_square" = g_square_switch,
     "reg" = reg_test,
@@ -88,9 +98,12 @@
   nlev = NULL
 ) {
   method <- tolower(method)
-  if (inherits(X, "matrix")) X <- as.data.frame(X)
+  if (inherits(X, "matrix")) {
+    X <- as.data.frame(X)
+  }
 
-  switch(method,
+  switch(
+    method,
 
     # gaussian
     "fisher_z" = {
@@ -101,7 +114,9 @@
       as.matrix(X)
     },
     "fisher_z_mi" = {
-      if (inherits(X, "mids")) X <- mice::complete(X, action = "all")
+      if (inherits(X, "mids")) {
+        X <- mice::complete(X, action = "all")
+      }
       if (!is.list(X)) {
         stop("gaussMItest requires a list or a mids object.", call. = FALSE)
       }
@@ -137,7 +152,9 @@
       as.data.frame(X)
     },
     "conditional_gaussian_mi" = {
-      if (inherits(X, "mids")) X <- mice::complete(X, action = "all")
+      if (inherits(X, "mids")) {
+        X <- mice::complete(X, action = "all")
+      }
       if (!is.list(X)) {
         stop("mixMItest requires a list or a mids object.", call. = FALSE)
       }

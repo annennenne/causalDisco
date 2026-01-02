@@ -59,7 +59,8 @@ amat <- function(x) {
     } else {
       # pag encoding: 0 none, 1 circle, 2 arrow, 3 tail
       code_pair <- function(type) {
-        switch(type,
+        switch(
+          type,
           "-->" = c(3L, 2L), # from tail, to arrow
           "---" = c(3L, 3L), # tail, tail
           "<->" = c(2L, 2L), # arrow, arrow
@@ -73,7 +74,9 @@ amat <- function(x) {
       for (k in seq_len(nrow(x))) {
         f <- x@edges$from[[k]]
         t <- x@edges$to[[k]]
-        if (!nzchar(f) || !nzchar(t) || is.na(f) || is.na(t) || f == t) next
+        if (!nzchar(f) || !nzchar(t) || is.na(f) || is.na(t) || f == t) {
+          next
+        }
         codes <- code_pair(x@edges$edge[[k]])
         i <- idx[[t]]
         j <- idx[[f]]

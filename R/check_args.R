@@ -31,29 +31,44 @@ check_args_and_distribute_args <- function(
   # Check if the engine is supported
   if (!(engine %in% engine_registry)) {
     stop(
-      "Engine ", paste(engine), " is not supported. Supported engines are: ",
+      "Engine ",
+      paste(engine),
+      " is not supported. Supported engines are: ",
       paste(engine_registry, collapse = ", "),
       call. = FALSE
     )
   }
 
   if (is.null(search) && engine == "tetrad") {
-    stop("TetradSearch object must be provided for Tetrad engine.",
+    stop(
+      "TetradSearch object must be provided for Tetrad engine.",
       call. = FALSE
     )
   }
-  switch(engine,
+  switch(
+    engine,
     tetrad = check_args_and_distribute_args_tetrad(
-      search, args, alg, test, score
+      search,
+      args,
+      alg,
+      test,
+      score
     ),
     pcalg = check_args_and_distribute_args_pcalg(
-      args, alg, test, score
+      args,
+      alg,
+      test,
+      score
     ),
     bnlearn = check_args_and_distribute_args_bnlearn(
-      args, alg
+      args,
+      alg
     ),
     causalDisco = check_args_and_distribute_args_causalDisco(
-      args, alg, test, score
+      args,
+      alg,
+      test,
+      score
     )
   )
 }
@@ -122,14 +137,16 @@ check_args_and_distribute_args_pcalg <- function(
 ) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "methods", "pcalg"
+      "methods",
+      "pcalg"
     ),
     function_name = "check_args_and_distribute_args_pcalg"
   )
 
   # Note that the pcalg package does not have args that are sent
   # directly to the test itself, but it is rather sent to the algorithm.
-  switch(alg,
+  switch(
+    alg,
     pc = engine_args_alg <- names(formals(pcalg::pc)),
     fci = engine_args_alg <- names(formals(pcalg::fci)),
     ges = engine_args_alg <- names(formals(pcalg::ges)),
@@ -139,8 +156,9 @@ check_args_and_distribute_args_pcalg <- function(
   args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
   engine_args_score <- list()
   if (!is.null(score)) {
-    engine_args_score <- methods::getRefClass("GaussL0penIntScore")$
-      methods("initialize") |>
+    engine_args_score <- methods::getRefClass("GaussL0penIntScore")$methods(
+      "initialize"
+    ) |>
       methods::formalArgs()
     args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
   } else {
@@ -185,7 +203,8 @@ check_args_and_distribute_args_causalDisco <- function(
 ) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "methods", "pcalg"
+      "methods",
+      "pcalg"
     ),
     function_name = "check_args_and_distribute_args_causalDisco"
   )
@@ -193,7 +212,8 @@ check_args_and_distribute_args_causalDisco <- function(
   # Note that the causalDisco package does not have args that are sent
   # directly to the test itself
   # Determine main algorithm function and corresponding _run function
-  switch(alg,
+  switch(
+    alg,
     tpc = {
       engine_fun <- tpc
       engine_run_fun <- tpc_run
@@ -218,8 +238,10 @@ check_args_and_distribute_args_causalDisco <- function(
   # If ... is in top-level args, we need to also check _run function args
   if ("..." %in% engine_args_alg) {
     engine_args_run <- names(formals(engine_run_fun))
-    extra_args <- args[!(names(args) %in% engine_args_alg) &
-      (names(args) %in% engine_args_run)]
+    extra_args <- args[
+      !(names(args) %in% engine_args_alg) &
+        (names(args) %in% engine_args_run)
+    ]
     args_to_pass_to_engine_alg <- c(args_to_pass_to_engine_alg, extra_args)
   }
 
@@ -227,12 +249,12 @@ check_args_and_distribute_args_causalDisco <- function(
   engine_args_score <- list()
   if (!is.null(score)) {
     score <- tolower(score)
-    switch(score,
+    switch(
+      score,
       "tbic" = score <- "TemporalBIC",
       "tbdeu" = score <- "TemporalBDeu"
     )
-    engine_args_score <- methods::getRefClass(score)$
-      methods("initialize") |>
+    engine_args_score <- methods::getRefClass(score)$methods("initialize") |>
       methods::formalArgs()
     args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]
   } else {
@@ -250,7 +272,11 @@ check_args_and_distribute_args_causalDisco <- function(
   if (length(args_not_in_engine_args) > 0) {
     if ("..." %in% c(engine_args_alg, engine_args_score)) {
       warning(
-        paste0("The following arguments are not used in causalDisco::", alg, ": "),
+        paste0(
+          "The following arguments are not used in causalDisco::",
+          alg,
+          ": "
+        ),
         paste(args_not_in_engine_args, collapse = ", "),
         call. = FALSE
       )
@@ -258,7 +284,11 @@ check_args_and_distribute_args_causalDisco <- function(
       # extra precaution, cannot be hit with current algorithms in causalDisco
       # nocov start
       stop(
-        paste0("The following arguments are not used in causalDisco::", alg, ": "),
+        paste0(
+          "The following arguments are not used in causalDisco::",
+          alg,
+          ": "
+        ),
         paste(args_not_in_engine_args, collapse = ", "),
         call. = FALSE
       )
@@ -303,7 +333,9 @@ check_args_and_distribute_args_bnlearn <- function(
     if (!dots_allowed) {
       # learner has no '...' : throw error
       stop(
-        "The following arguments are not valid for bnlearn::", alg, ": ",
+        "The following arguments are not valid for bnlearn::",
+        alg,
+        ": ",
         paste(unclaimed, collapse = ", "),
         call. = FALSE
       )
@@ -312,8 +344,11 @@ check_args_and_distribute_args_bnlearn <- function(
     if (dots_allowed && !allow_dots) {
       # learner has '...' but caller did not allow extras
       stop(
-        "bnlearn::", alg, " has a '...' formal, but these arguments are not ",
-        "recognised: ", paste(unclaimed, collapse = ", "),
+        "bnlearn::",
+        alg,
+        " has a '...' formal, but these arguments are not ",
+        "recognised: ",
+        paste(unclaimed, collapse = ", "),
         ".  Set allow_dots = TRUE if you really want to forward them."
       )
     }

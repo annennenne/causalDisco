@@ -43,7 +43,8 @@ ges <- function(
   args <- rlang::list2(...)
 
   builder <- function(knowledge = NULL) {
-    runner <- switch(engine,
+    runner <- switch(
+      engine,
       tetrad = rlang::exec(ges_tetrad_runner, score, !!!args),
       pcalg = rlang::exec(ges_pcalg_runner, score, !!!args)
     )
@@ -59,14 +60,19 @@ ges <- function(
 ges_tetrad_runner <- function(score, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rJava", "rlang"
+      "rJava",
+      "rlang"
     ),
     function_name = "ges_tetrad_runner"
   )
 
   search <- TetradSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "fges",
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "tetrad",
+    "fges",
     score = score
   )
 
@@ -94,8 +100,11 @@ ges_tetrad_runner <- function(score, ...) {
 }
 
 #' @keywords internal
-ges_pcalg_runner <- function(score, ...,
-                             directed_as_undirected_knowledge = FALSE) {
+ges_pcalg_runner <- function(
+  score,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
@@ -105,7 +114,11 @@ ges_pcalg_runner <- function(score, ...,
 
   args <- list(...)
   search <- PcalgSearch$new()
-  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "ges",
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "pcalg",
+    "ges",
     score = score
   )
   search$set_params(args_to_pass$alg_args)
@@ -114,7 +127,8 @@ ges_pcalg_runner <- function(score, ...,
 
   runner <- list(
     set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge,
+      search$set_knowledge(
+        knowledge,
         directed_as_undirected = directed_as_undirected_knowledge
       )
     },

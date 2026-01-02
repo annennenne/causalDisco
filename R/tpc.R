@@ -38,9 +38,13 @@ tpc <- function(
 
   # build a `runner builder` that knows how to make a runner given knowledge
   builder <- function(knowledge = NULL) {
-    runner <- switch(engine,
+    runner <- switch(
+      engine,
       causalDisco = rlang::exec(
-        tpc_causalDisco_runner, test, alpha, !!!args
+        tpc_causalDisco_runner,
+        test,
+        alpha,
+        !!!args
       )
     )
     runner
@@ -52,8 +56,12 @@ tpc <- function(
 }
 
 #' @keywords internal
-tpc_causalDisco_runner <- function(test, alpha, ...,
-                                   directed_as_undirected_knowledge = FALSE) {
+tpc_causalDisco_runner <- function(
+  test,
+  alpha,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"

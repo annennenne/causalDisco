@@ -77,8 +77,12 @@ confusion <- function(est_amat, true_amat, type = "adj") {
 
   if (is.matrix(x)) {
     nodes <- rownames(x)
-    if (is.null(nodes)) nodes <- colnames(x)
-    if (is.null(nodes)) nodes <- paste0("V", seq_len(nrow(x)))
+    if (is.null(nodes)) {
+      nodes <- colnames(x)
+    }
+    if (is.null(nodes)) {
+      nodes <- paste0("V", seq_len(nrow(x)))
+    }
     if (inherits(x, "amat.pag")) {
       return(tamat(x, order = nodes, type = "ag"))
     }
@@ -123,7 +127,6 @@ confusion <- function(est_amat, true_amat, type = "adj") {
 #  }
 # }
 
-
 #' @inherit confusion
 #' @export
 adj_confusion <- function(est_amat, true_amat) {
@@ -165,9 +168,11 @@ dir_confusion <- function(est_amat, true_amat) {
     thisedge <- est_undir[i]
 
     if (thisedge %in% true_adj) {
-      if (thisedge %in% true_undir) { # correctly undirected
+      if (thisedge %in% true_undir) {
+        # correctly undirected
         dir_tn <- dir_tn + 2
-      } else if (thisedge %in% c(true_dir, true_revdir)) { # undirected, should be directed
+      } else if (thisedge %in% c(true_dir, true_revdir)) {
+        # undirected, should be directed
         dir_fn <- dir_fn + 1
         dir_tn <- dir_tn + 1
       }
@@ -179,15 +184,18 @@ dir_confusion <- function(est_amat, true_amat) {
     thisedge <- est_dir[i]
 
     if (thisedge %in% true_adj) {
-      if (thisedge %in% true_undir) { # is directed, should be undirected
+      if (thisedge %in% true_undir) {
+        # is directed, should be undirected
         dir_fp <- dir_fp + 1
         dir_tn <- dir_tn + 1
-      } else if (thisedge %in% true_dir) { # is directed in correct direction
+      } else if (thisedge %in% true_dir) {
+        # is directed in correct direction
         dir_tp <- dir_tp + 1
         dir_tn <- dir_tn + 1
       }
 
-      if (thisedge %in% true_revdir) { # is directed in incorrect direction
+      if (thisedge %in% true_revdir) {
+        # is directed in incorrect direction
         dir_fp <- dir_fp + 1
         dir_fn <- dir_fn + 1
       }
@@ -195,8 +203,10 @@ dir_confusion <- function(est_amat, true_amat) {
   }
 
   list(
-    tp = dir_tp, tn = dir_tn,
-    fp = dir_fp, fn = dir_fn
+    tp = dir_tp,
+    tn = dir_tn,
+    fp = dir_fp,
+    fn = dir_fn
   )
 }
 
@@ -236,27 +246,31 @@ dir_confusion_original <- function(est_amat, true_amat) {
     thisedge <- est_undir[i]
 
     if (thisedge %in% true_adj) {
-      if (thisedge %in% true_undir) { # correctly undirected
+      if (thisedge %in% true_undir) {
+        # correctly undirected
         dir_tn <- dir_tn + 1
-      } else if (thisedge %in% c(true_dir, true_revdir)) { # should be directed
+      } else if (thisedge %in% c(true_dir, true_revdir)) {
+        # should be directed
         dir_fn <- dir_fn + 1
       }
     }
   }
-
 
   # count metrics for directed edges
   for (i in seq_along(est_dir)) {
     thisedge <- est_dir[i]
 
     if (thisedge %in% true_adj) {
-      if (thisedge %in% true_undir) { # directed, should be undirected
+      if (thisedge %in% true_undir) {
+        # directed, should be undirected
         dir_fp <- dir_fp + 1
-      } else if (thisedge %in% true_dir) { # directed in correct direction
+      } else if (thisedge %in% true_dir) {
+        # directed in correct direction
         dir_tp <- dir_tp + 1
       }
 
-      if (thisedge %in% true_revdir) { # directed in incorrect direction
+      if (thisedge %in% true_revdir) {
+        # directed in incorrect direction
         dir_fp <- dir_fp + 1
         dir_fn <- dir_fn + 1
       }
@@ -264,8 +278,10 @@ dir_confusion_original <- function(est_amat, true_amat) {
   }
 
   list(
-    tp = dir_tp, tn = dir_tn,
-    fp = dir_fp, fn = dir_fn
+    tp = dir_tp,
+    tn = dir_tn,
+    fp = dir_fp,
+    fn = dir_fn
   )
 }
 
@@ -273,7 +289,6 @@ dir_confusion_original <- function(est_amat, true_amat) {
 ###############################################################################################################
 # Not exported below###########################################################################################
 ###############################################################################################################
-
 
 adj_fp <- function(est_halfskel, true_halfskel) {
   sum(est_halfskel == 1 & true_halfskel == 0)

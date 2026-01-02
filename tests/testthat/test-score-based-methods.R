@@ -7,7 +7,10 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
   df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
-    m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
+    m <- do.call(
+      ges_registry$ges$fn,
+      c(list(engine = engine), ges_args(engine))
+    )
 
     expect_s3_class(m, c("ges", "disco_method", "function"))
     expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
@@ -23,7 +26,10 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
   kn <- toy_knowledge(df)
 
   for (engine in ges_registry$ges$engines) {
-    m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
+    m <- do.call(
+      ges_registry$ges$fn,
+      c(list(engine = engine), ges_args(engine))
+    )
 
     res0 <- m(df)
     expect_s3_class(res0, "knowledgeable_caugi")
@@ -57,7 +63,10 @@ test_that("ges(): disco() injects knowledge and validates method type", {
   )
 
   for (engine in ges_registry$ges$engines) {
-    m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
+    m <- do.call(
+      ges_registry$ges$fn,
+      c(list(engine = engine), ges_args(engine))
+    )
 
     if (engine == "pcalg") {
       expect_warning(
@@ -77,7 +86,10 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
   df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
-    m <- do.call(ges_registry$ges$fn, c(list(engine = engine), ges_args(engine)))
+    m <- do.call(
+      ges_registry$ges$fn,
+      c(list(engine = engine), ges_args(engine))
+    )
 
     expect_error(
       disco(df, method = m, knowledge = list(foo = "bar")),
@@ -105,7 +117,8 @@ test_that("ges runners wire arguments correctly for each engine", {
 
   # also with more arguments
   runner_t2 <- ges_tetrad_runner(
-    score = "sem_bic", symmetric_first_step = TRUE,
+    score = "sem_bic",
+    symmetric_first_step = TRUE,
     singularity_lambda = 0.1
   )
   expect_type(runner_t2, "list")
@@ -113,7 +126,10 @@ test_that("ges runners wire arguments correctly for each engine", {
   expect_s3_class(runner_t2$run(df), "knowledgeable_caugi")
 
   # pcalg
-  runner_p <- ges_pcalg_runner(score = "sem_bic", directed_as_undirected_knowledge = TRUE)
+  runner_p <- ges_pcalg_runner(
+    score = "sem_bic",
+    directed_as_undirected_knowledge = TRUE
+  )
   expect_type(runner_p, "list")
   expect_true(is.function(runner_p$run))
   expect_s3_class(runner_p$run(df), "knowledgeable_caugi")

@@ -42,7 +42,8 @@ tges <- function(
   args <- rlang::list2(...)
 
   builder <- function(knowledge = NULL) {
-    runner <- switch(engine,
+    runner <- switch(
+      engine,
       causalDisco = rlang::exec(
         tges_causalDisco_runner,
         score,
@@ -58,8 +59,11 @@ tges <- function(
 }
 
 #' @keywords internal
-tges_causalDisco_runner <- function(score, ...,
-                                    directed_as_undirected_knowledge = FALSE) {
+tges_causalDisco_runner <- function(
+  score,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
@@ -82,7 +86,8 @@ tges_causalDisco_runner <- function(score, ...,
 
   runner <- list(
     set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge,
+      search$set_knowledge(
+        knowledge,
         directed_as_undirected = directed_as_undirected_knowledge
       )
     },

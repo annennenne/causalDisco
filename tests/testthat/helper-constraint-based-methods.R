@@ -4,7 +4,7 @@
 
 # register methods and the engines they support
 method_registry_constraint <- list(
-  pc  = list(fn = pc, engines = c("tetrad", "pcalg", "bnlearn")),
+  pc = list(fn = pc, engines = c("tetrad", "pcalg", "bnlearn")),
   fci = list(fn = fci, engines = c("tetrad", "pcalg"))
 )
 

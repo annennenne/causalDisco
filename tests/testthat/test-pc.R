@@ -12,13 +12,20 @@ test_that("pc Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(
+    engine = "tetrad",
+    test = "conditional_gaussian",
+    alpha = 0.05
+  )
   output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -29,12 +36,19 @@ test_that("pc Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(
+    engine = "tetrad",
+    test = "conditional_gaussian",
+    alpha = 0.05
+  )
   output <- disco(tpc_example, tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 })
 
 test_that("pc Tetrad disco respects required background knowledge", {
@@ -52,7 +66,10 @@ test_that("pc Tetrad disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -64,15 +81,25 @@ test_that("pc Tetrad disco respects required background knowledge", {
     youth_x3 %-->% oldage_x5
   )
 
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(
+    engine = "tetrad",
+    test = "conditional_gaussian",
+    alpha = 0.05
+  )
   output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations_tiers) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations_tiers) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   violations_req <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations_req) == 0,
+    info = "Required edge not found in the output graph."
+  )
 })
 
 test_that("pc Tetrad disco respects forbidden background knowledge", {
@@ -86,20 +113,32 @@ test_that("pc Tetrad disco respects forbidden background knowledge", {
     child_x2 %--x% child_x1
   )
 
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(
+    engine = "tetrad",
+    test = "conditional_gaussian",
+    alpha = 0.05
+  )
   output <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   # Verify it actually changes the output when adding forbidden knowledge
-  tetrad_pc_no_kn <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc_no_kn <- pc(
+    engine = "tetrad",
+    test = "conditional_gaussian",
+    alpha = 0.05
+  )
   out_no_kn <- disco(data = tpc_example, method = tetrad_pc_no_kn)
   edges_no_kn <- out_no_kn$caugi@edges
 
   # The forbidden edge is present
-  forbidden_present <- edges_no_kn$from == "child_x2" & edges_no_kn$to == "oldage_x5"
+  forbidden_present <- edges_no_kn$from == "child_x2" &
+    edges_no_kn$to == "oldage_x5"
   expect_true(
     sum(forbidden_present) >= 1,
     info = "Forbidden edge child_x2 --> oldage_x5 was not found in the output graph without knowledge."
@@ -169,7 +208,10 @@ test_that("pc pcalg disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   pcalg_pc <- pc(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
   output <- disco(data = tpc_example, method = pcalg_pc)
@@ -178,7 +220,7 @@ test_that("pc pcalg disco respects forbidden background knowledge", {
   # Test the original edges had the forbidden edge
   forbidden_present <-
     (edges$from == "child_x1" & edges$to == "child_x2") |
-      (edges$from == "child_x2" & edges$to == "child_x1")
+    (edges$from == "child_x2" & edges$to == "child_x1")
 
   expect_true(
     sum(forbidden_present) >= 1,
@@ -207,7 +249,10 @@ test_that("pc bnlearn disco respects tier knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -223,7 +268,10 @@ test_that("pc bnlearn disco respects tier knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 })
 
 test_that("pc bnlearn disco respects required background knowledge", {
@@ -243,8 +291,10 @@ test_that("pc bnlearn disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
-
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -256,7 +306,10 @@ test_that("pc bnlearn disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   # With tier+required knowledge
   kn <- knowledge(
@@ -274,10 +327,16 @@ test_that("pc bnlearn disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations_tiers) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations_tiers) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   violations_req <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations_req) == 0,
+    info = "Required edge not found in the output graph."
+  )
 })
 
 
@@ -294,7 +353,10 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -307,10 +369,16 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
-
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   # Test that if we forbid first edge from edges it's not present anymore (test it actually does something)
+  # Find edges which are "-->"
+  edge_required <- edges$edge == "-->"
+  edges <- edges[edge_required, ]
+  # Forbid the 1st such edge
   op <- paste0("%", edges$edge[1], "%")
 
   edge_expr <- as.call(list(
@@ -334,7 +402,10 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 })
 
 
@@ -365,20 +436,44 @@ test_that("pc disco learns colliders with all engines", {
   edges_bnlearn
 
   expect_true(
-    any(edges_pcalg$from == "A" & edges_pcalg$to == "B" & edges_pcalg$edge == "-->") &
-      any(edges_pcalg$from == "C" & edges_pcalg$to == "B" & edges_pcalg$edge == "-->"),
+    any(
+      edges_pcalg$from == "A" &
+        edges_pcalg$to == "B" &
+        edges_pcalg$edge == "-->"
+    ) &
+      any(
+        edges_pcalg$from == "C" &
+          edges_pcalg$to == "B" &
+          edges_pcalg$edge == "-->"
+      ),
     info = "pcalg PC did not learn the collider structure A -> B <- C"
   )
 
   expect_true(
-    any(edges_bnlearn$from == "A" & edges_bnlearn$to == "B" & edges_bnlearn$edge == "-->") &
-      any(edges_bnlearn$from == "C" & edges_bnlearn$to == "B" & edges_bnlearn$edge == "-->"),
+    any(
+      edges_bnlearn$from == "A" &
+        edges_bnlearn$to == "B" &
+        edges_bnlearn$edge == "-->"
+    ) &
+      any(
+        edges_bnlearn$from == "C" &
+          edges_bnlearn$to == "B" &
+          edges_bnlearn$edge == "-->"
+      ),
     info = "bnlearn PC did not learn the collider structure A -> B <- C"
   )
 
   expect_true(
-    any(edges_tetrad$from == "A" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->") &
-      any(edges_tetrad$from == "C" & edges_tetrad$to == "B" & edges_tetrad$edge == "-->"),
+    any(
+      edges_tetrad$from == "A" &
+        edges_tetrad$to == "B" &
+        edges_tetrad$edge == "-->"
+    ) &
+      any(
+        edges_tetrad$from == "C" &
+          edges_tetrad$to == "B" &
+          edges_tetrad$edge == "-->"
+      ),
     info = "tetrad PC did not learn the collider structure A -> B <- C"
   )
 })
@@ -411,16 +506,18 @@ test_that("pc disco learns same structure with all engines", {
   normalize_edges <- function(dt) {
     dt_norm <- data.table::copy(dt)
     is_undirected <- dt_norm$edge == "---"
-    dt_norm[is_undirected, `:=`(
-      from = pmin(from, to),
-      to   = pmax(from, to)
-    )]
+    dt_norm[
+      is_undirected,
+      `:=`(
+        from = pmin(from, to),
+        to = pmax(from, to)
+      )
+    ]
     dt_norm[order(from, edge, to)]
   }
 
   edges_pcalg_norm <- normalize_edges(edges_pcalg)
   edges_bnlearn_norm <- normalize_edges(edges_bnlearn)
-
 
   expect_equal(
     edges_pcalg_norm,

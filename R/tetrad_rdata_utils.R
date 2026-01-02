@@ -22,7 +22,8 @@
 rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rJava", "stats"
+      "rJava",
+      "stats"
     ),
     function_name = "rdata_to_tetrad"
   )
@@ -62,18 +63,26 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
       variable <- rJava::.jnew("edu/cmu/tetrad/data/ContinuousVariable", name)
       node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
       rJava::.jcall(
-        var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object")
+        var_list,
+        "Z",
+        "add",
+        rJava::.jcast(node, "java/lang/Object")
       )
       cont_data[[j]] <- rJava::.jarray(as.numeric(col), dispatch = TRUE)
       disc_data[[j]] <- rJava::.jnull("[I") # null int[] for discrete
     } else if (integer_cols[j]) {
       num_categories <- length(unique(stats::na.omit(col)))
       variable <- rJava::.jnew(
-        "edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories)
+        "edu/cmu/tetrad/data/DiscreteVariable",
+        name,
+        as.integer(num_categories)
       )
       node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
       rJava::.jcall(
-        var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object")
+        var_list,
+        "Z",
+        "add",
+        rJava::.jcast(node, "java/lang/Object")
       )
       cont_data[[j]] <- rJava::.jnull("[D") # null double[] for continuous
       disc_data[[j]] <- rJava::.jarray(as.integer(col), dispatch = TRUE)
@@ -81,11 +90,16 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
       levels <- levels(col)
       num_categories <- length(levels)
       variable <- rJava::.jnew(
-        "edu/cmu/tetrad/data/DiscreteVariable", name, as.integer(num_categories)
+        "edu/cmu/tetrad/data/DiscreteVariable",
+        name,
+        as.integer(num_categories)
       )
       node <- rJava::.jcast(variable, "edu/cmu/tetrad/graph/Node")
       rJava::.jcall(
-        var_list, "Z", "add", rJava::.jcast(node, "java/lang/Object")
+        var_list,
+        "Z",
+        "add",
+        rJava::.jcast(node, "java/lang/Object")
       )
       # Convert factor levels to integer codes (1-based in R, 0-based in Java)
       int_col <- as.integer(col)
@@ -141,7 +155,8 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
 tetrad_data_to_rdata <- function(data) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rJava", "stats"
+      "rJava",
+      "stats"
     ),
     function_name = "tetrad_data_to_rdata"
   )
@@ -153,7 +168,10 @@ tetrad_data_to_rdata <- function(data) {
 
   for (i in seq_len(num_vars) - 1L) {
     jstr <- rJava::.jcall(
-      names_list, "Ljava/lang/Object;", "get", as.integer(i)
+      names_list,
+      "Ljava/lang/Object;",
+      "get",
+      as.integer(i)
     )
     var_names[i + 1L] <- as.character(
       rJava::.jcall(jstr, "Ljava/lang/String;", "toString")
@@ -166,7 +184,8 @@ tetrad_data_to_rdata <- function(data) {
   for (j in seq_len(num_vars) - 1L) {
     node <- rJava::.jcall(
       data,
-      "Ledu/cmu/tetrad/graph/Node;", "getVariable",
+      "Ledu/cmu/tetrad/graph/Node;",
+      "getVariable",
       as.integer(j)
     )
     is_discrete <- rJava::.jinstanceof(
@@ -190,15 +209,21 @@ tetrad_data_to_rdata <- function(data) {
 
     for (r in seq_len(n) - 1L) {
       obj <- rJava::.jcall(
-        data, "Ljava/lang/Object;", "getObject", as.integer(r), as.integer(j)
+        data,
+        "Ljava/lang/Object;",
+        "getObject",
+        as.integer(r),
+        as.integer(j)
       )
 
       is_null <- isTRUE(rJava::is.jnull(obj))
       is_double <- isTRUE(rJava::.jinstanceof(
-        obj, "java/lang/Double"
+        obj,
+        "java/lang/Double"
       ))
       is_integer <- isTRUE(rJava::.jinstanceof(
-        obj, "java/lang/Integer"
+        obj,
+        "java/lang/Integer"
       ))
 
       dbl_val <- if (is_double) {

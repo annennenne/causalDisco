@@ -10,7 +10,9 @@
 #' @export
 edges <- function(amat) {
   p <- nrow(amat)
-  edge_list <- lapply(split(amat, rep(1:p, each = p)), function(x) which(x == 1))
+  edge_list <- lapply(split(amat, rep(1:p, each = p)), function(x) {
+    which(x == 1)
+  })
 
   out <- list()
   for (i in 1:p) {
@@ -36,6 +38,5 @@ edges <- function(amat) {
   }
   list(`dir` = oneway, `undir` = bothways)
 }
-
 
 ##

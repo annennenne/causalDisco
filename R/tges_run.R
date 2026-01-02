@@ -254,7 +254,8 @@ TEssGraph <- setRefClass(
 
       # Cast direction
       direction <- match.arg(direction)
-      alg_name <- switch(direction,
+      alg_name <- switch(
+        direction,
         forward = "GIES-F",
         backward = "GIES-B",
         turning = "GIES-T"
@@ -348,7 +349,8 @@ TEssGraph <- setRefClass(
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
 #' @export TemporalBIC
-TemporalBIC <- setRefClass( # nolint: object_name_linter.
+TemporalBIC <- setRefClass(
+  # nolint: object_name_linter.
   "TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
@@ -533,12 +535,14 @@ TemporalBDeu <- setRefClass(
     .iss = "numeric"
   ),
   methods = list(
-    initialize = function(data = matrix(1, 1, 1),
-                          nodes = colnames(data),
-                          iss = 1,
-                          knowledge = NULL,
-                          order = NULL, # deprecated
-                          ...) {
+    initialize = function(
+      data = matrix(1, 1, 1),
+      nodes = colnames(data),
+      iss = 1,
+      knowledge = NULL,
+      order = NULL, # deprecated
+      ...
+    ) {
       if (!is.null(knowledge) && !is.null(order)) {
         stop(
           "Both `knowledge` and `order` supplied. ",

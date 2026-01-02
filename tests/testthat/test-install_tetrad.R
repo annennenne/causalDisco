@@ -108,12 +108,17 @@ test_that("get_java_version extracts version correctly when present", {
 # Helper to reduce repetition
 expect_output_list <- function(x) {
   expect_type(x, "list")
-  expect_named(x, c("installed", "version", "java_ok", "java_version", "message"))
+  expect_named(
+    x,
+    c("installed", "version", "java_ok", "java_version", "message")
+  )
 }
 
 # ---- Branch 1: Java not found ----
 test_that("Returns message when Java is missing", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() NA_character_)
+  mockery::stub(check_tetrad_install, "get_java_version", function() {
+    NA_character_
+  })
 
   out <- check_tetrad_install("1.0")
   expect_output_list(out)

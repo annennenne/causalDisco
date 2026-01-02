@@ -30,15 +30,26 @@
 #'
 #' @export
 gaus_cor_score <- function(
-  cormat, n, p = NULL,
-  lambda = NULL, ...
+  cormat,
+  n,
+  p = NULL,
+  lambda = NULL,
+  ...
 ) {
-  if (is.null(lambda)) lambda <- log(n) / 2
+  if (is.null(lambda)) {
+    lambda <- log(n) / 2
+  }
 
-  if (is.null(p)) p <- dim(cormat)[1]
+  if (is.null(p)) {
+    p <- dim(cormat)[1]
+  }
 
-  outscore <- methods::new("GaussL0penObsScore", matrix(1, 1, 1),
-    lambda = lambda, intercept = FALSE, ...
+  outscore <- methods::new(
+    "GaussL0penObsScore",
+    matrix(1, 1, 1),
+    lambda = lambda,
+    intercept = FALSE,
+    ...
   )
 
   # drop entries not needed
@@ -51,7 +62,9 @@ gaus_cor_score <- function(
   outscore$pp.dat$data.count <- rep(n, p)
   outscore$pp.dat$total.data.count <- n
   outscore$pp.dat$scatter.index <- rep(1, p)
-  outscore$pp.dat$scatter <- list(cbind(rbind(cormat, rep(0, p)), c(rep(0, p), 1)) * (n - 1))
+  outscore$pp.dat$scatter <- list(
+    cbind(rbind(cormat, rep(0, p)), c(rep(0, p), 1)) * (n - 1)
+  )
   outscore$.nodes <- rownames(cormat)
 
   outscore

@@ -18,7 +18,10 @@ test_that("ges Tetrad disco respects tier knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   kn <- knowledge(
     tpc_example,
@@ -34,7 +37,10 @@ test_that("ges Tetrad disco respects tier knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 })
 
 test_that("ges Tetrad disco respects required background knowledge", {
@@ -52,7 +58,10 @@ test_that("ges Tetrad disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   # With tier+required knowledge
 
@@ -71,10 +80,16 @@ test_that("ges Tetrad disco respects required background knowledge", {
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(nrow(violations_tiers) == 0, info = "Tier violations were found in the output graph.")
+  expect_true(
+    nrow(violations_tiers) == 0,
+    info = "Tier violations were found in the output graph."
+  )
 
   violations_req <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations_req) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations_req) == 0,
+    info = "Required edge not found in the output graph."
+  )
 })
 
 test_that("ges Tetrad disco respects forbidden background knowledge", {
@@ -93,7 +108,10 @@ test_that("ges Tetrad disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 })
 
 #### pcalg ges tests
@@ -161,7 +179,10 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(nrow(violations) == 0, info = "Required edge not found in the output graph.")
+  expect_true(
+    nrow(violations) == 0,
+    info = "Required edge not found in the output graph."
+  )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
   output <- disco(data = tpc_example, method = pcalg_ges)
@@ -170,7 +191,7 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
   # Test the original edges had the forbidden edge
   forbidden_present <-
     (edges$from == "child_x1" & edges$to == "child_x2") |
-      (edges$from == "child_x2" & edges$to == "child_x1")
+    (edges$from == "child_x2" & edges$to == "child_x1")
 
   expect_true(
     sum(forbidden_present) >= 1,

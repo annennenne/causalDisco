@@ -18,7 +18,8 @@ NULL
 #' @rdname BnlearnSearch
 #'
 #' @export
-BnlearnSearch <- R6Class( # nolint: object_name_linter.
+BnlearnSearch <- R6Class(
+  # nolint: object_name_linter.
   "BnlearnSearch",
   public = list(
     #' @template data-field
@@ -161,7 +162,8 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
-          "bnlearn", "purrr"
+          "bnlearn",
+          "purrr"
         ),
         class_name = "BnlearnSearch"
       )
@@ -193,8 +195,7 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
     #'
     #' @param method Character naming the test to use.
     #' @param alpha Significance level for the test.
-    set_test = function(method,
-                        alpha = 0.05) {
+    set_test = function(method, alpha = 0.05) {
       stopifnot(
         is.numeric(alpha),
         length(alpha) == 1,
@@ -241,9 +242,7 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
       )
 
       if (!(method %in% allowed_tests)) {
-        stop("Unknown test type using bnlearn engine: ", method,
-          call. = FALSE
-        )
+        stop("Unknown test type using bnlearn engine: ", method, call. = FALSE)
       }
       if (method == "fisher_z") {
         method <- "zf" # alias
@@ -298,9 +297,7 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
         "pnal-cg" # penalized node-average (log-)likelihood for cg vars
       )
       if (!(method %in% allowed_scores)) {
-        stop("Unknown score type using bnlearn engine: ", method,
-          call. = FALSE
-        )
+        stop("Unknown score type using bnlearn engine: ", method, call. = FALSE)
       }
 
       self$score <- method
@@ -322,8 +319,15 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
         self$set_params(args)
       }
       need_test <- c(
-        "pc", "gs", "iamb", "fast.iamb", "inter.iamb", "iamb.fdr",
-        "mmpc", "si.hiton.pc", "hpc"
+        "pc",
+        "gs",
+        "iamb",
+        "fast.iamb",
+        "inter.iamb",
+        "iamb.fdr",
+        "mmpc",
+        "si.hiton.pc",
+        "hpc"
       )
       need_score <- c("hc", "tabu")
       need_both <- c("mmhc", "rsmax2", "h2pc")
@@ -339,12 +343,14 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
 
       if (method %in% need_both) {
         if (is.null(self$test) || is.null(self$score)) {
-          stop("Both test and score must be set for this algorithm.",
+          stop(
+            "Both test and score must be set for this algorithm.",
             call. = FALSE
           )
         }
         if (
-          method %in% need_restrict_maximize ||
+          method %in%
+            need_restrict_maximize ||
             is.null(self$maximize_alg) ||
             is.null(self$restrict_alg)
         ) {
@@ -355,54 +361,54 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
         }
       }
 
-      self$alg <- switch(method,
+      self$alg <- switch(
+        method,
 
         # constraint-based
-        "pc" = purrr::partial(bnlearn::pc.stable,
+        "pc" = purrr::partial(
+          bnlearn::pc.stable,
           test = self$test,
           !!!self$params
         ),
-        "gs" = purrr::partial(bnlearn::gs,
+        "gs" = purrr::partial(bnlearn::gs, test = self$test, !!!self$params),
+        "iamb" = purrr::partial(
+          bnlearn::iamb,
           test = self$test,
           !!!self$params
         ),
-        "iamb" = purrr::partial(bnlearn::iamb,
+        "fast.iamb" = purrr::partial(
+          bnlearn::fast.iamb,
           test = self$test,
           !!!self$params
         ),
-        "fast.iamb" = purrr::partial(bnlearn::fast.iamb,
+        "inter.iamb" = purrr::partial(
+          bnlearn::inter.iamb,
           test = self$test,
           !!!self$params
         ),
-        "inter.iamb" = purrr::partial(bnlearn::inter.iamb,
-          test = self$test,
-          !!!self$params
-        ),
-        "iamb.fdr" = purrr::partial(bnlearn::iamb.fdr,
+        "iamb.fdr" = purrr::partial(
+          bnlearn::iamb.fdr,
           test = self$test,
           !!!self$params
         ),
 
         # local / skeleton discovery
-        "mmpc" = purrr::partial(bnlearn::mmpc,
+        "mmpc" = purrr::partial(
+          bnlearn::mmpc,
           test = self$test,
           !!!self$params
         ),
-        "si.hiton.pc" = purrr::partial(bnlearn::si.hiton.pc,
+        "si.hiton.pc" = purrr::partial(
+          bnlearn::si.hiton.pc,
           test = self$test,
           !!!self$params
         ),
-        "hpc" = purrr::partial(bnlearn::hpc,
-          test = self$test,
-          !!!self$params
-        ),
+        "hpc" = purrr::partial(bnlearn::hpc, test = self$test, !!!self$params),
 
         # score-based
-        "hc" = purrr::partial(bnlearn::hc,
-          score = self$score,
-          !!!self$params
-        ),
-        "tabu" = purrr::partial(bnlearn::tabu,
+        "hc" = purrr::partial(bnlearn::hc, score = self$score, !!!self$params),
+        "tabu" = purrr::partial(
+          bnlearn::tabu,
           score = self$score,
           !!!self$params
         ),
@@ -412,7 +418,8 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
           bnlearn::mmhc,
           !!!self$params
         ),
-        "rsmax2" = purrr::partial(bnlearn::rsmax2,
+        "rsmax2" = purrr::partial(
+          bnlearn::rsmax2,
           test = self$test,
           score = self$score,
           !!!self$params
@@ -431,7 +438,9 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
           bnlearn::aracne,
           !!!self$params
         ),
-        stop("Unknown method type using bnlearn engine: ", method,
+        stop(
+          "Unknown method type using bnlearn engine: ",
+          method,
           call. = FALSE
         )
       )
@@ -455,10 +464,13 @@ BnlearnSearch <- R6Class( # nolint: object_name_linter.
     #'  If NULL, the currently set data will be used, i.e. \code{self$data}.
     run_search = function(data = NULL) {
       # Data checks
-      if (!is.null(data)) self$set_data(data)
+      if (!is.null(data)) {
+        self$set_data(data)
+      }
 
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or pass data to run_search().",
+        stop(
+          "No data is set. Use set_data() first or pass data to run_search().",
           call. = FALSE
         )
       }

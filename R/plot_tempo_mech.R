@@ -41,13 +41,16 @@ plot_tempo_mech <- function(
     add_psi <- FALSE
   }
 
-  plot_ordered_amat(x_amat,
-    order = x_order, psi = x_psi,
+  plot_ordered_amat(
+    x_amat,
+    order = x_order,
+    psi = x_psi,
     add_time_axis = add_time_axis,
     add_psi = add_psi,
     var_labels = var_labels,
     period_labels = period_labels,
-    colors = colors, ...
+    colors = colors,
+    ...
   )
 }
 
@@ -89,8 +92,10 @@ plot_ordered_amat <- function(
   add_time_axis = TRUE,
   add_psi = TRUE,
   CPDAG = TRUE,
-  var_labels = NULL, period_labels = NULL,
-  vertex.size = 6, jitter = 5,
+  var_labels = NULL,
+  period_labels = NULL,
+  vertex.size = 6,
+  jitter = 5,
   space = 5,
   mark.border = NA,
   edge.arrow.size = 0.5,
@@ -102,16 +107,23 @@ plot_ordered_amat <- function(
 ) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "graphics", "igraph", "RColorBrewer", "scales"
+      "graphics",
+      "igraph",
+      "RColorBrewer",
+      "scales"
     ),
     function_name = "plot_ordered_amat"
   )
 
-  if (is.null(period_labels)) period_labels <- order
+  if (is.null(period_labels)) {
+    period_labels <- order
+  }
 
   ncol <- length(order)
   if (is.null(colors)) {
-    if (ncol < 3) ncol <- 3
+    if (ncol < 3) {
+      ncol <- 3
+    }
     colors <- RColorBrewer::brewer.pal("Dark2", n = ncol)
   }
   cols <- colors[seq_along(order)]
@@ -129,8 +141,13 @@ plot_ordered_amat <- function(
 
   groups <- sapply(order, function(x) getvar(vnames, x), simplify = FALSE)
 
-
-  mat <- ordered_layout(vnames, order, sep = sep, jitter = jitter, space = space)
+  mat <- ordered_layout(
+    vnames,
+    order,
+    sep = sep,
+    jitter = jitter,
+    space = space
+  )
   edges <- igraph::as_edgelist(this_graph) # igraph
 
   # drop one copy of double edges
@@ -190,13 +207,13 @@ plot_ordered_amat <- function(
     }
   }
 
-
   igraph::plot.igraph(
     this_graph,
     mark.groups = groups,
     edge.color = edgecolors,
     edge.arrow.mode = arrowmodes,
-    layout = mat, vertex.size = vertex.size,
+    layout = mat,
+    vertex.size = vertex.size,
     edge.arrow.size = edge.arrow.size,
     edge.width = edge.width,
     edge.curved = edge.curved,
@@ -211,7 +228,9 @@ plot_ordered_amat <- function(
     ...
   ) # igraph
   if (add_time_axis) {
-    graphics::axis(1, seq(-1, 1, 2 / (length(period_labels) - 1)),
+    graphics::axis(
+      1,
+      seq(-1, 1, 2 / (length(period_labels) - 1)),
       period_labels,
       cex.axis = 1.5
     )
@@ -237,8 +256,10 @@ plot_ordered_amat <- function(
 #' @noRd
 #' @keywords internal
 ordered_layout <- function(vnames, order, sep = "_", jitter, space) {
-  out_mat <- matrix(NA,
-    nrow = length(vnames), ncol = 2,
+  out_mat <- matrix(
+    NA,
+    nrow = length(vnames),
+    ncol = 2,
     dimnames = list(vnames, c("x", "y"))
   )
   n_pfs <- length(order)
@@ -249,7 +270,9 @@ ordered_layout <- function(vnames, order, sep = "_", jitter, space) {
     n_these <- length(these_var)
     jitter_vals <- rep(c(j, j + jitter), ceiling(n_these / 2))[1:n_these]
     out_mat[these_var, 1] <- jitter_vals
-    out_mat[these_var, 2] <- c(-floor(n_these / 2):floor(n_these / 2))[1:n_these]
+    out_mat[these_var, 2] <- c(-floor(n_these / 2):floor(n_these / 2))[
+      1:n_these
+    ]
     j <- j + 2 * jitter + space
   }
   out_mat

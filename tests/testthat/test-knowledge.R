@@ -16,21 +16,30 @@ test_that("knowledge object is created correctly using mini-DSL", {
       V1 %-->% V2,
       V2 %-->% V3
     )
-  expect_equal(kn$vars, tibble::tibble(
-    var = c("V1", "V2", "V3", "V4", "V5"),
-    tier = c("1", "1", "2", "3", "3")
-  ))
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = c("V1", "V2", "V3", "V4", "V5"),
+      tier = c("1", "1", "2", "3", "3")
+    )
+  )
   expect_equal(kn$frozen, FALSE)
-  expect_equal(kn$edges, tibble::tibble(
-    status = c("forbidden", "required", "required"),
-    from = c("V1", "V1", "V2"),
-    to = c("V3", "V2", "V3"),
-    tier_from = c("1", "1", "1"),
-    tier_to = c("2", "1", "2")
-  ))
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "3")
-  ))
+  expect_equal(
+    kn$edges,
+    tibble::tibble(
+      status = c("forbidden", "required", "required"),
+      from = c("V1", "V1", "V2"),
+      to = c("V3", "V2", "V3"),
+      tier_from = c("1", "1", "1"),
+      tier_to = c("2", "1", "2")
+    )
+  )
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "3")
+    )
+  )
 })
 
 # seeding with dataframe
@@ -57,10 +66,13 @@ test_that("seeding knowledge object with a df, matrix, or tibble works", {
   expect_equal(kn, kn_tbl)
   expect_equal(kn, kn_mat)
   expect_equal(kn$frozen, TRUE)
-  expect_equal(kn$vars, tibble::tibble(
-    var = c("X1", "X2", "X3", "X4"),
-    tier = c("1", "2", "2", NA_character_)
-  ))
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = c("X1", "X2", "X3", "X4"),
+      tier = c("1", "2", "2", NA_character_)
+    )
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -78,9 +90,12 @@ test_that("tier generation with named tiers using character names", {
     V1 %-->% V2,
     V2 %-->% V3
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 test_that("tier generation with named tiers using symbols/expression", {
@@ -94,9 +109,12 @@ test_that("tier generation with named tiers using symbols/expression", {
     V1 %-->% V2,
     V2 %-->% V3
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 test_that("tier generation with named tiers using mix of integers, chars, and symbols", {
@@ -112,9 +130,12 @@ test_that("tier generation with named tiers using mix of integers, chars, and sy
     V1 %-->% V2,
     V2 %-->% V3
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "Two", "3", "Four", "Five")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "Two", "3", "Four", "Five")
+    )
+  )
 })
 
 test_that("tier generation with negative numeric tiers errors", {
@@ -139,11 +160,13 @@ test_that("tier sorts if all numeric", {
       2 ~ V4 + V5
     )
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "3")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "3")
+    )
+  )
   expect_equal(kn$vars$tier, c("1", "2", "2", "3", "3"))
-
 
   kn <- knowledge(
     tier(
@@ -152,9 +175,12 @@ test_that("tier sorts if all numeric", {
       2 ~ V4 + V5
     )
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "10")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "10")
+    )
+  )
   expect_equal(kn$vars$tier, c("1", "2", "2", "10", "10"))
 })
 
@@ -169,9 +195,12 @@ test_that("tier generation using verbs only", {
     add_tier(3, after = 2) |>
     add_to_tier(2 ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "3")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "3")
+    )
+  )
 })
 
 test_that("tier generation using verbs only", {
@@ -181,9 +210,12 @@ test_that("tier generation using verbs only", {
     add_tier(Three, after = Two) |>
     add_to_tier(Two ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 test_that("tier generation using verbs only", {
@@ -193,9 +225,12 @@ test_that("tier generation using verbs only", {
     add_tier(Two, before = Three) |>
     add_to_tier(Two ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 test_that("tier generation using verbs only", {
@@ -205,9 +240,12 @@ test_that("tier generation using verbs only", {
     add_tier(Three, after = 2) |>
     add_to_tier(Three ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "2", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "2", "Three")
+    )
+  )
 })
 
 test_that("tier generation with verbs works", {
@@ -217,9 +255,12 @@ test_that("tier generation with verbs works", {
     add_tier(Two, before = 3) |>
     add_tier(Two_and_a_Half, after = Two) |>
     add_tier(2.75, before = 3)
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "Two", "Two_and_a_Half", "2.75", "3")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "Two", "Two_and_a_Half", "2.75", "3")
+    )
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -236,9 +277,12 @@ test_that("tier generation with mixing DSL and verbs", {
     add_tier(3, after = 2) |>
     add_to_tier(3 ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "3")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "3")
+    )
+  )
 })
 
 test_that("tier generation with mixing DSL and verbs with symbols", {
@@ -251,9 +295,12 @@ test_that("tier generation with mixing DSL and verbs with symbols", {
     add_tier(Three, after = 2) |>
     add_to_tier(Three ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "Three")
+    )
+  )
 })
 
 test_that("tier generation with mixing DSL and verbs with symbols and chars", {
@@ -266,9 +313,12 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
     add_tier(Two, before = "Three") |>
     add_to_tier("Two" ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 test_that("tier generation with mixing DSL and verbs with symbols and chars", {
@@ -281,9 +331,12 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
     add_tier(2, after = One) |>
     add_to_tier(2 ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "2", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "2", "Three")
+    )
+  )
 })
 
 test_that("tier generation with mixing DSL and verbs with symbols and chars", {
@@ -296,9 +349,12 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
     add_tier(2, after = One) |>
     add_to_tier(2 ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "2", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "2", "Three")
+    )
+  )
 })
 
 test_that("tier generation with mixing DSL and verbs with symbols and chars", {
@@ -311,9 +367,12 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
     add_tier(Two, before = Three) |>
     add_to_tier(Two ~ V3)
 
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "Two", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "Two", "Three")
+    )
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -322,7 +381,8 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
 
 test_that("tier generation using seq_tiers", {
   df <- as.data.frame(
-    matrix(runif(10), # 10 random numbers in (0,1)
+    matrix(
+      runif(10), # 10 random numbers in (0,1)
       nrow = 1,
       ncol = 10,
       byrow = TRUE
@@ -341,13 +401,19 @@ test_that("tier generation using seq_tiers", {
     ),
     X_1 %-->% X_2
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = 1:10 |> as.character()
-  ))
-  expect_equal(kn$vars, tibble::tibble(
-    var = paste0("X_", 1:10),
-    tier = 1:10 |> as.character()
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = 1:10 |> as.character()
+    )
+  )
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = paste0("X_", 1:10),
+      tier = 1:10 |> as.character()
+    )
+  )
 })
 
 test_that("tier generation using seq_tiers with labels", {
@@ -367,13 +433,19 @@ test_that("tier generation using seq_tiers with labels", {
       seq_tiers(5, matches("Y{i}_")) # exact match
     )
   )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("1", "2", "3", "5")
-  ))
-  expect_equal(kn$vars, tibble::tibble(
-    var = c("X_1", "X_2", "tier3_A", "Y5_ok"),
-    tier = c(1, 2, 3, 5) |> as.character()
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("1", "2", "3", "5")
+    )
+  )
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = c("X_1", "X_2", "tier3_A", "Y5_ok"),
+      tier = c(1, 2, 3, 5) |> as.character()
+    )
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -382,7 +454,8 @@ test_that("tier generation using seq_tiers with labels", {
 
 test_that("tier generation using 1:n", {
   df <- as.data.frame(
-    matrix(runif(10), # 10 random numbers in (0,1)
+    matrix(
+      runif(10), # 10 random numbers in (0,1)
       nrow = 1,
       ncol = 10,
       byrow = TRUE
@@ -398,13 +471,19 @@ test_that("tier generation using 1:n", {
         1:10
       )
     )
-  expect_equal(kn$tiers, tibble::tibble(
-    label = 1:10 |> as.character()
-  ))
-  expect_equal(kn$vars, tibble::tibble(
-    var = paste0("X_", 1:10),
-    tier = 1:10 |> as.character()
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = 1:10 |> as.character()
+    )
+  )
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = paste0("X_", 1:10),
+      tier = 1:10 |> as.character()
+    )
+  )
 })
 
 
@@ -416,13 +495,19 @@ test_that("add_to_tier() works as expected", {
   kn <- knowledge() |>
     add_tier(One) |>
     add_to_tier(One ~ V1 + V2)
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One")
-  ))
-  expect_equal(kn$vars, tibble::tibble(
-    var = c("V1", "V2"),
-    tier = c("One", "One")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One")
+    )
+  )
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = c("V1", "V2"),
+      tier = c("One", "One")
+    )
+  )
 })
 
 test_that("add_to_tier() works as expected with mini-DSL", {
@@ -434,13 +519,19 @@ test_that("add_to_tier() works as expected with mini-DSL", {
     )
   ) |>
     add_to_tier(One ~ V6)
-  expect_equal(kn$tiers, tibble::tibble(
-    label = c("One", "2", "Three")
-  ))
-  expect_equal(kn$vars, tibble::tibble(
-    var = c("V1", "V2", "V6", "V3", "V4", "V5"),
-    tier = c("One", "One", "One", "2", "2", "Three")
-  ))
+  expect_equal(
+    kn$tiers,
+    tibble::tibble(
+      label = c("One", "2", "Three")
+    )
+  )
+  expect_equal(
+    kn$vars,
+    tibble::tibble(
+      var = c("V1", "V2", "V6", "V3", "V4", "V5"),
+      tier = c("One", "One", "One", "2", "2", "Three")
+    )
+  )
 })
 
 
@@ -448,9 +539,11 @@ test_that("add_to_tier() works as expected with mini-DSL", {
 # Infix operators do the same as functions
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("required() and %-->% produce the same edges", {
-  expect_warning(kn_req <- knowledge(
-    required(V1 ~ V2)
-  ))
+  expect_warning(
+    kn_req <- knowledge(
+      required(V1 ~ V2)
+    )
+  )
   kn_dsl <- knowledge(
     V1 %-->% V2
   )
@@ -458,9 +551,11 @@ test_that("required() and %-->% produce the same edges", {
 })
 
 test_that("forbidden() and %--x% produce the same edges", {
-  expect_warning(kn_req <- knowledge(
-    forbidden(V1 ~ V2)
-  ))
+  expect_warning(
+    kn_req <- knowledge(
+      forbidden(V1 ~ V2)
+    )
+  )
   kn_dsl <- knowledge(
     V1 %--x% V2
   )
@@ -1147,7 +1242,8 @@ test_that("reordering respects tier-violation rules", {
     V2 %-->% V3 # V2 must stay *before* V1
   )
 
-  expect_error(reposition_tier(kn2, Three, after = One),
+  expect_error(
+    reposition_tier(kn2, Three, after = One),
     "Edge(s) violate tier ordering: V2 --> V3",
     fixed = TRUE
   )
@@ -1218,19 +1314,22 @@ test_that("knowledge() throws error when using another function than tier(), for
 test_that("print.knowledge() snapshot", {
   local_edition(3) # enable v3 snapshotting
 
-  withr::with_options(list(
-    crayon.enabled = FALSE, # strip colour codes
-    cli.num_colors = 1
-  ), {
-    kn <- knowledge(
-      tibble::tibble(V1 = 1, V2 = 2),
-      tier(1 ~ V1),
-      tier(2 ~ V2),
-      V1 %--x% V2
-    )
+  withr::with_options(
+    list(
+      crayon.enabled = FALSE, # strip colour codes
+      cli.num_colors = 1
+    ),
+    {
+      kn <- knowledge(
+        tibble::tibble(V1 = 1, V2 = 2),
+        tier(1 ~ V1),
+        tier(2 ~ V2),
+        V1 %--x% V2
+      )
 
-    expect_snapshot_output(print(kn), cran = FALSE)
-  })
+      expect_snapshot_output(print(kn), cran = FALSE)
+    }
+  )
 })
 
 test_that(".edge_verb() validates formula structure and matches", {
@@ -1252,7 +1351,9 @@ test_that(".edge_verb() validates formula structure and matches", {
   # both sides match zero vars: specific error branch
   expect_error(
     .edge_verb(
-      kn, "forbidden", rlang::quo(starts_with("Z") ~ starts_with("W"))
+      kn,
+      "forbidden",
+      rlang::quo(starts_with("Z") ~ starts_with("W"))
     ),
     "Formula `starts_with(\"Z\") ~ starts_with(\"W\")` matched no variables.",
     fixed = TRUE
@@ -1394,13 +1495,16 @@ test_that("add_vars validates input types", {
 test_that("forbid_edge() and require_edge() add single edges", {
   kn <- knowledge()
   kn_f <- forbid_edge(kn, V1 ~ V2)
-  expect_equal(kn_f$edges, tibble::tibble(
-    status    = "forbidden",
-    from      = "V1",
-    to        = "V2",
-    tier_from = NA_character_,
-    tier_to   = NA_character_
-  ))
+  expect_equal(
+    kn_f$edges,
+    tibble::tibble(
+      status = "forbidden",
+      from = "V1",
+      to = "V2",
+      tier_from = NA_character_,
+      tier_to = NA_character_
+    )
+  )
 
   kn_r <- require_edge(kn, V1 ~ V2)
   expect_equal(kn_r$edges$status, "required")
@@ -1433,7 +1537,10 @@ test_that("forbid_edge()/require_edge() respect tidy-select on either side", {
   expect_true(all(kn$edges$to == "Y"))
 
   kn2 <- require_edge(kn, Y ~ matches("^X[12]$"))
-  expect_equal(sort(kn2$edges$status), c("forbidden", "forbidden", "required", "required"))
+  expect_equal(
+    sort(kn2$edges$status),
+    c("forbidden", "forbidden", "required", "required")
+  )
 })
 
 test_that("forbidden() and required() inside knowledge() create edges", {
@@ -1591,21 +1698,28 @@ test_that("as_tetrad_knowledge() passes tiers and edges to the Java proxy", {
   )
 
   fake <- rlang::env(
-    tiers     = list(),
+    tiers = list(),
     forbidden = list(),
-    required  = list()
+    required = list()
   )
 
   new_stub <- function(class) {
     list(
-      addToTier    = function(i, v) fake$tiers <- append(fake$tiers, list(c(i, v))),
-      setForbidden = function(f, t) fake$forbidden <- append(fake$forbidden, list(c(f, t))),
-      setRequired  = function(f, t) fake$required <- append(fake$required, list(c(f, t)))
+      addToTier = function(i, v) {
+        fake$tiers <- append(fake$tiers, list(c(i, v)))
+      },
+      setForbidden = function(f, t) {
+        fake$forbidden <- append(fake$forbidden, list(c(f, t)))
+      },
+      setRequired = function(f, t) {
+        fake$required <- append(fake$required, list(c(f, t)))
+      }
     )
   }
 
   mockery::stub(
-    as_tetrad_knowledge, "requireNamespace",
+    as_tetrad_knowledge,
+    "requireNamespace",
     function(pkg, quietly = FALSE) pkg == "rJava"
   )
   mockery::stub(as_tetrad_knowledge, "rJava::.jinit", function(...) NULL)
@@ -1728,7 +1842,11 @@ test_that("result has correct dimnames and dimensions", {
     A %--x% B,
     C %-->% D
   )
-  cons <- as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE)
+  cons <- as_pcalg_constraints(
+    kn,
+    labels = labels,
+    directed_as_undirected = TRUE
+  )
   expect_equal(dim(cons$fixed_gaps), c(4L, 4L))
   expect_equal(dimnames(cons$fixed_gaps), list(labels, labels))
   expect_equal(dim(cons$fixed_edges), c(4L, 4L))
@@ -1784,7 +1902,8 @@ test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
   kn_forb$edges$to[1] <- "X" # X not in vars or labels
 
   expect_error(
-    as_pcalg_constraints(kn_forb,
+    as_pcalg_constraints(
+      kn_forb,
       labels = c("A", "B"),
       directed_as_undirected = TRUE
     ),
@@ -1799,7 +1918,8 @@ test_that("as_pcalg_constraints() detects edges that reference unknown vars", {
   kn_req$edges$to[1] <- "Y"
 
   expect_error(
-    as_pcalg_constraints(kn_req,
+    as_pcalg_constraints(
+      kn_req,
       labels = c("A", "B"),
       directed_as_undirected = TRUE
     ),
@@ -1831,7 +1951,10 @@ test_that("exogenous() can take a list of variables", {
   )
 
   expect_equal(kn$vars$var, c("A", "B", "C"))
-  expect_equal(kn$edges$status, c("forbidden", "forbidden", "forbidden", "forbidden"))
+  expect_equal(
+    kn$edges$status,
+    c("forbidden", "forbidden", "forbidden", "forbidden")
+  )
   expect_equal(kn$edges$from, c("A", "B", "C", "C"))
   expect_equal(kn$edges$to, c("B", "A", "A", "B"))
 })
@@ -1919,7 +2042,10 @@ test_that("multiple calls of exogenous() accumulate correctly", {
     exogenous(B)
   )
 
-  expect_equal(kn$edges$status, c("forbidden", "forbidden", "forbidden", "forbidden"))
+  expect_equal(
+    kn$edges$status,
+    c("forbidden", "forbidden", "forbidden", "forbidden")
+  )
   expect_setequal(kn$edges$from, c("B", "C", "A", "C"))
   expect_setequal(kn$edges$to, c("A", "A", "B", "B"))
 })
@@ -1971,12 +2097,18 @@ test_that("remove_edges() drops forbidden and required edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
-    A %--x% C, B %--x% D,
-    B %-->% C, C %-->% D
+    A %--x% C,
+    B %--x% D,
+    B %-->% C,
+    C %-->% D
   )
   # check edges present
-  expect_true(any(kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"))
-  expect_true(any(kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"))
+  expect_true(any(
+    kn$edges$status == "forbidden" & kn$edges$from == "A" & kn$edges$to == "C"
+  ))
+  expect_true(any(
+    kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"
+  ))
   # remove a forbidden edge
   kn2 <- remove_edges(kn, A ~ C)
   expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
@@ -2004,7 +2136,8 @@ test_that("remove_edges() supports multiple formulas and tidyselect", {
   kn <- knowledge(
     data.frame(X1 = 1, X2 = 2, Y = 3),
     tier(1 ~ X1 + X2, 2 ~ Y),
-    X1 %--x% Y, X2 %--x% Y,
+    X1 %--x% Y,
+    X2 %--x% Y,
     X2 %-->% X1
   )
 
@@ -2113,7 +2246,6 @@ test_that("chaining remove_* works together", {
 # ──────────────────────────────────────────────────────────────────────────────
 # deparse_knowledge()
 # ──────────────────────────────────────────────────────────────────────────────
-
 
 test_that("deparse_knowledge() emits minimal code for empty knowledge", {
   kn <- knowledge()

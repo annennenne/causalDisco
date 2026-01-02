@@ -3,12 +3,25 @@ test_that("new_knowledgeable_caugi stops if not knowledge", {
   cg <- caugi::as_caugi(
     matrix(
       c(
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-        0, 0, 0, 0
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
       ),
-      nrow = 4, byrow = TRUE
+      nrow = 4,
+      byrow = TRUE
     ),
     class = "DAG"
   )
@@ -24,12 +37,25 @@ test_that("knowledgeable_caugi stops if not knowledge", {
   cg <- caugi::as_caugi(
     matrix(
       c(
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-        0, 0, 0, 0
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
       ),
-      nrow = 4, byrow = TRUE
+      nrow = 4,
+      byrow = TRUE
     ),
     class = "DAG"
   )
@@ -66,12 +92,25 @@ test_that("knowledge helpers works", {
   cg <- caugi::as_caugi(
     matrix(
       c(
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-        0, 0, 0, 0
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
       ),
-      nrow = 4, byrow = TRUE
+      nrow = 4,
+      byrow = TRUE
     ),
     class = "DAG"
   )
@@ -85,13 +124,11 @@ test_that("knowledge helpers works", {
   expect_equal(nrow(output), 0)
   expect_equal(class(output)[1], "tbl_df")
 
-
   output <- `$<-.knowledgeable_caugi`(kcg, "hi", 1)
   expect_equal(output$hi, 1)
 
   output <- `$<-.knowledgeable_caugi`(kcg, "vars", 1)
   expect_equal(output$knowledge$vars, 1)
-
 
   output <- `[[.knowledgeable_caugi`(kcg, "hi")
   expect_null(output)
@@ -103,7 +140,6 @@ test_that("knowledge helpers works", {
   output <- `[[.knowledgeable_caugi`(kcg, "knowledge")
   expect_true(is_knowledge(output))
   expect_false(is_knowledgeable_caugi(output))
-
 
   output <- `[[<-.knowledgeable_caugi`(kcg, "hi", 1)
   expect_equal(output$hi, 1)

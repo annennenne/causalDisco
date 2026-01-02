@@ -41,9 +41,10 @@ compare <- function(x, y = NULL) {
     edges1 <- x
     edges2 <- y
   } else {
-    stop("x and y must either both be tpdags or be numeric vectors of the same length.")
+    stop(
+      "x and y must either both be tpdags or be numeric vectors of the same length."
+    )
   }
-
 
   # note: all numbers should be divided by 2 as
   # we are counting each edge twice (one time
@@ -60,8 +61,10 @@ compare <- function(x, y = NULL) {
   }
 
   out <- list(
-    n_edges1 = n1, n_edges2 = n2,
-    psi1 = psi1, psi2 = psi2,
+    n_edges1 = n1,
+    n_edges2 = n2,
+    psi1 = psi1,
+    psi2 = psi2,
     nadded = nadded,
     nremoved = nremoved
   )

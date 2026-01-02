@@ -17,7 +17,8 @@ NULL
 #' @rdname CausalDiscoSearch
 #'
 #' @export CausalDiscoSearch
-CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
+CausalDiscoSearch <- R6::R6Class(
+  # nolint: object_name_linter.
   "CausalDiscoSearch",
   public = list(
     #' @template data-field
@@ -74,7 +75,12 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
-          "pcalg", "purrr", "R6", "rlang", "stats", "utils"
+          "pcalg",
+          "purrr",
+          "R6",
+          "rlang",
+          "stats",
+          "utils"
         ),
         class_name = "CausalDiscoSearch"
       )
@@ -97,7 +103,12 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
         return(invisible(self))
       }
       reserved <- c(
-        "data", "suff_stat", "knowledge", "score", "test", "labels"
+        "data",
+        "suff_stat",
+        "knowledge",
+        "score",
+        "test",
+        "labels"
       )
       bad <- intersect(names(params), reserved)
       if (length(bad)) {
@@ -161,7 +172,10 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       if (!is.null(self$data)) {
         self$set_suff_stat()
       } else {
-        out <- .get_pcalg_test_from_string(method = private$test_key, suff_stat = FALSE)
+        out <- .get_pcalg_test_from_string(
+          method = private$test_key,
+          suff_stat = FALSE
+        )
         self$test <- out$method
       }
       invisible(self)
@@ -176,7 +190,11 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       method <- tolower(method)
       allowed <- c("tbic", "tbdeu")
       if (!(method %in% allowed)) {
-        stop("Unknown score type using causalDisco engine: ", method, call. = FALSE)
+        stop(
+          "Unknown score type using causalDisco engine: ",
+          method,
+          call. = FALSE
+        )
       }
 
       private$score_method <- method
@@ -225,7 +243,8 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       method <- tolower(method)
       private$alg_method <- method
 
-      switch(method,
+      switch(
+        method,
         "tpc" = {
           if (is.null(self$test)) {
             stop("No test is set. Use set_test() first.", call. = FALSE)
@@ -252,7 +271,9 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
             verbose = isTRUE(self$params$verbose)
           )
         },
-        stop("Unknown method type using causalDisco engine: ", method,
+        stop(
+          "Unknown method type using causalDisco engine: ",
+          method,
           call. = FALSE
         )
       )
@@ -293,7 +314,8 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
         }
       }
       if (is.null(self$data)) {
-        stop("No data is set. Use set_data() first or pass data to ",
+        stop(
+          "No data is set. Use set_data() first or pass data to ",
           "run_search().",
           call. = FALSE
         )
@@ -305,7 +327,8 @@ CausalDiscoSearch <- R6::R6Class( # nolint: object_name_linter.
       # constraint-based path
       if (!identical(private$alg_method, "tges")) {
         if (is.null(self$suff_stat) && set_suff_stat) {
-          stop("No sufficient statistic is set. Use set_data() first.",
+          stop(
+            "No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
         }

@@ -46,15 +46,20 @@ pc <- function(
 
   # build a `runner builder` that knows how to make a runner given knowledge
   builder <- function(knowledge = NULL) {
-    runner <- switch(engine,
-      tetrad = rlang::exec(pc_tetrad_runner,
-        test = test, alpha = alpha, !!!args
+    runner <- switch(
+      engine,
+      tetrad = rlang::exec(
+        pc_tetrad_runner,
+        test = test,
+        alpha = alpha,
+        !!!args
       ),
-      pcalg = rlang::exec(pc_pcalg_runner,
-        test = test, alpha = alpha, !!!args
-      ),
-      bnlearn = rlang::exec(pc_bnlearn_runner,
-        test = test, alpha = alpha, !!!args
+      pcalg = rlang::exec(pc_pcalg_runner, test = test, alpha = alpha, !!!args),
+      bnlearn = rlang::exec(
+        pc_bnlearn_runner,
+        test = test,
+        alpha = alpha,
+        !!!args
       )
     )
     runner
@@ -69,14 +74,19 @@ pc <- function(
 pc_tetrad_runner <- function(test, alpha, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rJava", "rlang"
+      "rJava",
+      "rlang"
     ),
     function_name = "pc_tetrad_runner"
   )
 
   search <- TetradSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "tetrad", "pc",
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "tetrad",
+    "pc",
     test = test
   )
 
@@ -107,8 +117,12 @@ pc_tetrad_runner <- function(test, alpha, ...) {
 
 
 #' @keywords internal
-pc_pcalg_runner <- function(test, alpha, ...,
-                            directed_as_undirected_knowledge = FALSE) {
+pc_pcalg_runner <- function(
+  test,
+  alpha,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
@@ -118,7 +132,11 @@ pc_pcalg_runner <- function(test, alpha, ...,
 
   search <- PcalgSearch$new()
   args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(search, args, "pcalg", "pc",
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "pcalg",
+    "pc",
     test = test
   )
 
@@ -128,7 +146,8 @@ pc_pcalg_runner <- function(test, alpha, ...,
 
   runner <- list(
     set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge,
+      search$set_knowledge(
+        knowledge,
         directed_as_undirected = directed_as_undirected_knowledge
       )
     },

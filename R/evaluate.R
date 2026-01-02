@@ -80,7 +80,10 @@ evaluate.matrix <- function(est, true, metrics, list_out = FALSE, ...) {
   }
   if (n_other > 0) {
     for (i in 1:n_other) {
-      other_metrics[[i]] <- do.call(other[i], list(est_amat = est, true_amat = true))
+      other_metrics[[i]] <- do.call(
+        other[i],
+        list(est_amat = est, true_amat = true)
+      )
     }
     other_names <- other
   }
@@ -113,7 +116,11 @@ evaluate.array <- function(est, true, metrics, ...) {
   p <- length(metrics$adj) + length(metrics$dir) + length(metrics$other)
   out <- matrix(NA, n, p)
   for (i in 1:n) {
-    res <- evaluate.matrix(est = est[i, , ], true = true[i, , ], metrics = metrics)
+    res <- evaluate.matrix(
+      est = est[i, , ],
+      true = true[i, , ],
+      metrics = metrics
+    )
     out[i, ] <- unlist(res)
   }
   colnames(out) <- names(res)

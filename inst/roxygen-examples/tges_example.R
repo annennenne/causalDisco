@@ -25,7 +25,8 @@ my_tges(tpc_example)
 
 data("tpc_example")
 
-score_bic <- new("TemporalBIC",
+score_bic <- new(
+  "TemporalBIC",
   data = tpc_example,
   nodes = colnames(tpc_example),
   knowledge = kn

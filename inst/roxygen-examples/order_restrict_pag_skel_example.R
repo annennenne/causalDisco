@@ -54,5 +54,8 @@ fci_skel <- pcalg::pdsep(
 )
 
 # Enforce temporal arrowheads across tiers in PAG skeleton
-pag_skel <- causalDisco:::order_restrict_pag_skel(fci_skel$G + 0, knowledge = kn)
+pag_skel <- causalDisco:::order_restrict_pag_skel(
+  fci_skel$G + 0,
+  knowledge = kn
+)
 pag_skel

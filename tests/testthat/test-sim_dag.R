@@ -1,12 +1,32 @@
 test_that("sim_dag works", {
   amat <- sim_dag(4, sparsity = 0, permute = FALSE)
-  expected_amat <- matrix(c(
-    0, 0, 0, 0,
-    1, 0, 0, 0,
-    1, 1, 0, 0,
-    1, 1, 1, 0
-  ), nrow = 4, byrow = TRUE)
-  rownames(expected_amat) <- colnames(expected_amat) <- paste("x", 1:4, sep = "")
+  expected_amat <- matrix(
+    c(
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      1,
+      0
+    ),
+    nrow = 4,
+    byrow = TRUE
+  )
+  rownames(expected_amat) <- colnames(expected_amat) <- paste(
+    "x",
+    1:4,
+    sep = ""
+  )
   expect_equal(amat, expected_amat)
 
   amat <- sim_dag(5, sparsity_lim = c(0.5, 0.5))

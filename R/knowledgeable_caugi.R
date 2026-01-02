@@ -44,7 +44,11 @@ new_knowledgeable_caugi <- function(cg, kn) {
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.default <- function(graph, kn = knowledge(), class = "PDAG") {
+knowledgeable_caugi.default <- function(
+  graph,
+  kn = knowledge(),
+  class = "PDAG"
+) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -58,7 +62,11 @@ knowledgeable_caugi.default <- function(graph, kn = knowledge(), class = "PDAG")
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.pcAlgo <- function(graph, kn = knowledge(), class = "PDAG") {
+knowledgeable_caugi.pcAlgo <- function(
+  graph,
+  kn = knowledge(),
+  class = "PDAG"
+) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -68,7 +76,11 @@ knowledgeable_caugi.pcAlgo <- function(graph, kn = knowledge(), class = "PDAG") 
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.fciAlgo <- function(graph, kn = knowledge(), class = "PAG") {
+knowledgeable_caugi.fciAlgo <- function(
+  graph,
+  kn = knowledge(),
+  class = "PAG"
+) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -79,7 +91,11 @@ knowledgeable_caugi.fciAlgo <- function(graph, kn = knowledge(), class = "PAG") 
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.tetrad_graph <- function(graph, kn = knowledge(), class = "PDAG") {
+knowledgeable_caugi.tetrad_graph <- function(
+  graph,
+  kn = knowledge(),
+  class = "PDAG"
+) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -89,7 +105,11 @@ knowledgeable_caugi.tetrad_graph <- function(graph, kn = knowledge(), class = "P
 
 #' @inheritParams knowledgeable_caugi
 #' @export
-knowledgeable_caugi.EssGraph <- function(graph, kn = knowledge(), class = "PDAG") {
+knowledgeable_caugi.EssGraph <- function(
+  graph,
+  kn = knowledge(),
+  class = "PDAG"
+) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -100,11 +120,15 @@ knowledgeable_caugi.EssGraph <- function(graph, kn = knowledge(), class = "PDAG"
     graph$.in.edges,
     \(child_idx, parent_vec) {
       if (length(parent_vec) == 0L) {
-        return(tibble::tibble(from = character(), to = character(), edge = character()))
+        return(tibble::tibble(
+          from = character(),
+          to = character(),
+          edge = character()
+        ))
       }
       tibble::tibble(
         from = nodes[parent_vec],
-        to   = rep(nodes[child_idx], length(parent_vec)),
+        to = rep(nodes[child_idx], length(parent_vec)),
         edge = rep("-->", length(parent_vec))
       )
     }
@@ -118,7 +142,7 @@ knowledgeable_caugi.EssGraph <- function(graph, kn = knowledge(), class = "PDAG"
   collapsed <- edges |>
     dplyr::mutate(
       canon_from = pmin(from, to),
-      canon_to   = pmax(from, to)
+      canon_to = pmax(from, to)
     ) |>
     dplyr::group_by(canon_from, canon_to) |>
     dplyr::summarise(
@@ -169,7 +193,8 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
 #' @return The nested `knowledge` object.
 #'
 #' @export
-knowledge.knowledgeable_caugi <- function(x) { # nolint: object_name_linter.
+knowledge.knowledgeable_caugi <- function(x) {
+  # nolint: object_name_linter.
   x$knowledge
 }
 

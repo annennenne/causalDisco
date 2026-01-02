@@ -1,11 +1,13 @@
 #Load numerical dataset numData
-load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
+load(url(
+  "https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"
+))
 
 #Load package
 library(bnlearn)
 
 #Learn causal structure using pc.stable():
-#Mandatory arguments: 
+#Mandatory arguments:
 ##The dataset as a data.frame
 bnlearn_pcstable_out <- pc.stable(numData)
 
@@ -14,4 +16,3 @@ bnlearn_pcstable_out
 
 #Plot output
 plot(bnlearn_pcstable_out)
-

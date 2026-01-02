@@ -82,8 +82,10 @@ ask_heap_size <- function() {
 #'
 #' @noRd
 #' @keywords internal
-find_tetrad_jar <- function(version = getOption("causalDisco.tetrad.version"),
-                            dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))) {
+find_tetrad_jar <- function(
+  version = getOption("causalDisco.tetrad.version"),
+  dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))
+) {
   # Check that directory exists
   if (!nzchar(dir) || !dir.exists(dir)) {
     stop(paste0(
@@ -129,7 +131,8 @@ init_java <- function(heap = default_heap()) {
     stop(
       "No Tetrad JAR found for version ",
       getOption("causalDisco.tetrad.version"),
-      " in ", system.file("java", package = "causalDisco")
+      " in ",
+      system.file("java", package = "causalDisco")
     )
   }
 
@@ -169,7 +172,9 @@ parse_heap_gb <- function(x) {
   }
 
   stop(
-    "Heap string \"", x, "\" not recognised. ",
+    "Heap string \"",
+    x,
+    "\" not recognised. ",
     "Specify a number (integer or decimal) followed by 'g' (gigabytes) ",
     "or 'm' (megabytes), e.g. \"4g\" or \"4096m\"."
   )
@@ -227,27 +232,33 @@ is_interactive <- function() {
 #'
 #' @example inst/roxygen-examples/dot-check_if_pkgs_are_installed_example.R
 #' @keywords internal
-.check_if_pkgs_are_installed <- function(pkgs,
-                                         function_name = NULL,
-                                         class_name = NULL) {
+.check_if_pkgs_are_installed <- function(
+  pkgs,
+  function_name = NULL,
+  class_name = NULL
+) {
   stopifnot(is.character(pkgs), length(pkgs) > 0)
   if (is.null(function_name) && is.null(class_name)) {
-    stop("Either function_name or class_name must be provided for ",
+    stop(
+      "Either function_name or class_name must be provided for ",
       ".check_if_pkgs_are_installed()",
       call. = FALSE
     )
   }
-  not_installed <- pkgs[!vapply(
-    pkgs,
-    requireNamespace,
-    quietly = TRUE,
-    FUN.VALUE = logical(1)
-  )]
+  not_installed <- pkgs[
+    !vapply(
+      pkgs,
+      requireNamespace,
+      quietly = TRUE,
+      FUN.VALUE = logical(1)
+    )
+  ]
 
   if (!is.null(function_name)) {
     if (length(not_installed) > 0) {
       msg <- paste0(
-        "The following packages are required for `", function_name,
+        "The following packages are required for `",
+        function_name,
         "()` but are not installed: \n       [",
         paste(not_installed, collapse = ", "),
         "].\n       Please install them with install.packages()."
@@ -257,7 +268,8 @@ is_interactive <- function() {
   } else if (!is.null(class_name)) {
     if (length(not_installed) > 0) {
       msg <- paste0(
-        "The following packages are required for the R6 class `", class_name,
+        "The following packages are required for the R6 class `",
+        class_name,
         "` but are not installed: \n       [",
         paste(not_installed, collapse = ", "),
         "].\n       Please install them with install.packages()."

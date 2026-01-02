@@ -25,7 +25,10 @@ detect_arch <- function() {
 jdk_download_url <- function(arch, os) {
   paste0(
     "https://api.adoptium.net/v3/binary/latest/25/ga/",
-    os, "/", arch, "/jdk/hotspot/normal/eclipse"
+    os,
+    "/",
+    arch,
+    "/jdk/hotspot/normal/eclipse"
   )
 }
 
@@ -50,14 +53,18 @@ install_java_windows <- function(force = FALSE) {
   # Read user PATH (registry)
   get_user_path <- function() {
     tryCatch(
-      paste(system2(
-        "powershell",
-        args = c(
-          "-NoProfile", "-Command",
-          "[Environment]::GetEnvironmentVariable('Path','User')"
+      paste(
+        system2(
+          "powershell",
+          args = c(
+            "-NoProfile",
+            "-Command",
+            "[Environment]::GetEnvironmentVariable('Path','User')"
+          ),
+          stdout = TRUE
         ),
-        stdout = TRUE
-      ), collapse = ";"),
+        collapse = ";"
+      ),
       error = function(e) Sys.getenv("PATH")
     )
   }
@@ -68,7 +75,8 @@ install_java_windows <- function(force = FALSE) {
       system2(
         "powershell",
         args = c(
-          "-NoProfile", "-Command",
+          "-NoProfile",
+          "-Command",
           "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')"
         ),
         stdout = TRUE
@@ -107,7 +115,9 @@ install_java_windows <- function(force = FALSE) {
   utils::unzip(zipfile, exdir = install_dir)
 
   jdk_installed <- detect_jdk_folder(install_dir)
-  if (is.null(jdk_installed)) stop("Extraction failed: no JDK folder found")
+  if (is.null(jdk_installed)) {
+    stop("Extraction failed: no JDK folder found")
+  }
 
   jdk_bin <- file.path(jdk_installed, "bin")
 
@@ -124,10 +134,12 @@ install_java_windows <- function(force = FALSE) {
 
   # --- Persistent JAVA_HOME ---
   user_java_home <- get_user_java_home()
-  if (!identical(
-    normalizePath(user_java_home, winslash = "/"),
-    normalizePath(jdk_installed, winslash = "/")
-  )) {
+  if (
+    !identical(
+      normalizePath(user_java_home, winslash = "/"),
+      normalizePath(jdk_installed, winslash = "/")
+    )
+  ) {
     system2("setx", c("JAVA_HOME", shQuote(jdk_installed)))
     message("Set persistent JAVA_HOME.")
   }
@@ -177,7 +189,9 @@ install_java_mac <- function(force = FALSE) {
   utils::untar(tarfile, exdir = install_dir)
 
   jdk_installed <- detect_jdk_folder(install_dir)
-  if (is.null(jdk_installed)) stop("Extraction failed: no JDK folder found")
+  if (is.null(jdk_installed)) {
+    stop("Extraction failed: no JDK folder found")
+  }
 
   java_home <- file.path(jdk_installed, "Contents/Home")
   jdk_bin <- file.path(java_home, "bin")

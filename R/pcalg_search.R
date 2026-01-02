@@ -16,7 +16,8 @@ NULL
 #'
 #' @importFrom R6 R6Class
 #' @export PcalgSearch
-PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
+PcalgSearch <- R6::R6Class(
+  # nolint: object_name_linter.
   "PcalgSearch",
   public = list(
     #' @template data-field
@@ -85,7 +86,9 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     initialize = function() {
       .check_if_pkgs_are_installed(
         pkgs = c(
-          "pcalg", "purrr", "rlang"
+          "pcalg",
+          "purrr",
+          "rlang"
         ),
         class_name = "PcalgSearch"
       )
@@ -179,23 +182,20 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
       method <- tolower(method)
       allowed <- c("sem_bic", "sem_bic_int")
       if (!(method %in% allowed)) {
-        stop("Unknown score type using pcalg engine: ", method,
-          call. = FALSE
-        )
+        stop("Unknown score type using pcalg engine: ", method, call. = FALSE)
       }
       # Function that will be used to build the score, when data is set
       return_pcalg_score <- function() {
         if (is.null(self$data)) {
-          stop("Data must be set before score.",
-            call. = FALSE
-          )
+          stop("Data must be set before score.", call. = FALSE)
         }
-        switch(method,
+        switch(
+          method,
           "sem_bic" = {
             score <- rlang::exec(
               "new",
               Class = "GaussL0penObsScore",
-              data  = self$data,
+              data = self$data,
               !!!params
             )
           },
@@ -203,7 +203,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
             score <- rlang::exec(
               "new",
               Class = "GaussL0penIntScore",
-              data  = self$data,
+              data = self$data,
               !!!params
             )
           }
@@ -219,12 +219,11 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
     #' @param method A string specifying the type of algorithm to use.
     set_alg = function(method) {
       method <- tolower(method)
-      switch(method,
+      switch(
+        method,
         "pc" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.",
-              call. = FALSE
-            )
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           self$alg <- purrr::partial(
             pcalg::pc,
@@ -234,9 +233,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
         },
         "fci" = {
           if (is.null(self$test)) {
-            stop("No test is set. Use set_test() first.",
-              call. = FALSE
-            )
+            stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           self$alg <- purrr::partial(
             pcalg::fci,
@@ -251,9 +248,7 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
             !!!self$params
           )
         },
-        stop("Unknown method type using pcalg engine: ", method,
-          call. = FALSE
-        )
+        stop("Unknown method type using pcalg engine: ", method, call. = FALSE)
       )
     },
 
@@ -279,7 +274,10 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
           directed_as_undirected = directed_as_undirected
         )
         if (any(constraints$fixed_edges)) {
-          warning("Engine pcalg does not use required edges; ignoring them.", call. = FALSE)
+          warning(
+            "Engine pcalg does not use required edges; ignoring them.",
+            call. = FALSE
+          )
         }
         constraints
       }
@@ -299,21 +297,21 @@ PcalgSearch <- R6::R6Class( # nolint: object_name_linter.
         }
       }
       if (is.null(self$data)) {
-        stop("No data is set. ",
+        stop(
+          "No data is set. ",
           "Use set_data() first or input data directly into run_search().",
           call. = FALSE
         )
       }
       if (is.null(self$alg)) {
-        stop("No algorithm is set. Use set_alg() first.",
-          call. = FALSE
-        )
+        stop("No algorithm is set. Use set_alg() first.", call. = FALSE)
       }
 
       # If score_function is NULL, then we are not using a score-based algorithm
       if (is.null(private$score_function)) {
         if (is.null(self$suff_stat) && set_suff_stat) {
-          stop("No sufficient statistic is set. Use set_data() first.",
+          stop(
+            "No sufficient statistic is set. Use set_data() first.",
             call. = FALSE
           )
         }

@@ -124,8 +124,10 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   expect_s3_class(runner_t_pc$run(df), "knowledgeable_caugi")
 
   runner_t_pc2 <- pc_tetrad_runner(
-    test = "fisher_z", alpha = 0.05,
-    singularity_lambda = 0.1, guarantee_cpdag = TRUE
+    test = "fisher_z",
+    alpha = 0.05,
+    singularity_lambda = 0.1,
+    guarantee_cpdag = TRUE
   )
   expect_type(runner_t_pc2, "list")
   expect_true(is.function(runner_t_pc2$run))
@@ -133,7 +135,9 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
 
   # pc: pcalg (+ alg args path via m.max)
   runner_p_pc <- pc_pcalg_runner(
-    test = "fisher_z", alpha = 0.05, m.max = 1L,
+    test = "fisher_z",
+    alpha = 0.05,
+    m.max = 1L,
     directed_as_undirected_knowledge = TRUE
   )
   expect_type(runner_p_pc, "list")
@@ -153,8 +157,10 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
   expect_s3_class(runner_t_fci$run(df), "knowledgeable_caugi")
 
   runner_t_fci2 <- fci_tetrad_runner(
-    test = "fisher_z", alpha = 0.05,
-    singularity_lambda = 0.1, depth = 2L
+    test = "fisher_z",
+    alpha = 0.05,
+    singularity_lambda = 0.1,
+    depth = 2L
   )
   expect_type(runner_t_fci2, "list")
   expect_true(is.function(runner_t_fci2$run))
@@ -162,7 +168,9 @@ test_that("pc and fci runners wire arguments correctly for each engine", {
 
   # fci: pcalg (+ alg args path)
   runner_p_fci <- fci_pcalg_runner(
-    test = "fisher_z", alpha = 0.05, m.max = 1L,
+    test = "fisher_z",
+    alpha = 0.05,
+    m.max = 1L,
     directed_as_undirected_knowledge = TRUE
   )
   expect_type(runner_p_fci, "list")

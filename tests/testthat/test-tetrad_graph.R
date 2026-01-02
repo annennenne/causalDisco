@@ -4,7 +4,10 @@
 
 test_that("tetrad_graph() errors if x is not a single character string", {
   expect_error(tetrad_graph(1), "`x` must be a single character string")
-  expect_error(tetrad_graph(c("a", "b")), "`x` must be a single character string")
+  expect_error(
+    tetrad_graph(c("a", "b")),
+    "`x` must be a single character string"
+  )
 })
 
 test_that("tetrad_graph() errors if adjacency matrix is not square", {

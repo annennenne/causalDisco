@@ -11,8 +11,12 @@ adult_w <- 2 * adult_z + rnorm(n)
 adult_y <- 2 * child_x + adult_w + rnorm(n)
 
 simdata <- data.frame(
-  child_x, child_y, child_z,
-  adult_x, adult_z, adult_w,
+  child_x,
+  child_y,
+  child_z,
+  adult_x,
+  adult_z,
+  adult_w,
   adult_y
 )
 
@@ -26,10 +30,7 @@ kn <- knowledge(
 )
 
 # Define TBIC score
-t_score <- new("TemporalBIC",
-  knowledge = kn,
-  data = simdata
-)
+t_score <- new("TemporalBIC", knowledge = kn, data = simdata)
 # Run tges
 tges_pre <- tges_run(t_score)
 

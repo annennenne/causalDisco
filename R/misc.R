@@ -9,7 +9,8 @@
 #' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
 #'
 #' @export
-as.graphNEL <- function(amat) { # nolint: object_name_linter.
+as.graphNEL <- function(amat) {
+  # nolint: object_name_linter.
   .check_if_pkgs_are_installed(
     pkgs = c(
       "methods"
@@ -102,7 +103,9 @@ graph_to_amat <- function(graph, to_from = TRUE, type = "pdag") {
   )
 
   res <- methods::as(graph, "matrix")
-  if (to_from) res <- t(res)
+  if (to_from) {
+    res <- t(res)
+  }
   attr(res, "tamat_type") <- type
   res
 }
@@ -119,14 +122,12 @@ graph_to_amat <- function(graph, to_from = TRUE, type = "pdag") {
 #'
 #' @export
 max_edges <- function(p) {
-  invalid <- (
-    !is.numeric(p) ||
-      length(p) != 1L ||
-      is.na(p) ||
-      is.infinite(p) ||
-      p %% 1L != 0L ||
-      p < 1L
-  )
+  invalid <- (!is.numeric(p) ||
+    length(p) != 1L ||
+    is.na(p) ||
+    is.infinite(p) ||
+    p %% 1L != 0L ||
+    p < 1L)
 
   if (invalid) {
     stop("`p` must be a single positive integer.")
@@ -190,7 +191,6 @@ n_edges <- function(amat) {
 ################################################################################
 # Not exported below############################################################
 ################################################################################
-
 
 which2indicator <- function(x, p) {
   out <- rep(0, p)

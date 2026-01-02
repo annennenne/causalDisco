@@ -24,7 +24,8 @@ with_mock_rjava <- function(code) {
   ns <- asNamespace("rJava")
 
   # save originals
-  originals <- mget(c(".jinit", ".jaddClassPath", ".jclassPath", ".jniInitialized"),
+  originals <- mget(
+    c(".jinit", ".jaddClassPath", ".jclassPath", ".jniInitialized"),
     envir = ns
   )
 

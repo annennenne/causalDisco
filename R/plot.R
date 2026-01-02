@@ -86,10 +86,13 @@ plot.pag <- function(x, ...) {
   nms <- character(n_edges)
   cmat <- array(
     c(
-      "0" = "none", "1" = "odot",
-      "2" = "normal", "3" = "none"
+      "0" = "none",
+      "1" = "odot",
+      "2" = "normal",
+      "3" = "none"
     )[as.character(thisamat)],
-    dim = dim(thisamat), dimnames = dimnames(thisamat)
+    dim = dim(thisamat),
+    dimnames = dimnames(thisamat)
   )
   edge_index <- 0L
   for (i in seq_len(p - 1)) {

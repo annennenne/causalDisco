@@ -45,9 +45,14 @@
 #' probmat_to_amat(pmat, threshold = 0.5, method = "bpco")
 #'
 #' @export
-probmat_to_amat <- function(probmat, threshold, method = "cutoff",
-                            keep_vnames = TRUE, graph_criterion = "pdag",
-                            deletesym = FALSE) {
+probmat_to_amat <- function(
+  probmat,
+  threshold,
+  method = "cutoff",
+  keep_vnames = TRUE,
+  graph_criterion = "pdag",
+  deletesym = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
@@ -55,14 +60,15 @@ probmat_to_amat <- function(probmat, threshold, method = "cutoff",
     function_name = "probmat_to_amat"
   )
 
-  if (keep_vnames) vnames <- rownames(probmat)
+  if (keep_vnames) {
+    vnames <- rownames(probmat)
+  }
 
   p <- nrow(probmat)
 
   if (method == "cutoff") {
     out <- matrix(as.numeric(probmat >= threshold), p, p)
   }
-
 
   if (method == "bpco") {
     probmat[probmat < threshold] <- 0
@@ -80,7 +86,9 @@ probmat_to_amat <- function(probmat, threshold, method = "cutoff",
     while (!new_is_valid && i <= n_nonzero) {
       deleteind <- ord[i]
       new[deleteind] <- 0
-      if (deletesym) new[which(badmat == deleteind)] <- 0
+      if (deletesym) {
+        new[which(badmat == deleteind)] <- 0
+      }
 
       new_is_valid <- pcalg::isValidGraph(new, type = graph_criterion)
       if (!new_is_valid) {
@@ -99,7 +107,9 @@ probmat_to_amat <- function(probmat, threshold, method = "cutoff",
     warning("The result is not a valid graph!")
   }
 
-  if (keep_vnames) dimnames(out) <- list(vnames, vnames)
+  if (keep_vnames) {
+    dimnames(out) <- list(vnames, vnames)
+  }
   out
 }
 

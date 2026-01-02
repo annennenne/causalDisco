@@ -13,13 +13,15 @@ print(kn)
 # error path
 try(
   causalDisco:::.edge_verb(
-    kn, "forbidden",
+    kn,
+    "forbidden",
     rlang::quo(child_x1 ~ non_existent_var)
   )
 )
 try(
   causalDisco:::.edge_verb(
-    kn, "invalid_type",
+    kn,
+    "invalid_type",
     rlang::quo(child_x1 ~ youth_x3)
   )
 )

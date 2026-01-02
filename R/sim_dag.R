@@ -22,9 +22,12 @@
 #' sim_dag(5, sparsity = 0.5)
 #'
 #' @export
-sim_dag <- function(p, sparsity = NULL,
-                    sparsity_lim = c(0, 0.8),
-                    permute = TRUE) {
+sim_dag <- function(
+  p,
+  sparsity = NULL,
+  sparsity_lim = c(0, 0.8),
+  permute = TRUE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "stats"
@@ -33,10 +36,7 @@ sim_dag <- function(p, sparsity = NULL,
   )
 
   if (is.null(sparsity)) {
-    sparsity <- stats::runif(1,
-      min = sparsity_lim[1],
-      max = sparsity_lim[2]
-    )
+    sparsity <- stats::runif(1, min = sparsity_lim[1], max = sparsity_lim[2])
   }
 
   adjm <- matrix(1, p, p)

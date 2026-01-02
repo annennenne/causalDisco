@@ -72,7 +72,12 @@
 knowledge <- function(...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "rlang", "stats", "tibble", "tidyselect", "utils"
+      "dplyr",
+      "rlang",
+      "stats",
+      "tibble",
+      "tidyselect",
+      "utils"
     ),
     function_name = "knowledge"
   )
@@ -117,8 +122,11 @@ knowledge <- function(...) {
       }
       if (length(vec_num) != length(vars)) {
         stop(
-          "Tier vector length (", length(vec_num),
-          ") must equal number of variables (", length(vars), ").",
+          "Tier vector length (",
+          length(vec_num),
+          ") must equal number of variables (",
+          length(vars),
+          ").",
           call. = FALSE
         )
       }
@@ -128,7 +136,10 @@ knowledge <- function(...) {
       dup <- intersect(vec_num, existing_num)
       if (length(dup)) {
         stop(
-          sprintf("Tier index(es) %s already exist.", paste(dup, collapse = ", ")),
+          sprintf(
+            "Tier index(es) %s already exist.",
+            paste(dup, collapse = ", ")
+          ),
           call. = FALSE
         )
       }
@@ -168,13 +179,17 @@ knowledge <- function(...) {
           )
 
           if (!length(pos)) {
-            stop("Pattern ", deparse(rhs), " matched no variables.",
+            stop(
+              "Pattern ",
+              deparse(rhs),
+              " matched no variables.",
               call. = FALSE
             )
           }
           if (any(tier_vec[pos] != "")) {
             dup <- kn$vars$var[pos[tier_vec[pos] != ""]]
-            stop("Some variables matched by two patterns: ",
+            stop(
+              "Some variables matched by two patterns: ",
               paste(dup, collapse = ", "),
               call. = FALSE
             )
@@ -209,7 +224,9 @@ knowledge <- function(...) {
         error = function(e) NULL
       )
 
-      if (is.character(tier_val) && length(tier_val) == 1L && nzchar(tier_val)) {
+      if (
+        is.character(tier_val) && length(tier_val) == 1L && nzchar(tier_val)
+      ) {
         tier_label <- tier_val
       } else if (is.numeric(tier_val) && length(tier_val) == 1L) {
         tier_label <- as.character(tier_val)
@@ -219,10 +236,13 @@ knowledge <- function(...) {
 
       vars <- .formula_vars(kn, rhs_expr)
       if (!length(vars)) {
-        stop(sprintf(
-          "Tier specification %s matched no variables.",
-          deparse(fml)
-        ), call. = FALSE)
+        stop(
+          sprintf(
+            "Tier specification %s matched no variables.",
+            deparse(fml)
+          ),
+          call. = FALSE
+        )
       }
       kn <<- add_vars(kn, vars)
 
@@ -230,11 +250,14 @@ knowledge <- function(...) {
       clash <- kn$vars$tier[match(vars, kn$vars$var)]
       if (any(!is.na(clash) & clash != tier_label)) {
         bad <- vars[!is.na(clash) & clash != tier_label]
-        stop(sprintf(
-          "Tier specification %s tries to re-assign variable(s) [%s] to a new tier.",
-          paste(deparse(fml), collapse = ""),
-          paste(bad, collapse = ", ")
-        ), call. = FALSE)
+        stop(
+          sprintf(
+            "Tier specification %s tries to re-assign variable(s) [%s] to a new tier.",
+            paste(deparse(fml), collapse = ""),
+            paste(bad, collapse = ", ")
+          ),
+          call. = FALSE
+        )
       }
 
       if (tier_label %in% kn$tiers$label) {
@@ -243,7 +266,11 @@ knowledge <- function(...) {
       }
 
       # create new tier after the current last one
-      after_anchor <- if (nrow(kn$tiers)) utils::tail(kn$tiers$label, 1) else NULL
+      after_anchor <- if (nrow(kn$tiers)) {
+        utils::tail(kn$tiers$label, 1)
+      } else {
+        NULL
+      }
 
       if (is.null(after_anchor)) {
         kn <<- add_tier(kn, !!lhs_expr)
@@ -272,25 +299,30 @@ knowledge <- function(...) {
     rhs_text <- paste0("'", paste(deparse(obj$rhs), collapse = ""), "'")
 
     if (!length(from_vars)) {
-      stop(sprintf(
-        "%s edge: no variables matched %s from the left-hand side.",
-        status_cap,
-        lhs_text
-      ), call. = FALSE)
+      stop(
+        sprintf(
+          "%s edge: no variables matched %s from the left-hand side.",
+          status_cap,
+          lhs_text
+        ),
+        call. = FALSE
+      )
     }
 
     if (!length(to_vars)) {
-      stop(sprintf(
-        "%s edge: no variables matched %s from the right-hand side.",
-        status_cap,
-        rhs_text
-      ), call. = FALSE)
+      stop(
+        sprintf(
+          "%s edge: no variables matched %s from the right-hand side.",
+          status_cap,
+          rhs_text
+        ),
+        call. = FALSE
+      )
     }
 
     kn <<- add_vars(kn, c(from_vars, to_vars))
     kn <<- .add_edges(kn, status, from_vars, to_vars)
   }
-
 
   edge_helper <- function(status, ...) {
     specs <- rlang::list2(...)
@@ -345,7 +377,10 @@ knowledge <- function(...) {
     specs <- rlang::enexprs(...)
 
     if (length(specs) == 0L) {
-      stop("exogenous() needs at least one variable specification.", call. = FALSE)
+      stop(
+        "exogenous() needs at least one variable specification.",
+        call. = FALSE
+      )
     }
 
     # if they passed >1 selector, splice them into a single c(...) call
@@ -419,7 +454,6 @@ knowledge <- function(...) {
 
     eval(expr, envir = environment())
   }
-
 
   # Sort tiers only if all labels are numeric-coercible
   suppressWarnings({
@@ -496,7 +530,8 @@ knowledge <- function(...) {
 add_vars <- function(.kn, vars) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "tibble"
+      "dplyr",
+      "tibble"
     ),
     function_name = "add_vars"
   )
@@ -507,7 +542,8 @@ add_vars <- function(.kn, vars) {
 
   if (.kn$frozen && length(missing)) {
     stop(
-      "Unknown variable(s): [", paste(missing, collapse = ", "),
+      "Unknown variable(s): [",
+      paste(missing, collapse = ", "),
       "]\nThey are not present in the data frame provided to this knowledge object.",
       call. = FALSE
     )
@@ -539,7 +575,9 @@ add_vars <- function(.kn, vars) {
 add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "rlang", "tibble"
+      "dplyr",
+      "rlang",
+      "tibble"
     ),
     function_name = "add_tier"
   )
@@ -556,7 +594,10 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   tier_expr <- rlang::enexpr(tier)
 
   if (length(tier_expr) != 1L) {
-    stop("`tier` must be a single non-empty label or a non-negative numeric literal.", call. = FALSE)
+    stop(
+      "`tier` must be a single non-empty label or a non-negative numeric literal.",
+      call. = FALSE
+    )
   }
   tier_val <- tryCatch(
     rlang::eval_tidy(tier_expr, env = parent.frame()),
@@ -565,7 +606,10 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
   if (!is.symbol(tier_expr)) {
     if (is.null(tier_expr) || is.na(tier_expr)) {
-      stop("`tier` must be a single non-empty label or a non-negative numeric literal.", call. = FALSE)
+      stop(
+        "`tier` must be a single non-empty label or a non-negative numeric literal.",
+        call. = FALSE
+      )
     }
   }
 
@@ -620,7 +664,8 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 
   pos <- match(anchor_lbl, .kn$tiers$label)
   if (is.na(pos)) {
-    stop(sprintf("`%s` does not refer to an existing tier.", anchor_lbl),
+    stop(
+      sprintf("`%s` does not refer to an existing tier.", anchor_lbl),
       call. = FALSE
     )
   }
@@ -660,7 +705,9 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 add_to_tier <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "glue", "rlang"
+      "dplyr",
+      "glue",
+      "rlang"
     ),
     function_name = "add_to_tier"
   )
@@ -695,7 +742,9 @@ add_to_tier <- function(.kn, ...) {
     # resolve variables on the RHS
     vars <- .formula_vars(.kn, rhs_expr)
     if (!length(vars)) {
-      stop(glue::glue("Specification `{deparse(rhs_expr)}` matched no variables."))
+      stop(glue::glue(
+        "Specification `{deparse(rhs_expr)}` matched no variables."
+      ))
     }
 
     # detect variables already assigned to a different tier
@@ -706,7 +755,8 @@ add_to_tier <- function(.kn, ...) {
       stop(
         sprintf(
           "Cannot reassign variable(s) [%s] to tier `%s` using add_to_tier().\n",
-          paste(bad, collapse = ", "), tier_label
+          paste(bad, collapse = ", "),
+          tier_label
         ),
         call. = FALSE
       )
@@ -893,7 +943,8 @@ get_tiers <- function(kn) {
 print.knowledge <- function(x, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "cli", "tibble"
+      "cli",
+      "tibble"
     ),
     function_name = "print.knowledge"
   )
@@ -947,14 +998,22 @@ print.knowledge <- function(x, ...) {
       from <- x$edges$from[i]
       to <- x$edges$to[i]
 
-      bullet <- switch(st,
+      bullet <- switch(
+        st,
         forbidden = cli::col_red(cli::symbol$cross),
-        required  = cli::col_green(cli::symbol$tick),
+        required = cli::col_green(cli::symbol$tick),
         cli::symbol$bullet
       )
 
       cli::cat_line(
-        " ", bullet, "  ", from, " ", sym_arrow, " ", to
+        " ",
+        bullet,
+        "  ",
+        from,
+        " ",
+        sym_arrow,
+        " ",
+        to
       )
     }
   }
@@ -976,7 +1035,8 @@ print.knowledge <- function(x, ...) {
 `+.knowledge` <- function(.kn1, .kn2) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "tibble"
+      "dplyr",
+      "tibble"
     ),
     function_name = "+.knowledge"
   )
@@ -1012,12 +1072,20 @@ print.knowledge <- function(x, ...) {
   # throw error if there are conflicts
   if (nrow(tier_conflicts) > 0L) {
     details <- paste0(
-      "- ", tier_conflicts$var, ": ",
-      src1, ": ", tier_conflicts$tier_1, ", ",
-      src2, ": ", tier_conflicts$tier_2
+      "- ",
+      tier_conflicts$var,
+      ": ",
+      src1,
+      ": ",
+      tier_conflicts$tier_1,
+      ", ",
+      src2,
+      ": ",
+      tier_conflicts$tier_2
     )
     msg <- paste0(
-      "Tier conflict detected for ", nrow(tier_conflicts),
+      "Tier conflict detected for ",
+      nrow(tier_conflicts),
       if (nrow(tier_conflicts) == 1L) " variable:\n" else " variables:\n",
       paste(details, collapse = "\n")
     )
@@ -1039,7 +1107,7 @@ print.knowledge <- function(x, ...) {
   out$edges <- dplyr::distinct(dplyr::bind_rows(.kn1$edges, .kn2$edges)) |>
     dplyr::mutate(
       tier_from = out$vars$tier[match(from, out$vars$var)],
-      tier_to   = out$vars$tier[match(to, out$vars$var)]
+      tier_to = out$vars$tier[match(to, out$vars$var)]
     )
 
   # validate
@@ -1069,7 +1137,8 @@ print.knowledge <- function(x, ...) {
 reorder_tiers <- function(.kn, order, by_index = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "rlang", "tibble"
+      "rlang",
+      "tibble"
     ),
     function_name = "reorder_tiers"
   )
@@ -1100,7 +1169,9 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
       }
       # nocov end
     }
-    stop("`order` contains an unsupported element: ", rlang::expr_text(expr),
+    stop(
+      "`order` contains an unsupported element: ",
+      rlang::expr_text(expr),
       call. = FALSE
     )
   }
@@ -1109,7 +1180,10 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
   if (by_index) {
     idx <- rlang::eval_tidy(rlang::enexpr(order), env = parent.frame())
     if (!is.numeric(idx) || length(idx) != n || !setequal(idx, seq_len(n))) {
-      stop("`order` must be a permutation of 1:", n, " when `by_index = TRUE`.",
+      stop(
+        "`order` must be a permutation of 1:",
+        n,
+        " when `by_index = TRUE`.",
         call. = FALSE
       )
     }
@@ -1118,7 +1192,11 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
     expr <- rlang::enexpr(order)
 
     # unwrap literal c(...) call, and get a list of expressions
-    parts <- if (rlang::is_call(expr, "c")) rlang::call_args(expr) else list(expr)
+    parts <- if (rlang::is_call(expr, "c")) {
+      rlang::call_args(expr)
+    } else {
+      list(expr)
+    }
 
     labels <- vapply(parts, as_label1, character(1))
     labels <- unname(labels)
@@ -1156,11 +1234,13 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
 #' @concept knowledge
 #'
 #' @export
-reposition_tier <- function(.kn,
-                            tier,
-                            before = NULL,
-                            after = NULL,
-                            by_index = FALSE) {
+reposition_tier <- function(
+  .kn,
+  tier,
+  before = NULL,
+  after = NULL,
+  by_index = FALSE
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
@@ -1179,12 +1259,15 @@ reposition_tier <- function(.kn,
     if (by_index) {
       idx <- rlang::eval_tidy(expr, env = parent.frame())
       if (!is.numeric(idx) || length(idx) != 1L) {
-        stop("When `by_index = TRUE`, tier references must be length-1 numeric.")
+        stop(
+          "When `by_index = TRUE`, tier references must be length-1 numeric."
+        )
       }
       return(current[idx])
     }
 
-    val <- tryCatch(rlang::eval_tidy(expr, env = parent.frame()),
+    val <- tryCatch(
+      rlang::eval_tidy(expr, env = parent.frame()),
       error = function(e) NULL
     )
 
@@ -1201,14 +1284,20 @@ reposition_tier <- function(.kn,
   }
 
   tier_lbl <- resolve_label(rlang::enexpr(tier))
-  anchor_lbl <- resolve_label(if (missing(before)) {
-    rlang::enexpr(after)
-  } else {
-    rlang::enexpr(before)
-  })
+  anchor_lbl <- resolve_label(
+    if (missing(before)) {
+      rlang::enexpr(after)
+    } else {
+      rlang::enexpr(before)
+    }
+  )
 
-  if (!tier_lbl %in% current) stop("Tier `", tier_lbl, "` does not exist.")
-  if (!anchor_lbl %in% current) stop("Anchor tier `", anchor_lbl, "` does not exist.")
+  if (!tier_lbl %in% current) {
+    stop("Tier `", tier_lbl, "` does not exist.")
+  }
+  if (!anchor_lbl %in% current) {
+    stop("Anchor tier `", anchor_lbl, "` does not exist.")
+  }
   if (tier_lbl == anchor_lbl) {
     return(.kn)
   } # nothing to do
@@ -1262,7 +1351,9 @@ is_knowledge <- function(x) {
 remove_vars <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "purrr", "rlang"
+      "dplyr",
+      "purrr",
+      "rlang"
     ),
     function_name = "remove_vars"
   )
@@ -1313,7 +1404,10 @@ remove_vars <- function(.kn, ...) {
 remove_edges <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "purrr", "rlang", "tidyr"
+      "dplyr",
+      "purrr",
+      "rlang",
+      "tidyr"
     ),
     function_name = "remove_edges"
   )
@@ -1366,7 +1460,9 @@ remove_edges <- function(.kn, ...) {
 remove_tiers <- function(.kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "purrr", "rlang"
+      "dplyr",
+      "purrr",
+      "rlang"
     ),
     function_name = "remove_tiers"
   )
@@ -1535,7 +1631,8 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 as_tetrad_knowledge <- function(.kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "purrr", "rJava"
+      "purrr",
+      "rJava"
     ),
     function_name = "as_tetrad_knowledge"
   )
@@ -1563,9 +1660,10 @@ as_tetrad_knowledge <- function(.kn) {
   purrr::pwalk(
     .kn$edges,
     function(status, from, to, ...) {
-      switch(status,
+      switch(
+        status,
         forbidden = j$setForbidden(from, to),
-        required  = j$setRequired(from, to)
+        required = j$setRequired(from, to)
       )
     }
   )
@@ -1614,7 +1712,9 @@ as_pcalg_constraints <- function(
 ) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "pcalg", "rlang"
+      "dplyr",
+      "pcalg",
+      "rlang"
     ),
     function_name = "as_pcalg_constraints"
   )
@@ -1638,15 +1738,18 @@ as_pcalg_constraints <- function(
     # all labels that aren't in knowledge
     bad_vars <- setdiff(labels, .kn$vars$var)
     if (length(bad_vars)) {
-      stop("`labels` contained variables that were not in the knowledge object: [",
-        paste(bad_vars, collapse = ", "), "]",
+      stop(
+        "`labels` contained variables that were not in the knowledge object: [",
+        paste(bad_vars, collapse = ", "),
+        "]",
         call. = FALSE
       )
     }
     # all vars that aren't in labels
     missing_vars <- setdiff(.kn$vars$var, labels)
     if (length(missing_vars)) {
-      stop("`labels` must contain all variables in the knowledge",
+      stop(
+        "`labels` must contain all variables in the knowledge",
         " object. The following is missing: [",
         paste(missing_vars, collapse = ", "),
         "]\nYou can add variables to your knowledge object with add_vars().",
@@ -1655,7 +1758,8 @@ as_pcalg_constraints <- function(
     } else {
       # nocov start
       # this is a future-proofing security measure, not reachable as of now
-      stop("`labels` must contain all variables in the knowledge object.",
+      stop(
+        "`labels` must contain all variables in the knowledge object.",
         call. = FALSE
       )
     }
@@ -1669,9 +1773,7 @@ as_pcalg_constraints <- function(
 
   if (!directed_as_undirected) {
     bad <- .kn$edges |>
-      dplyr::anti_join(.kn$edges,
-        by = c("from" = "to", "to" = "from")
-      ) |>
+      dplyr::anti_join(.kn$edges, by = c("from" = "to", "to" = "from")) |>
       dplyr::mutate(desc = paste0(from, " --> ", to)) |>
       dplyr::pull(desc)
     if (length(bad)) {
@@ -1779,7 +1881,10 @@ as_bnlearn_knowledge <- function(.kn) {
 forbid_tier_violations <- function(.kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "rlang", "tibble", "tidyr"
+      "dplyr",
+      "rlang",
+      "tibble",
+      "tidyr"
     ),
     function_name = "forbid_tier_violations"
   )
@@ -1807,11 +1912,11 @@ forbid_tier_violations <- function(.kn) {
   # add all those forbidden edges, dropping self-loops
   if (nrow(bad)) {
     new_edges <- tibble::tibble(
-      status    = "forbidden",
-      from      = bad$var_from,
-      to        = bad$var_to,
+      status = "forbidden",
+      from = bad$var_from,
+      to = bad$var_to,
       tier_from = .kn$vars$tier[match(bad$var_from, .kn$vars$var)],
-      tier_to   = .kn$vars$tier[match(bad$var_to, .kn$vars$var)]
+      tier_to = .kn$vars$tier[match(bad$var_to, .kn$vars$var)]
     )
 
     # bind to existing, drop duplicates
@@ -1874,12 +1979,12 @@ seq_tiers <- function(tiers, vars) {
     stop("`vars` must contain the placeholder `i`.", call. = FALSE)
   }
 
-
   # recursively substitute `i` or "{i}" helper
   replace_i <- function(expr, i_chr) {
-    switch(typeof(expr),
-      "language"  = as.call(lapply(as.list(expr), replace_i, i_chr)),
-      "symbol"    = if (identical(expr, quote(i))) rlang::expr(!!i_chr) else expr,
+    switch(
+      typeof(expr),
+      "language" = as.call(lapply(as.list(expr), replace_i, i_chr)),
+      "symbol" = if (identical(expr, quote(i))) rlang::expr(!!i_chr) else expr,
       "character" = rlang::expr(!!gsub("{i}", i_chr, expr, fixed = TRUE)),
       expr
     )
@@ -1924,11 +2029,11 @@ seq_tiers <- function(tiers, vars) {
       vars = tibble::tibble(var = vars, tier = NA_character_),
       tiers = tibble::tibble(label = character()),
       edges = tibble::tibble(
-        status     = character(),
-        from       = character(),
-        to         = character(),
-        tier_from  = character(),
-        tier_to    = character()
+        status = character(),
+        from = character(),
+        to = character(),
+        tier_from = character(),
+        tier_to = character()
       ),
       frozen = frozen
     ),
@@ -1958,12 +2063,14 @@ seq_tiers <- function(tiers, vars) {
 
   bad <- dplyr::filter(
     edges_df,
-    !is.na(tier_from), !is.na(tier_to),
+    !is.na(tier_from),
+    !is.na(tier_to),
     status != "forbidden",
     rank(tier_from) > rank(tier_to)
   )
   if (nrow(bad)) {
-    stop("Edge(s) violate tier ordering: ",
+    stop(
+      "Edge(s) violate tier ordering: ",
       paste(bad$from, "-->", bad$to, collapse = ", "),
       call. = FALSE
     )
@@ -2047,7 +2154,8 @@ seq_tiers <- function(tiers, vars) {
 .add_edges <- function(.kn, status, from, to, remove_self_loops = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "tidyr"
+      "dplyr",
+      "tidyr"
     ),
     function_name = ".add_edges"
   )
@@ -2063,9 +2171,9 @@ seq_tiers <- function(tiers, vars) {
   # one row per directed edge, then annotate
   block <- tidyr::crossing(from = from_chr, to = to_chr) |>
     dplyr::mutate(
-      status    = status,
+      status = status,
       tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
-      tier_to   = .kn$vars$tier[match(to, .kn$vars$var)]
+      tier_to = .kn$vars$tier[match(to, .kn$vars$var)]
     )
 
   # stop if any new edge violates the tier rule
@@ -2109,7 +2217,8 @@ seq_tiers <- function(tiers, vars) {
   )
 
   if (!(status %in% c("required", "forbidden"))) {
-    stop("`status` (edge type) must be 'required' or 'forbidden' for ",
+    stop(
+      "`status` (edge type) must be 'required' or 'forbidden' for ",
       "knowledge edge generation.",
       call. = FALSE
     )
@@ -2128,7 +2237,8 @@ seq_tiers <- function(tiers, vars) {
   to_vars <- .formula_vars(.kn, rlang::f_rhs(expr))
 
   if (!length(from_vars) || !length(to_vars)) {
-    stop(sprintf("Formula `%s` matched no variables.", deparse(expr)),
+    stop(
+      sprintf("Formula `%s` matched no variables.", deparse(expr)),
       call. = FALSE
     )
   }
@@ -2157,7 +2267,10 @@ seq_tiers <- function(tiers, vars) {
 .vars_from_spec <- function(.kn, spec) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "dplyr", "purrr", "rlang", "tidyselect"
+      "dplyr",
+      "purrr",
+      "rlang",
+      "tidyselect"
     ),
     function_name = ".vars_from_spec"
   )

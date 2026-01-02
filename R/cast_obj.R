@@ -12,7 +12,9 @@
 #' @return A Java object cast to a superclass that Tetrad takes as input.
 cast_obj <- function(obj) {
   # If the object is a score, cast it to ScoreWrapper
-  if (rJava::.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")) {
+  if (
+    rJava::.jinstanceof(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")
+  ) {
     rJava::.jcast(obj, "edu/cmu/tetrad/algcomparison/score/ScoreWrapper")
     # If the object is a data object, cast it to DataModel
   } else if (rJava::.jinstanceof(obj, "edu/cmu/tetrad/data/DataModel")) {
@@ -33,7 +35,8 @@ cast_obj <- function(obj) {
     rJava::.jcast(obj, "edu/cmu/tetrad/graph/Graph")
   } else {
     # Cast error
-    stop("The Java object cannot be cast to a superclass by cast_obj.",
+    stop(
+      "The Java object cannot be cast to a superclass by cast_obj.",
       call. = FALSE
     )
   }

@@ -184,7 +184,12 @@ test_that("tfci_run NA handling: error on NAs with na_method = 'none', cc with z
 test_that("tfci_run errors when varnames are unknown with suff_stat-only usage", {
   suff <- list(dummy = TRUE)
   expect_error(
-    tfci_run(data = NULL, suff_stat = suff, knowledge = knowledge(), varnames = NULL),
+    tfci_run(
+      data = NULL,
+      suff_stat = suff,
+      knowledge = knowledge(),
+      varnames = NULL
+    ),
     "Could not determine variable names. Supply `data` or `varnames`.",
     fixed = TRUE
   )

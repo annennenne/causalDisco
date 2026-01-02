@@ -23,11 +23,17 @@
 #' @param ... Additional argument passed to \code{\link{maketikz}}.
 #'
 #' @export
-tplot <- function(x, filename = "causaldisco_tplot_temp",
-                  keepfiles = FALSE, bend_edges = TRUE, ...) {
+tplot <- function(
+  x,
+  filename = "causaldisco_tplot_temp",
+  keepfiles = FALSE,
+  bend_edges = TRUE,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c(
-      "magick", "rmarkdown"
+      "magick",
+      "rmarkdown"
     ),
     function_name = "tplot"
   )
@@ -44,7 +50,6 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
     #        " - \\pgfplotsset{compat=1.18}",
     "---"
   )
-
 
   tcode <- maketikz(x, raw_out = TRUE, bend_edges = bend_edges, ...)
   file <- paste(filename, ".rmd", sep = "")
@@ -83,7 +88,6 @@ tplot <- function(x, filename = "causaldisco_tplot_temp",
 ############################################################################
 ## Not exported below ######################################################
 ############################################################################
-
 
 writer <- function(x, ..., outfile, sep = "\n") {
   cat(paste0(x, ...), file = outfile, append = TRUE, sep = sep)

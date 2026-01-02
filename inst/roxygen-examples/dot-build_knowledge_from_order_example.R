@@ -5,7 +5,7 @@ vnames <- names(tpc_example)
 
 # Create knowledge from a given order
 kn_from_order <- causalDisco:::.build_knowledge_from_order(
-  order  = c("child", "youth", "oldage"),
+  order = c("child", "youth", "oldage"),
   vnames = vnames
 )
 

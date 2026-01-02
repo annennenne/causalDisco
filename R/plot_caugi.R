@@ -157,8 +157,10 @@ plot.knowledgeable_caugi <- function(x, ...) {
     new_layout[, 2] <- center_y + radius * sin(angles)
 
     if (length(new_nodes) <= 3) {
-      new_layout[, 1] <- new_layout[, 1] + stats::runif(length(new_nodes), -0.1, 0.1)
-      new_layout[, 2] <- new_layout[, 2] + stats::runif(length(new_nodes), -0.1, 0.1)
+      new_layout[, 1] <- new_layout[, 1] +
+        stats::runif(length(new_nodes), -0.1, 0.1)
+      new_layout[, 2] <- new_layout[, 2] +
+        stats::runif(length(new_nodes), -0.1, 0.1)
     }
 
     layout_matrix <- rbind(layout_matrix, new_layout)
@@ -176,7 +178,9 @@ plot.knowledgeable_caugi <- function(x, ...) {
       from <- row$from
       to <- row$to
 
-      if (paste(from, to, sep = "->") %in% req_pairs) next
+      if (paste(from, to, sep = "->") %in% req_pairs) {
+        next
+      }
 
       g <- igraph::add_edges(g, c(to, from))
       eid <- igraph::ecount(g)
@@ -263,7 +267,13 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #'
 #' @export
 plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
-  .plot_knowledge_internal(x, x_jitter, vertex_size_scale, return_info = FALSE, ...)
+  .plot_knowledge_internal(
+    x,
+    x_jitter,
+    vertex_size_scale,
+    return_info = FALSE,
+    ...
+  )
 }
 
 #' Internal function to plot knowledge objects
@@ -272,7 +282,13 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
 #' @return If `return_info` is `TRUE`, a list containing plotting information.
 #' @keywords internal
 #' @noRd
-.plot_knowledge_internal <- function(x, x_jitter = 0, vertex_size_scale = 1, return_info = TRUE, ...) {
+.plot_knowledge_internal <- function(
+  x,
+  x_jitter = 0,
+  vertex_size_scale = 1,
+  return_info = TRUE,
+  ...
+) {
   vars <- x$vars
   edges_df <- x$edges
   tiers <- x$tiers
@@ -283,7 +299,8 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
     if (return_info) {
       return(list(
         graph = g,
-        layout = matrix(numeric(0),
+        layout = matrix(
+          numeric(0),
           ncol = 2,
           dimnames = list(character(0), c("x", "y"))
         ),
@@ -318,7 +335,8 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
         igraph::E(g)$arrow.mode[eid] <- 1
         igraph::E(g)$lty[eid] <- 1
         igraph::E(g)$color[eid] <- "blue"
-      } else { # forbidden
+      } else {
+        # forbidden
         igraph::E(g)$arrow.mode[eid] <- 1
         igraph::E(g)$lty[eid] <- 2
         igraph::E(g)$color[eid] <- "red"
@@ -328,7 +346,12 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
 
   # ----- Layout -----
   nodes <- igraph::V(g)$name
-  layout_matrix <- matrix(NA, nrow = length(nodes), ncol = 2, dimnames = list(nodes, c("x", "y")))
+  layout_matrix <- matrix(
+    NA,
+    nrow = length(nodes),
+    ncol = 2,
+    dimnames = list(nodes, c("x", "y"))
+  )
 
   if (length(tiers$label) > 0) {
     tier_index <- stats::setNames(seq_len(nrow(tiers)), tiers$label)
@@ -338,8 +361,13 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
     for (tier in unique(x_pos[!is.na(x_pos)])) {
       tier_vars <- nodes[!is.na(x_pos[nodes]) & x_pos[nodes] == tier]
       n_tier <- length(tier_vars)
-      layout_matrix[tier_vars, 1] <- rep(c(tier, tier + x_jitter), ceiling(n_tier / 2))[1:n_tier]
-      layout_matrix[tier_vars, 2] <- c(-floor(n_tier / 2):floor(n_tier / 2))[1:n_tier]
+      layout_matrix[tier_vars, 1] <- rep(
+        c(tier, tier + x_jitter),
+        ceiling(n_tier / 2)
+      )[1:n_tier]
+      layout_matrix[tier_vars, 2] <- c(-floor(n_tier / 2):floor(n_tier / 2))[
+        1:n_tier
+      ]
     }
 
     na_vars <- nodes[is.na(x_pos[nodes])]
@@ -349,7 +377,9 @@ plot.knowledge <- function(x, x_jitter = 0, vertex_size_scale = 1, ...) {
       radius <- max(
         diff(range(layout_matrix[!is.na(layout_matrix[, 1]), 1])),
         diff(range(layout_matrix[!is.na(layout_matrix[, 2]), 2]))
-      ) / 2 + 1
+      ) /
+        2 +
+        1
       angles <- seq(0, 2 * pi, length.out = length(na_vars) + 1)[-1]
       layout_matrix[na_vars, 1] <- center_x + radius * cos(angles)
       layout_matrix[na_vars, 2] <- center_y + radius * sin(angles)
