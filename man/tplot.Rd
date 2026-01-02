@@ -28,7 +28,7 @@ working directory.}
 \item{bend_edges}{If \code{TRUE} (default), all edges are bent 10 degrees
 to the right, thereby avoiding edges placed exactly on top of eachother.}
 
-\item{...}{Additional argument passed to \code{\link{maketikz}}.}
+\item{...}{Additional argument passed to \code{\link{make_tikz}}.}
 }
 \description{
 Generates a plot of a tamat, tpdag or tpag object by use of Latex tikz. Note

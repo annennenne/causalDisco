@@ -78,7 +78,7 @@ reference:
     contents:
       - starts_with("plot")
       - tplot
-      - maketikz
+      - make_tikz
 
   - title: "Printing"
     contents:

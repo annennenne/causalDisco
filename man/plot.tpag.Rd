@@ -18,29 +18,6 @@ No return value, the function is called for its side-effects (plotting).
 \description{
 Plot temporal partial ancestral graph (TPAG)
 }
-\examples{
-\dontrun{
-# simulate linear Gaussian data w unobserved variable L1
-n <- 100
-L1 <- rnorm(n)
-X1 <- rnorm(n)
-X2 <- L1 + X1 + rnorm(n)
-X3 <- X1 + rnorm(n)
-X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(
-  p1_X1 = X1,
-  p1_X2 = X2,
-  p2_X3 = X3,
-  p2_X4 = X4
-)
-
-# use FCI algorithm to recover PAG
-res <- tfci(d, order = c("p1", "p2"), test = cor_test)
-
-# plot
-plot(res)
-}
-}
 \author{
 This code is a modification of the fciAlgo plotting method implemented
 in the pcalg package.

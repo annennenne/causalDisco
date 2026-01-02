@@ -38,10 +38,6 @@ a false negative marks placement of tail (0) where there should have been an arr
 and a true negative marks correct placement of a tail (0).
 }
 \examples{
-\dontrun{
-#############################################################################
-# Compare two adjacency matrices ############################################
-#############################################################################
 x1 <- matrix(c(
   0, 0, 0, 0,
   1, 0, 1, 0,
@@ -54,11 +50,14 @@ x2 <- matrix(c(
   0, 0, 0, 0,
   1, 0, 1, 0
 ), 4, 4, byrow = TRUE)
+nodes <- c("A", "B", "C", "D")
+rownames(x1) <- colnames(x1) <- nodes
+rownames(x2) <- colnames(x2) <- nodes
 
 # confusion matrix for adjacencies
 confusion(x2, x1)
 
 # confusion matrix for conditional orientations
 confusion(x2, x1, type = "dir")
-}
+
 }

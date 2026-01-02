@@ -52,28 +52,28 @@
 #'   )
 #' )
 #'
-#' tpdag1 <- tpc_run(tpc_example,
+#' tpdag_example <- tpc_run(tpc_example,
 #'   kn,
 #'   alpha = 0.01,
 #'   test = cor_test,
 #'   output = "tpdag"
 #' )
-#' maketikz(tpdag1, clipboard = FALSE)
+#' make_tikz(tpdag_example, clipboard = FALSE)
 #'
 #' # Make tikz figure code from tamat, copy code to clipboard
-#' thisdag <- sim_dag(5)
-#' rownames(thisdag) <- colnames(thisdag) <- c(
+#' dag_example <- sim_dag(5)
+#' rownames(dag_example) <- colnames(dag_example) <- c(
 #'   "child_x", "child_y",
 #'   "child_z", "adult_x",
 #'   "adult_y"
 #' )
-#' thistamat <- tamat(thisdag, order = c("child", "adult"))
+#' output_tamat <- tamat(dag_example, order = c("child", "adult"))
 #' \dontrun{
-#' maketikz(thistamat)
+#' make_tikz(output_tamat)
 #' }
 #'
 #' @export
-maketikz <- function(
+make_tikz <- function(
   model,
   x_jit = 2,
   y_jit = 2,
@@ -93,7 +93,7 @@ maketikz <- function(
     pkgs = c(
       "clipr"
     ),
-    function_name = "maketikz"
+    function_name = "make_tikz"
   )
 
   if (

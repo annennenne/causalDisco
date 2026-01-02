@@ -20,7 +20,7 @@
 #' working directory.
 #' @param bend_edges If \code{TRUE} (default), all edges are bent 10 degrees
 #' to the right, thereby avoiding edges placed exactly on top of eachother.
-#' @param ... Additional argument passed to \code{\link{maketikz}}.
+#' @param ... Additional argument passed to \code{\link{make_tikz}}.
 #'
 #' @export
 tplot <- function(
@@ -51,7 +51,7 @@ tplot <- function(
     "---"
   )
 
-  tcode <- maketikz(x, raw_out = TRUE, bend_edges = bend_edges, ...)
+  tcode <- make_tikz(x, raw_out = TRUE, bend_edges = bend_edges, ...)
   file <- paste(filename, ".rmd", sep = "")
 
   file_conn <- file(file, "w")

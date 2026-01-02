@@ -1,22 +1,47 @@
-### pc() example ###
-\dontrun{
 data("tpc_example")
 
+#### Using pcalg engine ####
+# Recommended path using disco()
+pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, pc_pcalg)
+
+# or using pc_pcalg directly
+pc_pcalg(tpc_example)
+
+
+#### Using bnlearn engine with required knowledge ####
 kn <- knowledge(
   tpc_example,
-  tier(
-    child ~ tidyselect::starts_with("child"),
-    youth ~ tidyselect::starts_with("youth"),
-    oldage ~ tidyselect::starts_with("oldage")
-  )
+  starts_with("child") %-->% starts_with("youth")
 )
 
+
 # Recommended path using disco()
-my_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, pc_bnlearn, knowledge = kn)
 
-disco(tpc_example, my_pc, knowledge = kn)
+# or using pc_bnlearn directly
+pc_bnlearn <- pc_bnlearn |> set_knowledge(kn)
+pc_bnlearn(tpc_example)
 
-# or using my_pc directly
-my_pc <- my_pc |> set_knowledge(kn)
-my_pc(tpc_example)
+
+#### Using tetrad engine with tier knowledge ####
+# Requires Tetrad to be installed
+if (check_tetrad_install()$installed || check_tetrad_install()$java_ok) {
+  kn <- knowledge(
+    tpc_example,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  # Recommended path using disco()
+  pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  disco(tpc_example, pc_tetrad, knowledge = kn)
+
+  # or using pc_tetrad directly
+  pc_tetrad <- pc_tetrad |> set_knowledge(kn)
+  pc_tetrad(tpc_example)
 }
