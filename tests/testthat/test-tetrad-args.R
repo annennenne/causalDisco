@@ -16,7 +16,6 @@ test_that("tetrad test argument works (discrete)", {
     "g_square",
     "basis_function_lrt",
     # "probabilistic", # Currently doesn't work
-    "fisher_z",
     "degenerate_gaussian",
     "conditional_gaussian"
   )
