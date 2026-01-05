@@ -83,10 +83,10 @@ w <- x + rnorm(n) * 0.5
 z <- v + w + rnorm(n) * 0.5
 s <- z + rnorm(n) * 0.5
 
-data_linear <- data.frame(x = x, v = v, w = w, z = z, s = s)
+data_linear_reversed <- data.frame(x = x, v = v, w = w, z = z, s = s)
 
 pc_pcalg_reversed <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_reversed <- disco(data_linear, method = pc_pcalg_reversed)
+pc_result_reversed <- disco(data_linear_reversed, method = pc_pcalg_reversed)
 plot(pc_result_reversed, main = "PC (pcalg) reversed")
 ```
 
@@ -94,7 +94,7 @@ We learn the same causal structure as before, demonstrating that the direction o
 
 ## Non-linear example
 
-Here, we simulate data the same DAG structure as above, but with non-linear relationships between the variables.
+Here, we simulate data the same DAG structure as above, but with a non-linear relationships between the variables.
 
 ```{r non-linear causal discovery}
 set.seed(1405)
@@ -108,7 +108,8 @@ s <- z^2 + rnorm(n) * 0.25
 data_nonlinear <- data.frame(x = x, v = v, w = w, z = z, s = s)
 ```
 
-Here we try to use the PC algorithm with Fisher's Z test again, but this time it will not perform well due to the non-linear relationships in the data.
+If we try to use the PC algorithm with Fisher's Z test again it will not perform well due to the non-linear
+relationships in the data.
 
 ```{r pc algorithm non-linear}
 pc_pcalg_nonlinear <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
@@ -116,7 +117,10 @@ pc_result_nonlinear <- disco(data_nonlinear, method = pc_pcalg_nonlinear)
 plot(pc_result_nonlinear, main = "PC (pcalg) non-linear")
 ```
 
-As expected, the PC algorithm with Fisher's Z test does not recover the correct causal structure in this non-linear setting. To handle non-linear relationships, we can for instance use the Kernel Conditional Independence Test (KCI) in Tetrad.
+As expected, the PC algorithm with Fisher's Z test does not recover the correct causal structure in this non-linear
+setting at all. Note, that increasing the sample size does not help.
+
+To handle non-linear relationships, we can for instance use the Kernel Conditional Independence Test (KCI) in Tetrad.
 
 ```{r pc algorithm non-linear kci, eval = FALSE}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
@@ -134,6 +138,29 @@ is much more demanding than using Fisher's Z test.
 # Incorporating prior knowledge
 
 As the dimensional grows the problem of finding the corresponding graph given observational data becomes exponentially harder.
-Thus, if there is any prior information available, this can help make the problem easier.
+Thus, if there is any prior information available, this can help make the problem easier. We show how to incorporate
+prior knowledge into the causal discovery process using the same linear data as above. Suppose we knew that
+`v` and `w` do not cause `x`. This can be specified as follows:
 
-To be continued...
+```{r prior knowledge}
+kn <- knowledge(
+  data_linear,
+  v %--x% x,  # v does not cause x
+  w %--x% x   # w does not cause x
+)
+plot(kn)
+```
+
+We can then incorporate this knowledge into the PC algorithm as follows:
+
+```{r pc algorithm with knowledge}
+pc_pcalg <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+pc_result_with_knowledge <- disco(data_linear, method = pc_pcalg, knowledge = kn)
+plot(pc_result_with_knowledge$caugi)
+```
+
+It now correctly recovers the true DAG structure, since it couldn't decide from the data alone whether `x` causes `w`
+and `v` or vice versa.
+
+For more information about how to incorporate knowledge, see the
+[knowledge vignette](knowledge.html).
