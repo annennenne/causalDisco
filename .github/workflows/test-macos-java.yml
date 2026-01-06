@@ -1,0 +1,27 @@
+name: Test Eclipse Temurin Installation on macOS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-java-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install R dependencies
+        run: |
+          Rscript -e 'install.packages(c("utils"), repos="https://cran.r-project.org")'
+
+      - name: Run install_java()
+        run: |
+          Rscript -e '
+          source("R/install_java.R")
+          jdk <- install_java(force = TRUE)
+          cat("\nJAVA_HOME =", Sys.getenv("JAVA_HOME"), "\n")
+          system2("java", "-version", stdout=TRUE, stderr=TRUE)
+          '
