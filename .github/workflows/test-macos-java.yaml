@@ -2,7 +2,7 @@ name: Test Eclipse Temurin Installation on macOS
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   pull_request:
 
 jobs:
