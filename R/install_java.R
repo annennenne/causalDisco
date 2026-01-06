@@ -166,6 +166,7 @@ install_java_mac <- function(force = FALSE) {
     java_home <- file.path(jdk_existing, "Contents/Home")
     jdk_bin <- file.path(java_home, "bin")
 
+    Sys.setenv(JAVA_HOME = java_home) # <- add this
     Sys.setenv(PATH = paste0(jdk_bin, ":", Sys.getenv("PATH")))
 
     message("JDK already installed at: ", jdk_existing)
@@ -196,6 +197,7 @@ install_java_mac <- function(force = FALSE) {
   java_home <- file.path(jdk_installed, "Contents/Home")
   jdk_bin <- file.path(java_home, "bin")
 
+  Sys.setenv(JAVA_HOME = java_home)
   Sys.setenv(PATH = paste0(jdk_bin, ":", Sys.getenv("PATH")))
 
   message("\nJava in this session:")
