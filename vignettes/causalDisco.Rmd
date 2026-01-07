@@ -124,9 +124,9 @@ To handle non-linear relationships, we can for instance use the Kernel Condition
 
 ```{r pc algorithm non-linear kci, eval = FALSE}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  pc_bnlearn_nonlinear <- pc(engine = "tetrad", test = "kci")
-  pc_result_nonlinear_mi <- disco(data_nonlinear, method = pc_bnlearn_nonlinear)
-  plot(pc_result_nonlinear_mi, main = "PC (Tetrad KCI) non-linear")
+  pc_tetrad_nonlinear <- pc(engine = "tetrad", test = "kci")
+  pc_result_nonlinear_kci <- disco(data_nonlinear, method = pc_tetrad_nonlinear)
+  plot(pc_result_nonlinear_kci, main = "PC (Tetrad KCI) non-linear")
 }
 ```
 
