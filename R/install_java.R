@@ -233,7 +233,7 @@ install_java_mac <- function(force = FALSE) {
 #' system package manager.
 #'
 #' @param force Logical; if `TRUE`, forces reinstallation even if the JDK is
-#'        already present.
+#'        already present. Default is `FALSE`.
 #'
 #' @examples
 #' \dontrun{

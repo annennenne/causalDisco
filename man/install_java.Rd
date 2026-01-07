@@ -8,7 +8,7 @@ install_java(force = FALSE)
 }
 \arguments{
 \item{force}{Logical; if \code{TRUE}, forces reinstallation even if the JDK is
-already present.}
+already present. Default is \code{FALSE}.}
 }
 \description{
 Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
