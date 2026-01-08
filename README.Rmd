@@ -135,16 +135,43 @@ plot(disco_cd_tges)
 - Shouldn't we just list all possible arguments to `tpc`, `tfci`, and `tges` instead of `...` and forcing the user
 to look at the underlying `_run` functions? Then also make the `_run` functions not exported?
 
-- What I wrote in Tetrad FCI required under Tetrad issues - discuss?
-
 ## TODO
 
-- Improve plot
-  - Add some of the arguments from `plot_tempo_mech` (such as time_axis, ...)
+- Improve plot (use caugi)
+
+  - For new features that are hard to do in grid (which caugi uses), maybe just insert the image in ggplot? See this stackexchange https://stackoverflow.com/questions/9917049/inserting-an-image-to-ggplot2
+  Then we modify the image on top (i.e. the image we insert is the background).
+  It should be possible to read coordinates of groups and add time-axis that way for example.
+  
+  - Implement a working `make_tikz` for these plots. See tikzDevice package, which can do it automatically from R plots:
+  
+  ```{r tikzDevice example, eval=FALSE}
+  library(caugi)
+  library(tikzDevice)
+  cg <- caugi(A %-->% B + C)
+  tikz("cg_plot.tex", width = 6, height = 4)
+  plot(
+      cg,
+      node_style = list(
+          by_node = list(
+              A = list(fill = "lightblue", col = "darkblue", lwd = 2),
+              B = list(fill = "red")
+          )
+      )
+  )
+  dev.off()
+  ```
+  If we want any changes we can modify the tikz code after generation.
 
 - Make required work for our algorithms. It breaks when it internally calls `tpdag`, so look into that...
 
 - Make score/test/alg names consistent. Currently a mix of snake_case, kebab-case, and period.case.
+
+- In documentation of defaults for tests maybe add the underlying engine defaults if they differ?
+
+### Longterm
+
+- Once more developed look at https://github.com/py-why/causal-learn and add it as an engine?
 
 ### Manging exported functions
 
@@ -208,13 +235,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 ```
 
-The required edge is missing. This is maybe not a bug? Tetrad behaves the same way. Found this paper:
-[On the Completeness of Causal Discovery in the Presence of Latent
-Confounding with Tiered Background Knowledge](https://proceedings.mlr.press/v108/andrews20a/andrews20a.pdf)
-where it says "In fact, it is straightforward to show that FCI is
-not complete with background knowledge that specifies one variable as the cause of another." and continues with an example illustrating why.
-
-Should we add some warning about this in the documentation and if user tries to do it?
+Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
 
 - Non-working Tetrad test/score arguments `"cci"` and `"mixed_variable_polynomial"`:
 
@@ -290,7 +311,7 @@ Error in rdata_to_tetrad(df) :
 ```
 
 KCI test from Tetrad in pc algorithm gives wrong graph in getting started vignette (non-linear data) when
-version is 7.6.9? Works correctly in 7.6.8.
+version is 7.6.9? Works correctly in 7.6.8. Fixed in unreleased version of Tetrad (see #1946 in Tetrad issues).
 
 ### CRAN TODO
 
