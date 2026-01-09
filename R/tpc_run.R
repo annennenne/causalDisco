@@ -88,7 +88,7 @@ tpc_run <- function(
   data = NULL,
   knowledge = NULL,
   order = NULL,
-  alpha = 10^(-1),
+  alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
   method = "stable.fast",
