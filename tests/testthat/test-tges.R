@@ -85,7 +85,7 @@ test_that("TGES causalDisco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3
+    child_x1 %!-->% youth_x3
   )
 
   # Run TGES with TemporalBIC

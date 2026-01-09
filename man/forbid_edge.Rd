@@ -52,7 +52,7 @@ kn2 <- knowledge(
     old ~ starts_with("oldage")
   ),
   child_x1 \%-->\% youth_x3,
-  child_x2 \%--x\% youth_x4,
+  child_x2 \%!-->\% youth_x4,
   exo(child_x1) # synonym: exogenous()
 )
 

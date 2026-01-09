@@ -29,7 +29,7 @@ try(as_pcalg_constraints(kn), silent = TRUE) # fails due to tiers
 # using directed knowledge
 kn <- knowledge(
   tpc_example,
-  child_x1 %--x% youth_x3
+  child_x1 %!-->% youth_x3
 )
 
 try(as_pcalg_constraints(kn), silent = TRUE) # fails due to directed knowledge

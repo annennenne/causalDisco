@@ -1,8 +1,6 @@
 ### knowledge() example ###
 
-# build knowledge from a data frame and a few DSL calls
 data(tpc_example)
-df <- head(tpc_example)
 
 # knowledge objects are made with the knowledge() function
 kn <- knowledge()
@@ -20,7 +18,7 @@ kn <- knowledge(
 
 # if a data frame is provided, variable names are checked against it
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     1 ~ child_x1 + child_x2,
     2 ~ youth_x3 + youth_x4,
@@ -31,7 +29,7 @@ kn <- knowledge(
 # throws error
 try(
   knowledge(
-    df,
+    tpc_example,
     tier(
       1 ~ child_x1 + child_x2,
       2 ~ youth_x3 + youth_x4,
@@ -42,7 +40,7 @@ try(
 
 # using tidyselect helpers
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     1 ~ starts_with("child"), # can use tidyselect helpers
     2 ~ youth_x3 + youth_x4, # do not need quotes for tiers or variables
@@ -52,7 +50,7 @@ kn <- knowledge(
 
 # custom tier naming
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     "child" ~ starts_with("child"), # can use tidyselect helpers
     youth ~ starts_with("youth"), # do not need quotes for tiers
@@ -62,16 +60,16 @@ kn <- knowledge(
 
 # There is also required and forbidden edges, which are specified like so
 kn <- knowledge(
-  df,
+  tpc_example,
   child_x1 %-->% youth_x3,
   oldage_x6 %!-->% child_x1
 )
 
 # You can also add exogenous variables
 kn <- knowledge(
-  df,
+  tpc_example,
   exogenous(child_x1),
-  exo(child_x2), # shorthand
+  exo(child_x2) # shorthand
 )
 
 # You can also build knowledge with a verb pipeline
@@ -97,7 +95,7 @@ kn <-
   add_exogenous(V3)
 
 # Using seq_tiers for larger datasets
-df <- as.data.frame(
+tpc_example <- as.data.frame(
   matrix(
     runif(100), # 100 random numbers in (0,1)
     nrow = 1,
@@ -106,10 +104,10 @@ df <- as.data.frame(
   )
 )
 
-names(df) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
+names(tpc_example) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
 
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     seq_tiers(
       1:100,
@@ -119,7 +117,7 @@ kn <- knowledge(
   X_1 %-->% X_2
 )
 
-df <- data.frame(
+tpc_example <- data.frame(
   X_1 = 1,
   X_2 = 2,
   tier3_A = 3,
@@ -128,7 +126,7 @@ df <- data.frame(
 )
 
 kn_seq_tiers2 <- knowledge(
-  df,
+  tpc_example,
   tier(
     seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
     seq_tiers(3, starts_with("tier{i}")), # tier3_

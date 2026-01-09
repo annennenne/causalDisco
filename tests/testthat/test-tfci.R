@@ -89,7 +89,7 @@ test_that("tfci causalDisco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x2 %--x% oldage_x5
+    child_x2 %!-->% oldage_x5
   )
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")

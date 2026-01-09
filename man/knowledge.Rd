@@ -13,7 +13,7 @@ knowledge(...)
 initialize and freeze the variable set.
 \item Zero or more mini-DSL calls:
 \code{tier()}, \code{forbidden()}, \code{required()}, \code{exogenous()}, \code{exo()},
-or infix operators \verb{\%-->\%} and \verb{\%--x\%}.
+or infix operators \verb{\%-->\%} and \verb{\%!-->\%}.
 \itemize{
 \item \code{tier()}: One or more two-sided formulas (\code{tier(1 ~ x + y)}), or a numeric vector.
 \item \code{forbidden()} / \code{required()}: One or more two-sided formulas (\code{from ~ to}).
@@ -33,13 +33,13 @@ extended with variable relationships expressed via formulas, selectors, or infix
 forbidden(V1 ~ V4, V2 ~ V4)
 required(V1 ~ V2)
 V1 \%-->\% V3    # infix syntax for required edges
-V2 \%--x\% V3    # infix syntax for forbidden edges
+V2 \%!-->\% V3    # infix syntax for forbidden edges
 exogenous(V1, V2)
 }\if{html}{\out{</div>}}
 }
 \details{
 Create a \code{knowledge} object using a concise mini-DSL with \code{tier()}, \code{forbidden()},
-\code{required()}, \code{exogenous()} and infix edge operators \verb{\%-->\%} and \verb{\%--x\%}.
+\code{required()}, \code{exogenous()} and infix edge operators \verb{\%-->\%} and \verb{\%!-->\%}.
 
 The first argument can be a data frame, which will be used to populate the
 \code{knowledge} object with variable names. If you later add variables with
@@ -56,7 +56,7 @@ specifies variables. Variables can also be selected using \strong{tidyselect} sy
 \code{tier(1 ~ starts_with("V"))}.
 \item \code{forbidden()} / \code{required()}: Add directed edges between variables.
 LHS is the source, RHS is the target. Both sides support tidyselect syntax.
-\item \verb{\%-->\%} and \verb{\%--x\%}: Infix alternatives for \code{required()} and \code{forbidden()}.
+\item \verb{\%-->\%} and \verb{\%!-->\%}: Infix alternatives for \code{required()} and \code{forbidden()}.
 Example: \code{V1 \%-->\% V3} is equivalent to \code{required(V1 ~ V3)}.
 \item \code{exogenous()} / \code{exo()}: Mark variables as exogenous.
 \item Numeric vector shortcut for \code{tier()}:
@@ -66,9 +66,7 @@ Example: \code{V1 \%-->\% V3} is equivalent to \code{required(V1 ~ V3)}.
 \examples{
 ### knowledge() example ###
 
-# build knowledge from a data frame and a few DSL calls
 data(tpc_example)
-df <- head(tpc_example)
 
 # knowledge objects are made with the knowledge() function
 kn <- knowledge()
@@ -81,12 +79,12 @@ kn <- knowledge(
     2 ~ V3
   ),
   V1 \%-->\% V2,
-  V3 \%--x\% V1
+  V3 \%!-->\% V1
 )
 
 # if a data frame is provided, variable names are checked against it
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     1 ~ child_x1 + child_x2,
     2 ~ youth_x3 + youth_x4,
@@ -97,7 +95,7 @@ kn <- knowledge(
 # throws error
 try(
   knowledge(
-    df,
+    tpc_example,
     tier(
       1 ~ child_x1 + child_x2,
       2 ~ youth_x3 + youth_x4,
@@ -108,7 +106,7 @@ try(
 
 # using tidyselect helpers
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     1 ~ starts_with("child"), # can use tidyselect helpers
     2 ~ youth_x3 + youth_x4, # do not need quotes for tiers or variables
@@ -118,7 +116,7 @@ kn <- knowledge(
 
 # custom tier naming
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     "child" ~ starts_with("child"), # can use tidyselect helpers
     youth ~ starts_with("youth"), # do not need quotes for tiers
@@ -128,16 +126,16 @@ kn <- knowledge(
 
 # There is also required and forbidden edges, which are specified like so
 kn <- knowledge(
-  df,
+  tpc_example,
   child_x1 \%-->\% youth_x3,
-  oldage_x6 \%--x\% child_x1
+  oldage_x6 \%!-->\% child_x1
 )
 
 # You can also add exogenous variables
 kn <- knowledge(
-  df,
+  tpc_example,
   exogenous(child_x1),
-  exo(child_x2), # shorthand
+  exo(child_x2) # shorthand
 )
 
 # You can also build knowledge with a verb pipeline
@@ -163,7 +161,7 @@ kn <-
   add_exogenous(V3)
 
 # Using seq_tiers for larger datasets
-df <- as.data.frame(
+tpc_example <- as.data.frame(
   matrix(
     runif(100), # 100 random numbers in (0,1)
     nrow = 1,
@@ -172,10 +170,10 @@ df <- as.data.frame(
   )
 )
 
-names(df) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
+names(tpc_example) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
 
 kn <- knowledge(
-  df,
+  tpc_example,
   tier(
     seq_tiers(
       1:100,
@@ -185,7 +183,7 @@ kn <- knowledge(
   X_1 \%-->\% X_2
 )
 
-df <- data.frame(
+tpc_example <- data.frame(
   X_1 = 1,
   X_2 = 2,
   tier3_A = 3,
@@ -194,7 +192,7 @@ df <- data.frame(
 )
 
 kn_seq_tiers2 <- knowledge(
-  df,
+  tpc_example,
   tier(
     seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
     seq_tiers(3, starts_with("tier{i}")), # tier3_
