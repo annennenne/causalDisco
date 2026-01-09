@@ -25,7 +25,8 @@ BnlearnSearch <- R6Class(
     data = NULL,
 
     #' @field score Character scalar naming the score function used in
-    #'   bnlearn. Can be set with \code{$set_score()}.
+    #'   bnlearn. Can be set with \code{$set_score()}. Kebab-case score names (as used in \pkg{bnlearn}, e.g.
+    #'   \code{"pred-loglik"}) are also accepted and automatically translated to snake_case.
     #'   Recognised values are:
     #'
     #'  **Discrete – categorical**
@@ -34,7 +35,7 @@ BnlearnSearch <- R6Class(
     #'     \item \code{"aic"} — Akaike Information Criterion
     #'     \item \code{"bic"} — Bayesian Information Criterion
     #'     \item \code{"ebic"} — Extended BIC
-    #'     \item \code{"pred-loglik"} — predictive log-likelihood
+    #'     \item \code{"pred_loglik"} — predictive log-likelihood
     #'     \item \code{"bde"} — Bayesian Dirichlet equivalent (uniform)
     #'     \item \code{"bds"} — Bayesian Dirichlet score
     #'     \item \code{"mbde"} — modified BDE
@@ -47,64 +48,65 @@ BnlearnSearch <- R6Class(
     #'   }
     #'   \strong{Gaussian}
     #'   \itemize{
-    #'     \item \code{"loglik-g"}, \code{"aic-g"}, \code{"bic-g"},
-    #'       \code{"ebic-g"}, \code{"pred-loglik-g"}
+    #'     \item \code{"loglik_g"}, \code{"aic_g"}, \code{"bic_g"},
+    #'       \code{"ebic_g"}, \code{"pred_loglik_g"}
     #'     \item \code{"bge"} — Gaussian posterior density
-    #'     \item \code{"nal-g"} — node-average log-likelihood
-    #'     \item \code{"pnal-g"} — penalised node-average log-likelihood
+    #'     \item \code{"nal_g"} — node-average log-likelihood
+    #'     \item \code{"pnal_g"} — penalised node-average log-likelihood
     #'   }
     #'   \strong{Conditional Gaussian}
     #'   \itemize{
-    #'     \item \code{"loglik-cg"}, \code{"aic-cg"}, \code{"bic-cg"},
-    #'       \code{"ebic-cg"}, \code{"pred-loglik-cg"},
-    #'       \code{"nal-cg"}, \code{"pnal-cg"}
+    #'     \item \code{"loglik_cg"}, \code{"aic_cg"}, \code{"bic_cg"},
+    #'       \code{"ebic_cg"}, \code{"pred_loglik_cg"},
+    #'       \code{"nal_cg"}, \code{"pnal_cg"}
     #'   }
 
     score = NULL,
 
     #' @field test Character scalar naming the conditional-independence test
-    #'   passed to bnlearn. Can be set with \code{$set_score()}.
+    #'   passed to bnlearn. Can be set with \code{$set_score()}. Kebab-case test names
+    #'   (as used in \pkg{bnlearn}, e.g. "mi_adf") are also accepted and automatically translated to snake_case.
     #'   Recognised values are:
     #'
     #'   **Discrete – categorical**
     #'   \itemize{
     #'     \item \code{"mi"} – mutual information
-    #'     \item \code{"mi-adf"} – mutual information with adjusted d.f.
-    #'     \item \code{"mc-mi"} – Monte Carlo mutual information
-    #'     \item \code{"smc-mi"} – sequential Monte Carlo mutual information
-    #'     \item \code{"sp-mi"} – semi-parametric mutual information
-    #'     \item \code{"mi-sh"} – mutual information (shrinkage)
+    #'     \item \code{"mi_adf"} – mutual information with adjusted d.f.
+    #'     \item \code{"mc_mi"} – Monte Carlo mutual information
+    #'     \item \code{"smc_mi"} – sequential Monte Carlo mutual information
+    #'     \item \code{"sp_mi"} – semi-parametric mutual information
+    #'     \item \code{"mi_sh"} – mutual information (shrinkage)
     #'     \item \code{"x2"} – chi-squared
-    #'     \item \code{"x2-adf"} – chi-squared with adjusted d.f.
-    #'     \item \code{"mc-x2"} – Monte Carlo chi-squared
-    #'     \item \code{"smc-x2"} – sequential Monte Carlo chi-squared
-    #'     \item \code{"sp-x2"} – semi-parametric chi-squared
+    #'     \item \code{"x2_adf"} – chi-squared with adjusted d.f.
+    #'     \item \code{"mc_x2"} – Monte Carlo chi-squared
+    #'     \item \code{"smc_x2"} – sequential Monte Carlo chi-squared
+    #'     \item \code{"sp_x2"} – semi-parametric chi-squared
     #'   }
     #'
     #'   **Discrete – ordered factors**
     #'   \itemize{
     #'     \item \code{"jt"} – Jonckheere–Terpstra
-    #'     \item \code{"mc-jt"} – Monte Carlo Jonckheere–Terpstra
-    #'     \item \code{"smc-jt"} – sequential Monte Carlo Jonckheere–Terpstra
+    #'     \item \code{"mc_jt"} – Monte Carlo Jonckheere–Terpstra
+    #'     \item \code{"smc_jt"} – sequential Monte Carlo Jonckheere–Terpstra
     #'   }
     #'
     #'   **Gaussian**
     #'   \itemize{
     #'     \item \code{"cor"} – Pearson correlation
-    #'     \item \code{"mc-cor"} – Monte Carlo Pearson correlation
-    #'     \item \code{"smc-cor"} – sequential Monte Carlo Pearson correlation
+    #'     \item \code{"mc_cor"} – Monte Carlo Pearson correlation
+    #'     \item \code{"smc_cor"} – sequential Monte Carlo Pearson correlation
     #'     \item \code{"zf"} / \code{"fisher_z"} – Fisher Z test
-    #'     \item \code{"mc-zf"} – Monte Carlo Fisher Z
-    #'     \item \code{"smc-zf"} – sequential Monte Carlo Fisher Z
-    #'     \item \code{"mi-g"} – mutual information (Gaussian)
-    #'     \item \code{"mc-mi-g"} – Monte Carlo mutual information (Gaussian)
-    #'     \item \code{"smc-mi-g"} – sequential Monte Carlo mutual information (Gaussian)
-    #'     \item \code{"mi-g-sh"} – mutual information (Gaussian, shrinkage)
+    #'     \item \code{"mc_zf"} – Monte Carlo Fisher Z
+    #'     \item \code{"smc_zf"} – sequential Monte Carlo Fisher Z
+    #'     \item \code{"mi_g"} – mutual information (Gaussian)
+    #'     \item \code{"mc_mi_g"} – Monte Carlo mutual information (Gaussian)
+    #'     \item \code{"smc_mi_g"} – sequential Monte Carlo mutual information (Gaussian)
+    #'     \item \code{"mi_g_sh"} – mutual information (Gaussian, shrinkage)
     #'   }
     #'
     #'   **Conditional Gaussian**
     #'   \itemize{
-    #'     \item \code{"mi-cg"} – mutual information (conditional Gaussian)
+    #'     \item \code{"mi_cg"} – mutual information (conditional Gaussian)
     #'   }
     test = NULL,
 
@@ -201,8 +203,9 @@ BnlearnSearch <- R6Class(
         alpha > 0,
         alpha < 1
       )
-
       method <- tolower(method)
+      # Convert snake_case to kebab-case for bnlearn compatibility
+      method <- gsub("_", "-", method)
 
       allowed_tests <- c(
         # Discrete with categorical variables
@@ -228,7 +231,7 @@ BnlearnSearch <- R6Class(
         "mc-cor", # Monte Carlo pearson correlation
         "smc-cor", # sequential Monte Carlo pearson correlation
         "zf", # fisher Z test
-        "fisher_z",
+        "fisher-z",
         "mc-zf", # Monte Carlo fisher Z test
         "smc-zf", # sequential Monte Carlo fisher Z test
         "mi-g", # mutual information for Gaussian variables
@@ -243,7 +246,7 @@ BnlearnSearch <- R6Class(
       if (!(method %in% allowed_tests)) {
         stop("Unknown test type using bnlearn engine: ", method, call. = FALSE)
       }
-      if (method == "fisher_z") {
+      if (method == "fisher-z") {
         method <- "zf" # alias
       }
 
@@ -258,6 +261,8 @@ BnlearnSearch <- R6Class(
     #' @param method Character naming the score function to use.
     set_score = function(method) {
       method <- tolower(method)
+      # Convert snake_case to kebab-case for bnlearn compatibility
+      method <- gsub("_", "-", method)
 
       allowed_scores <- c(
         # Discrete with categorical variables
