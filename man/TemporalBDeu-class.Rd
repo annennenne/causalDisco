@@ -53,7 +53,7 @@ new(
 
 \examples{
 # For reproducibility
-set.seed(123)
+set.seed(1405)
 
 # Number of samples
 n <- 1000

@@ -129,7 +129,7 @@ test_that("TemporalBDeu covers if(length(parents) == 0) part", {
 })
 
 test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on violation)", {
-  set.seed(1)
+  set.seed(1405)
   X <- cbind(x = rnorm(50), y = rnorm(50))
   kn <- knowledge() |> add_vars(c("x", "y"))
   kn <- add_tier(kn, "T1")
@@ -154,7 +154,7 @@ test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on vi
 })
 
 test_that("TemporalBIC local.score raw and scatter branches both finite when allowed", {
-  set.seed(2)
+  set.seed(1405)
   n <- 80
   x <- rnorm(n)
   y <- 0.8 * x + rnorm(n, 0.5)
@@ -201,7 +201,7 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
 })
 
 test_that("TemporalBIC initialize from deprecated numeric/character order builds knowledge", {
-  set.seed(3)
+  set.seed(1405)
   X <- cbind(a = rnorm(20), b = rnorm(20))
   # numeric order
   expect_warning(
@@ -235,7 +235,7 @@ test_that("TemporalBIC initialize from deprecated numeric/character order builds
 })
 
 test_that("TemporalBIC with partially tiered knowledge skips enforcement for untiered vars", {
-  set.seed(4)
+  set.seed(1405)
   X <- cbind(x = rnorm(30), y = rnorm(30))
   kn <- knowledge() |> add_vars(c("x", "y"))
   kn <- add_tier(kn, "T1") # only define T1
@@ -255,7 +255,7 @@ test_that("TemporalBIC with partially tiered knowledge skips enforcement for unt
 })
 
 test_that("TemporalBDeu initializes and returns finite BDeu when allowed", {
-  set.seed(5)
+  set.seed(1405)
   n <- 200
   A <- factor(sample(1:2, n, TRUE))
   B <- factor(sample(1:3, n, TRUE))
@@ -278,7 +278,7 @@ test_that("TemporalBDeu initializes and returns finite BDeu when allowed", {
 })
 
 test_that("TemporalBDeu returns -Inf when a later-tier parent is proposed", {
-  set.seed(6)
+  set.seed(1405)
   n <- 150
   A <- factor(sample(1:2, n, TRUE))
   B <- factor(sample(1:2, n, TRUE))
@@ -318,7 +318,7 @@ test_that("tges_run() rejects non-supported score classes with clear message", {
 })
 
 test_that("tges_run() enforces factors for TemporalBDeu and missing-value guard", {
-  set.seed(7)
+  set.seed(1405)
   D_bad_type <- data.frame(A = rnorm(10), B = rnorm(10))
   kn <- knowledge() |> add_vars(c("A", "B"))
   kn <- add_tier(kn, "T1")
@@ -343,7 +343,7 @@ test_that("tges_run() enforces factors for TemporalBDeu and missing-value guard"
 })
 
 test_that("tges_run() builds Forbidden.edges from score$.order", {
-  set.seed(8)
+  set.seed(1405)
   X <- cbind(x = rnorm(10), y = rnorm(10))
   kn <- knowledge() |> add_vars(c("x", "y"))
   kn <- add_tier(kn, "T1")
@@ -365,7 +365,7 @@ test_that("tges_run() builds Forbidden.edges from score$.order", {
 })
 
 test_that("tges_run forward phase", {
-  set.seed(13) # friday the 13th
+  set.seed(1405)
   n <- 100
   X1 <- rnorm(n)
   X2 <- 0.5 * X1 + rnorm(n)
@@ -381,7 +381,7 @@ test_that("tges_run forward phase", {
 })
 
 test_that("tges_run turning phase", {
-  set.seed(13) # friday the 13th
+  set.seed(1405)
   n <- 100
   X1 <- rnorm(n) + rbinom(n, 1, 0.3)
   X2 <- 0.6 * X1**2 + rnorm(n) + rbinom(n, 1, 0.3)

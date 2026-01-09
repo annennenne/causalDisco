@@ -119,7 +119,7 @@ test_that("set_test unknown test errors", {
 # g_square
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("g_square dispatches to binCItest or disCItest", {
-  set.seed(1)
+  set.seed(1405)
 
   # binary levels -> binCItest path executes
   s2 <- PcalgSearch$new()
@@ -359,7 +359,7 @@ test_that("run_search errors in correct order and messages", {
 })
 
 test_that("run_search without score_function (pc) works; with score_function (ges) warns on fixedEdges", {
-  set.seed(11)
+  set.seed(1405)
   df <- matrix(rnorm(100), ncol = 5) |> as.data.frame()
   colnames(df) <- LETTERS[1:5]
 

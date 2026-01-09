@@ -1,4 +1,4 @@
-set.seed(2)
+set.seed(1405)
 n <- 200
 X1 <- rnorm(n)
 X2 <- X1 + rnorm(n)

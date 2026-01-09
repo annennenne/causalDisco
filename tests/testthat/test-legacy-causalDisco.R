@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("reg_test handles Gaussian (linear) case and finds association", {
-  set.seed(123)
+  set.seed(1405)
   n <- 400
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n, sd = 0.5)
@@ -22,7 +22,7 @@ test_that("reg_test handles Gaussian (linear) case and finds association", {
 })
 
 test_that("reg_test handles Gaussian independence", {
-  set.seed(42)
+  set.seed(1405)
   n <- 500
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
@@ -40,7 +40,7 @@ test_that("reg_test handles Gaussian independence", {
 })
 
 test_that("reg_test handles binomial (logistic) response", {
-  set.seed(99)
+  set.seed(1405)
   n <- 600
   Z <- stats::rnorm(n)
   X <- 0.7 * Z + stats::rnorm(n)
@@ -60,7 +60,7 @@ test_that("reg_test handles binomial (logistic) response", {
 })
 
 test_that("reg_test is symmetric", {
-  set.seed(7)
+  set.seed(1405)
   n <- 300
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
@@ -80,7 +80,7 @@ test_that("reg_test is symmetric", {
 })
 
 test_that("reg_test_each_dir removes NAs", {
-  set.seed(2024)
+  set.seed(1405)
   n <- 300
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
@@ -102,7 +102,7 @@ test_that("reg_test_each_dir removes NAs", {
 
 test_that("reg_test_each_dir wraps binary S in factor()", {
   # S contains both a binary and a numeric covariate; y is Gaussian so glm converges
-  set.seed(1)
+  set.seed(1405)
   n <- 50
   dat <- tibble::tibble(
     x_num = rnorm(n),
@@ -138,7 +138,7 @@ test_that("reg_test_each_dir wraps binary S in factor()", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("cor_test matches gaussCItest", {
-  set.seed(314)
+  set.seed(1405)
   p <- 4
   n <- 800
   X <- MASS::mvrnorm(n, mu = rep(0, p), Sigma = diag(p))

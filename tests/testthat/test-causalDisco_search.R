@@ -255,7 +255,7 @@ test_that("run_search errors are thrown in the right order", {
 })
 
 test_that("run_search returns knowledgeable_caugi for tpc success path", {
-  set.seed(1)
+  set.seed(1405)
   df <- data.frame(
     p1_x = rnorm(100),
     p1_y = rnorm(100),
@@ -279,7 +279,7 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
 })
 
 test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
-  set.seed(1)
+  set.seed(1405)
   df <- data.frame(
     child_x = rnorm(100),
     child_y = rnorm(100),
@@ -315,7 +315,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
 })
 
 test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)", {
-  set.seed(11)
+  set.seed(1405)
   gdf <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
   colnames(gdf) <- c("p1_A", "p1_B", "p2_C", "p2_D")
 
@@ -335,7 +335,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
   out_g <- s_g$run_search()
   expect_s3_class(out_g, "knowledgeable_caugi")
 
-  set.seed(12)
+  set.seed(1405)
   dfc <- data.frame(
     a = factor(sample(letters[1:3], 300, TRUE)),
     b = factor(sample(letters[1:2], 300, TRUE)),

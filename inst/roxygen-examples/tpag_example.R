@@ -1,5 +1,5 @@
 # Full pipeline to a PAG using temporal rules
-set.seed(3)
+set.seed(1405)
 n <- 200
 X1 <- rnorm(n)
 X2 <- X1 + rnorm(n)

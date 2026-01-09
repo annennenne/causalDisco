@@ -167,7 +167,7 @@ test_that("run_search errors when data/alg missing with exact messages", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("run_search works and covers whitelist/blacklist branches", {
-  set.seed(1)
+  set.seed(1405)
   df <- data.frame(
     X = sample(c(1, 2), 40, replace = TRUE),
     Y = sample(c(1, 2), 40, replace = TRUE),

@@ -18,7 +18,7 @@ pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
   directed_as_undirected = TRUE
 )
 
-set.seed(1)
+set.seed(1405)
 skel <- pcalg::skeleton(
   suffStat = ss_cor,
   indepTest = wrapped_test,

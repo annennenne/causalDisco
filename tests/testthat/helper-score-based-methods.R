@@ -15,7 +15,7 @@ ges_args <- function(engine) {
 }
 
 toy_df_score <- function(n = 100) {
-  set.seed(7)
+  set.seed(1405)
   V1 <- rnorm(n)
   V3 <- rnorm(n, 0, 0.2)
   V2 <- 0.6 * V1 + 0.4 * V3 + rnorm(n, 0, 0.05)

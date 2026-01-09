@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tfci_run returns knowledgeable_caugi on example data", {
-  set.seed(123)
+  set.seed(1405)
   data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
@@ -20,7 +20,7 @@ test_that("tfci_run returns knowledgeable_caugi on example data", {
 })
 
 test_that("tfci_run works with reg_test as well", {
-  set.seed(777)
+  set.seed(1405)
   data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
@@ -37,7 +37,7 @@ test_that("tfci_run works with reg_test as well", {
 })
 
 test_that("tfci_run respects forbidden knowledge (edge is removed)", {
-  set.seed(999)
+  set.seed(1405)
   data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
@@ -58,7 +58,7 @@ test_that("tfci_run respects forbidden knowledge (edge is removed)", {
 })
 
 test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws deprecation warning", {
-  set.seed(202)
+  set.seed(1405)
   data(tpc_example, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
@@ -76,7 +76,7 @@ test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws depr
 
 
 test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
-  set.seed(2)
+  set.seed(1405)
   df <- data.frame(
     p1_A = rnorm(25),
     p2_B = rnorm(25)
@@ -111,7 +111,7 @@ test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tfci_run errors when both knowledge and order are supplied", {
-  set.seed(606)
+  set.seed(1405)
   data(tpc_example, package = "causalDisco")
 
   ord <- c("child", "youth", "oldage")
@@ -196,7 +196,7 @@ test_that("tfci_run errors when varnames are unknown with suff_stat-only usage",
 })
 
 test_that("tfci_run demands suff_stat for non-builtin test functions", {
-  set.seed(1)
+  set.seed(1405)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
   strange_test <- function(x, y, S, suff_stat) 0

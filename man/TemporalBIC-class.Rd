@@ -59,7 +59,7 @@ new(
 
 \examples{
 # Simulate Gaussian data
-set.seed(123)
+set.seed(1405)
 n <- 500
 child_x <- rnorm(n)
 child_y <- 0.5 * child_x + rnorm(n)

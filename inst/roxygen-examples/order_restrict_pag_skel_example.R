@@ -1,5 +1,5 @@
 # Small example to obtain a PAG skeleton G via pdsep()
-set.seed(1)
+set.seed(1405)
 n <- 200
 X1 <- rnorm(n)
 X2 <- X1 + rnorm(n)

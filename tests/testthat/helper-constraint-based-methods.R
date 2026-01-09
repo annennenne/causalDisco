@@ -19,7 +19,7 @@ method_args <- function(method_name, engine) {
 
 # tiny continuous dataset; fast & stable
 toy_df_constraint <- function(n = 60L) {
-  set.seed(69)
+  set.seed(1405)
   V1 <- rnorm(n)
   V3 <- rnorm(n, 0, 0.2)
   V2 <- 0.6 * V1 + 0.4 * V3 + rnorm(n, 0, 0.05)
