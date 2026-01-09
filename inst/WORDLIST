@@ -59,6 +59,7 @@ Kun
 LiNG
 LiNGAM
 Liu
+Longterm
 MAGs
 MIMBUILD
 MPDAG
@@ -93,9 +94,7 @@ Tabu
 Temurin
 Terpstra
 Tetrad
-Tetrad's
 TetradSearch
-Tetrad’s
 Tidyselect
 Tobias
 Uhler's
@@ -111,6 +110,7 @@ bcpo
 bdeu
 bic
 bidirected
+binCItest
 bnlearn
 bnlearns
 bpco
@@ -129,6 +129,7 @@ fci
 fciAlgo
 fges
 fixedEdges
+ggplot
 graphNEL
 honouring
 igraph
@@ -162,6 +163,7 @@ sem
 semidirected
 simDAG
 simGausFromDAG
+stackexchange
 tamat
 tbic
 tetrad
@@ -170,6 +172,7 @@ tges
 tibble
 tidyselect
 tikz
+tikzDevice
 tpag
 tpc
 tpdag
