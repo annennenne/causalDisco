@@ -633,7 +633,7 @@ TetradSearch <- R6Class(
     #'      \item \code{conflict_rule = 1} -
     #'      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
     #'      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
-    #'      \code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+    #'      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
     #'      should be prioritized, while \code{3} means that existing colliders should be prioritized,
     #'      ignoring subsequent conflicting information.
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -876,7 +876,7 @@ TetradSearch <- R6Class(
     #'      \item \code{conflict_rule = 1} -
     #'      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
     #'      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
-    #'      \code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+    #'      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
     #'      should be prioritized, while \code{3} means that existing colliders should be prioritized,
     #'      ignoring subsequent conflicting information.
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -891,7 +891,7 @@ TetradSearch <- R6Class(
     #'      \item \code{conflict_rule = 1} -
     #'      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
     #'      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
-    #'      \code{\link[pcalg]{pc}}. \code{2} means that all collider conflicts using bidirected edges
+    #'      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
     #'      should be prioritized, while \code{3} means that existing colliders should be prioritized,
     #'      ignoring subsequent conflicting information.
     #'      \item \code{depth = -1} - Maximum size of conditioning set,

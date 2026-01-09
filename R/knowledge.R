@@ -1553,9 +1553,8 @@ deparse_knowledge <- function(kn, df_name = NULL) {
   # ---- edges (grouped) ----
   if (nrow(kn$edges)) {
     # group edges by 'from' and 'status'
-    library(dplyr)
-    edge_groups <- kn$edges %>%
-      dplyr::group_by(from, status) %>%
+    edge_groups <- kn$edges |>
+      dplyr::group_by(from, status) |>
       dplyr::summarise(to_vars = list(to), .groups = "drop")
 
     edge_fmls <- vapply(

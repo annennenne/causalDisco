@@ -38,9 +38,9 @@ CausalDiscoSearch <- R6::R6Class(
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
     #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-    #'    See \code{\link{cor_test}}.
+    #'    See [cor_test()].
     #'    \item \code{"reg"} - Regression test for discrete or binary data.
-    #'    See \code{\link{reg_test}}.
+    #'    See [reg_test()].
     #'  }
     test = NULL,
 
@@ -48,11 +48,11 @@ CausalDiscoSearch <- R6::R6Class(
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
     #'   \item \code{"tpc"}  - TPC algorithm.
-    #'   See \code{\link{tpc}}.
+    #'   See [tpc()].
     #'   \item \code{"tfci"} - TFCI algorithm.
-    #'   See \code{\link{tfci}}.
+    #'   See [tfci()].
     #'   \item \code{"tges"} - TGES algorithm.
-    #'   See \code{\link{tges}}.
+    #'   See [tges()].
     #' }
     alg = NULL,
 
@@ -288,10 +288,10 @@ CausalDiscoSearch <- R6::R6Class(
     #' @param directed_as_undirected Logical; whether to treat directed edges in
     #' the knowledge as undirected. Default is `FALSE`. This is due to the
     #' nature of how \pkg{pcalg} handles background knowledge when using
-    #' \code{\link[pcalg]{skeleton}} under the hood in
-    #' \code{\link{tpc}} and
-    #' \code{\link{tfci}}.
-    #' @seealso \code{\link{knowledge}}.
+    #' [pcalg::skeleton()] under the hood in
+    #' [tpc()] and
+    #' [tfci()].
+    #' @seealso [knowledge()].
     set_knowledge = function(kn, directed_as_undirected = FALSE) {
       is_knowledge(kn)
       self$knowledge <- kn

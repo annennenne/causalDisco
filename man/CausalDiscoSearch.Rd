@@ -84,7 +84,7 @@ try(CausalDiscoSearch$new()$set_alg("not_an_alg"))
 try(CausalDiscoSearch$new()$set_knowledge(list(not = "knowledge")))
 }
 \seealso{
-\code{\link{knowledge}}.
+\code{\link[=knowledge]{knowledge()}}.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -106,20 +106,20 @@ See \code{\link{TemporalBDeu}}.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
 \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-See \code{\link{cor_test}}.
+See \code{\link[=cor_test]{cor_test()}}.
 \item \code{"reg"} - Regression test for discrete or binary data.
-See \code{\link{reg_test}}.
+See \code{\link[=reg_test]{reg_test()}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
 \item \code{"tpc"}  - TPC algorithm.
-See \code{\link{tpc}}.
+See \code{\link[=tpc]{tpc()}}.
 \item \code{"tfci"} - TFCI algorithm.
-See \code{\link{tfci}}.
+See \code{\link[=tfci]{tfci()}}.
 \item \code{"tges"} - TGES algorithm.
-See \code{\link{tges}}.
+See \code{\link[=tges]{tges()}}.
 }}
 
 \item{\code{params}}{A list of parameters for the test and algorithm.
@@ -277,9 +277,9 @@ Sets the background knowledge for the search with a \code{knowledge} object.
 \item{\code{directed_as_undirected}}{Logical; whether to treat directed edges in
 the knowledge as undirected. Default is \code{FALSE}. This is due to the
 nature of how \pkg{pcalg} handles background knowledge when using
-\code{\link[pcalg]{skeleton}} under the hood in
-\code{\link{tpc}} and
-\code{\link{tfci}}.}
+\code{\link[pcalg:skeleton]{pcalg::skeleton()}} under the hood in
+\code{\link[=tpc]{tpc()}} and
+\code{\link[=tfci]{tfci()}}.}
 }
 \if{html}{\out{</div>}}
 }

@@ -249,9 +249,9 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #' Apply temporal restrictions and standard FCI orientation rules to produce a PAG.
 #' Cross-tier edges receive an arrowhead at the later node and separating sets that
 #' condition on the future are dropped (if \code{cautious = TRUE}) before calling
-#' \code{\link[pcalg]{udag2pag}}.
+#' [pcalg::udag2pag()].
 #'
-#' @param skel A skeleton-like object as returned by \code{\link[pcalg]{pdsep}},
+#' @param skel A skeleton-like object as returned by [pcalg::pdsep()],
 #'   containing \code{$G} (adjacency), \code{$sepset}, \code{$pMax}, and
 #'   \code{$max.ord}.
 #' @param knowledge A \emph{knowledge} object that provides tier labels for variables.

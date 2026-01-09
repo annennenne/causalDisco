@@ -23,7 +23,7 @@ increase the density of the estimated graph.}
 A reference class for categorical observational data Scoring with Tiered
 Background Knowledge. This class represents a score for causal discovery
 using tiered background knowledge from observational categorical
-data; it is used in the causal discovery function \code{\link{tges}}.
+data; it is used in the causal discovery function \code{\link[=tges]{tges()}}.
 }
 \details{
 The class implements a score which scores all edges contradicting the ordering
@@ -116,7 +116,7 @@ tges_pre <- tges_run(t_score)
 # plot(tges_pre)
 }
 \seealso{
-\code{\link{tges}}
+\code{\link[=tges]{tges()}}
 }
 \author{
 Tobias Ellegaard Larsen

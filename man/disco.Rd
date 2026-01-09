@@ -12,11 +12,11 @@ disco(data, method, knowledge = NULL)
 \item{method}{A \code{disco_method} object representing a causal discovery
 algorithm. Available methods are
 \itemize{
-\item \code{\link{pc}} - PC algorithm,
-\item \code{\link{fci}} - FCI algorithm,
-\item \code{\link{ges}} - GES algorithm,
-\item \code{\link{tges}} - TGES algorithm,
-\item \code{\link{tpc}} - TPC algorithm.
+\item \code{\link[=pc]{pc()}} - PC algorithm,
+\item \code{\link[=fci]{fci()}} - FCI algorithm,
+\item \code{\link[=ges]{ges()}} - GES algorithm,
+\item \code{\link[=tges]{tges()}} - TGES algorithm,
+\item \code{\link[=tpc]{tpc()}} - TPC algorithm.
 }}
 
 \item{knowledge}{A \code{knowledge} object to be incorporated into the disco method. If \code{NULL} (default), the method is

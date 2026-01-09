@@ -301,7 +301,7 @@ TEssGraph <- setRefClass(
 #' A Reference Class for Gaussian Observational Data Scoring with Tiered
 #' Background Knowledge. This class represents a score for causal discovery
 #' using tiered background knowledge from observational Gaussian
-#' data; it is used in the causal discovery function \code{\link{tges}}.
+#' data; it is used in the causal discovery function [tges()].
 #'
 #' The class implements a score which scores all edges contradicting the ordering
 #' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
@@ -343,8 +343,7 @@ TEssGraph <- setRefClass(
 #'
 #' @example inst/roxygen-examples/tbic_example.R
 #'
-#' @seealso
-#' \code{\link{tges}}
+#' @seealso [tges()]
 #'
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
@@ -482,7 +481,7 @@ TemporalBIC <- setRefClass(
 #' A reference class for categorical observational data Scoring with Tiered
 #' Background Knowledge. This class represents a score for causal discovery
 #' using tiered background knowledge from observational categorical
-#' data; it is used in the causal discovery function \code{\link{tges}}.
+#' data; it is used in the causal discovery function [tges()].
 #'
 #' The class implements a score which scores all edges contradicting the ordering
 #' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
@@ -521,8 +520,7 @@ TemporalBIC <- setRefClass(
 #'
 #' @example inst/roxygen-examples/tbdeu_example.R
 #'
-#' @seealso
-#' \code{\link{tges}}
+#' @seealso [tges()]
 #'
 #' @importClassesFrom pcalg Score
 #'

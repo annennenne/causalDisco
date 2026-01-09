@@ -12,6 +12,10 @@
 #' @param ... Additional arguments passed to the chosen engine
 #' (e.g. test or algorithm parameters).
 #'
+#' @details
+#' For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+#' via \code{...}, see [tpc_run()].
+#'
 #' @example inst/roxygen-examples/tpc_example.R
 #'
 #' @return

@@ -14,7 +14,7 @@
 #'
 #' @returns A `caugi` and a `knowledge` object in a list.
 #'
-#' @seealso \code{\link[caugi]{caugi}}
+#' @seealso [caugi::caugi()]
 #' @export
 knowledgeable_caugi <- function(graph, kn = knowledge(), class = "PDAG") {
   UseMethod("knowledgeable_caugi")

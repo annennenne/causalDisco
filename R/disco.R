@@ -7,11 +7,11 @@
 #' @param method A `disco_method` object representing a causal discovery
 #' algorithm. Available methods are
 #' \itemize{
-#'  \item \code{\link{pc}} - PC algorithm,
-#'  \item \code{\link{fci}} - FCI algorithm,
-#'  \item \code{\link{ges}} - GES algorithm,
-#'  \item \code{\link{tges}} - TGES algorithm,
-#'  \item \code{\link{tpc}} - TPC algorithm.
+#'  \item [pc()] - PC algorithm,
+#'  \item [fci()] - FCI algorithm,
+#'  \item [ges()] - GES algorithm,
+#'  \item [tges()] - TGES algorithm,
+#'  \item [tpc()] - TPC algorithm.
 #' }
 #' @param knowledge A `knowledge` object to be incorporated into the disco method. If `NULL` (default), the method is
 #'   applied without additional knowledge.

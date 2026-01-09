@@ -23,7 +23,7 @@ linear structural equations (i.e., whether a nonzero mean is allowed).}
 A Reference Class for Gaussian Observational Data Scoring with Tiered
 Background Knowledge. This class represents a score for causal discovery
 using tiered background knowledge from observational Gaussian
-data; it is used in the causal discovery function \code{\link{tges}}.
+data; it is used in the causal discovery function \code{\link[=tges]{tges()}}.
 }
 \details{
 The class implements a score which scores all edges contradicting the ordering
@@ -98,7 +98,7 @@ tges_pre <- tges_run(t_score)
 # plot(tges_pre)
 }
 \seealso{
-\code{\link{tges}}
+\code{\link[=tges]{tges()}}
 }
 \author{
 Tobias Ellegaard Larsen

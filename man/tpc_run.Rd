@@ -49,7 +49,7 @@ depends on the chosen \code{test}.}
 
 \item{method}{Skeleton construction method, one of \code{"stable"},
 \code{"original"}, or \code{"stable.fast"} (default). See
-\code{\link[pcalg]{skeleton}} for details.}
+\code{\link[pcalg:skeleton]{pcalg::skeleton()}} for details.}
 
 \item{na_method}{Handling of missing values, one of \code{"none"} (default;
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
@@ -76,7 +76,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{suff_stat}.}
 
 \item{...}{Additional arguments passed to
-\code{\link[pcalg]{skeleton}} during skeleton construction.}
+\code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
 \value{
 If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
@@ -94,7 +94,7 @@ future release.
 }
 \details{
 Any independence test implemented in \pkg{pcalg} may be used; see
-\code{\link[pcalg]{pc}}. When \code{na_method = "twd"}, test-wise deletion is
+\code{\link[pcalg:pc]{pcalg::pc()}}. When \code{na_method = "twd"}, test-wise deletion is
 performed: for \code{cor_test}, each pairwise correlation uses complete cases;
 for \code{reg_test}, each conditional test performs its own deletion. If you
 supply a user-defined \code{test}, you must also provide \code{suff_stat}.
@@ -137,9 +137,4 @@ my_tpc(tpc_example)
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
-
-# Deprecated: using order prefixes (will warn)
-testthat::expect_warning(
-  tpc_run(tpc_example, order = c("child", "youth", "oldage"), alpha = 0.01)
-)
 }

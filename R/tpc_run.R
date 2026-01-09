@@ -33,7 +33,7 @@
 #'   depends on the chosen \code{test}.
 #' @param method Skeleton construction method, one of \code{"stable"},
 #'   \code{"original"}, or \code{"stable.fast"} (default). See
-#'   \code{\link[pcalg]{skeleton}} for details.
+#'   [pcalg::skeleton()] for details.
 #' @param na_method Handling of missing values, one of \code{"none"} (default;
 #'   error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 #'   \code{"twd"} (test-wise deletion).
@@ -54,11 +54,11 @@
 #'   \code{data} is not supplied and all information is passed via
 #'   \code{suff_stat}.
 #' @param ... Additional arguments passed to
-#'   \code{\link[pcalg]{skeleton}} during skeleton construction.
+#'   [pcalg::skeleton()] during skeleton construction.
 #'
 #' @details
 #' Any independence test implemented in \pkg{pcalg} may be used; see
-#' \code{\link[pcalg]{pc}}. When \code{na_method = "twd"}, test-wise deletion is
+#' [pcalg::pc()]. When \code{na_method = "twd"}, test-wise deletion is
 #' performed: for \code{cor_test}, each pairwise correlation uses complete cases;
 #' for \code{reg_test}, each conditional test performs its own deletion. If you
 #' supply a user-defined \code{test}, you must also provide \code{suff_stat}.

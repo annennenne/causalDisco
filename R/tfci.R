@@ -13,10 +13,8 @@
 #' (e.g. test or algorithm parameters).
 #'
 #' @details
-#' For specific details on the supported scores, tests, and parameters for the engine, see:
-#' \itemize{
-#'  \item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
-#' }
+#' For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+#' via \code{...}, see [tfci_run()].
 #'
 #' @example inst/roxygen-examples/tfci_example.R
 #'

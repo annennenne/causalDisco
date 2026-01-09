@@ -24,8 +24,3 @@ my_tpc(tpc_example)
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
-
-# Deprecated: using order prefixes (will warn)
-testthat::expect_warning(
-  tpc_run(tpc_example, order = c("child", "youth", "oldage"), alpha = 0.01)
-)

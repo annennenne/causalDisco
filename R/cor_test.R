@@ -1,7 +1,6 @@
 #' Test for vanishing partial correlations
 #'
-#' This function simply calls the \code{\link[pcalg]{gaussCItest}}
-#' function from the \code{pcalg} package.
+#' This function simply calls the [pcalg::gaussCItest()] function from the \pkg{pcalg} package.
 #'
 #' @param x Index of x variable.
 #' @param y Index of y variable.

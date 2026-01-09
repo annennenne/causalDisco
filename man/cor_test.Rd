@@ -20,6 +20,5 @@ binary variables and order.}
 A numeric, which is the p-value of the test.
 }
 \description{
-This function simply calls the \code{\link[pcalg]{gaussCItest}}
-function from the \code{pcalg} package.
+This function simply calls the \code{\link[pcalg:condIndFisherZ]{pcalg::gaussCItest()}} function from the \pkg{pcalg} package.
 }

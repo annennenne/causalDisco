@@ -49,7 +49,7 @@ depends on the chosen \code{test}.}
 
 \item{method}{Skeleton construction method, one of \code{"stable"},
 \code{"original"}, or \code{"stable.fast"} (default). See
-\code{\link[pcalg]{skeleton}} for details.}
+\code{\link[pcalg:skeleton]{pcalg::skeleton()}} for details.}
 
 \item{na_method}{Handling of missing values, one of \code{"none"} (default;
 error on any \code{NA}), \code{"cc"} (complete-case analysis), or
@@ -69,7 +69,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{suff_stat}.}
 
 \item{...}{Additional arguments passed to
-\code{\link[pcalg]{skeleton}} during skeleton construction.}
+\code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
 \value{
 A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.

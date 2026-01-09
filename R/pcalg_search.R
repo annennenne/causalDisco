@@ -38,19 +38,18 @@ PcalgSearch <- R6::R6Class(
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
     #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-    #'    See \code{\link[pcalg]{gaussCItest}}.
+    #'    See [pcalg::gaussCItest()].
     #'    \item \code{"g_square"} - G square test for discrete data.
-    #'    See \code{\link[pcalg]{binCItest}} and
-    #'    \code{\link[pcalg]{disCItest}}.
+    #'    See \[pcalg::binCItest] and [pcalg::disCItest].
     #'  }
     test = NULL,
 
     #' @field alg A function that will be used to run the search algorithm.
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
-    #'   \item \code{"pc"} - PC algorithm. See \code{\link[pcalg]{pc}}.
-    #'   \item \code{"fci"} - FCI algorithm. See \code{\link[pcalg]{fci}}.
-    #'   \item \code{"ges"} - GES algorithm. See \code{\link[pcalg]{ges}}.
+    #'   \item \code{"pc"} - PC algorithm. See [pcalg::pc()].
+    #'   \item \code{"fci"} - FCI algorithm. See [pcalg::fci()].
+    #'   \item \code{"ges"} - GES algorithm. See [pcalg::ges()].
     #' }
     alg = NULL,
 

@@ -27,6 +27,10 @@ A function of class \code{"tpc"} that takes a single argument \code{data}
 \description{
 Run the temporal PC algorithm for causal discovery using causalDisco.
 }
+\details{
+For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+via \code{...}, see \code{\link[=tpc_run]{tpc_run()}}.
+}
 \examples{
 # Load data
 data(tpc_example)
@@ -54,9 +58,4 @@ my_tpc(tpc_example)
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
-
-# Deprecated: using order prefixes (will warn)
-testthat::expect_warning(
-  tpc_run(tpc_example, order = c("child", "youth", "oldage"), alpha = 0.01)
-)
 }
