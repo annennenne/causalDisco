@@ -534,35 +534,6 @@ test_that("add_to_tier() works as expected with mini-DSL", {
   )
 })
 
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Infix operators do the same as functions
-# ──────────────────────────────────────────────────────────────────────────────
-test_that("required() and %-->% produce the same edges", {
-  expect_warning(
-    kn_req <- knowledge(
-      required(V1 ~ V2)
-    )
-  )
-  kn_dsl <- knowledge(
-    V1 %-->% V2
-  )
-  expect_equal(kn_req$edges, kn_dsl$edges)
-})
-
-test_that("forbidden() and %!-->% produce the same edges", {
-  expect_warning(
-    kn_req <- knowledge(
-      forbidden(V1 ~ V2)
-    )
-  )
-  kn_dsl <- knowledge(
-    V1 %!-->% V2
-  )
-  expect_equal(kn_req$edges, kn_dsl$edges)
-})
-
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Infix operators errors if df and variables don't match
 # ──────────────────────────────────────────────────────────────────────────────
@@ -587,48 +558,6 @@ test_that("%-->% and %!-->% errors if df and variables don't match", {
   expect_error(
     knowledge(df, V2 %!-->% 1),
     "Forbidden edge: no variables matched '1' from the right-hand side.",
-    fixed = TRUE
-  )
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Edge errors
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("forbidden() errors when called without any formulas", {
-  expect_error(
-    expect_warning(knowledge(
-      forbidden()
-    )),
-    "forbidden() needs at least one two-sided formula.",
-    fixed = TRUE
-  )
-})
-
-test_that("required() errors when called without any formulas", {
-  expect_error(
-    expect_warning(knowledge(
-      required()
-    )),
-    "required() needs at least one two-sided formula.",
-    fixed = TRUE
-  )
-})
-test_that("forbidden() errors when called with a non-formula", {
-  expect_error(
-    expect_warning(knowledge(
-      forbidden(1)
-    )),
-    "Arguments must be two-sided formulas.",
-    fixed = TRUE
-  )
-})
-test_that("required() errors when called with a non-formula", {
-  expect_error(
-    expect_warning(knowledge(
-      required(1)
-    )),
-    "Arguments must be two-sided formulas.",
     fixed = TRUE
   )
 })
@@ -1292,21 +1221,21 @@ test_that("unfreeze() allows adding new variables", {
   expect_setequal(kn2$vars$var, c("A", "B", "C"))
   expect_false(kn2$frozen) # flag stays FALSE
 })
-test_that("knowledge() throws error when using another function than tier(), forbidden(), or required()", {
+test_that("knowledge() throws error when using another a not defined function", {
   df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
       df,
       musthave(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
+    "Only tier(), exogenous(), and infix edge operators (%-->%, %!-->%) are allowed.",
     fixed = TRUE
   )
   expect_error(
     knowledge(
       makingmistakes(V1 ~ 1)
     ),
-    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
+    "Only tier(), exogenous(), and infix edge operators (%-->%, %!-->%) are allowed.",
     fixed = TRUE
   )
 })
@@ -1543,7 +1472,7 @@ test_that("forbid_edge()/require_edge() respect tidy-select on either side", {
   )
 })
 
-test_that("forbidden() and required() inside knowledge() create edges", {
+test_that("forbidden and required inside knowledge() create edges", {
   kn <- knowledge(
     tier(
       A ~ V1,
@@ -1613,7 +1542,7 @@ test_that("knowledge() errors when required edges are bidirectional", {
 test_that("knowledge() rejects unknown top-level calls", {
   expect_error(
     knowledge(foo(V1)),
-    "Only tier(), forbidden(), required(), exogenous(), and infix edge operators",
+    "Only tier(), exogenous(), and infix edge operators (%-->%, %!-->%) are allowed.",
     fixed = TRUE
   )
 })
@@ -2064,7 +1993,7 @@ test_that("exogenous() is invariant to order of variables", {
   expect_equal(kn1, kn2)
 })
 
-test_that("exogenous() errors when it conflicts with required()", {
+test_that("exogenous() errors when it conflicts with required", {
   expect_error(
     knowledge(
       data.frame(A = 1, B = 2),
@@ -2288,15 +2217,12 @@ test_that("deparse_knowledge() collapses forbidden edges by source", {
     B %!-->% C
   )
   code <- deparse_knowledge(kn, "df")
-  # should have a single forbidden() call with two formulas:
-  #   A ~ C + D
-  #   B ~ C
-  expect_true(
-    grepl(
-      "forbidden\\(\\s*A ~ C \\+ D,\\s*B ~ C\\s*\\)",
-      code
-    )
-  )
+  # Should convert to
+  #   A %!-->% c(C, D),
+  #   B %!-->% C
+  expected_pattern <- "knowledge(df,\n  A %!-->% c(C, D),\n  B %!-->% C\n)"
+
+  expect_equal(code, expected_pattern)
 })
 
 test_that("deparse_knowledge() collapses required edges by source", {
@@ -2307,9 +2233,9 @@ test_that("deparse_knowledge() collapses required edges by source", {
     P %-->% R
   )
   code <- deparse_knowledge(kn, "df")
-  expect_true(
-    grepl("required\\(\\s*P ~ Q \\+ R\\s*\\)", code)
-  )
+
+  expected_pattern <- "knowledge(df,\n  P %-->% c(Q, R)\n)"
+  expect_equal(code, expected_pattern)
 })
 
 test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", {
@@ -2321,10 +2247,7 @@ test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", 
     B %-->% A
   )
   code <- deparse_knowledge(kn, "df")
-  expect_warning(
-    expect_warning(
-      kn2 <- eval(parse(text = code))
-    )
-  )
+
+  kn2 <- eval(parse(text = code))
   expect_equal(kn2, kn)
 })
