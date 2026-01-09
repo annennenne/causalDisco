@@ -68,9 +68,6 @@ We provide a helper function to install Temurin JDK 25 on macOS and Windows:
 causalDisco::install_java()
 ```
 
-You may also refer to Tetrad's
-[Java setup guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad).
-
 The current supported version of Tetrad can then be installed by calling
 
 ```{r install tetrad, eval=FALSE}
@@ -128,13 +125,6 @@ You can visualize the resulting causal graph using the `plot()` function:
 plot(disco_cd_tges)
 ```
 
-## Questions
-
-- `tpc` and `tfci` have default $\alpha = 0.05$, but the underlying `tpc_run` and `tfci_run` have $\alpha = 0.1$.
-
-- Shouldn't we just list all possible arguments to `tpc`, `tfci`, and `tges` instead of `...` and forcing the user
-to look at the underlying `_run` functions? Then also make the `_run` functions not exported?
-
 ## TODO
 
 - Improve plot (use caugi)
@@ -165,7 +155,7 @@ to look at the underlying `_run` functions? Then also make the `_run` functions 
 
 - Make required work for our algorithms. It breaks when it internally calls `tpdag`, so look into that...
 
-- Make score/test/alg names consistent. Currently a mix of snake_case, kebab-case, and period.case.
+- Make score/test/alg names consistent. Currently a mix of snake_case, kebab-case, and period.case. - done?
 
 - In documentation of defaults for tests maybe add the underlying engine defaults if they differ?
 
@@ -174,8 +164,6 @@ to look at the underlying `_run` functions? Then also make the `_run` functions 
 - Once more developed look at https://github.com/py-why/causal-learn and add it as an engine?
 
 ### Manging exported functions
-
-- Do we need to export the run functions (`tpc_run`, ...) if we recommend user to use `disco()` with the method functions (`tpc`, ...)?
 
 - Various helper functions: `as_pcalg_constraints`, ..., `is_knowledgeable_caugi`, ..., `tetrad_graph`
 

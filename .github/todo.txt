@@ -1,39 +1,10 @@
-# Knowledge vignette
+## Changes needed to finish knowledge vignette
 
-kn_1, kn_2 i knowledge vignette - done
-
-tiered knowledge i stedet for tier knowledge - done
-
-tiered knowledge mix letters and numbers - done
-
-exogenous knowledge til exogenous variables - done
-
-Add example with two exogenous variables - done
-
-Combine different kinds of knowledge - done
-
-Make an example in removing knowledge from a knowledge object - done
-
-Improve example to make it be observed through time in tiered knowledge - done
-
-## Changes needed
-
-Use %!-->% (and allow %!(-->)%) also) if !%-->% is not possible
-
-Allow tiered knowledge to be plotted as forbidden knowledge instead
+Allow tiered knowledge to be plotted as forbidden knowledge instead, see function `forbid_tier_violations()`
 
 Allow time axis on plots (is this needed to be implemented in caugi?)
 
-Only allow exo and exogenous (remove root) - done
-
 Plot function to knowledgeable_caugi shouldn't plot knowledge (maybe make a show_knowledge = FALSE) argument as default?
-
-Modify syntax of `remove_edges`, ... Currently it needs a formula `remove_edges(kn, child_x1 ~ youth_x3)`
-
-# Knowledge type graf
-
-Bruger skal kun må give knowledge der passer til objekt (e.g. DAG)
-
 
 # Caugi plot
 
@@ -41,10 +12,7 @@ Bruger skal kun må give knowledge der passer til objekt (e.g. DAG)
 
 - Label to edges (you already can in `grid.text()`, so maybe not needed?).
 
-
 # TODO
-
-Fjern export _run functions og move docs
 
 Check if skipped tests can be removed (could just add a version check on tetrad in tests?)
 
@@ -52,6 +20,7 @@ Check if skipped tests can be removed (could just add a version check on tetrad 
 
 Allow star - star (adjaceny) knowledge
 
+User should only be allowed to give knowledge that matches the knowledge class (e.g. DAG)
 
 
 

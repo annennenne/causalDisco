@@ -84,7 +84,7 @@ Recognised values are:
 
 \item{\code{test}}{Character scalar naming the conditional-independence test
 passed to bnlearn. Can be set with \code{$set_score()}. Kebab-case test names
-(as used in \pkg{bnlearn}, e.g. "mi_adf") are also accepted and automatically translated to snake_case.
+(as used in \pkg{bnlearn}, e.g. "mi-adf") are also accepted and automatically translated to snake_case.
 Recognised values are:
 
 \strong{Discrete – categorical}

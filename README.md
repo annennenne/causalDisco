@@ -71,9 +71,6 @@ Windows:
 causalDisco::install_java()
 ```
 
-You may also refer to Tetrad’s [Java setup
-guide](https://github.com/cmu-phil/tetrad/wiki/Setting-up-Java-for-Tetrad).
-
 The current supported version of Tetrad can then be installed by calling
 
 ``` r
@@ -155,15 +152,6 @@ plot(disco_cd_tges)
 
 <img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" /><img src="man/figures/README-plot-2.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
-## Questions
-
-- `tpc` and `tfci` have default $\alpha = 0.05$, but the underlying
-  `tpc_run` and `tfci_run` have $\alpha = 0.1$.
-
-- Shouldn’t we just list all possible arguments to `tpc`, `tfci`, and
-  `tges` instead of `...` and forcing the user to look at the underlying
-  `_run` functions? Then also make the `_run` functions not exported?
-
 ## TODO
 
 - Improve plot (use caugi)
@@ -201,7 +189,7 @@ plot(disco_cd_tges)
   calls `tpdag`, so look into that…
 
 - Make score/test/alg names consistent. Currently a mix of snake_case,
-  kebab-case, and period.case.
+  kebab-case, and period.case. - done?
 
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
@@ -212,9 +200,6 @@ plot(disco_cd_tges)
   and add it as an engine?
 
 ### Manging exported functions
-
-- Do we need to export the run functions (`tpc_run`, …) if we recommend
-  user to use `disco()` with the method functions (`tpc`, …)?
 
 - Various helper functions: `as_pcalg_constraints`, …,
   `is_knowledgeable_caugi`, …, `tetrad_graph`
@@ -304,7 +289,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: Unrecognized basis type: 4
+#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
 ```
 
 ``` r
