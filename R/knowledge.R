@@ -508,7 +508,7 @@ knowledge <- function(...) {
 #' frozen, an error is thrown if any of the variables are not present in the
 #' data frame provided to the object.
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param vars A character vector of variable names to add.
 #'
 #' @returns The updated `knowledge` object.
@@ -519,7 +519,7 @@ knowledge <- function(...) {
 #' @concept knowledge
 #'
 #' @export
-add_vars <- function(.kn, vars) {
+add_vars <- function(kn, vars) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -528,11 +528,11 @@ add_vars <- function(.kn, vars) {
     function_name = "add_vars"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
-  missing <- setdiff(vars, .kn$vars$var)
+  missing <- setdiff(vars, kn$vars$var)
 
-  if (.kn$frozen && length(missing)) {
+  if (kn$frozen && length(missing)) {
     stop(
       "Unknown variable(s): [",
       paste(missing, collapse = ", "),
@@ -543,14 +543,14 @@ add_vars <- function(.kn, vars) {
 
   if (length(missing)) {
     new_rows <- tibble::tibble(var = missing, tier = NA_character_)
-    .kn$vars <- dplyr::bind_rows(.kn$vars, new_rows)
+    kn$vars <- dplyr::bind_rows(kn$vars, new_rows)
   }
-  .kn
+  kn
 }
 
 #' @title Add (and position) a tier
 #'
-#' @param .kn A knowledge object.
+#' @param kn A knowledge object.
 #' @param tier Bare symbol / character (label) **or** numeric literal.
 #' @param before,after  Optional anchor relative to an existing tier label,
 #'  tier index, or variable.  Once the knowledge object already
@@ -564,7 +564,7 @@ add_vars <- function(.kn, vars) {
 #' @concept knowledge
 #'
 #' @export
-add_tier <- function(.kn, tier, before = NULL, after = NULL) {
+add_tier <- function(kn, tier, before = NULL, after = NULL) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -574,7 +574,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
     function_name = "add_tier"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
   before_sup <- !missing(before)
   after_sup <- !missing(after)
 
@@ -618,11 +618,11 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   }
 
   # duplicate?
-  if (label %in% .kn$tiers$label) {
+  if (label %in% kn$tiers$label) {
     stop(sprintf("Tier label `%s` already exists.", label), call. = FALSE)
   }
 
-  tiers_exist <- nrow(.kn$tiers) > 0L
+  tiers_exist <- nrow(kn$tiers) > 0L
 
   # no tiers yet
   if (!tiers_exist) {
@@ -632,8 +632,8 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
         call. = FALSE
       )
     }
-    .kn$tiers <- dplyr::bind_rows(.kn$tiers, tibble::tibble(label = label))
-    return(.kn)
+    kn$tiers <- dplyr::bind_rows(kn$tiers, tibble::tibble(label = label))
+    return(kn)
   }
 
   # tiers exist
@@ -654,7 +654,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
     as.character(rlang::enexpr(after))
   }
 
-  pos <- match(anchor_lbl, .kn$tiers$label)
+  pos <- match(anchor_lbl, kn$tiers$label)
   if (is.na(pos)) {
     stop(
       sprintf("`%s` does not refer to an existing tier.", anchor_lbl),
@@ -665,25 +665,25 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
   insert_at <- if (before_sup) pos else pos + 1L
 
   # build new tiers in three parts
-  head_part <- dplyr::slice(.kn$tiers, seq_len(insert_at - 1L))
+  head_part <- dplyr::slice(kn$tiers, seq_len(insert_at - 1L))
 
-  tail_part <- if (insert_at <= nrow(.kn$tiers)) {
-    dplyr::slice(.kn$tiers, insert_at:nrow(.kn$tiers))
+  tail_part <- if (insert_at <= nrow(kn$tiers)) {
+    dplyr::slice(kn$tiers, insert_at:nrow(kn$tiers))
   } else {
-    .kn$tiers[0, ] # empty tibble w/ same columns
+    kn$tiers[0, ] # empty tibble w/ same columns
   }
 
-  .kn$tiers <- dplyr::bind_rows(
+  kn$tiers <- dplyr::bind_rows(
     head_part,
     tibble::tibble(label = label),
     tail_part
   )
-  .kn
+  kn
 }
 
 #' @title Add variables to an existing tier
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
 #'
 #' @returns The updated `knowledge` object.
@@ -694,7 +694,7 @@ add_tier <- function(.kn, tier, before = NULL, after = NULL) {
 #' @concept knowledge
 #'
 #' @export
-add_to_tier <- function(.kn, ...) {
+add_to_tier <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -704,7 +704,7 @@ add_to_tier <- function(.kn, ...) {
     function_name = "add_to_tier"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
   specs <- rlang::list2(...)
   if (!length(specs)) {
@@ -721,7 +721,7 @@ add_to_tier <- function(.kn, ...) {
     tier_label <- as.character(lhs_expr)
 
     # tier must already exist
-    if (!tier_label %in% .kn$tiers$label) {
+    if (!tier_label %in% kn$tiers$label) {
       stop(
         sprintf(
           "Tier `%s` does not exist. Create it first with add_tier().",
@@ -732,7 +732,7 @@ add_to_tier <- function(.kn, ...) {
     }
 
     # resolve variables on the RHS
-    vars <- .formula_vars(.kn, rhs_expr)
+    vars <- .formula_vars(kn, rhs_expr)
     if (!length(vars)) {
       stop(glue::glue(
         "Specification `{deparse(rhs_expr)}` matched no variables."
@@ -740,7 +740,7 @@ add_to_tier <- function(.kn, ...) {
     }
 
     # detect variables already assigned to a different tier
-    current <- .kn$vars$tier[match(vars, .kn$vars$var)]
+    current <- kn$vars$tier[match(vars, kn$vars$var)]
     clash <- !is.na(current) & current != tier_label
     if (any(clash)) {
       bad <- vars[clash]
@@ -755,27 +755,27 @@ add_to_tier <- function(.kn, ...) {
     }
 
     # register variables and attach the tier label
-    .kn <- add_vars(.kn, vars)
-    .kn$vars$tier[match(vars, .kn$vars$var)] <- tier_label
+    kn <- add_vars(kn, vars)
+    kn$vars$tier[match(vars, kn$vars$var)] <- tier_label
   }
 
   # update tier_from and tier_to in edges
-  if (nrow(.kn$edges)) {
-    idx_from <- match(.kn$edges$from, .kn$vars$var)
-    idx_to <- match(.kn$edges$to, .kn$vars$var)
+  if (nrow(kn$edges)) {
+    idx_from <- match(kn$edges$from, kn$vars$var)
+    idx_to <- match(kn$edges$to, kn$vars$var)
 
-    .kn$edges$tier_from <- .kn$vars$tier[idx_from]
-    .kn$edges$tier_to <- .kn$vars$tier[idx_to]
+    kn$edges$tier_from <- kn$vars$tier[idx_from]
+    kn$edges$tier_to <- kn$vars$tier[idx_to]
 
     # check if we violate tier order
-    .validate_tier_rule(.kn$edges, .kn$tiers)
+    .validate_tier_rule(kn$edges, kn$tiers)
   }
 
   # tidy variable table: order by tier rank, then name
-  rank <- match(.kn$vars$tier, .kn$tiers$label)
-  .kn$vars <- dplyr::arrange(.kn$vars, rank, var)
+  rank <- match(kn$vars$tier, kn$tiers$label)
+  kn$vars <- dplyr::arrange(kn$vars, rank, var)
 
-  .kn
+  kn
 }
 
 #' Add forbidden edges
@@ -786,7 +786,7 @@ add_to_tier <- function(.kn, ...) {
 #' Formulas can use tidy-select on either side, so
 #' `forbid_edge(kn, starts_with("X") ~ Y)` forbids every `X_i --> Y`.
 #'
-#' @param .kn  A `knowledge` object.
+#' @param kn  A `knowledge` object.
 #' @param ...  One or more two-sided formulas.
 #'
 #' @returns The updated `knowledge` object.
@@ -797,7 +797,7 @@ add_to_tier <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-forbid_edge <- function(.kn, ...) {
+forbid_edge <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
@@ -811,9 +811,9 @@ forbid_edge <- function(.kn, ...) {
   }
 
   for (formula in dots) {
-    .kn <- .edge_verb(.kn, "forbidden", formula)
+    kn <- .edge_verb(kn, "forbidden", formula)
   }
-  .kn
+  kn
 }
 
 #' Add required edges
@@ -832,7 +832,7 @@ forbid_edge <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-require_edge <- function(.kn, ...) {
+require_edge <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
@@ -846,9 +846,9 @@ require_edge <- function(.kn, ...) {
   }
 
   for (formula in dots) {
-    .kn <- .edge_verb(.kn, "required", formula)
+    kn <- .edge_verb(kn, "required", formula)
   }
-  .kn
+  kn
 }
 
 #' @title Add exogenous variables
@@ -858,7 +858,7 @@ require_edge <- function(.kn, ...) {
 #' Every possible incoming edge to these nodes is automatically forbidden.
 #' This is equivalent to writing `forbidden(everything() ~ vars)`.
 #'
-#' @param .kn A knowledge object.
+#' @param kn A knowledge object.
 #' @param vars Tidyselect specification or character vector of variables.
 #'
 #' @returns Updated knowledge object.
@@ -869,10 +869,10 @@ require_edge <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-add_exogenous <- function(.kn, vars) {
-  is_knowledge(.kn)
-  .kn <- forbid_edge(.kn, everything() ~ {{ vars }})
-  .kn
+add_exogenous <- function(kn, vars) {
+  is_knowledge(kn)
+  kn <- forbid_edge(kn, everything() ~ {{ vars }})
+  kn
 }
 
 #' @rdname add_exogenous
@@ -885,7 +885,7 @@ add_exo <- add_exogenous
 #' even though it was frozen earlier by adding a data frame to the knowledge
 #' constructor `knowledge()`.
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @returns The same `knowledge` object with the `frozen` attribute set to
 #' `FALSE`.
 #'
@@ -895,10 +895,10 @@ add_exo <- add_exogenous
 #' @concept knowledge
 #'
 #' @export
-unfreeze <- function(.kn) {
-  is_knowledge(.kn)
-  .kn$frozen <- FALSE
-  .kn
+unfreeze <- function(kn) {
+  is_knowledge(kn)
+  kn$frozen <- FALSE
+  kn
 }
 
 #' @title Get tiers
@@ -1011,8 +1011,8 @@ print.knowledge <- function(x, ...) {
 
 # ────────────────────────────── Manipulation ──────────────────────────────────
 #' @title Merge two `knowledge` objects
-#' @param .kn1 A `knowledge` object.
-#' @param .kn2 Another `knowledge` object.
+#' @param kn1 A `knowledge` object.
+#' @param kn2 Another `knowledge` object.
 #'
 #' @example inst/roxygen-examples/plus-knowledge_example.R
 #'
@@ -1020,7 +1020,7 @@ print.knowledge <- function(x, ...) {
 #' @concept knowledge
 #'
 #' @exportS3Method "+" knowledge
-`+.knowledge` <- function(.kn1, .kn2) {
+`+.knowledge` <- function(kn1, kn2) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -1029,21 +1029,21 @@ print.knowledge <- function(x, ...) {
     function_name = "+.knowledge"
   )
 
-  is_knowledge(.kn1)
-  is_knowledge(.kn2)
+  is_knowledge(kn1)
+  is_knowledge(kn2)
 
   # combine
-  vars_all <- unique(c(.kn1$vars$var, .kn2$vars$var))
+  vars_all <- unique(c(kn1$vars$var, kn2$vars$var))
   out <- .new_knowledge(vars_all)
 
   # capture caller-provided names for messaging
-  src1 <- deparse(substitute(.kn1))
-  src2 <- deparse(substitute(.kn2))
+  src1 <- deparse(substitute(kn1))
+  src2 <- deparse(substitute(kn2))
 
   # detect tier conflicts
   tier_conflicts <- dplyr::bind_rows(
-    dplyr::mutate(.kn1$vars, .src = src1),
-    dplyr::mutate(.kn2$vars, .src = src2)
+    dplyr::mutate(kn1$vars, .src = src1),
+    dplyr::mutate(kn2$vars, .src = src2)
   ) |>
     dplyr::distinct(.src, var, tier) |>
     dplyr::group_by(var) |>
@@ -1081,18 +1081,18 @@ print.knowledge <- function(x, ...) {
   }
 
   # var tiers
-  vtiers <- dplyr::bind_rows(.kn1$vars, .kn2$vars) |>
+  vtiers <- dplyr::bind_rows(kn1$vars, kn2$vars) |>
     dplyr::distinct(var, .keep_all = TRUE)
 
   # merge vars
   out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
 
-  # merge tier labels, preserving .kn1 order then any new from .kn2
-  all_labels <- unique(c(.kn1$tiers$label, .kn2$tiers$label))
+  # merge tier labels, preserving kn1 order then any new from kn2
+  all_labels <- unique(c(kn1$tiers$label, kn2$tiers$label))
   out$tiers <- tibble::tibble(label = all_labels)
 
   # merge edges (status, from, to, tier_from, tier_to are all character)
-  out$edges <- dplyr::distinct(dplyr::bind_rows(.kn1$edges, .kn2$edges)) |>
+  out$edges <- dplyr::distinct(dplyr::bind_rows(kn1$edges, kn2$edges)) |>
     dplyr::mutate(
       tier_from = out$vars$tier[match(from, out$vars$var)],
       tier_to = out$vars$tier[match(to, out$vars$var)]
@@ -1107,7 +1107,7 @@ print.knowledge <- function(x, ...) {
 
 #' @title Reorder all tiers at once
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param order A vector that lists *every* tier exactly once, either by
 #'  label (default) or by numeric index (`by_index = TRUE`).
 #'  Be careful if you have numeric tier labels.
@@ -1122,7 +1122,7 @@ print.knowledge <- function(x, ...) {
 #' @concept knowledge
 #'
 #' @export
-reorder_tiers <- function(.kn, order, by_index = FALSE) {
+reorder_tiers <- function(kn, order, by_index = FALSE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang",
@@ -1131,9 +1131,9 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
     function_name = "reorder_tiers"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
-  current <- .kn$tiers$label
+  current <- kn$tiers$label
   n <- length(current)
 
   # helper function to convert a label expression to a string
@@ -1195,14 +1195,14 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
   }
 
   # apply new order
-  .kn$tiers <- tibble::tibble(label = labels)
+  kn$tiers <- tibble::tibble(label = labels)
 
   # validate
-  .validate_tier_rule(.kn$edges, .kn$tiers)
-  .validate_forbidden_required(.kn$edges)
+  .validate_tier_rule(kn$edges, kn$tiers)
+  .validate_forbidden_required(kn$edges)
 
   # return
-  .kn
+  kn
 }
 
 #' @title Move one tier before / after another
@@ -1223,7 +1223,7 @@ reorder_tiers <- function(.kn, order, by_index = FALSE) {
 #'
 #' @export
 reposition_tier <- function(
-  .kn,
+  kn,
   tier,
   before = NULL,
   after = NULL,
@@ -1236,12 +1236,12 @@ reposition_tier <- function(
     function_name = "reposition_tier"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
   if (!xor(missing(before), missing(after))) {
     stop("Supply exactly one of `before` or `after`.", call. = FALSE)
   }
 
-  current <- .kn$tiers$label
+  current <- kn$tiers$label
 
   resolve_label <- function(expr) {
     if (by_index) {
@@ -1287,14 +1287,14 @@ reposition_tier <- function(
     stop("Anchor tier `", anchor_lbl, "` does not exist.")
   }
   if (tier_lbl == anchor_lbl) {
-    return(.kn)
+    return(kn)
   } # nothing to do
 
   new_order <- setdiff(current, tier_lbl) # drop, then re-insert
   pos <- match(anchor_lbl, new_order)
   insert_at <- if (missing(before)) pos + 1L else pos
   new_order <- append(new_order, tier_lbl, after = insert_at - 1L)
-  reorder_tiers(.kn, c(!!!new_order))
+  reorder_tiers(kn, c(!!!new_order))
 }
 
 # ────────────────────────────────── Check ─────────────────────────────────────
@@ -1325,7 +1325,7 @@ is_knowledge <- function(x) {
 #' Drops the given variables from `kn$vars`, and automatically removes
 #' any edges that mention them.
 #'
-#' @param .kn   A `knowledge` object.
+#' @param kn   A `knowledge` object.
 #' @param ...   Unquoted variable names or tidy‐select helpers.
 #'
 #' @returns An updated `knowledge` object.
@@ -1336,7 +1336,7 @@ is_knowledge <- function(x) {
 #' @concept knowledge
 #'
 #' @export
-remove_vars <- function(.kn, ...) {
+remove_vars <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -1346,12 +1346,12 @@ remove_vars <- function(.kn, ...) {
     function_name = "remove_vars"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
 
   # resolve each quosure to a character vector of names
   vars_list <- purrr::map(specs, function(q) {
-    .vars_from_spec(.kn, rlang::get_expr(q))
+    .vars_from_spec(kn, rlang::get_expr(q))
   })
   vars <- unique(unlist(vars_list, use.names = FALSE))
 
@@ -1360,26 +1360,26 @@ remove_vars <- function(.kn, ...) {
   }
 
   # drop them from the var table
-  .kn$vars <- dplyr::filter(.kn$vars, !var %in% vars)
+  kn$vars <- dplyr::filter(kn$vars, !var %in% vars)
 
   # drop any edges that mention them
-  .kn$edges <- dplyr::filter(
-    .kn$edges,
+  kn$edges <- dplyr::filter(
+    kn$edges,
     !from %in% vars,
     !to %in% vars
   )
 
-  .kn
+  kn
 }
 
-#' @title Remove edges from a knowledge object
+#' @title Remove an edge from a knowledge object
 #' @description
-#' Drop any directed edge(s) matching the two‐sided formulas you supply.
-#' Errors if no edges matched.
+#' Drop a single directed edge specified by `from` and `to`.
+#' Errors if the edge does not exist.
 #'
-#' @param .kn   A `knowledge` object.
-#' @param ...   One or more two‐sided formulas, e.g. `A ~ B` or
-#' `starts_with("X") ~ Y`.
+#' @param kn   A `knowledge` object.
+#' @param from  The source node (unquoted or character).
+#' @param to    The target node (unquoted or character).
 #'
 #' @returns The updated `knowledge` object.
 #'
@@ -1389,44 +1389,38 @@ remove_vars <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-remove_edges <- function(.kn, ...) {
+remove_edge <- function(kn, from, to) {
   .check_if_pkgs_are_installed(
-    pkgs = c(
-      "dplyr",
-      "purrr",
-      "rlang",
-      "tidyr"
-    ),
-    function_name = "remove_edges"
+    pkgs = c("dplyr", "rlang", "tibble"),
+    function_name = "remove_edge"
   )
 
-  is_knowledge(.kn)
-  specs <- rlang::enquos(..., .ignore_empty = "all")
-  if (length(specs) == 0L) {
-    stop("remove_edges() needs at least one two-sided formula.", call. = FALSE)
-  }
+  is_knowledge(kn)
 
-  # build a little tibble of all (from,to) pairs the user wants to drop
-  drop_tbl <- purrr::map_dfr(specs, function(fq) {
-    expr <- rlang::get_expr(fq)
-    from_ <- .formula_vars(.kn, rlang::f_lhs(expr))
-    to_ <- .formula_vars(.kn, rlang::f_rhs(expr))
-    tidyr::crossing(from = from_, to = to_)
-  })
+  # capture as strings if unquoted
+  from <- rlang::as_name(rlang::enquo(from))
+  to <- rlang::as_name(rlang::enquo(to))
 
-  # did any of those actually exist in kn$edges?
+  # build tibble of edge to drop
+  drop_tbl <- tibble::tibble(from = from, to = to)
+
+  # check if the edge exists
   matched <- dplyr::inner_join(
     drop_tbl,
-    dplyr::select(.kn$edges, from, to),
+    dplyr::select(kn$edges, from, to),
     by = c("from", "to")
   )
+
   if (nrow(matched) == 0L) {
-    stop("remove_edges() matched no edges.", call. = FALSE)
+    stop(
+      sprintf("Edge from '%s' to '%s' does not exist.", from, to),
+      call. = FALSE
+    )
   }
 
-  # drop them
-  .kn$edges <- dplyr::anti_join(.kn$edges, drop_tbl, by = c("from", "to"))
-  .kn
+  # drop the edge
+  kn$edges <- dplyr::anti_join(kn$edges, drop_tbl, by = c("from", "to"))
+  kn
 }
 
 #' @title Remove entire tiers from a knowledge object
@@ -1434,7 +1428,7 @@ remove_edges <- function(.kn, ...) {
 #' @description
 #' Drops tier definitions (and un‐tiers any vars assigned to them).
 #'
-#' @param .kn   A `knowledge` object.
+#' @param kn   A `knowledge` object.
 #' @param ...   Tier labels (unquoted or character) or numeric indices.
 #'
 #' @returns An updated `knowledge` object.
@@ -1445,7 +1439,7 @@ remove_edges <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-remove_tiers <- function(.kn, ...) {
+remove_tiers <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -1455,29 +1449,29 @@ remove_tiers <- function(.kn, ...) {
     function_name = "remove_tiers"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
   specs <- rlang::enquos(..., .ignore_empty = "all")
-  keep <- .kn$tiers$label
+  keep <- kn$tiers$label
   to_drop <- purrr::map_chr(specs, function(q) {
-    val <- rlang::eval_tidy(q, .kn$tiers, env = parent.frame())
+    val <- rlang::eval_tidy(q, kn$tiers, env = parent.frame())
     if (is.numeric(val)) {
-      return(.kn$tiers$label[val])
+      return(kn$tiers$label[val])
     }
     as.character(val)
   })
 
   to_drop <- intersect(to_drop, keep)
   if (!length(to_drop)) {
-    return(.kn)
+    return(kn)
   }
 
   # drop the tier rows
-  .kn$tiers <- dplyr::filter(.kn$tiers, !label %in% to_drop)
+  kn$tiers <- dplyr::filter(kn$tiers, !label %in% to_drop)
 
   # reset any vars that were in those tiers
-  .kn$vars$tier[.kn$vars$tier %in% to_drop] <- NA_character_
+  kn$vars$tier[kn$vars$tier %in% to_drop] <- NA_character_
 
-  .kn
+  kn
 }
 
 # ───────────────────────────────── Deparse ────────────────────────────────────
@@ -1488,7 +1482,7 @@ remove_tiers <- function(.kn, ...) {
 #' the R code (using `knowledge()`, `tier()`, `%-->%`, and `%!-->%`.
 #' that would rebuild that same object.
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param df_name Optional name of the data frame you used
 #' (used as the first argument to `knowledge()`).  If `NULL`,
 #' `knowledge()` is called with no data frame.
@@ -1501,13 +1495,13 @@ remove_tiers <- function(.kn, ...) {
 #' @concept knowledge
 #'
 #' @export
-deparse_knowledge <- function(.kn, df_name = NULL) {
+deparse_knowledge <- function(kn, df_name = NULL) {
   .check_if_pkgs_are_installed(
     pkgs = c("dplyr"),
     function_name = "deparse_knowledge"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
   fmt_fml <- function(lhs, rhs_vars) {
     paste0(
@@ -1537,12 +1531,12 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
   }
 
   # ---- tiers ----
-  if (nrow(.kn$tiers)) {
-    tier_labels <- .kn$tiers$label
+  if (nrow(kn$tiers)) {
+    tier_labels <- kn$tiers$label
     tier_fmls <- vapply(
       tier_labels,
       function(lbl) {
-        vars <- .kn$vars$var[.kn$vars$tier == lbl]
+        vars <- kn$vars$var[kn$vars$tier == lbl]
         fmt_fml(lbl, vars)
       },
       character(1)
@@ -1557,10 +1551,10 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
   }
 
   # ---- edges (grouped) ----
-  if (nrow(.kn$edges)) {
+  if (nrow(kn$edges)) {
     # group edges by 'from' and 'status'
     library(dplyr)
-    edge_groups <- .kn$edges %>%
+    edge_groups <- kn$edges %>%
       dplyr::group_by(from, status) %>%
       dplyr::summarise(to_vars = list(to), .groups = "drop")
 
@@ -1602,7 +1596,7 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 #' This requires `rJava`. This is used internally, when setting knowledge with
 #' `set_knowledge` for methods using the Tetrad engine. `set_knowledge` is used
 #' internally, when using the `disco` function with knowledge given.
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #'
 #' @returns A Java `edu.cmu.tetrad.data.Knowledge` object.
 #'
@@ -1612,7 +1606,7 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
 #' @concept knowledge
 #'
 #' @export
-as_tetrad_knowledge <- function(.kn) {
+as_tetrad_knowledge <- function(kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "purrr",
@@ -1621,7 +1615,7 @@ as_tetrad_knowledge <- function(.kn) {
     function_name = "as_tetrad_knowledge"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
   # nocov start
   if (!rJava::.jniInitialized) {
     init_java()
@@ -1631,10 +1625,10 @@ as_tetrad_knowledge <- function(.kn) {
 
   # attach every variable that has a tier label
   purrr::pwalk(
-    list(.kn$vars$var, .kn$vars$tier),
+    list(kn$vars$var, kn$vars$tier),
     function(v, t) {
       if (!is.na(t)) {
-        idx <- match(t, .kn$tiers$label) # row position = tier rank
+        idx <- match(t, kn$tiers$label) # row position = tier rank
         j$addToTier(as.integer(idx), v)
       }
     }
@@ -1642,7 +1636,7 @@ as_tetrad_knowledge <- function(.kn) {
 
   # transfer forbidden / required edges
   purrr::pwalk(
-    .kn$edges,
+    kn$edges,
     function(status, from, to, ...) {
       switch(
         status,
@@ -1665,12 +1659,12 @@ as_tetrad_knowledge <- function(.kn) {
 #' edges, no tiers) and returns the two logical matrices in the exact
 #' variable order you supply.
 #'
-#' @param .kn A \code{knowledge} object.  Must have no tier information.
+#' @param kn A \code{knowledge} object.  Must have no tier information.
 #' @param labels Character vector of all variable names, in the exact order
-#'   of your data columns.  Every variable referenced by an edge in \code{.kn}
+#'   of your data columns.  Every variable referenced by an edge in \code{kn}
 #'   must appear here.
 #' @param directed_as_undirected Logical (default \code{FALSE}).  If
-#'   \code{FALSE}, we require that every edge in \code{.kn} has its
+#'   \code{FALSE}, we require that every edge in \code{kn} has its
 #'   mirror-image present as well, and will error if any are missing.  If
 #'   \code{TRUE}, we automatically mirror every directed edge into
 #'   an undirected constraint.
@@ -1690,8 +1684,8 @@ as_tetrad_knowledge <- function(.kn) {
 #'
 #' @export
 as_pcalg_constraints <- function(
-  .kn,
-  labels = .kn$vars$var,
+  kn,
+  labels = kn$vars$var,
   directed_as_undirected = FALSE
 ) {
   .check_if_pkgs_are_installed(
@@ -1703,9 +1697,9 @@ as_pcalg_constraints <- function(
     function_name = "as_pcalg_constraints"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
-  if (any(!is.na(.kn$vars$tier))) {
+  if (any(!is.na(kn$vars$tier))) {
     stop(
       "Tiered background knowledge cannot be utilised by the pcalg engine.\n",
       "pcalg does not support directed tier constraints."
@@ -1718,9 +1712,9 @@ as_pcalg_constraints <- function(
     stop("`labels` must be unique.", call. = FALSE)
   }
   # check that labels and knowledge object are aligned
-  if (!setequal(labels, .kn$vars$var)) {
+  if (!setequal(labels, kn$vars$var)) {
     # all labels that aren't in knowledge
-    bad_vars <- setdiff(labels, .kn$vars$var)
+    bad_vars <- setdiff(labels, kn$vars$var)
     if (length(bad_vars)) {
       stop(
         "`labels` contained variables that were not in the knowledge object: [",
@@ -1730,7 +1724,7 @@ as_pcalg_constraints <- function(
       )
     }
     # all vars that aren't in labels
-    missing_vars <- setdiff(.kn$vars$var, labels)
+    missing_vars <- setdiff(kn$vars$var, labels)
     if (length(missing_vars)) {
       stop(
         "`labels` must contain all variables in the knowledge",
@@ -1756,8 +1750,8 @@ as_pcalg_constraints <- function(
   idx <- rlang::set_names(seq_along(labels), labels)
 
   if (!directed_as_undirected) {
-    bad <- .kn$edges |>
-      dplyr::anti_join(.kn$edges, by = c("from" = "to", "to" = "from")) |>
+    bad <- kn$edges |>
+      dplyr::anti_join(kn$edges, by = c("from" = "to", "to" = "from")) |>
       dplyr::mutate(desc = paste0(from, " --> ", to)) |>
       dplyr::pull(desc)
     if (length(bad)) {
@@ -1771,7 +1765,7 @@ as_pcalg_constraints <- function(
   }
 
   # fill forbidden
-  forb <- dplyr::filter(.kn$edges, status == "forbidden")
+  forb <- dplyr::filter(kn$edges, status == "forbidden")
   for (k in seq_len(nrow(forb))) {
     i <- match(forb$from[k], labels, nomatch = NA_integer_)
     j <- match(forb$to[k], labels, nomatch = NA_integer_)
@@ -1784,7 +1778,7 @@ as_pcalg_constraints <- function(
   }
 
   # fill required
-  req <- dplyr::filter(.kn$edges, status == "required")
+  req <- dplyr::filter(kn$edges, status == "required")
   for (k in seq_len(nrow(req))) {
     i <- match(req$from[k], labels, nomatch = NA_integer_)
     j <- match(req$to[k], labels, nomatch = NA_integer_)
@@ -1808,7 +1802,7 @@ as_pcalg_constraints <- function(
 #' `blacklist` contains all forbidden edges. Tiers will be made into forbidden
 #' edges before running the conversion.
 #'
-#' @param .kn A \code{knowledge} object.  Must have no tier information.
+#' @param kn A \code{knowledge} object.  Must have no tier information.
 #'
 #' @returns A list with two elements, `whitelist` and `blacklist`, each a data
 #' frame containing the edges in a `from`, `to` format.
@@ -1819,7 +1813,7 @@ as_pcalg_constraints <- function(
 #' @concept knowledge
 #'
 #' @export
-as_bnlearn_knowledge <- function(.kn) {
+as_bnlearn_knowledge <- function(kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr"
@@ -1827,15 +1821,15 @@ as_bnlearn_knowledge <- function(.kn) {
     function_name = "as_bnlearn_knowledge"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
   # whitelist holds all required edges in a "from", "to" dataframe
-  whitelist <- dplyr::filter(.kn$edges, status == "required") |>
+  whitelist <- dplyr::filter(kn$edges, status == "required") |>
     dplyr::select(from, to) |>
     as.data.frame()
 
   # blacklist holds all forbidden edges (including tier violations)
-  blacklist <- forbid_tier_violations(.kn)$edges |>
+  blacklist <- forbid_tier_violations(kn)$edges |>
     dplyr::filter(status == "forbidden") |>
     dplyr::select(from, to) |>
     as.data.frame()
@@ -1853,7 +1847,7 @@ as_bnlearn_knowledge <- function(.kn) {
 #' forbids every directed edge that runs from a higher-numbered tier down
 #' into a lower-numbered tier.
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @returns The same `knowledge` object with new forbidden edges added.
 #'
 #' @example inst/roxygen-examples/forbid_tier_violations_example.R
@@ -1862,7 +1856,7 @@ as_bnlearn_knowledge <- function(.kn) {
 #' @concept knowledge
 #'
 #' @export
-forbid_tier_violations <- function(.kn) {
+forbid_tier_violations <- function(kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -1873,16 +1867,16 @@ forbid_tier_violations <- function(.kn) {
     function_name = "forbid_tier_violations"
   )
 
-  is_knowledge(.kn)
+  is_knowledge(kn)
 
   # build a named vector of tier rank
   tier_ranks <- rlang::set_names(
-    seq_along(.kn$tiers$label),
-    .kn$tiers$label
+    seq_along(kn$tiers$label),
+    kn$tiers$label
   )
 
   # annotate each var with its numeric rank
-  vars <- .kn$vars |>
+  vars <- kn$vars |>
     dplyr::mutate(rank = tier_ranks[tier])
 
   # select & rename for "from" vs "to"
@@ -1899,16 +1893,16 @@ forbid_tier_violations <- function(.kn) {
       status = "forbidden",
       from = bad$var_from,
       to = bad$var_to,
-      tier_from = .kn$vars$tier[match(bad$var_from, .kn$vars$var)],
-      tier_to = .kn$vars$tier[match(bad$var_to, .kn$vars$var)]
+      tier_from = kn$vars$tier[match(bad$var_from, kn$vars$var)],
+      tier_to = kn$vars$tier[match(bad$var_to, kn$vars$var)]
     )
 
     # bind to existing, drop duplicates
-    .kn$edges <- dplyr::distinct(
-      dplyr::bind_rows(.kn$edges, new_edges)
+    kn$edges <- dplyr::distinct(
+      dplyr::bind_rows(kn$edges, new_edges)
     )
   }
-  .kn
+  kn
 }
 
 #' @title Generate a Bundle of Tier–Variable Formulas
@@ -2123,7 +2117,7 @@ seq_tiers <- function(tiers, vars) {
 # ───────────────────────────── Edge helpers  ──────────────────────────────────
 #' @title Add one or many edges to a knowledge object
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param status A string, either "forbidden" or "required".
 #' @param from A tidyselect specification or character vector of variable names.
 #' @param to A tidyselect specification or character vector of variable names.
@@ -2135,7 +2129,7 @@ seq_tiers <- function(tiers, vars) {
 #' @example inst/roxygen-examples/dot-add_edges_example.R
 #' @noRd
 #' @keywords internal
-.add_edges <- function(.kn, status, from, to, remove_self_loops = TRUE) {
+.add_edges <- function(kn, status, from, to, remove_self_loops = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -2145,37 +2139,37 @@ seq_tiers <- function(tiers, vars) {
   )
 
   # resolve `from` / `to` specs into character vectors of variable names
-  from_chr <- .vars_from_spec(.kn, {{ from }})
-  to_chr <- .vars_from_spec(.kn, {{ to }})
+  from_chr <- .vars_from_spec(kn, {{ from }})
+  to_chr <- .vars_from_spec(kn, {{ to }})
 
-  # ensure all endpoint variables exist in `.kn$vars`
-  .kn <- add_vars(.kn, unique(c(from_chr, to_chr)))
+  # ensure all endpoint variables exist in `kn$vars`
+  kn <- add_vars(kn, unique(c(from_chr, to_chr)))
 
   # cartesian product
   # one row per directed edge, then annotate
   block <- tidyr::crossing(from = from_chr, to = to_chr) |>
     dplyr::mutate(
       status = status,
-      tier_from = .kn$vars$tier[match(from, .kn$vars$var)],
-      tier_to = .kn$vars$tier[match(to, .kn$vars$var)]
+      tier_from = kn$vars$tier[match(from, kn$vars$var)],
+      tier_to = kn$vars$tier[match(to, kn$vars$var)]
     )
 
   # stop if any new edge violates the tier rule
-  .validate_tier_rule(block, .kn$tiers)
+  .validate_tier_rule(block, kn$tiers)
 
   # stop if any new edge violates the forbidden/required rule
   .validate_forbidden_required(block)
 
   # merge into edge table, dropping duplicates, and return updated object
-  .kn$edges <- dplyr::distinct(dplyr::bind_rows(.kn$edges, block))
+  kn$edges <- dplyr::distinct(dplyr::bind_rows(kn$edges, block))
 
   if (remove_self_loops) {
-    .kn$edges <- dplyr::filter(.kn$edges, from != to)
+    kn$edges <- dplyr::filter(kn$edges, from != to)
   }
 
   # validate again for safety
-  .validate_forbidden_required(.kn$edges)
-  .kn
+  .validate_forbidden_required(kn$edges)
+  kn
 }
 
 #' @title Handle forbid_edge() / require_edge() calls
@@ -2185,14 +2179,14 @@ seq_tiers <- function(tiers, vars) {
 #' `forbid_edge()` or `require_edge()` into concrete variable names, then passes
 #' the cross-product to `.add_edges()`.
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param status Either `"forbidden"` or `"required"`.
 #' @param fml A quosure that must wrap a two-sided formula.
 #'
 #' @example inst/roxygen-examples/dot-edge_verb_example.R
 #' @noRd
 #' @keywords internal
-.edge_verb <- function(.kn, status, fml) {
+.edge_verb <- function(kn, status, fml) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rlang"
@@ -2217,8 +2211,8 @@ seq_tiers <- function(tiers, vars) {
 
   expr <- rlang::get_expr(fml)
 
-  from_vars <- .formula_vars(.kn, rlang::f_lhs(expr))
-  to_vars <- .formula_vars(.kn, rlang::f_rhs(expr))
+  from_vars <- .formula_vars(kn, rlang::f_lhs(expr))
+  to_vars <- .formula_vars(kn, rlang::f_rhs(expr))
 
   if (!length(from_vars) || !length(to_vars)) {
     stop(
@@ -2226,20 +2220,20 @@ seq_tiers <- function(tiers, vars) {
       call. = FALSE
     )
   }
-  .kn <- .add_edges(.kn, status, from_vars, to_vars)
-  .kn
+  kn <- .add_edges(kn, status, from_vars, to_vars)
+  kn
 }
 
 # ───────────────────────────── Misc helpers  ──────────────────────────────────
 #' @title Resolve a tidy-select or character spec to character names
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param spec A tidyselect specification (e.g. `everything()`,
 #' `starts_with("V")`) or a character vector.
 #' @keywords internal
 #' @title Resolve a tidy-select or character spec to character names
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param spec A tidyselect specification (e.g. `everything()`,
 #' `starts_with("V")`), a bare symbol, a character vector, *or* a literal
 #' `c(V1, V2, "V3")` call.
@@ -2248,7 +2242,7 @@ seq_tiers <- function(tiers, vars) {
 #' @example inst/roxygen-examples/dot-vars_from_spec_example.R
 #' @noRd
 #' @keywords internal
-.vars_from_spec <- function(.kn, spec) {
+.vars_from_spec <- function(kn, spec) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
@@ -2293,7 +2287,7 @@ seq_tiers <- function(tiers, vars) {
       return(out)
     }
     nm <- rlang::as_string(spec)
-    if (nm %in% .kn$vars$var) {
+    if (nm %in% kn$vars$var) {
       return(nm)
     }
     return(character(0))
@@ -2311,7 +2305,7 @@ seq_tiers <- function(tiers, vars) {
   vars <- tryCatch(
     names(tidyselect::eval_select(
       rlang::expr(all_of(!!q)), # !!q unquotes the symbol/variable
-      rlang::set_names(seq_along(.kn$vars$var), .kn$vars$var)
+      rlang::set_names(seq_along(kn$vars$var), kn$vars$var)
     )),
     error = function(e) character(0)
   )
@@ -2335,14 +2329,14 @@ seq_tiers <- function(tiers, vars) {
 
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'
-#' @param .kn A `knowledge` object.
+#' @param kn A `knowledge` object.
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #'
 #' @example inst/roxygen-examples/dot-formula_vars_example.R
 #' @noRd
 #' @keywords internal
-.formula_vars <- function(.kn, rhs) {
-  vars <- .vars_from_spec(.kn, rhs)
+.formula_vars <- function(kn, rhs) {
+  vars <- .vars_from_spec(kn, rhs)
   if (length(vars)) {
     return(vars)
   } # tidy-select succeeded

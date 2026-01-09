@@ -12,7 +12,7 @@ kn <- knowledge(
 )
 print(kn)
 
-kn <- remove_edges(kn, child_x1 ~ youth_x3)
+kn <- remove_edge(kn, child_x1, youth_x3)
 print(kn)
 
 kn <- remove_vars(kn, starts_with("child_"))

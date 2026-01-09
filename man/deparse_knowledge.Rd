@@ -4,10 +4,10 @@
 \alias{deparse_knowledge}
 \title{Deparse a knowledge object to knowledge() mini-DSL code}
 \usage{
-deparse_knowledge(.kn, df_name = NULL)
+deparse_knowledge(kn, df_name = NULL)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{df_name}{Optional name of the data frame you used
 (used as the first argument to \code{knowledge()}).  If \code{NULL},
@@ -58,7 +58,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

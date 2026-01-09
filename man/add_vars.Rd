@@ -4,10 +4,10 @@
 \alias{add_vars}
 \title{Add variables to \code{knowledge} object}
 \usage{
-add_vars(.kn, vars)
+add_vars(kn, vars)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{vars}{A character vector of variable names to add.}
 }
@@ -79,7 +79,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

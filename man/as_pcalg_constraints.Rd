@@ -4,21 +4,17 @@
 \alias{as_pcalg_constraints}
 \title{Convert background knowledge to pcalg constraint matrices}
 \usage{
-as_pcalg_constraints(
-  .kn,
-  labels = .kn$vars$var,
-  directed_as_undirected = FALSE
-)
+as_pcalg_constraints(kn, labels = kn$vars$var, directed_as_undirected = FALSE)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.  Must have no tier information.}
+\item{kn}{A \code{knowledge} object.  Must have no tier information.}
 
 \item{labels}{Character vector of all variable names, in the exact order
-of your data columns.  Every variable referenced by an edge in \code{.kn}
+of your data columns.  Every variable referenced by an edge in \code{kn}
 must appear here.}
 
 \item{directed_as_undirected}{Logical (default \code{FALSE}).  If
-\code{FALSE}, we require that every edge in \code{.kn} has its
+\code{FALSE}, we require that every edge in \code{kn} has its
 mirror-image present as well, and will error if any are missing.  If
 \code{TRUE}, we automatically mirror every directed edge into
 an undirected constraint.}
@@ -97,7 +93,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

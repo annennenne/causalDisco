@@ -4,10 +4,10 @@
 \alias{reorder_tiers}
 \title{Reorder all tiers at once}
 \usage{
-reorder_tiers(.kn, order, by_index = FALSE)
+reorder_tiers(kn, order, by_index = FALSE)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{order}{A vector that lists \emph{every} tier exactly once, either by
 label (default) or by numeric index (\code{by_index = TRUE}).
@@ -55,7 +55,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reposition_tier}()},

@@ -4,10 +4,10 @@
 \alias{as_tetrad_knowledge}
 \title{Convert to Tetrad \code{edu.cmu.tetrad.data.Knowledge}}
 \usage{
-as_tetrad_knowledge(.kn)
+as_tetrad_knowledge(kn)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 }
 \value{
 A Java \code{edu.cmu.tetrad.data.Knowledge} object.
@@ -49,7 +49,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

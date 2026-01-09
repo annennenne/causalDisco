@@ -4,10 +4,10 @@
 \alias{as_bnlearn_knowledge}
 \title{Convert background knowledge to bnlearns white- and blacklists}
 \usage{
-as_bnlearn_knowledge(.kn)
+as_bnlearn_knowledge(kn)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.  Must have no tier information.}
+\item{kn}{A \code{knowledge} object.  Must have no tier information.}
 }
 \value{
 A list with two elements, \code{whitelist} and \code{blacklist}, each a data
@@ -51,7 +51,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

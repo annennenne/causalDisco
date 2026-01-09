@@ -4,10 +4,10 @@
 \alias{add_tier}
 \title{Add (and position) a tier}
 \usage{
-add_tier(.kn, tier, before = NULL, after = NULL)
+add_tier(kn, tier, before = NULL, after = NULL)
 }
 \arguments{
-\item{.kn}{A knowledge object.}
+\item{kn}{A knowledge object.}
 
 \item{tier}{Bare symbol / character (label) \strong{or} numeric literal.}
 
@@ -81,7 +81,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

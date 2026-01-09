@@ -4,12 +4,12 @@
 \alias{+.knowledge}
 \title{Merge two \code{knowledge} objects}
 \usage{
-\method{+}{knowledge}(.kn1, .kn2)
+\method{+}{knowledge}(kn1, kn2)
 }
 \arguments{
-\item{.kn1}{A \code{knowledge} object.}
+\item{kn1}{A \code{knowledge} object.}
 
-\item{.kn2}{Another \code{knowledge} object.}
+\item{kn2}{Another \code{knowledge} object.}
 }
 \description{
 Merge two \code{knowledge} objects
@@ -79,7 +79,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

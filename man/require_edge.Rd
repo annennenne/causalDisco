@@ -4,10 +4,10 @@
 \alias{require_edge}
 \title{Add required edges}
 \usage{
-require_edge(.kn, ...)
+require_edge(kn, ...)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{...}{One or more two-sided formulas.}
 }
@@ -80,7 +80,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

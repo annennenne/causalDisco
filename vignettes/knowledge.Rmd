@@ -63,15 +63,13 @@ plot(kn_1)
 The blue solid edge represents the required edge from A to B, while the red dashed edge represents the forbidden edge
 from B to C.
 
-If one wishes to remove some edges (either required or forbidden) knowledge from an existing knowledge object, the `remove_edges` function can be used. 
+If one wishes to remove some edges (either required or forbidden) knowledge from an existing knowledge object, the `remove_edge` function can be used. 
 For example, to remove the required edge from A to B:
 
 ```{r remove required edge}
-kn_1_removed <- remove_edges(kn_1, A ~ B)
+kn_1_removed <- remove_edge(kn_1, from = A, to = B)
 plot(kn_1_removed)
 ```
-
-Modify syntax of `remove_edges`?
 
 ## Specifying required and forbidden edges in a dataset
 

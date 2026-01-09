@@ -5,12 +5,12 @@
 \alias{add_exo}
 \title{Add exogenous variables}
 \usage{
-add_exogenous(.kn, vars)
+add_exogenous(kn, vars)
 
-add_exo(.kn, vars)
+add_exo(kn, vars)
 }
 \arguments{
-\item{.kn}{A knowledge object.}
+\item{kn}{A knowledge object.}
 
 \item{vars}{Tidyselect specification or character vector of variables.}
 }
@@ -82,7 +82,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

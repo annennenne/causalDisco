@@ -4,10 +4,10 @@
 \alias{unfreeze}
 \title{Unfreeze a \code{knowledge} object.}
 \usage{
-unfreeze(.kn)
+unfreeze(kn)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 }
 \value{
 The same \code{knowledge} object with the \code{frozen} attribute set to
@@ -48,7 +48,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

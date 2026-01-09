@@ -4,10 +4,10 @@
 \alias{reposition_tier}
 \title{Move one tier before / after another}
 \usage{
-reposition_tier(.kn, tier, before = NULL, after = NULL, by_index = FALSE)
+reposition_tier(kn, tier, before = NULL, after = NULL, by_index = FALSE)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{tier}{The tier to move (label or index, honouring \code{by_index}).}
 
@@ -59,7 +59,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

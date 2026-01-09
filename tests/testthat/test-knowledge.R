@@ -2022,7 +2022,7 @@ test_that("exogenous() on unknown var errors when frozen", {
 # remove functions
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("remove_edges() drops forbidden and required edges", {
+test_that("remove_edge() drops forbidden and required edges", {
   kn <- knowledge(
     data.frame(A = 1, B = 2, C = 3, D = 4),
     tier(1 ~ A + B, 2 ~ C, 3 ~ D),
@@ -2039,54 +2039,23 @@ test_that("remove_edges() drops forbidden and required edges", {
     kn$edges$status == "required" & kn$edges$from == "C" & kn$edges$to == "D"
   ))
   # remove a forbidden edge
-  kn2 <- remove_edges(kn, A ~ C)
+  kn2 <- remove_edge(kn, A, C)
   expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))
   # remove a required edge
-  kn3 <- remove_edges(kn, C ~ D)
+  kn3 <- remove_edge(kn, C, D)
   expect_false(any(kn3$edges$from == "C" & kn3$edges$to == "D"))
   # other edges remain
   expect_true(any(kn3$edges$from == "B" & kn3$edges$to == "D"))
 })
 
-test_that("remove_edges() errors when called with no formulas", {
-  kn <- knowledge(
-    tibble::tibble(A = 1, B = 2),
-    A %!-->% B
-  )
-
-  expect_error(
-    remove_edges(kn),
-    "remove_edges() needs at least one two-sided formula.",
-    fixed = TRUE
-  )
-})
-
-test_that("remove_edges() supports multiple formulas and tidyselect", {
-  kn <- knowledge(
-    data.frame(X1 = 1, X2 = 2, Y = 3),
-    tier(1 ~ X1 + X2, 2 ~ Y),
-    X1 %!-->% Y,
-    X2 %!-->% Y,
-    X2 %-->% X1
-  )
-
-  # remove both X1→Y and X2→Y in one call
-  kn2 <- remove_edges(kn, X1 ~ Y, X2 ~ Y)
-  expect_false(any(kn2$edges$from %in% c("X1", "X2") & kn2$edges$to == "Y"))
-
-  # remove via character‐vector on the LHS
-  kn3 <- remove_edges(kn, c("X1", "X2") ~ Y)
-  expect_false(any(kn3$edges$to == "Y"))
-})
-
-test_that("remove_edges() warns if no edges matched", {
+test_that("remove_edge() warns if no edges matched", {
   kn <- knowledge(
     data.frame(A = 1, B = 2),
     A %!-->% B
   )
   expect_error(
-    remove_edges(kn, B ~ C),
-    "remove_edges() matched no edges",
+    remove_edge(kn, B, C),
+    "Edge from",
     fixed = TRUE
   )
 })
@@ -2164,7 +2133,7 @@ test_that("chaining remove_* works together", {
     B %-->% D
   )
   kn2 <- kn |>
-    remove_edges(A ~ C) |>
+    remove_edge(A, C) |>
     remove_vars(D) |>
     remove_tiers(3)
   expect_false(any(kn2$edges$from == "A" & kn2$edges$to == "C"))

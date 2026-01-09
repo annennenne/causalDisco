@@ -4,10 +4,10 @@
 \alias{remove_tiers}
 \title{Remove entire tiers from a knowledge object}
 \usage{
-remove_tiers(.kn, ...)
+remove_tiers(kn, ...)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{...}{Tier labels (unquoted or character) or numeric indices.}
 }
@@ -32,7 +32,7 @@ kn <- knowledge(
 )
 print(kn)
 
-kn <- remove_edges(kn, child_x1 ~ youth_x3)
+kn <- remove_edge(kn, child_x1, youth_x3)
 print(kn)
 
 kn <- remove_vars(kn, starts_with("child_"))
@@ -56,7 +56,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},
 \code{\link{reposition_tier}()},

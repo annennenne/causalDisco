@@ -4,10 +4,10 @@
 \alias{add_to_tier}
 \title{Add variables to an existing tier}
 \usage{
-add_to_tier(.kn, ...)
+add_to_tier(kn, ...)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 
 \item{...}{One or more two-sided formulas \code{tier ~ vars}.}
 }
@@ -77,7 +77,7 @@ Other knowledge functions:
 \code{\link{forbid_tier_violations}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},

@@ -4,10 +4,10 @@
 \alias{forbid_tier_violations}
 \title{Forbid all tier violations}
 \usage{
-forbid_tier_violations(.kn)
+forbid_tier_violations(kn)
 }
 \arguments{
-\item{.kn}{A \code{knowledge} object.}
+\item{kn}{A \code{knowledge} object.}
 }
 \value{
 The same \code{knowledge} object with new forbidden edges added.
@@ -50,7 +50,7 @@ Other knowledge functions:
 \code{\link{forbid_edge}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
-\code{\link{remove_edges}()},
+\code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
 \code{\link{reorder_tiers}()},
