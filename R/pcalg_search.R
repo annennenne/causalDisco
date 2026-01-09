@@ -40,7 +40,7 @@ PcalgSearch <- R6::R6Class(
     #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
     #'    See [pcalg::gaussCItest()].
     #'    \item \code{"g_square"} - G square test for discrete data.
-    #'    See \[pcalg::binCItest] and [pcalg::disCItest].
+    #'    See [pcalg::binCItest()] and [pcalg::disCItest()].
     #'  }
     test = NULL,
 

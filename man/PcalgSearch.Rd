@@ -60,7 +60,7 @@ Can be set with \code{$set_test()}. Recognized values are:
 \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
 See \code{\link[pcalg:condIndFisherZ]{pcalg::gaussCItest()}}.
 \item \code{"g_square"} - G square test for discrete data.
-See [pcalg::binCItest] and \link[pcalg:disCItest]{pcalg::disCItest}.
+See \code{\link[pcalg:binCItest]{pcalg::binCItest()}} and \code{\link[pcalg:disCItest]{pcalg::disCItest()}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
