@@ -33,11 +33,11 @@ apply to directed edges in the causal graph.
 - Required edges specify that a directed edge must exist between two variables.
 - Forbidden edges specify that a directed edge is not allowed between two variables.
 
-These constraints are specified using the %-->% (required) and %--x% (forbidden) operators.
+These constraints are specified using the %-->% (required) and %!-->% (forbidden) operators.
 
-We discussed better syntax for `%--x%`. Which of these alternatives are best:
+We discussed better syntax for `%!-->%`. Which of these alternatives are best:
 
-- `child_x1 %--x% youth_x3` (current)
+- `child_x1 %!-->% youth_x3` (current)
 - `!(child_x1 %-->% youth_x3)`
 - `child_x1 %!-->% youth_x3`
 
@@ -50,7 +50,7 @@ Suppose we want to require an edge from A to B, and forbid an edge from B to C:
 ```{r required and forbidden knowledge}
 kn_1 <- knowledge(
   A %-->% B,
-  B %--x% C
+  B %!-->% C
 )
 ```
 
@@ -88,7 +88,7 @@ We can pass the dataset to `knowledge`, which also checks that the specified var
 kn_2 <- knowledge(
   tpc_example,
   child_x1 %-->% youth_x3,
-  child_x2 %--x% oldage_x5
+  child_x2 %!-->% oldage_x5
 )
 ```
 
@@ -109,7 +109,7 @@ To make specifying variables easier, you can use tidyselect helpers such as `sta
 kn_3 <- knowledge(
   tpc_example,
   starts_with("child") %-->% starts_with("youth"),
-  starts_with("oldage") %--x% starts_with("youth")
+  starts_with("oldage") %!-->% starts_with("youth")
 )
 ```
 
@@ -242,7 +242,7 @@ kn_combined <- knowledge(
     3 ~ starts_with("oldage")
   ),
   child_x1 %-->% youth_x3,
-  child_x1 %--x% child_x2
+  child_x1 %!-->% child_x2
 )
 
 plot(kn_combined)
@@ -306,15 +306,15 @@ WIP. Currently causalDisco only works correctly with tiered and required knowled
 ## pcalg
 
 Only forbidden knowledge symmetric knowledge is supported for pcalg. That is, edges that are forbidden in both directions.
-Thus, the only type of knowledge that can be used with pcalg is knowledge created using forbidden edges (`%--x%`) without
+Thus, the only type of knowledge that can be used with pcalg is knowledge created using forbidden edges (`%!-->%`) without
 any directed knowledge or tiers, such as this:
 
 ```{r pcalg}
 data("tpc_example")
 kn <- knowledge(
   tpc_example,
-  child_x1 %--x% youth_x3,
-  youth_x3 %--x% child_x1
+  child_x1 %!-->% youth_x3,
+  youth_x3 %!-->% child_x1
 )
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 output <- disco(data = tpc_example, method = pc_pcalg, knowledge = kn)

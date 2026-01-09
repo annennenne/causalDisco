@@ -11,7 +11,7 @@ kn1 <- knowledge(
 
 kn2 <- knowledge(
   tier(3 ~ V3),
-  V2 %--x% V3
+  V2 %!-->% V3
 )
 
 kn_merged <- kn1 + kn2
@@ -41,7 +41,7 @@ try(kn1 + kn2)
 # Requried / forbidden violations
 
 kn1 <- knowledge(
-  V1 %--x% V2
+  V1 %!-->% V2
 )
 
 kn2 <- knowledge(

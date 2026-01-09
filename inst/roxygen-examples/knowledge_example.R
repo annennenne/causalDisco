@@ -15,7 +15,7 @@ kn <- knowledge(
     2 ~ V3
   ),
   V1 %-->% V2,
-  V3 %--x% V1
+  V3 %!-->% V1
 )
 
 # if a data frame is provided, variable names are checked against it
@@ -64,7 +64,7 @@ kn <- knowledge(
 kn <- knowledge(
   df,
   child_x1 %-->% youth_x3,
-  oldage_x6 %--x% child_x1
+  oldage_x6 %!-->% child_x1
 )
 
 # You can also add exogenous variables

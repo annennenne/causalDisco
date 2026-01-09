@@ -84,7 +84,7 @@ make_knowledge_test_object <- function(df) {
   # forbid a tier violation
   forbidden_kn <- knowledge(
     df,
-    X2 %--x% X1
+    X2 %!-->% X1
   )
   required_kn <- knowledge(
     df,

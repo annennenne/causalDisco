@@ -266,7 +266,7 @@ test_that("set_knowledge defers building constraints and validates input", {
   kn <- knowledge(
     df,
     A %-->% B,
-    B %--x% C
+    B %!-->% C
   )
 
   s$set_knowledge(kn, directed_as_undirected = TRUE)
@@ -309,7 +309,7 @@ test_that("set_knowledge defers building constraints and validates input", {
   kn <- knowledge(
     df,
     A %-->% B,
-    B %--x% C
+    B %!-->% C
   )
   s$set_knowledge(kn, directed_as_undirected = TRUE)
   s$set_test("fisher_z")

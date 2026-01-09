@@ -5,8 +5,8 @@ data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
-  child_x1 %--x% youth_x3,
-  youth_x3 %--x% child_x1
+  child_x1 %!-->% youth_x3,
+  youth_x3 %!-->% child_x1
 )
 
 pc_constraints <- as_pcalg_constraints(kn, directed_as_undirected = FALSE)

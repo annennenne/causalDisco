@@ -5,7 +5,7 @@
 #' Knowledge Mini-DSL Constructor
 #'
 #' Create a `knowledge` object using a concise mini-DSL with `tier()`, `forbidden()`,
-#' `required()`, `exogenous()` and infix edge operators `%-->%` and `%--x%`.
+#' `required()`, `exogenous()` and infix edge operators `%-->%` and `%!-->%`.
 #'
 #' @description
 #' Constructs a `knowledge` object optionally initialized with a data frame and
@@ -16,7 +16,7 @@
 #' forbidden(V1 ~ V4, V2 ~ V4)
 #' required(V1 ~ V2)
 #' V1 %-->% V3    # infix syntax for required edges
-#' V2 %--x% V3    # infix syntax for forbidden edges
+#' V2 %!-->% V3    # infix syntax for forbidden edges
 #' exogenous(V1, V2)
 #' ```
 #'
@@ -38,7 +38,7 @@
 #' - `forbidden()` / `required()`: Add directed edges between variables.
 #'   LHS is the source, RHS is the target. Both sides support tidyselect syntax.
 #'
-#' - `%-->%` and `%--x%`: Infix alternatives for `required()` and `forbidden()`.
+#' - `%-->%` and `%!-->%`: Infix alternatives for `required()` and `forbidden()`.
 #'   Example: `V1 %-->% V3` is equivalent to `required(V1 ~ V3)`.
 #'
 #' - `exogenous()` / `exo()`: Mark variables as exogenous.
@@ -51,7 +51,7 @@
 #'     initialize and freeze the variable set.
 #'   * Zero or more mini-DSL calls:
 #'     `tier()`, `forbidden()`, `required()`, `exogenous()`, `exo()`,
-#'     or infix operators `%-->%` and `%--x%`.
+#'     or infix operators `%-->%` and `%!-->%`.
 #'     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a numeric vector.
 #'     - `forbidden()` / `required()`: One or more two-sided formulas (`from ~ to`).
 #'     - `exogenous()` / `exo()`: Variable names or tidyselect selectors.
@@ -413,7 +413,7 @@ knowledge <- function(...) {
             "`%s()` is deprecated and will be removed in a future version. ",
             fun
           ),
-          "Please use the infix operators `%--x%` (forbidden) and `%-->%` (required) instead.",
+          "Please use the infix operators `%!-->%` (forbidden) and `%-->%` (required) instead.",
           call. = FALSE
         )
       }
@@ -426,7 +426,7 @@ knowledge <- function(...) {
     }
 
     # Infix forbidden
-    if (is.call(expr) && identical(expr[[1]], as.name("%--x%"))) {
+    if (is.call(expr) && identical(expr[[1]], as.name("%!-->%"))) {
       add_edge_infix(expr, "forbidden")
       next
     }
@@ -444,7 +444,7 @@ knowledge <- function(...) {
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
       stop(
         "Only tier(), forbidden(), required(), exogenous(), ",
-        "and infix edge operators (%-->%, %--x%) are allowed.\n",
+        "and infix edge operators (%-->%, %!-->%) are allowed.\n",
         "The expression that triggered this error was: ",
         deparse(expr),
         call. = FALSE
@@ -501,7 +501,7 @@ knowledge <- function(...) {
 #' @returns An object of class `forbidden_edge`.
 #' @keywords internal
 #' @noRd
-`%--x%` <- function(lhs, rhs) {
+`%!-->%` <- function(lhs, rhs) {
   structure(
     list(lhs = substitute(lhs), rhs = substitute(rhs)),
     class = "forbidden_edge"

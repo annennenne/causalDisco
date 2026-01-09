@@ -145,8 +145,8 @@ prior knowledge into the causal discovery process using the same linear data as 
 ```{r prior knowledge}
 kn <- knowledge(
   data_linear,
-  v %--x% x,  # v does not cause x
-  w %--x% x   # w does not cause x
+  v %!-->% x,  # v does not cause x
+  w %!-->% x   # w does not cause x
 )
 plot(kn)
 ```

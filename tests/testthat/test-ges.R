@@ -99,8 +99,8 @@ test_that("ges Tetrad disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3,
-    child_x2 %--x% child_x1
+    child_x1 %!-->% youth_x3,
+    child_x2 %!-->% child_x1
   )
 
   tetrad_ges <- ges(engine = "tetrad", score = "sem_bic")
@@ -157,7 +157,7 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3
+    child_x1 %!-->% youth_x3
   )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")
@@ -170,7 +170,7 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3,
+    child_x1 %!-->% youth_x3,
     forbidden(youth_x3 ~ child_x1)
   )
 

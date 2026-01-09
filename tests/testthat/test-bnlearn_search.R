@@ -197,7 +197,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
 
   # blacklist only
   kn <- knowledge(
-    Y %--x% Z
+    Y %!-->% Z
   )
   s$set_knowledge(kn)
   g3 <- s$run_search()
@@ -206,7 +206,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
   # both present
   kn <- knowledge(
     X %-->% Y,
-    Y %--x% Z
+    Y %!-->% Z
   )
   s$set_knowledge(kn)
   g4 <- s$run_search()

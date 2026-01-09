@@ -109,8 +109,8 @@ test_that("pc Tetrad disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3,
-    child_x2 %--x% child_x1
+    child_x1 %!-->% youth_x3,
+    child_x2 %!-->% child_x1
   )
 
   tetrad_pc <- pc(
@@ -188,7 +188,7 @@ test_that("pc pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3
+    child_x1 %!-->% youth_x3
   )
 
   pcalg_pc <- pc(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
@@ -199,8 +199,8 @@ test_that("pc pcalg disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3,
-    youth_x3 %--x% child_x1
+    child_x1 %!-->% youth_x3,
+    youth_x3 %!-->% child_x1
   )
 
   pcalg_pc <- pc(engine = "pcalg", test = "conditional_gaussian", alpha = 0.05)
@@ -345,7 +345,7 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3
+    child_x1 %!-->% youth_x3
   )
 
   bnlearn_pc <- pc(engine = "bnlearn", test = "cor", alpha = 0.05)
@@ -360,8 +360,8 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
 
   kn <- knowledge(
     tpc_example,
-    child_x1 %--x% youth_x3,
-    youth_x3 %--x% child_x1
+    child_x1 %!-->% youth_x3,
+    youth_x3 %!-->% child_x1
   )
 
   bnlearn_pc <- pc(engine = "bnlearn", test = "cor", alpha = 0.05)
@@ -391,8 +391,8 @@ test_that("pc bnlearn disco respects forbidden background knowledge", {
     knowledge,
     list(
       tpc_example,
-      child_x1 %--x% youth_x3,
-      youth_x3 %--x% child_x1,
+      child_x1 %!-->% youth_x3,
+      youth_x3 %!-->% child_x1,
       edge_expr
     )
   )
