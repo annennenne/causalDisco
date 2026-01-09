@@ -12,25 +12,10 @@ kn <- knowledge(
   oldage_x6 %!-->% child_x1
 )
 
-kn <- forbid_tier_violations(kn)
-
 code <- deparse_knowledge(kn, df_name = "tpc_example")
-
 cat(code)
-# printed output:
-# knowledge(tpc_example,
-#   tier(
-#     child ~ child_x1 + child_x2,
-#     youth ~ youth_x3 + youth_x4,
-#     old ~ oldage_x5 + oldage_x6
-#   ),
-#   forbidden(
-#     oldage_x5 ~ child_x1 + child_x2 + youth_x3 + youth_x4,
-#     oldage_x6 ~ child_x1 + child_x2 + youth_x3 + youth_x4,
-#     youth_x3 ~ child_x1 + child_x2,
-#     youth_x4 ~ child_x1 + child_x2
-#   ),
-#   required(
-#     child_x1 ~ youth_x3
-#   )
-# )
+
+# Explicitly add all forbidden edges implied by tiers
+kn <- forbid_tier_violations(kn)
+code <- deparse_knowledge(kn, df_name = "tpc_example")
+cat(code)

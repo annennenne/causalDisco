@@ -12,11 +12,9 @@ knowledge(...)
 \item Optionally, a single data frame (first argument) whose column names
 initialize and freeze the variable set.
 \item Zero or more mini-DSL calls:
-\code{tier()}, \code{forbidden()}, \code{required()}, \code{exogenous()}, \code{exo()},
-or infix operators \verb{\%-->\%} and \verb{\%!-->\%}.
+\code{tier()}, \code{exogenous()}, \code{exo()}, or infix operators \verb{\%-->\%}, \verb{\%!-->\%}.
 \itemize{
 \item \code{tier()}: One or more two-sided formulas (\code{tier(1 ~ x + y)}), or a numeric vector.
-\item \code{forbidden()} / \code{required()}: One or more two-sided formulas (\code{from ~ to}).
 \item \code{exogenous()} / \code{exo()}: Variable names or tidyselect selectors.
 Arguments are evaluated in order; only these calls are allowed.
 }
@@ -30,16 +28,14 @@ Constructs a \code{knowledge} object optionally initialized with a data frame an
 extended with variable relationships expressed via formulas, selectors, or infix operators:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{tier(1 ~ V1 + V2, exposure ~ E)
-forbidden(V1 ~ V4, V2 ~ V4)
-required(V1 ~ V2)
-V1 \%-->\% V3    # infix syntax for required edges
-V2 \%!-->\% V3    # infix syntax for forbidden edges
+V1 \%-->\% V3    # infix syntax for required edge from V1 to V3
+V2 \%!-->\% V3    # infix syntax for an edge from V2 to V3 that is forbidden
 exogenous(V1, V2)
 }\if{html}{\out{</div>}}
 }
 \details{
-Create a \code{knowledge} object using a concise mini-DSL with \code{tier()}, \code{forbidden()},
-\code{required()}, \code{exogenous()} and infix edge operators \verb{\%-->\%} and \verb{\%!-->\%}.
+Create a \code{knowledge} object using a concise mini-DSL with \code{tier()}, \code{exogenous()} and infix edge operators
+\verb{\%-->\%} and \verb{\%!-->\%}.
 
 The first argument can be a data frame, which will be used to populate the
 \code{knowledge} object with variable names. If you later add variables with
@@ -52,12 +48,10 @@ then be added via \code{tier()}, \code{forbidden()}, \code{required()}, infix op
 \itemize{
 \item \code{tier()}: Assigns variables to tiers. Tiers may be numeric or string labels.
 The left-hand side (LHS) of the formula is the tier; the right-hand side (RHS)
-specifies variables. Variables can also be selected using \strong{tidyselect} syntax:
+specifies variables. Variables can also be selected using tidyselect syntax:
 \code{tier(1 ~ starts_with("V"))}.
-\item \code{forbidden()} / \code{required()}: Add directed edges between variables.
-LHS is the source, RHS is the target. Both sides support tidyselect syntax.
-\item \verb{\%-->\%} and \verb{\%!-->\%}: Infix alternatives for \code{required()} and \code{forbidden()}.
-Example: \code{V1 \%-->\% V3} is equivalent to \code{required(V1 ~ V3)}.
+\item \verb{\%-->\%} and \verb{\%!-->\%}: Infix operators to define required and forbidden edges, respectively.
+Both sides of the operator can use tidyselect syntax to select multiple variables.
 \item \code{exogenous()} / \code{exo()}: Mark variables as exogenous.
 \item Numeric vector shortcut for \code{tier()}:
 \code{tier(c(1, 2, 1))} assigns tiers by index to all existing variables.

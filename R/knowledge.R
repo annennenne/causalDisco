@@ -4,8 +4,8 @@
 
 #' Knowledge Mini-DSL Constructor
 #'
-#' Create a `knowledge` object using a concise mini-DSL with `tier()`, `forbidden()`,
-#' `required()`, `exogenous()` and infix edge operators `%-->%` and `%!-->%`.
+#' Create a `knowledge` object using a concise mini-DSL with `tier()`, `exogenous()` and infix edge operators
+#' `%-->%` and `%!-->%`.
 #'
 #' @description
 #' Constructs a `knowledge` object optionally initialized with a data frame and
@@ -13,10 +13,8 @@
 #'
 #' ```r
 #' tier(1 ~ V1 + V2, exposure ~ E)
-#' forbidden(V1 ~ V4, V2 ~ V4)
-#' required(V1 ~ V2)
-#' V1 %-->% V3    # infix syntax for required edges
-#' V2 %!-->% V3    # infix syntax for forbidden edges
+#' V1 %-->% V3    # infix syntax for required edge from V1 to V3
+#' V2 %!-->% V3    # infix syntax for an edge from V2 to V3 that is forbidden
 #' exogenous(V1, V2)
 #' ```
 #'
@@ -32,14 +30,11 @@
 #'
 #' - `tier()`: Assigns variables to tiers. Tiers may be numeric or string labels.
 #'   The left-hand side (LHS) of the formula is the tier; the right-hand side (RHS)
-#'   specifies variables. Variables can also be selected using **tidyselect** syntax:
+#'   specifies variables. Variables can also be selected using tidyselect syntax:
 #'   `tier(1 ~ starts_with("V"))`.
 #'
-#' - `forbidden()` / `required()`: Add directed edges between variables.
-#'   LHS is the source, RHS is the target. Both sides support tidyselect syntax.
-#'
-#' - `%-->%` and `%!-->%`: Infix alternatives for `required()` and `forbidden()`.
-#'   Example: `V1 %-->% V3` is equivalent to `required(V1 ~ V3)`.
+#' - `%-->%` and `%!-->%`: Infix operators to define required and forbidden edges, respectively.
+#'   Both sides of the operator can use tidyselect syntax to select multiple variables.
 #'
 #' - `exogenous()` / `exo()`: Mark variables as exogenous.
 #'
@@ -50,10 +45,8 @@
 #'   * Optionally, a single data frame (first argument) whose column names
 #'     initialize and freeze the variable set.
 #'   * Zero or more mini-DSL calls:
-#'     `tier()`, `forbidden()`, `required()`, `exogenous()`, `exo()`,
-#'     or infix operators `%-->%` and `%!-->%`.
+#'     `tier()`, `exogenous()`, `exo()`, or infix operators `%-->%`, `%!-->%`.
 #'     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a numeric vector.
-#'     - `forbidden()` / `required()`: One or more two-sided formulas (`from ~ to`).
 #'     - `exogenous()` / `exo()`: Variable names or tidyselect selectors.
 #'     Arguments are evaluated in order; only these calls are allowed.
 #'
@@ -443,7 +436,7 @@ knowledge <- function(...) {
     # Standard function calls
     if (!is.call(expr) || !(as.character(expr[[1]]) %in% allowed)) {
       stop(
-        "Only tier(), forbidden(), required(), exogenous(), ",
+        "Only tier(), exogenous(), ",
         "and infix edge operators (%-->%, %!-->%) are allowed.\n",
         "The expression that triggered this error was: ",
         deparse(expr),
@@ -1492,7 +1485,7 @@ remove_tiers <- function(.kn, ...) {
 #'
 #' @description
 #' Given a `knowledge` object, return a single string containing
-#' the R code (using `knowledge()`, `tier()`, `forbidden()`, `required()`)
+#' the R code (using `knowledge()`, `tier()`, `%-->%`, and `%!-->%`.
 #' that would rebuild that same object.
 #'
 #' @param .kn A `knowledge` object.
@@ -1510,9 +1503,7 @@ remove_tiers <- function(.kn, ...) {
 #' @export
 deparse_knowledge <- function(.kn, df_name = NULL) {
   .check_if_pkgs_are_installed(
-    pkgs = c(
-      "dplyr"
-    ),
+    pkgs = c("dplyr"),
     function_name = "deparse_knowledge"
   )
 
@@ -1524,6 +1515,16 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
       " ~ ",
       paste(as.character(rhs_vars), collapse = " + ")
     )
+  }
+
+  fmt_edge <- function(lhs, rhs_vars, status) {
+    op <- ifelse(status == "required", " %-->% ", " %!-->% ")
+    rhs_str <- if (length(rhs_vars) > 1) {
+      paste0("c(", paste(rhs_vars, collapse = ", "), ")")
+    } else {
+      rhs_vars
+    }
+    paste0(lhs, op, rhs_str)
   }
 
   out <- character()
@@ -1555,52 +1556,40 @@ deparse_knowledge <- function(.kn, df_name = NULL) {
     )
   }
 
-  # ---- forbidden edges ----
-  forb <- dplyr::filter(.kn$edges, status == "forbidden")
-  if (nrow(forb)) {
-    # group by 'from'
-    f_grouped <- split(forb$to, forb$from)
-    forb_fmls <- vapply(
-      names(f_grouped),
-      function(fm) fmt_fml(fm, f_grouped[[fm]]),
+  # ---- edges (grouped) ----
+  if (nrow(.kn$edges)) {
+    # group edges by 'from' and 'status'
+    library(dplyr)
+    edge_groups <- .kn$edges %>%
+      dplyr::group_by(from, status) %>%
+      dplyr::summarise(to_vars = list(to), .groups = "drop")
+
+    edge_fmls <- vapply(
+      seq_len(nrow(edge_groups)),
+      function(i) {
+        fmt_edge(
+          edge_groups$from[i],
+          edge_groups$to_vars[[i]],
+          edge_groups$status[i]
+        )
+      },
       character(1)
     )
 
     out <- c(
       out,
-      "  forbidden(",
-      paste0("    ", forb_fmls, collapse = ",\n"),
-      "  ),"
-    )
-  }
-
-  # ---- required edges ----
-  req <- dplyr::filter(.kn$edges, status == "required")
-  if (nrow(req)) {
-    r_grouped <- split(req$to, req$from)
-    req_fmls <- vapply(
-      names(r_grouped),
-      function(fm) fmt_fml(fm, r_grouped[[fm]]),
-      character(1)
-    )
-
-    out <- c(
-      out,
-      "  required(",
-      paste0("    ", req_fmls, collapse = ",\n"),
-      "  ),"
+      paste0("  ", edge_fmls, collapse = ",\n")
     )
   }
 
   # ---- footer ----
-  # drop trailing comma on the last line
   last <- length(out)
   out[last] <- sub(",$", "", out[last])
   out <- c(out, ")")
 
-  # combine
   paste(out, collapse = "\n")
 }
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ────────────────── Conversion to Tetrad, pcalg, bnlearn  ─────────────────────
