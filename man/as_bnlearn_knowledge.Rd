@@ -21,8 +21,6 @@ Converts a \code{knowledge} object to a list of two data frames, namely
 edges before running the conversion.
 }
 \examples{
-### as_bnlearn_knowledge() example ###
-
 # produce whitelist/blacklist dataframe for bnlearn
 data(tpc_example)
 

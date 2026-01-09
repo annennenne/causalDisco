@@ -19,8 +19,6 @@ This requires \code{rJava}. This is used internally, when setting knowledge with
 internally, when using the \code{disco} function with knowledge given.
 }
 \examples{
-### as_tetrad_knowledge() example ###
-
 # convert to Tetrad Knowledge via rJava
 data(tpc_example)
 

@@ -1,5 +1,3 @@
-### check_and_distribute_args() example ###
-
 # Internal function. Examples only provided for developers extending
 # causalDisco.
 

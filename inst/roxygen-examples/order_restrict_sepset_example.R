@@ -1,5 +1,3 @@
-### order_restrict_sepset() example ###
-
 set.seed(2)
 n <- 200
 X1 <- rnorm(n)

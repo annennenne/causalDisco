@@ -23,8 +23,6 @@ Every possible incoming edge to these nodes is automatically forbidden.
 This is equivalent to writing \code{forbidden(everything() ~ vars)}.
 }
 \examples{
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

@@ -1,5 +1,3 @@
-### as_tetrad_knowledge() example ###
-
 # convert to Tetrad Knowledge via rJava
 data(tpc_example)
 

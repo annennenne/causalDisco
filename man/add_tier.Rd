@@ -22,8 +22,6 @@ The updated \code{knowledge} object.
 Add (and position) a tier
 }
 \examples{
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

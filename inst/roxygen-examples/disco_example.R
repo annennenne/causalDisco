@@ -1,4 +1,3 @@
-### disco() example ###
 data("tpc_example")
 
 # use pc with engine bnlearn and test fisher_z

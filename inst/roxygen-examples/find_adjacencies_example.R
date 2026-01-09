@@ -1,5 +1,3 @@
-### find_adjacencies() example ###
-
 # Small toy adjacency (from-to)
 amat <- matrix(0, 3, 3, dimnames = list(c("A", "B", "C"), c("A", "B", "C")))
 # A --> B, C --> B

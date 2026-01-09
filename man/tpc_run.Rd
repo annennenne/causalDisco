@@ -111,8 +111,6 @@ The \code{order} argument is deprecated. If provided, it is converted to a
 \code{tidyselect::starts_with()} for each prefix.
 }
 \examples{
-### tpc() example ###
-
 # Load data
 data(tpc_example)
 

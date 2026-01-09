@@ -1,5 +1,3 @@
-### v_orient_temporal() example ###
-
 data(tpc_example)
 vnames <- names(tpc_example)
 

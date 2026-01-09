@@ -1,5 +1,3 @@
-### .new_knowledge() example ###
-
 # create a bare knowledge object using .new_knowledge()
 kn1 <- try(causalDisco:::.new_knowledge(vars = c("A", "B", "C"), frozen = TRUE))
 

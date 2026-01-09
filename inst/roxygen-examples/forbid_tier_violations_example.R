@@ -1,5 +1,3 @@
-### forbid_tier_violations() example ###
-
 # automatically forbid edges that go from later tiers to earlier tiers
 data(tpc_example)
 

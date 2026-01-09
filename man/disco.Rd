@@ -38,7 +38,6 @@ For specific details on the supported algorithms, scores, tests, and parameters 
 }
 }
 \examples{
-### disco() example ###
 data("tpc_example")
 
 # use pc with engine bnlearn and test fisher_z

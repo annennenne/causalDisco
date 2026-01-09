@@ -1,5 +1,3 @@
-### tfci() example ###
-
 data("tpc_example")
 
 kn <- knowledge(

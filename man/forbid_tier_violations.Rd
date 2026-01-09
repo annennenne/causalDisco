@@ -18,8 +18,6 @@ forbids every directed edge that runs from a higher-numbered tier down
 into a lower-numbered tier.
 }
 \examples{
-### forbid_tier_violations() example ###
-
 # automatically forbid edges that go from later tiers to earlier tiers
 data(tpc_example)
 

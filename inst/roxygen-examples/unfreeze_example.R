@@ -1,5 +1,3 @@
-### unfreeze() example ###
-
 # unfreeze allows adding variables beyond the original data frame columns
 data(tpc_example)
 

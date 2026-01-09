@@ -28,8 +28,6 @@ A function of class \code{"tpc"} that takes a single argument \code{data}
 Run the temporal PC algorithm for causal discovery using causalDisco.
 }
 \examples{
-### tpc() example ###
-
 # Load data
 data(tpc_example)
 

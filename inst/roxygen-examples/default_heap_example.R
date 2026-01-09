@@ -1,5 +1,3 @@
-### default_heap() example ###
-
 # Save current session state
 op_old <- getOption("java.heap.size", NULL)
 env_old <- Sys.getenv("JAVA_HEAP_SIZE", unset = NA)

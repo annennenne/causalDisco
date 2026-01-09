@@ -1,5 +1,3 @@
-### tpdag() example ###
-
 # Full pipeline to a PAG using temporal rules
 set.seed(3)
 n <- 200

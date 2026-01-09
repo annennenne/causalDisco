@@ -19,8 +19,6 @@ even though it was frozen earlier by adding a data frame to the knowledge
 constructor \code{knowledge()}.
 }
 \examples{
-### unfreeze() example ###
-
 # unfreeze allows adding variables beyond the original data frame columns
 data(tpc_example)
 

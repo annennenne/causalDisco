@@ -93,8 +93,6 @@ After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2p
 for details.
 }
 \examples{
-### tfci() example ###
-
 data("tpc_example")
 
 kn <- knowledge(

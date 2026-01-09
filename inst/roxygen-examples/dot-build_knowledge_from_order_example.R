@@ -1,5 +1,3 @@
-### .build_knowledge_from_order() example ###
-
 data(tpc_example)
 vnames <- names(tpc_example)
 

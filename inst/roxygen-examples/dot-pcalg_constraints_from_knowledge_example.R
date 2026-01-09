@@ -1,4 +1,3 @@
-### .pcalg_constraints_from_knowledge() example ###
 data(tpc_example)
 
 kn <- knowledge(

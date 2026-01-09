@@ -1,5 +1,3 @@
-### is_after() example ###
-
 data(tpc_example)
 
 kn <- knowledge(

@@ -18,8 +18,6 @@ An updated \code{knowledge} object.
 Drops tier definitions (and un‐tiers any vars assigned to them).
 }
 \examples{
-### remove_vars() example ###
-
 # remove variables and their incident edges
 data(tpc_example)
 

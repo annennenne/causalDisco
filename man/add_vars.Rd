@@ -20,8 +20,6 @@ frozen, an error is thrown if any of the variables are not present in the
 data frame provided to the object.
 }
 \examples{
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

@@ -25,8 +25,6 @@ character with \code{NA_character_} for missing entries.
 The JVM must be initialized and Tetrad classes available on the class path.
 }
 \examples{
-### rdata_to_tetrad() / tetrad_data_to_rdata() example ###
-
 # Requires tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   set.seed(42)

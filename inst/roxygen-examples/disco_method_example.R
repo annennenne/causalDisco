@@ -1,5 +1,3 @@
-### disco_method() example ###
-
 # This is an example for developers interested in implementing their own methods
 # for causalDisco.
 

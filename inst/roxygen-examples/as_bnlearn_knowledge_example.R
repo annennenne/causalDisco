@@ -1,5 +1,3 @@
-### as_bnlearn_knowledge() example ###
-
 # produce whitelist/blacklist dataframe for bnlearn
 data(tpc_example)
 

@@ -19,8 +19,6 @@ Drops the given variables from \code{kn$vars}, and automatically removes
 any edges that mention them.
 }
 \examples{
-### remove_vars() example ###
-
 # remove variables and their incident edges
 data(tpc_example)
 

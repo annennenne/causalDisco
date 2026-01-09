@@ -1,5 +1,3 @@
-### order_restrict_amat_cpdag() example ###
-
 data(tpc_example)
 vnames <- names(tpc_example)
 

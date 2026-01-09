@@ -15,8 +15,6 @@
 Merge two \code{knowledge} objects
 }
 \examples{
-### +.knowledge example ###
-
 # Create two knowledge objects
 kn1 <- knowledge(
   tier(

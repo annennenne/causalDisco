@@ -22,7 +22,6 @@ Used in functions and classes in causalDisco to check if required packages
 are installed with a more informative error message.
 }
 \examples{
-### .check_if_pkgs_are_installed() example ###
 # Succeeds silently (base packages are always available)
 causalDisco:::.check_if_pkgs_are_installed(
   pkgs = c("stats"),

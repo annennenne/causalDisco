@@ -21,8 +21,6 @@ Formulas can use tidy-select on either side, so
 \code{forbid_edge(kn, starts_with("X") ~ Y)} forbids every \verb{X_i --> Y}.
 }
 \examples{
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

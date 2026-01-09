@@ -9,8 +9,6 @@ package, which wraps and adds temporal order to pcalg algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm.
 }
 \examples{
-### causalDisco_search R6 class example ###
-
 # Generally, we do not recommend using the R6 classes directly, but rather
 # use the disco() or any method function, for example pc(), instead.
 

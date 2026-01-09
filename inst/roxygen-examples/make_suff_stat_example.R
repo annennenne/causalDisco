@@ -1,5 +1,3 @@
-### make_suffStat() example ###
-
 data(tpc_example)
 
 ss_cor <- causalDisco:::make_suffStat(tpc_example, type = "cor_test")

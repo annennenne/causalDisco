@@ -1,5 +1,3 @@
-### .formula_vars() example ###
-
 # extract variable names from a RHS using tidyselect or symbols
 data(tpc_example)
 kn <- knowledge(tpc_example)

@@ -1,5 +1,3 @@
-### knowledge() example ###
-
 data(tpc_example)
 
 # knowledge objects are made with the knowledge() function

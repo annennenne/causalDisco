@@ -49,8 +49,6 @@ symmetrical counterpart. This can only hold for forbidden edges.
 }
 
 \examples{
-### as_pcalg_constraints() example ###
-
 # pcalg supports undirected constraints; build a tierless knowledge and convert
 data(tpc_example)
 

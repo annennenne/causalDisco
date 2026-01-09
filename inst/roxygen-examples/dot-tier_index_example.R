@@ -1,5 +1,3 @@
-### .tier_index() example ###
-
 data(tpc_example)
 
 kn <- knowledge(

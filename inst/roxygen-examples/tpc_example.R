@@ -1,5 +1,3 @@
-### tpc() example ###
-
 # Load data
 data(tpc_example)
 

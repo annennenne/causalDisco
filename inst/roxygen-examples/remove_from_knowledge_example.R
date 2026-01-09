@@ -1,5 +1,3 @@
-### remove_vars() example ###
-
 # remove variables and their incident edges
 data(tpc_example)
 

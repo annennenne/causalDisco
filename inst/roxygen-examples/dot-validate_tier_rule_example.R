@@ -1,5 +1,3 @@
-### .validate_tier_rule() example ###
-
 # success case: edge goes from child to youth (allowed)
 tiers <- tibble::tibble(label = c("child", "youth"))
 edges <- tibble::tibble(

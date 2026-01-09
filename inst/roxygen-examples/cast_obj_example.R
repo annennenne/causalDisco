@@ -1,5 +1,3 @@
-### cast_obj() example ###
-
 # This is an example of how to use the cast_obj() function to cast a Java object
 # The function is internal and is used in the TetradSearch class.
 

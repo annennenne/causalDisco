@@ -1,5 +1,3 @@
-### tpdag() example ###
-
 data(tpc_example)
 vnames <- names(tpc_example)
 

@@ -20,8 +20,6 @@ Drop any directed edge(s) matching the two‐sided formulas you supply.
 Errors if no edges matched.
 }
 \examples{
-### remove_vars() example ###
-
 # remove variables and their incident edges
 data(tpc_example)
 

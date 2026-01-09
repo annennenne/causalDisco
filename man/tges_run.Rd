@@ -23,8 +23,6 @@ A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 Perform causal discovery using the temporal greedy equivalence search algorithm.
 }
 \examples{
-### tges_run() example ###
-
 # Recommended route using disco:
 kn <- knowledge(
   tpc_example,

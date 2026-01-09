@@ -34,8 +34,6 @@ For specific details on the supported scores, tests, and parameters for the engi
 }
 }
 \examples{
-### tfci() example ###
-
 data("tpc_example")
 
 kn <- knowledge(

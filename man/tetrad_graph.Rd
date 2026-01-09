@@ -17,8 +17,6 @@ An object of class <tetrad_graph>
 Build a lightweight S3 wrapper around a Tetrad PAG string
 }
 \examples{
-### tetrad_graph() example ###
-
 # A tiny 3-node PAG in Tetrad’s CSV-like string form:
 # rows/cols are A,B,C; entries use pcalg’s PAG codes (0,1,2,3)
 pag_txt <- "A,B,C

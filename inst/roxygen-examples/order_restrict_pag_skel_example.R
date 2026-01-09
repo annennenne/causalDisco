@@ -1,5 +1,3 @@
-### order_restrict_pag_skel() example ###
-
 # Small example to obtain a PAG skeleton G via pdsep()
 set.seed(1)
 n <- 200

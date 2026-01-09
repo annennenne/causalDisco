@@ -1,5 +1,3 @@
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

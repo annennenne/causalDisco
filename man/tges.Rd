@@ -33,8 +33,6 @@ For specific details on the supported scores, tests, and parameters for the engi
 }
 }
 \examples{
-### tges_run() example ###
-
 # Recommended route using disco:
 kn <- knowledge(
   tpc_example,

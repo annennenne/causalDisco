@@ -20,8 +20,6 @@ Arguments follow the same rules as \strong{\code{forbid_edge()}} but a required 
 may only be given in \emph{one} direction (\code{X ~ Y} \strong{or} \code{Y ~ X}, not both).
 }
 \examples{
-### knowledge verbs example ###
-
 data(tpc_example)
 
 # create knowledge object using verbs

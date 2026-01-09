@@ -1,5 +1,3 @@
-### create_adj_matrix_from_list() and create_list_from_adj_matrix() example ###
-
 # List
 in_edges <- list(
   X = integer(0),
