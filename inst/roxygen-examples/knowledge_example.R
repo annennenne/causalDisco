@@ -72,7 +72,6 @@ kn <- knowledge(
   df,
   exogenous(child_x1),
   exo(child_x2), # shorthand
-  root(youth_x3) # another shorthand
 )
 
 # You can also build knowledge with a verb pipeline
@@ -93,8 +92,7 @@ kn <-
     forbidden(V5 ~ V6)
   ) |>
   add_tier(3, after = "2") |>
-  add_to_tier(3 ~ V7) |> # add third tier later
-  add_root(V1) |> # three ways to add roots
+  add_to_tier(3 ~ V7) |>
   add_exo(V2) |>
   add_exogenous(V3)
 

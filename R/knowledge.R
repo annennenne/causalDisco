@@ -41,7 +41,7 @@
 #' - `%-->%` and `%--x%`: Infix alternatives for `required()` and `forbidden()`.
 #'   Example: `V1 %-->% V3` is equivalent to `required(V1 ~ V3)`.
 #'
-#' - `exogenous()` / `exo()` / `root()`: Mark variables as exogenous (root nodes).
+#' - `exogenous()` / `exo()`: Mark variables as exogenous.
 #'
 #' - Numeric vector shortcut for `tier()`:
 #'   `tier(c(1, 2, 1))` assigns tiers by index to all existing variables.
@@ -50,11 +50,11 @@
 #'   * Optionally, a single data frame (first argument) whose column names
 #'     initialize and freeze the variable set.
 #'   * Zero or more mini-DSL calls:
-#'     `tier()`, `forbidden()`, `required()`, `exogenous()`, `exo()`, `root()`,
+#'     `tier()`, `forbidden()`, `required()`, `exogenous()`, `exo()`,
 #'     or infix operators `%-->%` and `%--x%`.
 #'     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a numeric vector.
 #'     - `forbidden()` / `required()`: One or more two-sided formulas (`from ~ to`).
-#'     - `exogenous()` / `exo()` / `root()`: Variable names or tidyselect selectors.
+#'     - `exogenous()` / `exo()`: Variable names or tidyselect selectors.
 #'     Arguments are evaluated in order; only these calls are allowed.
 #'
 #' @returns A populated `knowledge` object.
@@ -398,10 +398,9 @@ knowledge <- function(...) {
   }
   # synonyms for exogenous
   exo <- exogenous
-  root <- exogenous
 
   # evaluate the call list
-  allowed <- c("tier", "forbidden", "required", "exogenous", "exo", "root")
+  allowed <- c("tier", "forbidden", "required", "exogenous", "exo")
   deprecated <- c("forbidden", "required")
 
   for (expr in dots) {
@@ -862,7 +861,7 @@ require_edge <- function(.kn, ...) {
 #' @title Add exogenous variables
 #'
 #' @description
-#' Adds variables that cannot have incoming edges (root/exogenous nodes).
+#' Adds variables that cannot have incoming edges (exogenous nodes).
 #' Every possible incoming edge to these nodes is automatically forbidden.
 #' This is equivalent to writing `forbidden(everything() ~ vars)`.
 #'
@@ -886,10 +885,6 @@ add_exogenous <- function(.kn, vars) {
 #' @rdname add_exogenous
 #' @export
 add_exo <- add_exogenous
-
-#' @rdname add_exogenous
-#' @export
-add_root <- add_exogenous
 
 #' @title Unfreeze a `knowledge` object.
 #'

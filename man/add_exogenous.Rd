@@ -3,14 +3,11 @@
 \name{add_exogenous}
 \alias{add_exogenous}
 \alias{add_exo}
-\alias{add_root}
 \title{Add exogenous variables}
 \usage{
 add_exogenous(.kn, vars)
 
 add_exo(.kn, vars)
-
-add_root(.kn, vars)
 }
 \arguments{
 \item{.kn}{A knowledge object.}
@@ -21,7 +18,7 @@ add_root(.kn, vars)
 Updated knowledge object.
 }
 \description{
-Adds variables that cannot have incoming edges (root/exogenous nodes).
+Adds variables that cannot have incoming edges (exogenous nodes).
 Every possible incoming edge to these nodes is automatically forbidden.
 This is equivalent to writing \code{forbidden(everything() ~ vars)}.
 }
@@ -41,7 +38,7 @@ kn1 <- knowledge() |>
   add_to_tier(old ~ starts_with("oldage")) |>
   require_edge(child_x1 ~ youth_x3) |>
   forbid_edge(child_x2 ~ youth_x4) |>
-  add_exogenous(child_x1) # synonyms: add_exo(), add_root()
+  add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
 # (meaning you cannot add variables to the knowledge object anymore)
@@ -58,7 +55,7 @@ kn2 <- knowledge(
   ),
   child_x1 \%-->\% youth_x3,
   child_x2 \%--x\% youth_x4,
-  exo(child_x1) # synonyms: exogenous(), root()
+  exo(child_x1) # synonym: exogenous()
 )
 
 print(identical(kn1, kn2))

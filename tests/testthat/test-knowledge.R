@@ -2084,7 +2084,7 @@ test_that("exogenous() is idempotent", {
 test_that("exogenous() on unknown var errors when frozen", {
   kn <- knowledge(data.frame(A = 1, B = 2))
   expect_error(
-    add_root(kn, C),
+    add_exo(kn, C),
     "Unknown variable"
   )
 })

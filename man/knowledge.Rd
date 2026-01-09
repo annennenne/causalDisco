@@ -12,12 +12,12 @@ knowledge(...)
 \item Optionally, a single data frame (first argument) whose column names
 initialize and freeze the variable set.
 \item Zero or more mini-DSL calls:
-\code{tier()}, \code{forbidden()}, \code{required()}, \code{exogenous()}, \code{exo()}, \code{root()},
+\code{tier()}, \code{forbidden()}, \code{required()}, \code{exogenous()}, \code{exo()},
 or infix operators \verb{\%-->\%} and \verb{\%--x\%}.
 \itemize{
 \item \code{tier()}: One or more two-sided formulas (\code{tier(1 ~ x + y)}), or a numeric vector.
 \item \code{forbidden()} / \code{required()}: One or more two-sided formulas (\code{from ~ to}).
-\item \code{exogenous()} / \code{exo()} / \code{root()}: Variable names or tidyselect selectors.
+\item \code{exogenous()} / \code{exo()}: Variable names or tidyselect selectors.
 Arguments are evaluated in order; only these calls are allowed.
 }
 }}
@@ -58,7 +58,7 @@ specifies variables. Variables can also be selected using \strong{tidyselect} sy
 LHS is the source, RHS is the target. Both sides support tidyselect syntax.
 \item \verb{\%-->\%} and \verb{\%--x\%}: Infix alternatives for \code{required()} and \code{forbidden()}.
 Example: \code{V1 \%-->\% V3} is equivalent to \code{required(V1 ~ V3)}.
-\item \code{exogenous()} / \code{exo()} / \code{root()}: Mark variables as exogenous (root nodes).
+\item \code{exogenous()} / \code{exo()}: Mark variables as exogenous.
 \item Numeric vector shortcut for \code{tier()}:
 \code{tier(c(1, 2, 1))} assigns tiers by index to all existing variables.
 }
@@ -138,7 +138,6 @@ kn <- knowledge(
   df,
   exogenous(child_x1),
   exo(child_x2), # shorthand
-  root(youth_x3) # another shorthand
 )
 
 # You can also build knowledge with a verb pipeline
@@ -159,8 +158,7 @@ kn <-
     forbidden(V5 ~ V6)
   ) |>
   add_tier(3, after = "2") |>
-  add_to_tier(3 ~ V7) |> # add third tier later
-  add_root(V1) |> # three ways to add roots
+  add_to_tier(3 ~ V7) |>
   add_exo(V2) |>
   add_exogenous(V3)
 
