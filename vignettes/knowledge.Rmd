@@ -23,7 +23,9 @@ algorithms.
 The different supported knowledge types are explained below, along with examples of how to create knowledge objects and
 use them with causal discovery methods. All knowledge types can be freely combined.
 
-At a conceptual level, all knowledge is ultimately represented as constraints on allowed edges. Some knowledge types provide higher-level abstractions for expressing common modeling assumptions more conveniently.
+At a conceptual level, all knowledge is represented as constraints on edges, specifying which edges are allowed,
+disallowed, or required. Some knowledge types provide higher-level abstractions for expressing common modeling
+assumptions more conveniently.
 
 # Required and forbidden knowledge
 
@@ -33,15 +35,8 @@ apply to directed edges in the causal graph.
 - Required edges specify that a directed edge must exist between two variables.
 - Forbidden edges specify that a directed edge is not allowed between two variables.
 
-These constraints are specified using the %-->% (required) and %!-->% (forbidden) operators.
-
-We discussed better syntax for `%!-->%`. Which of these alternatives are best:
-
-- `child_x1 %!-->% youth_x3` (current)
-- `!(child_x1 %-->% youth_x3)`
-- `child_x1 %!-->% youth_x3`
-
-Note, that `child_x1 !%-->% youth_x3` is not valid syntax for the R passer.
+These constraints are specified using the %-->% (required) and %!-->% (forbidden) operators, with the exclamation mark
+(!) indicating negation of the edge.
 
 ## Specifying required and forbidden edges
 
