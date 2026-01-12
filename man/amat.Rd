@@ -29,3 +29,4 @@ that e.g. A(i,j) = 1 places a circle in the directed from j to i. For example, i
 A(i,j) = 1 and A(j,i) = 2, we have that i o-> j. Similarly, A(i,j) = 2 and A(j,i) = 3
 mean that i <- j.
 }
+\keyword{internal}

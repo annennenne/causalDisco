@@ -26,3 +26,4 @@ indicating which phase of GIES to perform a single step of.
 \seealso{
 \link{tges_run}, \link{TemporalBIC}, \link{TemporalBDeu}
 }
+\keyword{internal}

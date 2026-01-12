@@ -58,9 +58,10 @@ rownames(x1) <- colnames(x1) <- nodes
 rownames(x2) <- colnames(x2) <- nodes
 
 # confusion matrix for adjacencies
-confusion(x2, x1)
+causalDisco:::confusion(x2, x1)
 
 # confusion matrix for conditional orientations
-confusion(x2, x1, type = "dir")
+causalDisco:::confusion(x2, x1, type = "dir")
 
 }
+\keyword{internal}

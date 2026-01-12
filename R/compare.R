@@ -15,7 +15,8 @@
 #' object 2, relative to object 1), and \code{nremoved} (the number of
 #' absent edges in object 2, relative to object 1).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 compare <- function(x, y = NULL) {
   if (is.null(y)) {
     y <- x

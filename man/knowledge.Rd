@@ -145,7 +145,7 @@ kn <-
 kn <-
   knowledge(
     tier(1 ~ V5, 2 ~ V6),
-    forbidden(V5 ~ V6)
+    V5 \%!-->\% V6
   ) |>
   add_tier(3, after = "2") |>
   add_to_tier(3 ~ V7) |>

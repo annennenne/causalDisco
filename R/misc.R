@@ -34,7 +34,8 @@ as.graphNEL <- function(amat) {
 #'
 #' @return A logical.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 is_pdag <- function(amat) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -55,7 +56,8 @@ is_pdag <- function(amat) {
 #'
 #' @return A logical.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 is_cpdag <- function(amat) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -93,7 +95,8 @@ is_cpdag <- function(amat) {
 #'
 #' See \link{amat} for details about how an \code{ag} adjacency matrix is encoded.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 graph_to_amat <- function(graph, to_from = TRUE, type = "pdag") {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -120,7 +123,8 @@ graph_to_amat <- function(graph, to_from = TRUE, type = "pdag") {
 #'
 #' @return A numeric.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 max_edges <- function(p) {
   invalid <- (!is.numeric(p) ||
     length(p) != 1L ||
@@ -150,7 +154,8 @@ max_edges <- function(p) {
 #'
 #' @return An adjacency matrix (square matrix with 0/1 entries).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 essgraph_to_amat <- function(essgraph, p = length(essgraph$field(".nodes"))) {
   inlist <- essgraph$field(".in.edges")
   out <- t(sapply(inlist, which2indicator, p = p))
@@ -182,7 +187,8 @@ average_degree <- function(amat) {
 #'
 #' @return A numeric (non-negative integer).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 n_edges <- function(amat) {
   sum(halfskel(amat))
 }

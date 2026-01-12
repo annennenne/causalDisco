@@ -65,8 +65,8 @@ as_tetrad_knowledge <- function(kn) {
 #' Convert background knowledge to pcalg constraint matrices
 #'
 #' pcalg only supports _undirected_ (symmetric) background constraints:
-#' * **fixed_gaps**  — forbidding edges (zeros enforced)
-#' * **fixed_edges** — requiring edges (ones enforced)
+#' * **fixed_gaps**  - forbidding edges (zeros enforced)
+#' * **fixed_edges** - requiring edges (ones enforced)
 #'
 #' This function takes a \code{knowledge} object (with only forbidden/required
 #' edges, no tiers) and returns the two logical matrices in the exact

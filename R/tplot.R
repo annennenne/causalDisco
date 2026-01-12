@@ -22,7 +22,8 @@
 #' to the right, thereby avoiding edges placed exactly on top of eachother.
 #' @param ... Additional argument passed to \code{\link{make_tikz}}.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 tplot <- function(
   x,
   filename = "causaldisco_tplot_temp",

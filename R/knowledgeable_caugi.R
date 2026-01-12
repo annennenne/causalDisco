@@ -203,7 +203,8 @@ knowledge.knowledgeable_caugi <- function(x) {
 #' @param x An object
 #'
 #' @returns `TRUE` if the object is of class `knowledgeable_caugi`, `FALSE` otherwise.
-#' @export
+#' @keywords internal
+#' @noRd
 is_knowledgeable_caugi <- function(x) {
   inherits(x, "knowledgeable_caugi")
 }

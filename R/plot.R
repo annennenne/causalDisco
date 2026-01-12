@@ -7,7 +7,8 @@
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 plot.tpdag <- function(x, ...) {
   plot_tempo_mech(x, ...)
 }
@@ -22,7 +23,8 @@ plot.tpdag <- function(x, ...) {
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 plot.tskeleton <- function(x, ...) {
   plot_tempo_mech(x, ...)
 }
@@ -35,8 +37,8 @@ plot.tskeleton <- function(x, ...) {
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
-#'
-#' @export
+#' @keywords internal
+#' @noRd
 plot.tamat <- function(x, ...) {
   plot_tempo_mech(x, ...)
 }
@@ -53,7 +55,8 @@ plot.tamat <- function(x, ...) {
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 plot.pag <- function(x, ...) {
   thisamat <- t(amat(x))
   thisg <- as.graphNEL(thisamat)
@@ -102,7 +105,8 @@ plot.pag <- function(x, ...) {
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 plot.tpag <- function(x, ...) {
   plot.pag(x, ...)
 }

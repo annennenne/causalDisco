@@ -31,28 +31,28 @@ BnlearnSearch <- R6Class(
     #'
     #'  **Discrete – categorical**
     #'   \itemize{
-    #'     \item \code{"loglik"} — log-likelihood
-    #'     \item \code{"aic"} — Akaike Information Criterion
-    #'     \item \code{"bic"} — Bayesian Information Criterion
-    #'     \item \code{"ebic"} — Extended BIC
-    #'     \item \code{"pred_loglik"} — predictive log-likelihood
-    #'     \item \code{"bde"} — Bayesian Dirichlet equivalent (uniform)
-    #'     \item \code{"bds"} — Bayesian Dirichlet score
-    #'     \item \code{"mbde"} — modified BDE
-    #'     \item \code{"bdla"} — locally averaged BDE
-    #'     \item \code{"k2"} — K2 score
-    #'     \item \code{"fnml"} — factorised NML
-    #'     \item \code{"qnml"} — quotient NML
-    #'     \item \code{"nal"} — node-average log-likelihood
-    #'     \item \code{"pnal"} — penalised node-average log-likelihood
+    #'     \item \code{"loglik"} - log-likelihood
+    #'     \item \code{"aic"} - Akaike Information Criterion
+    #'     \item \code{"bic"} - Bayesian Information Criterion
+    #'     \item \code{"ebic"} - Extended BIC
+    #'     \item \code{"pred_loglik"} - predictive log-likelihood
+    #'     \item \code{"bde"} - Bayesian Dirichlet equivalent (uniform)
+    #'     \item \code{"bds"} - Bayesian Dirichlet score
+    #'     \item \code{"mbde"} - modified BDE
+    #'     \item \code{"bdla"} - locally averaged BDE
+    #'     \item \code{"k2"} - K2 score
+    #'     \item \code{"fnml"} - factorised NML
+    #'     \item \code{"qnml"} - quotient NML
+    #'     \item \code{"nal"} - node-average log-likelihood
+    #'     \item \code{"pnal"} - penalised node-average log-likelihood
     #'   }
     #'   \strong{Gaussian}
     #'   \itemize{
     #'     \item \code{"loglik_g"}, \code{"aic_g"}, \code{"bic_g"},
     #'       \code{"ebic_g"}, \code{"pred_loglik_g"}
-    #'     \item \code{"bge"} — Gaussian posterior density
-    #'     \item \code{"nal_g"} — node-average log-likelihood
-    #'     \item \code{"pnal_g"} — penalised node-average log-likelihood
+    #'     \item \code{"bge"} - Gaussian posterior density
+    #'     \item \code{"nal_g"} - node-average log-likelihood
+    #'     \item \code{"pnal_g"} - penalised node-average log-likelihood
     #'   }
     #'   \strong{Conditional Gaussian}
     #'   \itemize{

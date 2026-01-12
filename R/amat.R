@@ -18,7 +18,7 @@
 #' \code{caugi} object as obtained from \link{tpc}, \link{pc},
 #' \link{tfci}, or \link{fci}, respectively.
 #'
-#' @export
+#' @keywords internal
 amat <- function(x) {
   x_class <- class(x)
 

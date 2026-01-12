@@ -7,7 +7,8 @@
 #'
 #' @param amat An adjacency matrix.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 edges <- function(amat) {
   p <- nrow(amat)
   edge_list <- lapply(split(amat, rep(1:p, each = p)), function(x) {

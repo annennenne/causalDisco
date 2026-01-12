@@ -156,7 +156,8 @@ g1_score <- function(confusion) {
 #'
 #' @return A numeric (a non-negative integer).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 shd <- function(est_amat, true_amat) {
   m1 <- est_amat
   m2 <- true_amat

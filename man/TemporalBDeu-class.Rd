@@ -121,3 +121,4 @@ tges_pre <- tges_run(t_score)
 \author{
 Tobias Ellegaard Larsen
 }
+\keyword{internal}

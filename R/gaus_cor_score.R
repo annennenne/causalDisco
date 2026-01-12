@@ -28,7 +28,8 @@
 #' # Use gaus_cor_score with pcalg::ges()
 #' pcalg::ges(gaus_cor_score(cmat, n = 100))
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 gaus_cor_score <- function(
   cormat,
   n,

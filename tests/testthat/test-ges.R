@@ -171,7 +171,7 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
   kn <- knowledge(
     tpc_example,
     child_x1 %!-->% youth_x3,
-    forbidden(youth_x3 ~ child_x1)
+    youth_x3 %!-->% child_x1
   )
 
   pcalg_ges <- ges(engine = "pcalg", score = "sem_bic")

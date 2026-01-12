@@ -7,7 +7,8 @@
 #'
 #' @return An object of class <tetrad_graph>
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 tetrad_graph <- function(x) {
   .check_if_pkgs_are_installed(
     pkgs = c(

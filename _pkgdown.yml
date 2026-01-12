@@ -28,6 +28,12 @@ reference:
       - tges
       - tpc
 
+  - title: "Tests for TPC"
+    desc: "Test functions implemented for use in the TPC algorithm."
+    contents:
+      - cor_test
+      - reg_test
+
   - title: "Setup for Tetrad Engine"
     desc: "Functions for installing and verifying the Tetrad Java backend."
     contents:
@@ -44,47 +50,18 @@ reference:
     contents:
       - ends_with("run")
 
-  - title: "Temporal Graph and Score Classes Extending pcalg"
-    contents:
-      - TEssGraph
-      - TemporalBIC
-      - TemporalBDeu
-
-  - title: "Test Functions"
-    contents:
-      - ends_with("test")
-
-  - title: "Graph Operations"
-    contents:
-      - amat
-      - graph_to_amat
-      - essgraph_to_amat
-      - probmat_to_amat
-      - tamat
-      - edges
-      - n_edges
-      - max_edges
-      - is_cpdag
-      - is_pdag
-      - shd
-      - n_dags
-
   - title: "Simulation"
     contents:
       - sim_dag
       - sim_gaus_from_dag
 
-  - title: "Plotting"
+  - title: "Plotting and Printing"
     contents:
       - starts_with("plot")
-      - tplot
+      - starts_with("print")
       - make_tikz
 
-  - title: "Printing"
-    contents:
-      - starts_with("print")
-
-  - title: "Tiers / Knowledge helpers"
+  - title: "Knowledge helpers"
     contents:
       - starts_with("add")
       - starts_with("remove")
@@ -100,7 +77,6 @@ reference:
       - as_pcalg_constraints
       - knowledgeable_caugi
       - new_knowledgeable_caugi
-      - is_knowledgeable_caugi
       - knowledge.knowledgeable_caugi
       - deparse_knowledge
       - unfreeze
@@ -114,13 +90,6 @@ reference:
 
   - title: "Evaluation & Confusion Metrics"
     contents:
-      - starts_with("evaluate")
-      - confusion
-      - dir_confusion
-      - dir_confusion_original
-      - adj_confusion
-      - compare
-      - evaluate
       - precision
       - recall
       - specificity
@@ -134,6 +103,4 @@ reference:
   - title: "Miscellaneous"
     contents:
       - engine_registry
-      - tetrad_graph
       - tpc_example
-      - gaus_cor_score

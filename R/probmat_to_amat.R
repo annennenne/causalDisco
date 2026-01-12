@@ -44,7 +44,8 @@
 #' # Convert to adjacency matrix using BPCO-method (threshold = 0.5)
 #' probmat_to_amat(pmat, threshold = 0.5, method = "bpco")
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 probmat_to_amat <- function(
   probmat,
   threshold,

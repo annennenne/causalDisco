@@ -37,7 +37,8 @@
 #' can be used to change the return object to a list instead. This list will contain three lists, where
 #' adjacency, orientation and other metrics are reported, respectively.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 evaluate <- function(est, true, metrics, ...) {
   UseMethod("evaluate")
 }
@@ -48,7 +49,8 @@ evaluate <- function(est, true, metrics, ...) {
 #' @param  list_out If \code{FALSE} (default), output is returned as a data.frame, otherwise
 #' it will be a list.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 evaluate.matrix <- function(est, true, metrics, list_out = FALSE, ...) {
   adj <- metrics$adj
   dir <- metrics$dir
@@ -102,7 +104,8 @@ evaluate.matrix <- function(est, true, metrics, list_out = FALSE, ...) {
 
 #' @inherit evaluate
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 evaluate.tamat <- function(est, true, metrics, ...) {
   evaluate.matrix(est, true, metrics, ...)
 }
@@ -110,7 +113,8 @@ evaluate.tamat <- function(est, true, metrics, ...) {
 
 #' @inherit evaluate
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 evaluate.array <- function(est, true, metrics, ...) {
   n <- dim(est)[1]
   p <- length(metrics$adj) + length(metrics$dir) + length(metrics$other)

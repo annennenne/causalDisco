@@ -15,7 +15,8 @@
 #'
 #' @return No return value, the function is called for its side-effects (plotting).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 plot_tempo_mech <- function(
   x,
   add_time_axis = TRUE,

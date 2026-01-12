@@ -46,12 +46,12 @@
 #' rownames(x2) <- colnames(x2) <- nodes
 #'
 #' # confusion matrix for adjacencies
-#' confusion(x2, x1)
+#' causalDisco:::confusion(x2, x1)
 #'
 #' # confusion matrix for conditional orientations
-#' confusion(x2, x1, type = "dir")
+#' causalDisco:::confusion(x2, x1, type = "dir")
 #'
-#' @export
+#' @keywords internal
 confusion <- function(est_amat, true_amat, type = "adj") {
   est <- .as_tamat_any(est_amat)
   tru <- .as_tamat_any(true_amat)
@@ -127,7 +127,8 @@ confusion <- function(est_amat, true_amat, type = "adj") {
 # }
 
 #' @inherit confusion
-#' @export
+#' @keywords internal
+#' @noRd
 adj_confusion <- function(est_amat, true_amat) {
   est_halfskel <- halfskel(est_amat)
   true_halfskel <- halfskel(true_amat)
@@ -141,7 +142,8 @@ adj_confusion <- function(est_amat, true_amat) {
 }
 
 #' @inherit confusion
-#' @export
+#' @keywords internal
+#' @noRd
 dir_confusion <- function(est_amat, true_amat) {
   est_edges <- edges(est_amat)
   true_edges <- edges(true_amat)
@@ -219,7 +221,8 @@ dir_confusion <- function(est_amat, true_amat) {
 #' correct direction counts as a true positive (TP). A directed edge
 #' oriented in the incorrect direction counts as both a false positive (FP)
 #' and a false negative (FN).
-#' @export
+#' @keywords internal
+#' @noRd
 dir_confusion_original <- function(est_amat, true_amat) {
   est_edges <- edges(est_amat)
   true_edges <- edges(true_amat)

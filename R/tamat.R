@@ -20,7 +20,8 @@
 #' attribute(a character vector listing the temporal order of the variables
 #' in the adjacency matrix).
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 tamat <- function(amat, order, type = NULL) {
   out <- amat
   attr(out, "order") <- order

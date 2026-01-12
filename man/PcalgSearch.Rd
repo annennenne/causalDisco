@@ -86,7 +86,9 @@ sufficient statistic is build for a mixed test.}
 discrete test. If both continuous and discrete are \code{TRUE}, the sufficient
 statistic is build for a mixed test.}
 
-\item{\code{knowledge}}{A list of fixed constraints for the search algorithm.}
+\item{\code{knowledge}}{A list of fixed constraints for the search algorithm. Note, that
+pcalg only works with symmetric knowledge. Thus, the only allowed types of knowledge
+is forbidden edges in both directions.}
 
 \item{\code{adapt_df}}{Logical; whether to adapt the degrees of freedom
 for discrete tests.}

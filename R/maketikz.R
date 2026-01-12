@@ -67,7 +67,7 @@
 #'   "child_z", "adult_x",
 #'   "adult_y"
 #' )
-#' output_tamat <- tamat(dag_example, order = c("child", "adult"))
+#' output_tamat <- causalDisco:::tamat(dag_example, order = c("child", "adult"))
 #' \dontrun{
 #' make_tikz(output_tamat)
 #' }

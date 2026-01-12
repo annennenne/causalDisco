@@ -72,7 +72,9 @@ PcalgSearch <- R6::R6Class(
     #' statistic is build for a mixed test.
     discrete = NULL,
 
-    #' @field knowledge A list of fixed constraints for the search algorithm.
+    #' @field knowledge A list of fixed constraints for the search algorithm. Note, that
+    #' pcalg only works with symmetric knowledge. Thus, the only allowed types of knowledge
+    #' is forbidden edges in both directions.
     knowledge = NULL,
 
     #' @field adapt_df Logical; whether to adapt the degrees of freedom

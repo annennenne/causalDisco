@@ -7,7 +7,8 @@
 #'
 #' @return A numeric.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 n_dags <- function(p) {
   if (p <= 1) {
     return(1)

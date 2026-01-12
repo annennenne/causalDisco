@@ -239,7 +239,7 @@ to_adj_mat <- function(obj) {
 #' @seealso [tges_run], [TemporalBIC], [TemporalBDeu]
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
-#' @export TEssGraph
+#' @keywords internal
 TEssGraph <- setRefClass(
   "TEssGraph",
   contains = "EssGraph",
@@ -347,7 +347,7 @@ TEssGraph <- setRefClass(
 #'
 #' @importClassesFrom pcalg GaussL0penIntScore
 #'
-#' @export TemporalBIC
+#' @keywords internal
 TemporalBIC <- setRefClass(
   # nolint: object_name_linter.
   "TemporalBIC",
@@ -524,7 +524,7 @@ TemporalBIC <- setRefClass(
 #'
 #' @importClassesFrom pcalg Score
 #'
-#' @export TemporalBDeu
+#' @keywords internal
 TemporalBDeu <- setRefClass(
   "TemporalBDeu",
   contains = "DataScore",

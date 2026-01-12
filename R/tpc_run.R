@@ -549,9 +549,9 @@ tpdag <- function(skel, knowledge, from_to) {
 #' Build the \emph{sufficient statistic} object expected by the built-in
 #' conditional independence tests. Supports:
 #' \itemize{
-#'   \item \code{type = "reg_test"} — returns the original \code{data} and a
+#'   \item \code{type = "reg_test"} - returns the original \code{data} and a
 #'         logical indicator of which variables are binary;
-#'   \item \code{type = "cor_test"} — returns a pairwise-complete correlation
+#'   \item \code{type = "cor_test"} - returns a pairwise-complete correlation
 #'         matrix and the sample size \code{n}.
 #' }
 #'
@@ -564,16 +564,16 @@ tpdag <- function(skel, knowledge, from_to) {
 #' @details
 #' For \code{type = "reg_test"}, the return value is a list with elements:
 #' \itemize{
-#'   \item \code{data} — the original \code{data} object;
-#'   \item \code{binary} — a logical vector (one per column) indicating whether
+#'   \item \code{data} - the original \code{data} object;
+#'   \item \code{binary} - a logical vector (one per column) indicating whether
 #'         the variable is binary.
 #' }
 #'
 #' For \code{type = "cor_test"}, the return value is a list with elements:
 #' \itemize{
-#'   \item \code{C} — the correlation matrix computed with
+#'   \item \code{C} - the correlation matrix computed with
 #'         \code{use = "pairwise.complete.obs"};
-#'   \item \code{n} — the number of rows in \code{data}.
+#'   \item \code{n} - the number of rows in \code{data}.
 #' }
 #'
 #' Any other \code{type} results in an error.
