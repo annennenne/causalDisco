@@ -2,9 +2,6 @@
 # reorder_tiers()
 # ──────────────────────────────────────────────────────────────────────────────
 
-# helper to avoid repetition
-tiers_tbl <- function(...) tibble::tibble(label = c(...))
-
 test_that("reorder_tiers() works with complete permutations", {
   kn <- knowledge(tier(One ~ V1, Two ~ V2, Three ~ V3))
 
