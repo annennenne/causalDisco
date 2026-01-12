@@ -185,8 +185,18 @@ plot(kn)
 
 The plot then shows the tiers as layers, with the earliest tiers to the left and latest to the right.
 
-Tidyselect helpers such as `starts_with` can also be used to define tiers in a concise way, just as with required and forbidden edges.
+Tidyselect helpers such as `starts_with` can also be used to define tiers in a concise way, just as with required and forbidden edges. Different tidyselect helpers can be freely combined within a tier definition using `+`. For example,
+the following tiered knowledge object defines two tiers, "young" and "old", by combining tidyselect helpers:
 
+```{r tier knowledge with tidyselect}
+kn_tier <- knowledge(
+  tpc_example,
+  tier(
+    young ~ starts_with("child") + ends_with(c("3", "4")),
+    old   ~ starts_with("old")
+  )
+)
+```
 # Exogenous variables knowledge
 
 Exogenous variables are those that have no incoming edges in the causal graph.

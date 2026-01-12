@@ -2233,10 +2233,14 @@ seq_tiers <- function(tiers, vars) {
 #' @title Resolve a tidy-select or character spec to character names
 #'
 #' @param kn A `knowledge` object.
-#' @param spec A tidyselect specification (e.g. `everything()`,
-#' `starts_with("V")`), a bare symbol, a character vector, *or* a literal
-#' `c(V1, V2, "V3")` call.
-#' (Should be unevaluated, i.e. passed with rlang::expr or alike.)
+#' @param spec An unevaluated variable specification. May be:
+#'   - a tidyselect helper (e.g. `everything()`, `starts_with("V")`)
+#'   - a bare symbol naming a variable
+#'   - a character vector of variable names
+#'   - a literal `c(V1, V2, "V3")` call
+#'   - a binary `+` expression combining any of the above (interpreted as union)
+#'
+#'   Specifications are resolved recursively.
 #'
 #' @example inst/roxygen-examples/dot-vars_from_spec_example.R
 #' @noRd
@@ -2253,6 +2257,12 @@ seq_tiers <- function(tiers, vars) {
   )
   if (is.atomic(spec) && length(spec) == 1L && !is.character(spec)) {
     return(character(0))
+  }
+
+  if (rlang::is_call(spec, "+")) {
+    lhs <- .vars_from_spec(kn, spec[[2]])
+    rhs <- .vars_from_spec(kn, spec[[3]])
+    return(unique(c(lhs, rhs)))
   }
 
   # literal c(...) of names --> turn into a plain character vector

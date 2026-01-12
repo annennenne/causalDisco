@@ -375,6 +375,34 @@ test_that("tier generation with mixing DSL and verbs with symbols and chars", {
   )
 })
 
+test_that("tier tidyselect helpers works with +", {
+  kn1 <- knowledge(
+    tpc_example,
+    tier(
+      young ~ starts_with(c("child", "youth")),
+      old ~ starts_with("old")
+    )
+  )
+  kn2 <- knowledge(
+    tpc_example,
+    tier(
+      young ~ starts_with("child") + starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+  expect_equal(kn1, kn2)
+
+  kn3 <- knowledge(
+    tpc_example,
+    tier(
+      young ~ starts_with("child") + ends_with(c("3", "4")),
+      old ~ starts_with("old")
+    )
+  )
+
+  expect_equal(kn1, kn3)
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Tiers using seq_tiers
 # ──────────────────────────────────────────────────────────────────────────────
