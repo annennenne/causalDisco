@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.1.9023
+Version: 0.9.1.9024
 Authors@R:
       c(
         person(
