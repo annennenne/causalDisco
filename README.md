@@ -58,7 +58,7 @@ install Rust.
 
 ### Installing Java / JDK
 
-`causalDisco` provides an interface to the Java library
+causalDisco provides an interface to the Java library
 [Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
 algorithms. To use algorithms from Tetrad you need to install a Java
 Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
@@ -157,33 +157,68 @@ plot(disco_cd_tges)
 - Improve plot (use caugi)
 
   - For new features that are hard to do in grid (which caugi uses),
-    maybe just insert the image in ggplot? See this stackexchange
-    <https://stackoverflow.com/questions/9917049/inserting-an-image-to-ggplot2>
-    Then we modify the image on top (i.e. the image we insert is the
-    background). It should be possible to read coordinates of groups and
-    add time-axis that way for example.
+    maybe just insert the image in ggplot?
 
-  - Implement a working `make_tikz` for these plots. See tikzDevice
-    package, which can do it automatically from R plots:
+A rough WIP is here, which colors a rectangle around A and B:
 
-  ``` r
-  library(caugi)
-  library(tikzDevice)
-  cg <- caugi(A %-->% B + C)
-  tikz("cg_plot.tex", width = 6, height = 4)
-  plot(
-      cg,
-      node_style = list(
-          by_node = list(
-              A = list(fill = "lightblue", col = "darkblue", lwd = 2),
-              B = list(fill = "red")
-          )
-      )
+``` r
+# Make sure causalDisco is not loaded to avoid namespace conflicts with caugi
+if ("package:causalDisco" %in% search()) {
+  detach("package:causalDisco", unload = TRUE, character.only = TRUE)
+}
+
+library(caugi)
+library(ggplot2)
+library(ggplotify)
+library(grid)
+
+cg <- caugi(A %-->% B, C, D)
+layout <- caugi_layout(cg)
+print(layout)
+layout$x <- c(0.5, 0.5, 0, 1)
+layout$y <- c(0, 1, 0.5, 0.5)
+print(layout)
+plot_cg <- plot(cg, layout = layout)
+
+# Wrap the grid plot as ggplot
+gg <- as.ggplot(~grid.draw(plot_cg@grob))
+
+# Add rectangle
+gg +
+  annotate(
+    "rect",
+    xmin = layout$x[1] - 0.05,
+    xmax = layout$x[2] + 0.05,
+    ymin = layout$y[1],
+    ymax = layout$y[2],
+    fill = "red",
+    alpha = 0.3
   )
-  dev.off()
-  ```
+```
 
-  If we want any changes we can modify the tikz code after generation.
+![](man/figures/caugi-modified-plot.png)
+
+- Implement a working `make_tikz` for these plots. See tikzDevice
+  package, which can do it automatically from R plots:
+
+``` r
+library(caugi)
+library(tikzDevice)
+cg <- caugi(A %-->% B + C)
+tikz("cg_plot.tex", width = 6, height = 4)
+plot(
+  cg,
+  node_style = list(
+    by_node = list(
+      A = list(fill = "lightblue", col = "darkblue", lwd = 2),
+      B = list(fill = "red")
+    )
+  )
+)
+dev.off()
+```
+
+If we want any changes we can modify the tikz code after generation.
 
 - Make required work for our algorithms. It breaks when it internally
   calls `tpdag`, so look into that…
@@ -289,7 +324,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
+#> ! java.lang.RuntimeException: Unrecognized basis type: 4
 ```
 
 ``` r
