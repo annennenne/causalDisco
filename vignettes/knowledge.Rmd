@@ -35,8 +35,9 @@ apply to directed edges in the causal graph.
 - Required edges specify that a directed edge must exist between two variables.
 - Forbidden edges specify that a directed edge is not allowed between two variables.
 
-These constraints are specified using the %-->% (required) and %!-->% (forbidden) operators, with the exclamation mark
-(!) indicating negation of the edge.
+These constraints are specified using the `%-->%` (required) and `%!-->%` (forbidden) operators, with the exclamation mark
+(`!`) indicating negation of the edge, i.e. the absence of the edge. Conceptually, this could be written as `%!(-->)%`, but
+we find this syntax too verbose.
 
 ## Specifying required and forbidden edges
 
@@ -189,7 +190,7 @@ Tidyselect helpers such as `starts_with` can also be used to define tiers in a c
 the following tiered knowledge object defines two tiers, "young" and "old", by combining tidyselect helpers:
 
 ```{r tier knowledge with tidyselect}
-kn_tier <- knowledge(
+kn_tier_tidyselect <- knowledge(
   tpc_example,
   tier(
     young ~ starts_with("child") + ends_with(c("3", "4")),
@@ -197,6 +198,7 @@ kn_tier <- knowledge(
   )
 )
 ```
+
 # Exogenous variables knowledge
 
 Exogenous variables are those that have no incoming edges in the causal graph.
@@ -281,7 +283,7 @@ The black edges are those inferred from the data.
 
 ## bnlearn
 
-All knowledge types are supported with bnlearn engines. Note, that you can get a
+All knowledge types are supported with bnlearn engine. Note, that you can get a
 harmless(?) warning from bnlearn when using required knowledge.
 
 ```{r bnlearn}
@@ -304,7 +306,7 @@ plot(output)
 
 ## causalDisco
 
-WIP. Currently causalDisco only works correctly with tiered and required knowledge.
+WIP. Currently causalDisco only works correctly with tiered and forbidden knowledge.
 
 ## pcalg
 
@@ -325,7 +327,7 @@ output <- disco(data = tpc_example, method = pc_pcalg, knowledge = kn)
 
 ## Tetrad
 
-WIP. Currently only implemented correctly for forbidden knowledge.
+WIP. All knowledge types are supported with Tetrad engine.
 
 
 
