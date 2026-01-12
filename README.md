@@ -167,7 +167,7 @@ if ("package:causalDisco" %in% search()) {
   detach("package:causalDisco", unload = TRUE, character.only = TRUE)
 }
 
-library(caugi)
+library(caugi) # Needs recent version from GitHub
 library(ggplot2)
 library(ggplotify)
 library(grid)
@@ -233,11 +233,6 @@ If we want any changes we can modify the tikz code after generation.
 
 - Once more developed look at <https://github.com/py-why/causal-learn>
   and add it as an engine?
-
-### Manging exported functions
-
-- Various helper functions: `as_pcalg_constraints`, …,
-  `is_knowledgeable_caugi`, …, `tetrad_graph`
 
 ### Bugfixes
 
@@ -324,7 +319,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   output <- disco(data = tpc_example, method = tetrad_pc)
 }
 #> Error in `.jcall()`:
-#> ! java.lang.RuntimeException: Unrecognized basis type: 4
+#> ! java.lang.RuntimeException: java.lang.IllegalArgumentException: Unrecognized basis type: 4
 ```
 
 ``` r
@@ -344,16 +339,10 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   all algorithms aren’t currently fully supported.
 
 - Use `snake_case` for all exported functions + arguments (even if the
-  underlying engine uses e.g. camelCase).
+  underlying engine uses e.g. camelCase) - done?
 
 - See how `mlr3` does it, and see their wiki on roxygen R6 guide
   [here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
-
-- Make it clear somewhere what/how knowledge is supported in which
-  algorithms. E.g. `pc` with engine pcalg only works with forbidden
-  edges from knowledge objects and requires specifying both ways. It’s
-  documented in `?as_pcalg_constaints` but should be more visible. In
-  `?PcalgSearch` probably?
 
 - List in documentation of `tfci`, … what kind of graph it returns.
 
@@ -364,9 +353,33 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 - We are mixing between different things currently (since we rely on
   `caugi` are it uses `data.frame` and `S7`):
   - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and
-    `disco()$caugi@edges` is `data.frame`)
-  - `S3` vs `S7`
-  - More maybe?
+    `disco()$caugi@edges` is `data.frame`).
+
+Call `caugi@edges <- tibble::as_tibble(caugi@edges)` internally to
+standardize to tibble? And instead of forcing users to do
+`output$caugi@edges` (mix S3 and S7) we could implement something like
+this:
+
+``` r
+edges <- function(x) {
+  UseMethod("edges")
+}
+
+edges.knowledgeable_caugi <- function(x) {
+  tibble::as_tibble(x$caugi@edges)
+}
+
+nodes <- function(x) {
+  UseMethod("nodes")
+}
+
+nodes.knowledgeable_caugi <- function(x) {
+  tibble::as_tibble(x$caugi@edges)
+}
+```
+
+I.e., allow user to call `edges(output)` and `nodes(output)` to get
+edges and nodes as tibbles.
 
 ### Adopt Tetrad v7.6.9
 
