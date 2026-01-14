@@ -49,7 +49,6 @@ test_that("tetrad score argument works", {
   # Continuous
   data("tpc_example")
   run_ges_test <- function(data, score) {
-    print(score)
     ges_method <- ges(engine = "tetrad", score = score)
     ges_result <- disco(data, method = ges_method)
     expect_equal(class(ges_result), c("knowledgeable_caugi", "knowledge"))
