@@ -15,7 +15,7 @@
 #' @details
 #' For specific details on the supported scores, tests, and parameters for each engine, see:
 #' \itemize{
-#'  \item \code{\link{TetradSearch}} for \pkg{Tetrad},
+#'  \item \code{\link{TetradSearch}} for \pkg{Tetrad} (note, Tetrad refers to it as "FGES"),
 #'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
 #' }
 #'
