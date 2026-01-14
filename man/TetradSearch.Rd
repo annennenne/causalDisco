@@ -112,9 +112,6 @@ Recognised values are:
 \item \code{"rfci"} - Restricted FCI algorithm
 \item \code{"sp"} - Sparsest Permutation algorithm
 \item \code{"sp_fci"} - Sparsest Permutation using FCI
-\item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
-\item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
-but uses a BIC score to search for a skeleton.
 }}
 
 \item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
@@ -861,19 +858,6 @@ completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
 \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
 PAG (where feasible).
-}
-\item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
-\itemize{
-\item \code{penalty_discount = 2} - Penalty discount factor used
-in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-sparser graphs.
-}
-\item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
-but uses a BIC score to search for a skeleton.
-\itemize{
-\item \code{penalty_discount = 2} - Penalty discount factor used
-in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-sparser graphs.
 }
 }}
 }

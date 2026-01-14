@@ -430,25 +430,6 @@ test_that("set_alg() succeeds for algorithms with no explicit precheck", {
   })
 })
 
-test_that("set_alg() with svar_fci and svar_gfci", {
-  skip_if_no_tetrad()
-
-  df <- make_cont_test_data()
-  ts <- TetradSearch$new()
-  ts$set_score("sem_bic")
-  ts$set_test("fisher_z")
-  ts$set_data(df)
-  expect_no_condition(ts$set_alg("svar_fci"))
-  expect_no_condition(ts$set_alg("svar_gfci"))
-
-  # no data
-  ts <- TetradSearch$new()
-  ts$set_score("sem_bic")
-  ts$set_test("fisher_z")
-  expect_error(ts$set_alg("svar_fci"))
-  expect_error(ts$set_alg("svar_gfci"))
-})
-
 test_that("set_alg() warns when background knowledge is set for algorithms that do not use it", {
   skip_if_no_tetrad()
 
@@ -459,8 +440,7 @@ test_that("set_alg() warns when background knowledge is set for algorithms that 
     "ica_lingd",
     "ccd",
     "direct_lingam",
-    "dagma",
-    "svar_gfci"
+    "dagma"
   )
   df <- make_cont_test_data()
   purrr::walk(no_background_algorithms, \(alg) {

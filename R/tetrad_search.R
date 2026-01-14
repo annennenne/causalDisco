@@ -96,9 +96,6 @@ TetradSearch <- R6Class(
     #'   \item \code{"rfci"} - Restricted FCI algorithm
     #'   \item \code{"sp"} - Sparsest Permutation algorithm
     #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI
-    #'   \item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
-    #'   \item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
-    #'      but uses a BIC score to search for a skeleton.
     #' }
     alg = NULL,
 
@@ -887,19 +884,6 @@ TetradSearch <- R6Class(
     #'       \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
     #'       PAG (where feasible).
     #'    }
-    #'   \item \code{"svar_fci"} - SvarFCI algorithm (for timeseries data)
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used
-    #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-    #'       sparser graphs.
-    #'    }
-    #'   \item \code{"svar_gfci"} - SvarGFCI algorithm. Similar to SvarFCI,
-    #'   but uses a BIC score to search for a skeleton.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used
-    #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-    #'       sparser graphs.
-    #'    }
     #' }
     #' @return Invisibly returns \code{self}.
     set_alg = function(method, ...) {
@@ -1088,9 +1072,6 @@ TetradSearch <- R6Class(
           }
           private$set_ccd_alg(...)
         },
-        "svar_fci" = {
-          private$set_svar_fci_alg(...)
-        },
         "direct_lingam" = {
           if (is.null(self$score)) {
             stop("No score is set. Use set_score() first.", call. = FALSE)
@@ -1113,16 +1094,6 @@ TetradSearch <- R6Class(
             )
           }
           private$set_dagma_alg(...)
-        },
-        "svar_gfci" = {
-          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning(
-              "Background knowledge is set.",
-              "This algorithm does not use background knowledge.",
-              call. = FALSE
-            )
-          }
-          private$set_svar_gfci_alg(...)
         },
         {
           stop(
@@ -2936,92 +2907,6 @@ TetradSearch <- R6Class(
       self$alg <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/algorithm/continuous/dag/Dagma"
       )
-    },
-    set_svar_fci_alg = function(penalty_discount = 2) {
-      stopifnot(
-        is.numeric(penalty_discount),
-        penalty_discount >= 0,
-        length(penalty_discount) == 1
-      )
-      if (is.null(self$data)) {
-        stop("Data must be set before using `set_svar_fci_alg`.", call. = FALSE)
-      }
-      num_lags <- 2L
-      # Create lagged data using Java method.
-      lagged_data <- rJava::.jcall(
-        "edu/cmu/tetrad/search/utils/TsUtils", # correct class
-        "Ledu/cmu/tetrad/data/DataSet;", # return type
-        "createLagData", # static method
-        self$data, # DataSet
-        as.integer(num_lags) # int
-      )
-
-      ts_test <- rJava::.jnew(
-        "edu/cmu/tetrad/search/test/IndTestFisherZ",
-        lagged_data,
-        0.01
-      )
-      ts_test <- rJava::.jcast(
-        ts_test,
-        "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
-      )
-      svar_fci <- rJava::.jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarFci",
-        ts_test
-      )
-      svar_fci$setKnowledge(lagged_data$getKnowledge())
-      self$alg <- svar_fci
-    },
-    set_svar_gfci_alg = function(penalty_discount = 2) {
-      stopifnot(
-        is.numeric(penalty_discount),
-        penalty_discount >= 0,
-        length(penalty_discount) == 1
-      )
-
-      if (is.null(self$data)) {
-        stop(
-          "Data must be set before using `set_svar_gfci_alg`.",
-          call. = FALSE
-        )
-      }
-      num_lags <- 2L
-      lagged_data <- rJava::.jcall(
-        "edu/cmu/tetrad/search/utils/TsUtils", # correct class
-        "Ledu/cmu/tetrad/data/DataSet;", # return type
-        "createLagData", # static method
-        self$data, # DataSet
-        as.integer(num_lags) # int
-      )
-
-      ts_test <- rJava::.jnew(
-        "edu/cmu/tetrad/search/test/IndTestFisherZ",
-        lagged_data,
-        0.01
-      )
-      ts_test <- rJava::.jcast(
-        ts_test,
-        "edu/cmu/tetrad/algcomparison/independence/IndependenceWrapper"
-      )
-      ts_score <- rJava::.jnew(
-        "edu/cmu/tetrad/search/score/SemBicScore",
-        lagged_data,
-        TRUE
-      )
-      ts_score <- rJava::.jcast(
-        ts_score,
-        "edu/cmu/tetrad/algcomparison/score/ScoreWrapper"
-      )
-      self$set_params(
-        PENALTY_DISCOUNT = penalty_discount
-      )
-      svar_gfci <- rJava::.jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/SvarGfci",
-        ts_test,
-        ts_score
-      )
-      svar_gfci$setKnowledge(lagged_data$getKnowledge())
-      self$alg <- svar_gfci
     }
   )
 )
