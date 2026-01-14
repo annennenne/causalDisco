@@ -105,7 +105,6 @@ the package causalDisco itself, the Java library Tetrad, the R package
 bnlearn, and the R package pcalg.
 
 ``` r
-# options(causalDisco.tetrad.version = "7.6.9") # Memory issues are fixed on v7.6.9
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -273,11 +272,7 @@ fixedEdges in pcalg.
 
   - Fixing requires refactoring the disco_method builder design I think.
 
-IDK WHAT BOSSPOD REFERS TO in TETRAD?
-
 #### Tetrad issues
-
-- v7.6.9 of Tetrad seems to fix the memory issues.
 
 - Tetrad does not use required correctly in `fci` algorithm
 
@@ -354,33 +349,6 @@ nodes.knowledgeable_caugi <- function(x) {
 
 I.e., allow user to call `edges(output)` and `nodes(output)` to get
 edges and nodes as tibbles.
-
-### Adopt Tetrad v7.6.9
-
-This also doesn’t work on 7.6.9:
-
-``` r
-> load_all()
-ℹ Loading causalDisco
-causalDisco startup:
-  Java heap size requested: 2 GB
-  Tetrad version: 7.6.9
-  Java successfully initialized with 2 GB.
-  To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
-  Restart R to apply changes.
-  
-> var1 <- c(1.2, 2.3, 3.1, 4.5)
-> var2 <- c(5.1, 6.2, 7.3, 8.4)
-> df <- data.frame(var1, var2)
-> tetrad_data <- rdata_to_tetrad(df)
-Error in rdata_to_tetrad(df) : 
-  java.lang.ClassNotFoundException: edu/cmu/tetrad/data/DiscreteVariable
-```
-
-KCI test from Tetrad in pc algorithm gives wrong graph in getting
-started vignette (non-linear data) when version is 7.6.9? Works
-correctly in 7.6.8. Fixed in unreleased version of Tetrad (see \#1946 in
-Tetrad issues).
 
 ### CRAN TODO
 

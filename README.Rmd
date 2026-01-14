@@ -234,8 +234,6 @@ Should be easier to fix for test based algorithms? Just check if required edges 
 
   - Fixing requires refactoring the disco_method builder design I think.
 
-IDK WHAT BOSSPOD REFERS TO in TETRAD?
-
 #### Tetrad issues
 
 - Tetrad does not use required correctly in `fci` algorithm
