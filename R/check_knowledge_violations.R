@@ -66,7 +66,7 @@ check_edge_constraints <- function(edges, kn) {
   # ---- FORBIDDEN CHECKS ----
   forbidden_edges <- constraints |> dplyr::filter(status == "forbidden")
 
-  forbidden_allowed <- c("<->", "<-o", "<--")
+  forbidden_allowed <- c("<->", "<-o", "<--", "o-o")
 
   forbidden_violations <- forbidden_edges |>
     dplyr::inner_join(edges_tbl, by = c("from", "to")) |>
