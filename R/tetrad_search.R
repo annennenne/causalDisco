@@ -323,7 +323,7 @@ TetradSearch <- R6Class(
     #'      \item \code{"discrete_bic"} - BIC score for discrete data.
     #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
     #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-    #'      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+    #      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
     #'   }
@@ -449,7 +449,7 @@ TetradSearch <- R6Class(
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data.
     #'    }
-    #'    \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+    #    \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'    \itemize{
     #'      \item \code{structure_prior = 0} - The default number of parents
     #'      for any conditional probability table. Higher weight is accorded
@@ -515,9 +515,9 @@ TetradSearch <- R6Class(
         "mag_degenerate_gaussian_bic" = {
           private$use_mag_degenerate_gaussian_bic_score(...)
         },
-        "mixed_variable_polynomial" = {
-          private$use_mixed_variable_polynomial_score(...)
-        },
+        #"mixed_variable_polynomial" = {
+        #  private$use_mixed_variable_polynomial_score(...)
+        #},
         "poisson_prior" = {
           private$use_poisson_prior_score(...)
         },
@@ -1709,34 +1709,34 @@ TetradSearch <- R6Class(
       )
       self$score <- cast_obj(self$score)
     },
-    use_mixed_variable_polynomial_score = function(
-      structure_prior = 0,
-      f_degree = 0,
-      discretize = FALSE
-    ) {
-      stopifnot(
-        is.numeric(c(structure_prior, f_degree)),
-        floor(f_degree) == f_degree,
-        is.logical(discretize),
-        length(discretize) == 1
-      )
-      self$set_params(
-        STRUCTURE_PRIOR = structure_prior,
-        DISCRETIZE = discretize
-      )
-      # f_degree is not a static field in Params so we set it manually.
-      self$params$set(
-        "fDegree",
-        rJava::.jcast(
-          rJava::.jnew("java/lang/Double", as.double(f_degree)),
-          "java/lang/Object"
-        )
-      )
-      self$score <- rJava::.jnew(
-        "edu/cmu/tetrad/algcomparison/score/MVPBicScore"
-      )
-      self$score <- cast_obj(self$score)
-    },
+    # use_mixed_variable_polynomial_score = function(
+    #   structure_prior = 0,
+    #   f_degree = 0,
+    #   discretize = FALSE
+    # ) {
+    #   stopifnot(
+    #     is.numeric(c(structure_prior, f_degree)),
+    #     floor(f_degree) == f_degree,
+    #     is.logical(discretize),
+    #     length(discretize) == 1
+    #   )
+    #   self$set_params(
+    #     STRUCTURE_PRIOR = structure_prior,
+    #     DISCRETIZE = discretize
+    #   )
+    #   # f_degree is not a static field in Params so we set it manually.
+    #   self$params$set(
+    #     "fDegree",
+    #     rJava::.jcast(
+    #       rJava::.jnew("java/lang/Double", as.double(f_degree)),
+    #       "java/lang/Object"
+    #     )
+    #   )
+    #   self$score <- rJava::.jnew(
+    #     "edu/cmu/tetrad/algcomparison/score/MVPBicScore"
+    #   )
+    #   self$score <- cast_obj(self$score)
+    # },
     use_poisson_prior_score = function(
       poission_lambda = 2,
       precompute_covariances = TRUE,

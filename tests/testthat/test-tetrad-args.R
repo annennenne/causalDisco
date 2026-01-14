@@ -62,7 +62,8 @@ test_that("tetrad score argument works", {
     "degenerate_gaussian",
     "gic",
     "mag_degenerate_gaussian_bic",
-    # "mixed_variable_polynomial", currently doesn't work
+    # "mixed_variable_polynomial", removed for now since I can't find it in Tetrad software (I can find it on GitHub tho)
+    # and it wasn't working before
     "poisson_prior",
     "zhang_shen_bound"
   )

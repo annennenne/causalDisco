@@ -333,7 +333,6 @@ This is a generalization of the Degenerate Gaussian score.
 \item \code{"discrete_bic"} - BIC score for discrete data.
 \item \code{"gic"} - Generalized Information Criterion (GIC) score.
 \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
 \item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 }}
@@ -460,7 +459,6 @@ weights are distributed according to a binomial distribution,
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data.
 }
-\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
 \itemize{
 \item \code{structure_prior = 0} - The default number of parents
 for any conditional probability table. Higher weight is accorded

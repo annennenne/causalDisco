@@ -279,7 +279,7 @@ test_that("all known scores can be set without error", {
     "discrete_bic",
     "gic",
     "mag_degenerate_gaussian_bic",
-    "mixed_variable_polynomial",
+    # "mixed_variable_polynomial",
     "poisson_prior",
     "zhang_shen_bound"
   )
