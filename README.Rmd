@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
 
-`causalDisco` provides a unified interface for causal discovery on observational data.
+causalDisco provides a unified interface for causal discovery on observational data.
 It wraps multiple causal discovery backends under a common, consistent syntax. 
 
 ## Motivation

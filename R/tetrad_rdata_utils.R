@@ -18,7 +18,8 @@
 #'
 #' @return A Tetrad Java object representing the data frame.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -157,7 +158,8 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
 #' @return
 #' A data frame with the same dimensions and names as `data`.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 tetrad_data_to_rdata <- function(data) {
   .check_if_pkgs_are_installed(
     pkgs = c(

@@ -1,7 +1,7 @@
 #' Simulated data example
 #'
 #' A small simulated data example intended to showcase the TPC algorithm. Note that the variable name
-#' prefixes defines with period they are related to ("child", "youth" or "oldage").
+#' prefixes defines which period they are related to ("child", "youth" or "oldage").
 #'
 #' @format A data.frame with 200 rows and 6 variables.
 #' \describe{
