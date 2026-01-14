@@ -12,7 +12,7 @@ coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https
 status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
 
-`causalDisco` provides a unified interface for causal discovery on
+causalDisco provides a unified interface for causal discovery on
 observational data. It wraps multiple causal discovery backends under a
 common, consistent syntax.
 
@@ -231,11 +231,6 @@ If we want any changes we can modify the tikz code after generation.
 - In documentation of test / scores say which data types they support
   (continuous, discrete, mixed).
 
-### Longterm
-
-- Once more developed look at <https://github.com/py-why/causal-learn>
-  and add it as an engine?
-
 ### Bugfixes
 
 - bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
@@ -307,15 +302,7 @@ Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
 - Make it clear in `?BnlearnSearch` (and similar for the others) that
   all algorithms aren’t currently fully supported.
 
-- Use `snake_case` for all exported functions + arguments (even if the
-  underlying engine uses e.g. camelCase) - done?
-
-- See how `mlr3` does it, and see their wiki on roxygen R6 guide
-  [here](https://github.com/mlr-org/mlr3/wiki/Roxygen-R6-Guide).
-
 - List in documentation of `tfci`, … what kind of graph it returns.
-
-- Make vignettes
 
 ### Standardization
 
