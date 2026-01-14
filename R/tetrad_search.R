@@ -84,7 +84,6 @@ TetradSearch <- R6Class(
     #'   \item \code{"fci"} - FCI algorithm.
     #'   \item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
     #'   \item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
-    #'   \item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD algorithm.
     #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
     #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
     #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
@@ -721,28 +720,6 @@ TetradSearch <- R6Class(
     #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
     #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
     #'    }
-    #'   \item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD
-    #'   algorithm.
-    #'    \itemize{
-    #'      \item \code{alpha = 0.001} - Cutoff for p values (alpha),
-    #'      \item \code{penalty_discount = 2.0} - Penalty discount factor used
-    #'       in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-    #'       sparser graphs,
-    #'      \item \code{tetrad_test = "cca"} -  The tetrad test used. Available
-    #'      options are: \code{"cca"} for CCA, \code{"bt"} for Bollen-Ting,
-    #'      \code{"wishart"} for Wishart, and \code{"ark"} for Ark.
-    #'      \item \code{include_structure_model = TRUE} - If \code{TRUE}
-    #'       FOFC goes beyond the clustering step and calls a MIMBUILD routine
-    #'       (PCA or Bollen, chosen via \code{mimbuild_type}) to learn the
-    #'       causal relationships **between** the latent factors.
-    #'       The returned graph then contains both the measurement model
-    #'       (latent --> indicator edges) *and* the latent-level structure.
-    #'       When \code{FALSE} FOFC stops after the clustering phase and returns
-    #'       only the measurement model.
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'        variables or so, set this to FALSE in order to calculate
-    #'        covariances on the fly from data.
-    #'    }
     #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -1097,16 +1074,6 @@ TetradSearch <- R6Class(
             stop("No score is set. Use set_score() first.", call. = FALSE)
           }
           private$set_fask_alg(...)
-        },
-        "fofc" = {
-          if (!rJava::.jcall(self$knowledge, "Z", "isEmpty")) {
-            warning(
-              "Background knowledge is set.",
-              "This algorithm does not use background knowledge.",
-              call. = FALSE
-            )
-          }
-          private$set_fofc_alg(...)
         },
         "ccd" = {
           if (is.null(self$test)) {
@@ -2922,49 +2889,6 @@ TetradSearch <- R6Class(
         self$score
       )
       self$alg$setKnowledge(self$knowledge)
-    },
-    set_fofc_alg = function(
-      alpha = 0.001,
-      penalty_discount = 2.0,
-      tetrad_test = "cca",
-      include_structure_model = TRUE,
-      precompute_covariances = TRUE
-    ) {
-      stopifnot(
-        is.numeric(c(alpha, penalty_discount)),
-        alpha >= 0,
-        penalty_discount >= 0,
-        is.character(tetrad_test),
-        is.logical(c(include_structure_model, precompute_covariances)),
-        length(include_structure_model) == 1,
-        length(precompute_covariances) == 1
-      )
-      tetrad_test_int <- switch(
-        tolower(tetrad_test),
-        cca = 1L,
-        bt = 2L,
-        wishart = 3L,
-        ark = 4L,
-        stop(
-          "Unsupported `tetrad_test` input: ",
-          tetrad_test,
-          "\n",
-          "Supported values are: 'cca', 'bt', 'wishart' or 'ark'.",
-          call. = FALSE
-        )
-      )
-      self$set_params(
-        ALPHA = alpha,
-        PENALTY_DISCOUNT = penalty_discount,
-        TETRAD_TEST_FOFC = tetrad_test_int,
-        INCLUDE_STRUCTURE_MODEL = include_structure_model,
-        PRECOMPUTE_COVARIANCES = precompute_covariances
-      )
-      # TODO: v7.6.9 removes this folder. Figure out where new one is
-      # See this commit https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b
-      self$alg <- rJava::.jnew(
-        "edu/cmu/tetrad/algcomparison/algorithm/cluster/Fofc"
-      )
     },
     set_ccd_alg = function(depth = -1, apply_r1 = TRUE) {
       stopifnot(

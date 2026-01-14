@@ -86,7 +86,7 @@ causalDisco::check_tetrad_install()
 #> [1] TRUE
 #> 
 #> $version
-#> [1] "7.6.8"
+#> [1] "7.6.10"
 #> 
 #> $java_ok
 #> [1] TRUE
@@ -95,7 +95,7 @@ causalDisco::check_tetrad_install()
 #> [1] "25.0.1"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.8). Java version 25.0.1 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
 ```
 
 ## Example
@@ -109,7 +109,7 @@ bnlearn, and the R package pcalg.
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.8
+#>   Tetrad version: 7.6.10
 #>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
@@ -224,10 +224,13 @@ If we want any changes we can modify the tikz code after generation.
   calls `tpdag`, so look into that…
 
 - Make score/test/alg names consistent. Currently a mix of snake_case,
-  kebab-case, and period.case. - done?
+  kebab-case, and period.case. - done? Still missing algorithms.
 
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
+
+- In documentation of test / scores say which data types they support
+  (continuous, discrete, mixed).
 
 ### Longterm
 
@@ -238,15 +241,9 @@ If we want any changes we can modify the tikz code after generation.
 
 - bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
 
-- All of our algorithm does not work with required edges from knowledge
-  objects (see e.g. [unit tests for
-  tfci](https://github.com/BjarkeHautop/causalDisco/tree/master/tests/testthat/test-tfci.R)),
-  `tpc`, `tges`, … Currently does nothing. Either make it work or throw
-  error/warning if required edges are given.
-
-  - Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving
-    it score -Inf if missing a required edge, but then it runs forever.
-    I.e. adding the following to `local.score`
+- Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving it
+  score -Inf if missing a required edge, but then it runs forever. I.e.
+  adding the following to `local.score`
 
 ``` r
 vertex_name <- colnames(pp.dat$data)[vertex]
@@ -275,6 +272,8 @@ fixedEdges in pcalg.
   knowledge.
 
   - Fixing requires refactoring the disco_method builder design I think.
+
+IDK WHAT BOSSPOD REFERS TO in TETRAD?
 
 #### Tetrad issues
 
@@ -357,19 +356,6 @@ I.e., allow user to call `edges(output)` and `nodes(output)` to get
 edges and nodes as tibbles.
 
 ### Adopt Tetrad v7.6.9
-
-- Move to Tetrad v7.6.9. v7.6.9 removes the folder
-  [algcomparison/algorithm/cluster](https://github.com/cmu-phil/tetrad/tree/v7.6.8/tetrad-lib/src/main/java/edu/cmu/tetrad/algcomparison/algorithm/cluster)
-
-Was removed in this commit
-<https://github.com/cmu-phil/tetrad/commit/295dceef6b83ac08ff0032fb194cf3ee5e429337#diff-adf829223cc59eac11682310f8a77c0ec3cf26a5b4310d75ec8edfaa86dd285b>
-
-[Changelog](https://github.com/cmu-phil/tetrad/releases) item 14 says
-“and a generalization of GFFC (Generalized Find Factor Clusters) of FOFC
-and FTFC, providing multiple strategies for discovering latent
-clusterings from measurement data.”
-
-so we need to implement this in `causalDisco` (help?)
 
 This also doesn’t work on 7.6.9:
 

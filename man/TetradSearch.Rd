@@ -100,7 +100,6 @@ Recognised values are:
 \item \code{"fci"} - FCI algorithm.
 \item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
 \item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
-\item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD algorithm.
 \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
 \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
 \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
@@ -695,28 +694,6 @@ algorithm away from the target,
 \item \code{faithfulness_assumed = FALSE} - If TRUE, assume that if
 \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
 \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
-}
-\item \code{"fofc"} - Find One Factor Clusters (FOFC)/MIMBUILD
-algorithm.
-\itemize{
-\item \code{alpha = 0.001} - Cutoff for p values (alpha),
-\item \code{penalty_discount = 2.0} - Penalty discount factor used
-in BIC = 2L - ck log N, where c is the penalty. Higher c yields
-sparser graphs,
-\item \code{tetrad_test = "cca"} -  The tetrad test used. Available
-options are: \code{"cca"} for CCA, \code{"bt"} for Bollen-Ting,
-\code{"wishart"} for Wishart, and \code{"ark"} for Ark.
-\item \code{include_structure_model = TRUE} - If \code{TRUE}
-FOFC goes beyond the clustering step and calls a MIMBUILD routine
-(PCA or Bollen, chosen via \code{mimbuild_type}) to learn the
-causal relationships \strong{between} the latent factors.
-The returned graph then contains both the measurement model
-(latent --> indicator edges) \emph{and} the latent-level structure.
-When \code{FALSE} FOFC stops after the clustering phase and returns
-only the measurement model.
-\item \code{precompute_covariances = TRUE} - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data.
 }
 \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
 \itemize{

@@ -419,7 +419,6 @@ test_that("set_alg() succeeds for algorithms with no explicit precheck", {
 
   # these don't check prerequisites in set_alg(); just ensure they construct
   loose <- c(
-    "fofc",
     "dagma",
     "ica_lingam",
     "ica_lingd"
@@ -458,7 +457,6 @@ test_that("set_alg() warns when background knowledge is set for algorithms that 
     "cstar",
     "ica_lingam",
     "ica_lingd",
-    "fofc",
     "ccd",
     "direct_lingam",
     "dagma",
