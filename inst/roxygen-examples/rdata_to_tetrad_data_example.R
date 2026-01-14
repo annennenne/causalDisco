@@ -3,7 +3,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   set.seed(1405)
   my_df <- data.frame(
     cont = rnorm(6),
-    disc = as.integer(sample(0:2, 6, replace = TRUE))
+    disc = factor(as.integer(sample(0:2, 6, replace = TRUE)))
   )
 
   # R -> Tetrad (DataSet)
@@ -15,9 +15,10 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   str(df_roundtrip)
 
   # Check types are preserved: cont is numeric (double), disc is integer
-  stopifnot(is.numeric(df_roundtrip$cont), is.integer(df_roundtrip$disc))
+  stopifnot(is.numeric(df_roundtrip$cont), is.factor(df_roundtrip$disc))
 
   # Values should match (up to numeric tolerance)
   stopifnot(all.equal(my_df$cont, df_roundtrip$cont))
-  stopifnot(identical(my_df$disc, df_roundtrip$disc))
+  # Factor levels gets re-coded to be 0 1 when converting to Tetrad and back
+  stopifnot(identical(as.integer(my_df$disc), as.integer(df_roundtrip$disc)))
 }
