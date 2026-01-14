@@ -300,7 +300,6 @@ test_that("all known tests can be set without error (and mc path sets mc_test on
     "probabilistic",
     "fisher_z",
     "degenerate_gaussian",
-    "cci",
     "conditional_gaussian",
     "kci"
   )

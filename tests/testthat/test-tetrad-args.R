@@ -36,7 +36,6 @@ test_that("tetrad test argument works (continious)", {
 
   tests <- c(
     "fisher_z",
-    # "cci",      # Currently doesn't work
     "kci"
   )
 

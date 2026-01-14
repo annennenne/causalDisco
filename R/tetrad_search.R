@@ -62,7 +62,6 @@ TetradSearch <- R6Class(
     #'        probabilistic conditional independence judgments.
     #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
-    #'     \item \code{"cci"} - Conditional independence of variable in a continuous data set using Daudin's method.
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'   }
@@ -162,7 +161,6 @@ TetradSearch <- R6Class(
     #'        probabilistic conditional independence judgments.
     #'     \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
-    #'     \item \code{"cci"} - Conditional independence of variable in a continuous data set using Daudin's method.
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'   }
@@ -228,23 +226,6 @@ TetradSearch <- R6Class(
     #'          independence test,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse.
-    #'       }
-    #'       \item \code{"cci"} - Conditional independence of variable in a
-    #'       continuous data set using Daudin's method.
-    #'       \itemize{
-    #'          \item \code{alpha = 0.01} - Significance level for the
-    #'          independence test,
-    #'          \item \code{scaling_factor = 2} - For Gaussian kernel: The
-    #'          scaling factor * Silverman bandwidth.
-    #'          \item \code{basis_type = "legendre"} -
-    #'          The type of basis function to use. Available types are
-    #'          \code{"polynomial"}, \code{"hermite1"}, \code{"hermite2"},
-    #'          \code{"legendre"}, or \code{"chebyshev"}.
-    #'          \item \code{basis_scale = 0.0} - The scale of the basis function.
-    #'          Variables are scaled to `[-b, b]` for this b (0 = standardized).
-    #'          \item \code{truncation_limit = 3} - Basis functions 1 through
-    #'          this number will be used. The Degenerate Gaussian category
-    #'          indicator variables for mixed data are also used.
     #'       }
     #'       \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'       \itemize{

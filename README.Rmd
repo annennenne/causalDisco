@@ -259,26 +259,6 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 
 Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
 
-- Non-working Tetrad test/score arguments `"cci"` and `"mixed_variable_polynomial"`:
-
-```{r tetrad non-working arg cci, error = TRUE}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
-
-  tetrad_pc <- pc(engine = "tetrad", test = "cci", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_pc)
-}
-```
-
-```{r tetrad non-working arg mixed_variable_polynomial, error = TRUE}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
-  
-  tetrad_ges <- ges(engine = "tetrad", score = "mixed_variable_polynomial")
-  output <- disco(data = tpc_example, method = tetrad_ges)
-}
-```
-
 ### Documentation 
 
 - Make it clear in `?BnlearnSearch` (and similar for the others) that all algorithms aren't currently fully supported.
