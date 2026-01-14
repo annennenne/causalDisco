@@ -20,9 +20,9 @@ test_that("set_params and set_data store values", {
   s$set_params(list(alpha = 0.1, whatev = 2))
   expect_identical(s$params, list(alpha = 0.1, whatev = 2))
 
-  df <- data.frame(a = rnorm(10), b = rnorm(10))
-  s$set_data(df)
-  expect_identical(s$data, df)
+  my_df <- data.frame(a = rnorm(10), b = rnorm(10))
+  s$set_data(my_df)
+  expect_identical(s$data, my_df)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -153,8 +153,8 @@ test_that("run_search errors when data/alg missing with exact messages", {
   )
 
   # with data but no alg -> alg error
-  df <- data.frame(a = rnorm(20), b = rnorm(20))
-  s$set_data(df)
+  my_df <- data.frame(a = rnorm(20), b = rnorm(20))
+  s$set_data(my_df)
   expect_error(
     s$run_search(),
     "No algorithm is set. Use set_alg() first.",
@@ -168,7 +168,7 @@ test_that("run_search errors when data/alg missing with exact messages", {
 
 test_that("run_search works and covers whitelist/blacklist branches", {
   set.seed(1405)
-  df <- data.frame(
+  my_df <- data.frame(
     X = sample(c(1, 2), 40, replace = TRUE),
     Y = sample(c(1, 2), 40, replace = TRUE),
     Z = sample(c(1, 2), 40, replace = TRUE)
@@ -181,7 +181,7 @@ test_that("run_search works and covers whitelist/blacklist branches", {
   # simplest learner: chow.liu (no test/score needed)
   s <- BnlearnSearch$new()
   s$set_alg("chow.liu")
-  s$set_data(df)
+  s$set_data(my_df)
 
   # run without knowledge first
   g1 <- s$run_search()

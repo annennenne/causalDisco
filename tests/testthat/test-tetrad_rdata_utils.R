@@ -4,9 +4,9 @@ test_that("r_data_to_tetrad numeric", {
   var2 <- c(5.1, 6.2, 7.3, 8.4)
 
   # Create data frame
-  df <- data.frame(var1, var2)
+  my_df <- data.frame(var1, var2)
 
-  tetrad_data <- rdata_to_tetrad(df)
+  tetrad_data <- rdata_to_tetrad(my_df)
   expect_equal(class(tetrad_data)[1], "jobjRef")
 })
 
@@ -16,9 +16,9 @@ test_that("rdata_to_tetrad factor", {
   shape <- factor(c("circle", "square", "triangle", "circle"))
 
   # Create data frame
-  df <- data.frame(color, shape)
+  my_df <- data.frame(color, shape)
 
-  df
-  tetrad_data <- rdata_to_tetrad(df)
+  my_df
+  tetrad_data <- rdata_to_tetrad(my_df)
   expect_equal(class(tetrad_data)[1], "jobjRef")
 })

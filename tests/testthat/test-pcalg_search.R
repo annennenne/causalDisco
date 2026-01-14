@@ -27,12 +27,12 @@ test_that("set_params and set_data store values; set_data can skip suff stat", {
   s$set_params(list(alpha = 0.05, m.max = 2L))
   expect_identical(s$params, list(alpha = 0.05, m.max = 2L))
 
-  df <- matrix(rnorm(12), ncol = 3) |> as.data.frame()
-  colnames(df) <- c("X", "Y", "Z")
+  my_df <- matrix(rnorm(12), ncol = 3) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y", "Z")
 
   # skipping suff stat path
-  s$set_data(df, set_suff_stat = FALSE)
-  expect_identical(s$data, df)
+  s$set_data(my_df, set_suff_stat = FALSE)
+  expect_identical(s$data, my_df)
   expect_null(s$suff_stat)
 })
 
@@ -88,10 +88,10 @@ test_that("set_suff_stat works on matrix input for g_square", {
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("set_test stores key and resolves test in set_suff_stat", {
   s <- PcalgSearch$new()
-  df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
-  colnames(df) <- c("X", "Y")
+  my_df <- matrix(rnorm(20), ncol = 2) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y")
   s$set_test("fisher_z")
-  s$set_data(df, set_suff_stat = TRUE)
+  s$set_data(my_df, set_suff_stat = TRUE)
   expect_identical(s$test, pcalg::gaussCItest)
 
   s2 <- PcalgSearch$new()
@@ -193,12 +193,12 @@ test_that("set_score() lazy builder errors if data missing", {
 })
 
 test_that("GaussL0penIntScore is constructed when data present", {
-  df <- data.frame(
+  my_df <- data.frame(
     A = as.integer(sample(0:3, 20, TRUE)),
     B = as.integer(sample(0:3, 20, TRUE))
   )
   s <- PcalgSearch$new()
-  s$set_data(df, set_suff_stat = FALSE)
+  s$set_data(my_df, set_suff_stat = FALSE)
   s$set_score("sem_bic_int")
 
   sc <- s$.__enclos_env__$private$score_function()
@@ -261,10 +261,10 @@ test_that("set_knowledge defers building constraints and validates input", {
     class = "simpleError"
   )
 
-  df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
+  my_df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
   s <- PcalgSearch$new()
   kn <- knowledge(
-    df,
+    my_df,
     A %-->% B,
     B %!-->% C
   )
@@ -276,7 +276,7 @@ test_that("set_knowledge defers building constraints and validates input", {
   s$set_alg("pc")
 
   expect_warning(
-    out <- s$run_search(df),
+    out <- s$run_search(my_df),
     "Engine pcalg does not use required edges; ignoring them.",
     fixed = TRUE
   )
@@ -286,8 +286,8 @@ test_that("set_knowledge defers building constraints and validates input", {
 test_that("knowledge builder errors if data missing", {
   # exercise the internal 'Data must be set before knowledge.' stop site
   s <- PcalgSearch$new()
-  df <- data.frame(X = rnorm(5), Y = rnorm(5))
-  kn <- knowledge(df, X %-->% Y)
+  my_df <- data.frame(X = rnorm(5), Y = rnorm(5))
+  kn <- knowledge(my_df, X %-->% Y)
 
   s$set_knowledge(kn)
   expect_error(
@@ -304,16 +304,16 @@ test_that("set_knowledge defers building constraints and validates input", {
     class = "simpleError"
   )
 
-  df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
+  my_df <- data.frame(A = rnorm(20), B = rnorm(20), C = rnorm(20))
   s <- PcalgSearch$new()
   kn <- knowledge(
-    df,
+    my_df,
     A %-->% B,
     B %!-->% C
   )
   s$set_knowledge(kn, directed_as_undirected = TRUE)
   s$set_test("fisher_z")
-  s$set_data(df, set_suff_stat = TRUE)
+  s$set_data(my_df, set_suff_stat = TRUE)
   s$set_alg("pc")
 
   expect_warning(
@@ -338,10 +338,10 @@ test_that("run_search errors in correct order and messages", {
     fixed = TRUE
   )
 
-  df <- matrix(rnorm(30), ncol = 3) |> as.data.frame()
-  colnames(df) <- c("X", "Y", "Z")
+  my_df <- matrix(rnorm(30), ncol = 3) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y", "Z")
   s$set_test("fisher_z")
-  s$set_data(df, set_suff_stat = FALSE)
+  s$set_data(my_df, set_suff_stat = FALSE)
 
   expect_error(
     s$run_search(),
@@ -360,13 +360,13 @@ test_that("run_search errors in correct order and messages", {
 
 test_that("run_search without score_function (pc) works; with score_function (ges) warns on fixedEdges", {
   set.seed(1405)
-  df <- matrix(rnorm(100), ncol = 5) |> as.data.frame()
-  colnames(df) <- LETTERS[1:5]
+  my_df <- matrix(rnorm(100), ncol = 5) |> as.data.frame()
+  colnames(my_df) <- LETTERS[1:5]
 
   # PC path
   s_pc <- PcalgSearch$new()
   s_pc$set_test("fisher_z", alpha = 0.01)
-  s_pc$set_data(df, set_suff_stat = TRUE)
+  s_pc$set_data(my_df, set_suff_stat = TRUE)
   s_pc$set_alg("pc")
   res_pc <- s_pc$run_search()
   expect_s3_class(res_pc, "knowledgeable_caugi")
@@ -375,17 +375,17 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   s_ges <- PcalgSearch$new()
   s_ges$set_alg("ges")
   s_ges$set_score("sem_bic")
-  res_ges <- s_ges$run_search(df)
+  res_ges <- s_ges$run_search(my_df)
   expect_s3_class(res_ges, "knowledgeable_caugi")
 
   # GES with knowledge warns on fixedEdges
-  kn_req <- knowledge(df, A %-->% B)
+  kn_req <- knowledge(my_df, A %-->% B)
   s_ges2 <- PcalgSearch$new()
   s_ges2$set_alg("ges")
   s_ges2$set_score("sem_bic")
   s_ges2$set_knowledge(kn_req, directed_as_undirected = TRUE)
   expect_warning(
-    s_ges2$run_search(df),
+    s_ges2$run_search(my_df),
     "Engine pcalg does not use required edges; ignoring them.",
     fixed = TRUE
   )

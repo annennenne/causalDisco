@@ -62,57 +62,62 @@ test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("Scores initialize invalid `order` type errors cleanly", {
-  df <- data.frame(a = rnorm(10), b = rnorm(10))
+  my_df <- data.frame(a = rnorm(10), b = rnorm(10))
   expect_warning(expect_error(
     new(
       "TemporalBIC",
-      data = df,
+      data = my_df,
       order = list(1, 2) # neither numeric nor character
     ),
     regexp = "`order` must be either a vector of integers or a vector of"
   ))
   expect_warning(expect_error(
-    new("TemporalBDeu", data = df, order = list(1, 2)),
+    new("TemporalBDeu", data = my_df, order = list(1, 2)),
     regexp = "`order` must be either a vector of integers or a vector of"
   ))
   expect_error(
     new(
       "TemporalBIC",
-      data = df,
+      data = my_df,
       order = c(1, 2),
-      knowledge = knowledge(df, tier(1 ~ a, 2 ~ b))
+      knowledge = knowledge(my_df, tier(1 ~ a, 2 ~ b))
     ),
     regexp = "Both `knowledge` and `order` supplied"
   )
   expect_error(
     new(
       "TemporalBDeu",
-      data = df,
+      data = my_df,
       order = c(1, 2),
-      knowledge = knowledge(df, tier(1 ~ a, 2 ~ b))
+      knowledge = knowledge(my_df, tier(1 ~ a, 2 ~ b))
     ),
     regexp = "Both `knowledge` and `order` supplied"
   )
   expect_warning(expect_error(
-    new("TemporalBIC", data = df, order = c(factor(1), factor(2))),
+    new("TemporalBIC", data = my_df, order = c(factor(1), factor(2))),
     regexp = "`order` must be either a vector of integers or a vector of prefixes"
   ))
   expect_warning(expect_error(
-    new("TemporalBDeu", data = df, order = c(factor(1), factor(2))),
+    new("TemporalBDeu", data = my_df, order = c(factor(1), factor(2))),
     regexp = "`order` must be either a vector of integers or a vector of prefixes"
   ))
-  score_bic <- new("TemporalBIC", data = df, order = NULL, knowledge = NULL)
+  score_bic <- new("TemporalBIC", data = my_df, order = NULL, knowledge = NULL)
 
-  score_bdeu <- new("TemporalBDeu", data = df, order = NULL, knowledge = NULL)
+  score_bdeu <- new(
+    "TemporalBDeu",
+    data = my_df,
+    order = NULL,
+    knowledge = NULL
+  )
 
   expect_equal(score_bic$.order, c("a" = NA_integer_, "b" = NA_integer_))
   expect_equal(score_bdeu$.order, c("a" = NA_integer_, "b" = NA_integer_))
 
   expect_warning(
-    score_bdeu <- new("TemporalBDeu", data = df, order = c(1, 2))
+    score_bdeu <- new("TemporalBDeu", data = my_df, order = c(1, 2))
   )
   expect_warning(
-    score_bdeu <- new("TemporalBDeu", data = df, order = c("a", "b"))
+    score_bdeu <- new("TemporalBDeu", data = my_df, order = c("a", "b"))
   )
 })
 
@@ -371,11 +376,11 @@ test_that("tges_run forward phase", {
   X2 <- 0.5 * X1 + rnorm(n)
   X3 <- rnorm(n)
   X4 <- 1.2 * X2 + 0.5 * X3 + rnorm(n)
-  df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
+  my_df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
   # scale
-  df <- as.data.frame(scale(df))
-  kn <- knowledge(df, tier(1 ~ X1, 2 ~ X2 + X3 + X4))
-  sc <- new("TemporalBIC", data = df, knowledge = kn)
+  my_df <- as.data.frame(scale(my_df))
+  kn <- knowledge(my_df, tier(1 ~ X1, 2 ~ X2 + X3 + X4))
+  sc <- new("TemporalBIC", data = my_df, knowledge = kn)
   g <- tges_run(sc, verbose = FALSE)
   expect_true(TRUE)
 })
@@ -388,9 +393,9 @@ test_that("tges_run turning phase", {
   X3 <- -0.3 * X1 + rnorm(n) + rbinom(n, 1, 0.3)
   X4 <- 1.5 * X1 + -0.2 * X2**2 + 0.1 * X3**3 + rnorm(n) + rbinom(n, 1, 0.3)
 
-  df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
-  kn <- knowledge(df, tier(1 ~ X1 + X2 + X3 + X4))
-  sc <- new("TemporalBIC", data = df, knowledge = kn)
+  my_df <- data.frame(X1 = X1, X2 = X2, X3 = X3, X4 = X4)
+  kn <- knowledge(my_df, tier(1 ~ X1 + X2 + X3 + X4))
+  sc <- new("TemporalBIC", data = my_df, knowledge = kn)
   g <- tges_run(sc, verbose = FALSE)
   expect_true(TRUE)
 })

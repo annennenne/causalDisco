@@ -216,24 +216,24 @@ test_that("exo() is an alias for exogenous()", {
 })
 
 test_that("exogenous() works with multiple variables specified in different ways", {
-  df <- data.frame(X1 = 1, X11 = 2, Y = 3)
+  my_df <- data.frame(X1 = 1, X11 = 2, Y = 3)
   kn1 <- knowledge(
-    df,
+    my_df,
     exo(c(X1, X11))
   )
 
   kn2 <- knowledge(
-    df,
+    my_df,
     exo(X1, X11)
   )
 
   kn3 <- knowledge(
-    df,
+    my_df,
     exo(starts_with("X"))
   )
 
   kn4 <- knowledge(
-    df,
+    my_df,
     exo(ends_with("1"))
   )
   expect_equal(kn1, kn2)
@@ -499,8 +499,8 @@ test_that("single-tier or untiered variables add no edges", {
   expect_equal(nrow(kn_single$edges), 0)
 
   # untiered variables
-  df <- data.frame(V1 = 1, V2 = 1, V3 = 1)
-  kn_mixed <- knowledge(df, tier(1 ~ V1 + V2)) # V3 has tier NA
+  my_df <- data.frame(V1 = 1, V2 = 1, V3 = 1)
+  kn_mixed <- knowledge(my_df, tier(1 ~ V1 + V2)) # V3 has tier NA
   kn_mixed <- forbid_tier_violations(kn_mixed)
   expect_equal(nrow(kn_mixed$edges), 0) # NA tiers ignored
 })

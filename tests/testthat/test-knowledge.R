@@ -43,13 +43,13 @@ test_that("knowledge object is created correctly using mini-DSL", {
 })
 
 # seeding with dataframe
-test_that("seeding knowledge object with a df, matrix, or tibble works", {
-  df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
-  tbl <- tibble::as_tibble(df)
-  mat <- as.matrix(df)
+test_that("seeding knowledge object with a my_df, matrix, or tibble works", {
+  my_df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
+  tbl <- tibble::as_tibble(my_df)
+  mat <- as.matrix(my_df)
   kn <-
     knowledge(
-      df,
+      my_df,
       tier(1 ~ X1, 2 ~ X2 + X3),
       X1 %-->% X2
     )
@@ -408,7 +408,7 @@ test_that("tier tidyselect helpers works with +", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tier generation using seq_tiers", {
-  df <- as.data.frame(
+  my_df <- as.data.frame(
     matrix(
       runif(10), # 10 random numbers in (0,1)
       nrow = 1,
@@ -417,10 +417,10 @@ test_that("tier generation using seq_tiers", {
     )
   )
 
-  names(df) <- paste0("X_", 1:10) # label the columns X_1 … X_10
+  names(my_df) <- paste0("X_", 1:10) # label the columns X_1 … X_10
 
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       seq_tiers(
         1:10,
@@ -445,7 +445,7 @@ test_that("tier generation using seq_tiers", {
 })
 
 test_that("tier generation using seq_tiers with labels", {
-  df <- data.frame(
+  my_df <- data.frame(
     X_1 = 1,
     X_2 = 2,
     tier3_A = 3,
@@ -454,7 +454,7 @@ test_that("tier generation using seq_tiers with labels", {
   )
 
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
       seq_tiers(3, starts_with("tier{i}")), # tier3_…
@@ -481,7 +481,7 @@ test_that("tier generation using seq_tiers with labels", {
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("tier generation using 1:n", {
-  df <- as.data.frame(
+  my_df <- as.data.frame(
     matrix(
       runif(10), # 10 random numbers in (0,1)
       nrow = 1,
@@ -490,11 +490,11 @@ test_that("tier generation using 1:n", {
     )
   )
 
-  names(df) <- paste0("X_", 1:10) # label the columns X_1 … X_10
+  names(my_df) <- paste0("X_", 1:10) # label the columns X_1 … X_10
 
   kn <-
     knowledge(
-      df,
+      my_df,
       tier(
         1:10
       )
@@ -516,38 +516,38 @@ test_that("tier generation using 1:n", {
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Infix operators errors if df and variables don't match
+# Infix operators errors if my_df and variables don't match
 # ──────────────────────────────────────────────────────────────────────────────
-test_that("%-->% and %!-->% errors if df and variables don't match", {
-  df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
+test_that("%-->% and %!-->% errors if my_df and variables don't match", {
+  my_df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
-    knowledge(df, 1 %-->% V2),
+    knowledge(my_df, 1 %-->% V2),
     "Required edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
   expect_error(
-    knowledge(df, V2 %-->% 1),
+    knowledge(my_df, V2 %-->% 1),
     "Required edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
 
   expect_error(
-    knowledge(df, 1 %!-->% V2),
+    knowledge(my_df, 1 %!-->% V2),
     "Forbidden edge: no variables matched '1' from the left-hand side.",
     fixed = TRUE
   )
   expect_error(
-    knowledge(df, V2 %!-->% 1),
+    knowledge(my_df, V2 %!-->% 1),
     "Forbidden edge: no variables matched '1' from the right-hand side.",
     fixed = TRUE
   )
 })
 
 test_that("forbidden and required errors when no from vars matched", {
-  df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
+  my_df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
-      df,
+      my_df,
       1 %!-->% V1
     ),
     "Forbidden edge: no variables matched '1' from the left-hand side.",
@@ -555,7 +555,7 @@ test_that("forbidden and required errors when no from vars matched", {
   )
   expect_error(
     knowledge(
-      df,
+      my_df,
       1 %-->% V1
     ),
     "Required edge: no variables matched '1' from the left-hand side.",
@@ -564,10 +564,10 @@ test_that("forbidden and required errors when no from vars matched", {
 })
 
 test_that("forbidden and required errors when no to vars matched", {
-  df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
+  my_df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
-      df,
+      my_df,
       V1 %!-->% 1
     ),
     "Forbidden edge: no variables matched '1' from the right-hand side.",
@@ -575,7 +575,7 @@ test_that("forbidden and required errors when no to vars matched", {
   )
   expect_error(
     knowledge(
-      df,
+      my_df,
       V1 %-->% 1
     ),
     "Required edge: no variables matched '1' from the right-hand side.",
@@ -587,10 +587,10 @@ test_that("forbidden and required errors when no to vars matched", {
 # Tier errors
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("tier() errors if no formulas are supplied", {
-  df <- tibble::tibble(V1 = 1, V2 = 2)
+  my_df <- tibble::tibble(V1 = 1, V2 = 2)
 
   expect_error(
-    knowledge(df, tier()),
+    knowledge(my_df, tier()),
     "tier() needs at least one two-sided formula.",
     fixed = TRUE
   )
@@ -707,7 +707,7 @@ test_that("tier throws error for one variable in two tiers", {
   )
 })
 
-test_that("tier throws error for using numeric vector without df", {
+test_that("tier throws error for using numeric vector without my_df", {
   expect_error(
     knowledge(
       tier(
@@ -719,11 +719,11 @@ test_that("tier throws error for using numeric vector without df", {
   )
 })
 
-test_that("tier() errors when numeric vector length != ncol(df)", {
-  df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
+test_that("tier() errors when numeric vector length != ncol(my_df)", {
+  my_df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(
         1:10
       )
@@ -734,11 +734,11 @@ test_that("tier() errors when numeric vector length != ncol(df)", {
 })
 
 test_that("numeric-vector tier() errors on duplicate indices", {
-  df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
+  my_df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(1:3), # first time: creates tiers 1,2,3
       tier(1:3) # second time: should detect 1,2,3 already exist
     ),
@@ -748,11 +748,11 @@ test_that("numeric-vector tier() errors on duplicate indices", {
 })
 
 test_that("tier() throws error when mispecifying tier", {
-  df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
+  my_df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(2 ~ 1)
     ),
     "Tier specification 2 ~ 1 matched no variables.",
@@ -760,7 +760,7 @@ test_that("tier() throws error when mispecifying tier", {
   )
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(2 ~ X)
     ),
     "Unknown variable(s): [X]
@@ -788,11 +788,11 @@ They are not present in the data frame provided to this knowledge object.",
       )
     )
   )
-  df <- data.frame(A = 1, B = 2, check.names = FALSE)
+  my_df <- data.frame(A = 1, B = 2, check.names = FALSE)
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(
         1 ~ starts_with("Z")
       )
@@ -803,11 +803,11 @@ They are not present in the data frame provided to this knowledge object.",
 })
 
 test_that("numeric-vector tier() errors on duplicate indices", {
-  df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
+  my_df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(1:3), # first time: creates tiers 1,2,3
       tier(1:3) # second time: should detect 1,2,3 already exist
     ),
@@ -817,11 +817,11 @@ test_that("numeric-vector tier() errors on duplicate indices", {
 })
 
 test_that("seq_tiers() in tier() errors when no variables match the pattern", {
-  df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
+  my_df <- data.frame(A = 1, B = 2, C = 3, check.names = FALSE)
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(
         # build a bundle that will match no columns
         seq_tiers(1, starts_with("zzz"))
@@ -834,7 +834,7 @@ test_that("seq_tiers() in tier() errors when no variables match the pattern", {
 })
 
 test_that("tier() errors when two seq_tiers patterns overlap", {
-  df <- data.frame(
+  my_df <- data.frame(
     A = 1,
     B = 2,
     C = 3,
@@ -843,7 +843,7 @@ test_that("tier() errors when two seq_tiers patterns overlap", {
 
   expect_error(
     knowledge(
-      df,
+      my_df,
       tier(
         # seq_tiers(1:2, everything()) produces two formulas
         # 1 ~ everything(), 2 ~ everything()
@@ -935,10 +935,10 @@ test_that("add_tier() errors when no before or after is provided", {
 })
 
 test_that("tier() attaches to an existing tier label", {
-  df <- tibble::tibble(V1 = 1, V2 = 2)
+  my_df <- tibble::tibble(V1 = 1, V2 = 2)
 
   kn <- knowledge(
-    df,
+    my_df,
     tier(1 ~ V1), # creates tier "1" and assigns V1
     tier(1 ~ V2) # same label, should hit the 'add_to_tier' path
   )
@@ -1003,9 +1003,9 @@ test_that("adding tier after required edge is provided will trigger tier violati
 # Misc errors
 # ──────────────────────────────────────────────────────────────────────────────
 test_that("unfreeze() clears the frozen flag", {
-  df <- tibble::tibble(A = 1, B = 2)
+  my_df <- tibble::tibble(A = 1, B = 2)
 
-  kn_frozen <- knowledge(df) # passing a data frame sets frozen = TRUE
+  kn_frozen <- knowledge(my_df) # passing a data frame sets frozen = TRUE
   expect_true(kn_frozen$frozen)
 
   kn_unfrozen <- unfreeze(kn_frozen)
@@ -1013,8 +1013,8 @@ test_that("unfreeze() clears the frozen flag", {
 })
 
 test_that("unfreeze() allows adding new variables", {
-  df <- tibble::tibble(A = 1, B = 2)
-  kn <- knowledge(df) |> unfreeze() # thaw the object
+  my_df <- tibble::tibble(A = 1, B = 2)
+  kn <- knowledge(my_df) |> unfreeze() # thaw the object
 
   # add a new variable that wasn't in the original data frame
   kn2 <- add_vars(kn, "C")
@@ -1023,10 +1023,10 @@ test_that("unfreeze() allows adding new variables", {
   expect_false(kn2$frozen) # flag stays FALSE
 })
 test_that("knowledge() throws error when using another a not defined function", {
-  df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
+  my_df <- data.frame(V1 = 1, V2 = 2, check.names = FALSE)
   expect_error(
     knowledge(
-      df,
+      my_df,
       musthave(V1 ~ 1)
     ),
     "Only tier(), exogenous(), and infix edge operators (%-->%, %!-->%) are allowed.",
@@ -1198,11 +1198,11 @@ test_that("deparse_knowledge() emits minimal code for empty knowledge", {
 })
 
 test_that("deparse_knowledge() includes data-frame name when provided", {
-  df <- data.frame(A = 1, B = 2)
-  kn <- knowledge(df, tier(1 ~ A, 2 ~ B))
-  code <- deparse_knowledge(kn, "df")
+  my_df <- data.frame(A = 1, B = 2)
+  kn <- knowledge(my_df, tier(1 ~ A, 2 ~ B))
+  code <- deparse_knowledge(kn, "my_df")
   expected <- paste0(
-    "knowledge(df,",
+    "knowledge(my_df,",
     "\n  tier(",
     "\n    1 ~ A,",
     "\n    2 ~ B",
@@ -1213,54 +1213,54 @@ test_that("deparse_knowledge() includes data-frame name when provided", {
 })
 
 test_that("deparse_knowledge() groups multiple tiers into one tier() call", {
-  df <- data.frame(X = 1, Y = 2, Z = 3)
+  my_df <- data.frame(X = 1, Y = 2, Z = 3)
   kn <- knowledge(
-    df,
+    my_df,
     tier(first ~ X + Y, second ~ Z)
   )
-  code <- deparse_knowledge(kn, "df")
+  code <- deparse_knowledge(kn, "my_df")
   expect_true(grepl("tier\\(\\s*first ~ X \\+ Y,\\s*second ~ Z\\s*\\)", code))
 })
 
 test_that("deparse_knowledge() collapses forbidden edges by source", {
-  df <- data.frame(A = 1, B = 2, C = 3, D = 4)
+  my_df <- data.frame(A = 1, B = 2, C = 3, D = 4)
   kn <- knowledge(
-    df,
+    my_df,
     A %!-->% C,
     A %!-->% D,
     B %!-->% C
   )
-  code <- deparse_knowledge(kn, "df")
+  code <- deparse_knowledge(kn, "my_df")
   # Should convert to
   #   A %!-->% c(C, D),
   #   B %!-->% C
-  expected_pattern <- "knowledge(df,\n  A %!-->% c(C, D),\n  B %!-->% C\n)"
+  expected_pattern <- "knowledge(my_df,\n  A %!-->% c(C, D),\n  B %!-->% C\n)"
 
   expect_equal(code, expected_pattern)
 })
 
 test_that("deparse_knowledge() collapses required edges by source", {
-  df <- data.frame(P = 1, Q = 2, R = 3)
+  my_df <- data.frame(P = 1, Q = 2, R = 3)
   kn <- knowledge(
-    df,
+    my_df,
     P %-->% Q,
     P %-->% R
   )
-  code <- deparse_knowledge(kn, "df")
+  code <- deparse_knowledge(kn, "my_df")
 
-  expected_pattern <- "knowledge(df,\n  P %-->% c(Q, R)\n)"
+  expected_pattern <- "knowledge(my_df,\n  P %-->% c(Q, R)\n)"
   expect_equal(code, expected_pattern)
 })
 
 test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", {
-  df <- data.frame(A = 1, B = 2, C = 3)
+  my_df <- data.frame(A = 1, B = 2, C = 3)
   kn <- knowledge(
-    df,
+    my_df,
     tier(1 ~ A + B, 2 ~ C),
     A %!-->% C,
     B %-->% A
   )
-  code <- deparse_knowledge(kn, "df")
+  code <- deparse_knowledge(kn, "my_df")
 
   kn2 <- eval(parse(text = code))
   expect_equal(kn2, kn)

@@ -4,7 +4,7 @@
 
 test_that("ges(): constructor returns a disco_method and runs across engines", {
   skip_if_no_tetrad()
-  df <- toy_df_score()
+  my_df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
     m <- do.call(
@@ -15,15 +15,15 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
     expect_s3_class(m, c("ges", "disco_method", "function"))
     expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
 
-    res <- m(df)
+    res <- m(my_df)
     expect_s3_class(res, "knowledgeable_caugi")
   }
 })
 
 test_that("ges(): set_knowledge returns a new method and injects knowledge", {
   skip_if_no_tetrad()
-  df <- toy_df_score()
-  kn <- toy_knowledge(df)
+  my_df <- toy_df_score()
+  kn <- toy_knowledge(my_df)
 
   for (engine in ges_registry$ges$engines) {
     m <- do.call(
@@ -31,7 +31,7 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
       c(list(engine = engine), ges_args(engine))
     )
 
-    res0 <- m(df)
+    res0 <- m(my_df)
     expect_s3_class(res0, "knowledgeable_caugi")
 
     m2 <- set_knowledge(m, kn)
@@ -39,25 +39,25 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
 
     if (engine == "pcalg") {
       expect_warning(
-        m2(df),
+        m2(my_df),
         "Engine pcalg does not use required edges; ignoring them.",
         fixed = TRUE
       )
     } else {
-      expect_s3_class(m2(df), "knowledgeable_caugi")
+      expect_s3_class(m2(my_df), "knowledgeable_caugi")
     }
 
-    expect_s3_class(m(df), "knowledgeable_caugi")
+    expect_s3_class(m(my_df), "knowledgeable_caugi")
   }
 })
 
 test_that("ges(): disco() injects knowledge and validates method type", {
   skip_if_no_tetrad()
-  df <- toy_df_score()
-  kn <- toy_knowledge(df)
+  my_df <- toy_df_score()
+  kn <- toy_knowledge(my_df)
 
   expect_error(
-    disco(df, method = function(x) x),
+    disco(my_df, method = function(x) x),
     "The method must be a disco method object.",
     fixed = TRUE
   )
@@ -70,12 +70,12 @@ test_that("ges(): disco() injects knowledge and validates method type", {
 
     if (engine == "pcalg") {
       expect_warning(
-        disco(df, method = m, knowledge = kn),
+        disco(my_df, method = m, knowledge = kn),
         "Engine pcalg does not use required edges; ignoring them.",
         fixed = TRUE
       )
     } else {
-      res <- disco(df, method = m, knowledge = kn)
+      res <- disco(my_df, method = m, knowledge = kn)
       expect_s3_class(res, "knowledgeable_caugi")
     }
   }
@@ -83,7 +83,7 @@ test_that("ges(): disco() injects knowledge and validates method type", {
 
 test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
   skip_if_no_tetrad()
-  df <- toy_df_score()
+  my_df <- toy_df_score()
 
   for (engine in ges_registry$ges$engines) {
     m <- do.call(
@@ -92,7 +92,7 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
     )
 
     expect_error(
-      disco(df, method = m, knowledge = list(foo = "bar")),
+      disco(my_df, method = m, knowledge = list(foo = "bar")),
       "Input must be a knowledge instance.",
       fixed = TRUE
     )
@@ -105,7 +105,7 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
 
 test_that("ges runners wire arguments correctly for each engine", {
   skip_if_no_tetrad()
-  df <- toy_df_score()
+  my_df <- toy_df_score()
 
   # tetrad
   runner_t <- ges_tetrad_runner(
@@ -113,7 +113,7 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t, "list")
   expect_true(is.function(runner_t$run))
-  expect_s3_class(runner_t$run(df), "knowledgeable_caugi")
+  expect_s3_class(runner_t$run(my_df), "knowledgeable_caugi")
 
   # also with more arguments
   runner_t2 <- ges_tetrad_runner(
@@ -123,7 +123,7 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t2, "list")
   expect_true(is.function(runner_t2$run))
-  expect_s3_class(runner_t2$run(df), "knowledgeable_caugi")
+  expect_s3_class(runner_t2$run(my_df), "knowledgeable_caugi")
 
   # pcalg
   runner_p <- ges_pcalg_runner(
@@ -132,5 +132,5 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_p, "list")
   expect_true(is.function(runner_p$run))
-  expect_s3_class(runner_p$run(df), "knowledgeable_caugi")
+  expect_s3_class(runner_p$run(my_df), "knowledgeable_caugi")
 })

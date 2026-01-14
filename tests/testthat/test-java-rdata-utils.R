@@ -17,49 +17,57 @@ test_that("tetrad_data_to_rdata() and rdata_to_tetrad() round-trip mixed data wi
   skip_if_no_tetrad()
 
   # small mixed data frame
-  df <- data.frame(
+  my_df <- data.frame(
     x = c(1, 2.5, NA_real_), # continuous (double)
     y = factor(c(1L, NA_integer_, 3L)), # discrete (factor)
     check.names = FALSE
   )
 
   # R -> Java
-  ds <- rdata_to_tetrad(df, FALSE)
+  ds <- rdata_to_tetrad(my_df, FALSE)
   # quick sanity: Java reports same shape
   nrows <- rJava::.jcall(ds, "I", "getNumRows")
   ncols <- rJava::.jcall(ds, "I", "getNumColumns")
-  expect_identical(nrows, nrow(df))
-  expect_identical(ncols, ncol(df))
+  expect_identical(nrows, nrow(my_df))
+  expect_identical(ncols, ncol(my_df))
 
   # Java -> R
   back <- tetrad_data_to_rdata(ds)
 
   # names preserved
-  expect_identical(names(back), names(df))
+  expect_identical(names(back), names(my_df))
 
   # types preserved
   expect_identical(class(back$x), "numeric")
   expect_identical(class(back$y), "factor")
 
   # values preserved, including NAs
-  expect_equal(back$x, df$x, tolerance = 1e-12)
-  expect_identical(is.na(back$x), is.na(df$x))
-  expect_equal(as.integer(back$y), as.integer(df$y))
+  expect_equal(back$x, my_df$x, tolerance = 1e-12)
+  expect_identical(is.na(back$x), is.na(my_df$x))
+  expect_equal(as.integer(back$y), as.integer(my_df$y))
 })
 
 test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
   skip_if_no_tetrad()
 
-  df <- data.frame(
+  my_df <- data.frame(
     cont = c(0.1, NA_real_, 2.3),
     disc = c(1L, 2L, NA_integer_),
     check.names = FALSE
   )
 
   ds <- expect_warning(
-    rdata_to_tetrad(df, FALSE),
+    rdata_to_tetrad(my_df, FALSE),
     "The following integer columns are not factors: disc. They will be converted to numeric."
   )
+
+  my_df <- data.frame(
+    cont = c(0.1, NA_real_, 2.3),
+    disc = factor(c(1L, 2L, NA_integer_)),
+    check.names = FALSE
+  )
+
+  ds <- rdata_to_tetrad(my_df, FALSE)
 
   # column 0: ContinuousVariable, column 1: DiscreteVariable
   node0 <- rJava::.jcall(
@@ -92,12 +100,12 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
 
 test_that("rdata_to_tetrad() preserves factor labels and values", {
   skip_if_no_tetrad()
-  df <- data.frame(
+  my_df <- data.frame(
     fac = factor(c("c", "a", NA, "b", "a"), levels = c("a", "b", "c")),
     check.names = FALSE
   )
 
-  ds <- rdata_to_tetrad(df)
+  ds <- rdata_to_tetrad(my_df)
   node <- rJava::.jcall(
     ds,
     "Ledu/cmu/tetrad/graph/Node;",
@@ -109,8 +117,8 @@ test_that("rdata_to_tetrad() preserves factor labels and values", {
   back <- tetrad_data_to_rdata(ds)
 
   expect_equal(class(back$fac), "factor")
-  expect_equal(length(levels(back$fac)), length(levels(df$fac)))
-  expect_equal(as.integer(back$fac), as.integer(df$fac))
+  expect_equal(length(levels(back$fac)), length(levels(my_df$fac)))
+  expect_equal(as.integer(back$fac), as.integer(my_df$fac))
   expect_true(is.na(back$fac[3]))
 })
 

@@ -77,13 +77,13 @@ test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws depr
 
 test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
   set.seed(1405)
-  df <- data.frame(
+  my_df <- data.frame(
     p1_A = rnorm(25),
     p2_B = rnorm(25)
   )
   # Build a valid knowledge with both variables known
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       p1 ~ tidyselect::starts_with("p1"),
       p2 ~ tidyselect::starts_with("p2")
@@ -91,7 +91,7 @@ test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
   )
 
   # Provide suff_stat directly to hit the else-branch
-  ss <- make_suff_stat(df, type = "reg_test")
+  ss <- make_suff_stat(my_df, type = "reg_test")
 
   out <- tfci_run(
     data = NULL, # no data path
@@ -99,7 +99,7 @@ test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
     alpha = 0.2,
     test = reg_test,
     suff_stat = ss,
-    varnames = names(df)
+    varnames = names(my_df)
   )
 
   expect_s3_class(out, "knowledgeable_caugi")
@@ -139,8 +139,8 @@ test_that("tfci_run errors when both knowledge and order are supplied", {
 })
 
 test_that("tfci_run input guards fail fast with clear messages", {
-  df <- data.frame(a = 1:3, b = 1:3)
-  kn <- knowledge() |> add_vars(names(df))
+  my_df <- data.frame(a = 1:3, b = 1:3)
+  kn <- knowledge() |> add_vars(names(my_df))
 
   expect_error(
     tfci_run(data = NULL, suff_stat = NULL, knowledge = knowledge()),
@@ -149,13 +149,13 @@ test_that("tfci_run input guards fail fast with clear messages", {
   )
 
   expect_error(
-    tfci_run(data = df, knowledge = kn, na_method = "oops"),
+    tfci_run(data = my_df, knowledge = kn, na_method = "oops"),
     "Invalid choice of method for handling NA values.",
     fixed = TRUE
   )
 
   expect_error(
-    tfci_run(data = df, knowledge = kn, orientation_method = "funky"),
+    tfci_run(data = my_df, knowledge = kn, orientation_method = "funky"),
     "Orientation method must be one of standard, conservative or maj.rule.",
     fixed = TRUE
   )
@@ -197,12 +197,12 @@ test_that("tfci_run errors when varnames are unknown with suff_stat-only usage",
 
 test_that("tfci_run demands suff_stat for non-builtin test functions", {
   set.seed(1405)
-  df <- data.frame(a = rnorm(10), b = rnorm(10))
-  kn <- knowledge() |> add_vars(names(df))
+  my_df <- data.frame(a = rnorm(10), b = rnorm(10))
+  kn <- knowledge() |> add_vars(names(my_df))
   strange_test <- function(x, y, S, suff_stat) 0
 
   expect_error(
-    tfci_run(data = df, knowledge = kn, test = strange_test),
+    tfci_run(data = my_df, knowledge = kn, test = strange_test),
     "suff_stat needs to be supplied when using a non-builtin test.",
     fixed = TRUE
   )

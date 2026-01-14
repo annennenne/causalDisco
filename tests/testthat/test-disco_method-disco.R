@@ -34,11 +34,11 @@ test_that("disco_method builds a closure with correct classes and private env", 
   expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
 
   # when called, passes env$knowledge (NULL) to builder and returns runner$run()
-  df <- data.frame(x = 1:3, y = 3:1)
-  out <- m(df)
+  my_df <- data.frame(x = 1:3, y = 3:1)
+  out <- m(my_df)
   expect_type(out, "list")
   expect_identical(out$knowledge, NULL)
-  expect_identical(out$data, df)
+  expect_identical(out$data, my_df)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -67,8 +67,8 @@ test_that("set_knowledge.disco_method returns a new method that injects knowledg
   m <- disco_method(builder, "pc")
 
   # original method remains knowledge-free
-  df <- data.frame(a = 1:2, b = 2:1)
-  out0 <- m(df)
+  my_df <- data.frame(a = 1:2, b = 2:1)
+  out0 <- m(my_df)
   expect_null(out0$knowledge)
 
   # set knowledge -> returns a new disco_method preserving class
@@ -77,11 +77,11 @@ test_that("set_knowledge.disco_method returns a new method that injects knowledg
   expect_s3_class(m2, c("pc", "disco_method", "function"))
 
   # the new method injects knowledge via runner$set_knowledge()
-  out1 <- m2(df)
+  out1 <- m2(my_df)
   expect_identical(out1$knowledge, kn)
 
   # the original method is unchanged (immutability check)
-  out2 <- m(df)
+  out2 <- m(my_df)
   expect_null(out2$knowledge)
 })
 

@@ -41,11 +41,11 @@ make_cont_test_data <- function(n = 300, seed = 1) {
   X4 <- -0.5 * X2 + 0.7 * X3 + e4
   X5 <- 0.5 * X4 + e5
 
-  df <- data.frame(X1, X2, X3, X4, X5)
+  my_df <- data.frame(X1, X2, X3, X4, X5)
 
   # standardize each column (mean 0, sd 1)
-  df[] <- lapply(df, scale)
-  as.data.frame(df)
+  my_df[] <- lapply(my_df, scale)
+  as.data.frame(my_df)
 }
 
 # deterministic tiny discrete dataset with causal structure
@@ -71,9 +71,9 @@ make_disc_test_data <- function(n = 300, k = 3, seed = 2) {
 }
 
 # make knowledge object that respects the data-generating mechanism
-make_knowledge_test_object <- function(df) {
+make_knowledge_test_object <- function(my_df) {
   tiered_kn <- knowledge(
-    df,
+    my_df,
     tier(
       1 ~ X1,
       2 ~ X2 + X3,
@@ -83,11 +83,11 @@ make_knowledge_test_object <- function(df) {
   )
   # forbid a tier violation
   forbidden_kn <- knowledge(
-    df,
+    my_df,
     X2 %!-->% X1
   )
   required_kn <- knowledge(
-    df,
+    my_df,
     X1 %-->% X2
   )
   combi_kn <- tiered_kn + forbidden_kn + required_kn

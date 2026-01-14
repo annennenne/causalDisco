@@ -86,14 +86,14 @@ test_that("initialize sets sensible defaults", {
 
 test_that("set_suff_stat covers reg, cor and bad-type paths", {
   s <- CausalDiscoSearch$new()
-  df <- data.frame(X = rnorm(100), Y = rnorm(100))
+  my_df <- data.frame(X = rnorm(100), Y = rnorm(100))
 
   s$set_test("reg", alpha = 0.01)
-  s$set_data(df, set_suff_stat = TRUE)
+  s$set_data(my_df, set_suff_stat = TRUE)
   expect_true(is.list(s$suff_stat))
 
   s$set_test("fisher_z", alpha = 0.01)
-  s$set_data(df, set_suff_stat = FALSE)
+  s$set_data(my_df, set_suff_stat = FALSE)
   expect_silent(s$set_suff_stat())
   expect_named(s$suff_stat, c("C", "n"))
 
@@ -106,10 +106,10 @@ test_that("set_suff_stat covers reg, cor and bad-type paths", {
 
 test_that("set_data triggers set_suff_stat when requested", {
   s <- CausalDiscoSearch$new()
-  df <- matrix(rnorm(100), ncol = 2) |> as.data.frame()
-  colnames(df) <- c("X", "Y")
+  my_df <- matrix(rnorm(100), ncol = 2) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y")
   s$set_test("fisher_z")
-  expect_silent(s$set_data(df, set_suff_stat = TRUE))
+  expect_silent(s$set_data(my_df, set_suff_stat = TRUE))
   expect_named(s$suff_stat, c("C", "n"))
 })
 
@@ -141,11 +141,11 @@ test_that("set_params(NULL) is a no-op and returns invisibly", {
 test_that("set_data stores data; can skip suff stat", {
   s <- CausalDiscoSearch$new()
 
-  df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
-  colnames(df) <- c("X", "Y", "Z", "W")
+  my_df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y", "Z", "W")
 
-  s$set_data(df, set_suff_stat = FALSE)
-  expect_identical(s$data, df)
+  s$set_data(my_df, set_suff_stat = FALSE)
+  expect_identical(s$data, my_df)
   expect_null(s$suff_stat)
 })
 
@@ -157,9 +157,9 @@ test_that("set_knowledge assigns to self$knowledge and validates", {
     class = "simpleError"
   )
 
-  df <- data.frame(a = rnorm(100), b = rnorm(100), c = rnorm(100))
+  my_df <- data.frame(a = rnorm(100), b = rnorm(100), c = rnorm(100))
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       early ~ tidyselect::starts_with("a"),
       late ~ tidyselect::starts_with("b")
@@ -234,11 +234,11 @@ test_that("run_search errors are thrown in the right order", {
     fixed = TRUE
   )
 
-  df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
-  colnames(df) <- c("X", "Y", "Z", "W")
+  my_df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y", "Z", "W")
 
   s$set_test("fisher_z")
-  s$set_data(df, set_suff_stat = FALSE)
+  s$set_data(my_df, set_suff_stat = FALSE)
 
   expect_error(
     s$run_search(),
@@ -256,13 +256,13 @@ test_that("run_search errors are thrown in the right order", {
 
 test_that("run_search returns knowledgeable_caugi for tpc success path", {
   set.seed(1405)
-  df <- data.frame(
+  my_df <- data.frame(
     p1_x = rnorm(100),
     p1_y = rnorm(100),
     p2_z = rnorm(100)
   )
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       p1 ~ tidyselect::starts_with("p1"),
       p2 ~ tidyselect::starts_with("p2")
@@ -273,14 +273,14 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
   s$set_test("fisher_z")
   s$set_knowledge(kn)
   s$set_alg("tpc")
-  s$set_data(df, set_suff_stat = TRUE)
+  s$set_data(my_df, set_suff_stat = TRUE)
   res <- s$run_search()
   expect_s3_class(res, "knowledgeable_caugi")
 })
 
 test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   set.seed(1405)
-  df <- data.frame(
+  my_df <- data.frame(
     child_x = rnorm(100),
     child_y = rnorm(100),
     adult_x = rnorm(100),
@@ -288,7 +288,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   )
 
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       child ~ tidyselect::starts_with("child"),
       adult ~ tidyselect::starts_with("adult")
@@ -300,7 +300,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tpc$set_test("fisher_z")
   s_tpc$set_knowledge(kn)
   s_tpc$set_alg("tpc")
-  s_tpc$set_data(df, set_suff_stat = TRUE)
+  s_tpc$set_data(my_df, set_suff_stat = TRUE)
   res_tpc <- s_tpc$run_search()
   expect_s3_class(res_tpc, "knowledgeable_caugi")
 
@@ -309,7 +309,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tfci$set_test("fisher_z")
   s_tfci$set_knowledge(kn)
   s_tfci$set_alg("tfci")
-  s_tfci$set_data(df, set_suff_stat = TRUE)
+  s_tfci$set_data(my_df, set_suff_stat = TRUE)
   res_tfci <- s_tfci$run_search()
   expect_s3_class(res_tfci, "knowledgeable_caugi")
 })
@@ -382,10 +382,10 @@ test_that("verbose is accepted via set_params and passed to tges", {
 
 test_that("run_search errors when suff_stat missing for constraint-based algs", {
   s <- CausalDiscoSearch$new()
-  df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
-  colnames(df) <- c("X", "Y", "Z", "W")
+  my_df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
+  colnames(my_df) <- c("X", "Y", "Z", "W")
   s$set_test("fisher_z")
-  s$set_data(df, set_suff_stat = FALSE)
+  s$set_data(my_df, set_suff_stat = FALSE)
   s$set_alg("tpc")
   expect_error(
     s$run_search(),
@@ -415,13 +415,13 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
 })
 
 test_that("run_search(data=...) takes constraint-based path and computes suff_stat", {
-  df <- data.frame(
+  my_df <- data.frame(
     p1_x = rnorm(100),
     p1_y = rnorm(100),
     p2_z = rnorm(100)
   )
   kn <- knowledge(
-    df,
+    my_df,
     tier(
       p1 ~ tidyselect::starts_with("p1"),
       p2 ~ tidyselect::starts_with("p2")
@@ -433,7 +433,7 @@ test_that("run_search(data=...) takes constraint-based path and computes suff_st
   s$set_knowledge(kn)
   s$set_alg("tpc")
 
-  out <- s$run_search(data = df, set_suff_stat = TRUE)
+  out <- s$run_search(data = my_df, set_suff_stat = TRUE)
 
   expect_false(is.null(s$suff_stat))
   expect_named(s$suff_stat, c("C", "n"))
@@ -441,14 +441,14 @@ test_that("run_search(data=...) takes constraint-based path and computes suff_st
 })
 
 test_that("run_search(data=...) takes score-based path and skips suff_stat", {
-  df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
-  colnames(df) <- paste0("X", 1:4)
+  my_df <- matrix(rnorm(100), ncol = 4) |> as.data.frame()
+  colnames(my_df) <- paste0("X", 1:4)
 
   s <- CausalDiscoSearch$new()
   s$set_score("tbic")
   s$set_alg("tges")
 
-  out <- s$run_search(data = df, set_suff_stat = TRUE)
+  out <- s$run_search(data = my_df, set_suff_stat = TRUE)
 
   expect_null(s$suff_stat)
   expect_s3_class(out, "knowledgeable_caugi")
