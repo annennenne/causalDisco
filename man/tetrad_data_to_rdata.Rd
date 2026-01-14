@@ -22,6 +22,9 @@ Missing values (\code{null}, \code{Double.NaN}, or \code{Integer.MIN_VALUE}) are
 to the corresponding typed \code{NA}. Unknown variable kinds fall back to
 character with \code{NA_character_} for missing entries.
 
+Note, that the factor levels get converted to integer codes when passing to Tetrad and back to R. So if a factor had
+levels "a", "b", "c" then converting to Tetrad and back to R, they will be represented as levels 1, 2, 3 in R.
+
 The JVM must be initialized and Tetrad classes available on the class path.
 }
 \examples{

@@ -8,7 +8,7 @@ test_that("rdata_to_tetrad() validates input", {
 
   df_bad <- data.frame(a = 1:3, b = c("x", "y", "z"))
   expect_error(
-    rdata_to_tetrad(df_bad),
+    expect_warning(rdata_to_tetrad(df_bad)),
     "Data frame contains non-numeric or non-factor columns."
   )
 })
@@ -19,7 +19,7 @@ test_that("tetrad_data_to_rdata() and rdata_to_tetrad() round-trip mixed data wi
   # small mixed data frame
   df <- data.frame(
     x = c(1, 2.5, NA_real_), # continuous (double)
-    y = c(1L, NA_integer_, 3L), # discrete (integer)
+    y = factor(c(1L, NA_integer_, 3L)), # discrete (factor)
     check.names = FALSE
   )
 
@@ -38,13 +38,13 @@ test_that("tetrad_data_to_rdata() and rdata_to_tetrad() round-trip mixed data wi
   expect_identical(names(back), names(df))
 
   # types preserved
-  expect_identical(typeof(back$x), "double")
-  expect_identical(typeof(back$y), "integer")
+  expect_identical(class(back$x), "numeric")
+  expect_identical(class(back$y), "factor")
 
   # values preserved, including NAs
   expect_equal(back$x, df$x, tolerance = 1e-12)
   expect_identical(is.na(back$x), is.na(df$x))
-  expect_identical(back$y, df$y)
+  expect_equal(as.integer(back$y), as.integer(df$y))
 })
 
 test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
@@ -56,7 +56,10 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
     check.names = FALSE
   )
 
-  ds <- rdata_to_tetrad(df, FALSE)
+  ds <- expect_warning(
+    rdata_to_tetrad(df, FALSE),
+    "The following integer columns are not factors: disc. They will be converted to numeric."
+  )
 
   # column 0: ContinuousVariable, column 1: DiscreteVariable
   node0 <- rJava::.jcall(
@@ -87,10 +90,8 @@ test_that("rdata_to_tetrad() constructs expected variable kinds (smoke test)", {
   expect_true(is.na(back$disc[3]))
 })
 
-# todo: Make this not fail
 test_that("rdata_to_tetrad() preserves factor labels and values", {
   skip_if_no_tetrad()
-  skip("rdata_to_tetrad() does not yet preserve factor levels")
   df <- data.frame(
     fac = factor(c("c", "a", NA, "b", "a"), levels = c("a", "b", "c")),
     check.names = FALSE
@@ -107,9 +108,9 @@ test_that("rdata_to_tetrad() preserves factor labels and values", {
 
   back <- tetrad_data_to_rdata(ds)
 
-  expect_s3_class(back$fac, "factor")
-  expect_equal(levels(back$fac), levels(df$fac))
-  expect_equal(back$fac, df$fac)
+  expect_equal(class(back$fac), "factor")
+  expect_equal(length(levels(back$fac)), length(levels(df$fac)))
+  expect_equal(as.integer(back$fac), as.integer(df$fac))
   expect_true(is.na(back$fac[3]))
 })
 

@@ -31,8 +31,8 @@ test_that("cast_obj() casts ScoreWrapper implementors", {
 test_that("cast_obj() casts DataModel (DataSet)", {
   skip_if_no_tetrad()
 
-  df <- data.frame(x = c(1.0, NA_real_), y = c(1L, 2L))
-  ds <- rdata_to_tetrad(df)
+  my_df <- data.frame(x = c(1.0, NA_real_), y = factor(c(1L, 2L)))
+  ds <- rdata_to_tetrad(my_df)
 
   out <- cast_obj(ds)
   expect_true(rJava::.jinstanceof(out, "edu/cmu/tetrad/data/DataModel"))

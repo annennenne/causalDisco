@@ -35,6 +35,25 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
   nrows <- nrow(df)
   ncols <- ncol(df)
 
+  # Warn if integer columns are not factors
+  integer_cols <- sapply(df, is.integer)
+  factor_cols <- sapply(df, is.factor)
+
+  nonfactor_integers <- integer_cols & !factor_cols
+  if (any(nonfactor_integers)) {
+    warning(
+      "The following integer columns are not factors: ",
+      paste(names(df)[nonfactor_integers], collapse = ", "),
+      ". They will be converted to numeric. ",
+      "If you intended these columns to be categorical, convert them to factor first."
+    )
+
+    # Convert those columns to numeric
+    for (col_name in names(df)[nonfactor_integers]) {
+      df[[col_name]] <- as.numeric(df[[col_name]])
+    }
+  }
+
   # Create Java ArrayList<Node>
   var_list <- rJava::.jnew("java/util/ArrayList")
 
@@ -142,6 +161,9 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
 #' to the corresponding typed `NA`. Unknown variable kinds fall back to
 #' character with `NA_character_` for missing entries.
 #'
+#' Note, that the factor levels get converted to integer codes when passing to Tetrad and back to R. So if a factor had
+#' levels "a", "b", "c" then converting to Tetrad and back to R, they will be represented as levels 1, 2, 3 in R.
+#'
 #' The JVM must be initialized and Tetrad classes available on the class path.
 #'
 #' @param data A Java object of class `edu.cmu.tetrad.data.DataSet`.
@@ -203,8 +225,27 @@ tetrad_data_to_rdata <- function(data) {
     } else if (is_discrete) {
       v <- integer(n)
     } else {
-      # unknown type fallback
-      v <- character(n) # nocov
+      v <- character(n) # unknown type fallback
+    }
+
+    # For discrete variables, get the category names (levels)
+    if (is_discrete) {
+      jcategories <- rJava::.jcall(
+        node,
+        "Ljava/util/List;",
+        "getCategories"
+      )
+      num_categories <- rJava::.jcall(jcategories, "I", "size")
+      levels <- character(num_categories)
+      for (k in seq_len(num_categories) - 1L) {
+        levels[k + 1L] <- rJava::.jcall(
+          jcategories,
+          "Ljava/lang/Object;",
+          "get",
+          as.integer(k)
+        ) |>
+          rJava::.jcall("Ljava/lang/String;", "toString")
+      }
     }
 
     for (r in seq_len(n) - 1L) {
@@ -217,14 +258,8 @@ tetrad_data_to_rdata <- function(data) {
       )
 
       is_null <- isTRUE(rJava::is.jnull(obj))
-      is_double <- isTRUE(rJava::.jinstanceof(
-        obj,
-        "java/lang/Double"
-      ))
-      is_integer <- isTRUE(rJava::.jinstanceof(
-        obj,
-        "java/lang/Integer"
-      ))
+      is_double <- isTRUE(rJava::.jinstanceof(obj, "java/lang/Double"))
+      is_integer <- isTRUE(rJava::.jinstanceof(obj, "java/lang/Integer"))
 
       dbl_val <- if (is_double) {
         rJava::.jcall(obj, "D", "doubleValue")
@@ -239,21 +274,16 @@ tetrad_data_to_rdata <- function(data) {
 
       miss_double <- is_double && isTRUE(is.nan(dbl_val))
       miss_integer <- is_integer &&
-        isTRUE(
-          is.na(int_val) ||
-            int_val == .Machine$integer.min
-        )
-
+        isTRUE(is.na(int_val) || int_val == .Machine$integer.min)
       is_missing <- isTRUE(is_null || miss_double || miss_integer)
 
       if (is_missing) {
-        if (is_cont) {
-          v[r + 1L] <- NA_real_
+        v[r + 1L] <- if (is_cont) {
+          NA_real_
         } else if (is_discrete) {
-          v[r + 1L] <- NA_integer_
+          NA_integer_
         } else {
-          # extra safety precaution
-          v[r + 1L] <- NA_character_ # nocov
+          NA_character_
         }
         next
       }
@@ -263,14 +293,19 @@ tetrad_data_to_rdata <- function(data) {
       } else if (is_integer) {
         v[r + 1L] <- int_val
       } else {
-        # extra safety precaution
-        # nocov start
         s <- rJava::.jcall(obj, "Ljava/lang/String;", "toString")
         v[r + 1L] <- if (isTRUE(is.na(s))) NA_character_ else as.character(s)
-        # nocov end
       }
     }
+
+    # Convert integer vector to factor if it's a discrete variable
+    if (is_discrete) {
+      # +1 because Tetrad categories are 0-based but R factors are 1-based
+      v <- factor(v + 1L, levels = seq_along(levels), labels = levels)
+    }
+
     cols[[j + 1L]] <- v
   }
+
   stats::setNames(as.data.frame(cols, optional = TRUE), var_names)
 }

@@ -1313,7 +1313,7 @@ TetradSearch <- R6Class(
       )
       self$set_params(
         NUMBER_RESAMPLING = number_resampling,
-        FRACTION_RESAMPLE_SIZE = percent_resample_size,
+        PERCENT_RESAMPLE_SIZE = percent_resample_size,
         ADD_ORIGINAL_DATASET = add_original,
         RESAMPLING_WITH_REPLACEMENT = with_replacement,
         RESAMPLING_ENSEMBLE = resampling_ensemble,
