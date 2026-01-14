@@ -74,7 +74,6 @@ TetradSearch <- R6Class(
     #' \itemize{
     #'   \item \code{"boss"} - BOSS algorithm.
     #'   \item \code{"boss_fci"} - BOSS-FCI algorithm.
-    #'   \item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
     #'   \item \code{"ccd"} - Cyclic Causal Discovery.
     #'   \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
     #'   \item \code{"cpc"} - Conservative PC algorithm.
@@ -575,22 +574,6 @@ TetradSearch <- R6Class(
     #'    \item \code{guarantee_pag = FALSE} - Ensure the output is a legal PAG
     #'     (where feasible).
     #'   }
-    #'   \item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
-    #'    \itemize{
-    #'     \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
-    #'      backward equivalence search from the GES algorithm as one of its
-    #'      steps,
-    #'     \item \code{use_data_order = TRUE} - If TRUE, the data variable
-    #'      order should be used for the first initial permutation,
-    #'     \item \code{num_starts = 1} - The number of times the algorithm
-    #'      should be started from different initializations. By default, the
-    #'      algorithm will be run through at least once using the initialized
-    #'      parameters,
-    #'     \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
-    #'      final orientation rules set due to P. Spirtes, guaranteeing arrow
-    #'      completeness, should be used; TRUE if the (fuller) set due to
-    #'      J. Zhang, should be used guaranteeing additional tail completeness.
-    #'   }
     #'   \item \code{"ccd"} - Cyclic Causal Discovery.
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -1061,12 +1044,6 @@ TetradSearch <- R6Class(
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_boss_fci_alg(...)
-        },
-        "boss_pod" = {
-          if (is.null(self$score)) {
-            stop("No score is set. Use set_score() first.", call. = FALSE)
-          }
-          private$set_boss_pod_alg(...)
         },
         "fcit" = {
           if (is.null(self$score)) {
@@ -2698,37 +2675,6 @@ TetradSearch <- R6Class(
         self$test,
         self$score
       )
-      self$alg$setKnowledge(self$knowledge)
-    },
-    set_boss_pod_alg = function(
-      use_bes = TRUE,
-      use_data_order = TRUE,
-      num_starts = 1,
-      complete_rule_set_used = TRUE
-    ) {
-      # Early exit if the Java class does not exist
-      class_name <- "edu/cmu/tetrad/algcomparison/algorithm/oracle/pag/BossDot" # TODO: v7.6.9 renames this to BossPod
-
-      stopifnot(
-        is.numeric(c(num_starts)),
-        is.logical(c(
-          use_bes,
-          complete_rule_set_used,
-          use_data_order
-        )),
-        length(num_starts) == 1,
-        floor(num_starts) == num_starts,
-        num_starts >= 1
-      )
-
-      self$set_params(
-        USE_BES = use_bes,
-        USE_DATA_ORDER = use_data_order,
-        COMPLETE_RULE_SET_USED = complete_rule_set_used,
-        NUM_STARTS = num_starts
-      )
-
-      self$alg <- rJava::.jnew(class_name, self$score)
       self$alg$setKnowledge(self$knowledge)
     },
     set_fcit_alg = function(

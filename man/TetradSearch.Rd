@@ -90,7 +90,6 @@ Recognised values are:
 \itemize{
 \item \code{"boss"} - BOSS algorithm.
 \item \code{"boss_fci"} - BOSS-FCI algorithm.
-\item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
 \item \code{"ccd"} - Cyclic Causal Discovery.
 \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
 \item \code{"cpc"} - Conservative PC algorithm.
@@ -549,22 +548,6 @@ completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
 \item \code{guarantee_pag = FALSE} - Ensure the output is a legal PAG
 (where feasible).
-}
-\item \code{"boss_pod"} - BOSS-POD (BOSS-PAG of DAG) algorithm.
-\itemize{
-\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
-backward equivalence search from the GES algorithm as one of its
-steps,
-\item \code{use_data_order = TRUE} - If TRUE, the data variable
-order should be used for the first initial permutation,
-\item \code{num_starts = 1} - The number of times the algorithm
-should be started from different initializations. By default, the
-algorithm will be run through at least once using the initialized
-parameters,
-\item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
-final orientation rules set due to P. Spirtes, guaranteeing arrow
-completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness.
 }
 \item \code{"ccd"} - Cyclic Causal Discovery.
 \itemize{

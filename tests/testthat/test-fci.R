@@ -55,7 +55,7 @@ test_that("fci Tetrad disco respects tier knowledge", {
 
 test_that("fci Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
-
+  # TODO Works in unreleased version, so will work in next released version (7.6.11?)
   skip(
     "fci Tetrad does not yet support required background knowledge correctly."
   )

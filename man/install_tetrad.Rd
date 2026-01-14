@@ -13,7 +13,7 @@ install_tetrad(
 }
 \arguments{
 \item{version}{Character. The version of Tetrad to install.
-Default is "7.6.8".
+Default is "7.6.10".
 Use \code{options(causalDisco.tetrad.version = "...")} to change the default version.}
 
 \item{dir}{Character. The directory to install Tetrad into. Default is "~/tetrad".}

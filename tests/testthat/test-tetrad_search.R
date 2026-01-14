@@ -345,8 +345,7 @@ test_that("set_alg() succeeds for score-only algorithms when a score is set and 
     "restricted_boss",
     "sp",
     "fask",
-    "direct_lingam",
-    "boss_pod"
+    "direct_lingam"
   )
 
   purrr::walk(score_only, \(alg) {

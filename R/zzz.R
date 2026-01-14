@@ -1,7 +1,7 @@
 #' Default Tetrad version used in the package
 #' @keywords internal
 #' @noRd
-.default_tetrad_version <- "7.6.8"
+.default_tetrad_version <- "7.6.10"
 
 .onLoad <- function(...) {
   # Only set heap options if rJava is installed
