@@ -26,12 +26,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Anne Helby Petersen \email{ahpe@sund.ku.dk}
+\strong{Maintainer}: Bjarke Hautop Kristensen \email{bjarke.kristensen@sund.ku.dk}
 
 Authors:
 \itemize{
+  \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
   \item Frederik Fabricius-Bjerre \email{ffb@di.ku.dk}
-  \item Bjarke Hautop Kristensen \email{bjarke.kristensen@sund.ku.dk}
 }
 
 Other contributors:
