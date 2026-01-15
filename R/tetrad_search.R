@@ -33,15 +33,21 @@ TetradSearch <- R6Class(
     #'   \code{set_score()}. Supply one of the method strings for
     #'   \code{set_score()}. Recognised values are:
     #'
+    #'
+    #'   **Discrete – categorical**
+    #'   \itemize{
+    #'      \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
+    #'      \item \code{"discrete_bic"} - BIC score for discrete data.
+    #'   }
+    #'
+    #'   **Continuous – ?**
     #'   \itemize{
     #'      \item \code{"sem_bic"} - SEM BIC score.
     #'      \item \code{"ebic"} - Extended BIC score.
-    #'      \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
     #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
     #'        This is a generalization of the Degenerate Gaussian score.
     #'      \item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
     #'      \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
-    #'      \item \code{"discrete_bic"} - BIC score for discrete data.
     #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
     #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
     #'      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
@@ -54,15 +60,24 @@ TetradSearch <- R6Class(
     #'   \code{set_test()}. Supply one of the method strings for
     #'   \code{set_test()}. Recognised values are:
     #'
+    #'   **Discrete – categorical**
     #'   \itemize{
     #'     \item \code{"chi_square"} - chi-squared test
     #'     \item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test
     #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio
     #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
     #'        probabilistic conditional independence judgments.
-    #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
+    #'   }
+    #'
+    #'   **Continuous – Gaussian**
+    #'   \itemize{
+    #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test
+    #'   }
+    #'
+    #'   **Continuous – nonparametric**
+    #'   \itemize{
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'   }
     test = NULL,
