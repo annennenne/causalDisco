@@ -226,9 +226,6 @@ If we want any changes we can modify the tikz code after generation.
 - Make required work for our algorithms. It breaks when it internally
   calls `tpdag`, so look into that…
 
-- Make score/test/alg names consistent. Currently a mix of snake_case,
-  kebab-case, and period.case. - done? Still missing algorithms.
-
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
 
