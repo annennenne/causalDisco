@@ -1,61 +1,153 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.4
-Authors@R: 
-    c(person(given = "Anne Helby",
-             family = "Petersen",
-             role = c("aut", "cre"),
-             email = "ahpe@sund.ku.dk"),
-      person("Tobias Ellegaard", "Larsen", role = "ctb", "tobias.ellegaard@sund.ku.dk"),
-      person("Claus Thorn", "Ekstrøm", rol = "ctb", "ekstrom@sund.ku.dk"))
-Description: Various tools for inferring causal models from observational data. The package 
-    includes an implementation of the temporal Peter-Clark (TPC) algorithm. Petersen, Osler 
-    and Ekstrøm (2021) <doi:10.1093/aje/kwab087>. It also includes general tools
-    for evaluating differences in adjacency matrices, which can be used for evaluating
-    performance of causal discovery procedures. 
-Depends: R (>= 3.5.0)
+Version: 0.9.1.9026
+Authors@R:
+      c(
+        person(
+          given = "Anne Helby",
+          family = "Petersen",
+          role = "aut",
+          email = "ahpe@sund.ku.dk"
+        ),
+        person(
+          given = "Tobias Ellegaard",
+          family = "Larsen",
+          role = "ctb",
+          email = "tobias.ellegaard@sund.ku.dk"
+        ),
+        person(
+          given = "Claus Thorn",
+          family = "Ekstrøm",
+          role = "ctb",
+          email = "ekstrom@sund.ku.dk"
+        ),
+        person(
+          given = "Frederik Fabricius-Bjerre",
+          role = "aut",
+          email = "ffb@di.ku.dk"
+        ),
+        person(
+          given = "Bjarke Hautop",
+          family = "Kristensen",
+          role = c("aut", "cre"),
+          email = "bjarke.kristensen@sund.ku.dk"
+        )
+      )
+Description: Various tools for inferring causal models from observational
+    data. The package includes an implementation of the temporal
+    Peter-Clark (TPC) algorithm. Petersen, Osler and Ekstrøm (2021)
+    <doi:10.1093/aje/kwab087>. It also includes general tools for
+    evaluating differences in adjacency matrices, which can be used for
+    evaluating performance of causal discovery procedures.
 License: GPL-2
+URL: https://github.com/annennenne/causalDisco, https://bjarkehautop.github.io/causalDisco/
+BugReports: https://github.com/annennenne/causalDisco/issues
+SystemRequirements: Java (>= 21). Includes the Tetrad Java library
+    (see inst/java/LICENSE and inst/java/COPYRIGHT).
+    Source code: https://github.com/cmu-phil/tetrad
+    Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
+    Cargo (Rust's package manager), rustc >= 1.80.0, xz
+Depends: 
+    R (>= 4.2.0)
+biocViews:
+Imports:
+    caugi,
+    dplyr,
+    igraph,
+    methods,
+    pcalg,
+    purrr,
+    R6,
+    rlang,
+    S7,
+    tibble,
+    tidyselect
+Suggests: 
+    bnlearn,
+    cli,
+    clipr,
+    glue,
+    graph,
+    gtools,
+    magick,
+    MASS,
+    micd,
+    mice,
+    mockery,
+    ggplot2,
+    RColorBrewer,
+    Rgraphviz,
+    readr,
+    rJava,
+    rmarkdown,
+    scales,
+    stringr,
+    testthat (>= 3.0.0),
+    tidyr,
+    withr,
+    spelling,
+    knitr,
+    data.table
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/annennenne/causalDisco
-BugReports: https://github.com/annennenne/causalDisco/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
-Imports:
-    pcalg,
-    igraph,
-    RColorBrewer,
-    gtools,
-    clipr,
-    methods,
-    scales,
-    Rgraphviz,
-    graph,
-    magick,
-    rmarkdown
+RoxygenNote: 7.3.3
 Collate: 
+    'aaa_globals.R'
+    'aaa_init_helpers.R'
     'amat.R'
+    'bnlearn_search.R'
+    'cast_obj.R'
     'causalDisco-package.R'
+    'causalDisco_search.R'
+    'check_args.R'
+    'check_knowledge_violations.R'
     'compare.R'
     'confusion.R'
-    'corTest.R'
+    'constraint_based_run_helpers.R'
+    'cor_test.R'
+    'disco.R'
+    'disco_method.R'
     'edges.R'
+    'engine_registry.R'
     'evaluate.R'
-    'tpc.R'
     'fci.R'
-    'gausCorScore.R'
+    'gaus_cor_score.R'
+    'ges.R'
+    'install_java.R'
+    'install_tetrad.R'
+    'knowledge-conversions.R'
+    'knowledge-helpers.R'
+    'knowledge-manipulation.R'
+    'knowledge-verbs.R'
+    'knowledge.R'
+    'knowledgeable_caugi.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'
-    'nDAGs.R'
+    'n_dags.R'
     'pc.R'
+    'pcalg_search.R'
+    'pcalg_type_tests.R'
     'plot.R'
-    'plotTempoMech.R'
-    'probmat2amat.R'
-    'regTest.R'
-    'simDAG.R'
-    'simGausFromDAG.R'
+    'plot_caugi.R'
+    'plot_tempo_mech.R'
+    'probmat_to_amat.R'
+    'reg_test.R'
+    'sim_dag.R'
+    'sim_gaus_from_dag.R'
     'tamat.R'
+    'tetrad_graph.R'
+    'tetrad_rdata_utils.R'
+    'tetrad_search.R'
     'tfci.R'
+    'tpc_run.R'
+    'tfci_run.R'
     'tges.R'
+    'tges_run.R'
+    'tpc.R'
     'tplot.R'
+    'zzz.R'
+Language: en-US
+VignetteBuilder: knitr

@@ -1,0 +1,30 @@
+## Changes needed to finish knowledge vignette
+
+Allow tiered knowledge to be plotted as forbidden knowledge instead, see function `forbid_tier_violations()`
+
+Allow time axis on plots (is this needed to be implemented in caugi?)
+
+Plot function to knowledgeable_caugi shouldn't plot knowledge (maybe make a show_knowledge = FALSE) argument as default?
+
+# Caugi plot
+
+- Square nodes
+
+- Label to edges (you already can in `grid.text()`, so maybe not needed?).
+
+# TODO
+
+Check if skipped tests can be removed (could just add a version check on tetrad in tests?)
+
+# LONGTERM
+
+Allow star - star (adjaceny) knowledge
+
+User should only be allowed to give knowledge that matches the knowledge class (e.g. DAG)
+
+
+
+
+
+
+

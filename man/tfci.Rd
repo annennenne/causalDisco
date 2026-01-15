@@ -2,117 +2,56 @@
 % Please edit documentation in R/tfci.R
 \name{tfci}
 \alias{tfci}
-\title{Perform causal discovery using the temporal FCI algorithm (TFCI)}
+\title{The Temporal Fast Causal Inference (FCI) algorithm for causal discovery}
 \usage{
-tfci(
-  data = NULL,
-  order,
-  sparsity = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  varnames = NULL,
-  ...
-)
+tfci(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data.frame with data. All variables should be
-assigned to exactly one period by prefixing them with the period name
-(see example below).}
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"causalDisco"}}{causalDisco library.}
+}}
 
-\item{order}{A character vector with period-prefixes in their
-temporal order (see example below).}
+\item{test}{Character; name of the conditional‐independence test.}
 
-\item{sparsity}{The sparsity level to be used for independence
-testing (i.e. significance level threshold to use for each test).}
+\item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
-
-\item{suffStat}{Sufficient statistic. If this argument is supplied, the
-sufficient statistic is not computed from the inputted data. The format and
-contents of the sufficient statistic depends on which test is being used.}
-
-\item{method}{Which method to use for skeleton construction, must be
-\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-See \code{\link[pcalg]{skeleton}} for details.}
-
-\item{methodNA}{Method for handling missing information (\code{NA} values).
-Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-observations with missing information test-by-test) (further details below).}
-
-\item{methodOri}{Method for handling conflicting separating sets when orienting
-edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
-\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
-
-\item{varnames}{A character vector of variable names. It only needs to be supplied
-if the \code{data} argument is not used, and data are hence passed exclusively
-through the \code{suffStat} argument.}
-
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
 }
 \value{
-The default output is a \code{tpag} object. This is an
-S3 object, i.e., a list, with entries: \code{$tamat} (the estimated adjacency
-matrix), \code{$order} (character vector with the order, as inputted to
-this function), \code{$psi} (the significance level used for testing), and
-\code{$ntests} (the number of tests conducted).
-
-The adjacency matrix A has four possible entry values: 0 (no edge), 1 (circle),
-2 (arrowhead), 3 (tail). It is encoded as a "to-from" adjacency matrix, which means
-that e.g. A(i,j) = 1 places a circle in the directed from j to i. For example, if
-A(i,j) = 1 and A(j,i) = 2, we have that i o-> j. Similarly, A(i,j) = 2 and A(j,i) = 3
-mean that i <- j. Note that this is a transposed version of the adjacency
-matrix outputted for \code{fciAlgo} objects from the \code{pcalg} package, which
-is "to-from". But it is consistent with the "from-to" adjacency matrices used
-for \code{pcAlgo} objects from the same package.
+A function of class \code{"tfci"} that takes a single argument \code{data}
+(a data frame) and returns a \code{caugi} and \code{knowledge} (\code{knowledgeable_caugi})
+object.
 }
 \description{
-Use a modification of the FCI algorithm that makes use of background knowledge
-in the format of a partial ordering. This may for instance come about when
-variables can be assigned to distinct tiers or periods (i.e., a temporal ordering).
+Run the temporal FCI algorithm for causal discovery using causalDisco.
 }
 \details{
-The temporal/tiered background information enters several places in the TFCI
-algorithm: 1) In the skeleton construction phase, when looking for separating
-sets Z between two variables X and Y, Z is not allowed to contain variables that
-are strictly after both X and Y in the temporal order. 2) This also applies to
-the subsequent phase where the algorithm searches for possible D-SEP sets. 3)
-Prior to other orientation steps, any cross-tier edges get an arrowhead placed
-at their latest node.
-
-After this, the usual FCI orientation rules are applied, see \link[pcalg]{udag2pag}
-for details.
+For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+via \code{...}, see \code{\link[=tfci_run]{tfci_run()}}.
 }
 \examples{
-# simulate linear Gaussian data w unobserved variable L1
-set.seed(123)
-n <- 100
-L1 <- rnorm(n) 
-X1 <- rnorm(n)
-X2 <- L1 + X1 + rnorm(n)
-X3 <- X1 + rnorm(n)
-X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(p1_X1 = X1,
-                p1_X2 = X2,
-                p2_X3 = X3,
-                p2_X4 = X4)
+data("tpc_example")
 
-# use tfci algorithm to recover tpag (conservative edge orientation)
-tfci(d, test = corTest, order = c("p1", "p2"))
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ tidyselect::starts_with("child"),
+    youth ~ tidyselect::starts_with("youth"),
+    oldage ~ tidyselect::starts_with("oldage")
+  )
+)
 
-# use tfci with standard (non-conservative) method for edge orientation
-tfci(d, test = corTest, order = c("p1", "p2"), methodOri = "standard")
+# Recommended path using disco()
+my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
-}
-\author{
-Anne Helby Petersen, Qixiang Chen, and Daniel Malinsky.
+disco(tpc_example, my_tfci, knowledge = kn)
+
+# or using my_tfci directly
+my_tfci <- my_tfci |> set_knowledge(kn)
+my_tfci(tpc_example)
+
+# Also possible: using tfci_run()
+tfci_run(tpc_example, test = cor_test, knowledge = kn)
 }
