@@ -55,6 +55,12 @@ reference:
       - sim_dag
       - sim_gaus_from_dag
 
+  - title: "Example Datasets"
+    desc: "Small simulated datasets to illustrate causalDisco workflows."
+    contents:
+      - tpc_example
+      - matches(".*_data.*")
+
   - title: "Plotting and Printing"
     contents:
       - starts_with("plot")
@@ -103,4 +109,3 @@ reference:
   - title: "Miscellaneous"
     contents:
       - engine_registry
-      - tpc_example

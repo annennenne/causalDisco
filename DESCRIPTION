@@ -42,11 +42,9 @@ Description: Various tools for inferring causal models from observational
 License: GPL-2
 URL: https://github.com/annennenne/causalDisco, https://bjarkehautop.github.io/causalDisco/
 BugReports: https://github.com/annennenne/causalDisco/issues
-SystemRequirements: Java (>= 21). Includes the Tetrad Java library
-    (see inst/java/LICENSE and inst/java/COPYRIGHT).
+SystemRequirements: Cargo (Rust's package manager), rustc >= 1.80.0, xz
+    Java (>= 21) for Tetrad functionality (optional; includes installer; see inst/java/LICENSE and inst/java/COPYRIGHT);
     Source code: https://github.com/cmu-phil/tetrad
-    Source file: https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources
-    Cargo (Rust's package manager), rustc >= 1.80.0, xz
 Depends: 
     R (>= 4.2.0)
 biocViews:
@@ -107,6 +105,7 @@ Collate:
     'confusion.R'
     'constraint_based_run_helpers.R'
     'cor_test.R'
+    'data.R'
     'disco.R'
     'disco_method.R'
     'edges.R'
