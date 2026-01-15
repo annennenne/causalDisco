@@ -233,7 +233,12 @@ If we want any changes we can modify the tikz code after generation.
   defaults if they differ?
 
 - In documentation of test / scores say which data types they support
-  (continuous, discrete, mixed).
+  (continuous, discrete, mixed). It’s written for some of the engines,
+  but even that is unclear sometimes.
+
+- Update simulation functions (use caugi?)
+
+- Update evaluation and confusion metrics (use caugi?)
 
 ### Bugfixes
 

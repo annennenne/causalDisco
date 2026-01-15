@@ -201,7 +201,12 @@ missing algorithms.
 
 - In documentation of defaults for tests maybe add the underlying engine defaults if they differ?
 
-- In documentation of test / scores say which data types they support (continuous, discrete, mixed).
+- In documentation of test / scores say which data types they support (continuous, discrete, mixed). It's written for
+some of the engines, but even that is unclear sometimes.
+
+- Update simulation functions (use caugi?)
+
+- Update evaluation and confusion metrics (use caugi?)
 
 ### Bugfixes
 
