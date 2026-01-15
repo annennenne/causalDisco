@@ -116,7 +116,7 @@ library(causalDisco)
 # load data
 data("tpc_example")
 
-# define background knowledge object
+# Define background knowledge object
 kn <- knowledge(
   tpc_example,
   tier(
@@ -126,18 +126,18 @@ kn <- knowledge(
   )
 )
 
-# use Tetrad PC algorithm with conditional Gaussian test
+# Use Tetrad PC algorithm with conditional Gaussian test
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 
-  # similarly, one could do
+  # Similarly, one could do
   tetrad_pc <- tetrad_pc |> set_knowledge(kn)
   disco_tetrad_pc_new <- tetrad_pc(tpc_example)
 }
 
-# use causalDisco's own tges algorithm with temporal BIC score
+# Use causalDisco's own tges algorithm with temporal BIC score
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 ```
@@ -314,6 +314,8 @@ Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
   `caugi` are it uses `data.frame` and `S7`):
   - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and
     `disco()$caugi@edges` is `data.frame`).
+    - I added a `nodes()` and `edges()` method to `knowledgeable_caugi`
+      objects to easily return as `tibble`.
 
 ### CRAN TODO
 
