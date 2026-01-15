@@ -1,0 +1,580 @@
+# causalDisco ![](reference/figures/hex.png)
+
+causalDisco provides a unified interface for causal discovery on
+observational data. It wraps multiple causal discovery backends under a
+common, consistent syntax.
+
+## Motivation
+
+Causal discovery methods exist in many ecosystems, for example in
+bnlearn, pcalg, or Tetrad, but their APIs vary widely.
+
+causalDisco unifies them under one clear grammar, making it easy to
+compare results, switch algorithms, and focus on scientific questions
+rather than package quirks.
+
+Time to hit the disco 🪩
+
+## Installation
+
+### Install causalDisco
+
+To install causalDisco ensure you first have installed Rust as described
+below.
+
+Then you can install the development version of causalDisco from GitHub
+using pak:
+
+``` r
+pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
+```
+
+or with all suggested packages (note that this requires a valid Java /
+JDK installation for rJava as described below):
+
+``` r
+pak::pkg_install("https://github.com/BjarkeHautop/causalDisco", dependencies = TRUE)
+```
+
+### Installing Rust
+
+causalDisco depends on the package
+[caugi](https://github.com/frederikfabriciusbjerre/caugi), which
+requires Rust to be installed on your system. See
+<https://www.rust-lang.org/tools/install> for instructions on how to
+install Rust.
+
+### Installing Java / JDK
+
+causalDisco provides an interface to the Java library
+[Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
+algorithms. To use algorithms from Tetrad you need to install a Java
+Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
+available at <https://adoptium.net> for all major operating systems.
+
+We provide a helper function to install Temurin JDK 25 on macOS and
+Windows:
+
+``` r
+causalDisco::install_java()
+```
+
+The current supported version of Tetrad can then be installed by calling
+
+``` r
+causalDisco::install_tetrad()
+```
+
+To verify everything is set up correctly you can run
+[`check_tetrad_install()`](https://bjarkehautop.github.io/causalDisco/reference/check_tetrad_install.md):
+
+``` r
+causalDisco::check_tetrad_install()
+#> $installed
+#> [1] TRUE
+#> 
+#> $version
+#> [1] "7.6.10"
+#> 
+#> $java_ok
+#> [1] TRUE
+#> 
+#> $java_version
+#> [1] "25.0.1"
+#> 
+#> $message
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
+```
+
+## Example
+
+With causalDisco you can currently run causal discovery algorithms from
+the package causalDisco itself, the Java library Tetrad, the R package
+bnlearn, and the R package pcalg.
+
+``` r
+library(causalDisco)
+#> causalDisco startup:
+#>   Java heap size requested: 2 GB
+#>   Tetrad version: 7.6.10
+#>   Java successfully initialized with 2 GB.
+#>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
+#>   Restart R to apply changes.
+
+# load data
+data("tpc_example")
+
+# define background knowledge object
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+# use Tetrad PC algorithm with conditional Gaussian test
+# Requires Tetrad to be installed
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
+
+  # similarly, one could do
+  tetrad_pc <- tetrad_pc |> set_knowledge(kn)
+  disco_tetrad_pc_new <- tetrad_pc(tpc_example)
+}
+
+# use causalDisco's own tges algorithm with temporal BIC score
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+```
+
+You can visualize the resulting causal graph using the
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:
+
+``` r
+plot(disco_cd_tges)
+```
+
+![A causal graph with the known tiers indicated by vertical positioning
+of the nodes.](reference/figures/README-plot-1.png)![A causal graph with
+the known tiers indicated by vertical positioning of the
+nodes.](reference/figures/README-plot-2.png)
+
+## TODO
+
+- Improve plot (use caugi)
+
+  - For new features that are hard to do in grid (which caugi uses),
+    maybe just insert the image in ggplot?
+
+A rough WIP is here, which colors a rectangle around A and B:
+
+``` r
+# Make sure causalDisco is not loaded to avoid namespace conflicts with caugi
+if ("package:causalDisco" %in% search()) {
+  detach("package:causalDisco", unload = TRUE, character.only = TRUE)
+}
+
+library(caugi) # Needs recent version from GitHub
+library(ggplot2)
+library(ggplotify)
+library(grid)
+
+cg <- caugi(A %-->% B, C, D)
+layout <- caugi_layout(cg)
+print(layout)
+layout$x <- c(0.5, 0.5, 0, 1)
+layout$y <- c(0, 1, 0.5, 0.5)
+print(layout)
+plot_cg <- plot(cg, layout = layout)
+
+# Wrap the grid plot as ggplot
+gg <- as.ggplot(~grid.draw(plot_cg@grob))
+
+# Add rectangle
+gg +
+  annotate(
+    "rect",
+    xmin = layout$x[1] - 0.05,
+    xmax = layout$x[2] + 0.05,
+    ymin = layout$y[1],
+    ymax = layout$y[2],
+    fill = "red",
+    alpha = 0.3
+  )
+```
+
+![](reference/figures/caugi-modified-plot.png)
+
+- Implement a working `make_tikz` for these plots. See tikzDevice
+  package, which can do it automatically from R plots:
+
+``` r
+library(caugi)
+library(tikzDevice)
+cg <- caugi(A %-->% B + C)
+tikz("cg_plot.tex", width = 6, height = 4)
+plot(
+  cg,
+  node_style = list(
+    by_node = list(
+      A = list(fill = "lightblue", col = "darkblue", lwd = 2),
+      B = list(fill = "red")
+    )
+  )
+)
+dev.off()
+```
+
+If we want any changes we can modify the tikz code after generation.
+
+- Make required work for our algorithms. It breaks when it internally
+  calls `tpdag`, so look into that…
+
+- Make score/test/alg names consistent. Currently a mix of snake_case,
+  kebab-case, and period.case. - done? Still missing algorithms.
+
+- In documentation of defaults for tests maybe add the underlying engine
+  defaults if they differ?
+
+- In documentation of test / scores say which data types they support
+  (continuous, discrete, mixed).
+
+### Bugfixes
+
+- bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
+
+- Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving it
+  score -Inf if missing a required edge, but then it runs forever. I.e.
+  adding the following to `local.score`
+
+``` r
+vertex_name <- colnames(pp.dat$data)[vertex]
+req_parents <- kn$edges |>
+dplyr::filter(status == "required", to == vertex_name) |>
+dplyr::pull(from)
+
+parent_names <- colnames(pp.dat$data)[parents]
+missing_required <- !all(req_parents %in% parent_names)
+if (missing_required) {
+  return(-Inf)
+}
+```
+
+The algorithm needs to be modified when having required edges, I think.
+
+Should be easier to fix for test based algorithms? Just check if
+required edges are present after skeleton phase and add them if missing?
+(and forbid them from being removed in orientation phase). Look at
+fixedEdges in pcalg.
+
+- Look into how (if) possible to pass to pcalg.
+
+- Piping as done above for Tetrad in the example section loses
+  `$knowledge$tiers` information due to how builders/closures capture
+  knowledge.
+
+  - Fixing requires refactoring the disco_method builder design I think.
+
+#### Tetrad issues
+
+- Tetrad does not use required correctly in `fci` algorithm
+
+``` r
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  data("tpc_example")
+
+  kn <- knowledge(
+    tpc_example,
+    child_x1 %-->% youth_x3
+  )
+  
+  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
+  edges <- output$caugi@edges
+  edges
+}
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x2    o-o  child_x1
+#> 2:  child_x2    o-> oldage_x5
+#> 3:  child_x2    o-o  youth_x4
+#> 4: oldage_x5    --> oldage_x6
+#> 5:  youth_x3    o-> oldage_x5
+#> 6:  youth_x4    --> oldage_x6
+```
+
+Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
+
+### Documentation
+
+- Make it clear in
+  [`?BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.md)
+  (and similar for the others) that all algorithms aren’t currently
+  fully supported.
+
+- List in documentation of `tfci`, … what kind of graph it returns.
+
+### Standardization
+
+- We are mixing between different things currently (since we rely on
+  `caugi` are it uses `data.frame` and `S7`):
+  - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and
+    `disco()$caugi@edges` is `data.frame`).
+
+Call `caugi@edges <- tibble::as_tibble(caugi@edges)` internally to
+standardize to tibble? And instead of forcing users to do
+`output$caugi@edges` (mix S3 and S7) we could implement something like
+this:
+
+``` r
+edges <- function(x) {
+  UseMethod("edges")
+}
+
+edges.knowledgeable_caugi <- function(x) {
+  tibble::as_tibble(x$caugi@edges)
+}
+
+nodes <- function(x) {
+  UseMethod("nodes")
+}
+
+nodes.knowledgeable_caugi <- function(x) {
+  tibble::as_tibble(x$caugi@edges)
+}
+```
+
+I.e., allow user to call `edges(output)` and `nodes(output)` to get
+edges and nodes as tibbles.
+
+### CRAN TODO
+
+- Add a copyright holder (`"cph"`) in persons field of DESCRIPTION
+  (needed for CRAN, see
+  [here](https://github.com/DavisVaughan/extrachecks))
+
+- Update Description: field in DESCRIPTION to mention it wraps other
+  packages, …
+
+## Bugs & requests
+
+Bug reports and feature requests are welcome:
+
+👉 [open an issue](https://github.com/BjarkeHautop/causalDisco/issues).
+
+# Package index
+
+## Overview
+
+Package overview
+
+- [`causalDisco`](https://bjarkehautop.github.io/causalDisco/reference/causalDisco-package.md)
+  [`causalDisco-package`](https://bjarkehautop.github.io/causalDisco/reference/causalDisco-package.md)
+  : Causal Disco package
+
+## Main User Function
+
+High-level interface for running causal discovery.
+
+- [`disco()`](https://bjarkehautop.github.io/causalDisco/reference/disco.md)
+  : Disco!!
+- [`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md)
+  : Knowledge Mini-DSL Constructor
+
+## Causal Discovery Algorithms
+
+Core search algorithms implemented or wrapped by causalDisco.
+
+- [`fci()`](https://bjarkehautop.github.io/causalDisco/reference/fci.md)
+  : The FCI algorithm for causal discovery
+- [`ges()`](https://bjarkehautop.github.io/causalDisco/reference/ges.md)
+  : The GES algorithm for causal discovery
+- [`pc()`](https://bjarkehautop.github.io/causalDisco/reference/pc.md) :
+  The Peter-Clark (PC) Algorithm for Causal Discovery
+- [`tfci()`](https://bjarkehautop.github.io/causalDisco/reference/tfci.md)
+  : The Temporal Fast Causal Inference (FCI) algorithm for causal
+  discovery
+- [`tges()`](https://bjarkehautop.github.io/causalDisco/reference/tges.md)
+  : The Temporal GES algorithm for causal discovery
+- [`tpc()`](https://bjarkehautop.github.io/causalDisco/reference/tpc.md)
+  : The Temporal Peter-Clark (PC) algorithm for causal discovery
+
+## Tests for TPC
+
+Test functions implemented for use in the TPC algorithm.
+
+- [`cor_test()`](https://bjarkehautop.github.io/causalDisco/reference/cor_test.md)
+  : Test for vanishing partial correlations
+- [`reg_test()`](https://bjarkehautop.github.io/causalDisco/reference/reg_test.md)
+  : Regression-based information loss test
+
+## Setup for Tetrad Engine
+
+Functions for installing and verifying the Tetrad Java backend.
+
+- [`install_java()`](https://bjarkehautop.github.io/causalDisco/reference/install_java.md)
+  : Install Eclipse Temurin JDK 25 (with JAVA_HOME configuration)
+- [`install_tetrad()`](https://bjarkehautop.github.io/causalDisco/reference/install_tetrad.md)
+  : Install Tetrad GUI
+- [`check_tetrad_install()`](https://bjarkehautop.github.io/causalDisco/reference/check_tetrad_install.md)
+  : Check Tetrad Installation
+
+## R6 Classes
+
+- [`BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.md)
+  : R6 Interface to bnlearn Search Algorithms
+- [`CausalDiscoSearch`](https://bjarkehautop.github.io/causalDisco/reference/CausalDiscoSearch.md)
+  : R6 Interface to causalDisco Search Algorithms
+- [`PcalgSearch`](https://bjarkehautop.github.io/causalDisco/reference/PcalgSearch.md)
+  : R6 Interface to pcalg Search Algorithms
+- [`TetradSearch`](https://bjarkehautop.github.io/causalDisco/reference/TetradSearch.md)
+  : R6 Interface to Tetrad Search Algorithms
+
+## Algorithm Engines
+
+Low-level functions that execute search algorithms.
+
+- [`tfci_run()`](https://bjarkehautop.github.io/causalDisco/reference/tfci_run.md)
+  : Causal Discovery Using the Temporal FCI (TFCI) Algorithm
+- [`tges_run()`](https://bjarkehautop.github.io/causalDisco/reference/tges_run.md)
+  : Restricted Markov Equivalence Class Estimation Using Temporal Greedy
+  Equivalence Search
+- [`tpc_run()`](https://bjarkehautop.github.io/causalDisco/reference/tpc_run.md)
+  : Causal Discovery Using the Temporal PC Algorithm (TPC)
+
+## Simulation
+
+- [`sim_dag()`](https://bjarkehautop.github.io/causalDisco/reference/sim_dag.md)
+  : Simulate a random DAG
+- [`sim_gaus_from_dag()`](https://bjarkehautop.github.io/causalDisco/reference/sim_gaus_from_dag.md)
+  : Simulate Gaussian data according to DAG
+
+## Plotting and Printing
+
+- [`plot(`*`<knowledge>`*`)`](https://bjarkehautop.github.io/causalDisco/reference/plot.knowledge.md)
+  : Plot a Knowledge Object
+
+- [`plot(`*`<knowledgeable_caugi>`*`)`](https://bjarkehautop.github.io/causalDisco/reference/plot.knowledgeable_caugi.md)
+  :
+
+  Plot a Causal Graph from a `knowledgeable_caugi` Object
+
+- [`print(`*`<knowledge>`*`)`](https://bjarkehautop.github.io/causalDisco/reference/print.knowledge.md)
+  :
+
+  Print a `knowledge` object
+
+- [`make_tikz()`](https://bjarkehautop.github.io/causalDisco/reference/make_tikz.md)
+  : Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
+
+## Knowledge helpers
+
+- [`add_exogenous()`](https://bjarkehautop.github.io/causalDisco/reference/add_exogenous.md)
+  [`add_exo()`](https://bjarkehautop.github.io/causalDisco/reference/add_exogenous.md)
+  : Add exogenous variables
+
+- [`add_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_tier.md)
+  : Add (and position) a tier
+
+- [`add_to_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_to_tier.md)
+  : Add variables to an existing tier
+
+- [`add_vars()`](https://bjarkehautop.github.io/causalDisco/reference/add_vars.md)
+  :
+
+  Add variables to `knowledge` object
+
+- [`remove_edge()`](https://bjarkehautop.github.io/causalDisco/reference/remove_edge.md)
+  : Remove an edge from a knowledge object
+
+- [`remove_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/remove_tiers.md)
+  : Remove entire tiers from a knowledge object
+
+- [`remove_vars()`](https://bjarkehautop.github.io/causalDisco/reference/remove_vars.md)
+  : Remove variables (and their edges) from a knowledge object
+
+- [`require_edge()`](https://bjarkehautop.github.io/causalDisco/reference/require_edge.md)
+  : Add required edges
+
+- [`forbid_edge()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_edge.md)
+  : Add forbidden edges
+
+- [`forbid_tier_violations()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_tier_violations.md)
+  : Forbid all tier violations
+
+- [`get_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/get_tiers.md)
+  : Get tiers
+
+- [`reorder_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/reorder_tiers.md)
+  : Reorder all tiers at once
+
+- [`seq_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/seq_tiers.md)
+  : Generate a Bundle of Tier–Variable Formulas
+
+- [`reposition_tier()`](https://bjarkehautop.github.io/causalDisco/reference/reposition_tier.md)
+  : Move one tier before / after another
+
+- [`set_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/set_knowledge.md)
+  : Set background knowledge into a disco_method
+
+- [`as_tetrad_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_tetrad_knowledge.md)
+  :
+
+  Convert to Tetrad `edu.cmu.tetrad.data.Knowledge`
+
+- [`as_bnlearn_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_bnlearn_knowledge.md)
+  : Convert background knowledge to bnlearns white- and blacklists
+
+- [`as_pcalg_constraints()`](https://bjarkehautop.github.io/causalDisco/reference/as_pcalg_constraints.md)
+  : Convert background knowledge to pcalg constraint matrices
+
+- [`knowledgeable_caugi()`](https://bjarkehautop.github.io/causalDisco/reference/knowledgeable_caugi.md)
+  :
+
+  A `caugi` with an attached `knowledge` object
+
+- [`new_knowledgeable_caugi()`](https://bjarkehautop.github.io/causalDisco/reference/new_knowledgeable_caugi.md)
+  :
+
+  Create a new `knowledgeable_caugi` object
+
+- [`knowledge.knowledgeable_caugi()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.knowledgeable_caugi.md)
+  : Extract the knowledge from a knowledgeable_caugi
+
+- [`deparse_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/deparse_knowledge.md)
+  : Deparse a knowledge object to knowledge() mini-DSL code
+
+- [`unfreeze()`](https://bjarkehautop.github.io/causalDisco/reference/unfreeze.md)
+  :
+
+  Unfreeze a `knowledge` object.
+
+- [`` `+`( ``*`<knowledge>`*`)`](https://bjarkehautop.github.io/causalDisco/reference/plus-.knowledge.md)
+  :
+
+  Merge two `knowledge` objects
+
+## Conversions
+
+- [`as.graphNEL()`](https://bjarkehautop.github.io/causalDisco/reference/as.graphNEL.md)
+  : Convert adjacency matrix to graphNEL object
+
+## Evaluation & Confusion Metrics
+
+- [`precision()`](https://bjarkehautop.github.io/causalDisco/reference/precision.md)
+  : Precision
+- [`recall()`](https://bjarkehautop.github.io/causalDisco/reference/recall.md)
+  : Recall
+- [`specificity()`](https://bjarkehautop.github.io/causalDisco/reference/specificity.md)
+  : Specificity
+- [`f1_score()`](https://bjarkehautop.github.io/causalDisco/reference/f1_score.md)
+  : F1 score
+- [`g1_score()`](https://bjarkehautop.github.io/causalDisco/reference/g1_score.md)
+  : G1 score
+- [`fdr()`](https://bjarkehautop.github.io/causalDisco/reference/fdr.md)
+  : False Discovery Rate
+- [`npv()`](https://bjarkehautop.github.io/causalDisco/reference/npv.md)
+  : Negative predictive value
+- [`false_omission_rate()`](https://bjarkehautop.github.io/causalDisco/reference/false_omission_rate.md)
+  : False Omission Rate
+- [`average_degree()`](https://bjarkehautop.github.io/causalDisco/reference/average_degree.md)
+  : Compute average degree for adjacency matrix
+
+## Miscellaneous
+
+- [`engine_registry`](https://bjarkehautop.github.io/causalDisco/reference/engine_registry.md)
+  : Supported engines for causalDisco
+- [`tpc_example`](https://bjarkehautop.github.io/causalDisco/reference/tpc_example.md)
+  : Simulated data example
+
+# Articles
+
+### All vignettes
+
+- [Causal
+  Discovery](https://bjarkehautop.github.io/causalDisco/articles/causal-discovery.md):
+- [causalDisco](https://bjarkehautop.github.io/causalDisco/articles/causalDisco.md):
+- [Knowledge](https://bjarkehautop.github.io/causalDisco/articles/knowledge.md):
