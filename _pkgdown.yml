@@ -45,8 +45,8 @@ reference:
     contents:
       - ends_with("Search")
 
-  - title: "Algorithm Engines"
-    desc: "Low-level functions that execute search algorithms."
+  - title: "causalDisco Algorithm Run Functions"
+    desc: "Low-level functions that execute causalDisco search algorithms and detail their parameters."
     contents:
       - ends_with("run")
 
