@@ -46,7 +46,8 @@ BnlearnSearch <- R6Class(
     #'     \item \code{"nal"} - node-average log-likelihood
     #'     \item \code{"pnal"} - penalised node-average log-likelihood
     #'   }
-    #'   \strong{Gaussian}
+    #'
+    #'   **Continuous - Gaussian**
     #'   \itemize{
     #'     \item \code{"loglik_g"}, \code{"aic_g"}, \code{"bic_g"},
     #'       \code{"ebic_g"}, \code{"pred_loglik_g"}
@@ -54,7 +55,8 @@ BnlearnSearch <- R6Class(
     #'     \item \code{"nal_g"} - node-average log-likelihood
     #'     \item \code{"pnal_g"} - penalised node-average log-likelihood
     #'   }
-    #'   \strong{Conditional Gaussian}
+    #'
+    #'   **Continuous - Conditional Gaussian**
     #'   \itemize{
     #'     \item \code{"loglik_cg"}, \code{"aic_cg"}, \code{"bic_cg"},
     #'       \code{"ebic_cg"}, \code{"pred_loglik_cg"},
@@ -90,7 +92,7 @@ BnlearnSearch <- R6Class(
     #'     \item \code{"smc_jt"} – sequential Monte Carlo Jonckheere–Terpstra
     #'   }
     #'
-    #'   **Gaussian**
+    #'   **Continuous - Gaussian**
     #'   \itemize{
     #'     \item \code{"cor"} – Pearson correlation
     #'     \item \code{"mc_cor"} – Monte Carlo Pearson correlation
@@ -104,7 +106,7 @@ BnlearnSearch <- R6Class(
     #'     \item \code{"mi_g_sh"} – mutual information (Gaussian, shrinkage)
     #'   }
     #'
-    #'   **Conditional Gaussian**
+    #'   **Continuous - Conditional Gaussian**
     #'   \itemize{
     #'     \item \code{"mi_cg"} – mutual information (conditional Gaussian)
     #'   }
