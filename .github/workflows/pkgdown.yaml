@@ -31,16 +31,18 @@ jobs:
         with:
           use-public-rspm: true
 
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Install Java and Tetrad
+      - name: Install Tetrad
         run: |
-          Rscript -e '
-          source("R/install_java.R")
-          install_java(force = TRUE)
           cat("\nJAVA_HOME =", Sys.getenv("JAVA_HOME"), "\n")
           system2("java", "-version", stdout=TRUE, stderr=TRUE)
           source("R/zzz.R")
