@@ -77,6 +77,8 @@ reference:
       - as_pcalg_constraints
       - knowledgeable_caugi
       - new_knowledgeable_caugi
+      - edges
+      - nodes
       - knowledge.knowledgeable_caugi
       - deparse_knowledge
       - unfreeze

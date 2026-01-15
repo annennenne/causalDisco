@@ -201,6 +201,10 @@ gg +
   package, which can do it automatically from R plots:
 
 ``` r
+# Make sure causalDisco is not loaded to avoid namespace conflicts with caugi
+if ("package:causalDisco" %in% search()) {
+  detach("package:causalDisco", unload = TRUE, character.only = TRUE)
+}
 library(caugi)
 library(tikzDevice)
 cg <- caugi(A %-->% B + C)
@@ -282,17 +286,17 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges <- output$caugi@edges
-  edges
+  edges(output)
 }
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x2    o-o  child_x1
-#> 2:  child_x2    o-> oldage_x5
-#> 3:  child_x2    o-o  youth_x4
-#> 4: oldage_x5    --> oldage_x6
-#> 5:  youth_x3    o-> oldage_x5
-#> 6:  youth_x4    --> oldage_x6
+#> # A tibble: 6 × 3
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
 ```
 
 Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
@@ -310,32 +314,6 @@ Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
   `caugi` are it uses `data.frame` and `S7`):
   - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and
     `disco()$caugi@edges` is `data.frame`).
-
-Call `caugi@edges <- tibble::as_tibble(caugi@edges)` internally to
-standardize to tibble? And instead of forcing users to do
-`output$caugi@edges` (mix S3 and S7) we could implement something like
-this:
-
-``` r
-edges <- function(x) {
-  UseMethod("edges")
-}
-
-edges.knowledgeable_caugi <- function(x) {
-  tibble::as_tibble(x$caugi@edges)
-}
-
-nodes <- function(x) {
-  UseMethod("nodes")
-}
-
-nodes.knowledgeable_caugi <- function(x) {
-  tibble::as_tibble(x$caugi@edges)
-}
-```
-
-I.e., allow user to call `edges(output)` and `nodes(output)` to get
-edges and nodes as tibbles.
 
 ### CRAN TODO
 

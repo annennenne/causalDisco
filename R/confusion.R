@@ -145,8 +145,8 @@ adj_confusion <- function(est_amat, true_amat) {
 #' @keywords internal
 #' @noRd
 dir_confusion <- function(est_amat, true_amat) {
-  est_edges <- edges(est_amat)
-  true_edges <- edges(true_amat)
+  est_edges <- edges_amat(est_amat)
+  true_edges <- edges_amat(true_amat)
 
   true_adj <- c(true_edges$undir, true_edges$dir)
   true_adj <- c(true_adj, lapply(true_adj, rev))
@@ -224,8 +224,8 @@ dir_confusion <- function(est_amat, true_amat) {
 #' @keywords internal
 #' @noRd
 dir_confusion_original <- function(est_amat, true_amat) {
-  est_edges <- edges(est_amat)
-  true_edges <- edges(true_amat)
+  est_edges <- edges_amat(est_amat)
+  true_edges <- edges_amat(true_amat)
 
   true_adj <- c(true_edges$undir, true_edges$dir)
   true_adj <- c(true_adj, lapply(true_adj, rev))

@@ -9,7 +9,7 @@
 #'
 #' @keywords internal
 #' @noRd
-edges <- function(amat) {
+edges_amat <- function(amat) {
   p <- nrow(amat)
   edge_list <- lapply(split(amat, rep(1:p, each = p)), function(x) {
     which(x == 1)
