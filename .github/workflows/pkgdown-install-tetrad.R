@@ -1,0 +1,6 @@
+cat("\nJAVA_HOME =", Sys.getenv("JAVA_HOME"), "\n")
+system2("java", "-version", stdout = TRUE, stderr = TRUE)
+source("R/zzz.R")
+source("R/install_tetrad.R")
+install_tetrad(version = .default_tetrad_version)
+check_tetrad_install(version = .default_tetrad_version)
