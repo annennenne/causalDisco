@@ -90,10 +90,6 @@ reference:
       - unfreeze
       - +.knowledge
 
-  - title: "Conversions"
-    contents:
-      - as.graphNEL
-
   - title: "Evaluation & Confusion Metrics"
     contents:
       - precision
