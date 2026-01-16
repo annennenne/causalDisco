@@ -51,50 +51,56 @@ used by Tetrad.}
 \code{set_score()}. Supply one of the method strings for
 \code{set_score()}. Recognised values are:
 
-\strong{Discrete – categorical}
+\strong{Discrete - categorical}
 \itemize{
 \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
 \item \code{"discrete_bic"} - BIC score for discrete data.
 }
 
-\strong{Continuous – ?}
+\strong{Continuous - Gaussian}
 \itemize{
-\item \code{"sem_bic"} - SEM BIC score.
 \item \code{"ebic"} - Extended BIC score.
-\item \code{"basis_function_bic"} - BIC score for basis-function models.
-This is a generalization of the Degenerate Gaussian score.
-\item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
-\item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
 \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-\item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-\item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
 \item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
+}
+
+\strong{Mixed Discrete/Gaussian}
+\itemize{
+\item \code{"conditional_gaussian"} - Conditional Gaussian BIC score.
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
+\item \code{"basis_function_bic"} - BIC score for basis-function models.
+This is a generalization of the Degenerate Gaussian score.
+\item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
 }}
 
 \item{\code{test}}{Java object holding the independence test selected with
 \code{set_test()}. Supply one of the method strings for
 \code{set_test()}. Recognised values are:
 
-\strong{Discrete – categorical}
+\strong{Discrete - categorical}
 \itemize{
 \item \code{"chi_square"} - chi-squared test
-\item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test
-\item \code{"basis_function_lrt"} - basis-function likelihood-ratio
+\item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test.
+\item \code{"basis_function_lrt"} - basis-function likelihood-ratio.
 \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
 probabilistic conditional independence judgments.
-\item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
-\item \code{"conditional_gaussian"} - Mixed discrete/continuous test
 }
 
-\strong{Continuous – Gaussian}
+\strong{Continuous - Gaussian}
 \itemize{
-\item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test
+\item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
 }
 
-\strong{Continuous – nonparametric}
+\strong{Mixed Discrete/Gaussian}
 \itemize{
-\item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
+\item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
+\item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
+}
+
+\strong{General}
+\itemize{
+\item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
 }}
 
 \item{\code{alg}}{Java object representing the search algorithm.
@@ -118,14 +124,14 @@ Recognised values are:
 \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
 \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
 \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
-\item \code{"ica_lingd"} - ICA-LiNG-D algorithm
-\item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm
-\item \code{"pc"} - Peter-Clark (PC) algorithm
-\item \code{"pc_max"} - PCMax algorithm
-\item \code{"restricted_boss"} - Restricted BOSS algorithm
-\item \code{"rfci"} - Restricted FCI algorithm
-\item \code{"sp"} - Sparsest Permutation algorithm
-\item \code{"sp_fci"} - Sparsest Permutation using FCI
+\item \code{"ica_lingd"} - ICA-LiNG-D algorithm.
+\item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
+\item \code{"pc"} - Peter-Clark (PC) algorithm.
+\item \code{"pc_max"} - PCMax algorithm.
+\item \code{"restricted_boss"} - Restricted BOSS algorithm.
+\item \code{"rfci"} - Restricted FCI algorithm.
+\item \code{"sp"} - Sparsest Permutation algorithm.
+\item \code{"sp_fci"} - Sparsest Permutation using FCI.
 }}
 
 \item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
