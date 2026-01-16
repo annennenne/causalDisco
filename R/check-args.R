@@ -16,7 +16,7 @@
 #' @returns A list containing the distributed arguments for the algorithm, test,
 #' and score.
 #'
-#' @example inst/roxygen-examples/check_args_example.R
+#' @example inst/roxygen-examples/check_args-example.R
 #'
 #' @noRd
 #' @keywords internal

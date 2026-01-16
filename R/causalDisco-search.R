@@ -3,7 +3,7 @@
 #'
 #' @name CausalDiscoSearch
 #'
-#' @example inst/roxygen-examples/causalDisco_search_example.R
+#' @example inst/roxygen-examples/causalDisco_search-example.R
 NULL
 
 #' @title R6 Interface to causalDisco Search Algorithms

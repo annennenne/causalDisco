@@ -81,7 +81,7 @@
 #' \code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "caugi"},
 #' a `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
-#' @example inst/roxygen-examples/tpc_example.R
+#' @example inst/roxygen-examples/tpc-example.R
 #'
 #' @export
 tpc_run <- function(
@@ -210,7 +210,7 @@ tpc_run <- function(
 #' @param vnames Optional character vector of variable names when \code{data}
 #'   is not supplied.
 #'
-#' @example inst/roxygen-examples/dot-build_knowledge_from_order_example.R
+#' @example inst/roxygen-examples/dot-build_knowledge_from_order-example.R
 #'
 #' @return A \code{knowledge} object with tiers matching \code{order}.
 #' @keywords internal
@@ -281,7 +281,7 @@ tpc_run <- function(
 #' @param amat Square adjacency matrix (from-to convention).
 #' @param sepsets Separation sets as computed by \pkg{pcalg}.
 #'
-#' @example inst/roxygen-examples/v_orient_temporal_example.R
+#' @example inst/roxygen-examples/v_orient_temporal-example.R
 #'
 #' @return The updated adjacency matrix with additional arrowheads.
 #' @keywords internal
@@ -340,7 +340,7 @@ v_orient_temporal <- function(amat, sepsets) {
 #' @param amatrix Square adjacency matrix.
 #' @param index Integer index of the node.
 #'
-#' @example inst/roxygen-examples/find_adjacencies_example.R
+#' @example inst/roxygen-examples/find_adjacencies-example.R
 #'
 #' @return Integer vector of adjacent node indices.
 #' @keywords internal
@@ -361,7 +361,7 @@ find_adjacencies <- function(amatrix, index) {
 #' @param kn A \code{knowledge} object.
 #' @param vnames Character vector of variable names.
 #'
-#' @example inst/roxygen-examples/dot-tier_index_example.R
+#' @example inst/roxygen-examples/dot-tier_index-example.R
 #'
 #' @return Named integer vector of the same length as \code{vnames}.
 #' @keywords internal
@@ -386,7 +386,7 @@ find_adjacencies <- function(amatrix, index) {
 #' @param x,y Variable names.
 #' @param knowledge A \code{knowledge} object.
 #'
-#' @example inst/roxygen-examples/is_after_example.R
+#' @example inst/roxygen-examples/is_after-example.R
 #'
 #' @return Logical. \code{TRUE} if \code{x} is in a strictly later tier than
 #' \code{y}. Returns \code{FALSE} if either variable lacks a tier.
@@ -413,7 +413,7 @@ is_after <- function(x, y, knowledge) {
 #' @param vnames Character vector of variable names (labels).
 #' @param knowledge A \code{knowledge} object.
 #'
-#' @example inst/roxygen-examples/dir_test_example.R
+#' @example inst/roxygen-examples/dir_test-example.R
 #'
 #' @return A function with the same interface as \code{test}.
 #' @keywords internal
@@ -449,7 +449,7 @@ dir_test <- function(test, vnames, knowledge) {
 #' @param kn A \code{knowledge} object.
 #' @param labels Character vector of variable names in the desired order.
 #'
-#' @example inst/roxygen-examples/dot-pcalg_constraints_from_knowledge_example.R
+#' @example inst/roxygen-examples/dot-pcalg_constraints_from_knowledge-example.R
 #'
 #' @return A list with logical matrices \code{fixedGaps} and \code{fixedEdges}.
 #' @keywords internal
@@ -479,7 +479,7 @@ dir_test <- function(test, vnames, knowledge) {
 #' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
 #' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
-#' @example inst/roxygen-examples/order_restrict_amat_cpdag_example.R
+#' @example inst/roxygen-examples/order_restrict_amat_cpdag-example.R
 #'
 #' @return The pruned adjacency matrix.
 #' @keywords internal
@@ -519,7 +519,7 @@ order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
 #' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
 #' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
-#' @example inst/roxygen-examples/tpdag_example.R
+#' @example inst/roxygen-examples/tpdag-example.R
 #'
 #' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
 #' @keywords internal
@@ -578,7 +578,7 @@ tpdag <- function(skel, knowledge, from_to) {
 #'
 #' Any other \code{type} results in an error.
 #'
-#' @example inst/roxygen-examples/make_suff_stat_example.R
+#' @example inst/roxygen-examples/make_suff_stat-example.R
 #'
 #' @return A list whose structure depends on \code{type}, suitable for passing
 #'   as \code{suff_stat} to the corresponding test.

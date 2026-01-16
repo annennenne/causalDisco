@@ -16,7 +16,7 @@
 #' For specific details on the supported scores, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
 #' via \code{...}, see [tges_run()].
 #'
-#' @example inst/roxygen-examples/tges_example.R
+#' @example inst/roxygen-examples/tges-example.R
 #'
 #' @return
 #' A function of class \code{"tges"} that takes a single argument \code{data}

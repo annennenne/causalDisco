@@ -3,7 +3,7 @@
 #' @param x Character scalar in the form
 #'   \verb{"V1,V2,V3\\n0,2,0\\n3,0,1\\n0,3,0\\n"}
 #'
-#' @example inst/roxygen-examples/tetrad_graph_example.R
+#' @example inst/roxygen-examples/tetrad_graph-example.R
 #'
 #' @return An object of class <tetrad_graph>
 #'

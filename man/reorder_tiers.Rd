@@ -23,9 +23,7 @@ The same \code{knowledge} object with tiers rearranged.
 Reorder all tiers at once
 }
 \examples{
-### reposition_tier_example.R ###
-
-# move one tier relative to another
+# Move one tier relative to another
 data(tpc_example)
 
 kn <- knowledge(

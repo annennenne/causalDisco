@@ -16,7 +16,7 @@
 #' For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
 #' via \code{...}, see [tpc_run()].
 #'
-#' @example inst/roxygen-examples/tpc_example.R
+#' @example inst/roxygen-examples/tpc-example.R
 #'
 #' @return
 #' A function of class \code{"tpc"} that takes a single argument \code{data}

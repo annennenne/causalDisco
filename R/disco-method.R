@@ -11,7 +11,7 @@
 #' to build your own method, you can use this function to create a closure
 #' that will run with `disco`.
 #'
-#' @example inst/roxygen-examples/disco_method_example.R
+#' @example inst/roxygen-examples/disco_method-example.R
 #' @noRd
 #' @keywords internal
 disco_method <- function(builder, method_class) {

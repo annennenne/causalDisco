@@ -14,7 +14,7 @@
 #'
 #' @author Tobias Ellegaard Larsen
 #'
-#' @example inst/roxygen-examples/tges_example.R
+#' @example inst/roxygen-examples/tges-example.R
 #'
 #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
@@ -122,7 +122,7 @@ tges_run <- function(score, verbose = FALSE) {
 #'   contains the indices of the parents of node `i`. Names must be the node
 #'   labels in order.
 #'
-#' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj_example.R
+#' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj-example.R
 #'
 #' @return A numeric matrix with row and column names equal to `names(input_list)`,
 #'   where entry `(i, j) = 1` iff `j` is a parent of `i`.
@@ -152,7 +152,7 @@ create_adj_matrix_from_list <- function(input_list) {
 #' @param adj_matrix A square numeric matrix with row and column names giving
 #'   node labels. Entry `(i, j) = 1` indicates an edge `j -> i`.
 #'
-#' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj_example.R
+#' @example inst/roxygen-examples/create_adj_matrix_from_list_from_adj-example.R
 #'
 #' @return A named list of integer vectors with one element per node; each
 #'   element lists the parent indices (columns with value 1 in that row).
@@ -341,7 +341,7 @@ TEssGraph <- setRefClass(
 #'
 #' @author Tobias Ellegaard Larsen
 #'
-#' @example inst/roxygen-examples/tbic_example.R
+#' @example inst/roxygen-examples/tbic-example.R
 #'
 #' @seealso [tges()]
 #'
@@ -518,7 +518,7 @@ TemporalBIC <- setRefClass(
 #'
 #' @author Tobias Ellegaard Larsen
 #'
-#' @example inst/roxygen-examples/tbdeu_example.R
+#' @example inst/roxygen-examples/tbdeu-example.R
 #'
 #' @seealso [tges()]
 #'

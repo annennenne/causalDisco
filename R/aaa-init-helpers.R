@@ -4,7 +4,7 @@
 #' This function retrieves the default heap size for the Java Virtual Machine.
 #' The standard size is 2 gigabytes.
 #'
-#' @example inst/roxygen-examples/default_heap_example.R
+#' @example inst/roxygen-examples/default_heap-example.R
 #' @noRd
 #' @keywords internal
 default_heap <- function() {
@@ -23,7 +23,7 @@ default_heap <- function() {
 #' @description
 #' Only written so we can mock for testing
 #'
-#' @example inst/roxygen-examples/dot-read_line_example.R
+#' @example inst/roxygen-examples/dot-read_line-example.R
 #' @noRd
 #' @keywords internal
 .read_line <- function(prompt) {
@@ -39,7 +39,7 @@ default_heap <- function() {
 #' size is not set in the options or environment variables. Is only used in
 #' interactive sessions.
 #'
-#' @example inst/roxygen-examples/ask_heap_size_example.R
+#' @example inst/roxygen-examples/ask_heap_size-example.R
 #' @noRd
 #' @keywords internal
 ask_heap_size <- function() {
@@ -117,7 +117,7 @@ find_tetrad_jar <- function(
 #' @param heap A string specifying the heap size for the JVM. "2g" for 2
 #'  gigabytes.
 #'
-#' @example inst/roxygen-examples/init_java_example.R
+#' @example inst/roxygen-examples/init_java-example.R
 #' @noRd
 #' @keywords internal
 init_java <- function(heap = default_heap()) {
@@ -153,7 +153,7 @@ init_java <- function(heap = default_heap()) {
 #' @param x A string representing the heap size, e.g., "4g" or "4096m".
 #' @returns A numeric value representing the heap size in gigabytes.
 #'
-#' @example inst/roxygen-examples/parse_heap_gb_example.R
+#' @example inst/roxygen-examples/parse_heap_gb-example.R
 #' @noRd
 #' @keywords internal
 parse_heap_gb <- function(x) {
@@ -189,7 +189,7 @@ parse_heap_gb <- function(x) {
 #'
 #' @returns A numeric value representing the current heap size in gigabytes.
 #'
-#' @example inst/roxygen-examples/current_heap_gb_example.R
+#' @example inst/roxygen-examples/current_heap_gb-example.R
 #' @noRd
 #' @keywords internal
 current_heap_gb <- function() {
@@ -210,7 +210,7 @@ current_heap_gb <- function() {
 #' for mocking.
 #'
 #' @returns A logical value indicating whether the session is interactive.
-#' @example inst/roxygen-examples/is_interactive_example.R
+#' @example inst/roxygen-examples/is_interactive-example.R
 #' @noRd
 #' @keywords internal
 is_interactive <- function() {
@@ -230,7 +230,7 @@ is_interactive <- function() {
 #' @returns Invisibly returns TRUE if all packages are installed,
 #'   otherwise stops or warns.
 #'
-#' @example inst/roxygen-examples/dot-check_if_pkgs_are_installed_example.R
+#' @example inst/roxygen-examples/dot-check_if_pkgs_are_installed-example.R
 #' @keywords internal
 .check_if_pkgs_are_installed <- function(
   pkgs,

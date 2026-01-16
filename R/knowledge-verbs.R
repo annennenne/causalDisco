@@ -10,7 +10,7 @@
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -55,7 +55,7 @@ add_vars <- function(kn, vars) {
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -185,7 +185,7 @@ add_tier <- function(kn, tier, before = NULL, after = NULL) {
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -288,7 +288,7 @@ add_to_tier <- function(kn, ...) {
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -323,7 +323,7 @@ forbid_edge <- function(kn, ...) {
 #' @inheritParams forbid_edge
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -360,7 +360,7 @@ require_edge <- function(kn, ...) {
 #'
 #' @returns Updated knowledge object.
 #'
-#' @example inst/roxygen-examples/knowledge_verbs_example.R
+#' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -386,7 +386,7 @@ add_exo <- add_exogenous
 #' @returns The same `knowledge` object with the `frozen` attribute set to
 #' `FALSE`.
 #'
-#' @example inst/roxygen-examples/unfreeze_example.R
+#' @example inst/roxygen-examples/unfreeze-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -408,7 +408,7 @@ unfreeze <- function(kn) {
 #'
 #' @returns A tibble with the tiers.
 #'
-#' @example inst/roxygen-examples/get_tiers_example.R
+#' @example inst/roxygen-examples/get_tiers-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -431,7 +431,7 @@ get_tiers <- function(kn) {
 #'
 #' @returns An updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -484,7 +484,7 @@ remove_vars <- function(kn, ...) {
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -534,7 +534,7 @@ remove_edge <- function(kn, from, to) {
 #'
 #' @returns An updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/remove_from_knowledge_example.R
+#' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -585,7 +585,7 @@ remove_tiers <- function(kn, ...) {
 #' @param kn A `knowledge` object.
 #' @returns The same `knowledge` object with new forbidden edges added.
 #'
-#' @example inst/roxygen-examples/forbid_tier_violations_example.R
+#' @example inst/roxygen-examples/forbid_tier_violations-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -666,7 +666,7 @@ forbid_tier_violations <- function(kn) {
 #'   You can pass this list directly to \code{tier()} (which will expand it
 #'   automatically).
 #'
-#' @example inst/roxygen-examples/seq_tiers_example.R
+#' @example inst/roxygen-examples/seq_tiers-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge

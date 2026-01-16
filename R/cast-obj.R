@@ -7,7 +7,7 @@
 #' @noRd
 #' @keywords internal
 #'
-#' @example inst/roxygen-examples/cast_obj_example.R
+#' @example inst/roxygen-examples/cast_obj-example.R
 #'
 #' @return A Java object cast to a superclass that Tetrad takes as input.
 cast_obj <- function(obj) {

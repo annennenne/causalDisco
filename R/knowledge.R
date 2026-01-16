@@ -66,7 +66,7 @@
 #' @importFrom tidyselect starts_with ends_with contains matches num_range
 #' @importFrom rlang !!
 #'
-#' @example inst/roxygen-examples/knowledge_example.R
+#' @example inst/roxygen-examples/knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -606,7 +606,7 @@ print.knowledge <- function(x, ...) {
 #'
 #' @param x Object to check.
 #'
-#' @example inst/roxygen-examples/is_knowledge_example.R
+#' @example inst/roxygen-examples/is_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -635,7 +635,7 @@ is_knowledge <- function(x) {
 #'
 #' @returns A single string (with newlines) of R code.
 #'
-#' @example inst/roxygen-examples/deparse_knowledge_example.R
+#' @example inst/roxygen-examples/deparse_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge

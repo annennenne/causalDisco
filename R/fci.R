@@ -20,7 +20,7 @@
 #'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
 #' }
 #'
-#' @example inst/roxygen-examples/fci_example.R
+#' @example inst/roxygen-examples/fci-example.R
 #'
 #' @return
 #' A function of class \code{"fci"} that takes a single argument \code{data}

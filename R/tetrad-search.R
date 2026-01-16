@@ -3,7 +3,7 @@
 #'
 #' @name TetradSearch
 #'
-#' @example inst/roxygen-examples/TetradSearch_example.R
+#' @example inst/roxygen-examples/TetradSearch-example.R
 NULL
 
 #' @title R6 Interface to Tetrad Search Algorithms

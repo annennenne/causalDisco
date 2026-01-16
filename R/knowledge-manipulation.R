@@ -3,7 +3,7 @@
 #' @param kn1 A `knowledge` object.
 #' @param kn2 Another `knowledge` object.
 #'
-#' @example inst/roxygen-examples/plus-knowledge_example.R
+#' @example inst/roxygen-examples/plus-knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -105,7 +105,7 @@
 #'
 #' @returns The same `knowledge` object with tiers rearranged.
 #'
-#' @example inst/roxygen-examples/reorder_tiers_example.R
+#' @example inst/roxygen-examples/reorder_tiers-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -205,7 +205,7 @@ reorder_tiers <- function(kn, order, by_index = FALSE) {
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/reorder_tiers_example.R
+#' @example inst/roxygen-examples/reorder_tiers-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge

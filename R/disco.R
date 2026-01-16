@@ -25,7 +25,7 @@
 #'  \item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
 #' }
 #'
-#' @example inst/roxygen-examples/disco_example.R
+#' @example inst/roxygen-examples/disco-example.R
 #'
 #' @returns A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'

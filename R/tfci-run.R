@@ -36,7 +36,7 @@
 #'
 #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'
-#' @example inst/roxygen-examples/tfci_example.R
+#' @example inst/roxygen-examples/tfci-example.R
 #'
 #' @include tpc-run.R
 #' @importClassesFrom pcalg pcAlgo
@@ -180,7 +180,7 @@ tfci_run <- function(
 #'   (rows/columns named by variable names).
 #' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
 #'
-#' @example inst/roxygen-examples/order_restrict_pag_skel_example.R
+#' @example inst/roxygen-examples/order_restrict_pag_skel-example.R
 #'
 #' @return The modified adjacency matrix with arrowheads added at the later node
 #'   for cross-tier pairs.
@@ -215,7 +215,7 @@ order_restrict_pag_skel <- function(amat, knowledge) {
 #' @param vnames Character vector of variable names, used to translate indices in
 #'   \code{sepset} into names for tier comparison.
 #'
-#' @example inst/roxygen-examples/order_restrict_sepset_example.R
+#' @example inst/roxygen-examples/order_restrict_sepset-example.R
 #'
 #' @return The input \code{sepset} with any disallowed separating sets replaced by
 #'   \code{NULL}. Emits a warning each time such a set is removed.
@@ -260,7 +260,7 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #' @param cautious Logical; if \code{TRUE}, remove any separating set that violates
 #'   temporal constraints before orientation.
 #'
-#' @example inst/roxygen-examples/tpag_example.R
+#' @example inst/roxygen-examples/tpag-example.R
 #'
 #' @return A PAG adjacency matrix in pcalg format (integer codes \code{0/1/2/3}).
 #' @keywords internal

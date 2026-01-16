@@ -19,7 +19,7 @@
 #'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
 #' }
 #'
-#' @example inst/roxygen-examples/ges_example.R
+#' @example inst/roxygen-examples/ges-example.R
 #'
 #' @return
 #' A function of class \code{"ges"} that takes a single argument \code{data}

@@ -13,7 +13,7 @@
 #'
 #' @returns A Java `edu.cmu.tetrad.data.Knowledge` object.
 #'
-#' @example inst/roxygen-examples/as_tetrad_knowledge_example.R
+#' @example inst/roxygen-examples/as_tetrad_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -90,7 +90,7 @@ as_tetrad_knowledge <- function(kn) {
 #' * If \code{directed_as_undirected = FALSE} and any edge lacks its
 #'   symmetrical counterpart. This can only hold for forbidden edges.
 #'
-#' @example inst/roxygen-examples/as_pcalg_constraints_example.R
+#' @example inst/roxygen-examples/as_pcalg_constraints-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
@@ -220,7 +220,7 @@ as_pcalg_constraints <- function(
 #' @returns A list with two elements, `whitelist` and `blacklist`, each a data
 #' frame containing the edges in a `from`, `to` format.
 #'
-#' @example inst/roxygen-examples/as_bnlearn_knowledge_example.R
+#' @example inst/roxygen-examples/as_bnlearn_knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge

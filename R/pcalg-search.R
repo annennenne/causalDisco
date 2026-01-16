@@ -3,7 +3,7 @@
 #'
 #' @name PcalgSearch
 #'
-#' @example inst/roxygen-examples/pcalg_search_example.R
+#' @example inst/roxygen-examples/pcalg_search-example.R
 NULL
 
 #' @title R6 Interface to pcalg Search Algorithms

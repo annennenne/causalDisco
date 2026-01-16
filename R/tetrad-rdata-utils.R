@@ -14,7 +14,7 @@
 #' continuous variables, as Tetrad does not support ordinal variables. If set
 #' to `FALSE`, this means that integer columns are treated as unordered factors.
 #'
-#' @example inst/roxygen-examples/rdata_to_tetrad_data_example.R
+#' @example inst/roxygen-examples/rdata_to_tetrad_data-example.R
 #'
 #' @return A Tetrad Java object representing the data frame.
 #'
@@ -153,7 +153,7 @@ rdata_to_tetrad <- function(df, int_cols_as_cont = TRUE) {
 #'
 #' @param data A Java object of class `edu.cmu.tetrad.data.DataSet`.
 #'
-#' @example inst/roxygen-examples/rdata_to_tetrad_data_example.R
+#' @example inst/roxygen-examples/rdata_to_tetrad_data-example.R
 #'
 #' @return
 #' A data frame with the same dimensions and names as `data`.

@@ -16,7 +16,7 @@
 #' For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
 #' via \code{...}, see [tfci_run()].
 #'
-#' @example inst/roxygen-examples/tfci_example.R
+#' @example inst/roxygen-examples/tfci-example.R
 #'
 #' @return
 #' A function of class \code{"tfci"} that takes a single argument \code{data}

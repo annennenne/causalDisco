@@ -10,7 +10,7 @@
 #'
 #' @returns An S3 object of class `"knowledge"`.
 #'
-#' @example inst/roxygen-examples/dot-new_knowledge_example.R
+#' @example inst/roxygen-examples/dot-new_knowledge-example.R
 #' @noRd
 #' @keywords internal
 .new_knowledge <- function(vars = character(), frozen = FALSE) {
@@ -47,7 +47,7 @@
 #' `to`, `tier_from`, and `tier_to`.
 #' @param tiers A data frame with a column `label` listing tier labels
 #'
-#' @example inst/roxygen-examples/dot-validate_tier_rule_example.R
+#' @example inst/roxygen-examples/dot-validate_tier_rule-example.R
 #' @noRd
 #' @keywords internal
 .validate_tier_rule <- function(edges_df, tiers) {
@@ -86,7 +86,7 @@
 #' @param edges_df Data frame with columns `status`, `from`, `to`,
 #'   `tier_from`, and `tier_to`.
 #'
-#' @example inst/roxygen-examples/dot-validate_forbidden_required_example.R
+#' @example inst/roxygen-examples/dot-validate_forbidden_required-example.R
 #' @noRd
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
@@ -147,7 +147,7 @@
 #'
 #' @returns The updated `knowledge` object.
 #'
-#' @example inst/roxygen-examples/dot-add_edges_example.R
+#' @example inst/roxygen-examples/dot-add_edges-example.R
 #' @noRd
 #' @keywords internal
 .add_edges <- function(kn, status, from, to, remove_self_loops = TRUE) {
@@ -204,7 +204,7 @@
 #' @param status Either `"forbidden"` or `"required"`.
 #' @param fml A quosure that must wrap a two-sided formula.
 #'
-#' @example inst/roxygen-examples/dot-edge_verb_example.R
+#' @example inst/roxygen-examples/dot-edge_verb-example.R
 #' @noRd
 #' @keywords internal
 .edge_verb <- function(kn, status, fml) {
@@ -264,7 +264,7 @@
 #'
 #'   Specifications are resolved recursively.
 #'
-#' @example inst/roxygen-examples/dot-vars_from_spec_example.R
+#' @example inst/roxygen-examples/dot-vars_from_spec-example.R
 #' @noRd
 #' @keywords internal
 .vars_from_spec <- function(kn, spec) {
@@ -363,7 +363,7 @@
 #' @param kn A `knowledge` object.
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #'
-#' @example inst/roxygen-examples/dot-formula_vars_example.R
+#' @example inst/roxygen-examples/dot-formula_vars-example.R
 #' @noRd
 #' @keywords internal
 .formula_vars <- function(kn, rhs) {

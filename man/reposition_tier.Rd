@@ -27,9 +27,7 @@ The updated \code{knowledge} object.
 Move one tier before / after another
 }
 \examples{
-### reposition_tier_example.R ###
-
-# move one tier relative to another
+# Move one tier relative to another
 data(tpc_example)
 
 kn <- knowledge(

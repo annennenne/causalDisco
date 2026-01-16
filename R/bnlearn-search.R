@@ -3,7 +3,7 @@
 #'
 #' @name BnlearnSearch
 #'
-#' @example inst/roxygen-examples/bnlearn_search_example.R
+#' @example inst/roxygen-examples/bnlearn_search-example.R
 NULL
 
 #' @title R6 Interface to bnlearn Search Algorithms
