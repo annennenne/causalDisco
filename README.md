@@ -262,10 +262,10 @@ If we want any changes we can modify the tikz code after generation.
   if we currently document ones we haven’t implemented yet.
 
   - Missing scores:
-    `"Rank BIC Score", "SEM BIC Score", "Instance-specific Augmented SEM BIC Score"`
+    `"SEM BIC Score", "Instance-specific Augmented SEM BIC Score"`
 
-  - Missing tests: \`“Basis Function Blocks Test”, “GIN”, “Poisson Prior
-    Test”, “RCIT”, “Rank Independence Test TS”, “SEM BIC Test”.
+  - Missing tests:
+    `"Basis Function Blocks Test", "GIN", "Poisson Prior Test", "RCIT", "Rank Independence Test TS", "SEM BIC Test"`.
 
 - Update simulation functions (use caugi?)
 

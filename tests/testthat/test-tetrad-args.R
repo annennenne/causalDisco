@@ -1,8 +1,6 @@
 test_that("tetrad test argument works (discrete)", {
   skip_if_no_tetrad()
-  # Discrete – categorical
-  disc_test_data <- make_disc_test_data(n = 2000)
-  disc_test_data[] <- lapply(disc_test_data, factor)
+  data(cat_data)
 
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
@@ -18,12 +16,12 @@ test_that("tetrad test argument works (discrete)", {
     "probabilistic"
   )
 
-  lapply(tests, function(t) run_pc_test(disc_test_data, t))
+  lapply(tests, function(t) run_pc_test(cat_data, t))
 })
 
 test_that("tetrad test argument works (continuous)", {
   skip_if_no_tetrad()
-  data("tpc_example")
+  data(num_data)
 
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
@@ -36,7 +34,7 @@ test_that("tetrad test argument works (continuous)", {
     "fisher_z"
   )
 
-  lapply(tests, function(t) run_pc_test(tpc_example, t))
+  lapply(tests, function(t) run_pc_test(num_data, t))
 })
 
 test_that("tetrad test argument works (mixed)", {
@@ -76,10 +74,11 @@ test_that("tetrad score argument works (continuous)", {
     "ebic",
     "gic",
     "poisson_prior",
-    "zhang_shen_bound"
+    "zhang_shen_bound",
+    "rank_bic"
   )
 
-  lapply(tests, function(t) run_ges_test(tpc_example, t))
+  lapply(tests, function(t) run_ges_test(num_data, t))
 })
 
 
@@ -119,7 +118,7 @@ test_that("tetrad score argument works (mixed)", {
     "basis_function_bic",
     "mag_degenerate_gaussian_bic",
     "basis_function_blocks_bic",
-    "basis_function_sem_bic_score"
+    "basis_function_sem_bic"
   )
 
   lapply(tests, function(t) run_ges_test(mix_data, t))

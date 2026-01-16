@@ -46,6 +46,7 @@ TetradSearch <- R6Class(
     #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
     #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
+    #'      \item \code{"rank_bic"} - Rank-based BIC score.
     #'   }
     #'
     #'   **Mixed Discrete/Gaussian**
@@ -351,6 +352,7 @@ TetradSearch <- R6Class(
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
     #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
     #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+    #'      \item \code{"rank_bic"} - Rank-based BIC score.
     #'   }
     #' @param ... Additional arguments passed to the private score-setting methods.
     #'    For the following scores, the following parameters are available:
@@ -528,6 +530,13 @@ TetradSearch <- R6Class(
     #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
     #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
     #'    }
+    #'    \item \code{"rank_bic"} - Rank BIC score.
+    #'    \itemize{
+    #'      \item \code{gamma = 0.8} - Gamma parameter for Extended BIC (Chen and Chen, 2008). Between 0 and 1,
+    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'      graphs.
+    #'    }
     #'  }
     #'
     #' @return Invisibly returns \code{self}.
@@ -577,8 +586,8 @@ TetradSearch <- R6Class(
         "basis_function_sem_bic" = {
           private$use_basis_function_sem_bic_score(...)
         },
-        "basis_function_sem_bic_score" = {
-          private$use_basis_function_sem_bic_score(...)
+        "rank_bic" = {
+          private$use_rank_bic_score(...)
         },
         {
           stop(
@@ -1846,6 +1855,26 @@ TetradSearch <- R6Class(
       )
       self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
+    use_rank_bic_score = function(
+      gamma = 0.8,
+      penalty_discount = 2
+    ) {
+      stopifnot(
+        is.numeric(gamma),
+        is.numeric(penalty_discount),
+        gamma >= 0,
+        gamma <= 1,
+        penalty_discount >= 0
+      )
+      self$set_params(
+        EBIC_GAMMA = gamma,
+        PENALTY_DISCOUNT = penalty_discount
+      )
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/RankBicScore"
       )
       self$score <- cast_obj(self$score)
     },

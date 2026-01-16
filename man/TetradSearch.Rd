@@ -63,6 +63,7 @@ used by Tetrad.}
 \item \code{"gic"} - Generalized Information Criterion (GIC) score.
 \item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
+\item \code{"rank_bic"} - Rank-based BIC score.
 }
 
 \strong{Mixed Discrete/Gaussian}
@@ -354,6 +355,7 @@ This is a generalization of the Degenerate Gaussian score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
 \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+\item \code{"rank_bic"} - Rank-based BIC score.
 }}
 
 \item{\code{...}}{Additional arguments passed to the private score-setting methods.
@@ -530,6 +532,13 @@ graphs,
 covariance/correlation matrices for numerical stability,
 \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
 The Degenerate Gaussian category indicator variables for mixed data are also used.
+}
+\item \code{"rank_bic"} - Rank BIC score.
+\itemize{
+\item \code{gamma = 0.8} - Gamma parameter for Extended BIC (Chen and Chen, 2008). Between 0 and 1,
+\item \code{penalty_discount = 2} - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs.
 }
 }}
 }
