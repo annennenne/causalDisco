@@ -55,6 +55,7 @@ TetradSearch <- R6Class(
     #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
     #'        This is a generalization of the Degenerate Gaussian score.
     #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
     #'   }
     #'
     # #'   **General (non-linear Gaussian?)**
@@ -347,6 +348,7 @@ TetradSearch <- R6Class(
     #      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
     #'   }
     #' @param ... Additional arguments passed to the private score-setting methods.
     #'    For the following scores, the following parameters are available:
@@ -435,7 +437,7 @@ TetradSearch <- R6Class(
     #'    }
     #'    \item \code{"discrete_bic"} - BIC score for discrete data.
     #'    \itemize{
-    #'      'item \code{penalty_discount = 2} - Penalty discount. Higher penalty
+    #'      \item \code{penalty_discount = 2} - Penalty discount. Higher penalty
     #'      yields sparser graphs,
     #'      \item \code{structure_prior = 0} - The default number of parents
     #'      for any conditional probability table. Higher weight is accorded
@@ -502,6 +504,18 @@ TetradSearch <- R6Class(
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
+    #'    \item \code{"basis_function_blocks_bic"} - BIC score for mixed data
+    #'    using basis-function embedding
+    #'    \itemize{
+    #'      \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
+    #'      types are \code{"polynomial"}, \code{"legrende"}, \code{"hermite"},
+    #'      and \code{"chebyshev"},
+    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'      graphs,
+    #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
+    #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
+    #'    }
     #'  }
     #'
     #' @return Invisibly returns \code{self}.
@@ -544,6 +558,9 @@ TetradSearch <- R6Class(
         },
         "zhang_shen_bound" = {
           private$use_zhang_shen_bound_score(...)
+        },
+        "basis_function_blocks_bic" = {
+          private$use_basis_function_blocks_bic_score(...)
         },
         {
           stop(
@@ -1748,6 +1765,44 @@ TetradSearch <- R6Class(
       )
       self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/ZhangShenBoundScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
+    use_basis_function_blocks_bic_score = function(
+      basis_type = "polynomial",
+      penalty_discount = 2,
+      truncation_limit = 3
+    ) {
+      basis_type_int <- switch(
+        basis_type,
+        polynomial = 0L,
+        legendre = 1L,
+        hermite = 2L,
+        chebyshev = 3L,
+        stop(
+          "Unsupported `basis_type` input: ",
+          basis_type,
+          "\n",
+          "Supported values are: 'polynomial', 'legendre', 'hermite', and 'chebyshev'.",
+          call. = FALSE
+        )
+      )
+
+      stopifnot(
+        is.numeric(penalty_discount),
+        is.numeric(truncation_limit),
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        penalty_discount >= 0
+      )
+
+      self$set_params(
+        BASIS_TYPE = basis_type_int,
+        PENALTY_DISCOUNT = penalty_discount,
+        TRUNCATION_LIMIT = truncation_limit
+      )
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/BfBlocksBicScore"
       )
       self$score <- cast_obj(self$score)
     },
