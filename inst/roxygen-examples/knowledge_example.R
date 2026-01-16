@@ -1,10 +1,6 @@
 data(tpc_example)
 
-# knowledge objects are made with the knowledge() function
-kn <- knowledge()
-
-
-# knowledge objects contain tier information, forbidden and required edges
+# Knowledge objects can contain tier information, forbidden and required edges
 kn <- knowledge(
   tier(
     1 ~ V1 + V2,
@@ -14,7 +10,7 @@ kn <- knowledge(
   V3 %!-->% V1
 )
 
-# if a data frame is provided, variable names are checked against it
+# If a data frame is provided, variable names are checked against it
 kn <- knowledge(
   tpc_example,
   tier(
@@ -24,7 +20,7 @@ kn <- knowledge(
   )
 )
 
-# throws error
+# Throws error if variable not in data
 try(
   knowledge(
     tpc_example,
@@ -32,28 +28,28 @@ try(
       1 ~ child_x1 + child_x2,
       2 ~ youth_x3 + youth_x4,
       3 ~ oldage_x5 + woops
-    ) # wrong name
+    )
   )
 )
 
-# using tidyselect helpers
+# Using tidyselect helpers
 kn <- knowledge(
   tpc_example,
   tier(
-    1 ~ starts_with("child"), # can use tidyselect helpers
-    2 ~ youth_x3 + youth_x4, # do not need quotes for tiers or variables
+    1 ~ starts_with("child"),
+    2 ~ ends_with(c("_x3", "_x4")),
     3 ~ starts_with("oldage")
-  ) # doesn't have to match data naming
+  )
 )
 
-# custom tier naming
+# Custom tier naming
 kn <- knowledge(
   tpc_example,
   tier(
-    "child" ~ starts_with("child"), # can use tidyselect helpers
-    youth ~ starts_with("youth"), # do not need quotes for tiers
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
     elderly ~ starts_with("oldage")
-  ) # doesn't have to match data naming
+  )
 )
 
 # There is also required and forbidden edges, which are specified like so
@@ -70,15 +66,27 @@ kn <- knowledge(
   exo(child_x2) # shorthand
 )
 
+# Mix different operators
+kn <- knowledge(
+  tpc_example,
+  tier(
+    1 ~ starts_with("child") + youth_x4,
+    2 ~ youth_x3 + starts_with("oldage")
+  ),
+  child_x1 %-->% youth_x3,
+  oldage_x6 %!-->% oldage_x5,
+  exo(child_x2)
+)
+
 # You can also build knowledge with a verb pipeline
 kn <-
   knowledge() |>
-  add_vars(c("A", "B", "C", "D")) |> # knowledge now only takes these variables
+  add_vars(c("A", "B", "C", "D")) |> # Knowledge now only takes these variables
   add_tier(One) |>
-  add_to_tier("One" ~ A + B) |>
+  add_to_tier(One ~ A + B) |>
   add_tier(2, after = One) |>
   add_to_tier(2 ~ C + D) |>
-  forbid_edge("A" ~ C) |>
+  forbid_edge(A ~ C) |>
   require_edge(A ~ B)
 
 # Mix DSL start + verb refinement
@@ -93,19 +101,19 @@ kn <-
   add_exogenous(V3)
 
 # Using seq_tiers for larger datasets
-tpc_example <- as.data.frame(
+large_data <- as.data.frame(
   matrix(
-    runif(100), # 100 random numbers in (0,1)
+    runif(100),
     nrow = 1,
     ncol = 100,
     byrow = TRUE
   )
 )
 
-names(tpc_example) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
+names(large_data) <- paste0("X_", 1:100)
 
 kn <- knowledge(
-  tpc_example,
+  large_data,
   tier(
     seq_tiers(
       1:100,
@@ -115,7 +123,7 @@ kn <- knowledge(
   X_1 %-->% X_2
 )
 
-tpc_example <- data.frame(
+small_data <- data.frame(
   X_1 = 1,
   X_2 = 2,
   tier3_A = 3,
@@ -123,11 +131,11 @@ tpc_example <- data.frame(
   check.names = FALSE
 )
 
-kn_seq_tiers2 <- knowledge(
-  tpc_example,
+kn <- knowledge(
+  small_data,
   tier(
-    seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
-    seq_tiers(3, starts_with("tier{i}")), # tier3_
-    seq_tiers(5, matches("Y{i}_ok")) # exact match
+    seq_tiers(1:2, ends_with("_{i}")),
+    seq_tiers(3, starts_with("tier{i}")),
+    seq_tiers(5, matches("Y{i}_ok"))
   )
 )

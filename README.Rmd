@@ -208,9 +208,6 @@ If we want any changes we can modify the tikz code after generation.
 
 - In documentation of defaults for tests maybe add the underlying engine defaults if they differ?
 
-- In documentation of test / scores say which data types they support (continuous, discrete, mixed). It's written for
-some of the engines, but even that is unclear sometimes.
-
 - In tests (and examples) don't use `tpc_example` all the time and instead also use other datasets (e.g. num_data, cat_data, mix_data).
 (this also avoids that we currently simulate data in tests when needing an e.g. numerical dataset).
 

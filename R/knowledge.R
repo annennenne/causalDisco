@@ -41,6 +41,16 @@
 #' - Numeric vector shortcut for `tier()`:
 #'   `tier(c(1, 2, 1))` assigns tiers by index to all existing variables.
 #'
+#' Multiple calls or operators are additive: each call adds new edges to the knowledge object.
+#' For example:
+#'
+#' ```r
+#' V1 %-->% V3
+#' V2 %-->% V3
+#' ```
+#'
+#' results in both edges being required - i.e., the union of all specified required edges.
+#'
 #' @param ... Arguments to define the knowledge object:
 #'   * Optionally, a single data frame (first argument) whose column names
 #'     initialize and freeze the variable set.
