@@ -1,50 +1,44 @@
 library(shiny)
 library(markdown)
 
-propNames <- read.csv("propertyLabels.csv", stringsAsFactors = FALSE)
-descriptions <- read.csv(
-  "descriptions.csv",
-  stringsAsFactors = FALSE,
-  nrows = 24
-)
+propNames <- read.csv("propertyLabels.csv",
+                      stringsAsFactors = FALSE)
+descriptions <- read.csv("descriptions.csv",
+                         stringsAsFactors = FALSE,
+                         nrows = 24)
 
 source("procedureChooser.R")
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
-  output$distPlot <- renderPlot({
-    hist(
-      rnorm(100),
-      breaks = 10,
-      col = "#75AADB",
-      border = "white",
-      xlab = "Waiting time to next eruption (in mins)",
-      main = "Histogram of waiting times"
-    )
+    
+  
+    output$distPlot <- renderPlot({
+    
+    hist(rnorm(100), breaks = 10, col = "#75AADB", border = "white",
+         xlab = "Waiting time to next eruption (in mins)",
+         main = "Histogram of waiting times")
+    
   })
-
+  
   output$procedures <- renderUI({
     useProps <- propNames$assumption %in% input$inputProps
     pros <- procedureChooser(useProps)
     outids <- descriptions[descriptions$ID %in% pros, "ID"]
     outnames <- descriptions[descriptions$ID %in% pros, "name"]
     nOut <- length(outids)
-
-    if (nOut == 0) {
-      return("No available procedures found.")
-    }
-
+    
+    if (nOut == 0) return("No available procedures found.")
+    
     outLinks <- lapply(1:nOut, function(x) {
-      actionLink(
-        inputId = paste("tile_", outids[x], sep = ""),
-        label = outnames[x]
-      )
+      actionLink(inputId = paste("tile_", outids[x], sep = ""),
+                 label = outnames[x])
     })
   })
-
+  
   makeReactiveBinding("showProcedure")
   showProcedure <- "blank"
-
+  
   observeEvent(input$tile_1, showProcedure <<- "tile_1")
   observeEvent(input$tile_2, showProcedure <<- "tile_2")
   observeEvent(input$tile_3, showProcedure <<- "tile_3")
@@ -69,8 +63,9 @@ server <- function(input, output) {
   observeEvent(input$tile_22, showProcedure <<- "tile_22")
   observeEvent(input$tile_23, showProcedure <<- "tile_23")
   observeEvent(input$tile_24, showProcedure <<- "tile_24")
-
+  
   output$whichproc <- renderUI({
     includeHTML(paste("www/", showProcedure, ".html", sep = ""))
   })
 }
+

@@ -1,1 +1,0 @@
-### amat() example ###

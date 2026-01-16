@@ -1,331 +1,205 @@
-#' Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
+#' Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG. 
 #'
-#' @details Note that it is necessary to read in relevant tikz libraries in the
+#' @details Note that it is necessary to read in relevant tikz libraries in the 
 #' Latex preamble. The relevant lines of code are (depending a bit on parameter settings): \cr
 #' \code{\\usepackage{tikz}} \cr
 #' \code{\\usetikzlibrary{arrows.meta,arrows,shapes,decorations,automata,backgrounds,petri}} \cr
 #' \code{\\usepackage{pgfplots}}
 #'
-#' @param model \code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot.
-#' @param x_jit How much should nodes within a period be jittered horizontally.
-#' @param y_jit Vertical distance between nodes within a period.
-#' @param mark_periods If \code{TRUE}, gray boxes are drawn behind each period.
-#' @param period_gap Horizontal gap between different periods.
-#' @param annotate_edges If \code{TRUE}, add a text annotation to edges. If \code{annotation_labels}
+#' @param model \code{tpdag}, \code{tskeleton}, \code{tpag}, or \code{tamat} object to plot. 
+#' @param xjit How much should nodes within a period be jittered horizontally.
+#' @param yjit Vertical distance between nodes within a period.
+#' @param markperiods If \code{TRUE}, gray boxes are drawn behind each period. 
+#' @param xpgap Horizontal gap between different periods. 
+#' @param annotateEdges If \code{TRUE}, add a text annotation to edges. If \code{annotationlabels}
 #' are supplied, these labels will be used. Otherwise, the value in the inputted adjacency matrix corresponding
 #' to the edge will be used. Cannot be used for \code{tpag}
 #' input objects (or \code{ag} amat types).
-#' @param add_axis If \code{TRUE}, a horizontal axis with period labels are added.
-#' @param var_labels Optional labels for nodes (variables). Should be given as a named list, where
-#' the name is the variable name, and the entry is the label, e.g. \code{list(vname = "Label for vname")}.
-#' @param period_labels Optional labels for periods. Should be given as a named list, where
-#' the name is the period name (as stored in the \code{tamat}), and the entry is the label,
-#' e.g. \code{list(periodname = "Label for period")}.
-#' @param annotation_labels Optional labels for edge annotations. Only used if \code{annotate_edges = TRUE}.
-#' Should be given as a named list, where the name is the edge annotation (as stored in the \code{tamat}),
-#' and the entry is the label, e.g. \code{list(h = "High")}.
+#' @param addAxis If \code{TRUE}, a horizontal axis with period labels are added. 
+#' @param varLabels Optional labels for nodes (variables). Should be given as a named list, where 
+#' the name is the variable name, and the entry is the label, e.g. \code{list(vname = "Label for vname")}. 
+#' @param periodLabels Optional labels for periods. Should be given as a named list, where 
+#' the name is the period name (as stored in the \code{tamat}), and the entry is the label, 
+#' e.g. \code{list(periodname = "Label for period")}. 
+#' @param annotationLabels Optional labels for edge annotations. Only used if \code{annotateEdges = TRUE}. 
+#' Should be given as a named list, where the name is the edge annotation (as stored in the \code{tamat}), 
+#' and the entry is the label, e.g. \code{list(h = "High")}. 
 #' @param clipboard If \code{TRUE}, the tikz code is not printed, but instead copied to the clipboard,
-#' so it can easily be pasted into a Latex document.
-#' @param raw_out If \code{TRUE}, the tikz code is only returned as a character vector.
-#' @param color_annotate Named list of colors to use to mark edge annotations instead of labels. This
-#' overrules \code{annotate_edges} and both are not available at the same time. The list should be given with
+#' so it can easily be pasted into a Latex document. 
+#' @param rawout If \code{TRUE}, the tikz code is only returned as a character vector.  
+#' @param colorAnnotate Named list of colors to use to mark edge annotations instead of labels. This 
+#' overrules \code{annotateEdges} and both are not available at the same time. The list should be given with
 #' annotations as names and colors as entries, e.g. \code{list(h = "blue")}. Cannot be used for \code{tpag}
 #' input objects (or \code{ag} amat types).
-#' @param bend_edges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly
-#' on top of each other.
-#'
-#' @return Silently returns a character vector with lines of tikz code. The function
-#' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz
-#' code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code is instead printed
+#' @param bendedges If \code{TRUE}, all edges are bend 10 degrees to the right, thereby avoiding having edges exactly on
+#' top of each other. 
+#' 
+#' @return Silently returns a character vector with lines of tikz code. The function 
+#' furthermore has a side-effect. If \code{clipboard = TRUE}, the side-effect is that the tikz 
+#' code is also copied to the clipboard. If \code{clipboard = FALSE}, the tikz code is instead printed  
 #' in the console.
-#'
-#' @examples
-#'
+#' 
+#' @examples 
+#' 
 #' # Make tikz figure code from tpdag, print code to screen
-#' data(tpc_example)
-#' kn <- knowledge(
-#'   tpc_example,
-#'   tier(
-#'     child ~ tidyselect::starts_with("child"),
-#'     youth ~ tidyselect::starts_with("youth"),
-#'     oldage ~ tidyselect::starts_with("oldage")
-#'   )
-#' )
-#'
-#' tpdag_example <- tpc_run(tpc_example,
-#'   kn,
-#'   alpha = 0.01,
-#'   test = cor_test,
-#'   output = "tpdag"
-#' )
-#' make_tikz(tpdag_example, clipboard = FALSE)
-#'
+#' data(tpcExample)
+#' tpdag1 <- tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
+#'               test = corTest)
+#' maketikz(tpdag1, clipboard = FALSE)
+#' 
 #' # Make tikz figure code from tamat, copy code to clipboard
-#' dag_example <- sim_dag(5)
-#' rownames(dag_example) <- colnames(dag_example) <- c(
-#'   "child_x", "child_y",
-#'   "child_z", "adult_x",
-#'   "adult_y"
-#' )
-#' output_tamat <- causalDisco:::tamat(dag_example, order = c("child", "adult"))
+#' thisdag <- simDAG(5)
+#' rownames(thisdag) <- colnames(thisdag) <- c("child_x", "child_y",
+#'                                             "child_z", "adult_x", 
+#'                                             "adult_y")
+#' thistamat <- tamat(thisdag, order = c("child", "adult"))        
 #' \dontrun{
-#' make_tikz(output_tamat)
-#' }
-#'
+#' maketikz(thistamat)            
+#' }   
+#'               
+#' @importFrom clipr write_clip
 #' @export
-make_tikz <- function(
-  model,
-  x_jit = 2,
-  y_jit = 2,
-  mark_periods = TRUE,
-  period_gap = 4,
-  annotate_edges = NULL,
-  add_axis = TRUE,
-  var_labels = NULL,
-  period_labels = NULL,
-  annotation_labels = NULL,
-  clipboard = TRUE,
-  raw_out = FALSE,
-  color_annotate = NULL,
-  bend_edges = FALSE
-) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "clipr"
-    ),
-    function_name = "make_tikz"
-  )
-
-  if (
-    "tpdag" %in%
-      class(model) ||
-      "tskeleton" %in% class(model) ||
-      "tpag" %in% class(model)
-  ) {
+maketikz <- function(model, xjit = 2, yjit = 2,
+                       markperiods = TRUE, xpgap = 4,
+                       annotateEdges = NULL,
+                       addAxis = TRUE,
+                       varLabels = NULL,
+                       periodLabels = NULL,
+                       annotationLabels = NULL,
+                       clipboard = TRUE,
+                       rawout = FALSE,
+                       colorAnnotate = NULL,
+                       bendedges = FALSE) {
+  if ("tpdag" %in% class(model) | "tskeleton" %in% class(model) | 
+      "tpag" %in% class(model)) {
     amat <- model$tamat
-    order <- attr(amat, "order")
+    order <-  attr(amat, "order")
   } else if ("tamat" %in% class(model)) {
     amat <- model
     order <- attr(model, "order")
-  } else if (is_knowledgeable_caugi(model)) {
-    order <- get_tiers(model)
-    stop("Currently knowledgeable_caugis are not supported")
   } else {
     stop("Input model must be of class tpdag, tskeleton or tamat")
   }
-
+  
   istpag <- attr(amat, "tamat_type") == "ag"
-
-  if (istpag || (!is.null(color_annotate) && is.null(annotate_edges))) {
-    annotate_edges <- FALSE
+  
+  if (istpag | (!is.null(colorAnnotate) & is.null(annotateEdges))) {
+    annotateEdges <- FALSE
   }
-
-  if (is.null(annotate_edges)) {
-    annotate_edges <- !all(amat %in% c(0, 1))
+  
+  if (is.null(annotateEdges)) {
+    annotateEdges <- !all(amat %in% c(0,1))
   }
-
+  
   bendstr <- " "
-  if (bend_edges) {
-    bendstr <- " [bend right=10] "
-  }
-
+  if (bendedges) bendstr <- " [bend right=10] "
+  
   vars <- colnames(amat)
   nvar <- length(vars)
   nperiod <- length(order)
-
+  
   vparts <- strsplit(vars, split = "_")
   periods <- sapply(vparts, function(x) x[1])
   vnames <- sapply(vparts, function(x) paste(x[-1], collapse = "\\_"))
   neachperiod <- as.numeric(table(periods)[order])
   maxpvar <- max(neachperiod)[1]
-  maxypos <- maxpvar * y_jit
-
-  if (is.null(var_labels)) {
-    var_labels <- vnames
+  maxypos <- maxpvar * yjit
+  
+  if (is.null(varLabels)) {
+    varLabels <- vnames
   } else {
-    var_labels <- unlist(var_labels[rownames(amat)])
+    varLabels <- unlist(varLabels[rownames(amat)])
   }
-
-  if (is.null(period_labels)) {
-    period_labels <- order
+  
+  if (is.null(periodLabels)) {
+    periodLabels <- order 
   }
-
+  
   out <- c("%TIKZ FIG MADE BY CAUSALDISCO", "\\begin{tikzpicture}")
-
-  out <- c(
-    out,
-    paste(
-      "[every node/.style={font=\\small, align = center},",
-      "every edge/.append style={nodes={font=\\itshape\\scriptsize}}]"
-    )
-  )
-  if (annotate_edges && !is.null(annotation_labels)) {
-    for (i in seq_along(annotation_labels)) {
-      this_annotation <- names(annotation_labels)[i]
-      this_lab <- annotation_labels[[i]]
-      amat[amat == this_annotation] <- this_lab
+  
+  out <- c(out,  paste("[every node/.style={font=\\small, align = center},",
+                       "every edge/.append style={nodes={font=\\itshape\\scriptsize}}]"))
+  if (annotateEdges & !is.null(annotationLabels)) {
+    for (i in 1:length(annotationLabels)) {
+      thisAnnotation <- names(annotationLabels)[i]
+      thisLab <- annotationLabels[[i]]
+      amat[amat == thisAnnotation] <- thisLab
     }
   }
-
+  
   pcounters <- rep(1, nperiod)
-
+  
   for (i in 1:nvar) {
     thisperiod <- periods[i]
-    thisvname <- var_labels[i]
+    thisvname <- varLabels[i]
     thispno <- which(order == thisperiod)
-    thispno <- which(order == thisperiod) # TODO: not used
-
-    xpos <- (thispno - 1) *
-      period_gap +
-      (thispno - 1) * x_jit +
-      (i %% 2) * x_jit
+    thisptotal <- sum(periods == thisperiod)
+    
+    xpos <- (thispno-1)*xpgap + (thispno-1)*xjit + (i %% 2) * xjit
     ydist <- floor(maxypos / neachperiod[thispno])
-    ypos <- (maxypos - ((neachperiod[thispno] - 1) * ydist)) /
-      2 +
-      ydist * (pcounters[thispno] - 1)
-
-    out <- c(
-      out,
-      paste(
-        "\\node (",
-        i,
-        ") at (",
-        xpos,
-        ",",
-        ypos,
-        ") {",
-        thisvname,
-        "};",
-        sep = ""
-      )
-    )
-
-    if (add_axis && pcounters[thispno] == 1) {
-      out <- c(
-        out,
-        paste(
-          "\\node at (",
-          (thispno - 1) * period_gap + (thispno - 1) * x_jit + x_jit / 2,
-          ",",
-          "-0.5",
-          ") {",
-          period_labels[thispno],
-          "};",
-          sep = ""
-        )
-      )
+    ypos <- (maxypos - ((neachperiod[thispno] - 1) * ydist))/2 + 
+      ydist * (pcounters[thispno]-1) 
+    
+    out <- c(out, paste("\\node (", i, ") at (", xpos, ",", ypos, ") {", 
+                        thisvname, "};", sep = ""))
+    
+    if (addAxis & pcounters[thispno] == 1) {
+      out <- c(out, paste("\\node at (", (thispno-1)*xpgap + (thispno-1)*xjit  + xjit/2, 
+                          ",", "-0.5", ") {", 
+                          periodLabels[thispno], "};", sep = ""))
     }
-
-    # if (pcounter == thisptotal) {
-    #  pcounter <- 1
-    # } else {
+    
+    #if (pcounter == thisptotal) {
+    #  pcounter <- 1 
+    #} else { 
     #  pcounter <- pcounter + 1
-    # }
+    #}
     pcounters[thispno] <- pcounters[thispno] + 1
   }
-
+  
   allundir <- list()
-
+  
   if (!istpag) {
     for (i in 1:nvar) {
       thesechildren <- which(amat[, i] != 0)
       theseparents <- which(amat[i, ] != 0)
       theseundir <- intersect(thesechildren, theseparents)
-
-      thesetruechildren <- setdiff(thesechildren, theseundir)
-
-      theseundir <- theseundir[theseundir < i] # only store when smaller, avoids duplicates
-      if (length(theseundir) > 0) {
+      
+      thesetruechildren <- setdiff(thesechildren, theseundir) 
+      
+      theseundir <- theseundir[theseundir < i] #only store when smaller, avoids duplicates
+      if (length(theseundir) > 0 ) {
         allundir[[i]] <- theseundir
       }
       if (length(thesetruechildren) > 0) {
-        if (!annotate_edges && is.null(color_annotate)) {
-          out <- c(
-            out,
-            paste(
-              "\\draw [->] (",
-              i,
-              ") edge",
-              bendstr,
-              "(",
-              thesetruechildren,
-              ");",
-              sep = ""
-            )
-          )
+        if (!annotateEdges & is.null(colorAnnotate)) {
+          out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
+        } 
+        if (annotateEdges) {
+          #  browser()
+          out <- c(out, paste("\\draw [->] (", i, ") edge", bendstr, "node [above,sloped] {", amat[thesetruechildren, i],
+                              "} (", thesetruechildren, ");", sep = ""))
         }
-        if (annotate_edges) {
-          out <- c(
-            out,
-            paste(
-              "\\draw [->] (",
-              i,
-              ") edge",
-              bendstr,
-              "node [above,sloped] {",
-              amat[thesetruechildren, i],
-              "} (",
-              thesetruechildren,
-              ");",
-              sep = ""
-            )
-          )
-        }
-        if (!is.null(color_annotate)) {
-          out <- c(
-            out,
-            paste(
-              "\\draw [->, ",
-              unlist(color_annotate[amat[thesetruechildren, i]]),
-              "] (",
-              i,
-              ") edge",
-              bendstr,
-              "(",
-              thesetruechildren,
-              ");",
-              sep = ""
-            )
-          )
+        if (!is.null(colorAnnotate)) {
+          out <- c(out, paste("\\draw [->, ", unlist(colorAnnotate[amat[thesetruechildren, i]]), 
+                              "] (", i, ") edge", bendstr, "(", thesetruechildren, ");", sep = ""))
         }
       }
     }
-
-    for (i in seq_along(allundir)) {
-      theseneigh <- allundir[[i]]
-
-      if (length(theseneigh) == 0) {
-        next
-      }
-
-      if (!annotate_edges) {
-        out <- c(
-          out,
-          paste0(
-            "\\draw [-] (",
-            i,
-            ") edge",
-            bendstr,
-            "(",
-            theseneigh,
-            ");"
-          )
-        )
-      } else {
-        out <- c(
-          out,
-          paste0(
-            "\\draw [-] (",
-            i,
-            ") edge",
-            bendstr,
-            "node [above,sloped] {",
-            amat[theseneigh, i],
-            "} (",
-            theseneigh,
-            ");"
-          )
-        )
+    
+    n_undir <- length(allundir)
+    if (n_undir > 0) {
+      for (i in 1:length(allundir)) {
+        theseneigh <- allundir[[i]]
+        if (length(theseneigh) > 0) {
+          if (!annotateEdges) {
+            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "(", theseneigh, ");", sep = ""))
+          }
+          if (annotateEdges) {
+            out <- c(out, paste("\\draw [-] (", i, ") edge", bendstr, "node [above,sloped] {", amat[theseneigh, i],
+                                "} (", theseneigh, ");", sep = ""))
+          }
+        }
       }
     }
   }
@@ -333,115 +207,81 @@ make_tikz <- function(
     ahead_from <- c("{Circle[open]}", "<", "")
     ahead_to <- c("{Circle[open]}", ">", "")
     alledges <- edges_pag(amat)
-
-    alledges$tikzedge <- paste(
-      ahead_from[alledges$a1],
-      ahead_to[alledges$a2],
-      sep = "-"
-    )
-    for (i in seq_len(nrow(alledges))) {
-      out <- c(
-        out,
-        paste0(
-          "\\draw [",
-          alledges$tikzedge[i],
-          "] (",
-          alledges$n1[i],
-          ") edge",
-          bendstr,
-          "(",
-          alledges$n2[i],
-          ");"
-        )
-      )
+    
+    alledges$tikzedge <- paste(ahead_from[alledges$a1], ahead_to[alledges$a2], 
+                               sep = "-")
+    n_edges <- nrow(alledges)
+    if (n_edges > 0) {
+      for (i in 1:nrow(alledges)) {
+        out <- c(out, paste("\\draw [", alledges$tikzedge[i],
+                            "] (", alledges$n1[i], ") edge", bendstr, "(", alledges$n2[i], ");", 
+                            sep = ""))
+      }
     }
   }
-
-  if (add_axis) {
-    max_xpos <- (nperiod - 1) * period_gap + x_jit * nperiod
-    out <- c(
-      out,
-      paste("\\draw [-] (-1,0) edge (", max_xpos + 1, ",0);", sep = "")
-    )
+  
+  if (addAxis) {
+    max_xpos <- (nperiod-1)*xpgap + xjit*nperiod
+    out <- c(out, paste("\\draw [-] (-1,0) edge (", max_xpos + 1, ",0);", sep = ""))
   }
-
-  if (mark_periods) {
-    out <- c(
-      out,
-      "\\begin{pgfonlayer}{background}",
-      "\\filldraw [join=round,black!10]"
-    )
-
+  
+  if (markperiods) { 
+    out <- c(out, "\\begin{pgfonlayer}{background}", 
+             "\\filldraw [join=round,black!10]")
+    
     for (j in 1:nperiod) {
-      xpos_1 <- (j - 1) * period_gap + (j - 1) * x_jit
+      xpos_1 <- (j - 1) * xpgap + (j - 1) * xjit
       ypos_1 <- 0
-      xpos_2 <- xpos_1 + x_jit
-      ypos_2 <- (maxpvar) * y_jit
-
-      out <- c(
-        out,
-        paste(
-          "(",
-          xpos_1,
-          ",",
-          ypos_1,
-          ") rectangle (",
-          xpos_2,
-          ",",
-          ypos_2,
-          ")",
-          sep = ""
-        )
-      )
+      xpos_2 <- xpos_1 + xjit
+      ypos_2 <- (maxpvar) * yjit 
+      
+      out <- c(out, paste("(", xpos_1, ",", ypos_1, ") rectangle (",
+                          xpos_2, ",", ypos_2, ")", sep = ""))
     }
     out <- c(out, "; \\end{pgfonlayer}")
   }
-
+  
   out <- c(out, "\\end{tikzpicture}")
-
-  if (raw_out) {
-    return(out)
-  }
-
+  
+  if (rawout) return(out)
+  
   if (clipboard) {
-    clipr::write_clip(out)
+    write_clip(out)
   } else {
     cat(paste(out, collapse = "\n"))
   }
-
+  
   invisible(out)
 }
+
+
+
+
 
 
 ############################################################################
 ## Not exported below ######################################################
 ############################################################################
 
+  
 edges_pag <- function(amat, usevnames = FALSE) {
-  res <- data.frame(
-    n1 = character(),
-    a1 = character(),
-    a2 = character(),
-    n2 = character()
-  )
+  res <- data.frame(n1 = character(), a1 = character(), a2 = character(), 
+                    n2 = character())
   p <- nrow(amat)
   vnames <- colnames(amat)
   useamat <- amat
-
+  
   for (i in 1:p) {
     outgoing <- which(useamat[, i] != 0)
     nout <- length(outgoing)
     if (nout > 0) {
       for (j in outgoing) {
-        thisn1 <- i
+        thisn1 <- i 
         thisn2 <- j
-        thisa1 <- useamat[i, j]
-        thisa2 <- useamat[j, i]
-        useamat[i, j] <- 0
-        res <- rbind(
-          res,
-          data.frame(n1 = thisn1, a1 = thisa1, a2 = thisa2, n2 = thisn2)
-        )
+        thisa1 <- useamat[i,j]
+        thisa2 <- useamat[j,i]
+        useamat[i,j] <- 0
+        res <- rbind(res, data.frame(n1 = thisn1, a1 = thisa1, a2 = thisa2, n2 = thisn2)) 
       }
     }
   }

@@ -1,51 +1,42 @@
 #Load numeric dataset numData
-load(url(
-  "https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"
-))
+load(url("https://github.com/annennenne/causalDisco/raw/master/webtool/data/exampledata_numData.rda"))
 
 #Load package
 library(pcalg)
 
 #Prepare data for ges() call with arges option: Define score object,
 #then define sufficient statistic and use the latter to estimate the skeleton,
-#i.e., the undirected graph.
+#i.e., the undirected graph. 
 ##Note: This choice of score is suitable for Gaussian data.
 ##Note: The choice of sufficient statistic is also suitable for Gaussian data.
-##Note: We also choose options suitable for Gaussian data for estimating the
+##Note: We also choose options suitable for Gaussian data for estimating the 
 ###skeleton (independence test for Gaussian variables). We specify significance level
-###1% and use the names from the data set as graph labels.
+###1% and use the names from the data set as graph labels. 
 pcalg_score_numData <- new("GaussL0penObsScore", numData)
 pcalg_suffstat_numData <- list(C = cor(numData), n = nrow(numData))
-pcalg_skeleton_out <- as(
-  skeleton(
-    pcalg_suffstat_numData,
-    indepTest = gaussCItest,
-    alpha = 0.01,
-    labels = names(numData)
-  )@graph,
-  "matrix"
-)
+pcalg_skeleton_out <- as(skeleton(pcalg_suffstat_numData,
+                                  indepTest = gaussCItest,
+                                  alpha = 0.01,
+                                  labels = names(numData))@graph, "matrix")
 
 
 #Learn causal structure using ges()
-#Mandatory arguments:
+#Mandatory arguments: 
 ##A score object containg the data
-##What gaps (i.e. edges that are *not* allowed) to use. This is specified as the
-###opposite of the skeleton estimated above. This means that we use the estimated
-###skeleton as offset for the algorithm (but it is not necessarily respected in the
+##What gaps (i.e. edges that are *not* allowed) to use. This is specified as the 
+###opposite of the skeleton estimated above. This means that we use the estimated 
+###skeleton as offset for the algorithm (but it is not necessarily respected in the 
 ###output)
-##A method for performing adaptive restricted greedy equivalence search, we use "triples".
-pcalg_arges_out <- ges(
-  pcalg_score_numData,
-  fixedGaps = !pcalg_skeleton_out,
-  adaptive = "triples"
-)
+##A method for performing adaptive restricted greedy equivalence search, we use "triples".  
+pcalg_arges_out <- ges(pcalg_score_numData, fixedGaps = !pcalg_skeleton_out,
+                       adaptive = "triples")
 
-#Look at ingoing edges for each variable for outputted
+#Look at ingoing edges for each variable for outputted 
 #causal model
-sapply(pcalg_arges_out$essgraph$field(".in.edges"), function(x) {
-  names(numData[x])
-})
+sapply(pcalg_arges_out$essgraph$field(".in.edges"), 
+       function(x) names(numData[x]))
 
 #Plot output
 plot(pcalg_arges_out$essgraph)
+
+

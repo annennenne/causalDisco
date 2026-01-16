@@ -2,60 +2,130 @@
 % Please edit documentation in R/tpc.R
 \name{tpc}
 \alias{tpc}
-\title{The Temporal Peter-Clark (PC) algorithm for causal discovery}
+\title{Perform causal discovery using the temporal PC algorithm (TPC)}
 \usage{
-tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
+tpc(
+  data = NULL,
+  order,
+  sparsity = 10^(-1),
+  test = regTest,
+  suffStat = NULL,
+  method = "stable.fast",
+  methodNA = "none",
+  methodOri = "conservative",
+  output = "tpdag",
+  varnames = NULL,
+  ...
+)
 }
 \arguments{
-\item{engine}{Character; which engine to use. Must be one of:
-\describe{
-\item{\code{"causalDisco"}}{causalDisco library.}
-}}
+\item{data}{A data.frame with data. All variables should be
+assigned to exactly one period by prefixing them with the period name
+(see example below).}
 
-\item{test}{Character; name of the conditional‐independence test.}
+\item{order}{A character vector with period-prefixes in their
+temporal order (see example below).}
 
-\item{alpha}{Numeric; significance level for the CI tests.}
+\item{sparsity}{The sparsity level to be used for independence
+testing (i.e. significance level threshold to use for each test).}
 
-\item{...}{Additional arguments passed to the chosen engine
-(e.g. test or algorithm parameters).}
+\item{test}{A procedure for testing conditional independence.
+The default, \code{regTest} uses a regression-based information
+loss test. Another available option is \code{corTest} which
+tests for vanishing partial correlations. User supplied functions
+may also be used, see details below about the required syntax.}
+
+\item{suffStat}{Sufficient statistic. If this argument is supplied, the
+sufficient statistic is not computed from the inputted data. The format and
+contents of the sufficient statistic depends on which test is being used.}
+
+\item{method}{Which method to use for skeleton construction, must be
+\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
+See \code{\link[pcalg]{skeleton}} for details.}
+
+\item{methodNA}{Method for handling missing information (\code{NA} values).
+Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
+are present), \code{"cc"} (complete case analysis, deletes all observations
+that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
+observations with missing information test-by-test) (further details below).}
+
+\item{methodOri}{Method for handling conflicting separating sets when orienting
+edges. Currently only the conservative method is available.}
+
+\item{output}{One of \code{"tpdag"}, \code{"tskeleton"} or \code{"pcAlgo"}. If
+\code{"tskeleton"}, a temporal skeleton is constructed and outputted,
+but the edges are not directed. If \code{"tpdag"} (the default), a
+the edges are directed, resulting in a temporal partially directed
+acyclic graph (TPDAG). If \code{"pcAlgo"} the TPDAG is outputted as the
+object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
+intended for compatability with tools from that package.}
+
+\item{varnames}{A character vector of variable names. It only needs to be supplied
+if the \code{data} argument is not used, and data are hence passed exclusively
+through the \code{suffStat} argument.}
+
+\item{...}{Further optional arguments which are passed to
+\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
 }
 \value{
-A function of class \code{"tpc"} that takes a single argument \code{data}
-(a data frame) and returns a \code{caugi} and a \code{knowledge}
-(\code{knowledgeable_caugi}) object.
+A \code{tpdag} or \code{tskeleton} object. Both return types are
+S3 objects, i.e., lists with entries: \code{$tamat} (the estimated adjacency
+matrix), \code{$order} (character vector with the order, as inputted to
+this function), \code{$psi} (the significance level used for testing), and
+\code{$ntests} (the number of tests conducted).
 }
 \description{
-Run the temporal PC algorithm for causal discovery using causalDisco.
+Perform causal discovery using the temporal PC algorithm (TPC)
 }
 \details{
-For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
-via \code{...}, see \code{\link[=tpc_run]{tpc_run()}}.
+Note that all independence test procedures implemented
+in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
+
+The methods for handling missing information require that the \code{data},
+rather than the \code{suffStat} argument is used for inputting data; the latter
+assumes no missing information and hence always sets \code{methodNA = "none"}.
+If the test is \code{corTest}, test-wise deletion is performed when computing the
+sufficient statistic (correlation matrix) (so for each pair of variables, only
+complete cases are used). If the test is \code{regTest}, test-wise deletion
+is performed for each conditional independence test instead.
 }
 \examples{
-# Load data
-data(tpc_example)
+#TPC on included example data, use sparsity psi = 0.01, default test (regression-based
+#information loss):
+data(tpcExample)
+tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01)
 
-# Build knowledge
-kn <- knowledge(
-  tpc_example,
-  tier(
-    child ~ tidyselect::starts_with("child"),
-    youth ~ tidyselect::starts_with("youth"),
-    old ~ tidyselect::starts_with("old")
-  )
-)
 
-# Recommended route using disco
-my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
+#TPC on included example data, use sparsity psi = 0.01, use test for vanishing partial
+# correlations:
+data(tpcExample)
+tpc(tpcExample, order = c("child", "youth", "oldage"), sparsity = 0.01,
+test = corTest)
 
-disco(tpc_example, my_tpc, knowledge = kn)
 
-# or using my_tpc directly
+#TPC on another simulated data set
 
-my_tpc <- my_tpc |> set_knowledge(kn)
-my_tpc(tpc_example)
+#Simulate data
+set.seed(123)
+n <- 500
+child_x <- rnorm(n)^2
+child_y <- 0.5*child_x + rnorm(n)
+child_z <- sample(c(0,1), n, replace = TRUE,
+                  prob = c(0.3, 0.7))
 
-# Using tpc_run() directly
+adult_x <- child_x + rnorm(n)
+adult_z <- as.numeric(child_z + rnorm(n) > 0)
+adult_w <- 2*adult_z + rnorm(n)
+adult_y <- 2*sqrt(child_x) + adult_w^2 + rnorm(n)
 
-tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
+simdata <- data.frame(child_x, child_y, child_z,
+                      adult_x, adult_z, adult_w,
+                      adult_y)
+
+#Define order
+simorder <- c("child", "adult")
+
+#Perform TPC with sparsity psi = 0.001
+results <- tpc(simdata, order = simorder, sparsity = 10^(-3))
+
 }
