@@ -38,7 +38,7 @@
 #'
 #' @example inst/roxygen-examples/tfci_example.R
 #'
-#' @include tpc_run.R
+#' @include tpc-run.R
 #' @importClassesFrom pcalg pcAlgo
 #' @export
 tfci_run <- function(
