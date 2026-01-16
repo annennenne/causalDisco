@@ -24,7 +24,9 @@ A dataset created by discretizing the continuous \code{num_data} into 5 categori
 The R code used to generate this dataset is as follows:
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{data(num_data)
-cat_data <- as.data.frame(sapply(num_data, function(x) cut(x, breaks = 5, labels = letters[1:5])))
+cat_data <- as.data.frame(
+  lapply(num_data, function(x) cut(x, breaks = 5, labels = letters[1:5]))
+)
 }\if{html}{\out{</div>}}
 }
 \examples{

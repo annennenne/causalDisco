@@ -68,7 +68,9 @@
 #'
 #' ```R
 #' data(num_data)
-#' cat_data <- as.data.frame(sapply(num_data, function(x) cut(x, breaks = 5, labels = letters[1:5])))
+#' cat_data <- as.data.frame(
+#'   lapply(num_data, function(x) cut(x, breaks = 5, labels = letters[1:5]))
+#' )
 #' ```
 #'
 #' @examples
@@ -128,6 +130,7 @@
 #' ```R
 #' data(cat_data)
 #' cat_data_mcar <- cat_data
+#' n <- nrow(cat_data_mcar)
 #' set.seed(1405)
 #' cat_data_mcar$X1[sample(1:n, 100)] <- NA
 #' cat_data_mcar$X2[sample(1:n, 50)] <- NA
