@@ -164,7 +164,16 @@ plot(disco_cd_tges)
 - Updated getting started and knowledge vignettes based on the feedback.
   Anything missing?
 
-- Documentation of Tetrad score arguments?
+- Remove or keep tests/scores not present in Tetrad interface? (They
+  still work since we call Tetrad Java code directly, but they aren’t in
+  the Tetrad GUI). So also likely to be removed from Tetrad in future
+  versions?
+
+These scores: `"basis_function_bic"`, `mag_degenerate_gaussian_bic`,
+`mixed_variable_polynomial`.
+
+These tests: `chi_square`, `g_square`, `basis_function_lrt`,
+`probabilistic`.
 
 ## TODO
 
@@ -244,19 +253,19 @@ If we want any changes we can modify the tikz code after generation.
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
 
-- In documentation of test / scores say which data types they support
-  (continuous, discrete, mixed). It’s written for some of the engines,
-  but even that is unclear sometimes.
-
 - In tests (and examples) don’t use `tpc_example` all the time and
   instead also use other datasets (e.g. num_data, cat_data, mix_data).
   (this also avoids that we currently simulate data in tests when
   needing an e.g. numerical dataset).
 
-- Improve examples in documentation (currently very minimal).
-
 - Add all algs/scores/tests from the backends (start with Tetrad). Check
   if we currently document ones we haven’t implemented yet.
+
+  - Missing scores:
+    `"Rank BIC Score", "SEM BIC Score", "Instance-specific Augmented SEM BIC Score"`
+
+  - Missing tests: \`“Basis Function Blocks Test”, “GIN”, “Poisson Prior
+    Test”, “RCIT”, “Rank Independence Test TS”, “SEM BIC Test”.
 
 - Update simulation functions (use caugi?)
 
@@ -334,6 +343,9 @@ Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
   all algorithms aren’t currently fully supported.
 
 - List in documentation of `tfci`, … what kind of graph it returns.
+
+- Figure out how to not repeat the documentation of e.g. penalty
+  discount in TetradSearch R6 class.
 
 ### Standardization
 
