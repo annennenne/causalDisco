@@ -118,7 +118,8 @@ test_that("tetrad score argument works (mixed)", {
     "degenerate_gaussian",
     "basis_function_bic",
     "mag_degenerate_gaussian_bic",
-    "basis_function_blocks_bic"
+    "basis_function_blocks_bic",
+    "basis_function_sem_bic_score"
   )
 
   lapply(tests, function(t) run_ges_test(mix_data, t))

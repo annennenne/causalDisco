@@ -55,7 +55,8 @@ TetradSearch <- R6Class(
     #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
     #'        This is a generalization of the Degenerate Gaussian score.
     #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+    #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
     #'   }
     #'
     # #'   **General (non-linear Gaussian?)**
@@ -348,7 +349,8 @@ TetradSearch <- R6Class(
     #      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
-    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+    #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
     #'   }
     #' @param ... Additional arguments passed to the private score-setting methods.
     #'    For the following scores, the following parameters are available:
@@ -370,7 +372,7 @@ TetradSearch <- R6Class(
     #'        variables or so, set this to FALSE in order to calculate
     #'        covariances on the fly from data,
     #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'        lambda to the diagonal, < 0 Pseudoinverse
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
     #'      }
     #'    \item \code{ebic} - Extended BIC score.
     #'    \itemize{
@@ -516,6 +518,16 @@ TetradSearch <- R6Class(
     #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
     #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
     #'    }
+    #'    \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+    #'    \itemize{
+    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'      graphs,
+    #'      \item \code{jitter = 1e-8} - Small non-negative constant added to the diagonal of
+    #'      covariance/correlation matrices for numerical stability,
+    #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
+    #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
+    #'    }
     #'  }
     #'
     #' @return Invisibly returns \code{self}.
@@ -561,6 +573,12 @@ TetradSearch <- R6Class(
         },
         "basis_function_blocks_bic" = {
           private$use_basis_function_blocks_bic_score(...)
+        },
+        "basis_function_sem_bic" = {
+          private$use_basis_function_sem_bic_score(...)
+        },
+        "basis_function_sem_bic_score" = {
+          private$use_basis_function_sem_bic_score(...)
         },
         {
           stop(
@@ -1803,6 +1821,31 @@ TetradSearch <- R6Class(
       )
       self$score <- rJava::.jnew(
         "edu/cmu/tetrad/algcomparison/score/BfBlocksBicScore"
+      )
+      self$score <- cast_obj(self$score)
+    },
+    use_basis_function_sem_bic_score = function(
+      penalty_discount = 2,
+      jitter = 1e-8,
+      truncation_limit = 3
+    ) {
+      stopifnot(
+        is.numeric(penalty_discount),
+        is.numeric(jitter),
+        is.numeric(truncation_limit),
+        jitter >= 0,
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        penalty_discount >= 0
+      )
+
+      self$set_params(
+        REGULARIZATION_LAMBDA = jitter,
+        PENALTY_DISCOUNT = penalty_discount,
+        TRUNCATION_LIMIT = truncation_limit
+      )
+      self$score <- rJava::.jnew(
+        "edu/cmu/tetrad/algcomparison/score/BasisFunctionBicScore"
       )
       self$score <- cast_obj(self$score)
     },

@@ -72,7 +72,8 @@ used by Tetrad.}
 \item \code{"basis_function_bic"} - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.
 \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-\item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
+\item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+\item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
 }}
 
 \item{\code{test}}{Java object holding the independence test selected with
@@ -351,7 +352,8 @@ This is a generalization of the Degenerate Gaussian score.
 \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
 \item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
-\item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function embedding.
+\item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+\item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
 }}
 
 \item{\code{...}}{Additional arguments passed to the private score-setting methods.
@@ -374,7 +376,7 @@ of the likelihood difference,
 variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-lambda to the diagonal, < 0 Pseudoinverse
+lambda to the diagonal, < 0 Pseudoinverse.
 }
 \item \code{ebic} - Extended BIC score.
 \itemize{
@@ -516,6 +518,16 @@ and \code{"chebyshev"},
 \item \code{penalty_discount = 2} - Penalty discount factor used in
 BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
 graphs,
+\item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
+The Degenerate Gaussian category indicator variables for mixed data are also used.
+}
+\item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+\itemize{
+\item \code{penalty_discount = 2} - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,
+\item \code{jitter = 1e-8} - Small non-negative constant added to the diagonal of
+covariance/correlation matrices for numerical stability,
 \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
 The Degenerate Gaussian category indicator variables for mixed data are also used.
 }
