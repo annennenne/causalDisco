@@ -77,7 +77,7 @@ Recognised values are:
 \item \code{"pnal_g"} - penalised node-average log-likelihood
 }
 
-\strong{Continuous - Conditional Gaussian}
+\strong{Mixed Discrete/Gaussian}
 \itemize{
 \item \code{"loglik_cg"}, \code{"aic_cg"}, \code{"bic_cg"},
 \code{"ebic_cg"}, \code{"pred_loglik_cg"},
@@ -125,7 +125,7 @@ Recognised values are:
 \item \code{"mi_g_sh"} – mutual information (Gaussian, shrinkage)
 }
 
-\strong{Continuous - Conditional Gaussian}
+\strong{Mixed Discrete/Gaussian}
 \itemize{
 \item \code{"mi_cg"} – mutual information (conditional Gaussian)
 }}
