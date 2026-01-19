@@ -3,6 +3,7 @@ Adoptium
 BCInference
 BDE
 BDeu
+Basak
 Bjarke
 Bjerre
 BnlearnSearch
@@ -20,6 +21,7 @@ DAGMA
 DSL
 DirectLiNGAM
 EBIC
+Eagleson
 Ellegaard
 EssGraph
 FASK
@@ -58,10 +60,14 @@ Osler
 PAG
 PCMax
 PDAG
+Pilla
 Pseudoinverse
+RCIT
+RCoT
 Raskutti
 Recognised
 Renviron
+Satterthwaite
 Silverman
 Spirtes
 TETRAD
@@ -79,6 +85,7 @@ Tidyselect
 Tobias
 Uhler's
 WIP
+Welch
 Zhang
 adf
 adjacencies
@@ -87,6 +94,7 @@ al
 alg
 algs
 amat
+atm
 bdeu
 bic
 bidirected
