@@ -95,6 +95,7 @@ probabilistic conditional independence judgments.
 \itemize{
 \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
 \item \code{"poisson_prior"} - Poisson prior test.
+\item \code{"sem_bic"} - SEM BIC test.
 }
 
 \strong{Mixed Discrete/Gaussian}
@@ -107,6 +108,7 @@ probabilistic conditional independence judgments.
 \itemize{
 \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
 \item \code{"gin"} - Generalized Independence Noise test.
+\item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
 }}
 
 \item{\code{alg}}{Java object representing the search algorithm.
@@ -218,6 +220,9 @@ probabilistic conditional independence judgments.
 \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
 \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
 \item \code{"poisson_prior"} - Poisson prior test
+\item \code{"gin"} - Generalized Independence Noise test
+\item \code{"rcit"} - Randomized Conditional Independence Test (RCIT)
+\item \code{"sem_bic"} - SEM BIC test
 }}
 
 \item{\code{...}}{Additional arguments passed to the private test-setting methods.
@@ -343,6 +348,47 @@ and \code{"pearson"} - Pearson correlation (for linear),
 \item \code{gin_ridge = 1e-8} - Ridge parameter used when computing residuals.
 A small number >= 0.
 \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
+}
+\item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
+\itemize{
+\item \code{alpha = 0.05} - Significance level for the
+independence test,
+\item \code{rcit_approx = "lpb4"} - Null approximation method. Recognized values are:
+\code{"lpb4"} - Lindsay-Pilla-Basak method with 4 support points,
+\code{"hbe"} - Hall-Buckley-Eagleson method,
+\code{"gamma"} - Gamma (Satterthwaite-Welch),
+\code{"chi_square"} - Chi-square (normalized),
+\code{"permutation"} - Permutation-based (computationally intensive),
+\item \code{rcit_ridge = 1e-3} - Ridge parameter used when computing residuals.
+A small number >= 0,
+\item \code{num_feat = 10} - Number of random features to use
+for the regression of X and Y on Z. Values between 5 and 20 often suffice.
+\item \code{num_fourier_feat_xy = 5} - Number of random Fourier features to use for
+the tested variables X and Y. Small values often suffice (e.g., 3 to 10),
+\item \code{num_fourier_feat_z = 100} - Number of random Fourier features to use for
+the conditioning set Z. Values between 50 and 300 often suffice,
+\item \code{center_features = TRUE} - If TRUE, center the random features to have mean zero. Recommended
+for better numerical stability,
+\item \code{use_rcit = TRUE} - If TRUE, use RCIT; if FALSE, use RCoT
+(Randomized Conditional Correlation Test),
+\item \code{num_permutations = 500} - Number of permutations used for
+the independence test when \code{rcit_approx = "permutation"} is selected.
+\item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
+}
+\item \code{"sem_bic"} - SEM BIC test.
+\itemize{
+\item \code{penalty_discount = 2} - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,
+\item \code{structure_prior = 0} - The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,
+\item \code{precompute_covariances = TRUE} - For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+lambda to the diagonal, < 0 Pseudoinverse.
 }
 }}
 

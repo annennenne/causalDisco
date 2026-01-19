@@ -24,7 +24,7 @@ test_that("tetrad test argument works (continuous)", {
   data(num_data)
 
   run_pc_test <- function(data, test) {
-    pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
+    pc_method <- pc(engine = "tetrad", test = test)
     pc_result <- disco(data, method = pc_method)
     expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
     pc_result
@@ -32,7 +32,8 @@ test_that("tetrad test argument works (continuous)", {
 
   tests <- c(
     "fisher_z",
-    "poisson_prior"
+    "poisson_prior",
+    "sem_bic"
   )
 
   lapply(tests, function(t) run_pc_test(num_data, t))
@@ -43,24 +44,25 @@ test_that("tetrad test argument works (mixed)", {
   data(mix_data)
 
   run_pc_test <- function(data, test) {
-    print(test)
-    start_time <- Sys.time()
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
     if (test == "gin") {
       pc_method <- pc(engine = "tetrad", test = test, num_permutations = 10)
     }
+    if (test == "rcot") {
+      pc_method <- pc(engine = "tetrad", test = "rcit", use_rcit = FALSE)
+    }
     pc_result <- disco(data, method = pc_method)
     expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
     pc_result
-    end_time <- Sys.time()
-    print(end_time - start_time)
   }
 
   tests <- c(
     "degenerate_gaussian",
     "conditional_gaussian",
     "kci",
-    "gin"
+    "gin",
+    "rcit",
+    "rcot"
   )
 
   lapply(tests, function(t) run_pc_test(mix_data, t))

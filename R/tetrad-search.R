@@ -84,6 +84,7 @@ TetradSearch <- R6Class(
     #'   \itemize{
     #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
     #'     \item \code{"poisson_prior"} - Poisson prior test.
+    #'     \item \code{"sem_bic"} - SEM BIC test.
     #'   }
     #'
     #'   **Mixed Discrete/Gaussian**
@@ -96,6 +97,7 @@ TetradSearch <- R6Class(
     #'   \itemize{
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
     #'     \item \code{"gin"} - Generalized Independence Noise test.
+    #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
     #'   }
     test = NULL,
 
@@ -191,6 +193,9 @@ TetradSearch <- R6Class(
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'     \item \code{"poisson_prior"} - Poisson prior test
+    #'     \item \code{"gin"} - Generalized Independence Noise test
+    #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT)
+    #'     \item \code{"sem_bic"} - SEM BIC test
     #'   }
     #' @param ... Additional arguments passed to the private test-setting methods.
     #'   For the following tests, the following parameters are available:
@@ -316,6 +321,47 @@ TetradSearch <- R6Class(
     #'          A small number >= 0.
     #'          \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
     #'     }
+    #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
+    #'     \itemize{
+    #'        \item \code{alpha = 0.05} - Significance level for the
+    #'        independence test,
+    #'        \item \code{rcit_approx = "lpb4"} - Null approximation method. Recognized values are:
+    #'        \code{"lpb4"} - Lindsay-Pilla-Basak method with 4 support points,
+    #'        \code{"hbe"} - Hall-Buckley-Eagleson method,
+    #'        \code{"gamma"} - Gamma (Satterthwaite-Welch),
+    #'        \code{"chi_square"} - Chi-square (normalized),
+    #'        \code{"permutation"} - Permutation-based (computationally intensive),
+    #'        \item \code{rcit_ridge = 1e-3} - Ridge parameter used when computing residuals.
+    #'        A small number >= 0,
+    #'        \item \code{num_feat = 10} - Number of random features to use
+    #'        for the regression of X and Y on Z. Values between 5 and 20 often suffice.
+    #'        \item \code{num_fourier_feat_xy = 5} - Number of random Fourier features to use for
+    #'        the tested variables X and Y. Small values often suffice (e.g., 3 to 10),
+    #'        \item \code{num_fourier_feat_z = 100} - Number of random Fourier features to use for
+    #'        the conditioning set Z. Values between 50 and 300 often suffice,
+    #'        \item \code{center_features = TRUE} - If TRUE, center the random features to have mean zero. Recommended
+    #'        for better numerical stability,
+    #'        \item \code{use_rcit = TRUE} - If TRUE, use RCIT; if FALSE, use RCoT
+    #'        (Randomized Conditional Correlation Test),
+    #'        \item \code{num_permutations = 500} - Number of permutations used for
+    #'        the independence test when \code{rcit_approx = "permutation"} is selected.
+    #'        \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
+    #'    }
+    #'    \item \code{"sem_bic"} - SEM BIC test.
+    #'    \itemize{
+    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'      graphs,
+    #'      \item \code{structure_prior = 0} - The default number of parents
+    #'      for any conditional probability table. Higher weight is accorded
+    #'      to tables with about that number of parents. The prior structure
+    #'      weights are distributed according to a binomial distribution,
+    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #'      variables or so, set this to FALSE in order to calculate
+    #'      covariances on the fly from data,
+    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'      lambda to the diagonal, < 0 Pseudoinverse.
+    #'    }
     #' }
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
@@ -359,6 +405,12 @@ TetradSearch <- R6Class(
         },
         "gin" = {
           private$use_gin_test(..., use_for_mc = mc)
+        },
+        "rcit" = {
+          private$use_rcit_test(..., use_for_mc = mc)
+        },
+        "sem_bic" = {
+          private$use_sem_bic_test(..., use_for_mc = mc)
         },
         {
           stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
@@ -2351,7 +2403,111 @@ TetradSearch <- R6Class(
         self$test <- cast_obj(self$test)
       }
     },
-    # Algorithms
+    use_rcit_test = function(
+      alpha = 0.05,
+      rcit_approx = "lpb4",
+      rcit_ridge = 1e-3,
+      num_feat = 10,
+      num_fourier_feat_xy = 5,
+      num_fourier_feat_z = 100,
+      num_permutations = 500,
+      center_features = TRUE,
+      use_rcit = TRUE,
+      seed = -1,
+      use_for_mc = FALSE
+    ) {
+      stopifnot(
+        is.numeric(c(
+          alpha,
+          rcit_ridge,
+          num_feat,
+          num_fourier_feat_xy,
+          num_fourier_feat_z,
+          num_permutations,
+          seed
+        )),
+        alpha >= 0,
+        rcit_ridge >= 0,
+        num_feat >= 0,
+        floor(num_feat) == num_feat,
+        num_fourier_feat_xy >= 0,
+        floor(num_fourier_feat_xy) == num_fourier_feat_xy,
+        num_fourier_feat_z >= 0,
+        floor(num_fourier_feat_z) == num_fourier_feat_z,
+        num_permutations >= 0,
+        floor(num_permutations) == num_permutations,
+        is.logical(use_for_mc),
+        length(use_for_mc) == 1,
+        is.logical(center_features),
+        length(center_features) == 1,
+        is.logical(use_rcit),
+        length(use_rcit) == 1,
+        is.character(rcit_approx),
+        rcit_approx %in% c("lpb4", "hbe", "gamma", "chi_square", "permutation")
+      )
+
+      self$set_params(
+        ALPHA = alpha,
+        RCIT_APPROX = rcit_approx,
+        RCIT_LAMBDA = rcit_ridge,
+        RCIT_NUM_FEATURES = num_feat,
+        RCIT_NUM_FEATURES_XY = num_fourier_feat_xy,
+        RCIT_NUM_FEATURES_Z = num_fourier_feat_z,
+        RCIT_CENTER_FEATURES = center_features,
+        RCIT_MODE = use_rcit,
+        RCIT_PERMUTATIONS = num_permutations,
+        SEED = seed
+      )
+
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Rcit"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Rcit"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+    use_sem_bic_test = function(
+      penalty_discount = 2,
+      structure_prior = 0,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0,
+      use_for_mc = FALSE,
+      alpha = NULL
+    ) {
+      stopifnot(
+        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
+        penalty_discount >= 0,
+        structure_prior >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        PENALTY_DISCOUNT = penalty_discount,
+        STRUCTURE_PRIOR = structure_prior,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/SemBicTest"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/SemBicTest"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+
+    # ---------------------------------- Algorithms ---------------------------
     set_fges_alg = function(
       symmetric_first_step = FALSE,
       max_degree = -1,
