@@ -5,9 +5,9 @@
 \alias{TetradSearch}
 \title{R6 Interface to Tetrad Search Algorithms}
 \description{
-High-level wrapper around the Java-based \strong{Tetrad} causal-discovery
+High-level wrapper around the Java-based \pkg{Tetrad} causal-discovery
 library. The class lets you choose independence tests, scores, and search
-algorithms from Tetrad, run them on an R data set, and retrieve the
+algorithms from \pkg{Tetrad}, run them on an R data set, and retrieve the
 resulting graph or statistics.
 }
 \examples{
@@ -54,7 +54,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{data}}{Java object that stores the (possibly converted) data set
-used by Tetrad.}
+used by \pkg{Tetrad}.}
 
 \item{\code{rdata}}{Original \strong{R} \code{data.frame} supplied by the user.}
 
@@ -1038,7 +1038,7 @@ Sets the background knowledge object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{knowledge_obj}}{An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).}
+\item{\code{knowledge_obj}}{An object containing \pkg{Tetrad} knowledge.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1113,7 +1113,7 @@ Runs the chosen Tetrad algorithm on the data.
 generated.}
 
 \item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
-as continuous, since Tetrad does not support ordinal data, but only
+as continuous, since \pkg{Tetrad} does not support ordinal data, but only
 either continuous or nominal data. Default is \code{TRUE.}}
 }
 \if{html}{\out{</div>}}

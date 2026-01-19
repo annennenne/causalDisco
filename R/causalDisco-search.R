@@ -8,8 +8,8 @@ NULL
 
 #' @title R6 Interface to causalDisco Search Algorithms
 #'
-#' @description This class implements the search algorithms from the causalDisco
-#' package, which wraps and adds temporal order to pcalg algorithms.
+#' @description This class implements the search algorithms from the \pkg{causalDisco}
+#' package, which wraps and adds temporal order to \pkg{pcalg} algorithms.
 #' It allows to set the data, sufficient statistics, test, score, and algorithm.
 #'
 #' @importFrom R6 R6Class

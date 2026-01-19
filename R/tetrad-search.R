@@ -9,9 +9,9 @@ NULL
 #' @title R6 Interface to Tetrad Search Algorithms
 #'
 #' @description
-#' High-level wrapper around the Java-based **Tetrad** causal-discovery
+#' High-level wrapper around the Java-based \pkg{Tetrad} causal-discovery
 #' library. The class lets you choose independence tests, scores, and search
-#' algorithms from Tetrad, run them on an R data set, and retrieve the
+#' algorithms from \pkg{Tetrad}, run them on an R data set, and retrieve the
 #' resulting graph or statistics.
 #'
 #' @docType class
@@ -23,7 +23,7 @@ TetradSearch <- R6Class(
   "TetradSearch",
   public = list(
     #' @field data Java object that stores the (possibly converted) data set
-    #'  used by Tetrad.
+    #'  used by \pkg{Tetrad}.
     data = NULL,
 
     #' @field rdata Original **R** `data.frame` supplied by the user.
@@ -1287,7 +1287,7 @@ TetradSearch <- R6Class(
       invisible(self)
     },
     #' @description Sets the background knowledge object.
-    #' @param knowledge_obj An object containing Tetrad knowledge (must implement \code{get_tetrad_knowledge}).
+    #' @param knowledge_obj An object containing \pkg{Tetrad} knowledge.
     set_knowledge = function(knowledge_obj) {
       is_knowledge(knowledge_obj)
       knowledge_tetrad <- as_tetrad_knowledge(knowledge_obj)
@@ -1416,7 +1416,7 @@ TetradSearch <- R6Class(
     #' @param bootstrap (logical) If TRUE, bootstrapped graphs will be
     #' generated.
     #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
-    #' as continuous, since Tetrad does not support ordinal data, but only
+    #' as continuous, since \pkg{Tetrad} does not support ordinal data, but only
     #' either continuous or nominal data. Default is `TRUE.`
     #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
     #' Also populates \code{self$java}.
