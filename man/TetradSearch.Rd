@@ -227,7 +227,7 @@ For the following tests, the following parameters are available:
 \item \code{min_count = 1} - Minimum count for the chi-squared
 test per cell. Increasing this can improve accuracy of the test
 estimates,
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 independence test,
 \item \code{cell_table_type = "ad"} - The type of cell table to
 use for optimization. Available types are:
@@ -238,7 +238,7 @@ use for optimization. Available types are:
 \item \code{min_count = 1} - Minimum count for the independence
 test. Increasing this can improve accuracy of chi square
 estimates,
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 chi-squared test,
 \item \code{cell_table_type = "ad"} - The type of cell table to
 use for optimization. Available types are:
@@ -249,7 +249,7 @@ use for optimization. Available types are:
 \item \code{truncation_limit = 3} - Basis functions 1 through
 this number will be used. The Degenerate Gaussian category
 indicator variables for mixed data are also used,
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 likelihood-ratio test,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse,
@@ -269,7 +269,7 @@ divided equally among the cells in the table.
 }
 \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
 \itemize{
-\item \code{alpha = 0.01} - Significance level
+\item \code{alpha = 0.05} - Significance level
 for the independence test,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
@@ -277,14 +277,14 @@ lambda to the diagonal, < 0 Pseudoinverse.
 \item \code{"degenerate_gaussian"} - Degenerate Gaussian
 likelihood ratio test
 \itemize{
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 independence test,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
 \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
 \itemize{
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 independence test,
 \item \code{discretize = TRUE} - If TRUE for the conditional
 Gaussian likelihood, when scoring X --> D where X is continuous
@@ -301,7 +301,7 @@ per cell for the independence test.
 }
 \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
 \itemize{
-\item \code{alpha = 0.01} - Significance level for the
+\item \code{alpha = 0.05} - Significance level for the
 independence test,
 \item \code{approximate = TRUE} - If TRUE, use the approximate
 Gamma approximation algorithm. If FALSE, use the exact,

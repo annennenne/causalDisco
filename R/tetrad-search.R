@@ -199,7 +199,7 @@ TetradSearch <- R6Class(
     #'          \item \code{min_count = 1} - Minimum count for the chi-squared
     #'          test per cell. Increasing this can improve accuracy of the test
     #'          estimates,
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'          independence test,
     #'          \item \code{cell_table_type = "ad"} - The type of cell table to
     #'          use for optimization. Available types are:
@@ -210,7 +210,7 @@ TetradSearch <- R6Class(
     #'          \item \code{min_count = 1} - Minimum count for the independence
     #'          test. Increasing this can improve accuracy of chi square
     #'          estimates,
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'          chi-squared test,
     #'          \item \code{cell_table_type = "ad"} - The type of cell table to
     #'          use for optimization. Available types are:
@@ -221,7 +221,7 @@ TetradSearch <- R6Class(
     #'          \item \code{truncation_limit = 3} - Basis functions 1 through
     #'          this number will be used. The Degenerate Gaussian category
     #'          indicator variables for mixed data are also used,
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'          likelihood-ratio test,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse,
@@ -241,7 +241,7 @@ TetradSearch <- R6Class(
     #'       }
     #'       \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
     #'       \itemize{
-    #'          \item \code{alpha = 0.01} - Significance level
+    #'          \item \code{alpha = 0.05} - Significance level
     #'          for the independence test,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse.
@@ -249,14 +249,14 @@ TetradSearch <- R6Class(
     #'       \item \code{"degenerate_gaussian"} - Degenerate Gaussian
     #'       likelihood ratio test
     #'       \itemize{
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'          independence test,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse.
     #'       }
     #'       \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'       \itemize{
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'           independence test,
     #'          \item \code{discretize = TRUE} - If TRUE for the conditional
     #'           Gaussian likelihood, when scoring X --> D where X is continuous
@@ -273,7 +273,7 @@ TetradSearch <- R6Class(
     #'       }
     #'       \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'       \itemize{
-    #'          \item \code{alpha = 0.01} - Significance level for the
+    #'          \item \code{alpha = 0.05} - Significance level for the
     #'          independence test,
     #'          \item \code{approximate = TRUE} - If TRUE, use the approximate
     #'          Gamma approximation algorithm. If FALSE, use the exact,
@@ -1897,7 +1897,7 @@ TetradSearch <- R6Class(
     # Tests
     use_basis_function_lrt_test = function(
       truncation_limit = 3,
-      alpha = 0.01,
+      alpha = 0.05,
       singularity_lambda = 0.0,
       do_one_equation_only = FALSE,
       use_for_mc = FALSE
@@ -1930,7 +1930,7 @@ TetradSearch <- R6Class(
       }
     },
     use_fisher_z_test = function(
-      alpha = 0.01,
+      alpha = 0.05,
       singularity_lambda = 0.0,
       use_for_mc = FALSE
     ) {
@@ -1989,7 +1989,7 @@ TetradSearch <- R6Class(
     },
     use_chi_square_test = function(
       min_count = 1,
-      alpha = 0.01,
+      alpha = 0.05,
       cell_table_type = "ad",
       use_for_mc = FALSE
     ) {
@@ -2032,7 +2032,7 @@ TetradSearch <- R6Class(
     },
     use_g_square_test = function(
       min_count = 1,
-      alpha = 0.01,
+      alpha = 0.05,
       cell_table_type = "ad",
       use_for_mc = FALSE
     ) {
@@ -2074,7 +2074,7 @@ TetradSearch <- R6Class(
       }
     },
     use_conditional_gaussian_test = function(
-      alpha = 0.01,
+      alpha = 0.05,
       discretize = TRUE,
       num_categories_to_discretize = 3,
       min_sample_size_per_cell = 4,
@@ -2113,7 +2113,7 @@ TetradSearch <- R6Class(
       }
     },
     use_degenerate_gaussian_test = function(
-      alpha = 0.01,
+      alpha = 0.05,
       singularity_lambda = 0.0,
       use_for_mc = FALSE
     ) {
@@ -2170,7 +2170,7 @@ TetradSearch <- R6Class(
       }
     },
     use_kci_test = function(
-      alpha = 0.01,
+      alpha = 0.05,
       approximate = TRUE,
       scaling_factor = 1,
       num_bootstraps = 5000,
@@ -2241,7 +2241,7 @@ TetradSearch <- R6Class(
       }
     },
     use_cci_test = function(
-      alpha = 0.01,
+      alpha = 0.05,
       scaling_factor = 2,
       basis_type = "legendre",
       basis_scale = 0.0,
