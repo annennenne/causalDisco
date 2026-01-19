@@ -85,12 +85,14 @@ TetradSearch <- R6Class(
     #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
     #'     \item \code{"poisson_prior"} - Poisson prior test.
     #'     \item \code{"sem_bic"} - SEM BIC test.
+    #'     \item \code{"rank_independence"} - Rank-based independence test.
     #'   }
     #'
     #'   **Mixed Discrete/Gaussian**
     #'   \itemize{
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
     #'     \item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
+    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test.
     #'   }
     #'
     #'   **General**
@@ -196,6 +198,8 @@ TetradSearch <- R6Class(
     #'     \item \code{"gin"} - Generalized Independence Noise test
     #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT)
     #'     \item \code{"sem_bic"} - SEM BIC test
+    #'     \item \code{"rank_independence"} - Rank-based independence test
+    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test
     #'   }
     #' @param ... Additional arguments passed to the private test-setting methods.
     #'   For the following tests, the following parameters are available:
@@ -362,6 +366,22 @@ TetradSearch <- R6Class(
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
+    #'    \item \code{"rank_independence"} - Rank-based independence test.
+    #'    \itemize{
+    #'      \item \code{alpha = 0.05} - Significance level for the
+    #'      independence test
+    #'    }
+    #'    \item \code{"basis_function_blocks"} - Basis-function blocks test.
+    #'    \itemize{
+    #'      \item \code{alpha = 0.05} - Significance level for the
+    #'      independence test,
+    #'      \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
+    #'      types are \code{"polynomial"}, \code{"legrende"}, \code{"hermite"}, and
+    #'      \code{"chebyshev"},
+    #'      \item \code{truncation_limit = 3} - Basis functions 1 through
+    #'      this number will be used. The Degenerate Gaussian category
+    #'      indicator variables for mixed data are also used.
+    #'    }
     #' }
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
@@ -411,6 +431,12 @@ TetradSearch <- R6Class(
         },
         "sem_bic" = {
           private$use_sem_bic_test(..., use_for_mc = mc)
+        },
+        "rank_independence" = {
+          private$use_rank_independence_test(..., use_for_mc = mc)
+        },
+        "basis_function_blocks" = {
+          private$use_basis_function_blocks_test(..., use_for_mc = mc)
         },
         {
           stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
@@ -2502,6 +2528,77 @@ TetradSearch <- R6Class(
       } else {
         self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/SemBicTest"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+    use_rank_independence_test = function(
+      alpha = 0.05,
+      use_for_mc = FALSE
+    ) {
+      stopifnot(
+        is.numeric(alpha),
+        alpha >= 0,
+        is.logical(use_for_mc),
+        length(use_for_mc) == 1
+      )
+      self$set_params(
+        ALPHA = alpha
+      )
+
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/RankIndependenceTestTs"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/RankIndependenceTestTs"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+    use_basis_function_blocks_test = function(
+      alpha = 0.05,
+      basis_type = "polynomial",
+      truncation_limit = 3,
+      use_for_mc = FALSE
+    ) {
+      stopifnot(
+        is.numeric(c(alpha, truncation_limit)),
+        alpha >= 0,
+        truncation_limit >= 0,
+        floor(truncation_limit) == truncation_limit,
+        is.character(basis_type)
+      )
+      basis_type_int <- switch(
+        tolower(basis_type),
+        polynomial = 0L,
+        legendre = 1L,
+        hermite = 2L,
+        chebyshev = 3L,
+        stop(
+          "Unsupported `basis_type` input: ",
+          basis_type,
+          "\n",
+          "Supported values are: 'polynomial', 'legendre', 'hermite', and 'chebyshev'.",
+          call. = FALSE
+        )
+      )
+      self$set_params(
+        ALPHA = alpha,
+        BASIS_TYPE = basis_type_int,
+        TRUNCATION_LIMIT = truncation_limit
+      )
+
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionBlocksIndTest"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionBlocksIndTest"
         )
         self$test <- cast_obj(self$test)
       }

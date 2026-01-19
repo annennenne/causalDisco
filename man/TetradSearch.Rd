@@ -96,12 +96,14 @@ probabilistic conditional independence judgments.
 \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
 \item \code{"poisson_prior"} - Poisson prior test.
 \item \code{"sem_bic"} - SEM BIC test.
+\item \code{"rank_independence"} - Rank-based independence test.
 }
 
 \strong{Mixed Discrete/Gaussian}
 \itemize{
 \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
 \item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
+\item \code{"basis_function_blocks"} - Basis-function blocks test.
 }
 
 \strong{General}
@@ -223,6 +225,8 @@ probabilistic conditional independence judgments.
 \item \code{"gin"} - Generalized Independence Noise test
 \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT)
 \item \code{"sem_bic"} - SEM BIC test
+\item \code{"rank_independence"} - Rank-based independence test
+\item \code{"basis_function_blocks"} - Basis-function blocks test
 }}
 
 \item{\code{...}}{Additional arguments passed to the private test-setting methods.
@@ -389,6 +393,22 @@ variables or so, set this to FALSE in order to calculate
 covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
+}
+\item \code{"rank_independence"} - Rank-based independence test.
+\itemize{
+\item \code{alpha = 0.05} - Significance level for the
+independence test
+}
+\item \code{"basis_function_blocks"} - Basis-function blocks test.
+\itemize{
+\item \code{alpha = 0.05} - Significance level for the
+independence test,
+\item \code{basis_type = "polynomial"} - The type of basis to use. Supported
+types are \code{"polynomial"}, \code{"legrende"}, \code{"hermite"}, and
+\code{"chebyshev"},
+\item \code{truncation_limit = 3} - Basis functions 1 through
+this number will be used. The Degenerate Gaussian category
+indicator variables for mixed data are also used.
 }
 }}
 

@@ -175,6 +175,8 @@ These scores: `"basis_function_bic"`, `mag_degenerate_gaussian_bic`,
 These tests: `chi_square`, `g_square`, `basis_function_lrt`,
 `probabilistic`.
 
+- `use_for_mc` (Markov checker) argument and usage?
+
 ## TODO
 
 - Rewrite add checks (numeric, logical, …) using checkmate package. Some
@@ -271,9 +273,6 @@ If we want any changes we can modify the tikz code after generation.
     this error when implementing:
     `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null`
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
-
-  - Missing tests:
-    `"Basis Function Blocks Test", "Rank Independence Test TS"`.
 
 - Update simulation functions (use caugi?)
 

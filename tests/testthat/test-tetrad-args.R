@@ -33,7 +33,8 @@ test_that("tetrad test argument works (continuous)", {
   tests <- c(
     "fisher_z",
     "poisson_prior",
-    "sem_bic"
+    "sem_bic",
+    "rank_independence"
   )
 
   lapply(tests, function(t) run_pc_test(num_data, t))
@@ -62,7 +63,8 @@ test_that("tetrad test argument works (mixed)", {
     "kci",
     "gin",
     "rcit",
-    "rcot"
+    "rcot",
+    "basis_function_lrt"
   )
 
   lapply(tests, function(t) run_pc_test(mix_data, t))
