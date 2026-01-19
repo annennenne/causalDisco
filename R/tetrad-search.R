@@ -95,6 +95,7 @@ TetradSearch <- R6Class(
     #'   **General**
     #'   \itemize{
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
+    #'     \item \code{"gin"} - Generalized Independence Noise test.
     #'   }
     test = NULL,
 
@@ -279,8 +280,8 @@ TetradSearch <- R6Class(
     #'          Gamma approximation algorithm. If FALSE, use the exact,
     #'          \item \code{scaling_factor = 1} - For Gaussian kernel: The
     #'          scaling factor * Silverman bandwidth.
-    #'          \item \code{num_bootstraps = 5000} - Number of bootstrap
-    #'          samples to use for the KCI test.
+    #'          \item \code{num_bootstraps = 1000} - Number of bootstrap
+    #'          samples to use for the KCI test. Only used if \code{approximate = FALSE}.
     #'          \item \code{threshold = 1e-3} - Threshold for the KCI test.
     #'          Threshold to determine how many eigenvalues to use --
     #'          the lower the more (0 to 1).
@@ -301,8 +302,21 @@ TetradSearch <- R6Class(
     #'          covariances on the fly from data,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse.
-    #'          }
+    #'      }
+    #'      \item \code{"gin"} - Generalized Independence Noise test.
+    #'      \itemize{
+    #'          \item \code{alpha = 0.05} - Significance level for the
+    #'          independence test,
+    #'          \item \code{gin_backend = "dcor"} - Unconditional test for residual
+    #'          independence. Available types are \code{"dcor"} - Distance correlation (for non-linear)
+    #'          and \code{"pearson"} - Pearson correlation (for linear),
+    #'          \item \code{num_permutations = 200} - Number of permutations used for
+    #'          \code{"dcor"} backend. If \code{"pearson"} backend is used, this parameter is ignored.
+    #'          \item \code{gin_ridge = 1e-8} - Ridge parameter used when computing residuals.
+    #'          A small number >= 0.
+    #'          \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
     #'     }
+    #' }
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
     set_test = function(method, ..., mc = FALSE) {
@@ -342,6 +356,9 @@ TetradSearch <- R6Class(
         },
         "poisson_prior" = {
           private$use_poisson_prior_test(..., use_for_mc = mc)
+        },
+        "gin" = {
+          private$use_gin_test(..., use_for_mc = mc)
         },
         {
           stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
@@ -2173,7 +2190,7 @@ TetradSearch <- R6Class(
       alpha = 0.05,
       approximate = TRUE,
       scaling_factor = 1,
-      num_bootstraps = 5000,
+      num_bootstraps = 1000,
       threshold = 1e-3,
       kernel_type = "gaussian",
       polyd = 5,
@@ -2290,6 +2307,46 @@ TetradSearch <- R6Class(
       } else {
         self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/CciTest"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+    use_gin_test = function(
+      alpha = 0.05,
+      gin_backend = "dcor",
+      num_permutations = 200,
+      gin_ridge = 1e-8,
+      seed = -1,
+      use_for_mc = FALSE
+    ) {
+      stopifnot(
+        is.numeric(c(alpha, num_permutations, gin_ridge, seed)),
+        alpha >= 0,
+        num_permutations >= 0,
+        floor(num_permutations) == num_permutations,
+        gin_ridge >= 0,
+        is.logical(use_for_mc),
+        length(use_for_mc) == 1,
+        is.character(gin_backend),
+        gin_backend %in% c("dcor", "pearson")
+      )
+
+      self$set_params(
+        ALPHA = alpha,
+        GIN_PERMUTATIONS = num_permutations,
+        GIN_RIDGE = gin_ridge,
+        SEED = seed,
+        GIN_BACKEND = gin_backend
+      )
+
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Gin"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/Gin"
         )
         self$test <- cast_obj(self$test)
       }

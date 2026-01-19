@@ -141,6 +141,10 @@ These tests: `chi_square`, `g_square`, `basis_function_lrt`, `probabilistic`.
 
 ## TODO
 
+- Rewrite add checks (numeric, logical, ...) using checkmate package. Some of the checks aren't working correctly
+atm either (we check is.numeric on a vector - which won't work correctly). R converts `c(1, TRUE)` to a
+numeric vector, so is.numeric returns TRUE, but we want to catch that.
+
 - Improve plot (use caugi)
 
   - For new features that are hard to do in grid (which caugi uses), maybe just insert the image in ggplot?
@@ -218,15 +222,17 @@ If we want any changes we can modify the tikz code after generation.
 
 - Add all algs/scores/tests from the backends (start with Tetrad). Check if we currently document ones we haven't
 implemented yet.
-  - Missing scores: `"SEM BIC Score", "Instance-specific Augmented SEM BIC Score"`
+  - Missing scores: `"Instance-specific Augmented SEM BIC Score"`
   
-  - Missing tests: `"Basis Function Blocks Test", "GIN", "Poisson Prior Test", "RCIT", "Rank Independence Test TS", "SEM BIC Test"`.
+  - Missing tests: `"Basis Function Blocks Test", "GIN", "RCIT", "Rank Independence Test TS", "SEM BIC Test"`.
 
 - Update simulation functions (use caugi?)
 
 - Update evaluation and confusion metrics (use caugi?)
 
 ### Bugfixes
+
+- Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad.
 
 - bnlearn has bug for old version of caugi. Fixed in PR #149 in caugi.
 
