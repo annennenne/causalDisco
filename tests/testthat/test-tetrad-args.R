@@ -31,7 +31,8 @@ test_that("tetrad test argument works (continuous)", {
   }
 
   tests <- c(
-    "fisher_z"
+    "fisher_z",
+    "poisson_prior"
   )
 
   lapply(tests, function(t) run_pc_test(num_data, t))

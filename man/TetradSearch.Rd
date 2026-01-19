@@ -64,6 +64,7 @@ used by Tetrad.}
 \item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
 \item \code{"rank_bic"} - Rank-based BIC score.
+\item \code{"sem_bic"} - SEM BIC score.
 }
 
 \strong{Mixed Discrete/Gaussian}
@@ -93,6 +94,7 @@ probabilistic conditional independence judgments.
 \strong{Continuous - Gaussian}
 \itemize{
 \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
+\item \code{"poisson_prior"} - Poisson prior test.
 }
 
 \strong{Mixed Discrete/Gaussian}
@@ -214,6 +216,7 @@ probabilistic conditional independence judgments.
 \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
 \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
 \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
+\item \code{"poisson_prior"} - Poisson prior test
 }}
 
 \item{\code{...}}{Additional arguments passed to the private test-setting methods.
@@ -316,6 +319,16 @@ use. Available types are \code{"gaussian"}, \code{"linear"}, or
 if used.
 \item \code{polyc = 1} - The constant of the polynomial kernel,
 if used.
+}
+\item \code{"poisson_prior"} - Poisson prior test
+\itemize{
+\item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
+distribution (> 0),
+\item \code{precompute_covariances = TRUE} - For more than 5000
+variables or so, set this to FALSE in order to calculate
+covariances on the fly from data,
+\item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+lambda to the diagonal, < 0 Pseudoinverse.
 }
 }}
 
@@ -493,7 +506,7 @@ If FALSE, the integration will be exact.
 }
 \item \code{"poisson_prior"} - Poisson prior score.
 \itemize{
-\item \code{poission_lambda = 2} - Lambda parameter for the Poisson
+\item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
 distribution (> 0),
 \item \code{precompute_covariances = TRUE} - For more than 5000
 variables or so, set this to FALSE in order to calculate

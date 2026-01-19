@@ -83,6 +83,7 @@ TetradSearch <- R6Class(
     #'   **Continuous - Gaussian**
     #'   \itemize{
     #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
+    #'     \item \code{"poisson_prior"} - Poisson prior test.
     #'   }
     #'
     #'   **Mixed Discrete/Gaussian**
@@ -188,6 +189,7 @@ TetradSearch <- R6Class(
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
+    #'     \item \code{"poisson_prior"} - Poisson prior test
     #'   }
     #' @param ... Additional arguments passed to the private test-setting methods.
     #'   For the following tests, the following parameters are available:
@@ -290,6 +292,16 @@ TetradSearch <- R6Class(
     #'          \item \code{polyc = 1} - The constant of the polynomial kernel,
     #'          if used.
     #'       }
+    #'       \item \code{"poisson_prior"} - Poisson prior test
+    #'       \itemize{
+    #'          \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
+    #'          distribution (> 0),
+    #'          \item \code{precompute_covariances = TRUE} - For more than 5000
+    #'          variables or so, set this to FALSE in order to calculate
+    #'          covariances on the fly from data,
+    #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'          lambda to the diagonal, < 0 Pseudoinverse.
+    #'          }
     #'     }
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
@@ -327,6 +339,9 @@ TetradSearch <- R6Class(
         },
         "probabilistic" = {
           private$use_probabilistic_test(..., use_for_mc = mc)
+        },
+        "poisson_prior" = {
+          private$use_poisson_prior_test(..., use_for_mc = mc)
         },
         {
           stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
@@ -491,7 +506,7 @@ TetradSearch <- R6Class(
     #'    }
     #'    \item \code{"poisson_prior"} - Poisson prior score.
     #'    \itemize{
-    #'      \item \code{poission_lambda = 2} - Lambda parameter for the Poisson
+    #'      \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
     #'      distribution (> 0),
     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
@@ -1724,20 +1739,20 @@ TetradSearch <- R6Class(
     #   self$score <- cast_obj(self$score)
     # },
     use_poisson_prior_score = function(
-      poission_lambda = 2,
+      poisson_lambda = 1,
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
       stopifnot(
-        is.numeric(c(poission_lambda, singularity_lambda)),
-        poission_lambda >= 0,
+        is.numeric(c(poisson_lambda, singularity_lambda)),
+        poisson_lambda >= 0,
         singularity_lambda >= 0,
         is.logical(precompute_covariances),
         length(precompute_covariances) == 1
       )
       self$set_params(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
-        POISSON_LAMBDA = poission_lambda,
+        POISSON_LAMBDA = poisson_lambda,
         SINGULARITY_LAMBDA = singularity_lambda
       )
       self$score <- rJava::.jnew(
@@ -1936,6 +1951,38 @@ TetradSearch <- R6Class(
       } else {
         self$test <- rJava::.jnew(
           "edu/cmu/tetrad/algcomparison/independence/FisherZ"
+        )
+        self$test <- cast_obj(self$test)
+      }
+    },
+    use_poisson_prior_test = function(
+      poisson_lambda = 1,
+      precompute_covariances = TRUE,
+      singularity_lambda = 0.0,
+      use_for_mc = FALSE,
+      alpha = NULL
+    ) {
+      # alpha is not used atm in Tetrad?
+      stopifnot(
+        is.numeric(c(poisson_lambda, singularity_lambda)),
+        poisson_lambda >= 0,
+        singularity_lambda >= 0,
+        is.logical(precompute_covariances),
+        length(precompute_covariances) == 1
+      )
+      self$set_params(
+        POISSON_LAMBDA = poisson_lambda,
+        PRECOMPUTE_COVARIANCES = precompute_covariances,
+        SINGULARITY_LAMBDA = singularity_lambda
+      )
+      if (use_for_mc) {
+        self$mc_test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/PoissonBicTest"
+        )
+        self$mc_test <- cast_obj(self$mc_test)
+      } else {
+        self$test <- rJava::.jnew(
+          "edu/cmu/tetrad/algcomparison/independence/PoissonBicTest"
         )
         self$test <- cast_obj(self$test)
       }
