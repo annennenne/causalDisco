@@ -4,8 +4,6 @@ This document is intended for developers maintaining or extending this project.
 
 If you are new to the codebase, or returning after a long break, start here.
 
----
-
 ## 1. High-Level Architecture
 
 Each engine (i.e., an underlying R, Python, or Java package) is wrapped in its own
@@ -33,7 +31,6 @@ in the Tetrad repository are:
 These classes define what is available to be wrapped on the R side. Always ensure
 you are browsing the source corresponding to the current `.default_tetrad_version`.
 
----
 ### Adding a New Tetrad Score
 
 #### Finding Score and Test Descriptions in Tetrad
@@ -85,8 +82,6 @@ We follow the
 [tidyverse style guide](https://style.tidyverse.org/)
 for general R code.
 
----
-
 ### R6 Conventions
 
 For R6 classes, we use **PascalCase** for class names, following the
@@ -100,8 +95,6 @@ conventions used in
 This distinction helps visually separate classes from functions and emphasizes
 that R6 classes represent entities rather than actions.
 
----
-
 ### Formatting
 
 We use
@@ -109,8 +102,6 @@ We use
 as the automatic code formatter.
 
 Code should be formatted with Air before committing. We recommend enabling format-on-save in your editor.
-
----
 
 ### Documentation Style
 
@@ -124,3 +115,7 @@ Code should be formatted with Air before committing. We recommend enabling forma
 See, for example,
 [`BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.html),
 where this approach is implemented.
+
+### File Names
+
+We recommend using kebab-case for file names (e.g., `tetrad-search.R`).
