@@ -25,7 +25,7 @@ data; it is used in the causal discovery function \code{\link{tges}}.
 \details{
 The class implements a score which scores all edges contradicting the ordering
 (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
-the edges does not contradict, the score is equal to that of \code{\linkS4class{GaussL0penObsScore}}:
+the edges does not contradict, the score is equal to that of \link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore}:
 The class implements an \eqn{\ell_0}{ℓ0}-penalized Gaussian maximum
 likelihood estimator. The penalization is a constant (specified by
 the argument \code{lambda} in the constructor) times the number of
@@ -35,7 +35,7 @@ chosen as \eqn{\log(n)/2}{log(n)/2}, which corresponds to the BIC score.
 
 \section{Extends}{
 
-Class \code{\linkS4class{GaussL0penObsScore}} from \pkg{pcalg}, directly.
+Class \link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore} directly.
 
 All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 }

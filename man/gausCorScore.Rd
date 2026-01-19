@@ -14,18 +14,17 @@ gausCorScore(cormat, n, p = NULL, lambda = NULL, ...)
 \item{p}{The number of variables. This is inferred from the cormat if not supplied.}
 
 \item{lambda}{Penalty to use for the score. If \code{NULL} (default), the BIC score penalty is used. See
-\code{\link[pcalg]{GaussL0penObsScore-class}} for further details.}
+\link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore} for further details.}
 
-\item{...}{Other arguments passed along to \code{\link[pcalg]{GaussL0penObsScore-class}}.}
+\item{...}{Other arguments passed along to \link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore}.}
 }
 \value{
-A \code{Score} object (S4), see \code{\link[pcalg]{Score-class}}.
+A \code{Score} object (S4), see \link[pcalg:Score-class]{pcalg::Score}.
 }
 \description{
 The score is intended to be used with score-based causal discovery algorithms
-from the pcalg package. It is identical to the \code{\link[pcalg]{GaussL0penObsScore-class}},
+from the pcalg package. It is identical to the \link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore},
 except that it takes in a correlation matrix instead of the full data set.
-\code{\link[pcalg]{GaussL0penObsScore-class}}.
 }
 \examples{
 # Simulate data and compute correlation matrix
@@ -35,7 +34,7 @@ x3 <- x1 + x2 + rnorm(100)
 d <- data.frame(x1, x2, x3)
 cmat <- cor(d)
 
-# Use gausCorScore with pcalg::ges() 
+# Use gausCorScore with pcalg::ges()
 pcalg::ges(gausCorScore(cmat, n = 100))
 
 

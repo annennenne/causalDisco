@@ -2,12 +2,32 @@ Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
 Version: 0.9.4
 Authors@R: 
-    c(person(given = "Anne Helby",
-             family = "Petersen",
-             role = c("aut", "cre"),
-             email = "ahpe@sund.ku.dk"),
-      person("Tobias Ellegaard", "Larsen", role = "ctb", "tobias.ellegaard@sund.ku.dk"),
-      person("Claus Thorn", "Ekstrøm", rol = "ctb", "ekstrom@sund.ku.dk"))
+    c(
+      person(
+        given = "Anne Helby",
+        family = "Petersen",
+        role = "aut",
+        email = "ahpe@sund.ku.dk"
+      ),
+      person(
+        given = "Tobias Ellegaard",
+        family = "Larsen",
+        role = "ctb",
+        email = "tobias.ellegaard@sund.ku.dk"
+      ),
+      person(
+        given = "Claus Thorn",
+        family = "Ekstrøm",
+        role = "ctb",
+        email = "ekstrom@sund.ku.dk"
+      ),
+      person(
+        given = "Bjarke Hautop",
+        family = "Kristensen",
+        role = c("ctb", "cre"),
+        email = "bjarke.kristensen@sund.ku.dk"
+      )
+    )
 Description: Various tools for inferring causal models from observational data. The package 
     includes an implementation of the temporal Peter-Clark (TPC) algorithm. Petersen, Osler 
     and Ekstrøm (2021) <doi:10.1093/aje/kwab087>. It also includes general tools
@@ -20,7 +40,7 @@ LazyData: true
 URL: https://github.com/annennenne/causalDisco
 BugReports: https://github.com/annennenne/causalDisco/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
     pcalg,
     igraph,

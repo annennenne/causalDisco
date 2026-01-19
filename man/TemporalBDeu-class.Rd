@@ -30,7 +30,7 @@ the edges does not contradict, the score is equal to that of the standard BDeu.
 
 \section{Extends}{
 
-Class \code{\linkS4class{Score}} from \pkg{pcalg}, directly.
+Class \link[pcalg:Score-class]{pcalg::Score} directly.
 
 All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 }

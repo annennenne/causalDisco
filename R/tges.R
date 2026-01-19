@@ -2,8 +2,6 @@
 ### Reference classes used for tges
 ##################################################
 
-
-
 ## Define TemporalBIC score
 
 #' Temporal Bayesian Information Criterion (Score criterion)
@@ -13,7 +11,7 @@
 #'
 #' The class implements a score which scores all edges contradicting the ordering
 #' (edge going from a later tier to an earlier) to minus \eqn{\infty}{∞}. If the
-#' the edges does not contradict, the score is equal to that of \code{\linkS4class{GaussL0penObsScore}}:
+#' the edges does not contradict, the score is equal to that of [pcalg::GaussL0penObsScore-class]:
 #' The class implements an \eqn{\ell_0}{ℓ0}-penalized Gaussian maximum
 #' likelihood estimator. The penalization is a constant (specified by
 #' the argument \code{lambda} in the constructor) times the number of
@@ -21,7 +19,7 @@
 #' chosen as \eqn{\log(n)/2}{log(n)/2}, which corresponds to the BIC score.
 #'
 #' @section Extends:
-#' Class \code{\linkS4class{GaussL0penObsScore}} from \pkg{pcalg}, directly.
+#' Class [pcalg::GaussL0penObsScore-class] directly.
 #'
 #' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 #'
@@ -93,101 +91,108 @@
 #'
 #' @export
 
-
-
 #' @importClassesFrom pcalg GaussL0penIntScore
-setRefClass("TemporalBIC",
-            contains = "GaussL0penIntScore",
+setRefClass(
+  "TemporalBIC",
+  contains = "GaussL0penIntScore",
 
-            fields = list(
-              .order = "vector"),
+  fields = list(
+    .order = "vector"
+  ),
 
-            methods = list(
-              initialize = function(data = matrix(1, 1, 1),
-                                    nodes = colnames(data),
-                                    lambda = 0.5*log(nrow(data)),
-                                    intercept = TRUE,
-                                    format = c("raw", "scatter"),
-                                    use.cpp = FALSE,
-                                    order = rep(1,ncol(data)),
-                                    ...) {
-                .order <<- order
-                callSuper(data = data,
-                          targets = list(integer(0)),
-                          target.index = rep(as.integer(1), nrow(data)),
-                          nodes = nodes,
-                          lambda = lambda,
-                          intercept = intercept,
-                          format = format,
-                          use.cpp = use.cpp,
-                          ...)},
+  methods = list(
+    initialize = function(
+      data = matrix(1, 1, 1),
+      nodes = colnames(data),
+      lambda = 0.5 * log(nrow(data)),
+      intercept = TRUE,
+      format = c("raw", "scatter"),
+      use.cpp = FALSE,
+      order = rep(1, ncol(data)),
+      ...
+    ) {
+      .order <<- order
+      callSuper(
+        data = data,
+        targets = list(integer(0)),
+        target.index = rep(as.integer(1), nrow(data)),
+        nodes = nodes,
+        lambda = lambda,
+        intercept = intercept,
+        format = format,
+        use.cpp = use.cpp,
+        ...
+      )
+    },
 
+    local.score = function(vertex, parents, ...) {
+      ## Check validity of arguments
+      validate.vertex(vertex)
+      validate.parents(parents)
+      order <- .order
+      if (order[vertex] >= max(c(order[parents], -Inf))) {
+        #Checks if the tier of parents are before or same as node
 
+        if (c.fcn == "none") {
+          ## Calculate score in R
+          if (.format == "raw") {
+            ## calculate score from raw data matrix
+            ## Response vector for linear regression
+            Y <- pp.dat$data[pp.dat$non.int[[vertex]], vertex]
+            sigma2 <- sum(Y^2)
 
+            if (length(parents) + pp.dat$intercept != 0) {
+              ## Get data matrix on which linear regression is based
+              Z <- pp.dat$data[pp.dat$non.int[[vertex]], parents, drop = FALSE]
+              if (pp.dat$intercept) {
+                Z <- cbind(1, Z)
+              }
 
+              ## Calculate the scaled error covariance using QR decomposition
+              Q <- qr.Q(qr(Z))
+              sigma2 <- sigma2 - sum((Y %*% Q)^2)
+            }
+          } else if (.format == "scatter") {
+            ## Calculate the score based on pre-calculated scatter matrices
+            ## If an intercept is allowed, add a fake parent node
+            parents <- sort(parents)
+            if (pp.dat$intercept) {
+              parents <- c(pp.dat$vertex.count + 1, parents)
+            }
 
-              local.score = function(vertex, parents,...) {
-                ## Check validity of arguments
-                validate.vertex(vertex)
-                validate.parents(parents)
-                order <- .order
-                if (order[vertex] >= max(c(order[parents],-Inf))){
-                  #Checks if the tier of parents are before or same as node
+            pd.scMat <- pp.dat$scatter[[pp.dat$scatter.index[vertex]]]
+            sigma2 <- pd.scMat[vertex, vertex]
+            if (length(parents) != 0) {
+              b <- pd.scMat[vertex, parents]
+              sigma2 <- sigma2 -
+                as.numeric(b %*% solve(pd.scMat[parents, parents], b))
+            }
+          }
 
-                  if (c.fcn == "none") {
-                    ## Calculate score in R
-                    if (.format == "raw") {
-                      ## calculate score from raw data matrix
-                      ## Response vector for linear regression
-                      Y <- pp.dat$data[pp.dat$non.int[[vertex]], vertex]
-                      sigma2 <- sum(Y^2)
-
-                      if (length(parents) + pp.dat$intercept != 0) {
-                        ## Get data matrix on which linear regression is based
-                        Z <- pp.dat$data[pp.dat$non.int[[vertex]], parents, drop = FALSE]
-                        if (pp.dat$intercept)
-                          Z <- cbind(1, Z)
-
-                        ## Calculate the scaled error covariance using QR decomposition
-                        Q <- qr.Q(qr(Z))
-                        sigma2 <- sigma2 - sum((Y %*% Q)^2)
-                      }
-                    }
-                    else if (.format == "scatter") {
-                      ## Calculate the score based on pre-calculated scatter matrices
-                      ## If an intercept is allowed, add a fake parent node
-                      parents <- sort(parents)
-                      if (pp.dat$intercept)
-                        parents <- c(pp.dat$vertex.count + 1, parents)
-
-                      pd.scMat <- pp.dat$scatter[[pp.dat$scatter.index[vertex]]]
-                      sigma2 <- pd.scMat[vertex, vertex]
-                      if (length(parents) != 0) {
-                        b <- pd.scMat[vertex, parents]
-                        sigma2 <- sigma2 - as.numeric(b %*% solve(pd.scMat[parents, parents], b))
-                      }
-                    }
-
-                    ## Return local score
-                    lscore <- -0.5*pp.dat$data.count[vertex]*(1 + log(sigma2/pp.dat$data.count[vertex])) -
-                      pp.dat$lambda*(1 + length(parents))
-                    return(lscore)
-                  } else {
-                    ## Calculate score with the C++ library (NOT ABLE TO DO THIS YET)
-                    stop("Not able to compute using C++. Set use.cpp = FALSE")
-                  }
-                }
-                else { skip <- -Inf
-                return(skip)}#set score to minus infinity if vertex earlier than parents
-              }),
-            inheritPackage = TRUE
+          ## Return local score
+          lscore <- -0.5 *
+            pp.dat$data.count[vertex] *
+            (1 + log(sigma2 / pp.dat$data.count[vertex])) -
+            pp.dat$lambda * (1 + length(parents))
+          return(lscore)
+        } else {
+          ## Calculate score with the C++ library (NOT ABLE TO DO THIS YET)
+          stop("Not able to compute using C++. Set use.cpp = FALSE")
+        }
+      } else {
+        skip <- -Inf
+        return(skip)
+      } #set score to minus infinity if vertex earlier than parents
+    }
+  ),
+  inheritPackage = TRUE
 )
 
 # Define Temporal BDeu
 
 #' Temporal Bayesian Dirichlet equivalent uniform (Score criterion)
 #'
-#'A reference class for categorical observational data Scoring with Tiered Background Knowledge. This class represents a score for causal discovery using tiered background knowledge from observational categorical
+#' A reference class for categorical observational data Scoring with Tiered Background Knowledge. This class represents a score for causal discovery using tiered background knowledge from observational categorical
 #' data; it is used in the causal discovery function \code{\link{tges}}.
 #'
 #' The class implements a score which scores all edges contradicting the ordering
@@ -195,7 +200,7 @@ setRefClass("TemporalBIC",
 #' the edges does not contradict, the score is equal to that of the standard BDeu.
 #'
 #' @section Extends:
-#' Class \code{\linkS4class{Score}} from \pkg{pcalg}, directly.
+#' Class [pcalg::Score-class] directly.
 #'
 #' All reference classes extend and inherit methods from \code{\linkS4class{envRefClass}}.
 #'
@@ -372,102 +377,100 @@ setRefClass("TemporalBIC",
 #'
 #' @export
 
-setRefClass("TemporalBDeu",
-            contains = "DataScore",
+setRefClass(
+  "TemporalBDeu",
+  contains = "DataScore",
 
-            fields = list(
-              .order = "vector",
-              .iss = "numeric"),
+  fields = list(
+    .order = "vector",
+    .iss = "numeric"
+  ),
 
-            methods = list(
-              initialize = function(data = matrix(1, 1, 1),
-                                    nodes = colnames(data),
-                                    iss = 1,
-                                    order = rep(1,ncol(data)),
-                                    ...) {
-                .order <<- order
-                .iss <<- iss
-                callSuper(data = data,
-                          nodes = nodes,
-                          iss = iss,
-                          ...)},
+  methods = list(
+    initialize = function(
+      data = matrix(1, 1, 1),
+      nodes = colnames(data),
+      iss = 1,
+      order = rep(1, ncol(data)),
+      ...
+    ) {
+      .order <<- order
+      .iss <<- iss
+      callSuper(data = data, nodes = nodes, iss = iss, ...)
+    },
 
+    local.score = function(vertex, parents, ...) {
+      ## Check validity of arguments
+      validate.vertex(vertex)
+      validate.parents(parents)
+      order <- .order
+      iss <- .iss
+      if (order[vertex] >= max(c(order[parents], -Inf))) {
+        #Checks if the tier of parents are before or same as node
 
-              local.score = function(vertex, parents,...) {
-                ## Check validity of arguments
-                validate.vertex(vertex)
-                validate.parents(parents)
-                order <- .order
-                iss <- .iss
-                if (order[vertex] >= max(c(order[parents],-Inf))){
-                  #Checks if the tier of parents are before or same as node
+        # Create local dataset
+        D <- pp.dat$data[, c(vertex, parents), drop = FALSE]
+        pa_nam <- colnames(pp.dat$data)[parents]
+        ve_nam <- colnames(pp.dat$data)[vertex]
 
+        #n_j: number of counts for parent set equal to configuration j ( = j)
+        #n_jk: number of counts for parent set equal to configuration j ( = j)
+        #      and vertex state equal to state k ( = k)
 
-                  # Create local dataset
-                  D <- pp.dat$data[,c(vertex,parents),drop = FALSE]
-                  pa_nam <- colnames(pp.dat$data)[parents]
-                  ve_nam <- colnames(pp.dat$data)[vertex]
+        if (length(parents) == 0) {
+          #q: number of possible configurations of states of parents
+          q <- 1
 
-                  #n_j: number of counts for parent set equal to configuration j ( = j)
-                  #n_jk: number of counts for parent set equal to configuration j ( = j)
-                  #      and vertex state equal to state k ( = k)
+          #r: number of states for vertex
+          r <- nlevels(D[[ve_nam]])
 
-                  if (length(parents) == 0){
+          alpha_j <- iss
 
-                    #q: number of possible configurations of states of parents
-                    q <- 1
+          # Set pa_score to 0
+          pa_score <- lgamma(alpha_j) - lgamma(alpha_j + nrow(D))
+        } else {
+          #Number of in variables
+          nlev_D <- sapply(D[, c(ve_nam, pa_nam)], nlevels)
 
-                    #r: number of states for vertex
-                    r <- nlevels(D[[ve_nam]])
+          #q: number of possible configurations of states of parents
+          q <- prod(nlev_D[pa_nam])
 
-                    alpha_j <- iss
+          #r: number of states for vertex
+          r <- nlev_D[ve_nam]
 
-                    # Set pa_score to 0
-                    pa_score <- lgamma(alpha_j) - lgamma(alpha_j+nrow(D))
-                  } else {
+          #Table with number of occurences for parents and parents combinations
+          tab_pa <- as.data.frame(table(D[, c(pa_nam)]))
 
-                    #Number of in variables
-                    nlev_D <- sapply(D[,c(ve_nam,pa_nam)], nlevels)
+          alpha_j <- iss / q
 
-                    #q: number of possible configurations of states of parents
-                    q <- prod(nlev_D[pa_nam])
+          pa_score <- nrow(tab_pa) *
+            lgamma(alpha_j) -
+            sum(sapply(tab_pa$Freq, function(x) lgamma(alpha_j + x)))
+        }
 
-                    #r: number of states for vertex
-                    r <- nlev_D[ve_nam]
+        #Table with number of occurences and state combinations
+        tab_D <- as.data.frame(table(D))
 
-                    #Table with number of occurences for parents and parents combinations
-                    tab_pa <- as.data.frame(table(D[,c(pa_nam)]))
+        #Uniform prior with alpha according to imaginary sample size (iss)
+        alpha_jk <- alpha_j / r
 
-                    alpha_j <- iss/q
+        BdeuScore <- sum(sapply(tab_D$Freq, function(x) lgamma(alpha_jk + x))) -
+          nrow(tab_D) * lgamma(alpha_jk) +
+          pa_score
 
-                    pa_score <- nrow(tab_pa)*lgamma(alpha_j) - sum(sapply(tab_pa$Freq, function(x) lgamma(alpha_j + x)))
-                  }
-
-
-                  #Table with number of occurences and state combinations
-                  tab_D <- as.data.frame(table(D))
-
-
-                  #Uniform prior with alpha according to imaginary sample size (iss)
-                  alpha_jk <- alpha_j/r
-
-
-                  BdeuScore <- sum(sapply(tab_D$Freq, function(x) lgamma(alpha_jk + x))) - nrow(tab_D)*lgamma(alpha_jk) +
-                    pa_score
-
-
-                  return(BdeuScore)
-                }
-                else { skip <- -Inf
-                return(skip)}#set score to minus infinity if vertex earlier than parents
-              }),
-            inheritPackage = TRUE
+        return(BdeuScore)
+      } else {
+        skip <- -Inf
+        return(skip)
+      } #set score to minus infinity if vertex earlier than parents
+    }
+  ),
+  inheritPackage = TRUE
 )
 
 ##################################################
 ### Functions
 ##################################################
-
 
 #' Estimate the restricted Markov equivalence class using Temporal Greedy Equivalence Search
 #'
@@ -527,13 +530,25 @@ setRefClass("TemporalBDeu",
 #'
 #' @export
 
-
-tges <- function(score, verbose = FALSE){
-  stopifnot("Score must be of type TemporalBIC or TemporalBDeu, the only score criterion suported by tges at the moment."= class(score)[1] %in% c("TemporalBDeu","TemporalBIC"))
-  stopifnot("When using TemporalBDeu the data must be factors." = class(score)[1] == "TemporalBIC" | all(sapply(score$pp.dat$data, is.factor)))
+tges <- function(score, verbose = FALSE) {
+  stopifnot(
+    "Score must be of type TemporalBIC or TemporalBDeu, the only score criterion suported by tges at the moment." = class(
+      score
+    )[1] %in%
+      c("TemporalBDeu", "TemporalBIC")
+  )
+  stopifnot(
+    "When using TemporalBDeu the data must be factors." = class(score)[1] ==
+      "TemporalBIC" |
+      all(sapply(score$pp.dat$data, is.factor))
+  )
   stopifnot("Data must not contain missing values" = !anyNA(score$pp.dat$data))
   node.numbers <- 1:score$pp.dat$vertex.count
-  essgraph <- new("TEssGraph", nodes = as.character(node.numbers), score = score)
+  essgraph <- new(
+    "TEssGraph",
+    nodes = as.character(node.numbers),
+    score = score
+  )
   Forbidden.edges <- essgraph$.in.edges #list of nodes all with integer(0) entry
   node.names <- score$.nodes
   num.bidir <- 0
@@ -541,41 +556,54 @@ tges <- function(score, verbose = FALSE){
 
   #if order is given as a ordering of prefixes, change to integers
   pre_true <- (!is.numeric(score$.order))
-  if (pre_true){
+  if (pre_true) {
     prefix_order <- score$.order
-    int_order <- rep(NA,score$pp.dat$vertex.count)
-    for (i_o in node.numbers){
-      int_order[i_o] <- which(score$.order == strsplit(node.names[i_o], "_")[[1]][1])
+    int_order <- rep(NA, score$pp.dat$vertex.count)
+    for (i_o in node.numbers) {
+      int_order[i_o] <- which(
+        score$.order == strsplit(node.names[i_o], "_")[[1]][1]
+      )
     }
-    if (any(is.na(int_order))){stop("order need to be either prefixes of variable names or integers.") }
+    if (any(is.na(int_order))) {
+      stop("order need to be either prefixes of variable names or integers.")
+    }
     score$.order <- int_order
   }
   order <- score$.order
 
-  for (n in node.numbers){
-    Forbidden.edges[[n]] <- node.numbers[order[n]<order]
+  for (n in node.numbers) {
+    Forbidden.edges[[n]] <- node.numbers[order[n] < order]
   }
 
   cont <- TRUE
-  while(cont) {
+  while (cont) {
     cont <- FALSE
 
     #Forward phase
     runwhile <- TRUE
-    while(runwhile){
+    while (runwhile) {
       tempstep <- essgraph$greedy.step("forward", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile){cont <- TRUE}
-      else break
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])){ #Run through the nodes that have been changed
+      for (i in names(tempstep[-1])) {
+        #Run through the nodes that have been changed
         in.node.edges <- tempstep[-1][[i]] #save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
         removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] #List of edges to be removed
-        if (length(removed.edges) > 0){
-          bgx <- rep(as.numeric(i),length(removed.edges))
+        if (length(removed.edges) > 0) {
+          bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = createAdjMatrixFromList(essgraph$.in.edges), x = bgx, y = bgy,verbose = verbose)
+          amatbg <- pcalg::addBgKnowledge(
+            gInput = createAdjMatrixFromList(essgraph$.in.edges),
+            x = bgx,
+            y = bgy,
+            verbose = verbose
+          )
           no.forbidden.edges <- createListFromAdjMatrix(amatbg)
           essgraph$.in.edges <- no.forbidden.edges
         }
@@ -584,20 +612,29 @@ tges <- function(score, verbose = FALSE){
 
     #Backward phase
     runwhile <- TRUE
-    while(runwhile){
+    while (runwhile) {
       tempstep <- essgraph$greedy.step("backward", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile){cont <- TRUE}
-      else break
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])){ #Run through the nodes that have been changed
+      for (i in names(tempstep[-1])) {
+        #Run through the nodes that have been changed
         in.node.edges <- tempstep[-1][[i]] #save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
         removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] #List of edges to be removed
-        if (length(removed.edges) > 0){
-          bgx <- rep(as.numeric(i),length(removed.edges))
+        if (length(removed.edges) > 0) {
+          bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = createAdjMatrixFromList(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          amatbg <- pcalg::addBgKnowledge(
+            gInput = createAdjMatrixFromList(essgraph$.in.edges),
+            x = bgx,
+            y = bgy,
+            verbose = verbose
+          )
           no.forbidden.edges <- createListFromAdjMatrix(amatbg)
           essgraph$.in.edges <- no.forbidden.edges
         }
@@ -606,38 +643,58 @@ tges <- function(score, verbose = FALSE){
 
     #Turning phase
     runwhile <- TRUE
-    while(runwhile){
+    while (runwhile) {
       tempstep <- essgraph$greedy.step("turning", verbose = verbose)
       runwhile <- as.logical(tempstep[1])
-      if (runwhile){cont <- TRUE}
-      else break
+      if (runwhile) {
+        cont <- TRUE
+      } else {
+        break
+      }
 
-      for (i in names(tempstep[-1])){ #Run through the nodes that have been changed
+      for (i in names(tempstep[-1])) {
+        #Run through the nodes that have been changed
         in.node.edges <- tempstep[-1][[i]] #save the in.node edges of node i
         forbidden.node.edges <- Forbidden.edges[[as.numeric(i)]]
         removed.edges <- in.node.edges[in.node.edges %in% forbidden.node.edges] #List of edges to be removed
-        if (length(removed.edges) > 0){
-          bgx <- rep(as.numeric(i),length(removed.edges))
+        if (length(removed.edges) > 0) {
+          bgx <- rep(as.numeric(i), length(removed.edges))
           bgy <- removed.edges
-          amatbg <- pcalg::addBgKnowledge(gInput = createAdjMatrixFromList(essgraph$.in.edges), x = bgx, y = bgy, verbose = verbose)
+          amatbg <- pcalg::addBgKnowledge(
+            gInput = createAdjMatrixFromList(essgraph$.in.edges),
+            x = bgx,
+            y = bgy,
+            verbose = verbose
+          )
           no.forbidden.edges <- createListFromAdjMatrix(amatbg)
           essgraph$.in.edges <- no.forbidden.edges
         }
-
       }
     }
   }
   #essgraph$.nodes <- node.names # Save names of nodes
   #names(essgraph$.in.edges) <- node.names # Save names of nodes
-  if (!pre_true){
-    node.names <- paste(paste("T",as.character(order),sep = ""),node.names,sep = "_")
-    prefix_order <- paste("T",as.character(1:max(order)),sep = "")
+  if (!pre_true) {
+    node.names <- paste(
+      paste("T", as.character(order), sep = ""),
+      node.names,
+      sep = "_"
+    )
+    prefix_order <- paste("T", as.character(1:max(order)), sep = "")
   }
-  t_amat <- t(as(essgraph,"matrix"))*1
+  t_amat <- t(as(essgraph, "matrix")) * 1
   colnames(t_amat) <- rownames(t_amat) <- node.names
-  return_object <- causalDisco::tamat(t_amat,order = prefix_order)
+  return_object <- causalDisco::tamat(t_amat, order = prefix_order)
 
-  if (verbose){cat("Number of edges directed", num.bidir,"\nNumber of directed edges removed", num.directed, "\n")}
+  if (verbose) {
+    cat(
+      "Number of edges directed",
+      num.bidir,
+      "\nNumber of directed edges removed",
+      num.directed,
+      "\n"
+    )
+  }
   #return(essgraph)
   return(return_object)
 }
@@ -679,14 +736,13 @@ createListFromAdjMatrix <- function(adjMatrix) {
   n <- nrow(adjMatrix)
 
   # Initialize an empty list
-  resultList <- vector("list",n)
+  resultList <- vector("list", n)
   names(resultList) <- rownames(adjMatrix)
 
   # Iterate over the rows of the matrix
   for (i in 1:n) {
     # Find the indices (column numbers) where there is an in edge (value == 1)
     connectedIndices <- as.integer(which(adjMatrix[i, ] == 1))
-
 
     if (length(connectedIndices) > 0) {
       resultList[[i]] <- connectedIndices
@@ -703,47 +759,61 @@ createListFromAdjMatrix <- function(adjMatrix) {
 
 ## Define new EssGraph class (TEssgraph) with new greedy step that also return new edges added
 
-TEssGraph <- setRefClass("TEssGraph",
-                         contains = "EssGraph",
-                         methods = list(
-                           # Performs one greedy step
-                           greedy.step = function(direction = c("forward", "backward", "turning"), verbose = FALSE, ...) {
-                             stopifnot(!is.null(score <- getScore()))
+TEssGraph <- setRefClass(
+  "TEssGraph",
+  contains = "EssGraph",
+  methods = list(
+    # Performs one greedy step
+    greedy.step = function(
+      direction = c("forward", "backward", "turning"),
+      verbose = FALSE,
+      ...
+    ) {
+      stopifnot(!is.null(score <- getScore()))
 
-                             ## Cast direction
-                             direction <- match.arg(direction)
-                             alg.name <- switch(direction,
-                                                forward = "GIES-F",
-                                                backward = "GIES-B",
-                                                turning = "GIES-T")
+      ## Cast direction
+      direction <- match.arg(direction)
+      alg.name <- switch(
+        direction,
+        forward = "GIES-F",
+        backward = "GIES-B",
+        turning = "GIES-T"
+      )
 
-                             new.graph <- .Call(causalInference,
-                                                .in.edges,
-                                                score$pp.dat,
-                                                alg.name,
-                                                score$c.fcn,
-                                                causal.inf.options(caching = FALSE,
-                                                                   maxSteps = 1,
-                                                                   verbose = verbose,
-                                                                   #adaptive = "none", #added by TOBIAS
-                                                                   ...))
-                             if (identical(new.graph, "interrupt"))
-                               return(FALSE)
+      new.graph <- .Call(
+        causalInference,
+        .in.edges,
+        score$pp.dat,
+        alg.name,
+        score$c.fcn,
+        causal.inf.options(
+          caching = FALSE,
+          maxSteps = 1,
+          verbose = verbose,
+          #adaptive = "none", #added by TOBIAS
+          ...
+        )
+      )
+      if (identical(new.graph, "interrupt")) {
+        return(FALSE)
+      }
 
-                             if (new.graph$steps > 0) {
-                               last.edges <- .in.edges
-                               .in.edges <<- new.graph$in.edges
-                               names(.in.edges) <<- .nodes
+      if (new.graph$steps > 0) {
+        last.edges <- .in.edges
+        .in.edges <<- new.graph$in.edges
+        names(.in.edges) <<- .nodes
 
-                               new.in.edges <- .in.edges[sapply(names(.in.edges), function(x) !identical(.in.edges[[x]], last.edges[[x]]))]
-                               #returns if any new edges have been added. (Also returns if an edge have been removed and
-                               #there still is an edge going in to this node.)
-                             }
-                             else
-                               new.in.edges <- list()
+        new.in.edges <- .in.edges[sapply(names(.in.edges), function(x) {
+          !identical(.in.edges[[x]], last.edges[[x]])
+        })]
+        #returns if any new edges have been added. (Also returns if an edge have been removed and
+        #there still is an edge going in to this node.)
+      } else {
+        new.in.edges <- list()
+      }
 
-
-                             return(c((new.graph$steps == 1),new.in.edges))
-                           }), inheritPackage = TRUE
+      return(c((new.graph$steps == 1), new.in.edges))
+    }
+  ),
+  inheritPackage = TRUE
 )
-
