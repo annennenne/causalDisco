@@ -75,7 +75,6 @@ TetradSearch <- R6Class(
     #'   \itemize{
     #'     \item \code{"chi_square"} - chi-squared test
     #'     \item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test.
-    #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio.
     #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
     #'        probabilistic conditional independence judgments.
     #'   }
@@ -92,6 +91,7 @@ TetradSearch <- R6Class(
     #'   \itemize{
     #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
     #'     \item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
+    #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio.
     #'     \item \code{"basis_function_blocks"} - Basis-function blocks test.
     #'   }
     #'

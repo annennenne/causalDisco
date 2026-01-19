@@ -64,7 +64,8 @@ test_that("tetrad test argument works (mixed)", {
     "gin",
     "rcit",
     "rcot",
-    "basis_function_lrt"
+    "basis_function_lrt",
+    "basis_function_blocks"
   )
 
   lapply(tests, function(t) run_pc_test(mix_data, t))
