@@ -7,14 +7,13 @@
 data(tpc_example)
 
 # Recommended:
-pc(engine = "pcalg", test = "fisher_z")(tpc_example)
-
-# or
 my_pc <- pc(engine = "pcalg", test = "fisher_z")
 my_pc(tpc_example)
 
 # or
 disco(data = tpc_example, method = my_pc)
+
+# Example with detailed settings:
 
 # Using R6 class:
 s <- PcalgSearch$new()

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This S3 class wraps `caugi` graph object and a `knowledge` object. It is the
-#' output object of causal discovery methods used in `causalDisco`.
+#' output object of causal discovery methods used in \pkg{causalDisco}.
 #'
 #' @details
 #' The conversion from any graph type to a `caugi` is handled by the `caugi`

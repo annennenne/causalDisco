@@ -18,7 +18,7 @@ A \code{caugi} and a \code{knowledge} object in a list.
 }
 \description{
 This S3 class wraps \code{caugi} graph object and a \code{knowledge} object. It is the
-output object of causal discovery methods used in \code{causalDisco}.
+output object of causal discovery methods used in \pkg{causalDisco}.
 }
 \details{
 The conversion from any graph type to a \code{caugi} is handled by the \code{caugi}

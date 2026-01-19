@@ -32,7 +32,7 @@ data(num_data)
 head(num_data)
 ```
 
-We can use several algorithms from the `causalDisco` package to discover the causal structure from this data. Here is
+We can use several algorithms from the causalDisco package to discover the causal structure from this data. Here is
 an example using the Peter-Clark (PC) algorithm from Tetrad with the Kernel Conditional Independence Test (KCI).
 
 ```{r pc algorithm kci, eval = FALSE}

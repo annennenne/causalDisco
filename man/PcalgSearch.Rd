@@ -4,8 +4,9 @@
 \alias{PcalgSearch}
 \title{R6 Interface to pcalg Search Algorithms}
 \description{
-This class implements the search algorithms from the pcalg package.
-It allows to set the data, sufficient statistics, test, score, and algorithm.
+A wrapper that lets you drive \pkg{pcalg} algorithms within the \pkg{causalDisco} framework.
+For arguments to the test, score, and algorithm, see the \pkg{pcalg} documentation, which we link to
+in the respective sections below.
 }
 \examples{
 ### pcalg_search R6 class examples ###
@@ -14,17 +15,35 @@ It allows to set the data, sufficient statistics, test, score, and algorithm.
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data(tpc_example)
+data(num_data)
 
 # Recommended:
-pc(engine = "pcalg", test = "fisher_z")(tpc_example)
-
-# or
 my_pc <- pc(engine = "pcalg", test = "fisher_z")
-my_pc(tpc_example)
+my_pc(num_data)
 
 # or
-disco(data = tpc_example, method = my_pc)
+disco(data = num_data, method = my_pc)
+
+# Example with detailed settings:
+my_pc2 <- pc(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.01,
+  m.max = 4,
+  skel.method = "original"
+)
+
+disco(data = num_data, method = my_pc2)
+
+# With knowledge
+
+kn <- knowledge(
+  num_data,
+  X1 \%!-->\% X2,
+  X2 \%!-->\% X1
+)
+
+disco(data = num_data, method = my_pc2, knowledge = kn)
 
 # Using R6 class:
 s <- PcalgSearch$new()

@@ -3,14 +3,15 @@
 #'
 #' @name PcalgSearch
 #'
-#' @example inst/roxygen-examples/pcalg_search-example.R
+#' @example inst/roxygen-examples/pcalg-search-example.R
 NULL
 
 #' @title R6 Interface to pcalg Search Algorithms
 #'
 #' @description
-#' This class implements the search algorithms from the pcalg package.
-#' It allows to set the data, sufficient statistics, test, score, and algorithm.
+#' A wrapper that lets you drive \pkg{pcalg} algorithms within the \pkg{causalDisco} framework.
+#' For arguments to the test, score, and algorithm, see the \pkg{pcalg} documentation, which we link to
+#' in the respective sections below.
 #'
 #' @rdname PcalgSearch
 #'

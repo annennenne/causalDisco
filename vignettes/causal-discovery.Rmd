@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(causalDisco)
 ```
 
-This vignette provides an overview of the `causalDisco` package, which offers tools for causal discovery from
+This vignette provides an overview of the causalDisco package, which offers tools for causal discovery from
 observational data. It covers the main features of the package, including various causal discovery algorithms,
 knowledge incorporation, and result visualization.
 

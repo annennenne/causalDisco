@@ -23,15 +23,6 @@ my_pc2 <- pc(
 )
 disco(data = num_data, method = my_pc2)
 
-# With knowledge
-
-kn <- knowledge(
-  num_data,
-  starts_with("X") %-->% Y
-)
-
-disco(data = num_data, method = my_pc2, knowledge = kn)
-
 # Using R6 class:
 s <- BnlearnSearch$new()
 

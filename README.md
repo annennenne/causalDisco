@@ -175,7 +175,7 @@ These scores: `"basis_function_bic"`, `mag_degenerate_gaussian_bic`,
 These tests: `chi_square`, `g_square`, `basis_function_lrt`,
 `probabilistic`.
 
-- `use_for_mc` (Markov checker) argument and usage?
+- `use_for_mc` (Markov checker) argument and usage? Can’t set it atm…
 
 ## TODO
 
@@ -281,6 +281,9 @@ If we want any changes we can modify the tikz code after generation.
 ### Bugfixes
 
 - Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad.
+
+- Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the
+  argument (or fix…).
 
 - bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
 

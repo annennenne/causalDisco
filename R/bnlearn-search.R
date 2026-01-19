@@ -3,13 +3,13 @@
 #'
 #' @name BnlearnSearch
 #'
-#' @example inst/roxygen-examples/bnlearn_search-example.R
+#' @example inst/roxygen-examples/bnlearn-search-example.R
 NULL
 
 #' @title R6 Interface to bnlearn Search Algorithms
 #'
-#' @description A wrapper that lets you drive `bnlearns`’s structure-learning
-#' algorithms within the `causalDisco` framework.
+#' @description A wrapper that lets you drive \pkg{bnlearn} algorithms within the \pkg{causalDisco} framework.
+#' For arguments to the test, score, and algorithm, see the \pkg{bnlearn} documentation.
 #'
 #' @return An R6 object with the methods documented below.
 #'
