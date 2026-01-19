@@ -1,5 +1,5 @@
 test_that("tfci causalDisco works with no knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z")
 
@@ -9,7 +9,7 @@ test_that("tfci causalDisco works with no knowledge", {
 
 test_that("tfci causalDisco arguments to tfci_run can be passed along correctly", {
   # Just test no warning given
-  data("tpc_example")
+  data(tpc_example)
 
   my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", method = "stable")
 
@@ -18,7 +18,7 @@ test_that("tfci causalDisco arguments to tfci_run can be passed along correctly"
 
 
 test_that("tfci causalDisco respects tier knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -64,7 +64,7 @@ test_that("tfci causalDisco respects required background knowledge", {
   skip(
     "tfci causalDisco does not yet support required edges from knowledge objects."
   )
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -85,7 +85,7 @@ test_that("tfci causalDisco respects required background knowledge", {
 })
 
 test_that("tfci causalDisco respects forbidden background knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,

@@ -28,7 +28,7 @@ We will for this section use the `num_data` dataset included in the package for 
 discovery algorithms.
 
 ```{r load data}
-data("num_data")
+data(num_data)
 head(num_data)
 ```
 
@@ -42,7 +42,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   plot(pc_result_tetrad, main = "PC KCI (Tetrad)")
 }
 ```
-![](pc-kci-tetrad.png)
+![](PC-KCI-TETRAD.png)
 
 or the PC algorithm from bnlearn with Fisher's Z test:
 
@@ -66,7 +66,7 @@ We will for this section use the dataset `tpc_example`, which contains variables
 life stages: childhood, youth, and old age. 
 
 ```{r}
-data("tpc_example")
+data(tpc_example)
 head(tpc_example)
 ```
 

@@ -21,7 +21,7 @@ my_tges(tpc_example)
 
 # or you can run directly with tges_run()
 
-data("tpc_example")
+data(tpc_example)
 
 score_bic <- new(
   "TemporalBIC",

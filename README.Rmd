@@ -89,7 +89,7 @@ the Java library Tetrad, the R package bnlearn, and the R package pcalg.
 library(causalDisco)
 
 # load data
-data("tpc_example")
+data(tpc_example)
 
 # Define background knowledge object
 kn <- knowledge(
@@ -270,7 +270,7 @@ Should be easier to fix for test based algorithms? Just check if required edges 
 
 ```{r tetrad required bug}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,

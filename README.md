@@ -114,7 +114,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 
 # load data
-data("tpc_example")
+data(tpc_example)
 
 # Define background knowledge object
 kn <- knowledge(
@@ -322,7 +322,7 @@ fixedEdges in pcalg.
 
 ``` r
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,

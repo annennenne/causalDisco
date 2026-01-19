@@ -1,4 +1,4 @@
-data("tpc_example")
+data(tpc_example)
 
 # use pc with engine bnlearn and test fisher_z
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.01)

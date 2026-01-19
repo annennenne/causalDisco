@@ -41,11 +41,11 @@ we find this syntax too verbose.
 
 ## Specifying required and forbidden edges
 
-Suppose we want to require an edge from A to B, and forbid an edge from B to C:
+Suppose we want to require an edge from A to B, from A to C, and forbid an edge from B to C:
 
 ```{r required and forbidden knowledge}
 kn_1 <- knowledge(
-  A %-->% B,
+  A %-->% c(B, C),
   B %!-->% C
 )
 ```
@@ -59,7 +59,7 @@ plot(kn_1)
 The blue solid edge represents the required edge from A to B, while the red dashed edge represents the forbidden edge
 from B to C.
 
-If one wishes to remove some edges (either required or forbidden) knowledge from an existing knowledge object, the `remove_edge` function can be used. 
+If one wishes to remove some edges (either required or forbidden) knowledge from an existing knowledge object, the `remove_edge` function can be used.
 For example, to remove the required edge from A to B:
 
 ```{r remove required edge}
@@ -72,7 +72,7 @@ plot(kn_1_removed)
 We will use the `tpc_example` dataset from the causalDisco package for the following examples:
 
 ```{r dataset required and forbidden knowledge}
-data("tpc_example")
+data(tpc_example)
 head(tpc_example)
 ```
 
@@ -287,7 +287,7 @@ All knowledge types are supported with bnlearn engine. Note, that you can get a
 harmless(?) warning from bnlearn when using required knowledge.
 
 ```{r bnlearn}
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
@@ -315,7 +315,7 @@ Thus, the only type of knowledge that can be used with pcalg is knowledge create
 any directed knowledge or tiers, such as this:
 
 ```{r pcalg}
-data("tpc_example")
+data(tpc_example)
 kn <- knowledge(
   tpc_example,
   child_x1 %!-->% youth_x3,

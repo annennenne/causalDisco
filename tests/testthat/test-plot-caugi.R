@@ -31,7 +31,7 @@ test_that("Plotting knowledgeable_caugi with empty knowledge works", {
 })
 
 test_that("Plotting knowledge objects with required+forbidden works", {
-  data("tpc_example")
+  data(tpc_example)
   kn <- knowledge(
     tpc_example,
     child_x1 %-->% youth_x3,
@@ -171,7 +171,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
 })
 
 test_that("disco plotting works", {
-  data("tpc_example")
+  data(tpc_example)
 
   # define background knowledge object
   kn <- knowledge(
@@ -192,7 +192,7 @@ test_that("disco plotting works", {
 })
 
 test_that("disco plotting with required works", {
-  data("tpc_example")
+  data(tpc_example)
 
   # define background knowledge object
   kn <- knowledge(
@@ -214,7 +214,7 @@ test_that("disco plotting with required works", {
 })
 
 test_that("disco plotting with forbidden works", {
-  data("tpc_example")
+  data(tpc_example)
 
   # define background knowledge object
   kn <- knowledge(

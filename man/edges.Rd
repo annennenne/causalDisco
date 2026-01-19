@@ -19,7 +19,7 @@ A tibble containing the edges.
 \code{edges()} extracts the edges from a \code{knowledgeable_caugi} object.
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 kn <- knowledge(
   tpc_example,

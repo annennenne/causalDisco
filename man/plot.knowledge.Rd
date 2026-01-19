@@ -22,7 +22,7 @@ A plot of the knowledge structure.
 Plot a knowledge object (tiers + required + forbidden)
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,

@@ -5,7 +5,7 @@
 
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data("tpc_example")
+  data(tpc_example)
 
   # Recommended:
   my_pc <- pc(engine = "tetrad", test = "conditional_gaussian")

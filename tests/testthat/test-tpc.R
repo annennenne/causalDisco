@@ -1,6 +1,6 @@
 test_that("tpc causalDisco arguments to tfci_run can be passed along correctly", {
   # Just test no warning given
-  data("tpc_example")
+  data(tpc_example)
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", method = "stable")
 
@@ -8,7 +8,7 @@ test_that("tpc causalDisco arguments to tfci_run can be passed along correctly",
 })
 
 test_that("tpc causalDisco respects tier knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -51,7 +51,7 @@ test_that("tpc causalDisco respects tier knowledge", {
 })
 
 test_that("tpc causalDisco respects required background knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -95,7 +95,7 @@ test_that("tpc causalDisco respects required background knowledge", {
 })
 
 test_that("tpc causalDisco respects forbidden background knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,

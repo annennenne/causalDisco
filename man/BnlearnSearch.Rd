@@ -17,7 +17,7 @@ algorithms within the \code{causalDisco} framework.
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpc_example")
+data(tpc_example)
 
 # Recommended:
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)

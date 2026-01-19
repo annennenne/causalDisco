@@ -80,7 +80,7 @@ plot_caugi_graph <- function(g, layout = NULL, curved = TRUE, ...) {
 #' @return A plot of the causal graph.
 #' @method plot knowledgeable_caugi
 #' @examples
-#' data("tpc_example")
+#' data(tpc_example)
 #'
 #' kn <- knowledge(
 #'   tpc_example,
@@ -252,7 +252,7 @@ plot.knowledgeable_caugi <- function(x, ...) {
 #' @param ... Additional arguments passed to igraph `plot`.
 #' @return A plot of the knowledge structure.
 #' @examples
-#' data("tpc_example")
+#' data(tpc_example)
 #'
 #' kn <- knowledge(
 #'   tpc_example,

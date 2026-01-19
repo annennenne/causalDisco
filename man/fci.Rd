@@ -36,7 +36,7 @@ For specific details on the supported scores, tests, and parameters for each eng
 }
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 
 # Recommended path using disco()
 fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.05)

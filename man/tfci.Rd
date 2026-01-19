@@ -32,7 +32,7 @@ For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}
 via \code{...}, see \code{\link[=tfci_run]{tfci_run()}}.
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,

@@ -1,4 +1,4 @@
-data("tpc_example")
+data(tpc_example)
 
 # Recommended path using disco()
 fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.05)

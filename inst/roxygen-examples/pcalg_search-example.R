@@ -4,7 +4,7 @@
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpc_example")
+data(tpc_example)
 
 # Recommended:
 pc(engine = "pcalg", test = "fisher_z")(tpc_example)

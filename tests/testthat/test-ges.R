@@ -1,7 +1,7 @@
 test_that("ges Tetrad disco respects tier knowledge", {
   skip_if_no_tetrad()
 
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -46,7 +46,7 @@ test_that("ges Tetrad disco respects tier knowledge", {
 test_that("ges Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
 
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -95,7 +95,7 @@ test_that("ges Tetrad disco respects required background knowledge", {
 test_that("ges Tetrad disco respects forbidden background knowledge", {
   skip_if_no_tetrad()
 
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -118,7 +118,7 @@ test_that("ges Tetrad disco respects forbidden background knowledge", {
 
 test_that("ges pcalg disco errors on tier knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -138,7 +138,7 @@ test_that("ges pcalg disco errors on tier knowledge", {
 
 test_that("ges pcalg disco errors on required background knowledge", {
   # See ?as_pcalg_constraints - only forbidden edges are supported
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,
@@ -153,7 +153,7 @@ test_that("ges pcalg disco errors on required background knowledge", {
 })
 
 test_that("ges pcalg disco respects forbidden background knowledge", {
-  data("tpc_example")
+  data(tpc_example)
 
   kn <- knowledge(
     tpc_example,

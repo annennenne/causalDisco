@@ -1,4 +1,4 @@
-data("tpc_example")
+data(tpc_example)
 
 #### Using pcalg engine ####
 # Recommended path using disco()

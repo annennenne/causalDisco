@@ -278,7 +278,7 @@ is_knowledgeable_caugi <- function(x) {
 #' @export
 #'
 #' @examples
-#' data("tpc_example")
+#' data(tpc_example)
 #' cd_tges <- tges(engine = "causalDisco", score = "tbic")
 #' kn <- knowledge(
 #'   tpc_example,
@@ -304,7 +304,7 @@ edges <- function(x) {
 #' @export
 #'
 #' @examples
-#' data("tpc_example")
+#' data(tpc_example)
 #' cd_tges <- tges(engine = "causalDisco", score = "tbic")
 #' kn <- knowledge(
 #'   tpc_example,

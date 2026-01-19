@@ -22,7 +22,7 @@ knowledge is provided, the nodes are arranged according to their tiers; otherwis
 layout is used.
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,

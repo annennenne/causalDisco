@@ -34,7 +34,7 @@ For specific details on the supported scores, tests, and parameters for each eng
 }
 }
 \examples{
-data("tpc_example")
+data(tpc_example)
 
 #### Using pcalg engine ####
 # Recommended path using disco()
