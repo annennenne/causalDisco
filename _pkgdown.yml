@@ -28,11 +28,9 @@ reference:
       - tges
       - tpc
 
-  - title: "Tests for TPC"
-    desc: "Test functions implemented for use in the TPC algorithm."
+  - title: "R6 Classes"
     contents:
-      - cor_test
-      - reg_test
+      - ends_with("Search")
 
   - title: "Setup for Tetrad Engine"
     desc: "Functions for installing and verifying the Tetrad Java backend."
@@ -41,14 +39,16 @@ reference:
       - install_tetrad
       - check_tetrad_install
 
-  - title: "R6 Classes"
-    contents:
-      - ends_with("Search")
-
   - title: "causalDisco Algorithm Run Functions"
     desc: "Low-level functions that execute causalDisco search algorithms and detail their parameters."
     contents:
       - ends_with("run")
+
+  - title: "Tests for TPC"
+    desc: "Test functions implemented for use in the TPC algorithm."
+    contents:
+      - cor_test
+      - reg_test
 
   - title: "Simulation"
     contents:
