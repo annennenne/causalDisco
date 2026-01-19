@@ -47,6 +47,7 @@ TetradSearch <- R6Class(
     #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
     #'      \item \code{"rank_bic"} - Rank-based BIC score.
+    #'      \item \code{"sem_bic"} - SEM BIC score.
     #'   }
     #'
     #'   **Mixed Discrete/Gaussian**
