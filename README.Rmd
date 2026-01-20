@@ -141,7 +141,6 @@ These tests: `chi_square`, `g_square`, `basis_function_lrt`, `probabilistic`.
 
 - `use_for_mc` (Markov checker) argument and usage? Can't set it atm...
 
-
 ## TODO
 
 - Rewrite add checks (numeric, logical, ...) using checkmate package. Some of the checks aren't working correctly
@@ -294,15 +293,7 @@ Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
 
 - Figure out how to not repeat the documentation of e.g. penalty discount in TetradSearch R6 class.
 
-### Standardization
-
-- We are mixing between different things currently (since we rely on `caugi` are it uses `data.frame` and `S7`):
-  - `tibble` vs `data.frame` (e.g. `knowledge` is `tibble` and `disco()$caugi@edges` is `data.frame`).
-    - I added a `nodes()` and `edges()` method to `knowledgeable_caugi` objects to easily return as `tibble`.
-
 ### CRAN TODO
-
-- Add a copyright holder (`"cph"`) in persons field of DESCRIPTION (needed for CRAN, see [here](https://github.com/DavisVaughan/extrachecks))
 
 - Update Description: field in DESCRIPTION to mention it wraps other packages, ...
 
@@ -310,4 +301,4 @@ Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
 
 Bug reports and feature requests are welcome:
 
-👉 [open an issue](https://github.com/BjarkeHautop/causalDisco/issues).
+[open an issue](https://github.com/BjarkeHautop/causalDisco/issues).
