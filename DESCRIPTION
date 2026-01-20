@@ -48,6 +48,8 @@ SystemRequirements: Cargo (Rust's package manager), rustc >= 1.80.0, xz
 Depends: 
     R (>= 4.2.0)
 biocViews:
+Remotes:
+  frederikfabriciusbjerre/caugi
 Imports:
     caugi,
     checkmate,

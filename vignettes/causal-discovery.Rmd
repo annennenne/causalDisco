@@ -30,8 +30,7 @@ cg <- caugi(
   Z %-->% X1,
   X3 %-->% X2,
   X1 %-->% Y,
-  X2 %-->% Y,
-  class = "DAG"
+  X2 %-->% Y
 )
 plot(cg)
 ```
