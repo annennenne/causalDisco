@@ -21,10 +21,3 @@ Check if skipped tests can be removed (could just add a version check on tetrad 
 Allow star - star (adjaceny) knowledge
 
 User should only be allowed to give knowledge that matches the knowledge class (e.g. DAG)
-
-
-
-
-
-
-
