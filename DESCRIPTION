@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.4.9031
+Version: 0.9.5.9031
 Authors@R:
       c(
         person(
@@ -136,6 +136,7 @@ Collate:
     'reg-test.R'
     'sim-dag.R'
     'sim-gaus-from-dag.R'
+    'simulation.R'
     'tamat.R'
     'tetrad-graph.R'
     'tetrad-rdata-utils.R'

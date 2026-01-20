@@ -52,8 +52,8 @@ reference:
 
   - title: "Simulation"
     contents:
-      - sim_dag
-      - sim_gaus_from_dag
+      - starts_with("generate")
+      - starts_with("sim")
 
   - title: "Example Datasets"
     desc: "Small simulated datasets to illustrate causalDisco workflows."
