@@ -61,10 +61,11 @@ reference:
       - tpc_example
       - matches(".*_data.*")
 
-  - title: "Plotting and Printing"
+  - title: "Printing, Summarizing, and Plotting Objects"
     contents:
-      - starts_with("plot")
       - starts_with("print")
+      - starts_with("summary")
+      - starts_with("plot")
       - make_tikz
 
   - title: "Knowledge helpers"

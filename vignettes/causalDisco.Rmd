@@ -85,7 +85,14 @@ kn <- knowledge(
     oldage ~ starts_with("oldage")
   )
 )
-plot(kn)
+```
+
+You can view the knowledge object using `print()`, `summary()` or `plot()`:
+
+```{r view knowledge}
+print(kn)
+summary(kn)
+plot(kn, main = "Temporal Knowledge")
 ```
 
 We can then incorporate this knowledge into any algorithm like above. Here we use the Temporal Peter-Clark (tpc) algorithm
@@ -94,6 +101,13 @@ from causalDisco with the regression-based information loss test:
 ```{r tpc algorithm with knowledge}
 tpc_method <- tpc(engine = "causalDisco", test = "reg")
 tpc_result <- disco(tpc_example, method = tpc_method, knowledge = kn)
+```
+
+Similarly, we can view the results using `print()`, `summary()` or `plot()`:
+
+```{r view tpc results}
+print(tpc_result)
+summary(tpc_result)
 plot(tpc_result, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
 ```
 

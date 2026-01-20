@@ -174,6 +174,95 @@ knowledgeable_caugi.EssGraph <- function(
   new_knowledgeable_caugi(cg, kn)
 }
 
+#' @title Print method for knowledgeable_caugi objects
+#' @param x A `knowledgeable_caugi` object.
+#' @param compact Logical; if `TRUE`, prints a more compact representation.
+#' @param ... Additional arguments (not used).
+#' @examples
+#' data(tpc_example)
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' cd_tges <- tpc(engine = "causalDisco", test = "fisher_z")
+#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+#' print(disco_cd_tges)
+#' print(disco_cd_tges, compact = TRUE)
+#'
+#' @exportS3Method print knowledgeable_caugi
+print.knowledgeable_caugi <- function(x, compact = FALSE, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c("cli", "tibble"),
+    function_name = "print.knowledgeable_caugi"
+  )
+
+  cli::cli_h1("caugi graph")
+
+  # Graph info
+  graph_class <- x$caugi@graph_class
+
+  cli::cli_text("Graph class: {.strong {graph_class}}")
+
+  print_tbl_section <- function(title, tbl) {
+    if (!nrow(tbl)) {
+      cli::cli_alert_info("No {tolower(title)}")
+      return(invisible())
+    }
+
+    cli::cli_h2(title)
+
+    print(tibble::as_tibble(tbl))
+  }
+
+  if (compact) {
+    cli::cli_text("{nrow(edges(x))} edges, {nrow(nodes(x))} nodes")
+  } else {
+    print_tbl_section("Edges", edges(x))
+    print_tbl_section("Nodes", nodes(x))
+  }
+
+  # Knowledge info
+  NextMethod("print", compact = compact)
+
+  invisible(x)
+}
+
+#' @title Summary method for knowledgeable_caugi objects
+#' @param object A `knowledgeable_caugi` object.
+#' @param ... Additional arguments (not used).
+#' @examples
+#' data(tpc_example)
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' cd_tges <- tpc(engine = "causalDisco", test = "fisher_z")
+#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+#' summary(disco_cd_tges)
+#'
+#' @exportS3Method summary knowledgeable_caugi
+summary.knowledgeable_caugi <- function(object, ...) {
+  # Graph info
+  cli::cli_h1("caugi graph summary")
+  cli::cli_text("Graph class: {.strong {object$caugi@graph_class}}")
+  cli::cli_text("Nodes: {.strong {nrow(nodes(object))}}")
+  cli::cli_text("Edges: {.strong {nrow(edges(object))}}")
+
+  # Knowledge info
+  NextMethod("summary")
+
+  invisible(object)
+}
+
+
 #' @export
 set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
   if (!is_knowledge(knowledge)) {

@@ -515,87 +515,136 @@ knowledge <- function(...) {
 #' @title Print a `knowledge` object
 #'
 #' @param x A `knowledge` object.
+#' @param compact Logical. If `TRUE`, prints a more compact summary,
 #' @param ... Additional arguments (not used).
+#' @examples
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' print(kn)
+#' print(kn, compact = TRUE)
+#'
 #' @exportS3Method print knowledge
-print.knowledge <- function(x, ...) {
+print.knowledge <- function(x, compact = FALSE, ...) {
   .check_if_pkgs_are_installed(
-    pkgs = c(
-      "cli",
-      "tibble"
-    ),
+    pkgs = c("cli", "tibble"),
     function_name = "print.knowledge"
   )
 
   cli::cli_h1("Knowledge object")
 
-  if (nrow(x$tiers)) {
-    cat("\n")
-    cli::cli_h2("Tiers")
-    # print tibble without column and tibble info
-    print_this <- format(tibble::as_tibble(x$tiers))[-1L][-2L]
+  print_section <- function(title, tbl, header_fmt = NULL, n_max = 20) {
+    if (!nrow(tbl)) {
+      return(invisible())
+    }
 
-    hdr <- print_this[1]
-    pad <- sub("label.*", "", hdr)
-    tail <- sub(".*label", "", hdr)
-    print_this[1] <- paste0(
-      pad,
-      "\u001b[1mlabel\u001b[22m",
-      tail
-    )
+    cli::cli_h2(title)
 
-    cat(print_this, sep = "\n")
-  }
+    lines <- format(tibble::as_tibble(tbl))
+    lines <- lines[-c(1L, 2L)]
 
-  if (nrow(x$vars)) {
-    cat("\n")
-    cli::cli_h2("Variables")
-    # print tibble without column and tibble info
-    print_this <- format(tibble::as_tibble(x$vars))[-1L][-2L]
-    # format header
-    hdr <- print_this[1]
-    pad <- sub("var.*", "", hdr) # "  "
-    mid <- sub(".*var(.*)tier.*", "\\1", hdr) # "   "
-    tail <- sub(".*tier", "", hdr) # " "
-    print_this[1] <- paste0(
-      pad,
-      "\u001b[1mvar\u001b[22m",
-      mid,
-      "\u001b[1mtier\u001b[22m",
-      tail
-    )
-    cat(print_this, sep = "\n")
-  }
+    if (!is.null(header_fmt)) {
+      lines[1] <- header_fmt(lines[1])
+    }
 
-  if (nrow(x$edges)) {
-    cat("\n")
-    cli::cli_h2("Edges")
-    sym_arrow <- cli::symbol$arrow_right
-    for (i in seq_len(nrow(x$edges))) {
-      st <- x$edges$status[i]
-      from <- x$edges$from[i]
-      to <- x$edges$to[i]
-
-      bullet <- switch(
-        st,
-        forbidden = cli::col_red(cli::symbol$cross),
-        required = cli::col_green(cli::symbol$tick),
-        cli::symbol$bullet
-      )
-
-      cli::cat_line(
-        " ",
-        bullet,
-        "  ",
-        from,
-        " ",
-        sym_arrow,
-        " ",
-        to
-      )
+    # compact mode: show only first n_max rows
+    if (compact && length(lines) > n_max) {
+      cat(lines[1:n_max], sep = "\n")
+      cli::cli_text("... and {length(lines) - n_max} more rows")
+    } else {
+      cat(lines, sep = "\n")
     }
   }
-  cat("\n")
+
+  # ---- Print tiers and variables ----
+  print_section(
+    "Tiers",
+    x$tiers,
+    header_fmt = function(hdr) {
+      sub("(\\s*)label(.*)", "\\1\u001b[1mlabel\u001b[22m\\2", hdr)
+    },
+    n_max = if (compact) 5 else 20
+  )
+
+  print_section(
+    "Variables",
+    x$vars,
+    header_fmt = function(hdr) {
+      sub(
+        "(\\s*)var(.*)tier(\\s*)",
+        "\\1\u001b[1mvar\u001b[22m\\2\u001b[1mtier\u001b[22m\\3",
+        hdr
+      )
+    },
+    n_max = if (compact) 5 else 20
+  )
+
+  # ---- Print edges ----
+  if (nrow(x$edges)) {
+    cli::cli_h2("Edges")
+
+    sym_arrow <- cli::symbol$arrow_right
+    bullets <- c(
+      forbidden = cli::col_red(cli::symbol$cross),
+      required = cli::col_green(cli::symbol$tick)
+    )
+
+    if (compact && nrow(x$edges) > 20) {
+      rows <- seq_len(20)
+      cli::cli_text("Showing first 20 edges (of {nrow(x$edges)})")
+    } else {
+      rows <- seq_len(nrow(x$edges))
+    }
+
+    for (i in rows) {
+      edge <- x$edges[i, ]
+      bullet <- bullets[[edge$status]] %||% cli::symbol$bullet
+      cli::cat_line(" ", bullet, "  ", edge$from, " ", sym_arrow, " ", edge$to)
+    }
+
+    if (compact && nrow(x$edges) > 20) {
+      cli::cli_text("... and {nrow(x$edges) - 20} more edges")
+    }
+  }
+
   invisible(x)
+}
+
+#' @title Summary method for knowledge objects
+#' @param object A `knowledge` object.
+#' @param ... Additional arguments (not used).
+#' @examples
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' summary(kn)
+#'
+#' @exportS3Method summary knowledge
+summary.knowledge <- function(object, ...) {
+  cli::cli_h2("Knowledge summary")
+
+  n_tiers <- if (!is.null(object$tiers)) nrow(object$tiers) else 0
+  n_vars <- if (!is.null(object$vars)) nrow(object$vars) else 0
+
+  n_required <- sum(object$edges$status == "required", na.rm = TRUE)
+  n_forbidden <- sum(object$edges$status == "forbidden", na.rm = TRUE)
+
+  cli::cli_text("Tiers: {.strong {n_tiers}}")
+  cli::cli_text("Variables: {.strong {n_vars}}")
+  cli::cli_text("Required edges: {.strong {n_required}}")
+  cli::cli_text("Forbidden edges: {.strong {n_forbidden}}")
+
+  invisible(object)
 }
 
 # ────────────────────────────────── Check ─────────────────────────────────────

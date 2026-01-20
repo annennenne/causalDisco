@@ -14,7 +14,6 @@ CPC
 CPDAG
 CStaR
 CamelCase
-CausalDiscovery
 Chickering
 Codecov
 DAGMA
@@ -115,11 +114,11 @@ fixedEdges
 ggplot
 honouring
 igraph
+independencies
 initializations
 inout
 interventional
 ith
-jl
 kwab
 maketikz
 md
@@ -157,4 +156,3 @@ un
 underfit
 webtool
 xz
-’s
