@@ -165,3 +165,38 @@ test_that("knowledge helpers works", {
   expect_equal(class(output)[1], "knowledgeable_caugi")
   expect_equal(class(output)[2], "knowledge")
 })
+
+
+test_that("knowledgeable_caugi print and summary methods", {
+  kn <- knowledge()
+  cg <- caugi::as_caugi(
+    matrix(
+      c(
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ),
+      nrow = 4,
+      byrow = TRUE
+    ),
+    class = "DAG"
+  )
+  kcg <- knowledgeable_caugi(cg, kn)
+  print(kcg)
+  print(kcg, compact = TRUE)
+  summary(kcg)
+  expect_true(TRUE)
+})

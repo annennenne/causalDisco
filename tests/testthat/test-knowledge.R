@@ -1265,3 +1265,17 @@ test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", 
   kn2 <- eval(parse(text = code))
   expect_equal(kn2, kn)
 })
+
+test_that("print and summary method for knowledge", {
+  my_df <- data.frame(A = 1, B = 2, C = 3)
+  kn <- knowledge(
+    my_df,
+    tier(1 ~ A + B, 2 ~ C),
+    A %!-->% C,
+    B %-->% A
+  )
+  print(kn)
+  print(kn, compact = TRUE)
+  summary(kn)
+  expect_true(TRUE)
+})
