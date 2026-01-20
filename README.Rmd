@@ -228,8 +228,6 @@ implemented yet.
   - Missing scores: `"Instance-specific Augmented SEM BIC Score"`. Get this error when implementing:
   `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null` (see branch `Add-isa-sem-bic-score-to-Tetrad`).
   
-- Update simulation functions (use caugi?)
-
 - Update evaluation and confusion metrics (use caugi?)
 
 ### Bugfixes

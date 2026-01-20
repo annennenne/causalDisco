@@ -268,38 +268,9 @@ is_knowledgeable_caugi <- function(x) {
   x
 }
 
-#' Retrieve edges from a `knowledgeable_caugi` object
-#'
-#' @description
-#' `edges()` extracts the edges from a `knowledgeable_caugi` object.
-#'
-#' @param x A `knowledgeable_caugi` object.
-#' @return A tibble containing the edges.
-#' @export
-#'
-#' @examples
-#' data(tpc_example)
-#' cd_tges <- tges(engine = "causalDisco", score = "tbic")
-#' kn <- knowledge(
-#'   tpc_example,
-#'   tier(
-#'     child ~ starts_with("child"),
-#'     youth ~ starts_with("youth"),
-#'     old ~ starts_with("old")
-#'   )
-#' )
-#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
-#' edges(disco_cd_tges)
-edges <- function(x) {
-  UseMethod("edges")
-}
-
 #' Retrieve nodes from a `knowledgeable_caugi` object
 #'
-#' @description
-#' `nodes()` extracts the edges from a `knowledgeable_caugi` object.
-#'
-#' @param x A `knowledgeable_caugi` object.
+#' @param kcg A `knowledgeable_caugi` object.
 #' @return A tibble containing the nodes.
 #' @export
 #'
@@ -316,18 +287,29 @@ edges <- function(x) {
 #' )
 #' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #' nodes(disco_cd_tges)
-nodes <- function(x) {
-  UseMethod("nodes")
+nodes <- function(kcg) {
+  tibble::as_tibble(caugi::nodes(kcg$caugi))
 }
 
-#' @rdname edges
+#' Retrieve edges from a `knowledgeable_caugi` object
+#'
+#' @param kcg A `knowledgeable_caugi` object.
+#' @return A tibble containing the edges.
 #' @export
-edges.knowledgeable_caugi <- function(x) {
-  tibble::as_tibble(x$caugi@edges)
-}
-
-#' @rdname nodes
-#' @export
-nodes.knowledgeable_caugi <- function(x) {
-  tibble::as_tibble(x$caugi@nodes)
+#'
+#' @examples
+#' data(tpc_example)
+#' cd_tges <- tges(engine = "causalDisco", score = "tbic")
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+#' edges(disco_cd_tges)
+edges <- function(kcg) {
+  tibble::as_tibble(caugi::edges(kcg$caugi))
 }

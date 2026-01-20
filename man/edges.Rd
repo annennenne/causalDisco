@@ -2,21 +2,18 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{edges}
 \alias{edges}
-\alias{edges.knowledgeable_caugi}
 \title{Retrieve edges from a \code{knowledgeable_caugi} object}
 \usage{
-edges(x)
-
-\method{edges}{knowledgeable_caugi}(x)
+edges(kcg)
 }
 \arguments{
-\item{x}{A \code{knowledgeable_caugi} object.}
+\item{kcg}{A \code{knowledgeable_caugi} object.}
 }
 \value{
 A tibble containing the edges.
 }
 \description{
-\code{edges()} extracts the edges from a \code{knowledgeable_caugi} object.
+Retrieve edges from a \code{knowledgeable_caugi} object
 }
 \examples{
 data(tpc_example)

@@ -2,21 +2,18 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{nodes}
 \alias{nodes}
-\alias{nodes.knowledgeable_caugi}
 \title{Retrieve nodes from a \code{knowledgeable_caugi} object}
 \usage{
-nodes(x)
-
-\method{nodes}{knowledgeable_caugi}(x)
+nodes(kcg)
 }
 \arguments{
-\item{x}{A \code{knowledgeable_caugi} object.}
+\item{kcg}{A \code{knowledgeable_caugi} object.}
 }
 \value{
 A tibble containing the nodes.
 }
 \description{
-\code{nodes()} extracts the edges from a \code{knowledgeable_caugi} object.
+Retrieve nodes from a \code{knowledgeable_caugi} object
 }
 \examples{
 data(tpc_example)
