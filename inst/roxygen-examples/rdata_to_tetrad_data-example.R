@@ -15,10 +15,15 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   str(df_roundtrip)
 
   # Check types are preserved: cont is numeric (double), disc is integer
-  stopifnot(is.numeric(df_roundtrip$cont), is.factor(df_roundtrip$disc))
+  checkmate::assert_numeric(df_roundtrip$cont)
+  checkmate::assert_factor(df_roundtrip$disc)
 
-  # Values should match (up to numeric tolerance)
-  stopifnot(all.equal(my_df$cont, df_roundtrip$cont))
-  # Factor levels gets re-coded to be 0 1 when converting to Tetrad and back
-  stopifnot(identical(as.integer(my_df$disc), as.integer(df_roundtrip$disc)))
+  # Numeric columns should match (up to tolerance)
+  checkmate::assert_true(isTRUE(all.equal(my_df$cont, df_roundtrip$cont)))
+
+  # Factor columns should match exactly when coerced to integers
+  checkmate::assert_true(identical(
+    as.integer(my_df$disc),
+    as.integer(df_roundtrip$disc)
+  ))
 }

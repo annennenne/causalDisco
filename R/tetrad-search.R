@@ -386,10 +386,8 @@ TetradSearch <- R6Class(
     #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
     set_test = function(method, ..., mc = FALSE) {
-      stopifnot(
-        is.logical(mc),
-        length(mc) == 1
-      )
+      checkmate::assert_logical(mc, len = 1)
+
       method <- tolower(method)
       switch(
         method,
@@ -1350,14 +1348,12 @@ TetradSearch <- R6Class(
       test = FALSE,
       alg = FALSE
     ) {
-      stopifnot(
-        is.character(fn_pattern),
-        is.logical(c(score, test, alg)),
-        length(score) == 1,
-        length(test) == 1,
-        length(alg) == 1
-      )
-      # Check if exclusively one of score, etst, or alg is TRUE
+      checkmate::assert_character(fn_pattern)
+      checkmate::assert_logical(score, len = 1)
+      checkmate::assert_logical(test, len = 1)
+      checkmate::assert_logical(alg, len = 1)
+
+      # Check if exclusively one of score, test, or alg is TRUE
       if (sum(c(score, test, alg)) != 1) {
         stop(
           "Score is: ",
@@ -1425,10 +1421,7 @@ TetradSearch <- R6Class(
       bootstrap = FALSE,
       int_cols_as_cont = TRUE
     ) {
-      stopifnot(
-        is.logical(bootstrap),
-        length(bootstrap) == 1
-      )
+      checkmate::assert_logical(bootstrap, len = 1)
       if (!is.null(data)) {
         self$set_data(data, int_cols_as_cont)
       }
@@ -1478,20 +1471,22 @@ TetradSearch <- R6Class(
       resampling_ensemble = 1,
       seed = -1
     ) {
-      stopifnot(
-        is.numeric(number_resampling),
-        floor(number_resampling) == number_resampling,
-        number_resampling >= 0,
-        is.numeric(percent_resample_size),
-        percent_resample_size >= 0,
-        percent_resample_size <= 100,
-        is.logical(c(add_original, with_replacement)),
-        length(add_original) == 1,
-        length(with_replacement) == 1,
-        is.numeric(resampling_ensemble),
-        floor(resampling_ensemble) == resampling_ensemble,
-        is.numeric(seed)
+      checkmate::assert_int(number_resampling, lower = 0)
+
+      checkmate::assert_number(
+        percent_resample_size,
+        lower = 0,
+        upper = 100,
+        finite = TRUE
       )
+
+      checkmate::assert_logical(add_original, len = 1)
+      checkmate::assert_logical(with_replacement, len = 1)
+
+      checkmate::assert_int(resampling_ensemble)
+
+      checkmate::assert_int(seed)
+
       self$set_params(
         NUMBER_RESAMPLING = number_resampling,
         PERCENT_RESAMPLE_SIZE = percent_resample_size,
@@ -1507,9 +1502,8 @@ TetradSearch <- R6Class(
     #' as continuous, since Tetrad does not support ordinal data, but only
     #' either continuous or nominal data. Default is `TRUE.`
     set_data = function(data, int_cols_as_cont = TRUE) {
-      stopifnot(
-        is.data.frame(data)
-      )
+      checkmate::assert_data_frame(data)
+
       if (
         is.null(self$data) ||
           is.null(self$rdata) ||
@@ -1522,10 +1516,7 @@ TetradSearch <- R6Class(
     #' @description Toggles the verbosity in Tetrad.
     #' @param verbose (logical) TRUE to enable verbose logging, FALSE otherwise.
     set_verbose = function(verbose) {
-      stopifnot(
-        is.logical(verbose),
-        length(verbose) == 1
-      )
+      checkmate::assert_logical(verbose, len = 1)
       self$set_params(
         VERBOSE = verbose
       )
@@ -1533,13 +1524,8 @@ TetradSearch <- R6Class(
     #' @description Sets an integer time lag for time-series algorithms.
     #' @param time_lag (integer) The time lag to set.
     set_time_lag = function(time_lag = 0) {
-      stopifnot(
-        is.numeric(time_lag),
-        length(time_lag) == 1,
-        is.finite(time_lag),
-        floor(time_lag) == time_lag,
-        time_lag >= 0
-      )
+      checkmate::assert_int(time_lag, lower = 0)
+
       self$set_params(
         TIME_LAG = time_lag
       )
@@ -1625,15 +1611,11 @@ TetradSearch <- R6Class(
       singularity_lambda = 0.0,
       do_one_equation_only = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(truncation_limit, penalty_discount, singularity_lambda)),
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        penalty_discount >= 0,
-        singularity_lambda >= 0,
-        is.logical(do_one_equation_only),
-        length(do_one_equation_only) == 1
-      )
+      checkmate::assert_int(truncation_limit, lower = 0)
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(do_one_equation_only, len = 1)
+
       self$set_params(
         TRUNCATION_LIMIT = truncation_limit,
         PENALTY_DISCOUNT = penalty_discount,
@@ -1646,9 +1628,9 @@ TetradSearch <- R6Class(
       self$score <- cast_obj(self$score)
     },
     use_bdeu_score = function(sample_prior = 10, structure_prior = 0) {
-      stopifnot(
-        is.numeric(c(sample_prior, structure_prior))
-      )
+      checkmate::assert_number(sample_prior, finite = TRUE)
+      checkmate::assert_number(structure_prior, finite = TRUE)
+
       self$set_params(
         PRIOR_EQUIVALENT_SAMPLE_SIZE = sample_prior,
         STRUCTURE_PRIOR = structure_prior
@@ -1662,14 +1644,11 @@ TetradSearch <- R6Class(
       num_categories_to_discretize = 3,
       structure_prior = 0
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, num_categories_to_discretize)),
-        penalty_discount >= 0,
-        num_categories_to_discretize >= 0,
-        floor(num_categories_to_discretize) == num_categories_to_discretize,
-        is.logical(discretize),
-        length(discretize) == 1
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_categories_to_discretize, lower = 0)
+      checkmate::assert_logical(discretize, len = 1)
+      checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1687,14 +1666,11 @@ TetradSearch <- R6Class(
       singularity_lambda = 0.0,
       precompute_covariances = TRUE
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
-        penalty_discount >= 0,
-        structure_prior >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1710,11 +1686,9 @@ TetradSearch <- R6Class(
       penalty_discount = 2,
       structure_prior = 0
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, structure_prior)),
-        penalty_discount >= 0,
-        structure_prior >= 0
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior
@@ -1729,13 +1703,10 @@ TetradSearch <- R6Class(
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
-      stopifnot(
-        is.numeric(c(gamma, singularity_lambda)),
-        gamma >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(gamma, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         EBIC_GAMMA = gamma,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -1751,12 +1722,10 @@ TetradSearch <- R6Class(
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, singularity_lambda)),
-        penalty_discount >= 0,
-        singularity_lambda >= 0,
-        is.character(sem_gic_rule)
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_character(sem_gic_rule)
+
       sem_gic_rule_int <- switch(
         sem_gic_rule,
         "bic" = 1L,
@@ -1788,13 +1757,10 @@ TetradSearch <- R6Class(
       structure_prior = 0,
       precompute_covariances = TRUE
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, structure_prior)),
-        penalty_discount >= 0,
-        structure_prior >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -1838,13 +1804,10 @@ TetradSearch <- R6Class(
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
-      stopifnot(
-        is.numeric(c(poisson_lambda, singularity_lambda)),
-        poisson_lambda >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         POISSON_LAMBDA = poisson_lambda,
@@ -1862,16 +1825,12 @@ TetradSearch <- R6Class(
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
-      stopifnot(
-        is.numeric(singularity_lambda),
-        singularity_lambda >= 0,
-        is.numeric(c(penalty_discount, structure_prior)),
-        floor(penalty_discount) == penalty_discount,
-        floor(structure_prior) == structure_prior,
-        sem_bic_rule %in% c(1, 2),
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_int(penalty_discount, lower = 0)
+      checkmate::assert_int(structure_prior, lower = 0)
+      checkmate::assert_choice(sem_bic_rule, choices = c(1, 2))
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         SEM_BIC_STRUCTURE_PRIOR = structure_prior,
@@ -1889,13 +1848,10 @@ TetradSearch <- R6Class(
       precompute_covariances = TRUE,
       singularity_lambda = 0.0
     ) {
-      stopifnot(
-        is.numeric(c(risk_bound, singularity_lambda)),
-        risk_bound >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(risk_bound, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         ZS_RISK_BOUND = risk_bound,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -1911,6 +1867,10 @@ TetradSearch <- R6Class(
       penalty_discount = 2,
       truncation_limit = 3
     ) {
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_int(truncation_limit, lower = 0)
+      checkmate::assert_character(basis_type, len = 1)
+
       basis_type_int <- switch(
         basis_type,
         polynomial = 0L,
@@ -1924,14 +1884,6 @@ TetradSearch <- R6Class(
           "Supported values are: 'polynomial', 'legendre', 'hermite', and 'chebyshev'.",
           call. = FALSE
         )
-      )
-
-      stopifnot(
-        is.numeric(penalty_discount),
-        is.numeric(truncation_limit),
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        penalty_discount >= 0
       )
 
       self$set_params(
@@ -1949,15 +1901,9 @@ TetradSearch <- R6Class(
       jitter = 1e-8,
       truncation_limit = 3
     ) {
-      stopifnot(
-        is.numeric(penalty_discount),
-        is.numeric(jitter),
-        is.numeric(truncation_limit),
-        jitter >= 0,
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        penalty_discount >= 0
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(jitter, lower = 0, finite = TRUE)
+      checkmate::assert_int(truncation_limit, lower = 0)
 
       self$set_params(
         REGULARIZATION_LAMBDA = jitter,
@@ -1973,13 +1919,9 @@ TetradSearch <- R6Class(
       gamma = 0.8,
       penalty_discount = 2
     ) {
-      stopifnot(
-        is.numeric(gamma),
-        is.numeric(penalty_discount),
-        gamma >= 0,
-        gamma <= 1,
-        penalty_discount >= 0
-      )
+      checkmate::assert_number(gamma, lower = 0, upper = 1, finite = TRUE)
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+
       self$set_params(
         EBIC_GAMMA = gamma,
         PENALTY_DISCOUNT = penalty_discount
@@ -1997,15 +1939,11 @@ TetradSearch <- R6Class(
       do_one_equation_only = FALSE,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(truncation_limit, alpha, singularity_lambda)),
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        alpha >= 0,
-        singularity_lambda >= 0,
-        is.logical(do_one_equation_only),
-        length(do_one_equation_only) == 1
-      )
+      checkmate::assert_int(truncation_limit, lower = 0)
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(do_one_equation_only, len = 1)
+
       self$set_params(
         ALPHA = alpha,
         TRUNCATION_LIMIT = truncation_limit,
@@ -2029,11 +1967,9 @@ TetradSearch <- R6Class(
       singularity_lambda = 0.0,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(alpha, singularity_lambda)),
-        alpha >= 0,
-        singularity_lambda >= 0
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+
       self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -2058,13 +1994,10 @@ TetradSearch <- R6Class(
       alpha = NULL
     ) {
       # alpha is not used atm in Tetrad?
-      stopifnot(
-        is.numeric(c(poisson_lambda, singularity_lambda)),
-        poisson_lambda >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         POISSON_LAMBDA = poisson_lambda,
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -2088,14 +2021,11 @@ TetradSearch <- R6Class(
       cell_table_type = "ad",
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(min_count, alpha)),
-        min_count >= 0,
-        alpha >= 0,
-        floor(min_count) == min_count,
-        is.character(cell_table_type),
-        is.logical(use_for_mc)
-      )
+      checkmate::assert_int(min_count, lower = 0)
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_character(cell_table_type)
+      checkmate::assert_logical(use_for_mc, len = 1)
+
       cell_table_type_int <- switch(
         tolower(cell_table_type),
         ad = 1L,
@@ -2131,14 +2061,11 @@ TetradSearch <- R6Class(
       cell_table_type = "ad",
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(min_count, alpha)),
-        min_count >= 0,
-        alpha >= 0,
-        floor(min_count) == min_count,
-        is.character(cell_table_type),
-        is.logical(use_for_mc)
-      )
+      checkmate::assert_int(min_count, lower = 0)
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_character(cell_table_type)
+      checkmate::assert_logical(use_for_mc, len = 1)
+
       cell_table_type_int <- switch(
         tolower(cell_table_type),
         ad = 1L,
@@ -2175,20 +2102,11 @@ TetradSearch <- R6Class(
       min_sample_size_per_cell = 4,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(
-          alpha,
-          num_categories_to_discretize,
-          min_sample_size_per_cell
-        )),
-        alpha >= 0,
-        num_categories_to_discretize >= 0,
-        floor(num_categories_to_discretize) == num_categories_to_discretize,
-        is.logical(discretize),
-        length(discretize) == 1,
-        length(min_sample_size_per_cell) == 1,
-        floor(min_sample_size_per_cell) == min_sample_size_per_cell
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_categories_to_discretize, lower = 0)
+      checkmate::assert_int(min_sample_size_per_cell, lower = 0)
+      checkmate::assert_logical(discretize, len = 1)
+
       self$set_params(
         ALPHA = alpha,
         DISCRETIZE = discretize,
@@ -2212,11 +2130,9 @@ TetradSearch <- R6Class(
       singularity_lambda = 0.0,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(alpha, singularity_lambda)),
-        alpha >= 0,
-        singularity_lambda >= 0
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+
       self$set_params(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
@@ -2239,14 +2155,11 @@ TetradSearch <- R6Class(
       prior_ess = 10,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.logical(c(threshold, use_for_mc)),
-        length(threshold) == 1,
-        length(use_for_mc) == 1,
-        is.numeric(c(cutoff, prior_ess)),
-        cutoff >= 0,
-        prior_ess >= 0
-      )
+      checkmate::assert_logical(threshold, len = 1)
+      checkmate::assert_logical(use_for_mc, len = 1)
+      checkmate::assert_number(cutoff, lower = 0, finite = TRUE)
+      checkmate::assert_number(prior_ess, lower = 0, finite = TRUE)
+
       self$set_params(
         NO_RANDOMLY_DETERMINED_INDEPENDENCE = threshold,
         CUTOFF_IND_TEST = cutoff,
@@ -2275,42 +2188,24 @@ TetradSearch <- R6Class(
       polyc = 1,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(
-          alpha,
-          scaling_factor,
-          num_bootstraps,
-          threshold,
-          polyd,
-          polyc
-        )),
-        alpha >= 0,
-        scaling_factor >= 0,
-        num_bootstraps >= 0,
-        floor(num_bootstraps) == num_bootstraps,
-        threshold >= 0,
-        is.logical(c(approximate, use_for_mc)),
-        length(approximate) == 1,
-        length(use_for_mc) == 1,
-        kernel_type %in% c("gaussian", "linear", "polynomial"),
-        floor(polyd) == polyd,
-        floor(polyc) == polyc,
-        polyd >= 1,
-        polyc >= 0
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(scaling_factor, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_bootstraps, lower = 0)
+      checkmate::assert_number(threshold, lower = 0, finite = TRUE)
+      checkmate::assert_int(polyd, lower = 1)
+      checkmate::assert_int(polyc, lower = 0)
+      checkmate::assert_logical(approximate, len = 1)
+      checkmate::assert_logical(use_for_mc, len = 1)
+      checkmate::assert_choice(
+        kernel_type,
+        choices = c("gaussian", "linear", "polynomial")
       )
 
       kernel_type_int <- switch(
         kernel_type,
         gaussian = 1L,
         linear = 2L,
-        polynomial = 3L,
-        stop(
-          "Unsupported `kernel_type` input: ",
-          kernel_type,
-          "\n",
-          "Supported values are: 'gaussian', 'linear', and 'polynomial'.",
-          call. = FALSE
-        )
+        polynomial = 3L
       )
 
       self$set_params(
@@ -2343,17 +2238,13 @@ TetradSearch <- R6Class(
       truncation_limit = 3,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(alpha, scaling_factor, truncation_limit)),
-        alpha >= 0,
-        scaling_factor >= 0,
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        is.logical(use_for_mc),
-        length(use_for_mc) == 1,
-        is.character(basis_type),
-        basis_scale >= 0
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(scaling_factor, lower = 0, finite = TRUE)
+      checkmate::assert_int(truncation_limit, lower = 0)
+      checkmate::assert_number(basis_scale, lower = 0, finite = TRUE)
+      checkmate::assert_logical(use_for_mc, len = 1)
+      checkmate::assert_character(basis_type, len = 1)
+
       basis_type_int <- switch(
         tolower(basis_type),
         polynomial = 1L,
@@ -2364,12 +2255,11 @@ TetradSearch <- R6Class(
         stop(
           "Unsupported `basis_type` input: ",
           basis_type,
-          "\n",
-          "Supported values are: 'polynomial', 'hermite1', 'hermite2', ",
-          "'legendre', and 'chebyshev'.",
+          "\nSupported values are: 'polynomial', 'hermite1', 'hermite2', 'legendre', 'chebyshev'.",
           call. = FALSE
         )
       )
+
       self$set_params(
         ALPHA = alpha,
         SCALING_FACTOR = scaling_factor,
@@ -2397,17 +2287,13 @@ TetradSearch <- R6Class(
       seed = -1,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(alpha, num_permutations, gin_ridge, seed)),
-        alpha >= 0,
-        num_permutations >= 0,
-        floor(num_permutations) == num_permutations,
-        gin_ridge >= 0,
-        is.logical(use_for_mc),
-        length(use_for_mc) == 1,
-        is.character(gin_backend),
-        gin_backend %in% c("dcor", "pearson")
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_permutations, lower = 0)
+      checkmate::assert_number(gin_ridge, lower = 0, finite = TRUE)
+      checkmate::assert_number(seed, finite = TRUE)
+      checkmate::assert_logical(use_for_mc, len = 1)
+      checkmate::assert_character(gin_backend, len = 1)
+      checkmate::assert_choice(gin_backend, choices = c("dcor", "pearson"))
 
       self$set_params(
         ALPHA = alpha,
@@ -2442,34 +2328,22 @@ TetradSearch <- R6Class(
       seed = -1,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(
-          alpha,
-          rcit_ridge,
-          num_feat,
-          num_fourier_feat_xy,
-          num_fourier_feat_z,
-          num_permutations,
-          seed
-        )),
-        alpha >= 0,
-        rcit_ridge >= 0,
-        num_feat >= 0,
-        floor(num_feat) == num_feat,
-        num_fourier_feat_xy >= 0,
-        floor(num_fourier_feat_xy) == num_fourier_feat_xy,
-        num_fourier_feat_z >= 0,
-        floor(num_fourier_feat_z) == num_fourier_feat_z,
-        num_permutations >= 0,
-        floor(num_permutations) == num_permutations,
-        is.logical(use_for_mc),
-        length(use_for_mc) == 1,
-        is.logical(center_features),
-        length(center_features) == 1,
-        is.logical(use_rcit),
-        length(use_rcit) == 1,
-        is.character(rcit_approx),
-        rcit_approx %in% c("lpb4", "hbe", "gamma", "chi_square", "permutation")
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_number(rcit_ridge, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_feat, lower = 0)
+      checkmate::assert_int(num_fourier_feat_xy, lower = 0)
+      checkmate::assert_int(num_fourier_feat_z, lower = 0)
+      checkmate::assert_int(num_permutations, lower = 0)
+      checkmate::assert_number(seed, finite = TRUE)
+
+      checkmate::assert_logical(use_for_mc, len = 1)
+      checkmate::assert_logical(center_features, len = 1)
+      checkmate::assert_logical(use_rcit, len = 1)
+
+      checkmate::assert_character(rcit_approx, len = 1)
+      checkmate::assert_choice(
+        rcit_approx,
+        choices = c("lpb4", "hbe", "gamma", "chi_square", "permutation")
       )
 
       self$set_params(
@@ -2505,14 +2379,11 @@ TetradSearch <- R6Class(
       use_for_mc = FALSE,
       alpha = NULL
     ) {
-      stopifnot(
-        is.numeric(c(penalty_discount, structure_prior, singularity_lambda)),
-        penalty_discount >= 0,
-        structure_prior >= 0,
-        singularity_lambda >= 0,
-        is.logical(precompute_covariances),
-        length(precompute_covariances) == 1
-      )
+      checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
+      checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
+      checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(precompute_covariances, len = 1)
+
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
         STRUCTURE_PRIOR = structure_prior,
@@ -2536,12 +2407,9 @@ TetradSearch <- R6Class(
       alpha = 0.05,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(alpha),
-        alpha >= 0,
-        is.logical(use_for_mc),
-        length(use_for_mc) == 1
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_logical(use_for_mc, len = 1)
+
       self$set_params(
         ALPHA = alpha
       )
@@ -2564,13 +2432,10 @@ TetradSearch <- R6Class(
       truncation_limit = 3,
       use_for_mc = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(alpha, truncation_limit)),
-        alpha >= 0,
-        truncation_limit >= 0,
-        floor(truncation_limit) == truncation_limit,
-        is.character(basis_type)
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_int(truncation_limit, lower = 0)
+      checkmate::assert_character(basis_type, len = 1)
+
       basis_type_int <- switch(
         tolower(basis_type),
         polynomial = 0L,
@@ -2611,15 +2476,11 @@ TetradSearch <- R6Class(
       parallelized = FALSE,
       faithfulness_assumed = FALSE
     ) {
-      stopifnot(
-        is.logical(symmetric_first_step),
-        length(symmetric_first_step) == 1,
-        is.numeric(max_degree),
-        is.logical(parallelized),
-        length(parallelized) == 1,
-        is.logical(faithfulness_assumed),
-        length(faithfulness_assumed) == 1
-      )
+      checkmate::assert_logical(symmetric_first_step, len = 1)
+      checkmate::assert_number(max_degree, finite = TRUE)
+      checkmate::assert_logical(parallelized, len = 1)
+      checkmate::assert_logical(faithfulness_assumed, len = 1)
+
       self$set_params(
         SYMMETRIC_FIRST_STEP = symmetric_first_step,
         MAX_DEGREE = max_degree,
@@ -2641,18 +2502,12 @@ TetradSearch <- R6Class(
       number_of_expansions = 2,
       faithfulness_assumed = FALSE
     ) {
-      stopifnot(
-        is.character(targets),
-        length(targets) == 1,
-        is.numeric(max_degree),
-        max_degree >= -1,
-        is.character(trimming_style),
-        is.numeric(number_of_expansions),
-        floor(number_of_expansions) == number_of_expansions,
-        number_of_expansions >= 0,
-        is.logical(faithfulness_assumed),
-        length(faithfulness_assumed) == 1
-      )
+      checkmate::assert_character(targets, len = 1)
+      checkmate::assert_number(max_degree, lower = -1, finite = TRUE)
+      checkmate::assert_character(trimming_style, len = 1)
+      checkmate::assert_int(number_of_expansions, lower = 0)
+      checkmate::assert_logical(faithfulness_assumed, len = 1)
+
       trimming_style_int <- switch(
         tolower(trimming_style),
         none = 1L,
@@ -2686,15 +2541,11 @@ TetradSearch <- R6Class(
       use_data_order = TRUE,
       output_cpdag = TRUE
     ) {
-      stopifnot(
-        is.numeric(num_starts),
-        floor(num_starts) == num_starts,
-        num_starts >= 1,
-        is.logical(c(use_bes, use_data_order, output_cpdag)),
-        length(use_bes) == 1,
-        length(use_data_order) == 1,
-        length(output_cpdag) == 1
-      )
+      checkmate::assert_int(num_starts, lower = 1)
+      checkmate::assert_logical(use_bes, len = 1)
+      checkmate::assert_logical(use_data_order, len = 1)
+      checkmate::assert_logical(output_cpdag, len = 1)
+
       self$set_params(
         USE_BES = use_bes,
         NUM_STARTS = num_starts,
@@ -2714,16 +2565,11 @@ TetradSearch <- R6Class(
       num_starts = 1,
       allow_internal_randomness = TRUE
     ) {
-      stopifnot(
-        is.character(targets),
-        length(targets) == 1,
-        is.numeric(num_starts),
-        floor(num_starts) == num_starts,
-        num_starts >= 1,
-        is.logical(c(use_bes, allow_internal_randomness)),
-        length(use_bes) == 1,
-        length(allow_internal_randomness) == 1
-      )
+      checkmate::assert_character(targets, len = 1)
+      checkmate::assert_int(num_starts, lower = 1)
+      checkmate::assert_logical(use_bes, len = 1)
+      checkmate::assert_logical(allow_internal_randomness, len = 1)
+
       self$set_params(
         TARGETS = targets,
         USE_BES = use_bes,
@@ -2747,21 +2593,17 @@ TetradSearch <- R6Class(
       remove_effect_nodes = TRUE,
       sample_style = "subsample"
     ) {
-      stopifnot(
-        is.character(targets),
-        is.character(sample_style),
-        is.character(cpdag_algorithm),
-        length(targets) == 1,
-        is.numeric(c(selection_min_effect, num_subsamples, top_bracket)),
-        selection_min_effect >= 0,
-        num_subsamples >= 1,
-        floor(num_subsamples) == num_subsamples,
-        top_bracket >= 1,
-        floor(top_bracket) == top_bracket,
-        is.logical(c(parallelized, remove_effect_nodes)),
-        length(parallelized) == 1,
-        length(remove_effect_nodes) == 1
-      )
+      checkmate::assert_character(targets, len = 1)
+      checkmate::assert_character(sample_style, len = 1)
+      checkmate::assert_character(cpdag_algorithm, len = 1)
+
+      checkmate::assert_number(selection_min_effect, lower = 0, finite = TRUE)
+      checkmate::assert_int(num_subsamples, lower = 1)
+      checkmate::assert_int(top_bracket, lower = 1)
+
+      checkmate::assert_logical(parallelized, len = 1)
+      checkmate::assert_logical(remove_effect_nodes, len = 1)
+
       sample_style_int <- switch(
         tolower(sample_style),
         subsample = 1L,
@@ -2821,19 +2663,16 @@ TetradSearch <- R6Class(
       use_data_order = TRUE,
       num_starts = 1
     ) {
-      stopifnot(
-        is.numeric(c(covered_depth, singular_depth, nonsingular_depth)),
-        floor(covered_depth) == covered_depth,
-        floor(singular_depth) == singular_depth,
-        floor(nonsingular_depth) == nonsingular_depth,
-        is.logical(c(ordered_alg, raskutti_uhler, use_data_order)),
-        length(ordered_alg) == 1,
-        length(raskutti_uhler) == 1,
-        length(use_data_order) == 1,
-        is.numeric(num_starts),
-        floor(num_starts) == num_starts,
-        num_starts >= 1
-      )
+      checkmate::assert_int(covered_depth)
+      checkmate::assert_int(singular_depth)
+      checkmate::assert_int(nonsingular_depth)
+
+      checkmate::assert_logical(ordered_alg, len = 1)
+      checkmate::assert_logical(raskutti_uhler, len = 1)
+      checkmate::assert_logical(use_data_order, len = 1)
+
+      checkmate::assert_int(num_starts, lower = 1)
+
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -2857,17 +2696,12 @@ TetradSearch <- R6Class(
       stable_fas = TRUE,
       guarantee_cpdag = FALSE
     ) {
-      stopifnot(
-        is.numeric(conflict_rule),
-        length(conflict_rule) == 1,
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.logical(stable_fas),
-        length(stable_fas) == 1,
-        is.logical(guarantee_cpdag),
-        length(guarantee_cpdag) == 1
-      )
+      checkmate::assert_number(conflict_rule, finite = TRUE)
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+
+      checkmate::assert_logical(stable_fas, len = 1)
+      checkmate::assert_logical(guarantee_cpdag, len = 1)
+
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -2887,17 +2721,12 @@ TetradSearch <- R6Class(
       stable_fas = TRUE,
       guarantee_cpdag = FALSE
     ) {
-      stopifnot(
-        is.numeric(conflict_rule),
-        length(conflict_rule) == 1,
-        is.numeric(depth),
-        depth >= -1,
-        length(depth) == 1,
-        is.logical(stable_fas),
-        length(stable_fas) == 1,
-        is.logical(guarantee_cpdag),
-        length(guarantee_cpdag) == 1
-      )
+      checkmate::assert_number(conflict_rule, finite = TRUE)
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+
+      checkmate::assert_logical(stable_fas, len = 1)
+      checkmate::assert_logical(guarantee_cpdag, len = 1)
+
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -2918,20 +2747,20 @@ TetradSearch <- R6Class(
       max_disc_path_length = -1,
       stable_fas = TRUE
     ) {
-      stopifnot(
-        is.numeric(conflict_rule),
-        length(conflict_rule) == 1,
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.logical(use_heuristic),
-        length(use_heuristic) == 1,
-        is.numeric(max_disc_path_length),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.logical(stable_fas),
-        length(stable_fas) == 1
-      )
+      checkmate::assert_number(conflict_rule, finite = TRUE)
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+      checkmate::assert_logical(use_heuristic, len = 1)
+
+      checkmate::assert_number(max_disc_path_length, finite = TRUE)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_logical(stable_fas, len = 1)
+
       self$set_params(
         CONFLICT_RULE = conflict_rule,
         DEPTH = depth,
@@ -2953,20 +2782,20 @@ TetradSearch <- R6Class(
       complete_rule_set_used = TRUE,
       guarantee_pag = FALSE
     ) {
-      stopifnot(
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.logical(stable_fas),
-        length(stable_fas) == 1,
-        is.numeric(max_disc_path_length),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1,
-        is.logical(guarantee_pag),
-        length(guarantee_pag) == 1
-      )
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+      checkmate::assert_logical(stable_fas, len = 1)
+
+      checkmate::assert_number(max_disc_path_length, finite = TRUE)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -2987,18 +2816,19 @@ TetradSearch <- R6Class(
       max_disc_path_length = -1,
       complete_rule_set_used = TRUE
     ) {
-      stopifnot(
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.logical(stable_fas),
-        length(stable_fas) == 1,
-        is.numeric(max_disc_path_length),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1
-      )
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+      checkmate::assert_logical(stable_fas, len = 1)
+
+      checkmate::assert_number(max_disc_path_length, finite = TRUE)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+
       self$set_params(
         DEPTH = depth,
         STABLE_FAS = stable_fas,
@@ -3017,16 +2847,18 @@ TetradSearch <- R6Class(
       max_disc_path_length = -1,
       complete_rule_set_used = TRUE
     ) {
-      stopifnot(
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.numeric(max_disc_path_length),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1
-      )
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+
+      checkmate::assert_number(max_disc_path_length, finite = TRUE)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+
       self$set_params(
         DEPTH = depth,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
@@ -3046,20 +2878,20 @@ TetradSearch <- R6Class(
       complete_rule_set_used = TRUE,
       guarantee_pag = FALSE
     ) {
-      stopifnot(
-        is.numeric(depth),
-        length(depth) == 1,
-        depth >= -1,
-        is.numeric(max_degree),
-        length(max_degree) == 1,
-        is.numeric(max_disc_path_length),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1,
-        is.logical(guarantee_pag),
-        length(guarantee_pag) == 1
-      )
+      checkmate::assert_number(depth, lower = -1, finite = TRUE)
+      checkmate::assert_number(max_degree, finite = TRUE)
+
+      checkmate::assert_number(max_disc_path_length, finite = TRUE)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+
       self$set_params(
         DEPTH = depth,
         MAX_DEGREE = max_degree,
@@ -3085,29 +2917,21 @@ TetradSearch <- R6Class(
       use_heuristic = FALSE,
       num_starts = 1
     ) {
-      stopifnot(
-        is.numeric(c(
-          max_disc_path_length,
-          depth,
-          num_starts
-        )),
-        is.logical(c(
-          use_bes,
-          complete_rule_set_used,
-          guarantee_pag,
-          use_heuristic
-        )),
-        length(max_disc_path_length) == 1,
-        length(depth) == 1,
-        length(num_starts) == 1,
-        length(guarantee_pag) == 1,
-        floor(max_disc_path_length) == max_disc_path_length,
-        floor(depth) == depth,
-        floor(num_starts) == num_starts,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        depth >= -1,
-        num_starts >= 1
-      )
+      checkmate::assert_int(max_disc_path_length)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_int(depth, lower = -1)
+      checkmate::assert_int(num_starts, lower = 1)
+
+      checkmate::assert_logical(use_bes, len = 1)
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+      checkmate::assert_logical(use_heuristic, len = 1)
 
       self$set_params(
         USE_BES = use_bes,
@@ -3136,22 +2960,16 @@ TetradSearch <- R6Class(
       depth = -1,
       guarantee_pag = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(num_starts, depth)),
-        is.logical(c(
-          use_bes,
-          use_data_order,
-          complete_rule_set_used,
-          guarantee_pag
-        )),
-        floor(num_starts) == num_starts,
-        floor(depth) == depth,
-        length(depth) == 1,
-        num_starts >= 1,
-        depth >= -1,
-        length(guarantee_pag) == 1,
-        is.character(start_with)
-      )
+      checkmate::assert_int(num_starts, lower = 1)
+      checkmate::assert_int(depth, lower = -1)
+
+      checkmate::assert_logical(use_bes, len = 1)
+      checkmate::assert_logical(use_data_order, len = 1)
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+
+      checkmate::assert_character(start_with, len = 1)
+
       start_with_int <- switch(
         tolower(start_with),
         boss = 1L,
@@ -3197,38 +3015,25 @@ TetradSearch <- R6Class(
       num_starts = 1,
       guarantee_pag = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(
-          depth,
-          max_disc_path_length,
-          covered_depth,
-          singular_depth,
-          nonsingular_depth
-        )),
-        floor(depth) == depth,
-        floor(max_disc_path_length) == max_disc_path_length,
-        floor(covered_depth) == covered_depth,
-        floor(singular_depth) == singular_depth,
-        floor(nonsingular_depth) == nonsingular_depth,
-        is.logical(c(
-          stable_fas,
-          ordered_alg,
-          raskutti_uhler,
-          use_data_order,
-          guarantee_pag
-        )),
-        length(stable_fas) == 1,
-        length(ordered_alg) == 1,
-        length(raskutti_uhler) == 1,
-        length(use_data_order) == 1,
-        length(guarantee_pag) == 1,
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        is.numeric(num_starts),
-        floor(num_starts) == num_starts,
-        num_starts >= 1,
-        depth >= -1
-      )
+      checkmate::assert_int(depth, lower = -1)
+      checkmate::assert_int(max_disc_path_length)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+      checkmate::assert_int(covered_depth)
+      checkmate::assert_int(singular_depth)
+      checkmate::assert_int(nonsingular_depth)
+      checkmate::assert_int(num_starts, lower = 1)
+
+      checkmate::assert_logical(stable_fas, len = 1)
+      checkmate::assert_logical(ordered_alg, len = 1)
+      checkmate::assert_logical(raskutti_uhler, len = 1)
+      checkmate::assert_logical(use_data_order, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+
       self$set_params(
         GRASP_DEPTH = covered_depth,
         GRASP_SINGULAR_DEPTH = singular_depth,
@@ -3257,17 +3062,19 @@ TetradSearch <- R6Class(
       complete_rule_set_used = TRUE,
       guarantee_pag = FALSE
     ) {
-      stopifnot(
-        is.numeric(c(max_disc_path_length, depth)),
-        length(max_disc_path_length) == 1,
-        max_disc_path_length >= 0 || max_disc_path_length == -1,
-        depth >= -1,
-        length(depth) == 1,
-        is.logical(complete_rule_set_used),
-        length(complete_rule_set_used) == 1,
-        is.logical(guarantee_pag),
-        length(guarantee_pag) == 1
-      )
+      checkmate::assert_int(max_disc_path_length)
+      if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
+        stop(
+          "`max_disc_path_length` must be >= 0 or equal to -1.",
+          call. = FALSE
+        )
+      }
+
+      checkmate::assert_int(depth, lower = -1)
+
+      checkmate::assert_logical(complete_rule_set_used, len = 1)
+      checkmate::assert_logical(guarantee_pag, len = 1)
+
       self$set_params(
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
@@ -3288,14 +3095,11 @@ TetradSearch <- R6Class(
       ica_tolerance = 1e-8,
       threshold_b = 0.1
     ) {
-      stopifnot(
-        is.numeric(c(ica_a, ica_max_iter, ica_tolerance, threshold_b)),
-        ica_a >= 0,
-        ica_max_iter >= 0,
-        floor(ica_max_iter) == ica_max_iter,
-        ica_tolerance >= 0,
-        threshold_b >= 0
-      )
+      checkmate::assert_number(ica_a, lower = 0, finite = TRUE)
+      checkmate::assert_int(ica_max_iter, lower = 0)
+      checkmate::assert_number(ica_tolerance, lower = 0, finite = TRUE)
+      checkmate::assert_number(threshold_b, lower = 0, finite = TRUE)
+
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -3314,21 +3118,12 @@ TetradSearch <- R6Class(
       threshold_b = 0.1,
       threshold_w = 0.1
     ) {
-      stopifnot(
-        is.numeric(c(
-          ica_a,
-          ica_max_iter,
-          ica_tolerance,
-          threshold_b,
-          threshold_w
-        )),
-        ica_a >= 0,
-        ica_max_iter >= 0,
-        floor(ica_max_iter) == ica_max_iter,
-        ica_tolerance >= 0,
-        threshold_b >= 0,
-        threshold_w >= 0
-      )
+      checkmate::assert_number(ica_a, lower = 0, finite = TRUE)
+      checkmate::assert_int(ica_max_iter, lower = 0)
+      checkmate::assert_number(ica_tolerance, lower = 0, finite = TRUE)
+      checkmate::assert_number(threshold_b, lower = 0, finite = TRUE)
+      checkmate::assert_number(threshold_w, lower = 0, finite = TRUE)
+
       self$set_params(
         FAST_ICA_A = ica_a,
         FAST_ICA_MAX_ITER = ica_max_iter,
@@ -3348,16 +3143,12 @@ TetradSearch <- R6Class(
       left_right_rule = 1,
       skew_edge_threshold = 0.3
     ) {
-      stopifnot(
-        is.numeric(c(alpha, depth, fask_delta, skew_edge_threshold)),
-        alpha >= 0,
-        depth >= -1,
-        fask_delta >= -1,
-        skew_edge_threshold >= 0,
-        floor(depth) == depth,
-        length(depth) == 1,
-        floor(left_right_rule) == left_right_rule
-      )
+      checkmate::assert_number(alpha, lower = 0, finite = TRUE)
+      checkmate::assert_int(depth, lower = -1)
+      checkmate::assert_number(fask_delta, lower = -1, finite = TRUE)
+      checkmate::assert_number(skew_edge_threshold, lower = 0, finite = TRUE)
+      checkmate::assert_int(left_right_rule)
+
       self$set_params(
         ALPHA = alpha,
         DEPTH = depth,
@@ -3373,19 +3164,9 @@ TetradSearch <- R6Class(
       self$alg$setKnowledge(self$knowledge)
     },
     set_ccd_alg = function(depth = -1, apply_r1 = TRUE) {
-      stopifnot(
-        is.numeric(c(depth)),
-        depth >= -1,
-        is.logical(apply_r1),
-        length(apply_r1) == 1
-      )
-      stopifnot(
-        is.numeric(depth),
-        depth >= -1,
-        floor(depth) == depth,
-        is.logical(apply_r1),
-        length(apply_r1) == 1
-      )
+      checkmate::assert_int(depth, lower = -1)
+      checkmate::assert_logical(apply_r1, len = 1)
+
       self$set_params(
         DEPTH = depth,
         APPLY_R1 = apply_r1
@@ -3403,13 +3184,10 @@ TetradSearch <- R6Class(
       )
     },
     set_dagma_alg = function(lambda1 = 0.05, w_threshold = 0.1, cpdag = TRUE) {
-      stopifnot(
-        is.numeric(c(lambda1, w_threshold)),
-        lambda1 >= 0,
-        w_threshold >= 0,
-        is.logical(cpdag),
-        length(cpdag) == 1
-      )
+      checkmate::assert_number(lambda1, lower = 0, finite = TRUE)
+      checkmate::assert_number(w_threshold, lower = 0, finite = TRUE)
+      checkmate::assert_logical(cpdag, len = 1)
+
       self$set_params(
         LAMBDA1 = lambda1,
         W_THRESHOLD = w_threshold,

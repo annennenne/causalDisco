@@ -225,7 +225,7 @@ tpc_run <- function(
     function_name = ".build_knowledge_from_order"
   )
 
-  stopifnot(is.character(order), length(order) > 0)
+  checkmate::assert_character(order, min.len = 1)
 
   # build tier specs like: "<lbl>" ~ starts_with("<lbl>")
   fmls <- lapply(order, function(lbl) {

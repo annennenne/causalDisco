@@ -37,7 +37,7 @@ toy_graph_builder <- function(knowledge = NULL) {
       invisible(NULL)
     },
     run = function(data) {
-      stopifnot(is.data.frame(data))
+      checkmate::assert_data_frame(data)
       vnames <- names(data)
 
       # correlation matrix

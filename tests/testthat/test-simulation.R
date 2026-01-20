@@ -1,0 +1,35 @@
+test_that("generate_dag_data errors", {
+  cg <- caugi::caugi(A %-->% B, B %-->% C, A %-->% C, class = "PDAG")
+  expect_error(
+    generate_dag_data(cg, n = 100),
+    "`simulate_data` currently only supports DAGs. Graph class is: PDAG"
+  )
+
+  cg_empty <- caugi::caugi(class = "DAG")
+  expect_error(
+    generate_dag_data(cg_empty, n = 100),
+    "Cannot simulate data from an empty graph"
+  )
+})
+
+test_that("generate_dag_data works", {
+  cg <- caugi::caugi(A %-->% B, B %-->% C, A %-->% C, class = "DAG")
+  sim_data <- generate_dag_data(cg, n = 100)
+  expect_equal(nrow(sim_data), 100)
+  expect_equal(ncol(sim_data), 3)
+
+  sim_data_seed <- generate_dag_data(cg, n = 100, seed = 1405)
+  expect_equal(sim_data_seed, generate_dag_data(cg, n = 100, seed = 1405))
+
+  sim_data_custom <- generate_dag_data(
+    cg,
+    n = 100,
+    C = A^2 + B + rnorm(100, sd = 0.7)
+  )
+  expect_equal(nrow(sim_data_custom), 100)
+  expect_equal(ncol(sim_data_custom), 3)
+  expect_equal(
+    deparse(attr(sim_data_custom, "generating_model")$dgp$C),
+    "A^2 + B + rnorm(100, sd = 0.7)"
+  )
+})

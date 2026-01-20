@@ -201,12 +201,14 @@ BnlearnSearch <- R6Class(
     #' @param method Character naming the test to use.
     #' @param alpha Significance level for the test.
     set_test = function(method, alpha = 0.05) {
-      stopifnot(
-        is.numeric(alpha),
-        length(alpha) == 1,
-        alpha > 0,
-        alpha < 1
+      checkmate::assert_number(
+        alpha,
+        lower = 0,
+        upper = 1,
+        finite = TRUE,
+        null.ok = FALSE
       )
+
       method <- tolower(method)
       # Convert snake_case to kebab-case for bnlearn compatibility
       method <- gsub("_", "-", method)

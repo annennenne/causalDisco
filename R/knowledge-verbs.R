@@ -680,7 +680,7 @@ seq_tiers <- function(tiers, vars) {
     function_name = "seq_tiers"
   )
 
-  stopifnot(is.numeric(tiers), all(tiers >= 1L))
+  checkmate::assert_integerish(tiers, lower = 1)
 
   vars_expr <- rlang::enexpr(vars)
 

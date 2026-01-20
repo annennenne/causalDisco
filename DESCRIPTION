@@ -50,6 +50,7 @@ Depends:
 biocViews:
 Imports:
     caugi,
+    checkmate,
     dplyr,
     igraph,
     methods,

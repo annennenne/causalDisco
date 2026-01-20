@@ -157,7 +157,7 @@ init_java <- function(heap = default_heap()) {
 #' @noRd
 #' @keywords internal
 parse_heap_gb <- function(x) {
-  stopifnot(length(x) == 1)
+  checkmate::assert_character(x, len = 1, any.missing = FALSE)
 
   x <- tolower(trimws(as.character(x)))
 
@@ -237,7 +237,8 @@ is_interactive <- function() {
   function_name = NULL,
   class_name = NULL
 ) {
-  stopifnot(is.character(pkgs), length(pkgs) > 0)
+  checkmate::assert_character(pkgs, min.len = 1)
+
   if (is.null(function_name) && is.null(class_name)) {
     stop(
       "Either function_name or class_name must be provided for ",

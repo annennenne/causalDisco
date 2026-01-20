@@ -87,28 +87,13 @@ generate_dag_data <- function(
   }
 
   n <- as.integer(n)
-  if (length(n) != 1L || n <= 0L) {
-    stop("n must be a single integer > 0", call. = FALSE)
-  }
+  checkmate::assert_int(n, lower = 1)
 
-  # validation
-  if (
-    !is.numeric(coef_range) ||
-      length(coef_range) != 2L ||
-      coef_range[1] <= 0 ||
-      coef_range[2] <= coef_range[1]
-  ) {
-    stop("coef_range must be numeric c(min > 0, max >= min)", call. = FALSE)
-  }
+  checkmate::assert_numeric(coef_range, len = 2, lower = 0, any.missing = FALSE)
+  checkmate::assert_true(coef_range[2] >= coef_range[1])
 
-  if (
-    !is.numeric(error_sd) ||
-      length(error_sd) != 2L ||
-      error_sd[1] <= 0 ||
-      error_sd[1] > error_sd[2]
-  ) {
-    stop("error_sd must be c(min > 0, max >= min)", call. = FALSE)
-  }
+  checkmate::assert_numeric(error_sd, len = 2, lower = 0, any.missing = FALSE)
+  checkmate::assert_true(error_sd[2] >= error_sd[1])
 
   # capture custom equations
   equations <- as.list(substitute(list(...)))[-1L]
@@ -137,7 +122,6 @@ generate_dag_data <- function(
     dgp = list()
   )
 
-  # helper: sample signed coefficient with minimum magnitude
   sample_coef <- function(n, min_abs, max_abs) {
     sign <- sample(c(-1, 1), n, TRUE)
     magnitude <- stats::runif(n, min_abs, max_abs)
@@ -175,14 +159,14 @@ generate_dag_data <- function(
     } else {
       if (length(pa) == 0L) {
         data[[node]] <- stats::rnorm(n, sd = sd_node)
-        model$dgp[[node]] <- make_expr(NULL, sd_node) # only noise, no sd=0 term
+        model$dgp[[node]] <- make_expr(NULL, sd_node) # Only noise, no sd=0 term
       } else {
         coefs <- sample_coef(length(pa), coef_range[1], coef_range[2])
         pa_mat <- do.call(cbind, data[pa])
         signal <- as.vector(pa_mat %*% coefs)
         data[[node]] <- signal + stats::rnorm(n, sd = sd_node)
 
-        # create readable signal part
+        # Create readable signal part
         terms <- paste(pa, round(coefs, 3), sep = "*")
         signal_expr <- paste(terms, collapse = " + ")
         model$dgp[[node]] <- make_expr(signal_expr, sd_node)
