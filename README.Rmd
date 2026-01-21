@@ -126,28 +126,14 @@ plot(disco_cd_tges)
 
 ## Questions
 
-- Added the datasets from the webtool (https://shiny.sund.ku.dk/zms499/causalDisco/) to the package, see
-https://bjarkehautop.github.io/causalDisco/reference/index.html#example-datasets. Are these fine?
-  - Add a Discrete – ordered factors dataset (bnlearn has tests arguments that works on that only).
+- Updated getting started, knowledge vignettes based on the feedback. Anything missing?
 
-- Updated getting started and knowledge vignettes based on the feedback. Anything missing?
-
-- Remove or keep tests/scores not present in Tetrad interface? (They still work since we call Tetrad Java code directly, but they aren't in the Tetrad GUI).
-So also likely to be removed from Tetrad in future versions?
-
-These scores: `"basis_function_bic"`, `mag_degenerate_gaussian_bic`, `mixed_variable_polynomial`.
-
-These tests: `chi_square`, `g_square`, `basis_function_lrt`, `probabilistic`.
-
-- `use_for_mc` (Markov checker) argument and usage? Can't set it atm...
+- Made a causal discovery vignette (essentially old content of getting started vignette, but examples modified).
+Anything missing?
 
 ## TODO
 
-- Rewrite add checks (numeric, logical, ...) using checkmate package. Some of the checks aren't working correctly
-atm either (we check is.numeric on a vector - which won't work correctly). R converts `c(1, TRUE)` to a
-numeric vector, so is.numeric returns TRUE, but we want to catch that.
-
-- Improve plot (use caugi)
+- Improve plot (use caugi). Just got merged so look at that ...
 
   - For new features that are hard to do in grid (which caugi uses), maybe just insert the image in ggplot?
   
@@ -219,8 +205,9 @@ If we want any changes we can modify the tikz code after generation.
 
 - In documentation of defaults for tests maybe add the underlying engine defaults if they differ?
 
-- In tests (and examples) don't use `tpc_example` all the time and instead also use other datasets (e.g. num_data, cat_data, mix_data).
-(this also avoids that we currently simulate data in tests when needing an e.g. numerical dataset).
+- In tests (and examples) don't use `tpc_example` all the time and instead also use other data sets (e.g. num_data, cat_data, mix_data).
+(this also avoids that we currently simulate data in tests when needing an e.g. numerical dataset). Done mostly I think?
+Just missing cat_ord_data usage iirc.
 
 - Add all algs/scores/tests from the backends (start with Tetrad). Check if we currently document ones we haven't
 implemented yet.
@@ -231,9 +218,9 @@ implemented yet.
 
 ### Bugfixes
 
-- Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad.
+- Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad. Remove the argument for now (and maybe fix later).
 
-- Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the argument (or fix...).
+- Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the argument for now (and maybe fix later).
 
 - bnlearn has bug for old version of caugi. Fixed in PR #149 in caugi.
 
