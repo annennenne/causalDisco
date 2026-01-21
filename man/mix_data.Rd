@@ -34,6 +34,7 @@ mix_data$X3 <- cat_data$X3
 }
 \examples{
 data(mix_data)
+head(mix_data)
 
 }
 \seealso{

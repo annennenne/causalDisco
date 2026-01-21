@@ -24,6 +24,7 @@ prefixes defines which period they are related to ("child", "youth" or "oldage")
 }
 \examples{
 data(tpc_example)
+head(tpc_example)
 
 }
 \references{

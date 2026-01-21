@@ -31,6 +31,7 @@ cat_data <- as.data.frame(
 }
 \examples{
 data(cat_data)
+head(cat_data)
 
 }
 \seealso{

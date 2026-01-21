@@ -34,6 +34,7 @@ cat_data_mcar$X3[sample(1:n, 200)] <- NA
 }
 \examples{
 data(cat_data_mcar)
+head(cat_data_mcar)
 
 }
 \seealso{

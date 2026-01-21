@@ -15,8 +15,10 @@
 #'
 #' @references Petersen, AH; Osler, M and Ekstrøm, CT (2021): Data-Driven Model Building for Life-Course Epidemiology,
 #'  American Journal of Epidemiology.
+#'
 #' @examples
 #' data(tpc_example)
+#' head(tpc_example)
 #'
 "tpc_example"
 
@@ -47,6 +49,7 @@
 #'
 #' @examples
 #' data(num_data)
+#' head(num_data)
 #'
 "num_data"
 
@@ -75,9 +78,40 @@
 #'
 #' @examples
 #' data(cat_data)
+#' head(cat_data)
 #'
 #' @seealso [num_data]
 "cat_data"
+
+#' Simulated ordered categorical data example
+#'
+#' A dataset created by discretizing the continuous `num_data` into 5 ordered categorical levels per variable.
+#'
+#' @format A data.frame with 1000 rows and 5 variables.
+#' \describe{
+#'  \item{X1}{Categorical version of `num_data$X1`, with 5 ordered levels a–e.}
+#'  \item{X2}{Categorical version of `num_data$X2`, with 5 ordered levels a–e.}
+#'  \item{X3}{Categorical version of `num_data$X3`, with 5 ordered levels a–e.}
+#'  \item{Z}{Categorical version of `num_data$Z`, with 5 ordered levels a–e.}
+#'  \item{Y}{Categorical version of `num_data$Y`, with 5 ordered levels a–e.}
+#' }
+#'
+#' @details
+#' The R code used to generate this dataset is as follows:
+#'
+#' ```R
+#' data(num_data)
+#' cat_ord_data <- as.data.frame(
+#'   lapply(num_data, function(x) cut(x, breaks = 5, labels = letters[1:5], ordered_result = TRUE))
+#' )
+#' ```
+#'
+#' @examples
+#' data(cat_ord_data)
+#' head(cat_ord_data)
+#'
+#' @seealso [num_data]
+"cat_ord_data"
 
 #' Simulated mixed data example
 #'
@@ -107,6 +141,7 @@
 #'
 #' @examples
 #' data(mix_data)
+#' head(mix_data)
 #'
 #' @seealso [num_data], [cat_data]
 "mix_data"
@@ -139,6 +174,7 @@
 #'
 #' @examples
 #' data(cat_data_mcar)
+#' head(cat_data_mcar)
 #'
 #' @seealso [cat_data]
 "cat_data_mcar"
@@ -166,6 +202,7 @@
 #'
 #' @examples
 #' data(num_data_latent)
+#' head(num_data_latent)
 #'
 #' @seealso [num_data]
 "num_data_latent"

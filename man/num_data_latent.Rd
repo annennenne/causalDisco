@@ -29,6 +29,7 @@ num_data_latent <- num_data[, c("X1", "X2", "X3", "Y")]
 }
 \examples{
 data(num_data_latent)
+head(num_data_latent)
 
 }
 \seealso{
