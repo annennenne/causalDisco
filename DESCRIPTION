@@ -135,6 +135,7 @@ Collate:
     'plot-caugi.R'
     'plot-tempo-mech.R'
     'plot.R'
+    'print-helpers.R'
     'probmat-to-amat.R'
     'reg-test.R'
     'sim-dag.R'

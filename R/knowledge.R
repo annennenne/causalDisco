@@ -515,7 +515,8 @@ knowledge <- function(...) {
 #' @title Print a `knowledge` object
 #'
 #' @param x A `knowledge` object.
-#' @param compact Logical. If `TRUE`, prints a more compact summary,
+#' @param compact Logical. If `TRUE`, prints a more compact summary.
+#' @param wide_vars Logical. If `TRUE`, prints the variables in a wide format.
 #' @param ... Additional arguments (not used).
 #' @examples
 #' kn <- knowledge(
@@ -527,10 +528,11 @@ knowledge <- function(...) {
 #'   )
 #' )
 #' print(kn)
+#' print(kn, wide_vars = TRUE)
 #' print(kn, compact = TRUE)
 #'
 #' @exportS3Method print knowledge
-print.knowledge <- function(x, compact = FALSE, ...) {
+print.knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c("cli", "tibble"),
     function_name = "print.knowledge"
@@ -538,51 +540,74 @@ print.knowledge <- function(x, compact = FALSE, ...) {
 
   cli::cli_h1("Knowledge object")
 
-  print_section <- function(title, tbl, header_fmt = NULL, n_max = 20) {
-    if (!nrow(tbl)) {
-      return(invisible())
-    }
-
-    cli::cli_h2(title)
-
-    lines <- format(tibble::as_tibble(tbl))
-    lines <- lines[-c(1L, 2L)]
-
-    if (!is.null(header_fmt)) {
-      lines[1] <- header_fmt(lines[1])
-    }
-
-    # compact mode: show only first n_max rows
-    if (compact && length(lines) > n_max) {
-      cat(lines[1:n_max], sep = "\n")
-      cli::cli_text("... and {length(lines) - n_max} more rows")
-    } else {
-      cat(lines, sep = "\n")
-    }
+  # ---- Print tiers ----
+  tier_vec <- if (is.data.frame(x$tiers) || tibble::is_tibble(x$tiers)) {
+    x$tiers[[1]]
+  } else {
+    x$tiers
   }
-
-  # ---- Print tiers and variables ----
   print_section(
     "Tiers",
-    x$tiers,
+    tibble::tibble(tier = tier_vec),
     header_fmt = function(hdr) {
-      sub("(\\s*)label(.*)", "\\1\u001b[1mlabel\u001b[22m\\2", hdr)
+      sub("(\\s*)tier(.*)", "\\1\u001b[1mtier\u001b[22m\\2", hdr)
     },
     n_max = if (compact) 5 else 20
   )
 
-  print_section(
-    "Variables",
-    x$vars,
-    header_fmt = function(hdr) {
-      sub(
-        "(\\s*)var(.*)tier(\\s*)",
-        "\\1\u001b[1mvar\u001b[22m\\2\u001b[1mtier\u001b[22m\\3",
-        hdr
-      )
-    },
-    n_max = if (compact) 5 else 20
-  )
+  # ---- Print variables ----
+  vars_df <- x$vars
+
+  if (wide_vars) {
+    # Preserve NA tiers
+    tiers_vec <- x$vars$tier
+    tiers_vec[is.na(tiers_vec)] <- "<NA>"
+
+    vars_by_tier <- split(x$vars$var, tiers_vec)
+
+    n_max_cols <- max(lengths(vars_by_tier))
+
+    # Pad each tier with NA
+    vars_padded <- lapply(vars_by_tier, function(v) {
+      length(v) <- n_max_cols
+      v
+    })
+
+    vars_wide <- do.call(rbind, vars_padded)
+    colnames(vars_wide) <- paste0("var", seq_len(ncol(vars_wide)))
+    vars_wide <- tibble::as_tibble(vars_wide)
+
+    tier_names <- names(vars_by_tier)
+    tier_names[tier_names == "<NA>"] <- NA
+    vars_wide <- tibble::add_column(vars_wide, tier = tier_names, .before = 1)
+    na_idx <- is.na(vars_wide$tier)
+    vars_wide <- rbind(
+      vars_wide[!na_idx, , drop = FALSE],
+      vars_wide[na_idx, , drop = FALSE]
+    )
+
+    print_section(
+      "Variables",
+      vars_wide,
+      header_fmt = function(hdr) {
+        sub("(\\s*)tier(.*)", "\\1\u001b[1mtier\u001b[22m\\2", hdr)
+      },
+      n_max = if (compact) 5 else 20
+    )
+  } else {
+    print_section(
+      "Variables",
+      vars_df,
+      header_fmt = function(hdr) {
+        sub(
+          "(\\s*)var(.*)tier(\\s*)",
+          "\\1\u001b[1mvar\u001b[22m\\2\u001b[1mtier\u001b[22m\\3",
+          hdr
+        )
+      },
+      n_max = if (compact) 5 else 20
+    )
+  }
 
   # ---- Print edges ----
   if (nrow(x$edges)) {

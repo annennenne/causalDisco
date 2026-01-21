@@ -4,12 +4,14 @@
 \alias{print.knowledge}
 \title{Print a \code{knowledge} object}
 \usage{
-\method{print}{knowledge}(x, compact = FALSE, ...)
+\method{print}{knowledge}(x, compact = FALSE, wide_vars = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{knowledge} object.}
 
-\item{compact}{Logical. If \code{TRUE}, prints a more compact summary,}
+\item{compact}{Logical. If \code{TRUE}, prints a more compact summary.}
+
+\item{wide_vars}{Logical. If \code{TRUE}, prints the variables in a wide format.}
 
 \item{...}{Additional arguments (not used).}
 }
@@ -26,6 +28,7 @@ kn <- knowledge(
   )
 )
 print(kn)
+print(kn, wide_vars = TRUE)
 print(kn, compact = TRUE)
 
 }

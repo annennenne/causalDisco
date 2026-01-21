@@ -176,8 +176,7 @@ knowledgeable_caugi.EssGraph <- function(
 
 #' @title Print method for knowledgeable_caugi objects
 #' @param x A `knowledgeable_caugi` object.
-#' @param compact Logical; if `TRUE`, prints a more compact representation.
-#' @param ... Additional arguments (not used).
+#' @inheritParams print.knowledge
 #' @examples
 #' data(tpc_example)
 #' kn <- knowledge(
@@ -191,10 +190,16 @@ knowledgeable_caugi.EssGraph <- function(
 #' cd_tges <- tpc(engine = "causalDisco", test = "fisher_z")
 #' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #' print(disco_cd_tges)
+#' print(disco_cd_tges, wide_vars = TRUE)
 #' print(disco_cd_tges, compact = TRUE)
 #'
 #' @exportS3Method print knowledgeable_caugi
-print.knowledgeable_caugi <- function(x, compact = FALSE, ...) {
+print.knowledgeable_caugi <- function(
+  x,
+  compact = FALSE,
+  wide_vars = FALSE,
+  ...
+) {
   .check_if_pkgs_are_installed(
     pkgs = c("cli", "tibble"),
     function_name = "print.knowledgeable_caugi"
@@ -207,26 +212,15 @@ print.knowledgeable_caugi <- function(x, compact = FALSE, ...) {
 
   cli::cli_text("Graph class: {.strong {graph_class}}")
 
-  print_tbl_section <- function(title, tbl) {
-    if (!nrow(tbl)) {
-      cli::cli_alert_info("No {tolower(title)}")
-      return(invisible())
-    }
-
-    cli::cli_h2(title)
-
-    print(tibble::as_tibble(tbl))
-  }
-
   if (compact) {
     cli::cli_text("{nrow(edges(x))} edges, {nrow(nodes(x))} nodes")
   } else {
-    print_tbl_section("Edges", edges(x))
-    print_tbl_section("Nodes", nodes(x))
+    print_section("Edges", edges(x))
+    print_section("Nodes", nodes(x))
   }
 
   # Knowledge info
-  NextMethod("print", compact = compact)
+  NextMethod("print", compact = compact, wide_vars = wide_vars)
 
   invisible(x)
 }
