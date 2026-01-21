@@ -2,39 +2,11 @@
 # Tetrad test setup and utility functions
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("continuous generator returns standardized X1..X5", {
-  skip_if_no_tetrad()
-
-  my_df <- make_cont_test_data() # n = 300 by default
-  expect_s3_class(my_df, "data.frame")
-  expect_setequal(names(my_df), paste0("X", 1:5))
-  expect_true(all(purrr::map_lgl(my_df, is.numeric)))
-
-  # means ~ 0, sds ~ 1
-  m <- vapply(my_df, mean, numeric(1))
-  s <- vapply(my_df, stats::sd, numeric(1))
-  expect_true(all(abs(m) < 0.05))
-  expect_true(all(abs(s - 1) < 0.05))
-})
-
-test_that("discrete generator returns integer-coded X1,...,X5 in 0,...,k-1", {
-  skip_if_no_tetrad()
-
-  k <- 3
-  my_df <- make_disc_test_data(n = 300, k = k)
-  expect_s3_class(my_df, "data.frame")
-  expect_setequal(names(my_df), paste0("X", 1:5))
-  expect_true(all(purrr::map_lgl(my_df, is.integer)))
-
-  rng_ok <- purrr::map_lgl(my_df, \(x) all(x >= 0L & x <= (k - 1L)))
-  expect_true(all(rng_ok))
-})
-
 test_that("knowledge helper builds tiered/required/forbidden objects and casts to Tetrad", {
   skip_if_no_tetrad()
+  data(num_data)
 
-  my_df <- make_cont_test_data()
-  kn <- make_knowledge_test_object(my_df)
+  kn <- make_knowledge_test_object(num_data)
 
   expect_true(is.list(kn))
   expect_true(all(
@@ -148,8 +120,8 @@ test_that("set_alg warns when background knowledge is set but algorithm ignores 
   skip_if_no_tetrad()
 
   ts <- TetradSearch$new()
-  my_df <- make_cont_test_data()
-  kn <- make_knowledge_test_object(my_df)
+  data(num_data)
+  kn <- make_knowledge_test_object(num_data)
 
   ts$set_score("sem_bic")
   ts$set_knowledge(kn$tiered_kn)
@@ -163,8 +135,8 @@ test_that("set_knowledge attaches and propagates to existing algorithm", {
   skip_if_no_tetrad()
 
   ts <- TetradSearch$new()
-  my_df <- make_cont_test_data()
-  kn <- make_knowledge_test_object(my_df)
+  data(num_data)
+  kn <- make_knowledge_test_object(num_data)
 
   ts$set_score("sem_bic")
   ts$set_alg("fges")
@@ -178,8 +150,8 @@ test_that("set_knowledge propagates to an already-set algorithm", {
   skip_if_no_tetrad()
 
   ts <- TetradSearch$new()
-  my_df <- make_cont_test_data()
-  kn <- make_knowledge_test_object(my_df)
+  data(num_data)
+  kn <- make_knowledge_test_object(num_data)
 
   ts$set_score("sem_bic")
   ts$set_alg("fges") # algo first
@@ -197,8 +169,8 @@ test_that("warning about ignored knowledge only fires when knowledge is set", {
 
   # with knowledge -> warning
   ts1 <- TetradSearch$new()
-  my_df <- make_cont_test_data()
-  kn <- make_knowledge_test_object(my_df)
+  data(num_data)
+  kn <- make_knowledge_test_object(num_data)
   ts1$set_score("sem_bic")
   ts1$set_knowledge(kn$tiered_kn)
   expect_warning(
@@ -442,14 +414,15 @@ test_that("set_alg() warns when background knowledge is set for algorithms that 
     "direct_lingam",
     "dagma"
   )
-  my_df <- make_cont_test_data()
+  data(num_data)
+
   purrr::walk(no_background_algorithms, \(alg) {
     ts <- TetradSearch$new()
-    kn_list <- make_knowledge_test_object(my_df)
+    kn_list <- make_knowledge_test_object(num_data)
     ts$set_knowledge(kn_list$combi_kn)
     ts$set_score("sem_bic")
     ts$set_test("fisher_z")
-    ts$set_data(my_df)
+    ts$set_data(num_data)
     expect_warning(ts$set_alg(alg))
   })
 })
@@ -518,18 +491,19 @@ test_that("run_search() errors when pieces are missing", {
   expect_error(ts$run_search(), "No data is set", fixed = TRUE)
 
   # data but no algorithm
+  data(num_data)
   ts2 <- TetradSearch$new()
-  ts2$set_data(make_cont_test_data(n = 150))
+  ts2$set_data(num_data)
   expect_error(ts2$run_search(), "No algorithm is set", fixed = TRUE)
 })
 
 test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
   skip_if_no_tetrad()
 
-  my_df <- make_cont_test_data(n = 150)
+  data(num_data)
 
   ts <- TetradSearch$new()
-  ts$set_data(my_df)
+  ts$set_data(num_data)
   ts$set_score("sem_bic")
   ts$set_alg("fges")
 
@@ -562,16 +536,16 @@ test_that("FGES pipeline runs; toggles populate outputs; accessors work", {
   expect_true(nzchar(amat))
 })
 
-test_that("run_search(my_df) works instead of using set_data(my_df)", {
+test_that("run_search(num_data) works instead of using set_data(num_data)", {
   skip_if_no_tetrad()
 
-  my_df <- make_cont_test_data(n = 150)
+  data(num_data)
 
   ts <- TetradSearch$new()
   ts$set_score("sem_bic")
   ts$set_alg("fges")
 
-  res <- ts$run_search(my_df)
+  res <- ts$run_search(num_data)
 
   # main return type
   expect_s3_class(res, "knowledgeable_caugi")
@@ -591,10 +565,10 @@ test_that("run_search(my_df) works instead of using set_data(my_df)", {
 test_that("getters work after a run", {
   skip_if_no_tetrad()
 
-  my_df <- make_cont_test_data(n = 150)
+  data(num_data)
 
   ts <- TetradSearch$new()
-  ts$set_data(my_df)
+  ts$set_data(num_data)
   ts$set_score("sem_bic")
   ts$set_alg("fges")
 
@@ -625,10 +599,10 @@ test_that("getters work after a run", {
 test_that("get_dot() and get_amat() cover explicit java_obj + cast_obj branch", {
   skip_if_no_tetrad()
 
-  my_df <- make_cont_test_data(n = 120)
+  data(num_data)
 
   ts <- TetradSearch$new()
-  ts$set_data(my_df)
+  ts$set_data(num_data)
   ts$set_score("sem_bic")
   ts$set_alg("fges")
   ts$run_search()

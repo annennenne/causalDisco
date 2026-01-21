@@ -23,72 +23,25 @@ skip_if_no_tetrad <- function() {
   }
 }
 
-# deterministic tiny continuous dataset with causal structure
-make_cont_test_data <- function(n = 300, seed = 1) {
-  withr::local_seed(seed)
-
-  # base noise terms
-  e1 <- stats::rnorm(n, mean = 0, sd = 1)
-  e2 <- stats::rnorm(n, mean = 0, sd = 1)
-  e3 <- stats::rnorm(n, mean = 0, sd = 1)
-  e4 <- stats::rnorm(n, mean = 0, sd = 1)
-  e5 <- stats::rnorm(n, mean = 0, sd = 1)
-
-  # structural equations
-  X1 <- e1
-  X2 <- 0.8 * X1 + e2
-  X3 <- 0.6 * X1 + 0.6 * X2 + e3
-  X4 <- -0.5 * X2 + 0.7 * X3 + e4
-  X5 <- 0.5 * X4 + e5
-
-  my_df <- data.frame(X1, X2, X3, X4, X5)
-
-  # standardize each column (mean 0, sd 1)
-  my_df[] <- lapply(my_df, scale)
-  as.data.frame(my_df)
-}
-
-# deterministic tiny discrete dataset with causal structure
-make_disc_test_data <- function(n = 300, k = 3, seed = 2) {
-  withr::local_seed(seed)
-
-  # latent continuous vars with structure
-  cdat <- make_cont_test_data(n = n, seed = seed)
-
-  # discretize into k roughly equal-frequency bins
-  disc <- lapply(cdat, function(col) {
-    cut(
-      col[, 1], # scale() returns a matrix column
-      breaks = quantile(col, probs = seq(0, 1, length.out = k + 1)),
-      include.lowest = TRUE,
-      labels = FALSE
-    ) -
-      1L # zero-based integers
-  })
-
-  as.data.frame(disc) |>
-    rlang::set_names(paste0("X", seq_len(5)))
-}
-
 # make knowledge object that respects the data-generating mechanism
-make_knowledge_test_object <- function(my_df) {
+make_knowledge_test_object <- function(df) {
   tiered_kn <- knowledge(
-    my_df,
+    df,
     tier(
-      1 ~ X1,
-      2 ~ X2 + X3,
-      3 ~ X4,
-      4 ~ X5
+      1 ~ Z + X3,
+      2 ~ X1 + X2,
+      3 ~ Y
     )
   )
-  # forbid a tier violation
+
   forbidden_kn <- knowledge(
-    my_df,
-    X2 %!-->% X1
+    df,
+    Z %!-->% X3
   )
+
   required_kn <- knowledge(
-    my_df,
-    X1 %-->% X2
+    df,
+    X1 %-->% Y
   )
   combi_kn <- tiered_kn + forbidden_kn + required_kn
 
