@@ -15,6 +15,9 @@
 
 \item{...}{Additional arguments (not used).}
 }
+\value{
+Invisibly returns the \code{knowledgeable_caugi} object.
+}
 \description{
 Print method for knowledgeable_caugi objects
 }

@@ -1275,7 +1275,29 @@ test_that("print and summary method for knowledge", {
     B %-->% A
   )
   print(kn)
+  print(kn, wide = TRUE)
   print(kn, compact = TRUE)
+  print(kn, wide = TRUE, compact = TRUE)
+  summary(kn)
+  expect_true(TRUE)
+})
+
+test_that("print and summary method for empty knowledge works", {
+  kn <- knowledge()
+  print(kn)
+  print(kn, wide = TRUE)
+  print(kn, compact = TRUE)
+  print(kn, wide = TRUE, compact = TRUE)
+  summary(kn)
+  expect_true(TRUE)
+})
+
+test_that("print and summary method for no tier knowledge works", {
+  kn <- knowledge(A %-->% B)
+  print(kn)
+  print(kn, wide = TRUE)
+  print(kn, compact = TRUE)
+  print(kn, wide = TRUE, compact = TRUE)
   summary(kn)
   expect_true(TRUE)
 })

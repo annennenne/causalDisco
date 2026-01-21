@@ -177,6 +177,7 @@ knowledgeable_caugi.EssGraph <- function(
 #' @title Print method for knowledgeable_caugi objects
 #' @param x A `knowledgeable_caugi` object.
 #' @inheritParams print.knowledge
+#' @returns Invisibly returns the `knowledgeable_caugi` object.
 #' @examples
 #' data(tpc_example)
 #' kn <- knowledge(
@@ -228,6 +229,7 @@ print.knowledgeable_caugi <- function(
 #' @title Summary method for knowledgeable_caugi objects
 #' @param object A `knowledgeable_caugi` object.
 #' @param ... Additional arguments (not used).
+#' @returns Invisibly returns the `knowledgeable_caugi` object.
 #' @examples
 #' data(tpc_example)
 #' kn <- knowledge(

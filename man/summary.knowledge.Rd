@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments (not used).}
 }
+\value{
+Invisibly returns the \code{knowledge} object.
+}
 \description{
 Summary method for knowledge objects
 }
