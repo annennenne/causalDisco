@@ -19,10 +19,12 @@ Invisibly returns the caugi object used for plotting. The main effect is the plo
 }
 \description{
 Visualize a \code{knowledge} object as a directed graph using \code{\link[caugi:plot]{caugi::plot()}}.
-If tiers are defined, nodes will be arranged according to their tier.
 }
 \details{
 \itemize{
+\item \strong{Required edges} are drawn in \strong{blue}.
+\item \strong{Forbidden edges} are drawn in \strong{red}.
+\item If tiered knowledge is provided, nodes are arranged according to their tiers.
 \item Nodes are arranged by tiers if tier information is provided in the knowledge object.
 \item If some nodes are missing tier assignments, a warning is issued and the plot falls back
 to untiered plotting.

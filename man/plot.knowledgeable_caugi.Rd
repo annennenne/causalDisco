@@ -7,23 +7,37 @@
 \method{plot}{knowledgeable_caugi}(x, orientation = c("columns", "rows"), ...)
 }
 \arguments{
-\item{x}{A \code{caugi} object containing the causal graph and knowledge.}
+\item{x}{A \code{knowledgeable_caugi} object containing both the causal graph and the associated knowledge.}
 
-\item{...}{Additional arguments passed to igraph \code{plot} and \code{plot.knowledge}.}
+\item{orientation}{Character(1). Orientation of the tiers in the plot.
+Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
+
+\item{...}{Additional arguments passed to \code{\link[caugi:plot]{caugi::plot()}} and \code{\link[=plot.knowledge]{plot.knowledge()}}.}
 }
 \value{
-A plot of the causal graph.
+Invisibly returns the underlying \code{caugi} object. The main effect is the plot.
 }
 \description{
-This function visualizes a causal graph stored within a \code{caugi} object.
-It incorporates background knowledge to highlight required and forbidden edges. The required
-edges are drawn in blue, while forbidden edges are shown in red and are dashed. If tiered
-knowledge is provided, the nodes are arranged according to their tiers; otherwise, a circular
-layout is used.
+This function visualizes a causal graph stored within a \code{knowledgeable_caugi} object.
+It extends \code{\link[=plot.knowledge]{plot.knowledge()}} by combining the causal graph from a \code{caugi} object with
+background knowledge, highlighting required and forbidden edges.
+}
+\details{
+\itemize{
+\item \strong{Required edges} are drawn in \strong{blue}.
+\item \strong{Forbidden edges} are drawn in \strong{red}.
+\item If tiered knowledge is provided, nodes are arranged according to their tiers.
+}
+
+This function combines the causal graph and the knowledge object into a single plotting
+structure. If the knowledge contains tiers, nodes are laid out accordingly. Otherwise, the
+default igraph layout is used. Edge styling is automatically applied based on the knowledge:
+required edges are blue, forbidden edges are red and dashed.
 }
 \examples{
 data(tpc_example)
 
+# Define tiered knowledge
 kn <- knowledge(
   tpc_example,
   tier(
@@ -33,9 +47,23 @@ kn <- knowledge(
   )
 )
 
+# Fit a causal discovery model
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 
+# Plot with default column orientation
 plot(disco_cd_tges)
+
+# Plot with row orientation
+plot(disco_cd_tges, orientation = "rows")
+
+# Plot without tiers
+kn_untiered <- knowledge(
+  tpc_example,
+  child_x1 \%-->\% c(child_x2, youth_x3),
+  youth_x4 \%!-->\% oldage_x5
+)
+cd_untiered <- disco(data = tpc_example, method = cd_tges, knowledge = kn_untiered)
+plot(cd_untiered)
 
 }
