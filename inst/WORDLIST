@@ -9,6 +9,7 @@ Bjerre
 BnlearnSearch
 Bugfixes
 Bui
+CAUGI
 CMD
 CPC
 CPDAG
@@ -93,7 +94,6 @@ al
 alg
 algs
 amat
-atm
 bdeu
 bic
 bidirected
@@ -113,7 +113,7 @@ fges
 fixedEdges
 ggplot
 honouring
-igraph
+iirc
 independencies
 initializations
 inout
@@ -127,6 +127,7 @@ nDAGs
 nonsingular
 num
 oldage
+ord
 pag
 pak
 pc
@@ -154,5 +155,5 @@ tpdag
 tskeleton
 un
 underfit
-webtool
+untiered
 xz

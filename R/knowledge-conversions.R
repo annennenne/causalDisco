@@ -318,7 +318,7 @@ knowledge_to_caugi <- function(kn) {
   if (all(is.na(kn$vars$tier))) {
     tiers <- list()
   } else {
-    tier_levels <- unique(na.omit(kn$vars$tier))
+    tier_levels <- unique(stats::na.omit(kn$vars$tier))
     tiers <- lapply(tier_levels, function(t) kn$vars$var[kn$vars$tier == t])
     names(tiers) <- tier_levels
   }
@@ -378,7 +378,7 @@ combine_knowledge_and_caugi <- function(cg, kn) {
   if (all(is.na(kn$vars$tier))) {
     tiers <- list()
   } else {
-    tier_levels <- unique(na.omit(kn$vars$tier))
+    tier_levels <- unique(stats::na.omit(kn$vars$tier))
     tiers <- lapply(tier_levels, function(t) kn$vars$var[kn$vars$tier == t])
     names(tiers) <- tier_levels
   }

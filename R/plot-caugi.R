@@ -197,42 +197,37 @@ plot.knowledge <- function(
   cg <- info_object$caugi
   tiers <- info_object$tiers
 
-  # --- Merge forbidden edges in both directions into a single bidirectional edge in the caugi object ---
+  # --- Merge forbidden edges in both directions into a single bidirectional edge ---
   forbidden_edges <- subset(x$edges, status == "forbidden")
+
   if (nrow(forbidden_edges) > 1) {
-    # Detect pairs where both directions exist
-    edge_pairs <- apply(forbidden_edges, 1, function(r) {
-      paste(r["from"], r["to"], sep = "_")
+    # Create canonical keys for unordered pairs
+    keys <- apply(forbidden_edges[, c("from", "to")], 1, function(r) {
+      paste(sort(r), collapse = "|") # sort ensures A|B == B|A
     })
-    rev_pairs <- apply(forbidden_edges, 1, function(r) {
-      paste(r["to"], r["from"], sep = "_")
-    })
-    both_dirs <- intersect(edge_pairs, rev_pairs)
+
+    # Only keep pairs that appear twice (both directions exist)
+    tab <- table(keys)
+    bidir_keys <- names(tab[tab == 2])
 
     bidir_forbidden <- list()
 
-    for (pair in both_dirs) {
-      nodes <- strsplit(pair, "_")[[1]]
-      from <- nodes[1]
-      to <- nodes[2]
+    for (key in bidir_keys) {
+      nodes <- strsplit(key, "\\|")[[1]]
+      a <- nodes[1]
+      b <- nodes[2]
 
-      # Remove the two one-way edges
-      cg@.state$edges <- cg@edges[
-        !(cg@edges$from %in% c(from, to) & cg@edges$to %in% c(from, to)),
-      ]
-
-      cg@.state$class <- "ADMG"
+      # Remove both one-way edges safely
+      cg <- caugi::remove_edges(cg, from = a, to = b)
+      cg <- caugi::remove_edges(cg, from = b, to = a)
 
       # Add a single bidirectional edge
-      cg <- eval(as.call(
-        c(
-          list(quote(caugi::add_edges), cg),
-          list(as.call(list(as.name("%<->%"), as.name(from), as.name(to))))
-        )
-      ))
+      cg@.state$class <- "UNKNOWN"
+      cg <- caugi::add_edges(cg, from = a, edge = "<->", to = b)
 
       # Record merged forbidden edge for styling
-      bidir_forbidden[[from]] <- c(bidir_forbidden[[from]], to)
+      bidir_forbidden[[a]] <- c(bidir_forbidden[[a]], b)
+      bidir_forbidden[[b]] <- c(bidir_forbidden[[b]], a)
     }
   }
 

@@ -34,6 +34,16 @@ test_that("Plotting knowledge objects with required+forbidden works", {
   expect_true(TRUE)
 })
 
+test_that("Plotting knowledge objects with forbidden both directions works", {
+  data(tpc_example)
+  kn <- knowledge(
+    tpc_example,
+    exogenous(starts_with("child"))
+  )
+  plot(kn)
+  expect_true(TRUE)
+})
+
 test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   cg <- caugi::caugi(class = "PDAG")
 
