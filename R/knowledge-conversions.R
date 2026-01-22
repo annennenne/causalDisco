@@ -252,3 +252,129 @@ as_bnlearn_knowledge <- function(kn) {
     blacklist = blacklist
   )
 }
+
+
+#' Convert background knowledge to caugi object
+#'
+#' @description
+#' Converts a `knowledge` object to a `caugi` object used for plotting.
+#'
+#' @param kn A \code{knowledge} object.
+#'
+#' @returns A list with the `caugi` object alongside information.
+#'
+#' @examples
+#' data(tpc_example)
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   ),
+#'   child_x1 %-->% youth_x3,
+#' )
+#' cg <- knowledge_to_caugi(kn)
+#'
+#' @family knowledge functions
+#' @concept knowledge
+#'
+#' @keywords internal
+#' @noRd
+knowledge_to_caugi <- function(kn) {
+  .check_if_pkgs_are_installed(
+    pkgs = c("dplyr", "caugi"),
+    function_name = "knowledge_to_caugi"
+  )
+  is_knowledge(kn)
+
+  ## ---- build caugi(vars...) ----
+  caugi_call <- as.call(
+    c(list(quote(caugi::caugi)), lapply(kn$vars$var, as.name))
+  )
+
+  ## ---- build edge calls ----
+  edges <- kn$edges[kn$edges$status %in% c("required", "forbidden"), ]
+
+  if (nrow(edges) == 0) {
+    cg <- eval(caugi_call, envir = parent.frame())
+  } else {
+    edge_calls <- lapply(seq_len(nrow(edges)), function(i) {
+      as.call(list(
+        as.name("%-->%"),
+        as.name(edges$from[i]),
+        as.name(edges$to[i])
+      ))
+    })
+
+    full_call <- as.call(
+      c(list(quote(caugi::add_edges), caugi_call), edge_calls)
+    )
+
+    cg <- eval(full_call, envir = parent.frame())
+  }
+
+  ## ---- build tiers list ----
+  if (all(is.na(kn$vars$tier))) {
+    tiers <- list()
+  } else {
+    tier_levels <- unique(na.omit(kn$vars$tier))
+    tiers <- lapply(tier_levels, function(t) kn$vars$var[kn$vars$tier == t])
+    names(tiers) <- tier_levels
+  }
+
+  ## ---- return list ----
+  list(
+    caugi = cg,
+    tiers = tiers
+  )
+}
+
+#' Combine knowledge and caugi object
+#' @param cg A `caugi` object.
+#' @param kcg A `knowledgeable_caugi` object.
+#' @returns A list with the updated `caugi` object alongside information.
+#' @keywords internal
+#' @noRd
+combine_knowledge_and_caugi <- function(cg, kn) {
+  .check_if_pkgs_are_installed(
+    pkgs = c("dplyr", "caugi"),
+    function_name = "combine_knowledge_and_caugi"
+  )
+
+  # Extract edges from knowledge
+  edges <- kn$edges[kn$edges$status %in% c("required", "forbidden"), ]
+
+  if (nrow(edges) == 0) {
+    # No new edges; just return the original caugi
+    combined_cg <- cg
+  } else {
+    # Convert each edge to expression: from %-->% to
+    edge_calls <- lapply(seq_len(nrow(edges)), function(i) {
+      as.call(list(
+        as.name("%-->%"),
+        as.name(edges$from[i]),
+        as.name(edges$to[i])
+      ))
+    })
+
+    # Combine with existing caugi
+    full_call <- as.call(c(list(quote(caugi::add_edges), cg), edge_calls))
+
+    combined_cg <- eval(full_call, envir = parent.frame())
+  }
+
+  # Build tiers from knowledge object
+  if (all(is.na(kn$vars$tier))) {
+    tiers <- setNames(list(kn$vars$var), "NA")
+  } else {
+    tier_levels <- unique(na.omit(kn$vars$tier))
+    tiers <- lapply(tier_levels, function(t) kn$vars$var[kn$vars$tier == t])
+    names(tiers) <- tier_levels
+  }
+
+  list(
+    caugi = combined_cg,
+    tiers = tiers
+  )
+}

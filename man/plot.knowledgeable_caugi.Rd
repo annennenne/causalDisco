@@ -4,7 +4,7 @@
 \alias{plot.knowledgeable_caugi}
 \title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object}
 \usage{
-\method{plot}{knowledgeable_caugi}(x, ...)
+\method{plot}{knowledgeable_caugi}(x, orientation = c("columns", "rows"), ...)
 }
 \arguments{
 \item{x}{A \code{caugi} object containing the causal graph and knowledge.}

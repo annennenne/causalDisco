@@ -4,27 +4,36 @@
 \alias{plot.knowledge}
 \title{Plot a Knowledge Object}
 \usage{
-\method{plot}{knowledge}(x, x_jitter = 0, vertex_size_scale = 1, ...)
+\method{plot}{knowledge}(x, orientation = c("columns", "rows"), ...)
 }
 \arguments{
-\item{x}{A \code{knowledge} object.}
+\item{x}{A \code{knowledge} object, created using \code{\link[=knowledge]{knowledge()}}.}
 
-\item{x_jitter}{Amount of jitter to apply to x positions of tiered nodes (default 0).}
+\item{orientation}{Character(1). Orientation of the tiers in the plot.
+Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
 
-\item{vertex_size_scale}{Scaling factor for vertex sizes (default 1).}
-
-\item{...}{Additional arguments passed to igraph \code{plot}.}
+\item{...}{Additional arguments passed to \code{\link[caugi:plot]{caugi::plot()}}, e.g., \code{node_color}, \code{edge_color}.}
 }
 \value{
-A plot of the knowledge structure.
+Invisibly returns the caugi object used for plotting. The main effect is the plot.
 }
 \description{
-Plot a knowledge object (tiers + required + forbidden)
+Visualize a \code{knowledge} object as a directed graph using \code{\link[caugi:plot]{caugi::plot()}}.
+If tiers are defined, nodes will be arranged according to their tier.
+}
+\details{
+\itemize{
+\item Nodes are arranged by tiers if tier information is provided in the knowledge object.
+\item If some nodes are missing tier assignments, a warning is issued and the plot falls back
+to untiered plotting.
+\item The function automatically handles edges marked as "required" or "forbidden" in the knowledge object.
+}
 }
 \examples{
 data(tpc_example)
 
-kn <- knowledge(
+# Define a knowledge object with tiers
+kn_tiered <- knowledge(
   tpc_example,
   tier(
     child ~ starts_with("child"),
@@ -33,6 +42,21 @@ kn <- knowledge(
   )
 )
 
-plot(kn)
+# Simple plot (default column orientation)
+plot(kn_tiered)
+
+# Plot with row orientation
+plot(kn_tiered, orientation = "rows")
+
+# Plot with custom node/edge styling
+# plot(kn_tiered, node_color = "lightblue", edge_color = "darkred")
+
+# Define a knowledge object without tiers
+kn_untiered <- knowledge(
+  tpc_example,
+  child_x1 \%-->\% c(child_x2, youth_x3),
+  youth_x4 \%!-->\% oldage_x5
+)
+plot(kn_untiered)
 
 }
