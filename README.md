@@ -149,7 +149,7 @@ function:
 plot(disco_cd_tges)
 ```
 
-<img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" /><img src="man/figures/README-plot-2.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
+<img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
 ## Questions
 
@@ -161,10 +161,23 @@ plot(disco_cd_tges)
 
 ## TODO
 
-- Improve plot (use caugi). Just got merged so look at that …
+- Register a custom edge type for caugi to represent forbidden edges
+  differently than normal directed edges. Would simplify plotting logic
+  and easier to extend later.
 
-  - For new features that are hard to do in grid (which caugi uses),
-    maybe just insert the image in ggplot?
+``` r
+# Doesn't work atm because they enforce glyph to be length 3
+caugi::register_caugi_edge(
+  glyph = "!-->",
+  tail_mark = "arrow",
+  head_mark = "tail",
+  class = "directed",
+  symmetric = FALSE
+)
+```
+
+- Don’t clash namespaces with caugi to avoid issues when both are
+  loaded.
 
 A rough WIP is here, which colors a rectangle around A and B:
 
