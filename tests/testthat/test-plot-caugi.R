@@ -10,7 +10,7 @@ test_that("Plotting caugi objects work", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledge with empty works", {
+test_that("Plotting knowledgeable_caugi with empty knowledge works", {
   kn <- knowledge()
   cg <- caugi::caugi(class = "PDAG")
 
@@ -20,13 +20,6 @@ test_that("Plotting knowledge with empty works", {
     caugi::set_edges(B2 %---% C1)
   kcg <- knowledgeable_caugi(cg, kn)
   plot(kcg)
-  expect_true(TRUE)
-})
-
-
-test_that("Plotting knowledgeable_caugi with empty knowledge works", {
-  kn <- knowledge()
-  plot(kn)
   expect_true(TRUE)
 })
 
@@ -79,10 +72,16 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with only some of 
     )
   )
 
-  plot(kn)
+  expect_warning(
+    plot(kn),
+    "Not all nodes are assigned to tiers."
+  )
 
   kcg <- knowledgeable_caugi(cg, kn)
-  plot(kcg)
+  expect_warning(
+    plot(kcg),
+    "Not all nodes are assigned to tiers."
+  )
   expect_true(TRUE)
 })
 

@@ -342,31 +342,41 @@ combine_knowledge_and_caugi <- function(cg, kn) {
     function_name = "combine_knowledge_and_caugi"
   )
 
-  # Extract edges from knowledge
-  edges <- kn$edges[kn$edges$status %in% c("required", "forbidden"), ]
+  # Only keep required for now (need to figure out what to do with forbidden edges)
+  edges <- kn$edges[kn$edges$status %in% c("required"), ]
 
   if (nrow(edges) == 0) {
-    # No new edges; just return the original caugi
     combined_cg <- cg
   } else {
-    # Convert each edge to expression: from %-->% to
-    edge_calls <- lapply(seq_len(nrow(edges)), function(i) {
-      as.call(list(
-        as.name("%-->%"),
-        as.name(edges$from[i]),
-        as.name(edges$to[i])
-      ))
-    })
+    existing_edges <- cg@edges[, c("from", "to")]
 
-    # Combine with existing caugi
-    full_call <- as.call(c(list(quote(caugi::add_edges), cg), edge_calls))
+    # Keep only edges that do NOT already exist
+    edges_to_add <- edges[
+      !with(edges, paste(from, to)) %in%
+        with(existing_edges, paste(from, to)),
+    ]
 
-    combined_cg <- eval(full_call, envir = parent.frame())
+    if (nrow(edges_to_add) == 0) {
+      combined_cg <- cg
+    } else {
+      # Convert to edge calls: from %-->% to
+      edge_calls <- lapply(seq_len(nrow(edges_to_add)), function(i) {
+        as.call(list(
+          as.name("%-->%"),
+          as.name(edges_to_add$from[i]),
+          as.name(edges_to_add$to[i])
+        ))
+      })
+
+      # Combine with existing caugi
+      full_call <- as.call(c(list(quote(caugi::add_edges), cg), edge_calls))
+      combined_cg <- eval(full_call, envir = parent.frame())
+    }
   }
 
   # Build tiers from knowledge object
   if (all(is.na(kn$vars$tier))) {
-    tiers <- setNames(list(kn$vars$var), "NA")
+    tiers <- list()
   } else {
     tier_levels <- unique(na.omit(kn$vars$tier))
     tiers <- lapply(tier_levels, function(t) kn$vars$var[kn$vars$tier == t])

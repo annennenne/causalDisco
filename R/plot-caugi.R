@@ -1,12 +1,15 @@
 #' Plot a Causal Graph from a `knowledgeable_caugi` Object
 #'
-#' This function visualizes a causal graph stored within a `knowledgeable_caugi` object.
-#' It extends [plot.knowledge()] by combining the causal graph from a `caugi` object with
-#' background knowledge, highlighting required and forbidden edges.
+#' Visualize a causal graph stored within a `knowledgeable_caugi` object. This function
+#' extends [plot.knowledge()] by combining the causal graph from a `caugi` object with
+#' background knowledge, highlighting required edges.
 #'
-#' - **Required edges** are drawn in **blue**.
-#' - **Forbidden edges** are drawn in **red**.
+#' - **Required edges** are drawn in **blue** by default (`required_col`), can be changed.
+#' - **Forbidden edges** are not drawn by.
 #' - If tiered knowledge is provided, nodes are arranged according to their tiers.
+#' - Other edge styling (line width, arrow size, etc.) can be supplied via `edge_style`.
+#'   To override the color of a specific edge, specify it in
+#'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
 #' @inheritParams plot.knowledge
 #' @param x A `knowledgeable_caugi` object containing both the causal graph and the associated knowledge.
@@ -16,9 +19,9 @@
 #'
 #' @details
 #' This function combines the causal graph and the knowledge object into a single plotting
-#' structure. If the knowledge contains tiers, nodes are laid out accordingly. Otherwise, the
-#' default igraph layout is used. Edge styling is automatically applied based on the knowledge:
-#' required edges are blue, forbidden edges are red and dashed.
+#' structure. If the knowledge contains tiers, nodes are laid out accordingly; otherwise,
+#' the default caugi layout is used. Edges marked as required are automatically colored
+#' (or can be overridden per edge using `edge_style$by_edge`).
 #'
 #' @examples
 #' data(tpc_example)
@@ -43,19 +46,40 @@
 #' # Plot with row orientation
 #' plot(disco_cd_tges, orientation = "rows")
 #'
-#' # Plot without tiers
-#' kn_untiered <- knowledge(
-#'   tpc_example,
-#'   child_x1 %-->% c(child_x2, youth_x3),
-#'   youth_x4 %!-->% oldage_x5
+#' # Plot with custom node and edge styling
+#' plot(
+#'   disco_cd_tges,
+#'   node_style = list(
+#'     fill = "lightblue",
+#'     col = "darkblue",
+#'     lwd = 2,
+#'     padding = 4,
+#'     size = 1.2
+#'   ),
+#'   edge_style = list(
+#'     lwd = 1.5,
+#'     arrow_size = 4
+#'   )
 #' )
-#' cd_untiered <- disco(data = tpc_example, method = cd_tges, knowledge = kn_untiered)
-#' plot(cd_untiered)
 #'
+#' # Plot without tiers
+#' data(num_data)
+#' kn_untiered <- knowledge(
+#'   num_data,
+#'   X1 %-->% c(X2, X3),
+#'   Z %!-->% Y
+#' )
+#'
+#' bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z")
+#' res_untiered <- disco(data = num_data, method = bnlearn_pc, knowledge = kn_untiered)
+#' plot(res_untiered)
+#'
+#' @seealso [caugi::plot()]
 #' @export
 plot.knowledgeable_caugi <- function(
   x,
   orientation = c("columns", "rows"),
+  required_col = "blue",
   ...
 ) {
   orientation <- match.arg(orientation)
@@ -63,28 +87,48 @@ plot.knowledgeable_caugi <- function(
   cg <- info_object$caugi
   tiers <- info_object$tiers
 
-  has_tiers <- !all(is.na(tiers))
+  # Build automatic edge styles for required edges only
+  auto_edge_styles <- list(by_edge = list())
+  if (!is.null(x$knowledge$edges) && nrow(x$knowledge$edges) > 0) {
+    for (i in seq_len(nrow(x$knowledge$edges))) {
+      from <- x$knowledge$edges$from[i]
+      to <- x$knowledge$edges$to[i]
+      status <- x$knowledge$edges$status[i]
 
-  if (has_tiers) {
-    plot(cg, tiers = tiers, orientation = orientation, ...)
-  } else {
-    plot(cg, ...)
+      if (
+        status == "required" && any(cg@edges$from == from & cg@edges$to == to)
+      ) {
+        if (is.null(auto_edge_styles$by_edge[[from]])) {
+          auto_edge_styles$by_edge[[from]] <- list()
+        }
+        auto_edge_styles$by_edge[[from]][[to]] <- list(
+          col = required_col,
+          lwd = 2
+        )
+      }
+    }
   }
-}
 
+  plot_caugi_common(cg, tiers, orientation, auto_edge_styles, ...)
+}
 
 #' Plot a Knowledge Object
 #'
 #' Visualize a `knowledge` object as a directed graph using [caugi::plot()].
 #'
-#' - **Required edges** are drawn in **blue**.
-#' - **Forbidden edges** are drawn in **red**.
+#' - **Required edges** are drawn in **blue** by default (can be changed via `required_col`).
+#' - **Forbidden edges** are drawn in **red** by default (can be changed via `forbidden_col`).
 #' - If tiered knowledge is provided, nodes are arranged according to their tiers.
+#' - Users can override other edge styling (e.g., line width, arrow size) via the
+#'   `edge_style` argument. To override the color of a specific edge, use
+#'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
 #' @param x A `knowledge` object, created using [knowledge()].
 #' @param orientation Character(1). Orientation of the tiers in the plot.
 #'   Either `"columns"` (default) or `"rows"`. Only used if tiered knowledge is provided.
-#' @param ... Additional arguments passed to [caugi::plot()], e.g., `node_color`, `edge_color`.
+#' @param required_col Character(1). Color for edges marked as "required". Default `"blue"`.
+#' @param forbidden_col Character(1). Color for edges marked as "forbidden". Default `"red"`.
+#' @param ... Additional arguments passed to [caugi::plot()], e.g., `node_style`, `edge_style`.
 #'
 #' @return Invisibly returns the caugi object used for plotting. The main effect is the plot.
 #'
@@ -93,6 +137,9 @@ plot.knowledgeable_caugi <- function(
 #' - If some nodes are missing tier assignments, a warning is issued and the plot falls back
 #'   to untiered plotting.
 #' - The function automatically handles edges marked as "required" or "forbidden" in the knowledge object.
+#' - Other edge styling (line width, arrow size, etc.) can be supplied via `edge_style`.
+#'   The only way to override edge colors for specific edges is to specify them directly
+#'   in `edge_style$by_edge[[from]][[to]]$col`.
 #'
 #' @examples
 #' data(tpc_example)
@@ -113,8 +160,21 @@ plot.knowledgeable_caugi <- function(
 #' # Plot with row orientation
 #' plot(kn_tiered, orientation = "rows")
 #'
-#' # Plot with custom node/edge styling
-#' # plot(kn_tiered, node_color = "lightblue", edge_color = "darkred")
+#' # Plot with custom node styling and edge width/arrow size
+#' plot(
+#'   kn_tiered,
+#'   node_style = list(
+#'     fill = "lightblue",
+#'     col = "darkblue",
+#'     lwd = 2,
+#'     padding = 4,
+#'     size = 1.2
+#'   ),
+#'   edge_style = list(
+#'     lwd = 1.5,
+#'     arrow_size = 4
+#'   )
+#' )
 #'
 #' # Define a knowledge object without tiers
 #' kn_untiered <- knowledge(
@@ -125,32 +185,149 @@ plot.knowledgeable_caugi <- function(
 #' plot(kn_untiered)
 #'
 #' @export
-plot.knowledge <- function(x, orientation = c("columns", "rows"), ...) {
+plot.knowledge <- function(
+  x,
+  orientation = c("columns", "rows"),
+  required_col = "blue",
+  forbidden_col = "red",
+  ...
+) {
   orientation <- match.arg(orientation)
   info_object <- knowledge_to_caugi(x)
   cg <- info_object$caugi
   tiers <- info_object$tiers
 
+  # --- Merge forbidden edges in both directions into a single bidirectional edge in the caugi object ---
+  forbidden_edges <- subset(x$edges, status == "forbidden")
+  if (nrow(forbidden_edges) > 1) {
+    # Detect pairs where both directions exist
+    edge_pairs <- apply(forbidden_edges, 1, function(r) {
+      paste(r["from"], r["to"], sep = "_")
+    })
+    rev_pairs <- apply(forbidden_edges, 1, function(r) {
+      paste(r["to"], r["from"], sep = "_")
+    })
+    both_dirs <- intersect(edge_pairs, rev_pairs)
+
+    bidir_forbidden <- list()
+
+    for (pair in both_dirs) {
+      nodes <- strsplit(pair, "_")[[1]]
+      from <- nodes[1]
+      to <- nodes[2]
+
+      # Remove the two one-way edges
+      cg@.state$edges <- cg@edges[
+        !(cg@edges$from %in% c(from, to) & cg@edges$to %in% c(from, to)),
+      ]
+
+      cg@.state$class <- "ADMG"
+
+      # Add a single bidirectional edge
+      cg <- eval(as.call(
+        c(
+          list(quote(caugi::add_edges), cg),
+          list(as.call(list(as.name("%<->%"), as.name(from), as.name(to))))
+        )
+      ))
+
+      # Record merged forbidden edge for styling
+      bidir_forbidden[[from]] <- c(bidir_forbidden[[from]], to)
+    }
+  }
+
+  # --- Build automatic edge styles for required/forbidden edges ---
+  auto_edge_styles <- list(by_edge = list())
+  if (!is.null(x$edges) && nrow(x$edges) > 0) {
+    for (i in seq_len(nrow(x$edges))) {
+      from <- x$edges$from[i]
+      to <- x$edges$to[i]
+      status <- x$edges$status[i]
+
+      col <- switch(
+        status,
+        required = required_col,
+        forbidden = forbidden_col,
+        NULL
+      )
+      if (!is.null(col)) {
+        if (is.null(auto_edge_styles$by_edge[[from]])) {
+          auto_edge_styles$by_edge[[from]] <- list()
+        }
+        auto_edge_styles$by_edge[[from]][[to]] <- list(col = col)
+      }
+    }
+  }
+
+  plot_caugi_common(cg, tiers, orientation, auto_edge_styles, ...)
+}
+
+
+#' Common Plotting Function for Causal Graphs with Tiers and Edge Styles
+#' @param cg A caugi object representing the causal graph to be plotted.
+#' @param tiers A list of character vectors representing the tiers for tiered plotting.
+#' @param orientation Character(1). Orientation of the tiers in the plot.
+#'  Either "columns" or "rows".
+#' @param auto_edge_styles A list specifying automatic edge styles to be applied.
+#' This is typically generated based on required/forbidden edges in knowledge.
+#' @param ... Additional arguments passed to [caugi::plot()], such as `node_style` or `edge_style`.
+#' @keywords internal
+#' @noRd
+plot_caugi_common <- function(
+  cg,
+  tiers,
+  orientation = c("columns", "rows"),
+  auto_edge_styles = list(by_edge = list()),
+  ...
+) {
+  orientation <- match.arg(orientation)
+  dots <- list(...)
+
+  # Merge user-supplied edge_style
+  user_edge_styles <- dots$edge_style
+  if (!is.null(user_edge_styles)) {
+    merged_edge_styles <- auto_edge_styles
+
+    # Merge by_edge (specific edges)
+    if (!is.null(user_edge_styles$by_edge)) {
+      for (from in names(user_edge_styles$by_edge)) {
+        if (is.null(merged_edge_styles$by_edge[[from]])) {
+          merged_edge_styles$by_edge[[from]] <- list()
+        }
+        for (to in names(user_edge_styles$by_edge[[from]])) {
+          merged_edge_styles$by_edge[[from]][[to]] <- user_edge_styles$by_edge[[
+            from
+          ]][[to]]
+        }
+      }
+    }
+
+    # Merge all other top-level edge_style options (lwd, arrow_size, etc.)
+    for (name in setdiff(names(user_edge_styles), "by_edge")) {
+      merged_edge_styles[[name]] <- user_edge_styles[[name]]
+    }
+
+    dots$edge_style <- NULL
+  } else {
+    merged_edge_styles <- auto_edge_styles
+  }
+
+  # Check tiers
   has_tiers <- length(tiers) > 0 &&
     !all(sapply(tiers, function(x) all(is.na(x))))
   any_na_tiers <- any(sapply(tiers, function(x) any(is.na(x))))
 
-  if (has_tiers) {
-    if (any_na_tiers) {
-      warning(
-        "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers. Defaulting to untiered plotting.",
-        call. = FALSE
-      )
-      plot(cg, ...)
-    } else {
-      plot(
-        cg,
-        tiers = tiers,
-        orientation = orientation,
-        ...
-      )
-    }
-  } else {
-    plot(cg, ...)
+  # Prepare plot arguments
+  plot_args <- list(cg, edge_style = merged_edge_styles)
+  if (has_tiers && !any_na_tiers) {
+    plot_args$tiers <- tiers
+    plot_args$orientation <- orientation
+  } else if (has_tiers && any_na_tiers) {
+    warning(
+      "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers. Defaulting to untiered plotting.",
+      call. = FALSE
+    )
   }
+
+  do.call(plot, c(plot_args, dots))
 }

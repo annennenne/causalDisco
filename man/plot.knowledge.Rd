@@ -4,7 +4,13 @@
 \alias{plot.knowledge}
 \title{Plot a Knowledge Object}
 \usage{
-\method{plot}{knowledge}(x, orientation = c("columns", "rows"), ...)
+\method{plot}{knowledge}(
+  x,
+  orientation = c("columns", "rows"),
+  required_col = "blue",
+  forbidden_col = "red",
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{knowledge} object, created using \code{\link[=knowledge]{knowledge()}}.}
@@ -12,7 +18,11 @@
 \item{orientation}{Character(1). Orientation of the tiers in the plot.
 Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
 
-\item{...}{Additional arguments passed to \code{\link[caugi:plot]{caugi::plot()}}, e.g., \code{node_color}, \code{edge_color}.}
+\item{required_col}{Character(1). Color for edges marked as "required". Default \code{"blue"}.}
+
+\item{forbidden_col}{Character(1). Color for edges marked as "forbidden". Default \code{"red"}.}
+
+\item{...}{Additional arguments passed to \code{\link[caugi:plot]{caugi::plot()}}, e.g., \code{node_style}, \code{edge_style}.}
 }
 \value{
 Invisibly returns the caugi object used for plotting. The main effect is the plot.
@@ -22,13 +32,19 @@ Visualize a \code{knowledge} object as a directed graph using \code{\link[caugi:
 }
 \details{
 \itemize{
-\item \strong{Required edges} are drawn in \strong{blue}.
-\item \strong{Forbidden edges} are drawn in \strong{red}.
+\item \strong{Required edges} are drawn in \strong{blue} by default (can be changed via \code{required_col}).
+\item \strong{Forbidden edges} are drawn in \strong{red} by default (can be changed via \code{forbidden_col}).
 \item If tiered knowledge is provided, nodes are arranged according to their tiers.
+\item Users can override other edge styling (e.g., line width, arrow size) via the
+\code{edge_style} argument. To override the color of a specific edge, use
+\code{edge_style$by_edge[[from]][[to]]$col}.
 \item Nodes are arranged by tiers if tier information is provided in the knowledge object.
 \item If some nodes are missing tier assignments, a warning is issued and the plot falls back
 to untiered plotting.
 \item The function automatically handles edges marked as "required" or "forbidden" in the knowledge object.
+\item Other edge styling (line width, arrow size, etc.) can be supplied via \code{edge_style}.
+The only way to override edge colors for specific edges is to specify them directly
+in \code{edge_style$by_edge[[from]][[to]]$col}.
 }
 }
 \examples{
@@ -50,8 +66,21 @@ plot(kn_tiered)
 # Plot with row orientation
 plot(kn_tiered, orientation = "rows")
 
-# Plot with custom node/edge styling
-# plot(kn_tiered, node_color = "lightblue", edge_color = "darkred")
+# Plot with custom node styling and edge width/arrow size
+plot(
+  kn_tiered,
+  node_style = list(
+    fill = "lightblue",
+    col = "darkblue",
+    lwd = 2,
+    padding = 4,
+    size = 1.2
+  ),
+  edge_style = list(
+    lwd = 1.5,
+    arrow_size = 4
+  )
+)
 
 # Define a knowledge object without tiers
 kn_untiered <- knowledge(

@@ -4,7 +4,7 @@
 \alias{plot.knowledgeable_caugi}
 \title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object}
 \usage{
-\method{plot}{knowledgeable_caugi}(x, orientation = c("columns", "rows"), ...)
+\method{plot}{knowledgeable_caugi}(x, orientation = c("columns", "rows"), required_col = "blue", ...)
 }
 \arguments{
 \item{x}{A \code{knowledgeable_caugi} object containing both the causal graph and the associated knowledge.}
@@ -12,27 +12,32 @@
 \item{orientation}{Character(1). Orientation of the tiers in the plot.
 Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
 
+\item{required_col}{Character(1). Color for edges marked as "required". Default \code{"blue"}.}
+
 \item{...}{Additional arguments passed to \code{\link[caugi:plot]{caugi::plot()}} and \code{\link[=plot.knowledge]{plot.knowledge()}}.}
 }
 \value{
 Invisibly returns the underlying \code{caugi} object. The main effect is the plot.
 }
 \description{
-This function visualizes a causal graph stored within a \code{knowledgeable_caugi} object.
-It extends \code{\link[=plot.knowledge]{plot.knowledge()}} by combining the causal graph from a \code{caugi} object with
-background knowledge, highlighting required and forbidden edges.
+Visualize a causal graph stored within a \code{knowledgeable_caugi} object. This function
+extends \code{\link[=plot.knowledge]{plot.knowledge()}} by combining the causal graph from a \code{caugi} object with
+background knowledge, highlighting required edges.
 }
 \details{
 \itemize{
-\item \strong{Required edges} are drawn in \strong{blue}.
-\item \strong{Forbidden edges} are drawn in \strong{red}.
+\item \strong{Required edges} are drawn in \strong{blue} by default (\code{required_col}), can be changed.
+\item \strong{Forbidden edges} are not drawn by.
 \item If tiered knowledge is provided, nodes are arranged according to their tiers.
+\item Other edge styling (line width, arrow size, etc.) can be supplied via \code{edge_style}.
+To override the color of a specific edge, specify it in
+\code{edge_style$by_edge[[from]][[to]]$col}.
 }
 
 This function combines the causal graph and the knowledge object into a single plotting
-structure. If the knowledge contains tiers, nodes are laid out accordingly. Otherwise, the
-default igraph layout is used. Edge styling is automatically applied based on the knowledge:
-required edges are blue, forbidden edges are red and dashed.
+structure. If the knowledge contains tiers, nodes are laid out accordingly; otherwise,
+the default caugi layout is used. Edges marked as required are automatically colored
+(or can be overridden per edge using \code{edge_style$by_edge}).
 }
 \examples{
 data(tpc_example)
@@ -57,13 +62,35 @@ plot(disco_cd_tges)
 # Plot with row orientation
 plot(disco_cd_tges, orientation = "rows")
 
-# Plot without tiers
-kn_untiered <- knowledge(
-  tpc_example,
-  child_x1 \%-->\% c(child_x2, youth_x3),
-  youth_x4 \%!-->\% oldage_x5
+# Plot with custom node and edge styling
+plot(
+  disco_cd_tges,
+  node_style = list(
+    fill = "lightblue",
+    col = "darkblue",
+    lwd = 2,
+    padding = 4,
+    size = 1.2
+  ),
+  edge_style = list(
+    lwd = 1.5,
+    arrow_size = 4
+  )
 )
-cd_untiered <- disco(data = tpc_example, method = cd_tges, knowledge = kn_untiered)
-plot(cd_untiered)
 
+# Plot without tiers
+data(num_data)
+kn_untiered <- knowledge(
+  num_data,
+  X1 \%-->\% c(X2, X3),
+  Z \%!-->\% Y
+)
+
+bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z")
+res_untiered <- disco(data = num_data, method = bnlearn_pc, knowledge = kn_untiered)
+plot(res_untiered)
+
+}
+\seealso{
+\code{\link[caugi:plot]{caugi::plot()}}
 }
