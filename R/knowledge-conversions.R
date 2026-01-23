@@ -279,8 +279,7 @@ as_bnlearn_knowledge <- function(kn) {
 #' @family knowledge functions
 #' @concept knowledge
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 knowledge_to_caugi <- function(kn) {
   .check_if_pkgs_are_installed(
     pkgs = c("dplyr", "caugi"),

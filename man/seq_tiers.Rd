@@ -54,6 +54,7 @@ Other knowledge functions:
 \code{\link{forbid_edge}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
+\code{\link{knowledge_to_caugi}()},
 \code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},

@@ -80,6 +80,7 @@ Other knowledge functions:
 \code{\link{deparse_knowledge}()},
 \code{\link{get_tiers}()},
 \code{\link{knowledge}()},
+\code{\link{knowledge_to_caugi}()},
 \code{\link{remove_edge}()},
 \code{\link{remove_tiers}()},
 \code{\link{remove_vars}()},
