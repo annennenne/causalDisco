@@ -90,7 +90,7 @@ reference:
       - nodes
       - deparse_knowledge
       - unfreeze
-      - +.knowledg
+      - +.knowledge
       - knowledge.knowledgeable_caugi
 
   - title: "Evaluation & Confusion Metrics"
