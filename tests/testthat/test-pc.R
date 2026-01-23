@@ -501,17 +501,16 @@ test_that("pc disco learns same structure with all engines", {
   edges_bnlearn <- pc_result_bnlearn$caugi@edges
 
   # Function to normalize undirected edges for comparison (so a --- b and b --- a are the same, and sorted)
-  normalize_edges <- function(dt) {
-    dt_norm <- data.table::as.data.table(dt)
-    is_undirected <- dt_norm$edge == "---"
-    dt_norm[
-      is_undirected,
-      `:=`(
-        from = pmin(from, to),
-        to = pmax(from, to)
-      )
-    ]
-    dt_norm[order(from, edge, to)]
+  normalize_edges <- function(df) {
+    i <- df$edge == "---"
+
+    from_orig <- df$from
+    to_orig <- df$to
+
+    df$from[i] <- pmin(from_orig[i], to_orig[i])
+    df$to[i] <- pmax(from_orig[i], to_orig[i])
+
+    df[order(df$from, df$edge, df$to), ]
   }
 
   edges_pcalg_norm <- normalize_edges(edges_pcalg)
