@@ -178,33 +178,43 @@ caugi::register_caugi_edge(
 )
 ```
 
-- Don’t clash namespaces with caug. We currently share `nodes()` and
+- Don’t clash namespaces with caugi. We currently share `nodes()` and
   `edges()`. Make PR in caugi that makes their `nodes()` and `edges()`
-  it a S3/S7 class? Opened a PR in caugi to do this.
+  it a S3/S7 class? Merged in caugi. But if we want to submit to CRAN
+  before they do we can’t use it for now…
 
 A rough WIP is here, which colors a rectangle around A and B:
 
 ``` r
-# Make sure causalDisco is not loaded to avoid namespace conflicts with caugi
-if ("package:causalDisco" %in% search()) {
-  detach("package:causalDisco", unload = TRUE, character.only = TRUE)
-}
-
-library(caugi) # Needs recent version from GitHub
+library(caugi)
+#> 
+#> Attaching package: 'caugi'
+#> The following objects are masked from 'package:causalDisco':
+#> 
+#>     edges, nodes
 library(ggplot2)
 library(ggplotify)
-library(grid)
 
 cg <- caugi(A %-->% B, C, D)
 layout <- caugi_layout(cg)
 print(layout)
+#>   name   x   y
+#> 1    A 0.0 0.0
+#> 2    B 0.0 1.0
+#> 3    C 0.1 0.5
+#> 4    D 0.2 0.5
 layout$x <- c(0.5, 0.5, 0, 1)
 layout$y <- c(0, 1, 0.5, 0.5)
 print(layout)
+#>   name   x   y
+#> 1    A 0.5 0.0
+#> 2    B 0.5 1.0
+#> 3    C 0.0 0.5
+#> 4    D 1.0 0.5
 plot_cg <- plot(cg, layout = layout)
 
 # Wrap the grid plot as ggplot
-gg <- as.ggplot(~grid.draw(plot_cg@grob))
+gg <- as.ggplot(plot_cg@grob)
 
 # Add rectangle
 gg +
@@ -219,33 +229,30 @@ gg +
   )
 ```
 
-![](man/figures/caugi-modified-plot.png)
+<img src="man/figures/README-plot wip-1.png" alt="" width="100%" />
 
-- Implement a working `make_tikz` for these plots. See tikzDevice
-  package, which can do it automatically from R plots:
+- Implement a working `make_tikz` for these plots. Something like this
+  (coordinates are from `caugi::caugi_layout_sugiyama(cg)` scaled by
+  10)? Should be easy to make a function that generates code like this,
+  and we can then bend curves.
 
-``` r
-# Make sure causalDisco is not loaded to avoid namespace conflicts with caugi
-if ("package:causalDisco" %in% search()) {
-  detach("package:causalDisco", unload = TRUE, character.only = TRUE)
-}
-library(caugi)
-library(tikzDevice)
-cg <- caugi(A %-->% B + C)
-tikz("cg_plot.tex", width = 6, height = 4)
-plot(
-  cg,
-  node_style = list(
-    by_node = list(
-      A = list(fill = "lightblue", col = "darkblue", lwd = 2),
-      B = list(fill = "red")
-    )
-  )
-)
-dev.off()
+``` tex
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\begin{document}
+\tikzset{arrows={[scale=2]}}
+\begin{tikzpicture}
+% Nodes
+\node[draw, circle, fill=blue] (A) at (5,0) {A};
+\node[draw, circle, fill=red] (B) at (10,10) {B};
+\node[draw, circle, fill=gray] (C) at (0,10) {C};
+\path (A) edge[-Latex] (B) 
+      (A) edge[-Latex] (C);
+
+\end{tikzpicture}
+\end{document}
 ```
-
-If we want any changes we can modify the tikz code after generation.
 
 - Make required work for our algorithms. It breaks when it internally
   calls `tpdag`, so look into that…
@@ -326,17 +333,16 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   
   tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges(output)
+  edges(output$caugi)
 }
-#> # A tibble: 6 × 3
-#>   from      edge  to       
-#>   <chr>     <chr> <chr>    
-#> 1 child_x2  o-o   child_x1 
-#> 2 child_x2  o->   oldage_x5
-#> 3 child_x2  o-o   youth_x4 
-#> 4 oldage_x5 -->   oldage_x6
-#> 5 youth_x3  o->   oldage_x5
-#> 6 youth_x4  -->   oldage_x6
+#>         from   edge        to
+#>       <char> <char>    <char>
+#> 1:  child_x2    o-o  child_x1
+#> 2:  child_x2    o-> oldage_x5
+#> 3:  child_x2    o-o  youth_x4
+#> 4: oldage_x5    --> oldage_x6
+#> 5:  youth_x3    o-> oldage_x5
+#> 6:  youth_x4    --> oldage_x6
 ```
 
 Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
