@@ -30,6 +30,12 @@ discovery algorithms.
 ```{r load data}
 data(num_data)
 head(num_data)
+
+plot_layout <- data.frame(
+  name = c("Z", "X3", "X1", "X2", "Y"),
+  x = c(0.00, 0.50, 0.00, 0.50, 0.25),
+  y = c(0.0, 0.0, 0.5, 0.5, 1.0)
+)
 ```
 
 We can use several algorithms from the causalDisco package to discover the causal structure from this data. Here is
@@ -39,17 +45,17 @@ an example using the Peter-Clark (PC) algorithm from Tetrad with the Kernel Cond
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   pc_tetrad <- pc(engine = "tetrad", test = "kci", alpha = 0.05)
   pc_result_tetrad <- disco(num_data, method = pc_tetrad)
-  plot(pc_result_tetrad, main = "PC KCI (Tetrad)")
+  plot(pc_result_tetrad, layout = plot_layout, main = "PC KCI (Tetrad)")
 }
 ```
-![](PC-KCI-TETRAD.png)
+![](kci-tetrad-plot.png)
 
 or the PC algorithm from bnlearn with Fisher's Z test:
 
 ```{r pc algorithm fisher z}
 pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
 pc_result_bnlearn <- disco(num_data, method = pc_bnlearn)
-plot(pc_result_bnlearn, main = "PC Fisher Z (bnlearn)")
+plot(pc_result_bnlearn, layout = plot_layout, main = "PC Fisher Z (bnlearn)")
 ```
 
 or the generalized score equivalence (GES) algorithm from pcalg with the SEM-BIC score:
@@ -57,7 +63,7 @@ or the generalized score equivalence (GES) algorithm from pcalg with the SEM-BIC
 ```{r ges algorithm sem-bic}
 ges_pcalg <- ges(engine = "pcalg", score = "sem_bic")
 ges_result <- disco(num_data, method = ges_pcalg)
-plot(ges_result, main = "GES SEM-BIC (pcalg)")
+plot(ges_result, layout = plot_layout, main = "GES SEM-BIC (pcalg)")
 ```
 
 # Incorporating knowledge
@@ -108,7 +114,7 @@ Similarly, we can view the results using `print()`, `summary()` or `plot()`:
 ```{r view tpc results}
 print(tpc_result)
 summary(tpc_result)
-plot(tpc_result, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
+plot(tpc_result, layout = plot_layout, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
 ```
 
 # Next steps

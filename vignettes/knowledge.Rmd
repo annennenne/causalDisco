@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(causalDisco)
+library(caugi)
 ```
 
 This vignette demonstrates how to use the `knowledge` function to incorporate prior knowledge into causal discovery
@@ -86,10 +87,14 @@ kn_2 <- knowledge(
 )
 ```
 
-This knowledge object can also be visualized:
+This knowledge object can also be visualized (we manually adjust the layout for better appearance):
 
 ```{r plot required and forbidden knowledge with data}
-plot(kn_2)
+cg <- knowledge_to_caugi(kn_2)$caugi
+layout <- caugi_layout_sugiyama(cg)
+layout[6,2] <- layout[4,2]
+
+plot(kn_2, layout = layout)
 ```
 
 The plot then plots all variables in the dataset, with the required edges as blue solid edges and forbidden edges as
@@ -178,7 +183,7 @@ kn_mixed <- knowledge(
 )
 ```
 
-We can visualize the tiers using:
+We can visualize the tiers:
 
 ```{r plot tier knowledge}
 plot(kn)
@@ -216,7 +221,7 @@ kn_exo_1 <- knowledge(
 )
 ```
 
-Instead of `exogenous`, you can also use the shorthand functions `exo`.
+Instead of `exogenous`, you can also use the shorthand functions `exo()`.
 
 This knowledge object can be visualized:
 
@@ -231,7 +236,7 @@ kn_exo_2 <- knowledge(
   tpc_example,
   exogenous(starts_with("child"))
 )
-plot(kn_exo_2)
+plot(kn_exo_2, layout = "bipartite", orientation = "columns")
 ```
 
 # Combining different knowledge types

@@ -161,12 +161,14 @@ plot(disco_cd_tges)
 
 ## TODO
 
+- Make more complex plotting examples + tests for plot.
+
 - Register a custom edge type for caugi to represent forbidden edges
   differently than normal directed edges. Would simplify plotting logic
   and easier to extend later.
 
 ``` r
-# Doesn't work atm because they enforce glyph to be length 3
+# Doesn't work atm because CRAN version requires length 3 (will work in next release)
 caugi::register_caugi_edge(
   glyph = "!-->",
   tail_mark = "arrow",
@@ -176,8 +178,9 @@ caugi::register_caugi_edge(
 )
 ```
 
-- Don’t clash namespaces with caugi to avoid issues when both are
-  loaded.
+- Don’t clash namespaces with caug. We currently share `nodes()` and
+  `edges()`. Make PR in caugi that makes their `nodes()` and `edges()`
+  it a S3/S7 class? Opened a PR in caugi to do this.
 
 A rough WIP is here, which colors a rectangle around A and B:
 
