@@ -290,7 +290,14 @@ knowledge_to_caugi <- function(kn) {
 
   ## ---- build caugi(vars...) ----
   caugi_call <- as.call(
-    c(list(quote(caugi::caugi)), lapply(kn$vars$var, as.name))
+    c(
+      list(quote(caugi::caugi)),
+      lapply(kn$vars$var, as.name),
+      list(
+        class = "UNKNOWN",
+        simple = FALSE
+      )
+    )
   )
 
   ## ---- build edge calls ----

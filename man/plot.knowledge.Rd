@@ -33,7 +33,8 @@ Visualize a \code{knowledge} object as a directed graph using \code{\link[caugi:
 \details{
 \itemize{
 \item \strong{Required edges} are drawn in \strong{blue} by default (can be changed via \code{required_col}).
-\item \strong{Forbidden edges} are drawn in \strong{red} by default (can be changed via \code{forbidden_col}).
+\item \strong{Forbidden edges} are drawn in \strong{red} by default (can be changed via \code{forbidden_col}). If A to B and B to
+a is forbidden, a edge \verb{<->} is drawn.
 \item If tiered knowledge is provided, nodes are arranged according to their tiers.
 \item Users can override other edge styling (e.g., line width, arrow size) via the
 \code{edge_style} argument. To override the color of a specific edge, use

@@ -133,6 +133,8 @@ Anything missing?
 
 ## TODO
 
+- Make more complex plotting examples + tests for plot.
+
 - Register a custom edge type for caugi to represent forbidden edges differently than normal directed edges.
 Would simplify plotting logic and easier to extend later.
 

@@ -44,6 +44,33 @@ test_that("Plotting knowledge objects with forbidden both directions works", {
   expect_true(TRUE)
 })
 
+test_that("Plotting knowledge objects with caugi plot settings works", {
+  data(tpc_example)
+  kn_tiered <- knowledge(
+    tpc_example,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+  plot(
+    kn_tiered,
+    node_style = list(
+      fill = "lightblue",
+      col = "darkblue",
+      lwd = 2,
+      padding = 4,
+      size = 1.2
+    ),
+    edge_style = list(
+      lwd = 1.5,
+      arrow_size = 4
+    )
+  )
+  expect_true(TRUE)
+})
+
 test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   cg <- caugi::caugi(class = "PDAG")
 

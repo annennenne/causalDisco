@@ -117,7 +117,8 @@ plot.knowledgeable_caugi <- function(
 #' Visualize a `knowledge` object as a directed graph using [caugi::plot()].
 #'
 #' - **Required edges** are drawn in **blue** by default (can be changed via `required_col`).
-#' - **Forbidden edges** are drawn in **red** by default (can be changed via `forbidden_col`).
+#' - **Forbidden edges** are drawn in **red** by default (can be changed via `forbidden_col`). If A to B and B to
+#' a is forbidden, a edge `<->` is drawn.
 #' - If tiered knowledge is provided, nodes are arranged according to their tiers.
 #' - Users can override other edge styling (e.g., line width, arrow size) via the
 #'   `edge_style` argument. To override the color of a specific edge, use
@@ -197,40 +198,7 @@ plot.knowledge <- function(
   cg <- info_object$caugi
   tiers <- info_object$tiers
 
-  # --- Merge forbidden edges in both directions into a single bidirectional edge ---
-  forbidden_edges <- subset(x$edges, status == "forbidden")
-
-  if (nrow(forbidden_edges) > 1) {
-    # Create canonical keys for unordered pairs
-    keys <- apply(forbidden_edges[, c("from", "to")], 1, function(r) {
-      paste(sort(r), collapse = "|") # sort ensures A|B == B|A
-    })
-
-    # Only keep pairs that appear twice (both directions exist)
-    tab <- table(keys)
-    bidir_keys <- names(tab[tab == 2])
-
-    bidir_forbidden <- list()
-
-    for (key in bidir_keys) {
-      nodes <- strsplit(key, "\\|")[[1]]
-      a <- nodes[1]
-      b <- nodes[2]
-
-      # Remove both one-way edges safely
-      cg <- caugi::remove_edges(cg, from = a, to = b)
-      cg <- caugi::remove_edges(cg, from = b, to = a)
-
-      # Add a single bidirectional edge
-      cg@.state$class <- "UNKNOWN"
-      cg <- caugi::add_edges(cg, from = a, edge = "<->", to = b)
-
-      # Record merged forbidden edge for styling
-      bidir_forbidden[[a]] <- c(bidir_forbidden[[a]], b)
-      bidir_forbidden[[b]] <- c(bidir_forbidden[[b]], a)
-    }
-  }
-
+  # TODO: When caugi supports curved edges, modify this to use curved edges (sometimes)...
   # --- Build automatic edge styles for required/forbidden edges ---
   auto_edge_styles <- list(by_edge = list())
   if (!is.null(x$edges) && nrow(x$edges) > 0) {
