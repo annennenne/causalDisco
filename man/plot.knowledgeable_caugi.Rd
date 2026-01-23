@@ -4,13 +4,10 @@
 \alias{plot.knowledgeable_caugi}
 \title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object}
 \usage{
-\method{plot}{knowledgeable_caugi}(x, orientation = c("columns", "rows"), required_col = "blue", ...)
+\method{plot}{knowledgeable_caugi}(x, required_col = "blue", ...)
 }
 \arguments{
 \item{x}{A \code{knowledgeable_caugi} object containing both the causal graph and the associated knowledge.}
-
-\item{orientation}{Character(1). Orientation of the tiers in the plot.
-Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
 
 \item{required_col}{Character(1). Color for edges marked as "required". Default \code{"blue"}.}
 
@@ -22,7 +19,7 @@ Invisibly returns the underlying \code{caugi} object. The main effect is the plo
 \description{
 Visualize a causal graph stored within a \code{knowledgeable_caugi} object. This function
 extends \code{\link[=plot.knowledge]{plot.knowledge()}} by combining the causal graph from a \code{caugi} object with
-background knowledge, highlighting required edges.
+background knowledge.
 }
 \details{
 \itemize{

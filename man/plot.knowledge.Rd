@@ -4,19 +4,10 @@
 \alias{plot.knowledge}
 \title{Plot a Knowledge Object}
 \usage{
-\method{plot}{knowledge}(
-  x,
-  orientation = c("columns", "rows"),
-  required_col = "blue",
-  forbidden_col = "red",
-  ...
-)
+\method{plot}{knowledge}(x, required_col = "blue", forbidden_col = "red", ...)
 }
 \arguments{
 \item{x}{A \code{knowledge} object, created using \code{\link[=knowledge]{knowledge()}}.}
-
-\item{orientation}{Character(1). Orientation of the tiers in the plot.
-Either \code{"columns"} (default) or \code{"rows"}. Only used if tiered knowledge is provided.}
 
 \item{required_col}{Character(1). Color for edges marked as "required". Default \code{"blue"}.}
 

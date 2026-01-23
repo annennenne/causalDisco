@@ -2,7 +2,7 @@
 #'
 #' Visualize a causal graph stored within a `knowledgeable_caugi` object. This function
 #' extends [plot.knowledge()] by combining the causal graph from a `caugi` object with
-#' background knowledge, highlighting required edges.
+#' background knowledge.
 #'
 #' - **Required edges** are drawn in **blue** by default (`required_col`), can be changed.
 #' - **Forbidden edges** are not drawn by.
@@ -78,11 +78,9 @@
 #' @export
 plot.knowledgeable_caugi <- function(
   x,
-  orientation = c("columns", "rows"),
   required_col = "blue",
   ...
 ) {
-  orientation <- match.arg(orientation)
   info_object <- combine_knowledge_and_caugi(x$caugi, x$knowledge)
   cg <- info_object$caugi
   tiers <- info_object$tiers
@@ -109,7 +107,7 @@ plot.knowledgeable_caugi <- function(
     }
   }
 
-  plot_caugi_common(cg, tiers, orientation, auto_edge_styles, ...)
+  plot_caugi_common(cg, tiers, auto_edge_styles, ...)
 }
 
 #' Plot a Knowledge Object
@@ -125,8 +123,6 @@ plot.knowledgeable_caugi <- function(
 #'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
 #' @param x A `knowledge` object, created using [knowledge()].
-#' @param orientation Character(1). Orientation of the tiers in the plot.
-#'   Either `"columns"` (default) or `"rows"`. Only used if tiered knowledge is provided.
 #' @param required_col Character(1). Color for edges marked as "required". Default `"blue"`.
 #' @param forbidden_col Character(1). Color for edges marked as "forbidden". Default `"red"`.
 #' @param ... Additional arguments passed to [caugi::plot()], e.g., `node_style`, `edge_style`.
@@ -188,12 +184,10 @@ plot.knowledgeable_caugi <- function(
 #' @export
 plot.knowledge <- function(
   x,
-  orientation = c("columns", "rows"),
   required_col = "blue",
   forbidden_col = "red",
   ...
 ) {
-  orientation <- match.arg(orientation)
   info_object <- knowledge_to_caugi(x)
   cg <- info_object$caugi
   tiers <- info_object$tiers
@@ -222,15 +216,13 @@ plot.knowledge <- function(
     }
   }
 
-  plot_caugi_common(cg, tiers, orientation, auto_edge_styles, ...)
+  plot_caugi_common(cg, tiers, auto_edge_styles, ...)
 }
 
 
 #' Common Plotting Function for Causal Graphs with Tiers and Edge Styles
 #' @param cg A caugi object representing the causal graph to be plotted.
 #' @param tiers A list of character vectors representing the tiers for tiered plotting.
-#' @param orientation Character(1). Orientation of the tiers in the plot.
-#'  Either "columns" or "rows".
 #' @param auto_edge_styles A list specifying automatic edge styles to be applied.
 #' This is typically generated based on required/forbidden edges in knowledge.
 #' @param ... Additional arguments passed to [caugi::plot()], such as `node_style` or `edge_style`.
@@ -239,11 +231,9 @@ plot.knowledge <- function(
 plot_caugi_common <- function(
   cg,
   tiers,
-  orientation = c("columns", "rows"),
   auto_edge_styles = list(by_edge = list()),
   ...
 ) {
-  orientation <- match.arg(orientation)
   dots <- list(...)
 
   # Merge user-supplied edge_style
@@ -284,7 +274,6 @@ plot_caugi_common <- function(
   plot_args <- list(cg, edge_style = merged_edge_styles)
   if (has_tiers && !any_na_tiers) {
     plot_args$tiers <- tiers
-    plot_args$orientation <- orientation
   } else if (has_tiers && any_na_tiers) {
     warning(
       "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers. Defaulting to untiered plotting.",
