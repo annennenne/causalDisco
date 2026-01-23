@@ -590,7 +590,8 @@ remove_tiers <- function(kn, ...) {
 #' @family knowledge functions
 #' @concept knowledge
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 forbid_tier_violations <- function(kn) {
   .check_if_pkgs_are_installed(
     pkgs = c(
@@ -637,6 +638,45 @@ forbid_tier_violations <- function(kn) {
       dplyr::bind_rows(kn$edges, new_edges)
     )
   }
+  kn
+}
+
+#' @title Convert tiered knowledge to forbidden knowledge
+#' @description Converts tier assignments into forbidden edges, and drops tiers in the output.
+#' @param kn A `knowledge` object.
+#' @returns A `knowledge` object with forbidden edges added, tiers removed.
+#'
+#' @examples
+#' kn <- knowledge(
+#'  tpc_example,
+#'  tier(
+#'   child ~ starts_with("child"),
+#'   youth ~ starts_with("youth"),
+#'   old ~ starts_with("old")
+#'  )
+#' )
+#' kn_converted <- convert_tiers_to_forbidden(kn)
+#' print(kn_converted)
+#' plot(kn_converted)
+#'
+#' @family knowledge functions
+#' @concept knowledge
+#' @export
+convert_tiers_to_forbidden <- function(kn) {
+  kn <- forbid_tier_violations(kn)
+
+  # drop tiers in the returned object
+  kn$tiers <- tibble::tibble(label = character(0))
+  kn$vars <- kn$vars |> dplyr::mutate(tier = NA_character_)
+
+  # set tier info in edges to NA
+  if ("tier_from" %in% names(kn$edges)) {
+    kn$edges$tier_from <- NA_character_
+  }
+  if ("tier_to" %in% names(kn$edges)) {
+    kn$edges$tier_to <- NA_character_
+  }
+
   kn
 }
 

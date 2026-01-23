@@ -2,10 +2,6 @@
 
 Allow tiered knowledge to be plotted as forbidden knowledge instead, see function `forbid_tier_violations()`
 
-Allow time axis on plots (is this needed to be implemented in caugi?)
-
-Plot function to knowledgeable_caugi shouldn't plot knowledge (maybe make a show_knowledge = FALSE) argument as default?
-
 # Caugi plot
 
 - Square nodes

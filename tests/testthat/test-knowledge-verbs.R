@@ -509,6 +509,29 @@ test_that("function errors on non-knowledge objects", {
   expect_error(forbid_tier_violations(list()), "knowledge")
 })
 
+test_that("convert tiers to forbidden works", {
+  kn <- knowledge(
+    tier(
+      1 ~ V1 + V2,
+      2 ~ V3,
+      3 ~ V4 + V5
+    )
+  )
+
+  kn_converted <- convert_tiers_to_forbidden(kn)
+  expect_equal(kn_converted$vars$tier, rep((NA_character_), 5))
+  expect_equal(
+    dplyr::arrange(kn_converted$edges, from, to),
+    tibble::tibble(
+      status = rep("forbidden", 8),
+      from = c("V3", "V3", "V4", "V4", "V4", "V5", "V5", "V5"),
+      to = c("V1", "V2", "V1", "V2", "V3", "V1", "V2", "V3"),
+      tier_from = rep(NA_character_, 8),
+      tier_to = rep(NA_character_, 8)
+    )
+  )
+})
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Add to tier verb
 # ──────────────────────────────────────────────────────────────────────────────

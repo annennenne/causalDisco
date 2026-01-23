@@ -191,6 +191,14 @@ plot(kn)
 
 The plot then shows the tiers as layers, with the earliest tiers to the left and latest to the right.
 
+We can convert the meaning of the tiered knowledge into explicit forbidden edges using `convert_tiers_to_forbidden()`:
+
+```{r convert tiers to forbidden}
+kn_converted <- convert_tiers_to_forbidden(kn)
+print(kn_converted)
+plot(kn_converted)
+```
+
 Tidyselect helpers such as `starts_with` can also be used to define tiers in a concise way, just as with required and forbidden edges. Different tidyselect helpers can be freely combined within a tier definition using `+`. For example,
 the following tiered knowledge object defines two tiers, "young" and "old", by combining tidyselect helpers:
 
