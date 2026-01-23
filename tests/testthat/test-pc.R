@@ -502,7 +502,7 @@ test_that("pc disco learns same structure with all engines", {
 
   # Function to normalize undirected edges for comparison (so a --- b and b --- a are the same, and sorted)
   normalize_edges <- function(dt) {
-    dt_norm <- data.table::copy(dt)
+    dt_norm <- data.table::as.data.table(dt)
     is_undirected <- dt_norm$edge == "---"
     dt_norm[
       is_undirected,
