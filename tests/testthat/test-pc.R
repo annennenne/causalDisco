@@ -500,8 +500,6 @@ test_that("pc disco learns same structure with all engines", {
   edges_pcalg <- pc_result_pcalg$caugi@edges
   edges_bnlearn <- pc_result_bnlearn$caugi@edges
 
-  skip("bnlearn PC does not yet learn the structure correctly.") # Fixed in PR 149 in caugi
-
   # Function to normalize undirected edges for comparison (so a --- b and b --- a are the same, and sorted)
   normalize_edges <- function(dt) {
     dt_norm <- data.table::copy(dt)
