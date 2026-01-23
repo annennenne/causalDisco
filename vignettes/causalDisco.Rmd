@@ -114,7 +114,7 @@ Similarly, we can view the results using `print()`, `summary()` or `plot()`:
 ```{r view tpc results}
 print(tpc_result)
 summary(tpc_result)
-plot(tpc_result, layout = plot_layout, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
+plot(tpc_result, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
 ```
 
 # Next steps
