@@ -78,18 +78,20 @@ reference:
       - reorder_tiers
       - seq_tiers
       - reposition_tier
+      - convert_tiers_to_forbidden
       - set_knowledge
       - as_tetrad_knowledge
       - as_bnlearn_knowledge
       - as_pcalg_constraints
+      - knowledge_to_caugi
       - knowledgeable_caugi
       - new_knowledgeable_caugi
       - edges
       - nodes
-      - knowledge.knowledgeable_caugi
       - deparse_knowledge
       - unfreeze
-      - +.knowledge
+      - +.knowledg
+      - knowledge.knowledgeable_caugi
 
   - title: "Evaluation & Confusion Metrics"
     contents:
