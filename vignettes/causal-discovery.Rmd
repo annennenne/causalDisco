@@ -27,12 +27,13 @@ Suppose we have this DAG:
 
 ```{r dag}
 cg <- caugi(
-  Z %-->% X1,
-  X3 %-->% X2,
-  X1 %-->% Y,
-  X2 %-->% Y
+    Z %-->% X1,
+    X3 %-->% X2,
+    X1 %-->% Y,
+    X2 %-->% Y
 )
-plot(cg)
+layout <- caugi_layout_sugiyama(cg)
+plot(cg, layout = layout, main = "True DAG")
 ```
 
 We can create data from a linear Gaussian model corresponding to the above DAG using `generate_dag_data()`
@@ -64,7 +65,7 @@ pc_result_pcalg <- disco(data_linear, method = pc_pcalg)
 We can visualize the results using the `plot()` function:
 
 ```{r plot pc results simple}
-plot(pc_result_pcalg, main = "PC (pcalg)")
+plot(pc_result_pcalg, layout = layout, main = "PC (pcalg)")
 ```
 
 The first notable feature of this plot is that some edges are directed, while others are undirected.
@@ -91,7 +92,7 @@ data_linear_reverse <- generate_dag_data(
 )
 
 pc_result_reverse <- disco(data_linear_reverse, method = pc_pcalg)
-plot(pc_result_reverse, main = "PC (pcalg) reversed")
+plot(pc_result_reverse, layout = layout, main = "PC (pcalg) reversed")
 ```
 
 We learn the same causal structure as before, demonstrating that the direction of influence between `X2` and `X3`
@@ -111,7 +112,7 @@ data_nonlinear <- generate_dag_data(
   X3 = runif(n, min = -2, max = 2),
   X1 = Z^2 + rnorm(n, sd = 0.5),
   X2 = sin(0.7 * X3) + rnorm(n, sd = 1),
-  Y = 0.6 * X1 + 0.4 * exp(X2) + rnorm(n, sd = 1.5),
+  Y = 0.6 * X1^2 + 0.4 * exp(X2) + rnorm(n, sd = 1.5),
   seed = 1405
 )
 attr(data_nonlinear, "generating_model")
@@ -123,27 +124,13 @@ relationships in the data.
 ```{r pc algorithm non-linear}
 pc_pcalg_nonlinear <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 pc_result_nonlinear <- disco(data_nonlinear, method = pc_pcalg_nonlinear)
-plot(pc_result_nonlinear, main = "PC (pcalg) non-linear")
+plot(pc_result_nonlinear, layout = layout, main = "PC (pcalg) non-linear")
 ```
 
 As expected, the PC algorithm with Fisher's Z test does not recover the correct causal structure in this non-linear
 setting at all. Note, that increasing the sample size does not help.
 
-To handle non-linear relationships, we can for instance use the Kernel Conditional Independence Test (KCI) test
-in Tetrad.
-
-```{r pc algorithm non-linear rcit, eval = FALSE}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  pc_tetrad_nonlinear <- pc(engine = "tetrad", test = "kci")
-  pc_result_nonlinear_kci <- disco(data_nonlinear, method = pc_tetrad_nonlinear)
-  plot(pc_result_nonlinear_kci, main = "PC (Tetrad kci) non-linear")
-}
-```
-
-![](tetrad-kci-nonlinear.png)
-
-The result of the PC algorithm using the KCI test look like what we'd expect to see. Note, that this test
-is much more computationally demanding than using Fisher's Z test.
+TODO: Find something that finds correct CPDAG in nonlinear-case?
 
 # Incorporating prior knowledge
 
@@ -167,7 +154,7 @@ We can then incorporate this knowledge into the PC algorithm as follows:
 ```{r pc algorithm with knowledge}
 pc_pcalg <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
 pc_result_with_knowledge <- disco(data_linear, method = pc_pcalg, knowledge = kn)
-plot(pc_result_with_knowledge$caugi)
+plot(pc_result_with_knowledge, layout = layout, main = "PC (pcalg) with knowledge")
 ```
 
 It now correctly recovers the true DAG structure with this extra knowledge.
