@@ -52,6 +52,7 @@ Imports:
     caugi (>= 1.0.0),
     checkmate,
     dplyr,
+    grDevices,
     igraph,
     methods,
     pcalg,
@@ -123,6 +124,7 @@ Collate:
     'knowledge-verbs.R'
     'knowledge.R'
     'knowledgeable-caugi.R'
+    'make-tikz.R'
     'maketikz.R'
     'metrics.R'
     'misc.R'

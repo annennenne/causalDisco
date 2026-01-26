@@ -73,7 +73,7 @@
 #' }
 #'
 #' @export
-make_tikz <- function(
+make_tikz_old <- function(
   model,
   x_jit = 2,
   y_jit = 2,
