@@ -272,7 +272,7 @@ as_bnlearn_knowledge <- function(kn) {
 #'     youth ~ starts_with("youth"),
 #'     old ~ starts_with("old")
 #'   ),
-#'   child_x1 %-->% youth_x3,
+#'   child_x1 %-->% youth_x3
 #' )
 #' cg <- knowledge_to_caugi(kn)
 #'

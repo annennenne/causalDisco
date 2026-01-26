@@ -52,7 +52,7 @@ tplot <- function(
     "---"
   )
 
-  tcode <- make_tikz(x, raw_out = TRUE, bend_edges = bend_edges, ...)
+  tcode <- make_tikz_old(x, raw_out = TRUE, bend_edges = bend_edges, ...)
   file <- paste(filename, ".rmd", sep = "")
 
   file_conn <- file(file, "w")
