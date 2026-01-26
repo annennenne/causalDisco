@@ -76,7 +76,7 @@ cat(tikz_code)
 tikz_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
 cat(tikz_snippet)
 
-# With bent arrows
+# With bent edges
 tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
 cat(tikz_bent)
 
