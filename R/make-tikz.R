@@ -11,11 +11,11 @@
 #' @param scale Numeric scalar. Scaling factor for node coordinates. Default is `10`.
 #' @param full_doc Logical. If `TRUE` (default), generates a full standalone
 #'   LaTeX document. If `FALSE`, returns only the `tikzpicture` environment.
-#' @param bend_arrows Logical. If `TRUE`, edges are drawn with bent arrows to
+#' @param bend_edges Logical. If `TRUE`, edges are drawn with bent arrows to
 #'   reduce overlap. Default is `FALSE`. Arrows bend left or right depending
 #'   on the relative positions of nodes.
 #' @param bend_angle Numeric scalar. Angle in degrees for bending arrows when
-#'   `bend_arrows = TRUE`. Default is `25`.
+#'   `bend_edges = TRUE`. Default is `25`.
 #'
 #' @return A character string containing LaTeX TikZ code. Depending on
 #'   `full_doc`, this is either:
@@ -54,7 +54,7 @@
 #' cat(tikz_snippet)
 #'
 #' # With bent arrows
-#' tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_arrows = TRUE)
+#' tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
 #' cat(tikz_bent)
 #'
 #' @export
@@ -62,7 +62,7 @@ make_tikz <- function(
   caugi_plot_obj,
   scale = 10,
   full_doc = TRUE,
-  bend_arrows = FALSE,
+  bend_edges = FALSE,
   bend_angle = 25
 ) {
   stopifnot(inherits(caugi_plot_obj, "caugi::caugi_plot"))
@@ -173,7 +173,7 @@ make_tikz <- function(
     edge_grob_children,
     nodes,
     scale,
-    bend_arrows,
+    bend_edges,
     bend_angle,
     global_edge_color
   ) {
@@ -230,7 +230,7 @@ make_tikz <- function(
       }
 
       # ---- Bend arrows ----
-      if (bend_arrows) {
+      if (bend_edges) {
         from_x <- nodes[[which(sapply(nodes, function(n) {
           n$label == from_node
         }))]]$x
@@ -371,7 +371,7 @@ make_tikz <- function(
     edge_grob_children,
     nodes,
     scale,
-    bend_arrows,
+    bend_edges,
     bend_angle,
     global_edge_color
   )

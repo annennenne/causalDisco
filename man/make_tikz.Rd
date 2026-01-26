@@ -8,7 +8,7 @@ make_tikz(
   caugi_plot_obj,
   scale = 10,
   full_doc = TRUE,
-  bend_arrows = FALSE,
+  bend_edges = FALSE,
   bend_angle = 25
 )
 }
@@ -20,12 +20,12 @@ make_tikz(
 \item{full_doc}{Logical. If \code{TRUE} (default), generates a full standalone
 LaTeX document. If \code{FALSE}, returns only the \code{tikzpicture} environment.}
 
-\item{bend_arrows}{Logical. If \code{TRUE}, edges are drawn with bent arrows to
+\item{bend_edges}{Logical. If \code{TRUE}, edges are drawn with bent arrows to
 reduce overlap. Default is \code{FALSE}. Arrows bend left or right depending
 on the relative positions of nodes.}
 
 \item{bend_angle}{Numeric scalar. Angle in degrees for bending arrows when
-\code{bend_arrows = TRUE}. Default is \code{25}.}
+\code{bend_edges = TRUE}. Default is \code{25}.}
 }
 \value{
 A character string containing LaTeX TikZ code. Depending on
@@ -77,7 +77,7 @@ tikz_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
 cat(tikz_snippet)
 
 # With bent arrows
-tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_arrows = TRUE)
+tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
 cat(tikz_bent)
 
 }
