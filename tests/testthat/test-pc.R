@@ -510,7 +510,9 @@ test_that("pc disco learns same structure with all engines", {
     df$from[i] <- pmin(from_orig[i], to_orig[i])
     df$to[i] <- pmax(from_orig[i], to_orig[i])
 
-    df[order(df$from, df$edge, df$to), ]
+    df <- df[order(df$from, df$edge, df$to), ]
+    rownames(df) <- NULL
+    df
   }
 
   edges_pcalg_norm <- normalize_edges(edges_pcalg)
@@ -522,7 +524,6 @@ test_that("pc disco learns same structure with all engines", {
     info = "pcalg and bnlearn PC did not learn the same structure"
   )
 
-  skip_if_no_tetrad()
   tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
   pc_result_tetrad <- disco(data_simple, method = tetrad_pc)
   edges_tetrad <- pc_result_tetrad$caugi@edges
