@@ -16,6 +16,6 @@ code <- deparse_knowledge(kn, df_name = "tpc_example")
 cat(code)
 
 # Explicitly add all forbidden edges implied by tiers
-kn <- forbid_tier_violations(kn)
+kn <- convert_tiers_to_forbidden(kn)
 code <- deparse_knowledge(kn, df_name = "tpc_example")
 cat(code)

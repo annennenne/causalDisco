@@ -11,7 +11,7 @@ kn <- knowledge(
 )
 
 # turn all tier violations to forbidden edges
-kn2 <- forbid_tier_violations(kn)
+kn2 <- convert_tiers_to_forbidden(kn)
 
 print(kn)
 print(kn2)
