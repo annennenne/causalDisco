@@ -58,7 +58,7 @@
 #'   test = cor_test,
 #'   output = "tpdag"
 #' )
-#' make_tikz(tpdag_example, clipboard = FALSE)
+#' make_tikz_old(tpdag_example, clipboard = FALSE)
 #'
 #' # Make tikz figure code from tamat, copy code to clipboard
 #' dag_example <- sim_dag(5)
@@ -69,7 +69,7 @@
 #' )
 #' output_tamat <- causalDisco:::tamat(dag_example, order = c("child", "adult"))
 #' \dontrun{
-#' make_tikz(output_tamat)
+#' make_tikz_old(output_tamat)
 #' }
 #'
 #' @export
