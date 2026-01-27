@@ -3,7 +3,7 @@
 \name{set_knowledge}
 \alias{set_knowledge}
 \alias{set_knowledge.disco_method}
-\title{Set background knowledge into a disco_method}
+\title{Set Background Knowledge to Disco Method}
 \usage{
 set_knowledge(method, knowledge)
 
@@ -15,5 +15,5 @@ set_knowledge(method, knowledge)
 \item{knowledge}{A knowledge object appropriate for the engine.}
 }
 \description{
-Set background knowledge into a disco_method
+Set Background Knowledge to Disco Method
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{forbid_edge}
 \alias{forbid_edge}
-\title{Add forbidden edges}
+\title{Add Forbidden Edges to Knowledge}
 \usage{
 forbid_edge(kn, ...)
 }

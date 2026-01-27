@@ -2,7 +2,7 @@
 % Please edit documentation in R/metrics.R
 \name{npv}
 \alias{npv}
-\title{Negative predictive value}
+\title{Negative Predictive Value}
 \usage{
 npv(confusion)
 }

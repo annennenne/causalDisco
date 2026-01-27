@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{get_tiers}
 \alias{get_tiers}
-\title{Get tiers}
+\title{Get Tiers from Knowledge}
 \usage{
 get_tiers(kn)
 }

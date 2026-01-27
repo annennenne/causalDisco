@@ -3,7 +3,7 @@
 \docType{data}
 \name{tpc_example}
 \alias{tpc_example}
-\title{Simulated data example}
+\title{Simulated Life-Course Data}
 \format{
 A data.frame with 200 rows and 6 variables.
 \describe{

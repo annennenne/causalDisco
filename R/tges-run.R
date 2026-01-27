@@ -2,7 +2,7 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Restricted Markov Equivalence Class Estimation Using Temporal Greedy Equivalence Search
+#' Run the TGES Algorithm for Causal Discovery
 #'
 #' Perform causal discovery using the temporal greedy equivalence search algorithm.
 #'

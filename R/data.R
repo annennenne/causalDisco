@@ -1,4 +1,4 @@
-#' Simulated data example
+#' Simulated Life-Course Data
 #'
 #' A small simulated data example intended to showcase the TPC algorithm. Note that the variable name
 #' prefixes defines which period they are related to ("child", "youth" or "oldage").
@@ -22,7 +22,7 @@
 #'
 "tpc_example"
 
-#' Simulated numerical data example
+#' Simulated Numerical Data
 #'
 #' @format A data.frame with 1000 rows and 5 variables.
 #' \describe{
@@ -53,7 +53,7 @@
 #'
 "num_data"
 
-#' Simulated categorical data example
+#' Simulated Categorical Data
 #'
 #' A dataset created by discretizing the continuous `num_data` into 5 categorical levels per variable.
 #'
@@ -83,7 +83,7 @@
 #' @seealso [num_data]
 "cat_data"
 
-#' Simulated ordered categorical data example
+#' Simulated Ordered Categorical Data
 #'
 #' A dataset created by discretizing the continuous `num_data` into 5 ordered categorical levels per variable.
 #'
@@ -113,7 +113,7 @@
 #' @seealso [num_data]
 "cat_ord_data"
 
-#' Simulated mixed data example
+#' Simulated Mixed Data
 #'
 #' A dataset combining continuous and categorical variables. The first three variables are replaced
 #' with categorical versions from `cat_data`.
@@ -146,7 +146,7 @@
 #' @seealso [num_data], [cat_data]
 "mix_data"
 
-#' Simulated categorical data with MCAR (missing completely at random)
+#' Simulated Categorical Data with MCAR
 #'
 #' A dataset based on `cat_data` where some values are randomly removed to simulate MCAR.
 #'
@@ -179,7 +179,7 @@
 #' @seealso [cat_data]
 "cat_data_mcar"
 
-#' Simulated numerical data example with latent variable
+#' Simulated Numerical Data with Latent Variable
 #'
 #' A dataset similar to `num_data` but with the variable `Z` treated as a latent variable and thus omitted.
 #'

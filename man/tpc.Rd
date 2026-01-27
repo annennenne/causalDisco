@@ -2,7 +2,7 @@
 % Please edit documentation in R/tpc.R
 \name{tpc}
 \alias{tpc}
-\title{The Temporal Peter-Clark (PC) algorithm for causal discovery}
+\title{TPC Algorithm for Causal Discovery}
 \usage{
 tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }

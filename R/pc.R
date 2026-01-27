@@ -1,7 +1,7 @@
-#' @title The Peter-Clark (PC) Algorithm for Causal Discovery
+#' @title PC Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the PC algorithm for causal discovery using one of several engines.
+#' Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{

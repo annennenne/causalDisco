@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{convert_tiers_to_forbidden}
 \alias{convert_tiers_to_forbidden}
-\title{Convert tiered knowledge to forbidden knowledge}
+\title{Convert Tiered Knowledge to Forbidden Knowledge}
 \usage{
 convert_tiers_to_forbidden(kn)
 }

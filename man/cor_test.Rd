@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor-test.R
 \name{cor_test}
 \alias{cor_test}
-\title{Test for vanishing partial correlations}
+\title{Test for Vanishing Partial Correlations}
 \usage{
 cor_test(x, y, conditioning_set, suff_stat)
 }

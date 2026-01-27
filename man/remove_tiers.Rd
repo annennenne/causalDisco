@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{remove_tiers}
 \alias{remove_tiers}
-\title{Remove entire tiers from a knowledge object}
+\title{Remove Tiers from Knowledge}
 \usage{
 remove_tiers(kn, ...)
 }

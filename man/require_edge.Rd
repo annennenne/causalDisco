@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{require_edge}
 \alias{require_edge}
-\title{Add required edges}
+\title{Add Required Edges to Knowledge}
 \usage{
 require_edge(kn, ...)
 }

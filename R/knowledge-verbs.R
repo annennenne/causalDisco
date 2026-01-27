@@ -1,5 +1,5 @@
 # ────────────────────────────────── Add / Insert ─────────────────────────────────────
-#' @title Add variables to `knowledge` object
+#' @title Add Variables to Knowledge
 #'
 #' @description Adds variables to the `knowledge` object. If the object is
 #' frozen, an error is thrown if any of the variables are not present in the
@@ -45,7 +45,11 @@ add_vars <- function(kn, vars) {
   kn
 }
 
-#' @title Add (and position) a tier
+#' @title Add a Tier to Knowledge
+#'
+#' @description
+#' Adds a new tier to the `knowledge` object, either at the start, end,
+#' or before/after an existing tier.
 #'
 #' @param kn A knowledge object.
 #' @param tier Bare symbol / character (label) **or** numeric literal.
@@ -178,7 +182,7 @@ add_tier <- function(kn, tier, before = NULL, after = NULL) {
   kn
 }
 
-#' @title Add variables to an existing tier
+#' @title Add Variables to a Tier in Knowledge
 #'
 #' @param kn A `knowledge` object.
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
@@ -275,7 +279,7 @@ add_to_tier <- function(kn, ...) {
   kn
 }
 
-#' Add forbidden edges
+#' Add Forbidden Edges to Knowledge
 #'
 #' @description
 #' Forbid one or more directed edges.
@@ -313,7 +317,7 @@ forbid_edge <- function(kn, ...) {
   kn
 }
 
-#' Add required edges
+#' Add Required Edges to Knowledge
 #'
 #' @description
 #' Require one or more directed edges.
@@ -348,7 +352,7 @@ require_edge <- function(kn, ...) {
   kn
 }
 
-#' @title Add exogenous variables
+#' @title Add Exogenous Variables to Knowledge
 #'
 #' @description
 #' Adds variables that cannot have incoming edges (exogenous nodes).
@@ -376,7 +380,7 @@ add_exogenous <- function(kn, vars) {
 #' @export
 add_exo <- add_exogenous
 
-#' @title Unfreeze a `knowledge` object.
+#' @title Unfreeze a Knowledge Object.
 #'
 #' @description This allows you to add new variables to the `knowledge` object,
 #' even though it was frozen earlier by adding a data frame to the knowledge
@@ -399,7 +403,7 @@ unfreeze <- function(kn) {
 }
 
 # ────────────────────────────────── Inspect ───────────────────────────────────
-#' @title Get tiers
+#' @title Get Tiers from Knowledge
 #'
 #' @description
 #' Get tiers from a `knowledge` object.
@@ -420,7 +424,7 @@ get_tiers <- function(kn) {
 }
 
 # ───────────────────────────────── Remove / Delete ─────────────────────────────────────
-#' @title Remove variables (and their edges) from a knowledge object
+#' @title Remove Variables Along with Their Edges from Knowledge
 #'
 #' @description
 #' Drops the given variables from `kn$vars`, and automatically removes
@@ -473,7 +477,7 @@ remove_vars <- function(kn, ...) {
   kn
 }
 # ────────────────────────────────── Edge rules ───────────────────────────────
-#' @title Remove an edge from a knowledge object
+#' @title Remove an Edge from Knowledge
 #' @description
 #' Drop a single directed edge specified by `from` and `to`.
 #' Errors if the edge does not exist.
@@ -524,7 +528,7 @@ remove_edge <- function(kn, from, to) {
   kn
 }
 
-#' @title Remove entire tiers from a knowledge object
+#' @title Remove Tiers from Knowledge
 #'
 #' @description
 #' Drops tier definitions (and un‐tiers any vars assigned to them).
@@ -575,7 +579,7 @@ remove_tiers <- function(kn, ...) {
   kn
 }
 
-#' @title Forbid all tier violations
+#' @title Forbid Tier Violations in Knowledge
 #'
 #' @description
 #' Given a `knowledge` object with variables already assigned to tiers,
@@ -641,7 +645,7 @@ forbid_tier_violations <- function(kn) {
   kn
 }
 
-#' @title Convert tiered knowledge to forbidden knowledge
+#' @title Convert Tiered Knowledge to Forbidden Knowledge
 #' @description Converts tier assignments into forbidden edges, and drops tiers in the output.
 #' @param kn A `knowledge` object.
 #' @returns A `knowledge` object with forbidden edges added, tiers removed.

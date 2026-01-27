@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge.R
 \name{print.knowledge}
 \alias{print.knowledge}
-\title{Print a \code{knowledge} object}
+\title{Print a Knowledge Object}
 \usage{
 \method{print}{knowledge}(x, compact = FALSE, wide_vars = FALSE, ...)
 }
@@ -19,7 +19,7 @@
 Invisibly returns the \code{knowledge} object.
 }
 \description{
-Print a \code{knowledge} object
+Print a Knowledge Object
 }
 \examples{
 kn <- knowledge(

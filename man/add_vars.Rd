@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{add_vars}
 \alias{add_vars}
-\title{Add variables to \code{knowledge} object}
+\title{Add Variables to Knowledge}
 \usage{
 add_vars(kn, vars)
 }

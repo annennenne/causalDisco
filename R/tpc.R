@@ -1,4 +1,4 @@
-#' @title The Temporal Peter-Clark (PC) algorithm for causal discovery
+#' @title TPC Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the temporal PC algorithm for causal discovery using causalDisco.

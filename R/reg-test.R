@@ -1,4 +1,4 @@
-#' Regression-based information loss test
+#' Regression-based Information Loss Test
 #'
 #' We test whether \code{x} and \code{y} are associated, given
 #' \code{conditioning_set} using a generalized linear model.

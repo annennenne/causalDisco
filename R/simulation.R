@@ -1,4 +1,4 @@
-#' Simulate data from a DAG with linear Gaussian relationships
+#' Generate Synthetic Data from a Linear Gaussian DAG
 #'
 #' Generates synthetic data from a directed acyclic graph (DAG) specified as a
 #' `caugi` graph object. Each node is modeled as a linear combination of its

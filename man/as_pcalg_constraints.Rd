@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-conversions.R
 \name{as_pcalg_constraints}
 \alias{as_pcalg_constraints}
-\title{Convert background knowledge to pcalg constraint matrices}
+\title{Convert Knowledge to pcalg Knowledge}
 \usage{
 as_pcalg_constraints(kn, labels = kn$vars$var, directed_as_undirected = FALSE)
 }

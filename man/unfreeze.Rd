@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{unfreeze}
 \alias{unfreeze}
-\title{Unfreeze a \code{knowledge} object.}
+\title{Unfreeze a Knowledge Object.}
 \usage{
 unfreeze(kn)
 }

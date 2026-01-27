@@ -33,7 +33,7 @@ disco_method <- function(builder, method_class) {
 }
 
 
-#' Set background knowledge into a disco_method
+#' Set Background Knowledge to Disco Method
 #'
 #' @param method A \code{"disco_method"} function.
 #' @param knowledge A knowledge object appropriate for the engine.

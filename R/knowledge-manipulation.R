@@ -1,5 +1,5 @@
 # ────────────────────────────── Manipulation ──────────────────────────────────
-#' @title Merge two `knowledge` objects
+#' @title Merge Knowledge Objects
 #' @param kn1 A `knowledge` object.
 #' @param kn2 Another `knowledge` object.
 #'
@@ -94,7 +94,7 @@
   out
 }
 
-#' @title Reorder all tiers at once
+#' @title Reorder Tiers in Knowledge
 #'
 #' @param kn A `knowledge` object.
 #' @param order A vector that lists *every* tier exactly once, either by
@@ -194,7 +194,7 @@ reorder_tiers <- function(kn, order, by_index = FALSE) {
   kn
 }
 
-#' @title Move one tier before / after another
+#' @title Move a Tier Relative to Another in Knowledge
 #'
 #' @inheritParams reorder_tiers
 #' @param tier The tier to move (label or index, honouring `by_index`).

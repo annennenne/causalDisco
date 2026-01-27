@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{knowledgeable_caugi}
 \alias{knowledgeable_caugi}
-\title{A \code{caugi} with an attached \code{knowledge} object}
+\title{Knowledgeable Caugi Object}
 \usage{
 knowledgeable_caugi(graph, kn = knowledge(), class = "PDAG")
 }

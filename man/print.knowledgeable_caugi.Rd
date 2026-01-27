@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{print.knowledgeable_caugi}
 \alias{print.knowledgeable_caugi}
-\title{Print method for knowledgeable_caugi objects}
+\title{Print a Knowledgeable Caugi Object}
 \usage{
 \method{print}{knowledgeable_caugi}(x, compact = FALSE, wide_vars = FALSE, ...)
 }
@@ -19,7 +19,7 @@
 Invisibly returns the \code{knowledgeable_caugi} object.
 }
 \description{
-Print method for knowledgeable_caugi objects
+Print a Knowledgeable Caugi Object
 }
 \examples{
 data(tpc_example)

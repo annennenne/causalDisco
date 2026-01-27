@@ -2,7 +2,7 @@
 % Please edit documentation in R/tges-run.R
 \name{tges_run}
 \alias{tges_run}
-\title{Restricted Markov Equivalence Class Estimation Using Temporal Greedy Equivalence Search}
+\title{Run the TGES Algorithm for Causal Discovery}
 \usage{
 tges_run(score, verbose = FALSE)
 }

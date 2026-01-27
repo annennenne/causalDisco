@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-conversions.R
 \name{knowledge_to_caugi}
 \alias{knowledge_to_caugi}
-\title{Convert background knowledge to caugi object}
+\title{Convert Knowledge to Caugi}
 \usage{
 knowledge_to_caugi(kn)
 }

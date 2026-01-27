@@ -1,7 +1,8 @@
 # TODO make tiered plots
 
-#' Convert a `caugi_plot` object to TikZ code
+#' @title Generate TikZ Code from a Caugi Plot
 #'
+#' @description
 #' Generates LaTeX TikZ code from a `caugi::caugi_plot` object, preserving
 #' node positions, labels, and visual styles. Edges are rendered with arrows,
 #' line widths, and colors. The output is readable LaTeX code that can be

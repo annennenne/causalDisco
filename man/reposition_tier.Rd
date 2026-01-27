@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-manipulation.R
 \name{reposition_tier}
 \alias{reposition_tier}
-\title{Move one tier before / after another}
+\title{Move a Tier Relative to Another in Knowledge}
 \usage{
 reposition_tier(kn, tier, before = NULL, after = NULL, by_index = FALSE)
 }
@@ -24,7 +24,7 @@ labels. Defaults to \code{FALSE}.}
 The updated \code{knowledge} object.
 }
 \description{
-Move one tier before / after another
+Move a Tier Relative to Another in Knowledge
 }
 \examples{
 # Move one tier relative to another

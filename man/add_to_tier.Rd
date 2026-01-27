@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{add_to_tier}
 \alias{add_to_tier}
-\title{Add variables to an existing tier}
+\title{Add Variables to a Tier in Knowledge}
 \usage{
 add_to_tier(kn, ...)
 }
@@ -15,7 +15,7 @@ add_to_tier(kn, ...)
 The updated \code{knowledge} object.
 }
 \description{
-Add variables to an existing tier
+Add Variables to a Tier in Knowledge
 }
 \examples{
 data(tpc_example)

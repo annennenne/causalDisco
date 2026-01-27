@@ -2,7 +2,7 @@
 % Please edit documentation in R/make-tikz.R
 \name{make_tikz}
 \alias{make_tikz}
-\title{Convert a \code{caugi_plot} object to TikZ code}
+\title{Generate TikZ Code from a Caugi Plot}
 \usage{
 make_tikz(
   caugi_plot_obj,

@@ -3,7 +3,7 @@
 \name{add_exogenous}
 \alias{add_exogenous}
 \alias{add_exo}
-\title{Add exogenous variables}
+\title{Add Exogenous Variables to Knowledge}
 \usage{
 add_exogenous(kn, vars)
 

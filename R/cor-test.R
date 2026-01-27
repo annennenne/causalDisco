@@ -1,4 +1,4 @@
-#' Test for vanishing partial correlations
+#' Test for Vanishing Partial Correlations
 #'
 #' This function simply calls the [pcalg::gaussCItest()] function from the \pkg{pcalg} package.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tfci.R
 \name{tfci}
 \alias{tfci}
-\title{The Temporal Fast Causal Inference (FCI) algorithm for causal discovery}
+\title{TFCI Algorithm for Causal Discovery}
 \usage{
 tfci(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fci.R
 \name{fci}
 \alias{fci}
-\title{The FCI algorithm for causal discovery}
+\title{FCI Algorithm for Causal Discovery}
 \usage{
 fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 }

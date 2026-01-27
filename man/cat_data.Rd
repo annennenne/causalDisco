@@ -3,7 +3,7 @@
 \docType{data}
 \name{cat_data}
 \alias{cat_data}
-\title{Simulated categorical data example}
+\title{Simulated Categorical Data}
 \format{
 A data.frame with 1000 rows and 5 variables.
 \describe{

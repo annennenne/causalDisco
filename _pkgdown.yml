@@ -12,14 +12,14 @@ reference:
       Package overview
     contents:
       - causalDisco-package
-  - title: "Main User Function"
+  - title: "Causal Discovery Interface"
     desc: "High-level interface for running causal discovery."
     contents:
       - disco
       - knowledge
 
   - title: "Causal Discovery Algorithms"
-    desc: Core search algorithms implemented or wrapped by causalDisco.
+    desc: "Core search algorithms implemented or wrapped by causalDisco."
     contents:
       - fci
       - ges

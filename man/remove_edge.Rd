@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{remove_edge}
 \alias{remove_edge}
-\title{Remove an edge from a knowledge object}
+\title{Remove an Edge from Knowledge}
 \usage{
 remove_edge(kn, from, to)
 }

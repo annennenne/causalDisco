@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{summary.knowledgeable_caugi}
 \alias{summary.knowledgeable_caugi}
-\title{Summary method for knowledgeable_caugi objects}
+\title{Summarize a Knowledgeable Caugi Object}
 \usage{
 \method{summary}{knowledgeable_caugi}(object, ...)
 }
@@ -15,7 +15,7 @@
 Invisibly returns the \code{knowledgeable_caugi} object.
 }
 \description{
-Summary method for knowledgeable_caugi objects
+Summarize a Knowledgeable Caugi Object
 }
 \examples{
 data(tpc_example)

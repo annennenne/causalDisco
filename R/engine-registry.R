@@ -1,6 +1,6 @@
 .engines <- c("bnlearn", "causalDisco", "pcalg", "tetrad")
 
-#' Supported engines for causalDisco
+#' Supported Engines
 #'
 #' Available engines: `r paste(.engines, collapse = ", ")`.
 #'

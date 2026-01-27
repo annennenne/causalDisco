@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{remove_vars}
 \alias{remove_vars}
-\title{Remove variables (and their edges) from a knowledge object}
+\title{Remove Variables Along with Their Edges from Knowledge}
 \usage{
 remove_vars(kn, ...)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge.R
 \name{deparse_knowledge}
 \alias{deparse_knowledge}
-\title{Deparse a knowledge object to knowledge() mini-DSL code}
+\title{Deparse a Knowledge Object into Knowledge DSL Code}
 \usage{
 deparse_knowledge(kn, df_name = NULL)
 }

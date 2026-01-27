@@ -2,7 +2,7 @@
 % Please edit documentation in R/install-java.R
 \name{install_java}
 \alias{install_java}
-\title{Install Eclipse Temurin JDK 25 (with JAVA_HOME configuration)}
+\title{Install Eclipse Temurin JDK 25}
 \usage{
 install_java(force = FALSE)
 }
@@ -14,13 +14,8 @@ already present. Default is \code{FALSE}.}
 Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
 the environment so the JDK is immediately available to the current R session.
 
-On \strong{Windows}, this function also sets the \code{JAVA_HOME} environment variable
-(both for the current session and persistently using \code{setx}) to ensure that
+This function also sets the \code{JAVA_HOME} environment variable to ensure that
 packages such as \strong{rJava} work without additional configuration.
-
-On \strong{macOS}, the JDK is installed under \verb{~/temurin25} and the current R
-session's \code{JAVA_HOME} is updated automatically. macOS users may need to restart
-their terminal or R session for system-wide detection.
 
 This helper function is intended for users who prefer an automated installation
 or who find it inconvenient to manually download and install Java from the

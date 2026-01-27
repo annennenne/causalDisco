@@ -3,7 +3,7 @@
 \docType{data}
 \name{num_data}
 \alias{num_data}
-\title{Simulated numerical data example}
+\title{Simulated Numerical Data}
 \format{
 A data.frame with 1000 rows and 5 variables.
 \describe{
@@ -18,7 +18,7 @@ A data.frame with 1000 rows and 5 variables.
 num_data
 }
 \description{
-Simulated numerical data example
+Simulated Numerical Data
 }
 \details{
 The R code used to generate this dataset is as follows:

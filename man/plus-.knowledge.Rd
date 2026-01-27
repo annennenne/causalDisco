@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-manipulation.R
 \name{+.knowledge}
 \alias{+.knowledge}
-\title{Merge two \code{knowledge} objects}
+\title{Merge Knowledge Objects}
 \usage{
 \method{+}{knowledge}(kn1, kn2)
 }
@@ -12,7 +12,7 @@
 \item{kn2}{Another \code{knowledge} object.}
 }
 \description{
-Merge two \code{knowledge} objects
+Merge Knowledge Objects
 }
 \examples{
 # Create two knowledge objects

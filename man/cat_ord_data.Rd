@@ -3,7 +3,7 @@
 \docType{data}
 \name{cat_ord_data}
 \alias{cat_ord_data}
-\title{Simulated ordered categorical data example}
+\title{Simulated Ordered Categorical Data}
 \format{
 A data.frame with 1000 rows and 5 variables.
 \describe{

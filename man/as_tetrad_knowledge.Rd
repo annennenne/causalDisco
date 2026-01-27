@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-conversions.R
 \name{as_tetrad_knowledge}
 \alias{as_tetrad_knowledge}
-\title{Convert to Tetrad \code{edu.cmu.tetrad.data.Knowledge}}
+\title{Convert Knowledge to Tetrad Knowledge}
 \usage{
 as_tetrad_knowledge(kn)
 }

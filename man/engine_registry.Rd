@@ -3,7 +3,7 @@
 \docType{data}
 \name{engine_registry}
 \alias{engine_registry}
-\title{Supported engines for causalDisco}
+\title{Supported Engines}
 \format{
 An object of class \code{list} of length 4.
 }

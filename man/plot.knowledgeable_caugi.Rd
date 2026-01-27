@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-caugi.R
 \name{plot.knowledgeable_caugi}
 \alias{plot.knowledgeable_caugi}
-\title{Plot a Causal Graph from a \code{knowledgeable_caugi} Object}
+\title{Plot a Knowledgeable Caugi Object}
 \usage{
 \method{plot}{knowledgeable_caugi}(x, required_col = "blue", ...)
 }

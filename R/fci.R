@@ -1,4 +1,4 @@
-#' @title The FCI algorithm for causal discovery
+#' @title FCI Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the FCI algorithm for causal discovery using one of several engines.

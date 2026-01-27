@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{new_knowledgeable_caugi}
 \alias{new_knowledgeable_caugi}
-\title{Create a new \code{knowledgeable_caugi} object}
+\title{Create a Knowledgeable Caugi Object}
 \usage{
 new_knowledgeable_caugi(cg, kn)
 }
@@ -12,5 +12,5 @@ new_knowledgeable_caugi(cg, kn)
 \item{kn}{A \code{knowledge} object}
 }
 \description{
-Create a new \code{knowledgeable_caugi} object
+Create a Knowledgeable Caugi Object
 }

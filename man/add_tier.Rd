@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{add_tier}
 \alias{add_tier}
-\title{Add (and position) a tier}
+\title{Add a Tier to Knowledge}
 \usage{
 add_tier(kn, tier, before = NULL, after = NULL)
 }
@@ -19,7 +19,8 @@ has >= 1 tier, you must supply \strong{exactly one} of these.}
 The updated \code{knowledge} object.
 }
 \description{
-Add (and position) a tier
+Adds a new tier to the \code{knowledge} object, either at the start, end,
+or before/after an existing tier.
 }
 \examples{
 data(tpc_example)

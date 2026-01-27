@@ -2,7 +2,7 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Causal Discovery Using the Temporal FCI (TFCI) Algorithm
+#' Run the TFCI Algorithm for Causal Discovery
 #'
 #' Use a modification of the FCI algorithm that makes use of background knowledge
 #' in the format of a partial ordering. This may, for instance, come about when

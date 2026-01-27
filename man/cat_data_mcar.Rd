@@ -3,7 +3,7 @@
 \docType{data}
 \name{cat_data_mcar}
 \alias{cat_data_mcar}
-\title{Simulated categorical data with MCAR (missing completely at random)}
+\title{Simulated Categorical Data with MCAR}
 \format{
 A data.frame with 1000 rows and 5 variables.
 \describe{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tfci-run.R
 \name{tfci_run}
 \alias{tfci_run}
-\title{Causal Discovery Using the Temporal FCI (TFCI) Algorithm}
+\title{Run the TFCI Algorithm for Causal Discovery}
 \usage{
 tfci_run(
   data = NULL,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulation.R
 \name{generate_dag_data}
 \alias{generate_dag_data}
-\title{Simulate data from a DAG with linear Gaussian relationships}
+\title{Generate Synthetic Data from a Linear Gaussian DAG}
 \usage{
 generate_dag_data(
   cg,

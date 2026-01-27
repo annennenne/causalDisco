@@ -2,7 +2,7 @@
 % Please edit documentation in R/pc.R
 \name{pc}
 \alias{pc}
-\title{The Peter-Clark (PC) Algorithm for Causal Discovery}
+\title{PC Algorithm for Causal Discovery}
 \usage{
 pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
@@ -25,7 +25,7 @@ A function of class \code{"pc"} that takes a single argument \code{data}
 (a data frame) and returns a \code{caugi} and a \code{knowledge} object.
 }
 \description{
-Run the PC algorithm for causal discovery using one of several engines.
+Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
 }
 \details{
 For specific details on the supported scores, tests, and parameters for each engine, see:

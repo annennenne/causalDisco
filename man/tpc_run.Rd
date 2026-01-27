@@ -2,7 +2,7 @@
 % Please edit documentation in R/tpc-run.R
 \name{tpc_run}
 \alias{tpc_run}
-\title{Causal Discovery Using the Temporal PC Algorithm (TPC)}
+\title{Run the TPC Algorithm for Causal Discovery}
 \usage{
 tpc_run(
   data = NULL,

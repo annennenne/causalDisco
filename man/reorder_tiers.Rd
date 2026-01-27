@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-manipulation.R
 \name{reorder_tiers}
 \alias{reorder_tiers}
-\title{Reorder all tiers at once}
+\title{Reorder Tiers in Knowledge}
 \usage{
 reorder_tiers(kn, order, by_index = FALSE)
 }
@@ -20,7 +20,7 @@ labels. Defaults to \code{FALSE}.}
 The same \code{knowledge} object with tiers rearranged.
 }
 \description{
-Reorder all tiers at once
+Reorder Tiers in Knowledge
 }
 \examples{
 # Move one tier relative to another

@@ -1,4 +1,4 @@
-#' @title The GES algorithm for causal discovery
+#' @title GES Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the GES algorithm for causal discovery using one of several engines.

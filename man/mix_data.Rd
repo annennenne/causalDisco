@@ -3,7 +3,7 @@
 \docType{data}
 \name{mix_data}
 \alias{mix_data}
-\title{Simulated mixed data example}
+\title{Simulated Mixed Data}
 \format{
 A data.frame with 1000 rows and 5 variables.
 \describe{

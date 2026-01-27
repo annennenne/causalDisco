@@ -2,7 +2,7 @@
 % Please edit documentation in R/ges.R
 \name{ges}
 \alias{ges}
-\title{The GES algorithm for causal discovery}
+\title{GES Algorithm for Causal Discovery}
 \usage{
 ges(engine = c("tetrad", "pcalg"), score, ...)
 }

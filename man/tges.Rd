@@ -2,7 +2,7 @@
 % Please edit documentation in R/tges.R
 \name{tges}
 \alias{tges}
-\title{The Temporal GES algorithm for causal discovery}
+\title{TGES Algorithm for Causal Discovery}
 \usage{
 tges(engine = c("causalDisco"), score, ...)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledgeable-caugi.R
 \name{knowledge.knowledgeable_caugi}
 \alias{knowledge.knowledgeable_caugi}
-\title{Extract the knowledge from a knowledgeable_caugi}
+\title{Extract Knowledge from a Knowledable Caugi}
 \usage{
 knowledge.knowledgeable_caugi(x)
 }

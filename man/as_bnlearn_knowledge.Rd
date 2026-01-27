@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge-conversions.R
 \name{as_bnlearn_knowledge}
 \alias{as_bnlearn_knowledge}
-\title{Convert background knowledge to bnlearns white- and blacklists}
+\title{Convert Knowledge to bnlearn Knowledge}
 \usage{
 as_bnlearn_knowledge(kn)
 }

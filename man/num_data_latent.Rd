@@ -3,7 +3,7 @@
 \docType{data}
 \name{num_data_latent}
 \alias{num_data_latent}
-\title{Simulated numerical data example with latent variable}
+\title{Simulated Numerical Data with Latent Variable}
 \format{
 A data.frame with 1000 rows and 4 variables.
 \describe{

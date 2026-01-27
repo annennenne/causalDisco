@@ -2,7 +2,7 @@
 % Please edit documentation in R/knowledge.R
 \name{summary.knowledge}
 \alias{summary.knowledge}
-\title{Summary method for knowledge objects}
+\title{Summarize a Knowledge Object}
 \usage{
 \method{summary}{knowledge}(object, ...)
 }
@@ -15,7 +15,7 @@
 Invisibly returns the \code{knowledge} object.
 }
 \description{
-Summary method for knowledge objects
+Summarize a Knowledge Object
 }
 \examples{
 kn <- knowledge(

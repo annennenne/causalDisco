@@ -2,7 +2,7 @@
 % Please edit documentation in R/reg-test.R
 \name{reg_test}
 \alias{reg_test}
-\title{Regression-based information loss test}
+\title{Regression-based Information Loss Test}
 \usage{
 reg_test(x, y, conditioning_set, suff_stat)
 }

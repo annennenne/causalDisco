@@ -512,7 +512,7 @@ knowledge <- function(...) {
 }
 
 # ────────────────────────────────── Print ─────────────────────────────────────
-#' @title Print a `knowledge` object
+#' @title Print a Knowledge Object
 #'
 #' @param x A `knowledge` object.
 #' @param compact Logical. If `TRUE`, prints a more compact summary.
@@ -653,7 +653,7 @@ print.knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
   invisible(x)
 }
 
-#' @title Summary method for knowledge objects
+#' @title Summarize a Knowledge Object
 #' @param object A `knowledge` object.
 #' @param ... Additional arguments (not used).
 #' @returns Invisibly returns the `knowledge` object.
@@ -719,7 +719,7 @@ is_knowledge <- function(x) {
 
 
 # ───────────────────────────────── Deparse ────────────────────────────────────
-#' @title Deparse a knowledge object to knowledge() mini-DSL code
+#' @title Deparse a Knowledge Object into Knowledge DSL Code
 #'
 #' @description
 #' Given a `knowledge` object, return a single string containing

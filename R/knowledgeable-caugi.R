@@ -1,4 +1,4 @@
-#' @title A `caugi` with an attached `knowledge` object
+#' @title Knowledgeable Caugi Object
 #'
 #' @description
 #' This S3 class wraps `caugi` graph object and a `knowledge` object. It is the
@@ -23,7 +23,7 @@ knowledgeable_caugi <- function(graph, kn = knowledge(), class = "PDAG") {
 # delegate field names used by `knowledge` methods
 .knowledge_fields <- c("vars", "tiers", "edges", "frozen")
 
-#' @title Create a new `knowledgeable_caugi` object
+#' @title Create a Knowledgeable Caugi Object
 #'
 #' @param cg A `caugi` object
 #' @param kn A `knowledge` object
@@ -174,7 +174,7 @@ knowledgeable_caugi.EssGraph <- function(
   new_knowledgeable_caugi(cg, kn)
 }
 
-#' @title Print method for knowledgeable_caugi objects
+#' @title Print a Knowledgeable Caugi Object
 #' @param x A `knowledgeable_caugi` object.
 #' @inheritParams print.knowledge
 #' @returns Invisibly returns the `knowledgeable_caugi` object.
@@ -226,7 +226,7 @@ print.knowledgeable_caugi <- function(
   invisible(x)
 }
 
-#' @title Summary method for knowledgeable_caugi objects
+#' @title Summarize a Knowledgeable Caugi Object
 #' @param object A `knowledgeable_caugi` object.
 #' @param ... Additional arguments (not used).
 #' @returns Invisibly returns the `knowledgeable_caugi` object.
@@ -268,7 +268,7 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
   method
 }
 
-#' @title Extract the knowledge from a knowledgeable_caugi
+#' @title Extract Knowledge from a Knowledable Caugi
 #'
 #' @description
 #' S3 method to extract the `knowledge` object from a `knowledgeable_caugi`.
@@ -279,7 +279,6 @@ set_knowledge.knowledgeable_caugi <- function(method, knowledge) {
 #'
 #' @export
 knowledge.knowledgeable_caugi <- function(x) {
-  # nolint: object_name_linter.
   x$knowledge
 }
 

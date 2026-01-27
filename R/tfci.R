@@ -1,4 +1,4 @@
-#' @title The Temporal Fast Causal Inference (FCI) algorithm for causal discovery
+#' @title TFCI Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the temporal FCI algorithm for causal discovery using causalDisco.

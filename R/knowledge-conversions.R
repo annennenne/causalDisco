@@ -2,7 +2,7 @@
 # ───────────── Conversion to External Engines: Tetrad, pcalg, bnlearn ─────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' @title Convert to Tetrad `edu.cmu.tetrad.data.Knowledge`
+#' @title Convert Knowledge to Tetrad Knowledge
 #'
 #' @description
 #' Converts a `knowledge` object to a Tetrad `edu.cmu.tetrad.data.Knowledge`.
@@ -62,7 +62,7 @@ as_tetrad_knowledge <- function(kn) {
   j
 }
 
-#' Convert background knowledge to pcalg constraint matrices
+#' Convert Knowledge to pcalg Knowledge
 #'
 #' \pkg{pcalg} only supports _undirected_ (symmetric) background constraints:
 #' * **fixed_gaps**  - forbidding edges (zeros enforced)
@@ -206,7 +206,7 @@ as_pcalg_constraints <- function(
   list(fixed_gaps = fixed_gaps, fixed_edges = fixed_edges)
 }
 
-#' Convert background knowledge to bnlearns white- and blacklists
+#' Convert Knowledge to bnlearn Knowledge
 #'
 #' @description
 #' Converts a `knowledge` object to a list of two data frames, namely
@@ -254,7 +254,7 @@ as_bnlearn_knowledge <- function(kn) {
 }
 
 
-#' Convert background knowledge to caugi object
+#' Convert Knowledge to Caugi
 #'
 #' @description
 #' Converts a `knowledge` object to a `caugi` object used for plotting.

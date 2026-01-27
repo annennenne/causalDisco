@@ -84,7 +84,7 @@ fdr <- function(confusion) {
   ifelse(fp + tp != 0, fp / (fp + tp), 1)
 }
 
-#' Negative predictive value
+#' Negative Predictive Value
 #'
 #' Computes negative predictive value recall from a confusion matrix, see \link{confusion}.
 #' Negative predictive value is defined as TN/(TN + FN), where TN are true negatives and
