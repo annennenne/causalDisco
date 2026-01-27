@@ -119,6 +119,19 @@ compute_global_color <- function(nodes, color_type) {
 }
 
 
+#' @title Escape LaTeX Special Characters
+#' @param x A character string.
+#' @returns The input string with LaTeX special characters escaped.
+#' @keywords internal
+#' @noRd
+latex_escape <- function(x) {
+  # Escapes _, %, &, #, $, {, }, ~, ^, \ (most common LaTeX specials)
+  x <- gsub("\\\\", "\\\\textbackslash{}", x)
+  x <- gsub("([_%#&$^{}~])", "\\\\\\1", x)
+  x
+}
+
+
 #' @title Build TikZ Node Lines
 #'
 #' @param nodes A list of node objects with `name`, `x`, `y`, `style`, and `label`.
@@ -163,9 +176,31 @@ build_node_lines <- function(nodes, global_node_fill, global_node_draw) {
       n$name,
       format_coord(n$x),
       format_coord(n$y),
-      n$label
+      latex_escape(n$label)
     )
   }))
+}
+
+#' @title Get Anchor and Offset for Tier Labels
+#' @param pos A character string specifying the position: "above", "below", "left", or "right".
+#' @param offset Numeric scalar. Offset distance for the label.
+#' @returns A list with `anchor`, `anchor_point`, `dx`, and `dy` for positioning the label.
+#' @keywords internal
+#' @noRd
+get_anchor_and_offset <- function(pos, offset = 0.2) {
+  switch(
+    pos,
+    above = list(anchor = "south", anchor_point = "north", dx = 0, dy = offset),
+    below = list(
+      anchor = "north",
+      anchor_point = "south",
+      dx = 0,
+      dy = -offset
+    ),
+    left = list(anchor = "east", anchor_point = "west", dx = -offset, dy = 0),
+    right = list(anchor = "west", anchor_point = "east", dx = offset, dy = 0),
+    stop("tier_label_pos must be one of: above, below, left, right")
+  )
 }
 
 
@@ -307,7 +342,14 @@ extract_edges <- function(
       "-->" = "-Latex",
       "---" = "-",
       "<->" = "{Latex}-{Latex}",
-      "-Latex" # Default fallback
+      {
+        warning(paste(
+          "Unknown edge type:",
+          edge$edge_type,
+          "- using '-Latex' as fallback."
+        ))
+        "-Latex"
+      }
     )
 
     style_str <- paste(style, collapse = ", ")

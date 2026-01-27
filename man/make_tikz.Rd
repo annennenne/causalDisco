@@ -10,7 +10,8 @@ make_tikz(
   scale = 10,
   full_doc = TRUE,
   bend_edges = FALSE,
-  bend_angle = 25
+  bend_angle = 25,
+  tier_label_pos = "above"
 )
 }
 \arguments{

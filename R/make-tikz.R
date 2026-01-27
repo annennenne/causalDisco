@@ -93,7 +93,8 @@ make_tikz <- function(
   scale = 10,
   full_doc = TRUE,
   bend_edges = FALSE,
-  bend_angle = 25
+  bend_angle = 25,
+  tier_label_pos = "above"
 ) {
   if (is.null(tier_node_map)) {
     make_tikz_standard(caugi_plot_obj, scale, full_doc, bend_edges, bend_angle)
@@ -108,6 +109,7 @@ make_tikz <- function(
     )
   }
 }
+
 #' @title Core TikZ Generation Logic
 #' @inheritParams make_tikz
 #' @returns A character string containing LaTeX TikZ code.
@@ -119,7 +121,8 @@ make_tikz <- function(
   tier_node_map = NULL,
   full_doc = TRUE,
   bend_edges = FALSE,
-  bend_angle = 25
+  bend_angle = 25,
+  tier_label_pos = "above"
 ) {
   stopifnot(inherits(caugi_plot_obj, "caugi::caugi_plot"))
 
@@ -211,9 +214,14 @@ make_tikz <- function(
       )
     })
     tier_label_lines <- lapply(names(tier_node_map), function(tier_name) {
+      pos_info <- get_anchor_and_offset(tier_label_pos, offset = 0.2)
       sprintf(
-        "\\node[anchor=west, draw=none, fill=none] at ($(%s.east)+(0.2cm,0)$) {%s};",
+        "\\node[anchor=%s, draw=none, fill=none] at ($(%s.%s)+(%scm,%scm)$) {%s};",
+        pos_info$anchor,
         tier_name,
+        pos_info$anchor_point,
+        pos_info$dx,
+        pos_info$dy,
         tier_name
       )
     })
@@ -325,7 +333,8 @@ make_tikz_tiered <- function(
   scale = 10,
   full_doc = TRUE,
   bend_edges = FALSE,
-  bend_angle = 25
+  bend_angle = 25,
+  tier_label_pos = "above"
 ) {
   .make_tikz_core(
     caugi_plot_obj,
@@ -333,6 +342,7 @@ make_tikz_tiered <- function(
     tier_node_map,
     full_doc,
     bend_edges,
-    bend_angle
+    bend_angle,
+    tier_label_pos
   )
 }
