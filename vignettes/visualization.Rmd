@@ -1,0 +1,240 @@
+---
+title: "Visualization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(causalDisco)
+library(caugi)
+```
+
+This vignette demonstrates how to visualize causal graphs. We cover plotting `knowledge` objects and
+`knowledgeable_caugi` objects, customizing layouts and styles, and exporting graphs to TikZ for inclusion in
+LaTeX documents.
+
+# Plotting Knowledge
+
+We start by creating a simple knowledge object and visualizing it with `plot()`.
+This knowledge encodes the following relationships between variables in our dataset:
+
+```{r knowledge plot}
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
+)
+
+plot(kn)
+```
+
+By default, required edges are shown in blue and forbidden edges in red.
+You can customize these colors using `required_col` and `forbidden_col`:
+
+```{r knowledge plot different colors}
+plot(kn, required_col = "skyblue", forbidden_col = "orange")
+```
+
+Different node layouts, node styles, and edge styles can be specified using the `layout`, `node_style`, and `edge_style`
+parameters.
+We provide a quick example and refer to the `causalDisco::plot()` function (and the underlying `caugi::plot()` function)
+documentation for more details.
+
+```{r knowledge plot custom styles}
+plot(
+  kn,
+  layout = "fruchterman-reingold",
+  node_style = list(
+    fill = "lightblue", # Fill color
+    col = "darkblue", # Border color
+    lwd = 2, # Border width
+    padding = 4, # Text padding (mm)
+    size = 1.2 # Size multiplier
+  ),
+  edge_style = list(
+    lwd = 1.5, # Edge width
+    arrow_size = 4 # Arrow size (mm)
+  )
+)
+```
+
+## Plotting Tiered Knowledge
+
+We can also visualize tiered knowledge structures. Here is an example using a dataset with variables measured at
+different life stages:
+
+```{r tiered knowledge plot}
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 %-->% child_x2,
+  child_x2 %!-->% youth_x3
+)
+plot(kn_tiered)
+```
+
+Variables are grouped by life stage, reflecting the tiered structure. This helps visually convey temporal or
+hierarchical relationships in the data.
+
+# Plotting Knowledable Caugi Objects
+
+Here we create a knowledgeable caugi object by combining a causal discovery result with prior knowledge,
+and visualize it using the `plot` function.
+
+```{r knowledgeable caugi plot}
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
+)
+
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z")
+pc_result <- disco(num_data, method = pc_bnlearn, knowledge = kn)
+plot(pc_result)
+```
+
+Blue edges indicate required relationships from prior knowledge, black edges show those learned from the data,
+and forbidden edges are not plotted (to avoid confusion and clutter).
+
+With tiered knowledge, the plotting works similarly:
+
+```{r knowledgeable caugi tiered plot}
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn_tiered)
+plot(disco_cd_tges)
+```
+
+Where we can see the tiers reflected in the layout of the graph.
+
+# Exporting to TikZ
+
+The `make_tikz()` function exports plots as clean, fully editable TikZ code for inclusion in LaTeX documents.
+
+Unlike many graph export tools, edges are attached to nodes rather than positioned using hard-coded coordinates,
+making the output easier to modify and maintain.
+
+This functionality works for `knowledge`, `knowledgeable_caugi`, and `caugi::caugi` objects, allowing you to customize layouts,
+styles, and edges further in your LaTeX document.
+
+## Exporting Knowledge to TikZ
+
+We first demonstrate TikZ export for a `knowledge` object.
+
+```{r tikz export knowledge}
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
+)
+
+kn_plot <- plot(kn)
+
+# Full standalone document
+tikz_knowledge_code <- make_tikz(kn_plot, scale = 10, full_doc = TRUE)
+cat(tikz_knowledge_code)
+
+# Only the tikzpicture environment
+tikz_knowledge_snippet <- make_tikz(kn_plot, scale = 10, full_doc = FALSE)
+cat(tikz_knowledge_snippet)
+```
+
+Setting `full_doc = TRUE` generates a complete standalone LaTeX document that can be compiled directly.
+Using `full_doc = FALSE` instead returns only the tikzpicture environment, which is convenient for inclusion
+inside an existing LaTeX document.
+
+The TikZ export also supports edge bending, which can substantially improve readability when edges overlap (in particular for tiered
+knowledge).
+This feature is not available in the standard `caugi::plot()` function. Here is an example, where the edge using the
+standard straight style edge overlaps the node `youth_x3`, while the bent edge avoids this overlap:
+
+```{r tikz bend edges}
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 %-->% oldage_x5
+)
+
+kn_tiered_plot <- plot(kn_tiered)
+kn_tiered_plot
+
+tiers <- list(
+  child = c("child_x1", "child_x2"),
+  youth = c("youth_x3", "youth_x4"),
+  old = c("oldage_x5", "oldage_x6")
+)
+
+tikz_bent_tiered <- make_tikz(kn_tiered_plot, tier_node_map = tiers, scale = 10, full_doc = FALSE, bend_edges = TRUE, bend_angle = 20)
+cat(tikz_bent_tiered)
+```
+
+## Exporting Knowledgeable Caugi to TikZ
+
+Knowledge-enhanced causal discovery results can be exported in the same way:
+
+```{r tikz export knowledgeable caugi}
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn_tiered)
+
+disco_plot <- plot(disco_cd_tges)
+tikz_knowledge_snippet <- make_tikz(disco_plot, scale = 10, full_doc = FALSE)
+cat(tikz_knowledge_snippet)
+```
+
+## Exporting Caugi Objects to Tikz
+
+The same export mechanism also applies to standard caugi objects:
+
+```{r tikz export caugi}
+cg <- caugi::caugi(
+  A %-->% B + C
+)
+plot_obj <- caugi::plot(cg, node_style = list(fill = "red"))
+tikz_caugi_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
+cat(tikz_caugi_snippet)
+```
+
