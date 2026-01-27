@@ -169,7 +169,7 @@ test_that("latex_escape escapes backslash correctly", {
 
 test_that("latex_escape handles strings with multiple specials", {
   input <- "100% of $people & 50_50 #tests {ok} ~yes^no \\"
-  expected <- "100\\% of \\$people \\& 50\\_50 \\#tests \\{ok\\} \\~yes\\^no \\textbackslash{}"
+  expected <- "100\\% of \\$people \\& 50\\_50 \\#tests \\{ok\\} \\~yes\\^no \\textbackslash\\{\\}"
   expect_equal(latex_escape(input), expected)
 })
 

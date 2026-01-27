@@ -19,6 +19,9 @@
 #'   to reduce overlap.
 #' @param bend_angle Numeric scalar. Angle in degrees for bending arrows when
 #'   `bend_edges = TRUE`. Default is `25`.
+#' @param tier_label_pos Character string specifying the position of tier labels
+#'   relative to the tier rectangles. Must be one of `"above"`, `"below"`, `"left"`, or `"right"`.
+#'   Default is `"above"`.
 #'
 #' @return A character string containing LaTeX TikZ code. Depending on
 #'   `full_doc`, this is either:
@@ -94,18 +97,26 @@ make_tikz <- function(
   full_doc = TRUE,
   bend_edges = FALSE,
   bend_angle = 25,
-  tier_label_pos = "above"
+  tier_label_pos = c("above", "below", "left", "right")
 ) {
+  tier_label_pos <- match.arg(tier_label_pos)
   if (is.null(tier_node_map)) {
-    make_tikz_standard(caugi_plot_obj, scale, full_doc, bend_edges, bend_angle)
+    make_tikz_standard(
+      caugi_plot_obj = caugi_plot_obj,
+      scale = scale,
+      full_doc = full_doc,
+      bend_edges = bend_edges,
+      bend_angle = bend_angle
+    )
   } else {
     make_tikz_tiered(
-      caugi_plot_obj,
-      tier_node_map,
-      scale,
-      full_doc,
-      bend_edges,
-      bend_angle
+      caugi_plot_obj = caugi_plot_obj,
+      tier_node_map = tier_node_map,
+      scale = scale,
+      full_doc = full_doc,
+      bend_edges = bend_edges,
+      bend_angle = bend_angle,
+      tier_label_pos = tier_label_pos
     )
   }
 }

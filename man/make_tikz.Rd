@@ -11,7 +11,7 @@ make_tikz(
   full_doc = TRUE,
   bend_edges = FALSE,
   bend_angle = 25,
-  tier_label_pos = "above"
+  tier_label_pos = c("above", "below", "left", "right")
 )
 }
 \arguments{
@@ -33,6 +33,10 @@ to reduce overlap.}
 
 \item{bend_angle}{Numeric scalar. Angle in degrees for bending arrows when
 \code{bend_edges = TRUE}. Default is \code{25}.}
+
+\item{tier_label_pos}{Character string specifying the position of tier labels
+relative to the tier rectangles. Must be one of \code{"above"}, \code{"below"}, \code{"left"}, or \code{"right"}.
+Default is \code{"above"}.}
 }
 \value{
 A character string containing LaTeX TikZ code. Depending on
