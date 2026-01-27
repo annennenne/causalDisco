@@ -32,14 +32,14 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
   \item Frederik Fabricius-Bjerre \email{ffb@di.ku.dk}
+  \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
 }
 
 Other contributors:
 \itemize{
-  \item Tobias Ellegaard Larsen \email{tobias.ellegaard@sund.ku.dk} [contributor]
   \item Claus Thorn Ekstrøm \email{ekstrom@sund.ku.dk} [contributor]
+  \item Tobias Ellegaard Larsen \email{tobias.ellegaard@sund.ku.dk} [contributor]
 }
 
 }

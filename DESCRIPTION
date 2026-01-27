@@ -4,16 +4,21 @@ Version: 0.9.5.9036
 Authors@R:
       c(
         person(
+          given = "Bjarke Hautop",
+          family = "Kristensen",
+          role = c("aut", "cre"),
+          email = "bjarke.kristensen@sund.ku.dk"
+        ),
+        person(
+          given = "Frederik Fabricius-Bjerre",
+          role = "aut",
+          email = "ffb@di.ku.dk"
+        ),
+        person(
           given = "Anne Helby",
           family = "Petersen",
           role = "aut",
           email = "ahpe@sund.ku.dk"
-        ),
-        person(
-          given = "Tobias Ellegaard",
-          family = "Larsen",
-          role = "ctb",
-          email = "tobias.ellegaard@sund.ku.dk"
         ),
         person(
           given = "Claus Thorn",
@@ -22,15 +27,10 @@ Authors@R:
           email = "ekstrom@sund.ku.dk"
         ),
         person(
-          given = "Frederik Fabricius-Bjerre",
-          role = "aut",
-          email = "ffb@di.ku.dk"
-        ),
-        person(
-          given = "Bjarke Hautop",
-          family = "Kristensen",
-          role = c("aut", "cre"),
-          email = "bjarke.kristensen@sund.ku.dk"
+          given = "Tobias Ellegaard",
+          family = "Larsen",
+          role = "ctb",
+          email = "tobias.ellegaard@sund.ku.dk"
         )
       )
 Description: Various tools for inferring causal models from observational
