@@ -4,7 +4,7 @@
 \name{causalDisco-package}
 \alias{causalDisco}
 \alias{causalDisco-package}
-\title{causalDisco: Causal Disocvery in R}
+\title{causalDisco: Causal Discovery in R}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

@@ -11,12 +11,12 @@ test_that("make_tikz produces correct snippet for simple A --> B graph", {
 
   # ---- Check TikZ basics ----
   expect_true(grepl(
-    "\\tikzset{arrows={[scale=3]}}",
+    "\\tikzset{arrows={[scale=3]}",
     tikz_snippet,
     fixed = TRUE
   ))
   expect_true(grepl(
-    "\\tikzset{every node/.style={fill=lightgray}}",
+    "every node/.style={fill=lightgray",
     tikz_snippet,
     fixed = TRUE
   ))
@@ -47,7 +47,7 @@ test_that("make_tikz produces correct snippet for simple A --> B graph", {
 
   tikz_snippet_full <- make_tikz(plot_obj, full_doc = TRUE)
   expect_true(grepl(
-    "\\documentclass{standalone}",
+    "\\documentclass[tikz,border=2mm]{standalone}",
     tikz_snippet_full,
     fixed = TRUE
   ))
@@ -67,7 +67,7 @@ test_that("make_tikz produces correct snippet for simple A --- B graph", {
 
   # ---- Check TikZ basics ----
   expect_true(grepl(
-    "\\tikzset{every node/.style={fill=lightgray}}",
+    "every node/.style={fill=lightgray",
     tikz_snippet,
     fixed = TRUE
   ))
@@ -104,7 +104,7 @@ test_that("make_tikz produces correct snippet for simple A <-> B graph", {
 
   # ---- Check TikZ basics ----
   expect_true(grepl(
-    "\\tikzset{every node/.style={fill=lightgray}}",
+    "every node/.style={fill=lightgray",
     tikz_snippet,
     fixed = TRUE
   ))
@@ -126,6 +126,31 @@ test_that("make_tikz produces correct snippet for simple A <-> B graph", {
   # ---- Check edge ----
   expect_true(grepl(
     "(A) edge[, {Latex}-{Latex}] (B)",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+})
+
+test_that("make_tikz produces bent edges automatically for A --> B, B --> A graph", {
+  cg <- caugi::caugi(A %-->% B, B %-->% A, simple = FALSE, class = "UNKNOWN")
+  layout <- data.frame(
+    name = c("A", "B"),
+    x = c(1, 0),
+    y = c(0, 0)
+  )
+
+  plot_obj <- caugi::plot(cg, layout = layout)
+
+  tikz_snippet <- make_tikz(plot_obj, full_doc = FALSE, bend_angle = 10)
+
+  # ---- Check edge ----
+  expect_true(grepl(
+    "(A) edge[bend left=10, -Latex] (B)",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+  expect_true(grepl(
+    "(B) edge[bend left=10, -Latex] (A)",
     tikz_snippet,
     fixed = TRUE
   ))

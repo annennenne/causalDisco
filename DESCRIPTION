@@ -124,6 +124,7 @@ Collate:
     'knowledge-verbs.R'
     'knowledge.R'
     'knowledgeable-caugi.R'
+    'make-tikz-helpers.R'
     'make-tikz.R'
     'maketikz.R'
     'metrics.R'

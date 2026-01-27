@@ -9,12 +9,12 @@ Bjerre
 BnlearnSearch
 Bugfixes
 Bui
-CAUGI
 CMD
 CPC
 CPDAG
 CStaR
 CamelCase
+Caugi
 Chickering
 Codecov
 DAGMA
@@ -82,6 +82,7 @@ Terpstra
 Tetrad
 TetradSearch
 Tidyselect
+TikZ
 Tobias
 Uhler's
 WIP
@@ -98,7 +99,6 @@ bdeu
 bic
 bidirected
 bnlearn
-bnlearns
 caugi
 causalInference
 cpdag
@@ -111,7 +111,6 @@ factorised
 fci
 fges
 fixedEdges
-ggplot
 honouring
 iirc
 independencies
@@ -148,7 +147,6 @@ tges
 tibble
 tidyselect
 tikz
-tikzDevice
 tpag
 tpc
 tpdag

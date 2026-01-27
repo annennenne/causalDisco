@@ -6,6 +6,7 @@
 \usage{
 make_tikz(
   caugi_plot_obj,
+  tier_node_map = NULL,
   scale = 10,
   full_doc = TRUE,
   bend_edges = FALSE,
@@ -15,14 +16,19 @@ make_tikz(
 \arguments{
 \item{caugi_plot_obj}{A \code{caugi::caugi_plot} object.}
 
+\item{tier_node_map}{Optional named list mapping tier names to vectors of
+node names. If provided, tier rectangles and labels are added to the TikZ
+output. Default is \code{NULL}.}
+
 \item{scale}{Numeric scalar. Scaling factor for node coordinates. Default is \code{10}.}
 
 \item{full_doc}{Logical. If \code{TRUE} (default), generates a full standalone
 LaTeX document. If \code{FALSE}, returns only the \code{tikzpicture} environment.}
 
-\item{bend_edges}{Logical. If \code{TRUE}, edges are drawn with bent arrows to
-reduce overlap. Default is \code{FALSE}. Arrows bend left or right depending
-on the relative positions of nodes.}
+\item{bend_edges}{Logical. If \code{TRUE}, edges are drawn with bent edges. Default is \code{FALSE}.
+Edges connecting the same pair of nodes in both directions (\code{A \%-->\% B} and \code{B \%-->\% A})
+are automatically bent left and right to avoid overlap. Bend direction is automatically chosen
+to reduce overlap.}
 
 \item{bend_angle}{Numeric scalar. Angle in degrees for bending arrows when
 \code{bend_edges = TRUE}. Default is \code{25}.}
@@ -59,9 +65,9 @@ edges. Supported features include:
 }
 }
 
-To make the generated TikZ code more concise and readable, the code uses
-global style settings, and only specifies individual styles for nodes or edges
-that differ from these global defaults.
+The generated TikZ code uses global style settings, and edges are connected
+to nodes by name (as opposed to hard-coded coordinates), making it easy to
+modify the output further if needed.
 }
 \examples{
 
@@ -79,5 +85,31 @@ cat(tikz_snippet)
 # With bent edges
 tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
 cat(tikz_bent)
+
+# With a color not supported by default TikZ colors
+plot_darkblue <- caugi::plot(cg, node_style = list(fill = "darkblue"))
+tikz_darkblue <- make_tikz(plot_darkblue, scale = 10)
+
+# Will use RGB specification for darkblue
+cat(tikz_darkblue)
+
+# With tiered nodes
+cg_tiered <- caugi::caugi(
+  X1 \%-->\% M1 + M2,
+  X2 \%-->\% M1 + M2,
+  M1 \%-->\% Y,
+  M2 \%-->\% Y
+)
+tiers <- list(
+  exposures = c("X1", "X2"),
+  mediators = c("M1", "M2"),
+  outcome = "Y"
+)
+plot_tiered <- caugi::plot(cg_tiered, tiers = tiers)
+tikz_tiered <- make_tikz(
+  plot_tiered,
+  tier_node_map = tiers
+)
+cat(tikz_tiered)
 
 }

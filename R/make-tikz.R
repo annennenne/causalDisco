@@ -1,5 +1,3 @@
-# TODO make tiered plots
-
 #' @title Generate TikZ Code from a Caugi Plot
 #'
 #' @description
@@ -9,12 +7,16 @@
 #' directly compiled or modified.
 #'
 #' @param caugi_plot_obj A `caugi::caugi_plot` object.
+#' @param tier_node_map Optional named list mapping tier names to vectors of
+#'  node names. If provided, tier rectangles and labels are added to the TikZ
+#'  output. Default is `NULL`.
 #' @param scale Numeric scalar. Scaling factor for node coordinates. Default is `10`.
 #' @param full_doc Logical. If `TRUE` (default), generates a full standalone
 #'   LaTeX document. If `FALSE`, returns only the `tikzpicture` environment.
-#' @param bend_edges Logical. If `TRUE`, edges are drawn with bent arrows to
-#'   reduce overlap. Default is `FALSE`. Arrows bend left or right depending
-#'   on the relative positions of nodes.
+#' @param bend_edges Logical. If `TRUE`, edges are drawn with bent edges. Default is `FALSE`.
+#'   Edges connecting the same pair of nodes in both directions (`A %-->% B` and `B %-->% A`)
+#'   are automatically bent left and right to avoid overlap. Bend direction is automatically chosen
+#'   to reduce overlap.
 #' @param bend_angle Numeric scalar. Angle in degrees for bending arrows when
 #'   `bend_edges = TRUE`. Default is `25`.
 #'
@@ -37,9 +39,9 @@
 #'   - Arrow scale
 #'   - Optional bending to reduce overlapping arrows
 #'
-#' To make the generated TikZ code more concise and readable, the code uses
-#' global style settings, and only specifies individual styles for nodes or edges
-#' that differ from these global defaults.
+#' The generated TikZ code uses global style settings, and edges are connected
+#' to nodes by name (as opposed to hard-coded coordinates), making it easy to
+#' modify the output further if needed.
 #'
 #' @examples
 #'
@@ -58,10 +60,63 @@
 #' tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
 #' cat(tikz_bent)
 #'
+#' # With a color not supported by default TikZ colors
+#' plot_darkblue <- caugi::plot(cg, node_style = list(fill = "darkblue"))
+#' tikz_darkblue <- make_tikz(plot_darkblue, scale = 10)
+#'
+#' # Will use RGB specification for darkblue
+#' cat(tikz_darkblue)
+#'
+#' # With tiered nodes
+#' cg_tiered <- caugi::caugi(
+#'   X1 %-->% M1 + M2,
+#'   X2 %-->% M1 + M2,
+#'   M1 %-->% Y,
+#'   M2 %-->% Y
+#' )
+#' tiers <- list(
+#'   exposures = c("X1", "X2"),
+#'   mediators = c("M1", "M2"),
+#'   outcome = "Y"
+#' )
+#' plot_tiered <- caugi::plot(cg_tiered, tiers = tiers)
+#' tikz_tiered <- make_tikz(
+#'   plot_tiered,
+#'   tier_node_map = tiers
+#' )
+#' cat(tikz_tiered)
+#'
 #' @export
 make_tikz <- function(
   caugi_plot_obj,
+  tier_node_map = NULL,
   scale = 10,
+  full_doc = TRUE,
+  bend_edges = FALSE,
+  bend_angle = 25
+) {
+  if (is.null(tier_node_map)) {
+    make_tikz_standard(caugi_plot_obj, scale, full_doc, bend_edges, bend_angle)
+  } else {
+    make_tikz_tiered(
+      caugi_plot_obj,
+      tier_node_map,
+      scale,
+      full_doc,
+      bend_edges,
+      bend_angle
+    )
+  }
+}
+#' @title Core TikZ Generation Logic
+#' @inheritParams make_tikz
+#' @returns A character string containing LaTeX TikZ code.
+#' @keywords internal
+#' @noRd
+.make_tikz_core <- function(
+  caugi_plot_obj,
+  scale = 10,
+  tier_node_map = NULL,
   full_doc = TRUE,
   bend_edges = FALSE,
   bend_angle = 25
@@ -69,294 +124,17 @@ make_tikz <- function(
   stopifnot(inherits(caugi_plot_obj, "caugi::caugi_plot"))
 
   g <- caugi_plot_obj@grob$children$caugi.graph
-
-  # ---------------- Helper Functions ---------------- #
-
-  rcolor_to_tikz <- function(r_col) {
-    if (is.null(r_col) || length(r_col) == 0) {
-      return(list(tikz = NULL, r_col = NULL))
-    }
-    r_col <- tolower(r_col)
-    if (r_col == "lightgrey") {
-      r_col <- "lightgray"
-    }
-
-    tikz_defaults <- c(
-      "black",
-      "blue",
-      "brown",
-      "cyan",
-      "darkgray",
-      "gray",
-      "green",
-      "lightgray",
-      "magenta",
-      "orange",
-      "pink",
-      "purple",
-      "red"
-    )
-
-    if (r_col %in% tikz_defaults) {
-      return(list(tikz = r_col, r_col = NULL))
-    }
-
-    rgb_vals <- grDevices::col2rgb(r_col) / 255
-    tikz_str <- sprintf(
-      "{rgb:red,%.3f;green,%.3f;blue,%.3f}",
-      rgb_vals[1],
-      rgb_vals[2],
-      rgb_vals[3]
-    )
-    list(tikz = tikz_str, r_col = r_col)
-  }
-
-  extract_nodes <- function(node_grob_children, scale) {
-    circle_nodes <- node_grob_children[grepl(
-      "^node\\.",
-      names(node_grob_children)
-    )]
-    text_grobs <- node_grob_children[grepl(
-      "^label\\.",
-      names(node_grob_children)
-    )]
-    label_map <- stats::setNames(
-      lapply(text_grobs, function(x) x$label),
-      gsub("label\\.", "node.", names(text_grobs))
-    )
-
-    nodes <- lapply(circle_nodes, function(node) {
-      gp <- node$gp
-      style <- list()
-      if (!is.null(gp$fill) && length(gp$fill) > 0) {
-        style$fill <- rcolor_to_tikz(gp$fill)
-      }
-      if (!is.null(gp$col) && length(gp$col) > 0) {
-        style$draw <- rcolor_to_tikz(gp$col)
-      }
-      if (!is.null(gp$fontsize) && length(gp$fontsize) > 0) {
-        style$font <- sprintf(
-          "\\fontsize{%.0f}{%.0f}\\selectfont",
-          gp$fontsize,
-          gp$fontsize * 1.2
-        )
-      }
-      list(
-        name = label_map[[node$name]],
-        x = as.numeric(node$x) * scale,
-        y = as.numeric(node$y) * scale,
-        style = style,
-        label = label_map[[node$name]]
-      )
-    })
-    nodes
-  }
-
-  compute_global_color <- function(nodes, color_type) {
-    vals <- sapply(nodes, function(n) {
-      if (
-        !is.null(n$style[[color_type]]) && !is.null(n$style[[color_type]]$tikz)
-      ) {
-        n$style[[color_type]]$tikz
-      } else {
-        NA
-      }
-    })
-    vals <- vals[!is.na(vals)]
-    if (length(vals) > 0) {
-      names(sort(table(vals), decreasing = TRUE))[1]
-    } else {
-      NULL
-    }
-  }
-
-  extract_edges <- function(
-    edge_grob_children,
-    nodes,
-    scale,
-    bend_edges,
-    bend_angle,
-    global_edge_color
-  ) {
-    # ---- Determine global arrow scale (numeric, unit-safe) ----
-    edge_lengths <- sapply(edge_grob_children, function(e) {
-      if (!is.null(e$arrow$length) && length(e$arrow$length) > 0) {
-        as.numeric(e$arrow$length)
-      } else {
-        NA_real_
-      }
-    })
-
-    edge_lengths <- edge_lengths[!is.na(edge_lengths)]
-    global_arrow_length <- if (length(edge_lengths) > 0) {
-      as.numeric(names(sort(table(edge_lengths), decreasing = TRUE))[1])
-    } else {
-      1
-    }
-
-    # ---- Build edges ----
-    edge_lines <- sapply(edge_grob_children, function(edge) {
-      # Resolve from/to nodes
-      from_node <- nodes[[which(sapply(nodes, function(n) {
-        n$x == as.numeric(edge$x0) * scale &&
-          n$y == as.numeric(edge$y0) * scale
-      }))]]$label
-
-      to_node <- nodes[[which(sapply(nodes, function(n) {
-        n$x == as.numeric(edge$x1) * scale &&
-          n$y == as.numeric(edge$y1) * scale
-      }))]]$label
-
-      style <- c()
-
-      # ---- Color ----
-      if (!is.null(edge$gp$col) && length(edge$gp$col) > 0) {
-        col_tikz <- rcolor_to_tikz(edge$gp$col)
-        if (!is.null(col_tikz$tikz) && col_tikz$tikz != global_edge_color) {
-          style <- c(style, paste0("draw=", col_tikz$tikz))
-        }
-      }
-
-      # ---- Line width ----
-      if (!is.null(edge$gp$lwd) && length(edge$gp$lwd) > 0) {
-        style <- c(style, paste0("line width=", edge$gp$lwd))
-      }
-
-      # ---- Arrow scale (unit-safe comparison) ----
-      if (!is.null(edge$arrow$length) && length(edge$arrow$length) > 0) {
-        edge_len_num <- as.numeric(edge$arrow$length)
-        if (!is.na(edge_len_num) && edge_len_num != global_arrow_length) {
-          style <- c(style, paste0("arrows={[scale=", edge_len_num, "]}"))
-        }
-      }
-
-      # ---- Bend arrows ----
-      if (bend_edges) {
-        from_x <- nodes[[which(sapply(nodes, function(n) {
-          n$label == from_node
-        }))]]$x
-        to_x <- nodes[[which(sapply(nodes, function(n) n$label == to_node))]]$x
-        bend_dir <- if (to_x >= from_x) "bend left" else "bend right"
-        style <- c(style, paste0(bend_dir, "=", bend_angle))
-      }
-
-      # ---- Edge type -> TikZ arrow spec ----
-      arrow_spec <- switch(
-        edge$edge_type,
-        "-->" = "-Latex",
-        "---" = "-",
-        "<->" = "{Latex}-{Latex}",
-        "-Latex" # Default fallback
-      )
-
-      style_str <- paste(style, collapse = ", ")
-      sprintf(
-        "(%s) edge[%s, %s] (%s)",
-        from_node,
-        style_str,
-        arrow_spec,
-        to_node
-      )
-    })
-
-    list(
-      edge_lines = edge_lines,
-      global_arrow_length = global_arrow_length
-    )
-  }
-
-  format_coord <- function(x) {
-    if (x == round(x)) as.character(round(x)) else sprintf("%.3f", x)
-  }
-
-  build_node_lines <- function(nodes, global_node_fill, global_node_draw) {
-    unlist(lapply(nodes, function(n) {
-      style_list <- c("circle")
-      for (sty_name in names(n$style)) {
-        if (sty_name %in% c("fill", "draw")) {
-          global_val <- if (sty_name == "fill") {
-            global_node_fill
-          } else {
-            global_node_draw
-          }
-          if (
-            !is.null(n$style[[sty_name]]) &&
-              n$style[[sty_name]]$tikz != global_val
-          ) {
-            style_list <- c(
-              style_list,
-              paste0(sty_name, "=", n$style[[sty_name]]$tikz)
-            )
-          }
-        } else {
-          style_list <- c(
-            style_list,
-            paste0(sty_name, "=", n$style[[sty_name]])
-          )
-        }
-      }
-      if (!"draw" %in% names(n$style) && is.null(global_node_draw)) {
-        style_list <- c("draw", style_list)
-      }
-      sprintf(
-        "\\node[%s] (%s) at (%s,%s) {%s};",
-        paste(style_list, collapse = ", "),
-        n$name,
-        format_coord(n$x),
-        format_coord(n$y),
-        n$label
-      )
-    }))
-  }
-
-  build_tikz_globals <- function(
-    global_node_fill,
-    global_node_draw,
-    global_edge_color
-  ) {
-    tikz_global <- c()
-    if (!is.null(global_node_fill)) {
-      tikz_global <- c(
-        tikz_global,
-        paste0("every node/.style={fill=", global_node_fill, "}")
-      )
-    }
-    if (!is.null(global_node_draw)) {
-      if (length(tikz_global) > 0) {
-        tikz_global[length(tikz_global)] <- sub(
-          "\\}$",
-          paste0(", draw=", global_node_draw, "}"),
-          tikz_global[length(tikz_global)]
-        )
-      } else {
-        tikz_global <- c(
-          tikz_global,
-          paste0("every node/.style={draw=", global_node_draw, "}")
-        )
-      }
-    }
-    if (!is.null(global_edge_color)) {
-      tikz_global <- c(
-        tikz_global,
-        paste0("every path/.style={draw=", global_edge_color, "}")
-      )
-    }
-    if (length(tikz_global) > 0) {
-      paste0("\\tikzset{", paste(tikz_global, collapse = ", "), "}")
-    } else {
-      ""
-    }
-  }
-
-  # ---------------- Main Logic ---------------- #
-
   node_grob_children <- g$children$node_gtree$children
   edge_grob_children <- g$children[grep("^edge", names(g$children))]
 
+  # ---- Extract nodes ----
   nodes <- extract_nodes(node_grob_children, scale)
+
+  # ---- Global node colors ----
   global_node_fill <- compute_global_color(nodes, "fill")
   global_node_draw <- compute_global_color(nodes, "draw")
 
+  # ---- Global edge color ----
   edge_dummy_nodes <- lapply(edge_grob_children, function(e) {
     col <- if (!is.null(e$gp$col) && length(e$gp$col) > 0) {
       rcolor_to_tikz(e$gp$col)
@@ -367,6 +145,7 @@ make_tikz <- function(
   })
   global_edge_color <- compute_global_color(edge_dummy_nodes, "draw")
 
+  # ---- Node and edge lines ----
   node_lines <- build_node_lines(nodes, global_node_fill, global_node_draw)
   edge_info <- extract_edges(
     edge_grob_children,
@@ -379,50 +158,181 @@ make_tikz <- function(
   edge_lines <- edge_info$edge_lines
   global_arrow_length <- edge_info$global_arrow_length
 
-  tikz_global_line <- build_tikz_globals(
-    global_node_fill,
-    global_node_draw,
-    global_edge_color
+  # ---- Auto-bend bidirectional edges ----
+  # Only if bend_edges = FALSE
+  if (!bend_edges && length(edge_lines) > 1) {
+    # Collect edge coordinates
+    edge_coords <- lapply(edge_grob_children, function(e) {
+      data.frame(
+        x0 = e$x0,
+        y0 = e$y0,
+        x1 = e$x1,
+        y1 = e$y1
+      )
+    })
+    edge_coords <- do.call(rbind, edge_coords)
+
+    # Find bidirectional edges: edges with reversed coordinates
+    bidir_idx <- sapply(seq_len(nrow(edge_coords)), function(i) {
+      any(
+        edge_coords$x0[i] == edge_coords$x1[-i] &
+          edge_coords$y0[i] == edge_coords$y1[-i] &
+          edge_coords$x1[i] == edge_coords$x0[-i] &
+          edge_coords$y1[i] == edge_coords$y0[-i]
+      )
+    })
+
+    if (any(bidir_idx)) {
+      # Apply bending to those edges
+      edge_lines <- lapply(seq_along(edge_lines), function(i) {
+        if (bidir_idx[i]) {
+          gsub(
+            "\\[, -Latex\\]",
+            sprintf("[bend left=%s, -Latex]", bend_angle),
+            edge_lines[[i]]
+          )
+        } else {
+          edge_lines[[i]]
+        }
+      })
+    }
+  }
+
+  # ---- Optional tier rectangles and labels ----
+  tier_rect_lines <- tier_label_lines <- character(0)
+  if (!is.null(tier_node_map)) {
+    stopifnot(is.list(tier_node_map) && length(tier_node_map) > 0)
+    tier_rect_lines <- lapply(names(tier_node_map), function(tier_name) {
+      node_names <- tier_node_map[[tier_name]]
+      sprintf(
+        "\\node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(%s)] (%s) {};",
+        paste(node_names, collapse = ")("),
+        tier_name
+      )
+    })
+    tier_label_lines <- lapply(names(tier_node_map), function(tier_name) {
+      sprintf(
+        "\\node[anchor=west, draw=none, fill=none] at ($(%s.east)+(0.2cm,0)$) {%s};",
+        tier_name,
+        tier_name
+      )
+    })
+  }
+
+  # ---- TikZ global settings ----
+  node_style_vec <- c()
+  if (!is.null(global_node_fill)) {
+    node_style_vec <- c(node_style_vec, paste0("fill=", global_node_fill))
+  }
+  node_style_vec <- c(
+    node_style_vec,
+    "circle",
+    "draw",
+    "minimum size=8mm",
+    "align=center"
   )
+  node_style_str <- paste(node_style_vec, collapse = ", ")
+
   generator_line <- paste0(
     "%%% Generated by causalDisco (version ",
     utils::packageVersion("causalDisco"),
     ")"
   )
 
-  tikz_code <- if (full_doc) {
-    paste(
-      generator_line,
-      "\\documentclass{standalone}",
-      "\\usepackage{tikz}",
-      "\\usetikzlibrary{positioning, arrows.meta}",
-      "",
-      "\\begin{document}",
-      sprintf("\\tikzset{arrows={[scale=%s]}}", global_arrow_length),
-      tikz_global_line,
+  # ---- Assemble TikZ ----
+  assemble_tikz <- function(doc = TRUE) {
+    lines <- c(
+      if (doc) {
+        c(
+          generator_line,
+          "\\documentclass[tikz,border=2mm]{standalone}",
+          "\\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}",
+          "",
+          "\\begin{document}"
+        )
+      } else {
+        generator_line
+      },
+
+      # ---- TikZ global settings ----
+      sprintf(
+        "\\tikzset{arrows={[scale=%s]}, every node/.style={%s}, arrow/.style={-{Stealth}, thick}}",
+        global_arrow_length,
+        node_style_str
+      ),
+
       "\\begin{tikzpicture}",
-      paste(node_lines, collapse = "\n"),
-      "",
-      paste0("\\path ", paste(edge_lines, collapse = "\n      "), ";"),
-      "",
+
+      # ---- Nodes ----
+      node_lines,
+
+      # ---- Optional tier rectangles ----
+      if (length(tier_rect_lines)) {
+        c(
+          "\\begin{scope}[on background layer]",
+          tier_rect_lines,
+          "\\end{scope}"
+        )
+      },
+
+      # ---- Optional tier labels ----
+      tier_label_lines,
+
+      # ---- Edges ----
+      sprintf("\\path %s;", paste(edge_lines, collapse = "\n      ")),
+
       "\\end{tikzpicture}",
-      "\\end{document}",
-      sep = "\n"
+      if (doc) "\\end{document}"
     )
-  } else {
-    paste(
-      generator_line,
-      sprintf("\\tikzset{arrows={[scale=%s]}}", global_arrow_length),
-      tikz_global_line,
-      "\\begin{tikzpicture}",
-      paste(node_lines, collapse = "\n"),
-      "",
-      paste0("\\path ", paste(edge_lines, collapse = "\n      "), ";"),
-      "",
-      "\\end{tikzpicture}",
-      sep = "\n"
-    )
+
+    paste(unlist(lines), collapse = "\n")
   }
 
-  tikz_code
+  assemble_tikz(full_doc)
+}
+
+
+#' @title Generate TikZ Code from a Standard Caugi Plot
+#' @inheritParams make_tikz
+#' @returns A character string containing LaTeX TikZ code.
+#' @keywords internal
+#' @noRd
+make_tikz_standard <- function(
+  caugi_plot_obj,
+  scale = 10,
+  full_doc = TRUE,
+  bend_edges = FALSE,
+  bend_angle = 25
+) {
+  .make_tikz_core(
+    caugi_plot_obj,
+    scale,
+    tier_node_map = NULL,
+    full_doc,
+    bend_edges,
+    bend_angle
+  )
+}
+
+#' @title Generate TikZ Code from a Tiered Caugi Plot
+#' @inheritParams make_tikz
+#' @returns A character string containing LaTeX TikZ code.
+#' @keywords internal
+#' @noRd
+make_tikz_tiered <- function(
+  caugi_plot_obj,
+  tier_node_map,
+  scale = 10,
+  full_doc = TRUE,
+  bend_edges = FALSE,
+  bend_angle = 25
+) {
+  .make_tikz_core(
+    caugi_plot_obj,
+    scale,
+    tier_node_map,
+    full_doc,
+    bend_edges,
+    bend_angle
+  )
 }

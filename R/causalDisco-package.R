@@ -1,4 +1,4 @@
-#' @title causalDisco: Causal Disocvery in R
+#' @title causalDisco: Causal Discovery in R
 #' @name causalDisco-package
 #' @section System requirements:
 #' Cargo (Rust's package manager), rustc >= 1.80.0, xz.
