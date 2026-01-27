@@ -161,7 +161,10 @@ plot(disco_cd_tges)
 
 ## TODO
 
-- Make more complex plotting examples + tests for plot.
+- Make more complex plotting examples + tests for plot. Done?
+
+- Modify `make_tikz()` examples to be on Knowledge+Knowledgeable caugi
+  instead of on caugi directly.
 
 - Register a custom edge type for caugi to represent forbidden edges
   differently than normal directed edges. Would simplify plotting logic
