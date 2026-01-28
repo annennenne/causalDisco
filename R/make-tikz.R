@@ -46,48 +46,7 @@
 #' to nodes by name (as opposed to hard-coded coordinates), making it easy to
 #' modify the output further if needed.
 #'
-#' @examples
-#'
-#' cg <- caugi::caugi(A %-->% B + C)
-#' plot_obj <- caugi::plot(cg, node_style = list(fill = "red"))
-#'
-#' # Full standalone document
-#' tikz_code <- make_tikz(plot_obj, scale = 10, full_doc = TRUE)
-#' cat(tikz_code)
-#'
-#' # Only the tikzpicture environment
-#' tikz_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
-#' cat(tikz_snippet)
-#'
-#' # With bent edges
-#' tikz_bent <- make_tikz(plot_obj, scale = 10, full_doc = FALSE, bend_edges = TRUE)
-#' cat(tikz_bent)
-#'
-#' # With a color not supported by default TikZ colors
-#' plot_darkblue <- caugi::plot(cg, node_style = list(fill = "darkblue"))
-#' tikz_darkblue <- make_tikz(plot_darkblue, scale = 10)
-#'
-#' # Will use RGB specification for darkblue
-#' cat(tikz_darkblue)
-#'
-#' # With tiered nodes
-#' cg_tiered <- caugi::caugi(
-#'   X1 %-->% M1 + M2,
-#'   X2 %-->% M1 + M2,
-#'   M1 %-->% Y,
-#'   M2 %-->% Y
-#' )
-#' tiers <- list(
-#'   exposures = c("X1", "X2"),
-#'   mediators = c("M1", "M2"),
-#'   outcome = "Y"
-#' )
-#' plot_tiered <- caugi::plot(cg_tiered, tiers = tiers)
-#' tikz_tiered <- make_tikz(
-#'   plot_tiered,
-#'   tier_node_map = tiers
-#' )
-#' cat(tikz_tiered)
+#' @example inst/roxygen-examples/make-tikz-example.R
 #'
 #' @export
 make_tikz <- function(
