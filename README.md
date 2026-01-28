@@ -159,12 +159,10 @@ plot(disco_cd_tges)
 - Made a causal discovery vignette (essentially old content of getting
   started vignette, but examples modified). Anything missing?
 
+- Made a visualization vignette showing knowledge plotting and TikZ
+  export. Anything missing?
+
 ## TODO
-
-- Make more complex plotting examples + tests for plot. Done?
-
-- Modify `make_tikz()` examples to be on Knowledge+Knowledgeable caugi
-  instead of on caugi directly.
 
 - Register a custom edge type for caugi to represent forbidden edges
   differently than normal directed edges. Would simplify plotting logic
@@ -234,29 +232,6 @@ gg +
 
 <img src="man/figures/README-plot wip-1.png" alt="" width="100%" />
 
-- Implement a working `make_tikz` for these plots. Something like this
-  (coordinates are from `caugi::caugi_layout_sugiyama(cg)` scaled by
-  10)? Should be easy to make a function that generates code like this,
-  and we can then bend curves.
-
-``` tex
-\documentclass{article}
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}
-\begin{document}
-\tikzset{arrows={[scale=2]}}
-\begin{tikzpicture}
-% Nodes
-\node[draw, circle, fill=blue] (A) at (5,0) {A};
-\node[draw, circle, fill=red] (B) at (10,10) {B};
-\node[draw, circle, fill=gray] (C) at (0,10) {C};
-\path (A) edge[-Latex] (B) 
-      (A) edge[-Latex] (C);
-
-\end{tikzpicture}
-\end{document}
-```
-
 - Make required work for our algorithms. It breaks when it internally
   calls `tpdag`, so look into that…
 
@@ -267,7 +242,7 @@ gg +
   instead also use other data sets (e.g. num_data, cat_data, mix_data).
   (this also avoids that we currently simulate data in tests when
   needing an e.g. numerical dataset). Done mostly I think? Just missing
-  cat_ord_data usage iirc.
+  `cat_ord_data` usage iirc.
 
 - Add all algs/scores/tests from the backends (start with Tetrad). Check
   if we currently document ones we haven’t implemented yet.
@@ -276,6 +251,10 @@ gg +
     this error when implementing:
     `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null`
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
+
+- Implement fci from pcalg
+
+- Implement BOSS + grasp from Tetrad
 
 - Update evaluation and confusion metrics (use caugi?)
 
@@ -287,11 +266,9 @@ gg +
 - Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the
   argument for now (and maybe fix later).
 
-- bnlearn has bug for old version of caugi. Fixed in PR \#149 in caugi.
-
-- Tried implementing it in the scores (e.g. `TemporalBdeu`) by giving it
-  score -Inf if missing a required edge, but then it runs forever. I.e.
-  adding the following to `local.score`
+- Tried implementing required edges in the scores (e.g. `TemporalBdeu`)
+  by giving it score -Inf if missing a required edge, but then it runs
+  forever. I.e. adding the following to `local.score`
 
 ``` r
 vertex_name <- colnames(pp.dat$data)[vertex]
