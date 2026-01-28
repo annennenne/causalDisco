@@ -266,7 +266,7 @@ test_that("build_node_lines adds non-global fill/draw correctly", {
   # Both fill and draw differ from globals, so they should appear in style_list
   expect_true(grepl("fill=blue", lines[1]))
   expect_true(grepl("draw=green", lines[1]))
-  expect_true(grepl("\\(node3\\) at \\(0,0\\) \\{C\\};", lines[1]))
+  expect_true(grepl("\\(node1\\) at \\(0,0\\) \\{A\\};", lines[1]))
 })
 
 
