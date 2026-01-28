@@ -283,3 +283,35 @@ plot_caugi_common <- function(
 
   do.call(plot, c(plot_args, dots))
 }
+
+#' Plot Method for causalDisco Objects
+#'
+#' This is the generic `plot()` function for objects of class \code{knowledge}
+#' or \code{knowledgeable_caugi}. It dispatches to the class-specific plotting methods
+#' [plot.knowledge()] and [plot.knowledgeable_caugi()].
+#'
+#' @param x An object to plot (class \code{knowledge} or \code{knowledgeable_caugi}).
+#' @param ... Additional arguments passed to class-specific plot methods and to [caugi::plot()].
+#'
+#' @return Invisibly returns the input object. The primary effect is the generated plot.
+#'
+#' @seealso [plot.knowledge()], [plot.knowledgeable_caugi()], [caugi::plot()]
+#'
+#' @examples
+#' data(tpc_example)
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   )
+#' )
+#' plot(kn)
+#'
+#' cd_tges <- tges(engine = "causalDisco", score = "tbic")
+#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+#' plot(disco_cd_tges)
+#'
+#' @name plot
+NULL
