@@ -23,7 +23,13 @@ This vignette demonstrates how to visualize causal graphs. We cover plotting `kn
 `knowledgeable_caugi` objects, customizing layouts and styles, and exporting graphs to TikZ for inclusion in
 LaTeX documents.
 
-# Plotting Knowledge
+# Plotting
+
+You can visualize causal graphs using the `plot()` function, which works for both `knowledge` and
+`knowledgeable_caugi` objects. The function leverages the underlying `caugi::plot()` method, providing
+flexible options for customizing the appearance of nodes and edges.
+
+## Plotting Knowledge Objects
 
 We start by creating a simple knowledge object and visualizing it with `plot()`.
 This knowledge encodes the following relationships between variables in our dataset:
@@ -70,7 +76,7 @@ plot(
 )
 ```
 
-## Plotting Tiered Knowledge
+### Plotting Tiered Knowledge
 
 We can also visualize tiered knowledge structures. Here is an example using a dataset with variables measured at
 different life stages:
@@ -93,7 +99,7 @@ plot(kn_tiered)
 Variables are grouped by life stage, reflecting the tiered structure. This helps visually convey temporal or
 hierarchical relationships in the data.
 
-# Plotting Knowledgeable Caugi Objects
+## Plotting Knowledgeable Caugi Objects
 
 Here we create a `knowledgeable_caugi` object by combining a causal discovery result with prior knowledge,
 and visualize it using the `plot` function.
@@ -204,7 +210,7 @@ cat(tikz_bent_tiered)
 
 ## Exporting Knowledgeable Caugi to TikZ
 
-Knowledge-enhanced causal discovery results can be exported in the same way:
+The output of `disco()` gives a `knowledgeable_caugi` object, which can also be exported to TikZ:
 
 ```{r tikz export knowledgeable caugi}
 data(tpc_example)
@@ -217,17 +223,23 @@ kn_tiered <- knowledge(
   )
 )
 
+tiers <- list(
+  child = c("child_x1", "child_x2"),
+  youth = c("youth_x3", "youth_x4"),
+  old = c("oldage_x5", "oldage_x6")
+)
+
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn_tiered)
 
 disco_plot <- plot(disco_cd_tges)
-tikz_knowledge_snippet <- make_tikz(disco_plot, scale = 10, full_doc = FALSE)
-cat(tikz_knowledge_snippet)
+tikz_snippet <- make_tikz(disco_plot, tier_node_map = tiers, scale = 10, full_doc = FALSE)
+cat(tikz_snippet)
 ```
 
 ## Exporting Caugi Objects to TikZ
 
-The same export mechanism also applies to standard caugi objects:
+The same export mechanism also applies to standard `caugi` objects:
 
 ```{r tikz export caugi}
 cg <- caugi::caugi(
