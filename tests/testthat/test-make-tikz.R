@@ -155,3 +155,73 @@ test_that("make_tikz produces bent edges automatically for A --> B, B --> A grap
     fixed = TRUE
   ))
 })
+
+test_that("make_tikz works on tiered knowledge", {
+  data(tpc_example)
+  kn_tiered <- knowledge(
+    tpc_example,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+
+  kn_tiered_plot <- plot(kn_tiered)
+  tiers <- list(
+    child = c("child_x1", "child_x2"),
+    youth = c("youth_x3", "youth_x4"),
+    old = c("oldage_x5", "oldage_x6")
+  )
+
+  tikz_snippet <- make_tikz(
+    kn_tiered_plot,
+    tier_node_map = tiers,
+    full_doc = FALSE
+  )
+
+  expect_true(grepl(
+    "node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(child_x1)(child_x2)] (child)",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+
+  tiers <- list(
+    child = c("child_x1", "child_x2"),
+    youth = c("youth_x3", "youth_x4"),
+    old = c("oldage_x5", "oldage_x6")
+  )
+
+  cd_tges <- tges(engine = "causalDisco", score = "tbic")
+  disco_cd_tges <- disco(
+    data = tpc_example,
+    method = cd_tges,
+    knowledge = kn_tiered
+  )
+
+  disco_plot <- plot(disco_cd_tges)
+  tikz_snippet <- make_tikz(
+    disco_plot,
+    tier_node_map = tiers,
+    scale = 10,
+    full_doc = FALSE
+  )
+
+  expect_true(grepl(
+    "begin{scope}[on background layer]",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+
+  expect_true(grepl(
+    "node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(child_x1)(child_x2)] (child)",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+
+  expect_true(grepl(
+    "node[anchor=south, draw=none, fill=none] at ($(child.north)+(0cm,0.2cm)$) {child}",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+})
