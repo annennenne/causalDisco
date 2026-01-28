@@ -97,14 +97,14 @@ cat(tikz_kn_snippet)
 
 # With bent edges
 tikz_bent <- make_tikz(
-  plot_obj,
+  plot_kn,
   full_doc = FALSE,
   bend_edges = TRUE
 )
 cat(tikz_bent)
 
 # With a color not supported by default TikZ colors
-plot_darkblue <- caugi::plot(cg, node_style = list(fill = "darkblue"))
+plot_darkblue <- caugi::plot(kn, node_style = list(fill = "darkblue"))
 tikz_darkblue <- make_tikz(plot_darkblue, full_doc = FALSE)
 # Will use RGB specification for darkblue
 cat(tikz_darkblue)
