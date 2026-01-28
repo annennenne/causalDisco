@@ -372,9 +372,11 @@ extract_edges <- function(
 #'
 #' @param coord A numeric coordinate.
 #'
-#' @returns A character string formatted to 2 decimal places.
+#' @returns A character string rounded to at most 3 decimal places,
+#'   with trailing zeros (and any trailing decimal point) removed.
 #' @keywords internal
 #' @noRd
 format_coord <- function(x) {
-  if (x == round(x)) as.character(round(x)) else sprintf("%.3f", x)
+  out <- sprintf("%.3f", x)
+  sub("\\.?0+$", "", out)
 }

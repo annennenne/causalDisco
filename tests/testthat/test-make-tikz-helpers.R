@@ -244,6 +244,32 @@ test_that("build_node_lines handles custom styles besides fill/draw", {
   expect_true(grepl("font=", lines[1]))
 })
 
+test_that("build_node_lines adds non-global fill/draw correctly", {
+  nodes <- list(
+    list(
+      name = "node1",
+      x = 0,
+      y = 0,
+      label = "A",
+      style = list(
+        fill = list(tikz = "blue"), # different from global
+        draw = list(tikz = "green") # different from global
+      )
+    )
+  )
+
+  global_fill <- "red"
+  global_draw <- "black"
+
+  lines <- build_node_lines(nodes, global_fill, global_draw)
+
+  # Both fill and draw differ from globals, so they should appear in style_list
+  expect_true(grepl("fill=blue", lines[1]))
+  expect_true(grepl("draw=green", lines[1]))
+  expect_true(grepl("\\(node3\\) at \\(0,0\\) \\{C\\};", lines[1]))
+})
+
+
 ######### get_anchor_and_offset Tests #########
 
 test_that("get_anchor_and_offset returns correct anchors for above", {
@@ -499,4 +525,15 @@ test_that("extract_edges ignores missing gp or arrow attributes", {
   expect_false(grepl("draw=", line))
   expect_false(grepl("line width=", line))
   expect_false(grepl("arrows=\\{\\[scale=", line))
+})
+
+
+########### format_coord Tests #########
+
+test_that("format_coord formats coordinates correctly", {
+  expect_equal(format_coord(1), "1")
+  expect_equal(format_coord(1.1), "1.1")
+  expect_equal(format_coord(1.11), "1.11")
+  expect_equal(format_coord(1.111), "1.111")
+  expect_equal(format_coord(1.1111), "1.111")
 })
