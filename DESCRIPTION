@@ -12,7 +12,7 @@ Authors@R:
         person(
           given = "Frederik Fabricius-Bjerre",
           role = "aut",
-          email = "ffb@di.ku.dk"
+          email = "frederik@fabriciusbjerre.dk"
         ),
         person(
           given = "Anne Helby",
@@ -98,6 +98,8 @@ Collate:
     'aaa-init-helpers.R'
     'amat.R'
     'bnlearn-search.R'
+    'boss-fci.R'
+    'boss.R'
     'cast-obj.R'
     'causalDisco-package.R'
     'causalDisco-search.R'

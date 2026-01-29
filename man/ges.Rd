@@ -15,7 +15,7 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 
 \item{score}{Character; name of the scoring function to use.}
 
-\item{...}{Additional arguments passed to the chosen engine (e.g. test or
+\item{...}{Additional arguments passed to the chosen engine (e.g. score and
 algorithm parameters).}
 }
 \value{
@@ -27,7 +27,7 @@ A function of class \code{"ges"} that takes a single argument \code{data}
 Run the GES algorithm for causal discovery using one of several engines.
 }
 \details{
-For specific details on the supported scores, tests, and parameters for each engine, see:
+For specific details on the supported scores, and parameters for each engine, see:
 \itemize{
 \item \code{\link{TetradSearch}} for \pkg{Tetrad} (note, Tetrad refers to it as "FGES"),
 \item \code{\link{PcalgSearch}} for \pkg{pcalg}.

@@ -32,7 +32,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Frederik Fabricius-Bjerre \email{ffb@di.ku.dk}
+  \item Frederik Fabricius-Bjerre \email{frederik@fabriciusbjerre.dk}
   \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
 }
 

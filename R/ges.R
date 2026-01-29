@@ -9,11 +9,11 @@
 #'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
 #'   }
 #' @param score Character; name of the scoring function to use.
-#' @param ... Additional arguments passed to the chosen engine (e.g. test or
+#' @param ... Additional arguments passed to the chosen engine (e.g. score and
 #' algorithm parameters).
 #'
 #' @details
-#' For specific details on the supported scores, tests, and parameters for each engine, see:
+#' For specific details on the supported scores, and parameters for each engine, see:
 #' \itemize{
 #'  \item \code{\link{TetradSearch}} for \pkg{Tetrad} (note, Tetrad refers to it as "FGES"),
 #'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
