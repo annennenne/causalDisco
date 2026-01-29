@@ -1,15 +1,14 @@
-#' @title Generate TikZ Code from a Caugi Plot
+#' @title Generate TikZ Code from a Object
 #'
 #' @description
-#' Generates LaTeX TikZ code from a `caugi::caugi_plot` object, preserving
-#' node positions, labels, and visual styles. Edges are rendered with arrows,
-#' line widths, and colors. The output is readable LaTeX code that can be
+#' Generates LaTeX TikZ code from a `knowledgeable_caugi`, `knowledge`, or
+#' `caugi::caugi` object, preserving node positions, labels, and visual styles.
+#' Edges are rendered with arrows, line widths, and colors.
+#' The output is readable LaTeX code that can be
 #' directly compiled or modified.
 #'
-#' @param caugi_plot_obj A `caugi::caugi_plot` object.
-#' @param tier_node_map Optional named list mapping tier names to vectors of
-#'  node names. If provided, tier rectangles and labels are added to the TikZ
-#'  output. Default is `NULL`.
+#' @param x A `knowledgeable_caugi`, `knowledge`, or `caugi::caugi` object.
+#' @param ... Additional arguments passed to [plot()] and [caugi::plot()].
 #' @param scale Numeric scalar. Scaling factor for node coordinates. Default is `10`.
 #' @param full_doc Logical. If `TRUE` (default), generates a full standalone
 #'   LaTeX document. If `FALSE`, returns only the `tikzpicture` environment.
@@ -22,6 +21,96 @@
 #' @param tier_label_pos Character string specifying the position of tier labels
 #'   relative to the tier rectangles. Must be one of `"above"`, `"below"`, `"left"`, or `"right"`.
 #'   Default is `"above"`.
+#'
+#' @return A character string containing LaTeX TikZ code. Depending on
+#'  `full_doc`, this is either:
+#'  * a complete LaTeX document (`full_doc = TRUE`), or
+#'  * only the `tikzpicture` environment (`full_doc = FALSE`).
+#'
+#' @details
+#' The function calls `plot()` to generate a `caugi::caugi_plot` object, then
+#' traverses the plot object's grob structure to extract nodes and
+#' edges. Supported features include:
+#'
+#' * **Nodes**
+#'   - Fill color and draw color (supports both named colors and custom RGB values)
+#'   - Font size
+#'   - Coordinates are scaled by the `scale` parameter
+#'
+#' * **Edges**
+#'   - Line color and width
+#'   - Arrow scale
+#'   - Optional bending to reduce overlapping arrows
+#'
+#' The generated TikZ code uses global style settings, and edges are connected
+#' to nodes by name (as opposed to hard-coded coordinates), making it easy to
+#' modify the output further if needed.
+#'
+#' @example inst/roxygen-examples/make-tikz-example.R
+#'
+#' @export
+make_tikz <- function(
+  x,
+  ...,
+  scale = 10,
+  full_doc = TRUE,
+  bend_edges = FALSE,
+  bend_angle = 25,
+  tier_label_pos = c("above", "below", "left", "right")
+) {
+  tier_label_pos <- match.arg(tier_label_pos)
+  dots <- list(...)
+  caugi_plot_obj <- plot(x, ...)
+
+  if (inherits(x, "knowledgeable_caugi")) {
+    x <- x$knowledge
+  }
+
+  tier_node_map <- NULL
+
+  if ("tiers" %in% names(dots)) {
+    tier_node_map <- dots$tiers
+  } else if (inherits(x, "knowledge")) {
+    tier_vector <- x$vars$tier
+
+    if (any(is.na(tier_vector))) {
+      if (!all(is.na(tier_vector))) {
+        warning(
+          "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers.\nDefaulting to untiered plotting.",
+          call. = FALSE
+        )
+      }
+      tier_node_map <- NULL
+    } else {
+      tier_node_map <- split(x$vars$var, x$vars$tier)
+    }
+  }
+
+  .make_tikz(
+    caugi_plot_obj,
+    tier_node_map = tier_node_map,
+    scale = scale,
+    full_doc = full_doc,
+    bend_edges = bend_edges,
+    bend_angle = bend_angle,
+    tier_label_pos = tier_label_pos
+  )
+}
+
+
+#' @title Generate TikZ Code from a Caugi Plot
+#'
+#' @description
+#' Generates LaTeX TikZ code from a `caugi::caugi_plot` object, preserving
+#' node positions, labels, and visual styles. Edges are rendered with arrows,
+#' line widths, and colors. The output is readable LaTeX code that can be
+#' directly compiled or modified.
+#'
+#' @inheritParams make_tikz
+#' @param caugi_plot_obj A `caugi::caugi_plot` object.
+#' @param tier_node_map Optional named list mapping tier names to vectors of
+#'  node names. If provided, tier rectangles and labels are added to the TikZ
+#'  output. Default is `NULL`.
 #'
 #' @return A character string containing LaTeX TikZ code. Depending on
 #'   `full_doc`, this is either:
@@ -48,8 +137,9 @@
 #'
 #' @example inst/roxygen-examples/make-tikz-example.R
 #'
-#' @export
-make_tikz <- function(
+#' @keywords internal
+#' @noRd
+.make_tikz <- function(
   caugi_plot_obj,
   tier_node_map = NULL,
   scale = 10,
@@ -198,18 +288,11 @@ make_tikz <- function(
   }
 
   # ---- TikZ global settings ----
-  node_style_vec <- c()
-  if (!is.null(global_node_fill)) {
-    node_style_vec <- c(node_style_vec, paste0("fill=", global_node_fill))
-  }
-  node_style_vec <- c(
-    node_style_vec,
-    "circle",
-    "draw",
-    "minimum size=8mm",
-    "align=center"
+  tikz_global_settings <- build_tikz_globals(
+    global_node_fill = global_node_fill,
+    global_node_draw = global_node_draw,
+    global_edge_color = global_edge_color
   )
-  node_style_str <- paste(node_style_vec, collapse = ", ")
 
   generator_line <- paste0(
     "%%% Generated by causalDisco (version ",
@@ -233,10 +316,11 @@ make_tikz <- function(
       },
 
       # ---- TikZ global settings ----
-      sprintf(
-        "\\tikzset{arrows={[scale=%s]}, every node/.style={%s}, arrow/.style={-{Stealth}, thick}}",
+      paste0(
+        tikz_global_settings,
+        "\n\\tikzset{arrows={[scale=",
         global_arrow_length,
-        node_style_str
+        "]}, arrow/.style={-{Stealth}, thick}}"
       ),
 
       "\\begin{tikzpicture}",

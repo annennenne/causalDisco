@@ -148,7 +148,9 @@ Unlike many graph export tools, edges are attached to nodes rather than position
 making the output easier to modify and maintain.
 
 This functionality works for `knowledge`, `knowledgeable_caugi`, and `caugi::caugi` objects, allowing you to customize layouts,
-styles, and edges further in your LaTeX document.
+styles, and edges further in your LaTeX document. It calls the underlying `causalDisco::plot()` method
+(which calls `caugi::plot()`) to generate the initial plot object before converting it to TikZ code.
+Thus, you can supply any arguments to `make_tikz()` that are supported by `causalDisco::plot()` and `caugi::plot()`.
 
 ## Exporting Knowledge to TikZ
 
@@ -163,14 +165,12 @@ kn <- knowledge(
   Y %!-->% Z
 )
 
-kn_plot <- plot(kn)
-
 # Full standalone document
-tikz_knowledge_code <- make_tikz(kn_plot, scale = 10, full_doc = TRUE)
+tikz_knowledge_code <- make_tikz(kn, scale = 10, full_doc = TRUE)
 cat(tikz_knowledge_code)
 
 # Only the tikzpicture environment
-tikz_knowledge_snippet <- make_tikz(kn_plot, scale = 10, full_doc = FALSE)
+tikz_knowledge_snippet <- make_tikz(kn, scale = 10, full_doc = FALSE)
 cat(tikz_knowledge_snippet)
 ```
 
@@ -195,18 +195,21 @@ kn_tiered <- knowledge(
   child_x1 %-->% oldage_x5
 )
 
-kn_tiered_plot <- plot(kn_tiered)
-kn_tiered_plot
+plot(kn_tiered)
 
-tiers <- list(
-  child = c("child_x1", "child_x2"),
-  youth = c("youth_x3", "youth_x4"),
-  old = c("oldage_x5", "oldage_x6")
+tikz_bent_tiered <- make_tikz(
+  kn_tiered,
+  scale = 10,
+  full_doc = FALSE,
+  bend_edges = TRUE,
+  bend_angle = 20
 )
-
-tikz_bent_tiered <- make_tikz(kn_tiered_plot, tier_node_map = tiers, scale = 10, full_doc = FALSE, bend_edges = TRUE, bend_angle = 20)
 cat(tikz_bent_tiered)
 ```
+
+The TikZ plot can be seen here:
+
+![](tikz-tier-plot.pdf)
 
 ## Exporting Knowledgeable Caugi to TikZ
 

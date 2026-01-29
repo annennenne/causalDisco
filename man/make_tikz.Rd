@@ -2,11 +2,11 @@
 % Please edit documentation in R/make-tikz.R
 \name{make_tikz}
 \alias{make_tikz}
-\title{Generate TikZ Code from a Caugi Plot}
+\title{Generate TikZ Code from a Object}
 \usage{
 make_tikz(
-  caugi_plot_obj,
-  tier_node_map = NULL,
+  x,
+  ...,
   scale = 10,
   full_doc = TRUE,
   bend_edges = FALSE,
@@ -15,11 +15,9 @@ make_tikz(
 )
 }
 \arguments{
-\item{caugi_plot_obj}{A \code{caugi::caugi_plot} object.}
+\item{x}{A \code{knowledgeable_caugi}, \code{knowledge}, or \code{caugi::caugi} object.}
 
-\item{tier_node_map}{Optional named list mapping tier names to vectors of
-node names. If provided, tier rectangles and labels are added to the TikZ
-output. Default is \code{NULL}.}
+\item{...}{Additional arguments passed to \code{\link[=plot]{plot()}} and \code{\link[caugi:plot]{caugi::plot()}}.}
 
 \item{scale}{Numeric scalar. Scaling factor for node coordinates. Default is \code{10}.}
 
@@ -47,13 +45,15 @@ A character string containing LaTeX TikZ code. Depending on
 }
 }
 \description{
-Generates LaTeX TikZ code from a \code{caugi::caugi_plot} object, preserving
-node positions, labels, and visual styles. Edges are rendered with arrows,
-line widths, and colors. The output is readable LaTeX code that can be
+Generates LaTeX TikZ code from a \code{knowledgeable_caugi}, \code{knowledge}, or
+\code{caugi::caugi} object, preserving node positions, labels, and visual styles.
+Edges are rendered with arrows, line widths, and colors.
+The output is readable LaTeX code that can be
 directly compiled or modified.
 }
 \details{
-The function traverses the plot object's grob structure to extract nodes and
+The function calls \code{plot()} to generate a \code{caugi::caugi_plot} object, then
+traverses the plot object's grob structure to extract nodes and
 edges. Supported features include:
 \itemize{
 \item \strong{Nodes}

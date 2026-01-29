@@ -264,6 +264,8 @@ build_tikz_globals <- function(
 #' @returns A list with two elements:
 #' * `edge_lines`: A character vector of TikZ edge lines.
 #' * `global_arrow_length`: The global arrow length used.
+#' * `col`: The color used for edges.
+#' * `
 #' @keywords internal
 #' @noRd
 extract_edges <- function(
@@ -284,10 +286,13 @@ extract_edges <- function(
   })
 
   edge_lengths <- edge_lengths[!is.na(edge_lengths)]
-  global_arrow_length <- if (length(edge_lengths) > 0) {
-    as.numeric(names(sort(table(edge_lengths), decreasing = TRUE))[1])
+  if (length(edge_lengths) > 0) {
+    global_arrow_length <- as.numeric(names(sort(
+      table(edge_lengths),
+      decreasing = TRUE
+    ))[1])
   } else {
-    1
+    global_arrow_length <- 1
   }
 
   # ---- Build edges ----
