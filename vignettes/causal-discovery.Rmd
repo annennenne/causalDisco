@@ -69,7 +69,9 @@ We can use the PC algorithm from any of the "tetrad", "pcalg", or "bnlearn" engi
 data. The motivation for having multiple engines is that they may implement different algorithms, tests, or
 scoring methods, or the same algorithm may be implemented differently across engines.
 
-Below, we set up the PC algorithm using Fisher's Z test, a significance level of 0.05, and `pcalg` as the engine.
+Below, we set up the PC algorithm using Fisher's Z test, a significance level of 0.05, and `pcalg` as the engine. To do
+so, we first define the PC method using the `pc()` function, and then pass it to the `disco()` function along with
+the data.
 
 ```{r pc algorithm simple}
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)

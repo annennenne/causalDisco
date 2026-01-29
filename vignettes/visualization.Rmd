@@ -38,7 +38,7 @@ This knowledge encodes the following relationships between variables in our data
 data(num_data)
 kn <- knowledge(
   num_data,
-  X1 %-->% X2,
+  X1 %-->% c(X2, X3),
   X2 %!-->% c(X3, Y),
   Y %!-->% Z
 )
