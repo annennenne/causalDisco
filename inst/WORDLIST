@@ -18,6 +18,7 @@ Caugi
 Chickering
 Codecov
 DAGMA
+DAGs
 DSL
 DirectLiNGAM
 EBIC
@@ -37,6 +38,7 @@ GFCI
 GIC
 GIES
 GRaSP
+Glymour
 Graphviz
 HITON
 HPC
@@ -87,6 +89,7 @@ Tobias
 Uhler's
 WIP
 Welch
+Zanga
 Zhang
 adf
 adjacencies
@@ -101,6 +104,7 @@ bidirected
 bnlearn
 caugi
 causalInference
+confounder
 cpdag
 df
 discretizing
@@ -126,7 +130,6 @@ nDAGs
 nonsingular
 num
 oldage
-ord
 pag
 pak
 pc
