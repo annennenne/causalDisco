@@ -236,3 +236,30 @@ test_that("make_tikz works on tiered knowledge", {
     fixed = TRUE
   ))
 })
+
+test_that("make_tikz works with custom tier", {
+  data(tpc_example)
+  kn_tiered <- knowledge(
+    tpc_example,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    )
+  )
+  tiers <- list(
+    young = c("child_x1", "child_x2", "youth_x3", "youth_x4"),
+    old = c("oldage_x5", "oldage_x6")
+  )
+  tikz_snippet <- make_tikz(
+    kn_tiered,
+    layout = "tiered",
+    tiers = tiers,
+    full_doc = FALSE
+  )
+  expect_true(grepl(
+    "(young)",
+    tikz_snippet,
+    fixed = TRUE
+  ))
+})

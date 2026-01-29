@@ -74,12 +74,6 @@ make_tikz <- function(
     tier_vector <- x$vars$tier
 
     if (any(is.na(tier_vector))) {
-      if (!all(is.na(tier_vector))) {
-        warning(
-          "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers.\nDefaulting to untiered plotting.",
-          call. = FALSE
-        )
-      }
       tier_node_map <- NULL
     } else {
       tier_node_map <- split(x$vars$var, x$vars$tier)

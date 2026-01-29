@@ -1,16 +1,3 @@
-#' @title Convert to named tibble
-#' @param x Input data (vector, matrix, or data frame).
-#' @param colnames Character vector of column names.
-#' @keywords internal
-#' @noRd
-as_named_tibble <- function(x, colnames) {
-  if (is.null(dim(x))) {
-    x <- matrix(x, ncol = length(colnames))
-  }
-  tibble::as_tibble(x, .name_repair = "minimal") |>
-    stats::setNames(colnames)
-}
-
 #' @title Print section helper
 #' @description Print a titled section with a formatted tibble.
 #' @param title Section title.

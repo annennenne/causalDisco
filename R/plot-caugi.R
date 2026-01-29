@@ -279,7 +279,7 @@ plot_caugi_common <- function(
     plot_args$tiers <- tiers
   } else if (has_tiers && any_na_tiers) {
     warning(
-      "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers. Defaulting to untiered plotting.",
+      "Not all nodes are assigned to tiers. Tiered plotting not implemented for partial tiers. \nDefaulting to untiered plotting.",
       call. = FALSE
     )
   }
