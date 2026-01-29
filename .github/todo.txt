@@ -41,3 +41,4 @@ Make edges, nodes dispatch to avoid nameclash
 - Allow star - star (adjaceny) knowledge
 
 - User should only be allowed to give knowledge that matches the knowledge class (e.g. DAG)
+

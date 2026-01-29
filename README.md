@@ -153,14 +153,7 @@ plot(disco_cd_tges)
 
 ## Questions
 
-- Updated getting started, knowledge vignettes based on the feedback.
-  Anything missing?
-
-- Made a causal discovery vignette (essentially old content of getting
-  started vignette, but examples modified). Anything missing?
-
-- Made a visualization vignette showing knowledge plotting and TikZ
-  export. Anything missing?
+- Updated all the vignettes - anything missing?
 
 ## TODO
 
