@@ -101,7 +101,7 @@ plot.knowledgeable_caugi <- function(
         }
         auto_edge_styles$by_edge[[from]][[to]] <- list(
           col = required_col,
-          lwd = 2
+          fill = required_col
         )
       }
     }
@@ -211,7 +211,10 @@ plot.knowledge <- function(
         if (is.null(auto_edge_styles$by_edge[[from]])) {
           auto_edge_styles$by_edge[[from]] <- list()
         }
-        auto_edge_styles$by_edge[[from]][[to]] <- list(col = col)
+        auto_edge_styles$by_edge[[from]][[to]] <- list(
+          col = col,
+          fill = col
+        )
       }
     }
   }
