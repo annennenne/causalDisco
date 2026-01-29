@@ -245,8 +245,6 @@ gg +
     `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null`
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
 
-- Implement fci from pcalg
-
 - Implement BOSS + grasp from Tetrad
 
 - Update evaluation and confusion metrics (use caugi?)
