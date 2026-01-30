@@ -1,4 +1,4 @@
-test_that("boss Tetrad disco respects tier knowledge", {
+test_that("boss_fci Tetrad disco respects tier knowledge", {
   skip_if_no_tetrad()
 
   data(tpc_example)
@@ -12,8 +12,8 @@ test_that("boss Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
+  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
 
   edges <- output$caugi@edges
 
@@ -32,8 +32,8 @@ test_that("boss Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(tpc_example, tetrad_boss, knowledge = kn)
+  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  output <- disco(tpc_example, tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_tier_violations(edges, kn)
@@ -43,7 +43,7 @@ test_that("boss Tetrad disco respects tier knowledge", {
   )
 })
 
-test_that("boss Tetrad disco respects required background knowledge", {
+test_that("boss_fci Tetrad disco respects required background knowledge", {
   skip_if_no_tetrad()
 
   data(tpc_example)
@@ -56,8 +56,8 @@ test_that("boss Tetrad disco respects required background knowledge", {
     "boss_fci Tetrad runs forever with required. See #1950 in Tetrad."
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
+  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -78,8 +78,8 @@ test_that("boss Tetrad disco respects required background knowledge", {
     youth_x3 %-->% oldage_x5
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
+  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
@@ -95,7 +95,7 @@ test_that("boss Tetrad disco respects required background knowledge", {
   )
 })
 
-test_that("boss Tetrad disco respects forbidden background knowledge", {
+test_that("boss_fci Tetrad disco respects forbidden background knowledge", {
   skip_if_no_tetrad()
 
   data(tpc_example)
@@ -106,8 +106,8 @@ test_that("boss Tetrad disco respects forbidden background knowledge", {
     child_x2 %!-->% child_x1
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
+  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)

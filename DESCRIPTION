@@ -118,6 +118,7 @@ Collate:
     'fci.R'
     'gaus-cor-score.R'
     'ges.R'
+    'grasp.R'
     'install-java.R'
     'install-tetrad.R'
     'knowledge-conversions.R'

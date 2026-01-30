@@ -21,8 +21,11 @@ reference:
   - title: "Causal Discovery Algorithms"
     desc: "Core search algorithms implemented or wrapped by causalDisco."
     contents:
+      - boss
+      - boss_fci
       - fci
       - ges
+      - grasp
       - pc
       - tfci
       - tges

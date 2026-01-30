@@ -166,8 +166,6 @@ test_that("ges pcalg disco respects forbidden background knowledge", {
     regexp = "pcalg does not support asymmetric edges."
   )
 
-  skip("ges pcalg gives fake warning?")
-
   kn <- knowledge(
     tpc_example,
     child_x1 %!-->% youth_x3,
