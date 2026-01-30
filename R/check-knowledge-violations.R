@@ -28,7 +28,7 @@ check_tier_violations <- function(edges, kn) {
 
   violations <- edges_with_tiers |>
     dplyr::filter(
-      edge != "<->", # bidirectional edges are allowed between tiers (means latent confounder)
+      !edge %in% c("<->", "o-o"),
       tier_from > tier_to
     )
 
