@@ -8,6 +8,19 @@ disco(tpc_example, ges_pcalg)
 # or using ges_pcalg directly
 ges_pcalg(tpc_example)
 
+# With all algorithm arguments specified
+ges_pcalg <- ges(
+  engine = "pcalg",
+  score = "sem_bic",
+  adaptive = "vstructures",
+  phase = "forward",
+  iterate = FALSE,
+  maxDegree = 3,
+  verbose = FALSE
+)
+disco(tpc_example, ges_pcalg)
+
+
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {

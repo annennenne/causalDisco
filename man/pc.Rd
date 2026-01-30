@@ -46,6 +46,23 @@ disco(tpc_example, pc_pcalg)
 # or using pc_pcalg directly
 pc_pcalg(tpc_example)
 
+# With all algorithm arguments specified
+pc_pcalg <- pc(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.05,
+  fixedGaps = NULL,
+  fixedEdges = NULL,
+  NAdelete = FALSE,
+  m.max = 10,
+  u2pd = "relaxed",
+  skel.method = "original",
+  conservative = TRUE,
+  maj.rule = FALSE,
+  solve.confl = TRUE,
+  numCores = 1,
+  verbose = TRUE
+)
 
 #### Using bnlearn engine with required knowledge ####
 kn <- knowledge(
@@ -62,6 +79,18 @@ disco(tpc_example, pc_bnlearn, knowledge = kn)
 pc_bnlearn <- pc_bnlearn |> set_knowledge(kn)
 pc_bnlearn(tpc_example)
 
+
+# With all algorithm arguments specified
+pc_bnlearn <- pc(
+  engine = "bnlearn",
+  test = "fisher_z",
+  alpha = 0.05,
+  max.sx = 2,
+  debug = FALSE,
+  undirected = TRUE
+)
+
+disco(tpc_example, pc_bnlearn)
 
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
@@ -82,5 +111,19 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   # or using pc_tetrad directly
   pc_tetrad <- pc_tetrad |> set_knowledge(kn)
   pc_tetrad(tpc_example)
+}
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  pc_tetrad <- pc(
+    engine = "tetrad",
+    test = "fisher_z",
+    alpha = 0.05,
+    conflict_rule = 2,
+    depth = 10,
+    stable_fas = FALSE,
+    guarantee_cpdag = TRUE
+  )
+  disco(tpc_example, pc_tetrad)
 }
 }
