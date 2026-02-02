@@ -215,7 +215,7 @@ Initializes the \code{TetradSearch} object, creating new Java objects for
 \subsection{Method \code{set_test()}}{
 Sets the independence test to use in Tetrad.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_test(method, ..., mc = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_test(method, ..., use_for_mc = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -423,7 +423,7 @@ indicator variables for mixed data are also used.
 }
 }}
 
-\item{\code{mc}}{(logical) If TRUE, sets this test for the Markov checker \code{mc_test}.}
+\item{\code{use_for_mc}}{(logical) If TRUE, sets this test for the Markov checker \code{mc_test}.}
 }
 \if{html}{\out{</div>}}
 }

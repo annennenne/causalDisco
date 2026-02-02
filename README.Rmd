@@ -237,7 +237,7 @@ Should be easier to fix for test based algorithms? Just check if required edges 
 
 - Tetrad does not use required correctly in `fci` algorithm
 
-```{r tetrad required bug}
+```{r tetrad required fci bug}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   data(tpc_example)
 
@@ -253,6 +253,24 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 ```
 
 Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
+
+- Tetrad introduces cycle in `pc` algorithm when required edges are used (in unreleased Tetrad version it
+gives `X1 %---% X2` instead, i.e. not respecting the required knowledge).
+
+```{r tetrad required pc bug}
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  data(num_data)
+
+  kn <- knowledge(
+    num_data,
+    X1 %-->% X2,
+    X3 %-->% Z
+  )
+  
+  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  disco(data = num_data, method = tetrad_pc, knowledge = kn)
+}
+```
 
 ### Documentation 
 

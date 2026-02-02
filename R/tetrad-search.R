@@ -383,58 +383,58 @@ TetradSearch <- R6Class(
     #'      indicator variables for mixed data are also used.
     #'    }
     #' }
-    #' @param mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
+    #' @param use_for_mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
-    set_test = function(method, ..., mc = FALSE) {
-      checkmate::assert_logical(mc, len = 1)
+    set_test = function(method, ..., use_for_mc = FALSE) {
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       method <- tolower(method)
       switch(
         method,
         "chi_square" = {
-          private$use_chi_square_test(..., use_for_mc = mc)
+          private$use_chi_square_test(..., use_for_mc = use_for_mc)
         },
         "fisher_z" = {
-          private$use_fisher_z_test(..., use_for_mc = mc)
+          private$use_fisher_z_test(..., use_for_mc = use_for_mc)
         },
         "cci" = {
-          private$use_cci_test(..., use_for_mc = mc)
+          private$use_cci_test(..., use_for_mc = use_for_mc)
         },
         "basis_function_lrt" = {
-          private$use_basis_function_lrt_test(..., use_for_mc = mc)
+          private$use_basis_function_lrt_test(..., use_for_mc = use_for_mc)
         },
         "conditional_gaussian" = {
-          private$use_conditional_gaussian_test(..., use_for_mc = mc)
+          private$use_conditional_gaussian_test(..., use_for_mc = use_for_mc)
         },
         "degenerate_gaussian" = {
-          private$use_degenerate_gaussian_test(..., use_for_mc = mc)
+          private$use_degenerate_gaussian_test(..., use_for_mc = use_for_mc)
         },
         "g_square" = {
-          private$use_g_square_test(..., use_for_mc = mc)
+          private$use_g_square_test(..., use_for_mc = use_for_mc)
         },
         "kci" = {
-          private$use_kci_test(..., use_for_mc = mc)
+          private$use_kci_test(..., use_for_mc = use_for_mc)
         },
         "probabilistic" = {
-          private$use_probabilistic_test(..., use_for_mc = mc)
+          private$use_probabilistic_test(..., use_for_mc = use_for_mc)
         },
         "poisson_prior" = {
-          private$use_poisson_prior_test(..., use_for_mc = mc)
+          private$use_poisson_prior_test(..., use_for_mc = use_for_mc)
         },
         "gin" = {
-          private$use_gin_test(..., use_for_mc = mc)
+          private$use_gin_test(..., use_for_mc = use_for_mc)
         },
         "rcit" = {
-          private$use_rcit_test(..., use_for_mc = mc)
+          private$use_rcit_test(..., use_for_mc = use_for_mc)
         },
         "sem_bic" = {
-          private$use_sem_bic_test(..., use_for_mc = mc)
+          private$use_sem_bic_test(..., use_for_mc = use_for_mc)
         },
         "rank_independence" = {
-          private$use_rank_independence_test(..., use_for_mc = mc)
+          private$use_rank_independence_test(..., use_for_mc = use_for_mc)
         },
         "basis_function_blocks" = {
-          private$use_basis_function_blocks_test(..., use_for_mc = mc)
+          private$use_basis_function_blocks_test(..., use_for_mc = use_for_mc)
         },
         {
           stop("Unknown test type using tetrad engine: ", method, call. = FALSE)
@@ -1133,6 +1133,7 @@ TetradSearch <- R6Class(
         },
         "pc" = {
           if (is.null(self$test)) {
+            browser()
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_pc_alg(...)
@@ -1950,17 +1951,11 @@ TetradSearch <- R6Class(
         SINGULARITY_LAMBDA = singularity_lambda,
         DO_ONE_EQUATION_ONLY = do_one_equation_only
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/BasisFunctionLrt",
+        use_for_mc = use_for_mc
+      )
     },
     use_fisher_z_test = function(
       alpha = 0.05,
@@ -1974,17 +1969,11 @@ TetradSearch <- R6Class(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/FisherZ"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/FisherZ"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/FisherZ",
+        use_for_mc = use_for_mc
+      )
     },
     use_poisson_prior_test = function(
       poisson_lambda = 1,
@@ -1993,7 +1982,7 @@ TetradSearch <- R6Class(
       use_for_mc = FALSE,
       alpha = NULL
     ) {
-      # alpha is not used atm in Tetrad?
+      # alpha is not in Tetrad
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
@@ -2003,17 +1992,11 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/PoissonBicTest"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/PoissonBicTest"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/PoissonBicTest",
+        use_for_mc = use_for_mc
+      )
     },
     use_chi_square_test = function(
       min_count = 1,
@@ -2043,17 +2026,11 @@ TetradSearch <- R6Class(
         MIN_COUNT_PER_CELL = min_count,
         CELL_TABLE_TYPE = cell_table_type_int
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ChiSquare"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/ChiSquare",
+        use_for_mc = use_for_mc
+      )
     },
     use_g_square_test = function(
       min_count = 1,
@@ -2083,17 +2060,11 @@ TetradSearch <- R6Class(
         MIN_COUNT_PER_CELL = min_count,
         CELL_TABLE_TYPE = cell_table_type_int
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/GSquare"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/GSquare"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/GSquare",
+        use_for_mc = use_for_mc
+      )
     },
     use_conditional_gaussian_test = function(
       alpha = 0.05,
@@ -2113,17 +2084,11 @@ TetradSearch <- R6Class(
         NUM_CATEGORIES_TO_DISCRETIZE = num_categories_to_discretize,
         MIN_SAMPLE_SIZE_PER_CELL = min_sample_size_per_cell
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/ConditionalGaussianLrt",
+        use_for_mc = use_for_mc
+      )
     },
     use_degenerate_gaussian_test = function(
       alpha = 0.05,
@@ -2137,17 +2102,11 @@ TetradSearch <- R6Class(
         ALPHA = alpha,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/DegenerateGaussianLrt",
+        use_for_mc = use_for_mc
+      )
     },
     use_probabilistic_test = function(
       threshold = FALSE,
@@ -2165,17 +2124,11 @@ TetradSearch <- R6Class(
         CUTOFF_IND_TEST = cutoff,
         PRIOR_EQUIVALENT_SAMPLE_SIZE = prior_ess
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ProbabilisticTest"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/ProbabilisticTest"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/ProbabilisticTest",
+        use_for_mc = use_for_mc
+      )
     },
     use_kci_test = function(
       alpha = 0.05,
@@ -2218,17 +2171,11 @@ TetradSearch <- R6Class(
         POLYNOMIAL_DEGREE = polyd,
         POLYNOMIAL_CONSTANT = polyc
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Kci"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Kci"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/Kci",
+        use_for_mc = use_for_mc
+      )
     },
     use_cci_test = function(
       alpha = 0.05,
@@ -2267,17 +2214,11 @@ TetradSearch <- R6Class(
         BASIS_SCALE = basis_scale,
         TRUNCATION_LIMIT = truncation_limit
       )
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/CciTest"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/CciTest"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/CciTest",
+        use_for_mc = use_for_mc
+      )
     },
     use_gin_test = function(
       alpha = 0.05,
@@ -2302,18 +2243,11 @@ TetradSearch <- R6Class(
         SEED = seed,
         GIN_BACKEND = gin_backend
       )
-
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Gin"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Gin"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/Gin",
+        use_for_mc = use_for_mc
+      )
     },
     use_rcit_test = function(
       alpha = 0.05,
@@ -2359,17 +2293,11 @@ TetradSearch <- R6Class(
         SEED = seed
       )
 
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Rcit"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/Rcit"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      iset_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/Rcit",
+        use_for_mc = use_for_mc
+      )
     },
     use_sem_bic_test = function(
       penalty_discount = 2,
@@ -2390,18 +2318,11 @@ TetradSearch <- R6Class(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
         SINGULARITY_LAMBDA = singularity_lambda
       )
-
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/SemBicTest"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/SemBicTest"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/SemBicTest",
+        use_for_mc = use_for_mc
+      )
     },
     use_rank_independence_test = function(
       alpha = 0.05,
@@ -2413,18 +2334,11 @@ TetradSearch <- R6Class(
       self$set_params(
         ALPHA = alpha
       )
-
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/RankIndependenceTestTs"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/RankIndependenceTestTs"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/RankIndependenceTestTs",
+        use_for_mc = use_for_mc
+      )
     },
     use_basis_function_blocks_test = function(
       alpha = 0.05,
@@ -2455,18 +2369,11 @@ TetradSearch <- R6Class(
         BASIS_TYPE = basis_type_int,
         TRUNCATION_LIMIT = truncation_limit
       )
-
-      if (use_for_mc) {
-        self$mc_test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionBlocksIndTest"
-        )
-        self$mc_test <- cast_obj(self$mc_test)
-      } else {
-        self$test <- rJava::.jnew(
-          "edu/cmu/tetrad/algcomparison/independence/BasisFunctionBlocksIndTest"
-        )
-        self$test <- cast_obj(self$test)
-      }
+      set_tetrad_test(
+        self,
+        "edu/cmu/tetrad/algcomparison/independence/BasisFunctionBlocksIndTest",
+        use_for_mc = use_for_mc
+      )
     },
 
     # ---------------------------------- Algorithms ---------------------------
@@ -3199,3 +3106,22 @@ TetradSearch <- R6Class(
     }
   )
 )
+
+#' Set Tetrad Test Helper Function
+#' @param self The instance of the class.
+#' @param class_name The Java class name of the test to create.
+#' @param use_for_mc Logical indicating if the test is for MC or not.
+#' @return None. Sets the test object in the appropriate slot.
+#' @keywords internal
+#' @noRd
+set_tetrad_test <- function(self, class_name, use_for_mc = FALSE) {
+  # Create the Java test object once
+  test_obj <- rJava::.jnew(class_name)
+  test_obj <- cast_obj(test_obj)
+
+  # Assign to the correct slots
+  if (use_for_mc) {
+    self$mc_test <- test_obj
+  }
+  self$test <- test_obj
+}

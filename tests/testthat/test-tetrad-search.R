@@ -66,12 +66,12 @@ test_that("TetradSearch constructor sets defaults correctly", {
 # Setters
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("set_test accepts known tests and rejects unknown; mc path sets mc_test", {
+test_that("set_test accepts known tests and rejects unknown; use_for_mc path sets mc_test", {
   skip_if_no_tetrad()
 
   ts <- TetradSearch$new()
   expect_no_condition(ts$set_test("fisher_z", alpha = 0.05))
-  expect_no_condition(ts$set_test("chi_square", mc = TRUE))
+  expect_no_condition(ts$set_test("chi_square", use_for_mc = TRUE))
   expect_jobj(ts$mc_test)
 
   expect_error(
@@ -262,7 +262,7 @@ test_that("all known scores can be set without error", {
   })
 })
 
-test_that("all known tests can be set without error (and mc path sets mc_test once)", {
+test_that("all known tests can be set without error (and use_for_mc path sets mc_test once)", {
   skip_if_no_tetrad()
 
   tests <- c(
@@ -282,10 +282,10 @@ test_that("all known tests can be set without error (and mc path sets mc_test on
     expect_no_condition(ts$set_test(tst))
   })
 
-  # one explicit mc=TRUE path to cover mc_test
+  # one explicit use_for_mc=TRUE path to cover mc_test
   purrr::walk(tests, \(tst) {
     ts <- TetradSearch$new()
-    expect_no_condition(ts$set_test(tst, mc = TRUE))
+    expect_no_condition(ts$set_test(tst, use_for_mc = TRUE))
   })
 })
 
