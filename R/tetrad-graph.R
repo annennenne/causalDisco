@@ -31,7 +31,7 @@ tetrad_graph <- function(x) {
   mat_text <- paste(parts[-1], collapse = "\n")
 
   amat <- readr::read_csv(
-    mat_text,
+    I(mat_text),
     col_names = FALSE,
     show_col_types = FALSE
   ) |>
