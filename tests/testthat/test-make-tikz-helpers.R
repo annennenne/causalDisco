@@ -93,11 +93,9 @@ test_that("extract_nodes returns correct nodes with styles and labels", {
   # Check styles
   expect_equal(result[[1]]$style$fill$tikz, "red")
   expect_equal(result[[1]]$style$draw$tikz, "black")
-  expect_equal(result[[1]]$style$font, "\\fontsize{12}{14}\\selectfont")
 
   expect_equal(result[[2]]$style$fill$tikz, "blue")
   expect_null(result[[2]]$style$draw) # col=NULL
-  expect_equal(result[[2]]$style$font, "\\fontsize{10}{12}\\selectfont")
 })
 
 test_that("extract_nodes handles empty input gracefully", {

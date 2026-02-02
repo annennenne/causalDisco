@@ -98,6 +98,7 @@ al
 alg
 algs
 amat
+args
 bdeu
 bic
 bidirected
@@ -116,7 +117,6 @@ fci
 fges
 fixedEdges
 honouring
-iirc
 independencies
 initializations
 inout
@@ -128,7 +128,6 @@ md
 micd
 nDAGs
 nonsingular
-num
 oldage
 pag
 pak

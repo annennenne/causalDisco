@@ -74,13 +74,6 @@ extract_nodes <- function(node_grob_children, scale) {
     if (!is.null(gp$col) && length(gp$col) > 0) {
       style$draw <- rcolor_to_tikz(gp$col)
     }
-    if (!is.null(gp$fontsize) && length(gp$fontsize) > 0) {
-      style$font <- sprintf(
-        "\\fontsize{%.0f}{%.0f}\\selectfont",
-        gp$fontsize,
-        gp$fontsize * 1.2
-      )
-    }
     list(
       name = label_map[[node$name]],
       x = as.numeric(node$x) * scale,
