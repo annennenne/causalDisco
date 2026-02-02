@@ -306,7 +306,7 @@ TetradSearch <- R6Class(
     #'       \itemize{
     #'          \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
     #'          distribution (> 0),
-    #'          \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'          \item \code{precompute_covariances = TRUE} - For more than 5000
     #'          variables or so, set this to FALSE in order to calculate
     #'          covariances on the fly from data,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -360,7 +360,7 @@ TetradSearch <- R6Class(
     #'      for any conditional probability table. Higher weight is accorded
     #'      to tables with about that number of parents. The prior structure
     #'      weights are distributed according to a binomial distribution,
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -479,7 +479,7 @@ TetradSearch <- R6Class(
     #'        difference of BIC scores to add or remove edges. The Nandy et al.
     #'        rule uses a single calculation of a partial correlation in place
     #'        of the likelihood difference,
-    #'        \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'        \item \code{precompute_covariances = TRUE} - For more than 5000
     #'        variables or so, set this to FALSE in order to calculate
     #'        covariances on the fly from data,
     #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -488,7 +488,7 @@ TetradSearch <- R6Class(
     #'    \item \code{ebic} - Extended BIC score.
     #'    \itemize{
     #'      \item \code{gamma} - The gamma parameter in the EBIC score.
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -544,7 +544,7 @@ TetradSearch <- R6Class(
     #'      weights are distributed according to a binomial distribution,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data.
     #'    }
@@ -567,7 +567,7 @@ TetradSearch <- R6Class(
     #'      \code{"ric"} - \eqn{2 \ln(p n)},
     #'      \code{"ricc"} - \eqn{2(\ln(p n) + \ln\ln(p n))},
     #'      \code{"gic6"} - \eqn{\ln n \ln(p n)}.
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -581,7 +581,7 @@ TetradSearch <- R6Class(
     #'      for any conditional probability table. Higher weight is accorded
     #'      to tables with about that number of parents. The prior structure
     #'      weights are distributed according to a binomial distribution,
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data.
     #'    }
@@ -601,7 +601,7 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
     #'      distribution (> 0),
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -611,7 +611,7 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{risk_bound = 0.2} - This is the probability of getting
     #'      the true model if a correct model is discovered. Could underfit.
-    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
     #'      variables or so, set this to FALSE in order to calculate
     #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
@@ -1671,6 +1671,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
@@ -1707,6 +1711,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(gamma, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         EBIC_GAMMA = gamma,
@@ -1726,7 +1734,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_character(sem_gic_rule)
-
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
       sem_gic_rule_int <- switch(
         sem_gic_rule,
         "bic" = 1L,
@@ -1761,6 +1772,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
@@ -1808,6 +1823,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         PRECOMPUTE_COVARIANCES = precompute_covariances,
@@ -1831,6 +1850,10 @@ TetradSearch <- R6Class(
       checkmate::assert_int(structure_prior, lower = 0)
       checkmate::assert_choice(sem_bic_rule, choices = c(1, 2))
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,
@@ -1852,6 +1875,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(risk_bound, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         ZS_RISK_BOUND = risk_bound,
@@ -1986,6 +2013,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         POISSON_LAMBDA = poisson_lambda,
@@ -2311,6 +2342,10 @@ TetradSearch <- R6Class(
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      if (precompute_covariances != TRUE) {
+        warning("`precompute_covariances = FALSE` doesn't work properly yet.")
+        precompute_covariances <- TRUE
+      }
 
       self$set_params(
         PENALTY_DISCOUNT = penalty_discount,

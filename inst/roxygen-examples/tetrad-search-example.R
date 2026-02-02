@@ -20,7 +20,6 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
     test = "sem_bic",
     penalty_discount = 1,
     structure_prior = 1,
-    precompute_covariances = TRUE,
     singularity_lambda = 0.1
   )
   disco(data = num_data, method = my_pc2)

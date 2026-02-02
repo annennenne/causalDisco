@@ -202,8 +202,6 @@ implemented yet.
 
 ### Bugfixes
 
-- Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad. Remove the argument for now (and maybe fix later).
-
 - Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the argument for now (and maybe fix later).
 
 - Tried implementing required edges in the scores (e.g. `TemporalBdeu`) by giving it score -Inf if missing a required edge,
