@@ -23,7 +23,7 @@
 #'
 #' @return
 #' A function of class \code{"grasp_fci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` and a `knowledge`
+#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
 #' (`knowledgeable_caugi`) object.
 #'
 #' @export
@@ -54,6 +54,7 @@ grasp_fci <- function(
 
   method <- disco_method(builder, "grasp_fci")
   attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PAG"
   method
 }
 

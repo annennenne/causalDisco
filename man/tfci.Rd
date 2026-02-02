@@ -21,7 +21,7 @@ tfci(engine = c("causalDisco"), test, alpha = 0.05, ...)
 }
 \value{
 A function of class \code{"tfci"} that takes a single argument \code{data}
-(a data frame) and returns a \code{caugi} and \code{knowledge} (\code{knowledgeable_caugi})
+(a data frame) and returns a \code{caugi} (of class "UNKNOWN") and \code{knowledge} (\code{knowledgeable_caugi})
 object.
 }
 \description{

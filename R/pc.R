@@ -25,7 +25,7 @@
 #'
 #' @return
 #' A function of class \code{"pc"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` and a `knowledge` object.
+#' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge` object.
 #'
 #' @export
 pc <- function(
@@ -67,6 +67,7 @@ pc <- function(
 
   method <- disco_method(builder, "pc")
   attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PDAG"
   method
 }
 

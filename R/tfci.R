@@ -20,7 +20,7 @@
 #'
 #' @return
 #' A function of class \code{"tfci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` and `knowledge` (`knowledgeable_caugi`)
+#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and `knowledge` (`knowledgeable_caugi`)
 #' object.
 #'
 #' @export
@@ -56,6 +56,7 @@ tfci <- function(
 
   method <- disco_method(builder, "tfci")
   attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PAG"
   method
 }
 

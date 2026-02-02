@@ -69,7 +69,6 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
     "The method must be a disco method object.",
     fixed = TRUE
   )
-
   for (method_name in names(method_registry_constraint)) {
     reg <- method_registry_constraint[[method_name]]
     for (engine in reg$engines) {
@@ -83,7 +82,17 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
           fixed = TRUE
         )
       } else {
-        res <- disco(num_data, method = m, knowledge = kn)
+        if (engine == "tetrad" && method_name == "pc") {
+          expect_warning(
+            {
+              res <- disco(num_data, method = m, knowledge = kn)
+            },
+            "Cannot mutate graph to class 'PDAG':",
+            fixed = TRUE
+          )
+        } else {
+          res <- disco(num_data, method = m, knowledge = kn)
+        }
       }
       expect_s3_class(res, "knowledgeable_caugi")
     }

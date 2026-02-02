@@ -19,7 +19,7 @@
 #'
 #' @return
 #' A function of class \code{"boss"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` and a `knowledge`
+#' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
 #' (`knowledgeable_caugi`) object.
 #'
 #' @export
@@ -48,6 +48,7 @@ boss <- function(
 
   method <- disco_method(builder, "boss")
   attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PDAG"
   method
 }
 

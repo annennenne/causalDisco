@@ -22,7 +22,7 @@ fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 }
 \value{
 A function of class \code{"fci"} that takes a single argument \code{data}
-(a data frame) and returns a \code{caugi} and a \code{knowledge}
+(a data frame) and returns a \code{caugi} (of class "UNKNOWN") and a \code{knowledge}
 (\code{knowledgeable_caugi}) object.
 }
 \description{

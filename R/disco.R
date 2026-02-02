@@ -32,6 +32,16 @@
 #' @export
 disco <- function(data, method, knowledge = NULL) {
   engine <- attr(method, "engine")
+  graph_class <- attr(method, "graph_class")
+
+  if (is.null(graph_class)) {
+    graph_class <- "UNKNOWN"
+  }
+
+  if (graph_class == "PAG") {
+    # Caugi currently does not support PAGs
+    graph_class <- "UNKNOWN"
+  }
 
   if (!inherits(method, "disco_method")) {
     stop("The method must be a disco method object.", call. = FALSE)
@@ -50,6 +60,25 @@ disco <- function(data, method, knowledge = NULL) {
     )
   }
   out <- method(data)
+
+  if (!is.null(out$caugi)) {
+    out$caugi <- tryCatch(
+      {
+        caugi::mutate_caugi(out$caugi, graph_class)
+      },
+      error = function(e) {
+        warning(
+          sprintf(
+            "Cannot mutate graph to class '%s': %s.",
+            graph_class,
+            e$message
+          ),
+          call. = FALSE
+        )
+        out$caugi
+      }
+    )
+  }
 
   if (!is.null(knowledge)) {
     out <- set_knowledge(out, knowledge)
