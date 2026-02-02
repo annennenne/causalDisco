@@ -77,4 +77,17 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   ges_tetrad <- ges_tetrad |> set_knowledge(kn)
   ges_tetrad(tpc_example)
 }
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  ges_tetrad <- ges(
+    engine = "tetrad",
+    score = "ebic",
+    symmetric_first_step = TRUE,
+    max_degree = 3,
+    parallelized = TRUE,
+    faithfulness_assumed = TRUE
+  )
+  disco(tpc_example, ges_tetrad)
+}
 }

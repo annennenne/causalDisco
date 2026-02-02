@@ -23,7 +23,7 @@ pc_pcalg <- pc(
   maj.rule = FALSE,
   solve.confl = TRUE,
   numCores = 1,
-  verbose = TRUE
+  verbose = FALSE
 )
 
 #### Using bnlearn engine with required knowledge ####
