@@ -249,12 +249,6 @@ gg +
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
 
-- In tests (and examples) don’t use `tpc_example` all the time and
-  instead also use other data sets (e.g. num_data, cat_data, mix_data).
-  (this also avoids that we currently simulate data in tests when
-  needing an e.g. numerical dataset). Done mostly I think? Just missing
-  `cat_ord_data` usage iirc.
-
 - Add all algs/scores/tests from the backends (start with Tetrad). Check
   if we currently document ones we haven’t implemented yet.
 
@@ -263,17 +257,9 @@ gg +
     `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null`
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
 
-- Implement BOSS + grasp from Tetrad
-
 - Update evaluation and confusion metrics (use caugi?)
 
 ### Bugfixes
-
-- Setting `mc = TRUE` (or `mc_test = TRUE`) errors in Tetrad. Remove the
-  argument for now (and maybe fix later).
-
-- Setting `precompute_covariances = FALSE` errors in Tetrad. Remove the
-  argument for now (and maybe fix later).
 
 - Tried implementing required edges in the scores (e.g. `TemporalBdeu`)
   by giving it score -Inf if missing a required edge, but then it runs

@@ -24,7 +24,7 @@ A function of class \code{"boss_fci"} that takes a single argument \code{data}
 }
 \description{
 Run the BOSS-FCI (Best Order Score Search FCI) algorithm for causal discovery using one of several engines. This
-uses BOSS in place of FGES for the intial step in the GFCI algorithm.
+uses BOSS in place of FGES for the initial step in the GFCI algorithm.
 }
 \details{
 For specific details on the supported scores, and parameters for each engine, see:

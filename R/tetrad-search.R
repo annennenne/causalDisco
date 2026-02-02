@@ -1133,7 +1133,6 @@ TetradSearch <- R6Class(
         },
         "pc" = {
           if (is.null(self$test)) {
-            browser()
             stop("No test is set. Use set_test() first.", call. = FALSE)
           }
           private$set_pc_alg(...)
@@ -2324,7 +2323,7 @@ TetradSearch <- R6Class(
         SEED = seed
       )
 
-      iset_tetrad_test(
+      set_tetrad_test(
         self,
         "edu/cmu/tetrad/algcomparison/independence/Rcit",
         use_for_mc = use_for_mc

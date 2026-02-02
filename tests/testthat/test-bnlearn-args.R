@@ -23,12 +23,11 @@ test_that("bnlearn test argument works (discrete)", {
   lapply(tests, function(t) suppressWarnings(run_pc_test(cat_data, t))) # bnlearn can give harmless warnings
 
   # Discrete - ordered factors
-  ordered_data <- cat_data
-  ordered_data[] <- lapply(ordered_data, function(x) as.ordered(x))
+  data(cat_ord_data)
 
   tests_ord <- c("jt", "mc-jt", "smc-jt")
 
-  lapply(tests_ord, function(t) suppressWarnings(run_pc_test(ordered_data, t))) # bnlearn can give harmless warnings
+  lapply(tests_ord, function(t) suppressWarnings(run_pc_test(cat_ord_data, t))) # bnlearn can give harmless warnings
 })
 
 test_that("bnlearn test argument works (continuous)", {

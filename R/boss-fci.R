@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Run the BOSS-FCI (Best Order Score Search FCI) algorithm for causal discovery using one of several engines. This
-#' uses BOSS in place of FGES for the intial step in the GFCI algorithm.
+#' uses BOSS in place of FGES for the initial step in the GFCI algorithm.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
