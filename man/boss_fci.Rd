@@ -4,7 +4,7 @@
 \alias{boss_fci}
 \title{BOSS-FCI Algorithm. for Causal Discovery}
 \usage{
-boss_fci(engine = "tetrad", score, ...)
+boss_fci(engine = "tetrad", score, test, alpha = 0.05, ...)
 }
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:
@@ -13,6 +13,10 @@ boss_fci(engine = "tetrad", score, ...)
 }}
 
 \item{score}{Character; name of the scoring function to use.}
+
+\item{test}{Character; name of the conditional‐independence test.}
+
+\item{alpha}{Numeric; significance level for the CI tests.}
 
 \item{...}{Additional arguments passed to the chosen engine (e.g. score and
 algorithm parameters).}
@@ -38,7 +42,11 @@ data(tpc_example)
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   # Recommended path using disco()
-  boss_fci_tetrad <- boss_fci(engine = "tetrad", score = "sem_bic")
+  boss_fci_tetrad <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   disco(tpc_example, boss_fci_tetrad)
 
   # or using boss_fci_tetrad directly
@@ -57,11 +65,31 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   )
 
   # Recommended path using disco()
-  boss_fci_tetrad <- boss_fci(engine = "tetrad", score = "sem_bic")
+  boss_fci_tetrad <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   disco(tpc_example, boss_fci_tetrad, knowledge = kn)
 
   # or using boss_fci_tetrad directly
   boss_fci_tetrad <- boss_fci_tetrad |> set_knowledge(kn)
   boss_fci_tetrad(tpc_example)
+}
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  boss_fci_tetrad <- boss_fci(
+    engine = "tetrad",
+    score = "poisson_prior",
+    test = "rank_independence",
+    depth = 3,
+    max_disc_path_length = 5,
+    use_bes = FALSE,
+    use_heuristic = FALSE,
+    complete_rule_set_used = FALSE,
+    guarantee_pag = TRUE
+  )
+  disco(tpc_example, boss_fci_tetrad)
 }
 }

@@ -8,7 +8,7 @@
 #'   \describe{
 #'     \item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
 #'   }
-#' @inheritParams ges
+#' @inheritParams grasp
 #'
 #' @details
 #' For specific details on the supported scores, and parameters for each engine, see:
@@ -27,6 +27,8 @@
 boss_fci <- function(
   engine = "tetrad",
   score,
+  test,
+  alpha = 0.05,
   ...
 ) {
   .check_if_pkgs_are_installed(
@@ -42,19 +44,19 @@ boss_fci <- function(
   builder <- function(knowledge = NULL) {
     runner <- switch(
       engine,
-      tetrad = rlang::exec(boss_tetrad_runner, score, !!!args)
+      tetrad = rlang::exec(boss_fci_tetrad_runner, score, test, alpha, !!!args)
     )
     runner
   }
 
-  method <- disco_method(builder, "boss")
+  method <- disco_method(builder, "boss_fci")
   attr(method, "engine") <- engine
   attr(method, "graph_class") <- "PAG"
   method
 }
 
 #' @keywords internal
-boss_fci_tetrad_runner <- function(score, ...) {
+boss_fci_tetrad_runner <- function(score, test, alpha, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rJava",
@@ -70,13 +72,25 @@ boss_fci_tetrad_runner <- function(score, ...) {
     args,
     "tetrad",
     "boss_fci",
-    score = score
+    score = score,
+    test = test
   )
 
   if (length(args_to_pass$score_args) > 0) {
     rlang::exec(search$set_score, score, !!!args_to_pass$score_args)
   } else {
     search$set_score(score)
+  }
+
+  if (length(args_to_pass$test_args) > 0) {
+    rlang::exec(
+      search$set_test,
+      test,
+      alpha = alpha,
+      !!!args_to_pass$test_args
+    )
+  } else {
+    search$set_test(test, alpha = alpha)
   }
 
   if (length(args_to_pass$alg_args) > 0) {

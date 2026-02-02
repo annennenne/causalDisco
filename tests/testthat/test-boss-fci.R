@@ -12,7 +12,11 @@ test_that("boss_fci Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  tetrad_boss_fci <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
 
   edges <- output$caugi@edges
@@ -32,7 +36,11 @@ test_that("boss_fci Tetrad disco respects tier knowledge", {
     )
   )
 
-  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  tetrad_boss_fci <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   output <- disco(tpc_example, tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
@@ -56,7 +64,11 @@ test_that("boss_fci Tetrad disco respects required background knowledge", {
     "boss_fci Tetrad runs forever with required. See #1950 in Tetrad."
   )
 
-  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  tetrad_boss_fci <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
@@ -78,7 +90,11 @@ test_that("boss_fci Tetrad disco respects required background knowledge", {
     youth_x3 %-->% oldage_x5
   )
 
-  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  tetrad_boss_fci <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
@@ -106,7 +122,11 @@ test_that("boss_fci Tetrad disco respects forbidden background knowledge", {
     child_x2 %!-->% child_x1
   )
 
-  tetrad_boss_fci <- boss_fci(engine = "tetrad", score = "sem_bic")
+  tetrad_boss_fci <- boss_fci(
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
   output <- disco(data = tpc_example, method = tetrad_boss_fci, knowledge = kn)
   edges <- output$caugi@edges
 
