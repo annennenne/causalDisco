@@ -48,7 +48,7 @@ from bnlearn with Fisher's Z test:
 
 ```{r pc algorithm fisher z bnlearn}
 pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-pc_result_bnlearn <- disco(num_data, method = pc_bnlearn)
+pc_result_bnlearn <- disco(data = num_data, method = pc_bnlearn)
 ```
 
 We can visualize the results using `plot()`:
@@ -69,7 +69,7 @@ pcalg package with the same test:
 
 ```{r pc algorithm fisher z pcalg}
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_pcalg <- disco(num_data, method = pc_pcalg)
+pc_result_pcalg <- disco(data = num_data, method = pc_pcalg)
 plot(pc_result_pcalg, layout = plot_layout, main = "PC Fisher Z (pcalg)")
 ```
 
@@ -87,7 +87,7 @@ helper functions `install_java()` and `install_tetrad()` to set them up.
 ```{r ges algorithm ebic tetrad, eval = FALSE}
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   ges_tetrad <- ges(engine = "tetrad", score = "ebic")
-  ges_result_tetrad <- disco(num_data, method = ges_tetrad)
+  ges_result_tetrad <- disco(data = num_data, method = ges_tetrad)
   plot(ges_result_tetrad, layout = plot_layout, main = "GES EBIC (Tetrad)")
 }
 ```
@@ -102,7 +102,7 @@ ragg::agg_png(
   res    = 96 * 2   # dpi * fig.retina
 )
 ges_tetrad <- ges(engine = "tetrad", score = "ebic")
-ges_result_tetrad <- disco(num_data, method = ges_tetrad)
+ges_result_tetrad <- disco(data = num_data, method = ges_tetrad)
 plot(ges_result_tetrad, layout = plot_layout, main = "GES EBIC (Tetrad)")
 dev.off()
 ```
@@ -185,7 +185,7 @@ from causalDisco with the regression-based information loss test:
 
 ```{r tpc algorithm with knowledge}
 tpc_method <- tpc(engine = "causalDisco", test = "reg")
-tpc_result <- disco(tpc_example, method = tpc_method, knowledge = kn)
+tpc_result <- disco(data = tpc_example, method = tpc_method, knowledge = kn)
 ```
 
 Similarly, we can view the results using `print()`, `summary()` or `plot()`:

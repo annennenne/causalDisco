@@ -75,7 +75,7 @@ the data.
 
 ```{r pc algorithm simple}
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_pcalg <- disco(data_linear, method = pc_pcalg)
+pc_result_pcalg <- disco(data = data_linear, method = pc_pcalg)
 ```
 
 We can visualize the results using the `plot()` function, where we explicitly provide the layout defined above so graphs
@@ -111,7 +111,7 @@ data_linear_reverse <- generate_dag_data(
   seed = 1405
 )
 
-pc_result_reverse <- disco(data_linear_reverse, method = pc_pcalg)
+pc_result_reverse <- disco(data = data_linear_reverse, method = pc_pcalg)
 plot(pc_result_reverse, layout = layout, main = "PC (pcalg) reversed")
 ```
 
@@ -170,7 +170,7 @@ We can then apply the PC algorithm as before:
 
 ```{r pc algorithm unobserved confounder}
 pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_unobserved <- disco(data_unobserved, method = pc_pcalg_unobserved)
+pc_result_unobserved <- disco(data = data_unobserved, method = pc_pcalg_unobserved)
 plot(pc_result_unobserved, layout = layout, main = "PC (pcalg) unobserved confounder")
 ```
 
