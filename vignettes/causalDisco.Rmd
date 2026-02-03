@@ -91,6 +91,21 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   plot(ges_result_tetrad, layout = plot_layout, main = "GES EBIC (Tetrad)")
 }
 ```
+```{r ges algorithm ebic tetrad plot code, echo=FALSE, eval = FALSE}
+# Code to generate the plot image
+# Settings from pkgdown::fig_settings()
+ragg::agg_png(
+  filename = "ges-ebic-tetrad.png",
+  width  = 7.291667,
+  height = 4.506593,
+  units  = "in",
+  res    = 96 * 2   # dpi * fig.retina
+)
+ges_tetrad <- ges(engine = "tetrad", score = "ebic")
+ges_result_tetrad <- disco(num_data, method = ges_tetrad)
+plot(ges_result_tetrad, layout = plot_layout, main = "GES EBIC (Tetrad)")
+dev.off()
+```
 ![](ges-ebic-tetrad.png)
 
 If you want to customize the plot appearance further, you can pass additional arguments to `plot()`. For example, to
