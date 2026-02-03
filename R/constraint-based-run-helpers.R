@@ -15,7 +15,6 @@
 constraint_based_prepare_inputs <- function(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   varnames = NULL,
   na_method = "none",
   test = reg_test,
@@ -35,26 +34,6 @@ constraint_based_prepare_inputs <- function(
   }
   if (is.null(data) && is.null(suff_stat)) {
     stop("Either data or sufficient statistic must be supplied.")
-  }
-
-  # knowledge/order validation
-  if (!is.null(knowledge) && !is.null(order)) {
-    stop(
-      "Both `knowledge` and `order` supplied. Please supply a knowledge object."
-    )
-  }
-
-  if (is.null(knowledge) && !is.null(order)) {
-    warning(
-      "`order` is deprecated in version 1.0.0 and will be removed in a future version. ",
-      "Please supply a `knowledge` object instead."
-    )
-    vnames0 <- if (is.null(data)) varnames else names(data)
-    knowledge <- .build_knowledge_from_order(
-      order,
-      data = data,
-      vnames = vnames0
-    )
   }
 
   if (is.null(knowledge)) {

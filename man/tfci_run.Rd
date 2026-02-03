@@ -7,7 +7,6 @@
 tfci_run(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
@@ -28,12 +27,6 @@ prefixed with their period name (see examples). When using
 \item{knowledge}{A \emph{knowledge} object describing tiers/periods and optional
 forbidden/required edges. This replaces the legacy \code{order} interface and
 is the preferred way to supply temporal background knowledge.}
-
-\item{order}{\strong{Deprecated}. A character vector with period-prefixes in their
-temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
-is \code{NULL}), a temporary \code{knowledge} object is constructed using
-\link[tidyselect:starts_with]{tidyselect::starts_with} for each prefix. Supplying
-both \code{knowledge} and \code{order} is an error.}
 
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}

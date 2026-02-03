@@ -61,66 +61,6 @@ test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
 # Scores
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("Scores initialize invalid `order` type errors cleanly", {
-  my_df <- data.frame(a = rnorm(10), b = rnorm(10))
-  expect_warning(expect_error(
-    new(
-      "TemporalBIC",
-      data = my_df,
-      order = list(1, 2) # neither numeric nor character
-    ),
-    regexp = "`order` must be either a vector of integers or a vector of"
-  ))
-  expect_warning(expect_error(
-    new("TemporalBDeu", data = my_df, order = list(1, 2)),
-    regexp = "`order` must be either a vector of integers or a vector of"
-  ))
-  expect_error(
-    new(
-      "TemporalBIC",
-      data = my_df,
-      order = c(1, 2),
-      knowledge = knowledge(my_df, tier(1 ~ a, 2 ~ b))
-    ),
-    regexp = "Both `knowledge` and `order` supplied"
-  )
-  expect_error(
-    new(
-      "TemporalBDeu",
-      data = my_df,
-      order = c(1, 2),
-      knowledge = knowledge(my_df, tier(1 ~ a, 2 ~ b))
-    ),
-    regexp = "Both `knowledge` and `order` supplied"
-  )
-  expect_warning(expect_error(
-    new("TemporalBIC", data = my_df, order = c(factor(1), factor(2))),
-    regexp = "`order` must be either a vector of integers or a vector of prefixes"
-  ))
-  expect_warning(expect_error(
-    new("TemporalBDeu", data = my_df, order = c(factor(1), factor(2))),
-    regexp = "`order` must be either a vector of integers or a vector of prefixes"
-  ))
-  score_bic <- new("TemporalBIC", data = my_df, order = NULL, knowledge = NULL)
-
-  score_bdeu <- new(
-    "TemporalBDeu",
-    data = my_df,
-    order = NULL,
-    knowledge = NULL
-  )
-
-  expect_equal(score_bic$.order, c("a" = NA_integer_, "b" = NA_integer_))
-  expect_equal(score_bdeu$.order, c("a" = NA_integer_, "b" = NA_integer_))
-
-  expect_warning(
-    score_bdeu <- new("TemporalBDeu", data = my_df, order = c(1, 2))
-  )
-  expect_warning(
-    score_bdeu <- new("TemporalBDeu", data = my_df, order = c("a", "b"))
-  )
-})
-
 test_that("TemporalBDeu covers if(length(parents) == 0) part", {
   data("alarm", package = "bnlearn")
   sc <- new(
@@ -203,40 +143,6 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
   sc_sc$pp.dat$data.count <- rep(n, ncol(X))
   s2 <- sc_sc$local.score(vertex = 2L, parents = 1L)
   expect_true(is.finite(s2))
-})
-
-test_that("TemporalBIC initialize from deprecated numeric/character order builds knowledge", {
-  set.seed(1405)
-  X <- cbind(a = rnorm(20), b = rnorm(20))
-  # numeric order
-  expect_warning(
-    {
-      sc_num <- new(
-        "TemporalBIC",
-        data = X,
-        nodes = colnames(X),
-        order = c(1, 2),
-        use.cpp = FALSE
-      )
-    },
-    regexp = "deprecated"
-  )
-  expect_true(all(!is.na(sc_num$.order)))
-
-  # character prefixes -> needs helper .build_knowledge_from_order
-  expect_warning(
-    {
-      sc_chr <- new(
-        "TemporalBIC",
-        data = X,
-        nodes = c("T1_a", "T2_b"),
-        order = c("T1", "T2"),
-        use.cpp = FALSE
-      )
-    },
-    regexp = "deprecated"
-  )
-  expect_true(all(!is.na(sc_chr$.order)))
 })
 
 test_that("TemporalBIC with partially tiered knowledge skips enforcement for untiered vars", {

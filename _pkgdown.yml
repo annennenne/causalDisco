@@ -71,7 +71,6 @@ reference:
       - starts_with("summary")
       - starts_with("plot")
       - make_tikz
-      - make_tikz_old
 
   - title: "Knowledge helpers"
     contents:

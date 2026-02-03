@@ -7,14 +7,12 @@
 tpc_run(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
   method = "stable.fast",
   na_method = "none",
   orientation_method = "conservative",
-  output = "caugi",
   directed_as_undirected = FALSE,
   varnames = NULL,
   ...
@@ -29,11 +27,6 @@ prefixed with their period name (see examples). When using
 \item{knowledge}{A \code{knowledge} object created with \code{knowledge()},
 encoding tier assignments and optional forbidden/required edges. This is
 the preferred way to provide temporal background knowledge.}
-
-\item{order}{A character vector of period prefixes in temporal order.
-Deprecated; use \code{knowledge} instead. If supplied, it is converted
-internally to tier knowledge using \code{tidyselect::starts_with()} for
-each prefix.}
 
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
@@ -58,14 +51,6 @@ error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 \item{orientation_method}{Conflict-handling method when orienting edges.
 Currently only the conservative method is available.}
 
-\item{output}{One of \code{"tpdag"}, \code{"tskeleton"}, \code{"pcAlgo"},
-or \code{"caugi"}. If \code{"tskeleton"}, return the temporal
-skeleton without directions. If \code{"tpdag"} (default), return a
-temporal partially directed acyclic graph (TPDAG). If \code{"pcAlgo"},
-return a \code{\link[pcalg]{pcAlgo-class}} object for compatibility with
-\pkg{pcalg}. If \code{"caugi"}, return a \code{caugi} and a \code{knowledge}
-(\code{knowledgeable_caugi}) object.}
-
 \item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
 edges in \code{knowledge} as undirected during skeleton learning. This
 is due to the fact that \pkg{pcalg} does not allow directed edges in
@@ -79,11 +64,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
 \value{
-If \code{output = "tpdag"} or \code{"tskeleton"}, an S3 list with entries
-\code{$tamat} (temporal adjacency matrix), \code{$psi} (alpha level),
-and \code{$ntests} (number of tests run). If \code{output = "pcAlgo"}, a
-\code{\link[pcalg]{pcAlgo-class}} object. If \code{output = "caugi"},
-a \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
+A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
 Run a tier-aware variant of the PC algorithm that respects background

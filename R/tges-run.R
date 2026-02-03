@@ -349,7 +349,6 @@ TEssGraph <- setRefClass(
 #'
 #' @keywords internal
 TemporalBIC <- setRefClass(
-  # nolint: object_name_linter.
   "TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
@@ -363,37 +362,9 @@ TemporalBIC <- setRefClass(
       intercept = TRUE,
       format = c("raw", "scatter"),
       knowledge = NULL,
-      order = NULL, # deprecated
       ...
     ) {
-      if (!is.null(knowledge) && !is.null(order)) {
-        stop(
-          "Both `knowledge` and `order` supplied. ",
-          "Please supply a knowledge object only.",
-          call. = FALSE
-        )
-      }
-      if (is.null(knowledge) && !is.null(order)) {
-        warning(
-          "`order` is deprecated in version 1.0.0 and will be removed in",
-          " a future version. Please supply a `knowledge` object instead."
-        )
-        if (is.numeric(order)) {
-          knowledge <- rlang::inject(knowledge(data, tier(!!order)))
-        } else if (is.character(order)) {
-          knowledge <- causalDisco:::.build_knowledge_from_order(
-            order,
-            vnames = nodes
-          )
-        } else {
-          stop(
-            "`order` must be either a vector of integers or a vector of ",
-            "prefixes. Provide a knowledge object instead.",
-            call. = FALSE
-          )
-        }
-      }
-      if (is.null(knowledge) && is.null(order)) {
+      if (is.null(knowledge)) {
         knowledge <- knowledge() |> add_vars(nodes)
       }
 
@@ -538,37 +509,9 @@ TemporalBDeu <- setRefClass(
       nodes = colnames(data),
       iss = 1,
       knowledge = NULL,
-      order = NULL, # deprecated
       ...
     ) {
-      if (!is.null(knowledge) && !is.null(order)) {
-        stop(
-          "Both `knowledge` and `order` supplied. ",
-          "Please supply a knowledge object only.",
-          call. = FALSE
-        )
-      }
-      if (is.null(knowledge) && !is.null(order)) {
-        warning(
-          "`order` is deprecated in version 1.0.0 and will be removed in",
-          " a future version. Please supply a `knowledge` object instead."
-        )
-        if (is.numeric(order)) {
-          knowledge <- rlang::inject(knowledge(data, tier(!!order)))
-        } else if (is.character(order)) {
-          knowledge <- causalDisco:::.build_knowledge_from_order(
-            order,
-            vnames = nodes
-          )
-        } else {
-          stop(
-            "`order` must be either a vector of integers or a vector of ",
-            "prefixes. Provide a knowledge object instead.",
-            call. = FALSE
-          )
-        }
-      }
-      if (is.null(knowledge) && is.null(order)) {
+      if (is.null(knowledge)) {
         knowledge <- knowledge() |> add_vars(nodes)
       }
 

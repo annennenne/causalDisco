@@ -269,7 +269,6 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
     )
   )
   s <- CausalDiscoSearch$new()
-  s$set_params(list(output = "caugi"))
   s$set_test("fisher_z")
   s$set_knowledge(kn)
   s$set_alg("tpc")
