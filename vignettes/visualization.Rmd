@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(causalDisco)
-library(caugi)
 ```
 
 This vignette demonstrates how to visualize causal graphs. We cover plotting `knowledge` objects and

@@ -50,15 +50,18 @@
 #' plot(
 #'   disco_cd_tges,
 #'   node_style = list(
-#'     fill = "lightblue",
-#'     col = "darkblue",
-#'     lwd = 2,
-#'     padding = 4,
-#'     size = 1.2
+#'     fill = "lightblue", # Fill color
+#'     col = "darkblue", # Border color
+#'     lwd = 2, # Border width
+#'     padding = 4, # Text padding (mm)
+#'     size = 1.2 # Size multiplier
 #'   ),
 #'   edge_style = list(
-#'     lwd = 1.5,
-#'     arrow_size = 4
+#'     lwd = 1.5, # Edge width
+#'     arrow_size = 4, # Arrow size (mm)
+#'     col = "darkgreen", # Edge color
+#'     fill = "black", # Arrow fill color
+#'     lty = "dashed" # Edge line type
 #'   )
 #' )
 #'
@@ -73,6 +76,14 @@
 #' bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z")
 #' res_untiered <- disco(data = num_data, method = bnlearn_pc, knowledge = kn_untiered)
 #' plot(res_untiered)
+#'
+#' # With a custom defined layout
+#' custom_layout <- data.frame(
+#'  name = c("child_x1", "child_x2", "youth_x3", "youth_x4", "oldage_x5", "oldage_x6"),
+#'  x = c(0, 1, 2, 2, 3, 4),
+#'  y = c(0, 1, 0, -1, 0, 1)
+#' )
+#' plot(res_untiered, layout = custom_layout)
 #'
 #' @seealso [caugi::plot()]
 #' @export
@@ -157,20 +168,32 @@ plot.knowledgeable_caugi <- function(
 #' # Plot with row orientation
 #' plot(kn_tiered, orientation = "rows")
 #'
-#' # Plot with custom node styling and edge width/arrow size
+#' # Plot with custom node styling, edge width/arrow size and edge colors
+#' kn <- knowledge(
+#'   tpc_example,
+#'   tier(
+#'     child ~ starts_with("child"),
+#'     youth ~ starts_with("youth"),
+#'     old ~ starts_with("old")
+#'   ),
+#'   child_x1 %-->% child_x2, # required edge
+#'   youth_x4 %!-->% youth_x3  # forbidden edge
+#' )
 #' plot(
-#'   kn_tiered,
+#'   kn,
 #'   node_style = list(
-#'     fill = "lightblue",
-#'     col = "darkblue",
-#'     lwd = 2,
-#'     padding = 4,
-#'     size = 1.2
+#'     fill = "lightblue", # Fill color
+#'     col = "darkblue", # Border color
+#'     lwd = 2, # Border width
+#'     padding = 4, # Text padding (mm)
+#'     size = 1.2 # Size multiplier
 #'   ),
 #'   edge_style = list(
-#'     lwd = 1.5,
-#'     arrow_size = 4
-#'   )
+#'     lwd = 1.5, # Edge width
+#'     arrow_size = 4 # Arrow size (mm)
+#'   ),
+#'   required_col = "darkgreen",
+#'   forbidden_col = "darkorange"
 #' )
 #'
 #' # Define a knowledge object without tiers
@@ -179,7 +202,16 @@ plot.knowledgeable_caugi <- function(
 #'   child_x1 %-->% c(child_x2, youth_x3),
 #'   youth_x4 %!-->% oldage_x5
 #' )
+#' # Plot with default layout
 #' plot(kn_untiered)
+#'
+#' # With a custom defined layout
+#' custom_layout <- data.frame(
+#'  name = c("child_x1", "child_x2", "youth_x3", "youth_x4", "oldage_x5", "oldage_x6"),
+#'  x = c(0, 1, 2, 2, 3, 4),
+#'  y = c(0, 1, 0, -1, 0, 1)
+#' )
+#' plot(kn_untiered, layout = custom_layout)
 #'
 #' @export
 plot.knowledge <- function(
