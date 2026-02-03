@@ -135,7 +135,6 @@ Collate:
     'pcalg-type-tests.R'
     'plot.R'
     'print-helpers.R'
-    'reg-test.R'
     'simulation.R'
     'tamat.R'
     'tetrad-graph.R'
