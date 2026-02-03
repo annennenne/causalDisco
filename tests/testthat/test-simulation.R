@@ -33,3 +33,24 @@ test_that("generate_dag_data works", {
     "A^2 + B + rnorm(100, sd = 0.7)"
   )
 })
+
+test_that("sim_dag errors", {
+  expect_error(
+    sim_dag(n = 5, m = 3, p = 0.2),
+    "Exactly one of 'm' or 'p' must be supplied."
+  )
+  expect_error(
+    sim_dag(n = 4.5, m = 3)
+  )
+  expect_error(
+    sim_dag(n = 5, m = 100)
+  )
+  expect_error(
+    sim_dag(n = 5, p = 1.1)
+  )
+})
+
+test_that("sim_dag works", {
+  out <- sim_dag(n = 5, m = 4)
+  expect_true(inherits(out, "caugi::caugi"))
+})

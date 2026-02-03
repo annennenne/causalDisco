@@ -53,7 +53,6 @@ Imports:
     checkmate,
     dplyr,
     grDevices,
-    igraph,
     methods,
     pcalg,
     purrr,
@@ -103,12 +102,12 @@ Collate:
     'cast-obj.R'
     'causalDisco-package.R'
     'causalDisco-search.R'
+    'causaldisco-tests.R'
     'check-args.R'
     'check-knowledge-violations.R'
     'compare.R'
     'confusion.R'
     'constraint-based-run-helpers.R'
-    'cor-test.R'
     'data.R'
     'disco-method.R'
     'disco.R'
@@ -116,7 +115,6 @@ Collate:
     'engine-registry.R'
     'evaluate.R'
     'fci.R'
-    'gaus-cor-score.R'
     'ges.R'
     'grasp-fci.R'
     'grasp.R'
@@ -130,21 +128,13 @@ Collate:
     'knowledgeable-caugi.R'
     'make-tikz-helpers.R'
     'make-tikz.R'
-    'maketikz.R'
     'metrics.R'
     'misc.R'
-    'n-dags.R'
     'pc.R'
     'pcalg-search.R'
     'pcalg-type-tests.R'
-    'plot-caugi.R'
-    'plot-tempo-mech.R'
     'plot.R'
     'print-helpers.R'
-    'probmat-to-amat.R'
-    'reg-test.R'
-    'sim-dag.R'
-    'sim-gaus-from-dag.R'
     'simulation.R'
     'tamat.R'
     'tetrad-graph.R'
@@ -156,7 +146,6 @@ Collate:
     'tges-run.R'
     'tges.R'
     'tpc.R'
-    'tplot.R'
     'zzz.R'
 Language: en-US
 VignetteBuilder: knitr

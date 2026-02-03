@@ -25,11 +25,6 @@
 #' @param knowledge A \emph{knowledge} object describing tiers/periods and optional
 #'   forbidden/required edges. This replaces the legacy \code{order} interface and
 #'   is the preferred way to supply temporal background knowledge.
-#' @param order \strong{Deprecated}. A character vector with period-prefixes in their
-#'   temporal order (e.g., \code{c("p1", "p2")}). If supplied (and \code{knowledge}
-#'   is \code{NULL}), a temporary \code{knowledge} object is constructed using
-#'   [tidyselect::starts_with] for each prefix. Supplying
-#'   both \code{knowledge} and \code{order} is an error.
 #' @param orientation_method Method for handling conflicting separating sets when orienting
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See \link[pcalg]{pc} for further details.
@@ -44,7 +39,6 @@
 tfci_run <- function(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
@@ -58,7 +52,6 @@ tfci_run <- function(
   prep <- constraint_based_prepare_inputs(
     data = data,
     knowledge = knowledge,
-    order = order,
     varnames = varnames,
     na_method = na_method,
     test = test,

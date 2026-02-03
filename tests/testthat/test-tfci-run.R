@@ -57,24 +57,6 @@ test_that("tfci_run respects forbidden knowledge (edge is removed)", {
   expect_s3_class(res, "knowledgeable_caugi")
 })
 
-test_that("tfci_run(order=...) runs and returns knowledgeable_caugi, throws deprecation warning", {
-  set.seed(1405)
-  data(tpc_example, package = "causalDisco")
-
-  ord <- c("child", "youth", "oldage")
-
-  expect_warning(
-    res <- tfci_run(
-      data = tpc_example,
-      order = ord,
-      alpha = 0.01,
-      test = cor_test
-    )
-  )
-  expect_s3_class(res, "knowledgeable_caugi")
-})
-
-
 test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
   set.seed(1405)
   my_df <- data.frame(
@@ -109,34 +91,6 @@ test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
 # ──────────────────────────────────────────────────────────────────────────────
 # tfci_run() guards and errors
 # ──────────────────────────────────────────────────────────────────────────────
-
-test_that("tfci_run errors when both knowledge and order are supplied", {
-  set.seed(1405)
-  data(tpc_example, package = "causalDisco")
-
-  ord <- c("child", "youth", "oldage")
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ tidyselect::starts_with("child"),
-      youth ~ tidyselect::starts_with("youth"),
-      oldage ~ tidyselect::starts_with("oldage")
-    )
-  )
-
-  expect_error(
-    tfci_run(
-      data = tpc_example,
-      knowledge = kn,
-      order = ord,
-      alpha = 0.015,
-      test = cor_test
-    ),
-    "Both `knowledge` and `order` supplied. Please supply a knowledge object.",
-    fixed = TRUE
-  )
-})
 
 test_that("tfci_run input guards fail fast with clear messages", {
   my_df <- data.frame(a = 1:3, b = 1:3)

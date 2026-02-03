@@ -189,3 +189,54 @@ generate_dag_data <- function(
   attr(out, "generating_model") <- model
   out
 }
+
+#' Simulate a Random DAG
+#'
+#' Simulates a random directed acyclic graph adjacency (DAG) matrix with `n` nodes
+#' and either `m` edges, edge creation probability `p`, or edge creation
+#' probability range `p_range`.
+#'
+#' @param n The number of nodes.
+#' @param m Integer in `0, n*(n-1)/2`. Number of edges in the graph. Exactly one
+#' of `m` or `p` must be supplied.
+#' @param p Numeric in `[0,1]`. Probability of edge creation. Exactly one of
+#' `m` or `p` must be supplied.
+#'
+#' @returns The sampled `caugi` object.
+#' @examples
+#' # Simulate a DAG with 5 nodes and 3 edges
+#' sim_dag(n = 5, m = 3)
+#'
+#' # Simulate a DAG with 5 nodes and edge creation probability of 0.2
+#' sim_dag(n = 5, p = 0.2)
+#'
+#' @seealso [caugi::generate_graph()]
+#' @export
+sim_dag <- function(
+  n,
+  m = NULL,
+  p = NULL
+) {
+  # Check only one of m, p, p_range is supplied
+  n_args_supplied <- sum(!sapply(list(m, p), is.null))
+
+  if (n_args_supplied != 1) {
+    stop("Exactly one of 'm' or 'p' must be supplied.")
+  }
+  checkmate::assert_int(n, lower = 1)
+  checkmate::assert(
+    checkmate::check_null(m),
+    checkmate::check_int(m, lower = 0, upper = n * (n - 1) / 2)
+  )
+  checkmate::assert(
+    checkmate::check_null(p),
+    checkmate::check_number(p, lower = 0, upper = 1)
+  )
+
+  caugi::generate_graph(
+    n = n,
+    m = m,
+    p = p,
+    class = "DAG"
+  )
+}

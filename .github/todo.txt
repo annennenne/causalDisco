@@ -1,20 +1,6 @@
-# Functions to remove
-
-- sim_dag
-- sim_gaus_from_dag
-- make_tikz_old
-- ...
-
 # Namespace
 
 Make edges, nodes dispatch to avoid nameclash
-
-
-# Functions to not export
-
-- set_knowledge
-
-- ...
 
 # Remove files not used
 
