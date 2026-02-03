@@ -87,7 +87,7 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
             {
               res <- disco(num_data, method = m, knowledge = kn)
             },
-            "Cannot mutate graph to class 'PDAG':",
+            "Cannot mutate graph to class 'PDAG'.",
             fixed = TRUE
           )
         } else {

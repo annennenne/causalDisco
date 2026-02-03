@@ -46,6 +46,15 @@ disco <- function(data, method, knowledge = NULL) {
   if (!inherits(method, "disco_method")) {
     stop("The method must be a disco method object.", call. = FALSE)
   }
+
+  if (engine == "causalDisco" && any(knowledge$edges$status == "required")) {
+    warning(
+      "causalDisco engine does not support required edges in knowledge. ",
+      "These will be ignored.",
+      call. = FALSE
+    )
+  }
+
   # inject knowledge via S3 generic
   if (!is.null(knowledge)) {
     is_knowledge(knowledge)
@@ -67,11 +76,15 @@ disco <- function(data, method, knowledge = NULL) {
         caugi::mutate_caugi(out$caugi, graph_class)
       },
       error = function(e) {
+        cycle_msg <- ""
+        if (identical(graph_class, "PDAG")) {
+          cycle_msg <- " The graph contains a directed cycle."
+        }
         warning(
           sprintf(
-            "Cannot mutate graph to class '%s': %s.",
+            "Cannot mutate graph to class '%s'.%s",
             graph_class,
-            e$message
+            cycle_msg
           ),
           call. = FALSE
         )

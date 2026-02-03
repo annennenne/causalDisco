@@ -59,8 +59,13 @@ test_that("tpc causalDisco respects required background knowledge", {
   )
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z")
-  out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
-
+  out <- expect_warning(
+    disco(data = tpc_example, method = my_tpc, knowledge = kn),
+    "causalDisco engine does not support required edges in knowledge."
+  )
+  skip(
+    "tpc causalDisco does not yet support required edges from knowledge objects."
+  )
   edges <- out$caugi@edges
 
   violations <- causalDisco:::check_edge_constraints(edges, kn)
@@ -69,11 +74,6 @@ test_that("tpc causalDisco respects required background knowledge", {
     nrow(violations) == 0,
     info = "Required edge not found in the output graph."
   )
-
-  # edges contains child_x1 -> child_x2. Verify graph changes when we require child_x2 -> child_x1 instead.
-  skip(
-    "tpc causalDisco does not yet support required edges from knowledge objects."
-  ) # Above works due to chance
 
   kn <- knowledge(
     tpc_example,

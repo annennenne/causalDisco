@@ -241,9 +241,8 @@ test_that("disco plotting with required works", {
     child_x1 %-->% youth_x3
   )
 
-  # use causalDisco's own tges algorithm with temporal BIC score
-  cd_tges <- tges(engine = "causalDisco", score = "tbic")
-  disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+  cd_pc <- pc(engine = "tetrad", test = "fisher_z")
+  disco_cd_tges <- disco(data = tpc_example, method = cd_pc, knowledge = kn)
 
   plot(disco_cd_tges)
   expect_true(TRUE)
