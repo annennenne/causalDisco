@@ -92,10 +92,10 @@ causalDisco::check_tetrad_install()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.1"
+#> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
 ```
 
 ## Example
@@ -223,17 +223,12 @@ gg +
 
 <img src="man/figures/README-plot wip-1.png" alt="" width="100%" />
 
-- In documentation of defaults for tests maybe add the underlying engine
-  defaults if they differ?
-
 - Add all algs/scores/tests from the backends (start with Tetrad). Check
   if we currently document ones we haven’t implemented yet.
-
   - Missing scores: `"Instance-specific Augmented SEM BIC Score"`. Get
     this error when implementing:
     `Error in .jcall("RJavaTools", "Ljava/lang/Object;", "invokeMethod", cl, : java.lang.NullPointerException: Cannot invoke "edu.cmu.tetrad.data.Knowledge.getTestingData()" because "this.knowledge" is null`
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
-
 - Update evaluation and confusion metrics (use caugi?)
 
 #### Tetrad issues
