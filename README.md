@@ -131,24 +131,7 @@ kn <- knowledge(
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
-
-  # Similarly, one could do
-  tetrad_pc <- tetrad_pc |> set_knowledge(kn)
-  disco_tetrad_pc_new <- tetrad_pc(tpc_example)
 }
-#> Warning: The `file` argument of `vroom()` must use `I()` for literal data as of vroom
-#> 1.5.0.
-#>   
-#>   # Bad:
-#>   vroom("X,Y\n1.5,2.3\n")
-#>   
-#>   # Good:
-#>   vroom(I("X,Y\n1.5,2.3\n"))
-#> ℹ The deprecated feature was likely used in the readr package.
-#>   Please report the issue at <https://github.com/tidyverse/readr/issues>.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 
 # Use causalDisco's own tges algorithm with temporal BIC score
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
@@ -169,9 +152,6 @@ plot(disco_cd_tges)
 - Updated all the vignettes - anything missing?
 
 ## TODO
-
-- Make examples for each engine with using all possible arguments (alg
-  settings).
 
 - Check all args (that we want) are available.
 
@@ -243,9 +223,6 @@ gg +
 
 <img src="man/figures/README-plot wip-1.png" alt="" width="100%" />
 
-- Make required work for our algorithms. It breaks when it internally
-  calls `tpdag`, so look into that…
-
 - In documentation of defaults for tests maybe add the underlying engine
   defaults if they differ?
 
@@ -258,40 +235,6 @@ gg +
     (see branch `Add-isa-sem-bic-score-to-Tetrad`).
 
 - Update evaluation and confusion metrics (use caugi?)
-
-### Bugfixes
-
-- Tried implementing required edges in the scores (e.g. `TemporalBdeu`)
-  by giving it score -Inf if missing a required edge, but then it runs
-  forever. I.e. adding the following to `local.score`
-
-``` r
-vertex_name <- colnames(pp.dat$data)[vertex]
-req_parents <- kn$edges |>
-dplyr::filter(status == "required", to == vertex_name) |>
-dplyr::pull(from)
-
-parent_names <- colnames(pp.dat$data)[parents]
-missing_required <- !all(req_parents %in% parent_names)
-if (missing_required) {
-  return(-Inf)
-}
-```
-
-The algorithm needs to be modified when having required edges, I think.
-
-Should be easier to fix for test based algorithms? Just check if
-required edges are present after skeleton phase and add them if missing?
-(and forbid them from being removed in orientation phase). Look at
-fixedEdges in pcalg.
-
-- Look into how (if) possible to pass to pcalg.
-
-- Piping as done above for Tetrad in the example section loses
-  `$knowledge$tiers` information due to how builders/closures capture
-  knowledge.
-
-  - Fixing requires refactoring the disco_method builder design I think.
 
 #### Tetrad issues
 
@@ -324,7 +267,7 @@ Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
 
 - Tetrad introduces cycle in `pc` algorithm when required edges are used
   (in unreleased Tetrad version it gives `X1 %---% X2` instead, i.e. not
-  respecting the required knowledge).
+  respecting the required knowledge). See \#1951.
 
 ``` r
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
@@ -339,8 +282,8 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
   disco(data = num_data, method = tetrad_pc, knowledge = kn)
 }
-#> Warning: Cannot mutate graph to class 'PDAG': Cannot convert caugi of class
-#> 'UNKNOWN' to 'PDAG'.FALSE.
+#> Warning: Cannot mutate graph to class 'PDAG'. The graph contains a directed
+#> cycle.
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: UNKNOWN
@@ -384,8 +327,6 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 
 - Make it clear in `?BnlearnSearch` (and similar for the others) that
   all algorithms aren’t currently fully supported.
-
-- List in documentation of `tfci`, … what kind of graph it returns.
 
 - Figure out how to not repeat the documentation of e.g. penalty
   discount in TetradSearch R6 class.
