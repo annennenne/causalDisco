@@ -4,16 +4,45 @@
 \alias{specificity}
 \title{Specificity}
 \usage{
-specificity(confusion)
+specificity(truth, guess, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the true graph.}
+
+\item{guess}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
 A numeric in [0,1].
 }
 \description{
-Computes specificity from a confusion matrix, see \link{confusion}.
-Specificity is defined as TN/(TN + FP), where TN are true negatives and
-FP are false positives. If TN + FP = 0, 0 is returned.
+Computes specificity from two \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+specificity as \code{TN/(TN + FP)}, where \code{TN} are true negatives and
+\code{FP} are false positives. If \code{TN + FP = 0}, \code{1} is returned.
 }
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+specificity(cg1, cg2, type = "adj")
+specificity(cg1, cg2, type = "dir")
+
+}
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{f1_score}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{g1_score}()},
+\code{\link{npv}()},
+\code{\link{precision}()},
+\code{\link{recall}()},
+\code{\link{shd}()}
+}
+\concept{metrics}

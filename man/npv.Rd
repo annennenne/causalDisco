@@ -4,16 +4,45 @@
 \alias{npv}
 \title{Negative Predictive Value}
 \usage{
-npv(confusion)
+npv(truth, guess, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the true graph.}
+
+\item{guess}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
 A numeric in [0,1].
 }
 \description{
-Computes negative predictive value recall from a confusion matrix, see \link{confusion}.
-Negative predictive value is defined as TN/(TN + FN), where TN are true negatives and
-FN are false negatives. If TP + FN = 0, 0 is returned.
+Computes negative predictive value from two \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+negative predictive value as \code{TN/(TN + FN)}, where \code{TN} are true negatives and
+\code{FN} are false negatives. If \code{TN + FN = 0}, \code{1} is returned.
 }
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+npv(cg1, cg2, type = "adj")
+npv(cg1, cg2, type = "dir")
+
+}
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{f1_score}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{g1_score}()},
+\code{\link{precision}()},
+\code{\link{recall}()},
+\code{\link{shd}()},
+\code{\link{specificity}()}
+}
+\concept{metrics}
