@@ -2,7 +2,7 @@
 % Please edit documentation in R/boss.R
 \name{boss}
 \alias{boss}
-\title{BOSS Algorithm. for Causal Discovery}
+\title{BOSS Algorithm for Causal Discovery}
 \usage{
 boss(engine = "tetrad", score, ...)
 }

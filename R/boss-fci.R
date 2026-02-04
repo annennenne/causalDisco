@@ -1,4 +1,4 @@
-#' @title BOSS-FCI Algorithm. for Causal Discovery
+#' @title BOSS-FCI Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the BOSS-FCI (Best Order Score Search FCI) algorithm for causal discovery using one of several engines. This

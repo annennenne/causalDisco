@@ -1,4 +1,4 @@
-#' @title BOSS Algorithm. for Causal Discovery
+#' @title BOSS Algorithm for Causal Discovery
 #'
 #' @description
 #' Run the BOSS (Best Order Score Search) algorithm for causal discovery using one of several engines.

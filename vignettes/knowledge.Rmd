@@ -56,7 +56,7 @@ This knowledge object can be visualized:
 plot(kn_1)
 ```
 
-The blue solid edge represents the required edge from A to B, while the red edge represents the forbidden edge
+The blue edge represents the required edge from A to B, while the red edge represents the forbidden edge
 from B to C.
 
 If one wishes to remove some edges (either required or forbidden) knowledge from an existing knowledge object, the `remove_edge` function can be used.

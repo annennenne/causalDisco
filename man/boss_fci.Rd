@@ -2,7 +2,7 @@
 % Please edit documentation in R/boss-fci.R
 \name{boss_fci}
 \alias{boss_fci}
-\title{BOSS-FCI Algorithm. for Causal Discovery}
+\title{BOSS-FCI Algorithm for Causal Discovery}
 \usage{
 boss_fci(engine = "tetrad", score, test, alpha = 0.05, ...)
 }
