@@ -113,10 +113,10 @@ library(causalDisco)
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 
-# load data
+# Load data
 data(tpc_example)
 
-# Define background knowledge object
+# Define background tiered knowledge object
 kn <- knowledge(
   tpc_example,
   tier(
@@ -129,12 +129,19 @@ kn <- knowledge(
 # Use Tetrad PC algorithm with conditional Gaussian test
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  tetrad_pc <- pc(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
+  tetrad_pc <- pc(
+    engine = "tetrad", # Use the Tetrad implementation
+    test = "conditional_gaussian", # Use conditional Gaussian test
+    alpha = 0.05 # Significance level for the test
+  )
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 }
 
-# Use causalDisco's own tges algorithm with temporal BIC score
-cd_tges <- tges(engine = "causalDisco", score = "tbic")
+# Use causalDisco's own implementation of the tges algorithm with temporal BIC score
+cd_tges <- tges(
+  engine = "causalDisco", # Use the causalDisco implementation
+  score = "tbic" # Use temporal BIC score
+)
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 ```
 

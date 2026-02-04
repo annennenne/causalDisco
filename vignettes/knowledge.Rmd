@@ -45,8 +45,8 @@ Suppose we want to require an edge from A to B, from A to C, and forbid an edge 
 
 ```{r required and forbidden knowledge}
 kn_1 <- knowledge(
-  A %-->% c(B, C),
-  B %!-->% C
+  A %-->% c(B, C), # Require edges from A to B and A to C
+  B %!-->% C # Forbid edge from B to C
 )
 ```
 
@@ -81,8 +81,8 @@ We can pass the dataset to `knowledge`, which also checks that the specified var
 ```{r required and forbidden knowledge with data}
 kn_2 <- knowledge(
   tpc_example,
-  child_x1 %-->% youth_x3,
-  child_x2 %!-->% oldage_x5
+  child_x1 %-->% youth_x3, # Require edge from child_x1 to youth_x3
+  child_x2 %!-->% oldage_x5 # Forbid edge from child_x2 to oldage_x5
 )
 ```
 
