@@ -136,3 +136,22 @@ test_that("boss_fci Tetrad disco respects forbidden background knowledge", {
     info = "Required edge not found in the output graph."
   )
 })
+
+test_that("boss_fci Tetrad disco works with additional args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  boss_fci_tetrad <- boss_fci(
+    engine = "tetrad",
+    score = "poisson_prior",
+    test = "rank_independence",
+    depth = 3,
+    max_disc_path_length = 5,
+    use_bes = FALSE,
+    use_heuristic = FALSE,
+    complete_rule_set_used = FALSE,
+    guarantee_pag = TRUE
+  )
+  out <- disco(num_data, boss_fci_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})

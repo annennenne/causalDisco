@@ -1267,7 +1267,7 @@ test_that("deparse_knowledge() round-trips: eval(parse(code)) equals original", 
 })
 
 test_that("print and summary method for knowledge", {
-  my_df <- data.frame(A = 1, B = 2, C = 3)
+  my_df <- data.frame(A = 1, B = 2, C = 3, D = 4, E = 5, F = 6)
   kn <- knowledge(
     my_df,
     tier(1 ~ A + B, 2 ~ C),

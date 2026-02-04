@@ -113,3 +113,27 @@ test_that("grasp Tetrad disco respects forbidden background knowledge", {
     info = "Required edge not found in the output graph."
   )
 })
+
+test_that("grasp Tetrad disco works with additional args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  grasp_tetrad <- grasp_fci(
+    engine = "tetrad",
+    test = "poisson_prior",
+    score = "rank_bic",
+    alpha = 0.05,
+    depth = 3,
+    stable_fas = FALSE,
+    max_disc_path_length = 5,
+    covered_depth = 3,
+    singular_depth = 2,
+    nonsingular_depth = 2,
+    ordered_alg = TRUE,
+    raskutti_uhler = TRUE,
+    use_data_order = FALSE,
+    num_starts = 3
+  )
+  out <- disco(num_data, grasp_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})

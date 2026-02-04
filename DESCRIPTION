@@ -101,7 +101,7 @@ Collate:
     'cast-obj.R'
     'causalDisco-package.R'
     'causalDisco-search.R'
-    'causaldisco-tests.R'
+    'causalDisco-tests.R'
     'check-args.R'
     'check-knowledge-violations.R'
     'constraint-based-run-helpers.R'
