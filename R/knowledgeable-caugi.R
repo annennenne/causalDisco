@@ -5,7 +5,7 @@
 #' output object of causal discovery methods used in \pkg{causalDisco}.
 #'
 #' @details
-#' The conversion from any graph type to a `caugi` is handled by the `caugi`
+#' The conversion from any graph type to a `caugi` is handled by the \pkg{caugi}
 #' package.
 #'
 #' @param graph A causal graph object
