@@ -116,13 +116,13 @@ test_that("knowledge helpers works", {
   )
   kcg <- knowledgeable_caugi(cg, kn)
 
-  nodes_kcg <- nodes(kcg)
+  nodes_kcg <- nodes(kcg$caugi)
   expected_nodes <- tibble::tibble(
     name = c("V1", "V2", "V3", "V4")
   )
   expect_equal(nodes_kcg, expected_nodes)
 
-  edges_kcg <- edges(kcg)
+  edges_kcg <- edges(kcg$caugi)
   expected_edges <- tibble::tibble(
     from = c("V1", "V2", "V3"),
     edge = c("-->", "-->", "-->"),

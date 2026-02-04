@@ -213,11 +213,12 @@ print.knowledgeable_caugi <- function(
 
   cli::cli_text("Graph class: {.strong {graph_class}}")
 
+  cg <- x$caugi
   if (compact) {
-    cli::cli_text("{nrow(edges(x))} edges, {nrow(nodes(x))} nodes")
+    cli::cli_text("{nrow(edges(cg))} edges, {nrow(nodes(cg))} nodes")
   } else {
-    print_section("Edges", edges(x))
-    print_section("Nodes", nodes(x))
+    print_section("Edges", edges(cg))
+    print_section("Nodes", nodes(cg))
   }
 
   # Knowledge info
@@ -246,11 +247,12 @@ print.knowledgeable_caugi <- function(
 #'
 #' @exportS3Method summary knowledgeable_caugi
 summary.knowledgeable_caugi <- function(object, ...) {
+  cg <- object$caugi
   # Graph info
   cli::cli_h1("caugi graph summary")
-  cli::cli_text("Graph class: {.strong {object$caugi@graph_class}}")
-  cli::cli_text("Nodes: {.strong {nrow(nodes(object))}}")
-  cli::cli_text("Edges: {.strong {nrow(edges(object))}}")
+  cli::cli_text("Graph class: {.strong {cg@graph_class}}")
+  cli::cli_text("Nodes: {.strong {nrow(nodes(cg))}}")
+  cli::cli_text("Edges: {.strong {nrow(edges(cg))}}")
 
   # Knowledge info
   NextMethod("summary")
@@ -350,50 +352,4 @@ is_knowledgeable_caugi <- function(x) {
   }
   class(x) <- c("knowledgeable_caugi", "knowledge")
   x
-}
-
-#' Retrieve nodes from a `knowledgeable_caugi` object
-#'
-#' @param kcg A `knowledgeable_caugi` object.
-#' @return A tibble containing the nodes.
-#' @export
-#'
-#' @examples
-#' data(tpc_example)
-#' cd_tges <- tges(engine = "causalDisco", score = "tbic")
-#' kn <- knowledge(
-#'   tpc_example,
-#'   tier(
-#'     child ~ starts_with("child"),
-#'     youth ~ starts_with("youth"),
-#'     old ~ starts_with("old")
-#'   )
-#' )
-#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
-#' nodes(disco_cd_tges)
-nodes <- function(kcg) {
-  tibble::as_tibble(caugi::nodes(kcg$caugi))
-}
-
-#' Retrieve edges from a `knowledgeable_caugi` object
-#'
-#' @param kcg A `knowledgeable_caugi` object.
-#' @return A tibble containing the edges.
-#' @export
-#'
-#' @examples
-#' data(tpc_example)
-#' cd_tges <- tges(engine = "causalDisco", score = "tbic")
-#' kn <- knowledge(
-#'   tpc_example,
-#'   tier(
-#'     child ~ starts_with("child"),
-#'     youth ~ starts_with("youth"),
-#'     old ~ starts_with("old")
-#'   )
-#' )
-#' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
-#' edges(disco_cd_tges)
-edges <- function(kcg) {
-  tibble::as_tibble(caugi::edges(kcg$caugi))
 }

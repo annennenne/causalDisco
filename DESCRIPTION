@@ -99,6 +99,7 @@ Collate:
     'boss-fci.R'
     'boss.R'
     'cast-obj.R'
+    'caugi-helpers.R'
     'causalDisco-package.R'
     'causalDisco-search.R'
     'check-args.R'
