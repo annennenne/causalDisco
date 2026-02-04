@@ -138,7 +138,7 @@ test_that("grasp_fci Tetrad disco respects forbidden background knowledge", {
   )
 })
 
-test_that("grasp_fci Tetrad disco works with additional args", {
+test_that("grasp_fci Tetrad disco works with additional algorithm args", {
   skip_if_no_tetrad()
   data(num_data)
   grasp_fci_tetrad <- grasp_fci(
@@ -157,6 +157,24 @@ test_that("grasp_fci Tetrad disco works with additional args", {
     use_data_order = FALSE,
     num_starts = 3,
     guarantee_pag = TRUE
+  )
+  out <- disco(num_data, grasp_fci_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})
+
+test_that("grasp_fci Tetrad disco works with additional test and score args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  grasp_fci_tetrad <- grasp_fci(
+    engine = "tetrad",
+    test = "poisson_prior",
+    score = "rank_bic",
+    alpha = 0.05,
+    poisson_lambda = 2,
+    singularity_lambda = 0.1,
+    gamma = 0.5,
+    penalty_discount = 3
   )
   out <- disco(num_data, grasp_fci_tetrad)
 
