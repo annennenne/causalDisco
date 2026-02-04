@@ -26,6 +26,9 @@ test_that("Metrics compute the correct", {
   expect_equal(f1_score(cg1, cg2, type = "adj"), 2 / 3)
   expect_equal(f1_score(cg1, cg2, type = "dir"), 1 / 2)
 
+  expect_equal(g1_score(cg1, cg2, type = "adj"), 2 / 3)
+  expect_equal(g1_score(cg1, cg2, type = "dir"), 1 / 2)
+
   expect_equal(shd(cg1, cg2), 3)
 })
 

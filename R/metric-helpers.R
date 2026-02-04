@@ -40,7 +40,6 @@ dir_confusion <- function(est_amat, true_amat) {
 
   true_dir <- true_edges$dir
   true_revdir <- lapply(true_dir, rev)
-  # true_undir <- true_edges$undir
   true_undir <- c(true_edges$undir, lapply(true_edges$undir, rev))
 
   est_dir <- est_edges$dir
