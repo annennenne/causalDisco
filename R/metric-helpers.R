@@ -1,3 +1,93 @@
+#' Convert to Adjacency Matrix
+#'
+#' Convert a `caugi` object to its corresponding "from-to" adjacency matrix representation.
+#' If the graph is a PAG, the adjacency matrix will encode edge marks as follows:
+#' - `0`: No edge
+#' - `1`: Circle (o)
+#' - `2`: Arrowhead (>)
+#' - `3`: Tail (-)
+#'
+#' For PDAGs, the adjacency matrix will use `1` to indicate the presence of an edge and `0` for no edge.
+#'
+#' @param x A `caugi` object.
+#' @returns An adjacency matrix.
+#' @keywords internal
+#' @noRd
+amat <- function(x) {
+  if (!inherits(x, "caugi::caugi")) {
+    stop("Input must be a caugi object")
+  }
+  nodes <- x@nodes$name
+  n <- length(nodes)
+  idx <- stats::setNames(seq_along(nodes), nodes)
+
+  pag_marks <- c("<->", "o-o", "--o", "o->")
+  is_pag <- any(x@edges$edge %in% pag_marks)
+
+  # PDAG case
+  if (!is_pag) {
+    adj_mat <- matrix(0L, n, n, dimnames = list(nodes, nodes))
+
+    # directed --> edges
+    dir_idx <- which(x@edges$edge == "-->")
+    if (length(dir_idx) > 0) {
+      fr <- idx[x@edges$from[dir_idx]]
+      to <- idx[x@edges$to[dir_idx]]
+      adj_mat[cbind(to, fr)] <- 1L
+    }
+
+    # undirected --- edges
+    und_idx <- which(x@edges$edge == "---")
+    if (length(und_idx) > 0) {
+      fr <- idx[x@edges$from[und_idx]]
+      to <- idx[x@edges$to[und_idx]]
+      adj_mat[cbind(fr, to)] <- 1L
+      adj_mat[cbind(to, fr)] <- 1L
+    }
+    attr(adj_mat, "graph_class") <- "PDAG"
+    return(adj_mat)
+  }
+
+  # PAG case
+  adj_mat <- matrix(0L, n, n, dimnames = list(nodes, nodes))
+
+  edges <- x@edges
+  valid <- !(is.na(edges$from) |
+    is.na(edges$to) |
+    edges$from == "" |
+    edges$to == "" |
+    edges$from == edges$to)
+  edges <- edges[valid, , drop = FALSE]
+
+  edge_codes <- list(
+    "-->" = c(3L, 2L),
+    "---" = c(3L, 3L),
+    "<->" = c(2L, 2L),
+    "o-o" = c(1L, 1L),
+    "--o" = c(3L, 1L),
+    "o->" = c(1L, 2L)
+  )
+
+  codes_mat <- do.call(
+    rbind,
+    lapply(edges$edge, function(e) edge_codes[[e]] %||% c(0L, 0L))
+  )
+  from_idx <- idx[edges$from]
+  to_idx <- idx[edges$to]
+
+  adj_mat[cbind(to_idx, from_idx)] <- pmax(
+    adj_mat[cbind(to_idx, from_idx)],
+    codes_mat[, 1]
+  )
+  adj_mat[cbind(from_idx, to_idx)] <- pmax(
+    adj_mat[cbind(from_idx, to_idx)],
+    codes_mat[, 2]
+  )
+  attr(adj_mat, "graph_class") <- "PAG"
+  adj_mat
+}
+
+
 #' @title Confusion Matrix Components
 #'
 #' @description

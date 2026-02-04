@@ -95,7 +95,6 @@ RoxygenNote: 7.3.3
 Collate: 
     'aaa-globals.R'
     'aaa-init-helpers.R'
-    'amat.R'
     'bnlearn-search.R'
     'boss-fci.R'
     'boss.R'
@@ -105,7 +104,6 @@ Collate:
     'causaldisco-tests.R'
     'check-args.R'
     'check-knowledge-violations.R'
-    'compare.R'
     'constraint-based-run-helpers.R'
     'data.R'
     'disco-method.R'
@@ -135,7 +133,6 @@ Collate:
     'plot.R'
     'print-helpers.R'
     'simulation.R'
-    'tamat.R'
     'tetrad-graph.R'
     'tetrad-rdata-utils.R'
     'tetrad-search.R'

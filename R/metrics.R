@@ -47,9 +47,18 @@ confusion <- function(truth, est, type = c("adj", "dir")) {
   }
   caugi::same_nodes(truth, est, throw_error = truth)
 
-  # Extract adjacency matrices
-  est_amat <- caugi::as_adjacency(est)
-  truth_amat <- caugi::as_adjacency(truth)
+  est_amat <- amat(est)
+  truth_amat <- amat(truth)
+
+  if (
+    attr(est_amat, "graph_class") != "PDAG" ||
+      attr(truth_amat, "graph_class") != "PDAG"
+  ) {
+    stop(
+      "Confusion matrix only supports `-->` and `---` edges (PDAG).",
+      call. = FALSE
+    )
+  }
 
   nodes <- union(rownames(est_amat), rownames(truth_amat))
 

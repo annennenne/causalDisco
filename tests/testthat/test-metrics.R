@@ -83,3 +83,20 @@ test_that("Confusion errors on non-caugi objects", {
     "Both inputs must be caugi objects."
   )
 })
+
+test_that("Confusion errors on non PDAG", {
+  cg1 <- caugi::caugi(
+    A %<->% B + C,
+    B %-->% D
+  )
+  cg2 <- caugi::caugi(
+    A %o->% B + C,
+    B %-->% D
+  )
+
+  expect_error(
+    confusion(cg1, cg2),
+    "Confusion matrix only supports `-->` and `---` edges (PDAG).",
+    fixed = TRUE
+  )
+})
