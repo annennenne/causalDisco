@@ -1,15 +1,3 @@
-# Namespace
-
-Make edges, nodes dispatch to avoid nameclash
-
-# Remove files not used
-
-- n-dags.R
-
-- plot-tempo-mech.R
-
-- ...
-
 # Caugi plot
 
 - Square nodes
