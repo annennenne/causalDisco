@@ -4,12 +4,12 @@
 \alias{npv}
 \title{Negative Predictive Value}
 \usage{
-npv(truth, guess, type = c("adj", "dir"))
+npv(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -21,10 +21,11 @@ npv(truth, guess, type = c("adj", "dir"))
 A numeric in [0,1].
 }
 \description{
-Computes negative predictive value from two \code{caugi} objects.
+Computes negative predictive value from two PDAG \code{caugi} objects.
 It converts the \code{caugi} objects to adjacency matrices and computes
-negative predictive value as \code{TN/(TN + FN)}, where \code{TN} are true negatives and
+negative predictive value as \code{TN/(TN + FN)}, where \code{TN} are truth negatives and
 \code{FN} are false negatives. If \code{TN + FN = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -36,13 +37,14 @@ npv(cg1, cg2, type = "dir")
 \seealso{
 Other metrics: 
 \code{\link{confusion}()},
+\code{\link{evaluate}()},
 \code{\link{f1_score}()},
 \code{\link{false_omission_rate}()},
 \code{\link{fdr}()},
 \code{\link{g1_score}()},
 \code{\link{precision}()},
 \code{\link{recall}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}

@@ -4,12 +4,12 @@
 \alias{recall}
 \title{Recall}
 \usage{
-recall(truth, guess, type = c("adj", "dir"))
+recall(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -21,10 +21,11 @@ recall(truth, guess, type = c("adj", "dir"))
 A numeric in \verb{[0,1]}.
 }
 \description{
-Computes recall from two \code{caugi} objects.
+Computes recall from two PDAG \code{caugi} objects.
 It converts the \code{caugi} objects to adjacency matrices and computes
-recall as \code{TP/(TP + FN)}, where \code{TP} are true positives and
+recall as \code{TP/(TP + FN)}, where \code{TP} are truth positives and
 \code{FN} are false negatives. If \code{TP + FN = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -36,13 +37,14 @@ recall(cg1, cg2, type = "dir")
 \seealso{
 Other metrics: 
 \code{\link{confusion}()},
+\code{\link{evaluate}()},
 \code{\link{f1_score}()},
 \code{\link{false_omission_rate}()},
 \code{\link{fdr}()},
 \code{\link{g1_score}()},
 \code{\link{npv}()},
 \code{\link{precision}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}

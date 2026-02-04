@@ -32,6 +32,45 @@ test_that("Metrics compute the correct", {
   expect_equal(shd(cg1, cg2), 3)
 })
 
+test_that("evaluate works", {
+  cg1 <- caugi::caugi(A %-->% B + C)
+  cg2 <- caugi::caugi(B %-->% A + C)
+
+  out <- evaluate(cg1, cg2)
+  out_all <- evaluate(
+    cg1,
+    cg2,
+    metrics = list(
+      adj = c("precision", "recall"),
+      dir = c("f1_score"),
+      other = c("shd")
+    )
+  )
+
+  expect_true(is.data.frame(out))
+  expect_true(is.data.frame(out_all))
+  expect_equal(ncol(out_all), 4)
+})
+
+test_that("evaluate errors on wrong metric", {
+  cg1 <- caugi::caugi(A %-->% B + C)
+  cg2 <- caugi::caugi(B %-->% A + C)
+  expect_error(
+    evaluate(
+      cg1,
+      cg2,
+      metrics = list(
+        adj = c("precision", "non_existing_metric"),
+        dir = c("f1_score"),
+        other = c("shd")
+      )
+    ),
+    "Invalid adj metric(s): non_existing_metric",
+    fixed = TRUE
+  )
+})
+
+
 test_that("Confusion errors on non-caugi objects", {
   cg1 <- caugi::caugi(
     A %-->% B + C,

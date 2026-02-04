@@ -4,12 +4,12 @@
 \alias{false_omission_rate}
 \title{False Omission Rate}
 \usage{
-false_omission_rate(truth, guess, type = c("adj", "dir"))
+false_omission_rate(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -21,10 +21,11 @@ false_omission_rate(truth, guess, type = c("adj", "dir"))
 A numeric in [0,1].
 }
 \description{
-Computes false omission rate from two \code{caugi} objects.
+Computes false omission rate from two PDAG \code{caugi} objects.
 It converts the \code{caugi} objects to adjacency matrices and computes
 false omission rate as \code{FN/(FN + TN)}, where \code{FN} are false negatives and
-\code{TN} are true negatives. If \verb{FN + TN = 0, 1} is returned.
+\code{TN} are truth negatives. If \verb{FN + TN = 0, 1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -36,13 +37,14 @@ false_omission_rate(cg1, cg2, type = "dir")
 \seealso{
 Other metrics: 
 \code{\link{confusion}()},
+\code{\link{evaluate}()},
 \code{\link{f1_score}()},
 \code{\link{fdr}()},
 \code{\link{g1_score}()},
 \code{\link{npv}()},
 \code{\link{precision}()},
 \code{\link{recall}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}

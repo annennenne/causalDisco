@@ -4,12 +4,12 @@
 \alias{confusion}
 \title{Confusion Matrix}
 \usage{
-confusion(truth, guess, type = c("adj", "dir"))
+confusion(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -18,16 +18,16 @@ confusion(truth, guess, type = c("adj", "dir"))
 }}
 }
 \value{
-A list with entries \code{tp} (true positives), \code{tn} (true negatives),
+A list with entries \code{tp} (truth positives), \code{tn} (truth negatives),
 \code{fp} (false positives), and \code{fn} (false negatives).
 }
 \description{
-Compute confusion matrix for two \code{caugi} graphs.
+Compute confusion matrix for two PDAG \code{caugi} graphs.
 }
 \details{
 Adjacency comparison: The confusion matrix is a cross-tabulation
-of adjacencies. Hence, a true positive means that the two inputs agree on
-the presence of an adjacency. A true negative means that the two inputs agree
+of adjacencies. Hence, a truth positive means that the two inputs agree on
+the presence of an adjacency. A truth negative means that the two inputs agree
 on no adjacency. A false positive means that the estimated graph places an adjacency
 where there should be none. A false negative means that the estimated graph does
 not place an adjacency where there should have been one.
@@ -35,10 +35,12 @@ not place an adjacency where there should have been one.
 Orientation comparison: The orientation confusion matrix is conditional on agreement on
 adjacency. This means that only adjacencies that are shared in both input matrices are
 considered, and agreement wrt. orientation is then computed only among these edges
-that occur in both matrices. A true positive is a correctly placed arrowhead (1),
+that occur in both matrices. A truth positive is a correctly placed arrowhead (1),
 a false positive marks placement of arrowhead (1) where there should have been a tail (0),
 a false negative marks placement of tail (0) where there should have been an arrowhead (1),
-and a true negative marks correct placement of a tail (0).
+and a truth negative marks correct placement of a tail (0).
+
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -49,6 +51,7 @@ confusion(cg1, cg2, type = "dir")
 }
 \seealso{
 Other metrics: 
+\code{\link{evaluate}()},
 \code{\link{f1_score}()},
 \code{\link{false_omission_rate}()},
 \code{\link{fdr}()},
@@ -56,7 +59,7 @@ Other metrics:
 \code{\link{npv}()},
 \code{\link{precision}()},
 \code{\link{recall}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}

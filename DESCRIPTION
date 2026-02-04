@@ -112,7 +112,6 @@ Collate:
     'disco.R'
     'edges.R'
     'engine-registry.R'
-    'evaluate.R'
     'fci.R'
     'ges.R'
     'grasp-fci.R'

@@ -4,12 +4,12 @@
 \alias{f1_score}
 \title{F1 score}
 \usage{
-f1_score(truth, guess, type = c("adj", "dir"))
+f1_score(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -23,8 +23,9 @@ A numeric in [0,1].
 \description{
 Computes F1 score from two \code{caugi} objects.
 It converts the \code{caugi} objects to adjacency matrices and computes
-F1 score as \eqn{2 * TP/(2 * TP + FP + FN)}, where \code{TP} are true positives,
+F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where \code{TP} are truth positives,
 \code{FP} are false positives, and \code{FN} are false negatives. If \code{TP + FP + FN = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -36,13 +37,14 @@ f1_score(cg1, cg2, type = "dir")
 \seealso{
 Other metrics: 
 \code{\link{confusion}()},
+\code{\link{evaluate}()},
 \code{\link{false_omission_rate}()},
 \code{\link{fdr}()},
 \code{\link{g1_score}()},
 \code{\link{npv}()},
 \code{\link{precision}()},
 \code{\link{recall}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}

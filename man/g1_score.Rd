@@ -4,12 +4,12 @@
 \alias{g1_score}
 \title{G1 score}
 \usage{
-g1_score(truth, guess, type = c("adj", "dir"))
+g1_score(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the true graph.}
+\item{truth}{A \code{caugi} object representing the truth graph.}
 
-\item{guess}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \code{caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -23,8 +23,9 @@ A numeric in [0,1].
 \description{
 Computes G1 score from two \code{caugi} objects.
 It converts the \code{caugi} objects to adjacency matrices and computes
-G1 score defined as \eqn{2 * TN/(2 * TN + FN + FP)}, where \code{TN} are true negatives,
+G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where \code{TN} are truth negatives,
 \code{FP} are false positives, and FN are false negatives. If \code{TN + FN + FP = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
@@ -40,13 +41,14 @@ supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).
 \seealso{
 Other metrics: 
 \code{\link{confusion}()},
+\code{\link{evaluate}()},
 \code{\link{f1_score}()},
 \code{\link{false_omission_rate}()},
 \code{\link{fdr}()},
 \code{\link{npv}()},
 \code{\link{precision}()},
 \code{\link{recall}()},
-\code{\link{shd}()},
+\code{\link{reexports}},
 \code{\link{specificity}()}
 }
 \concept{metrics}
