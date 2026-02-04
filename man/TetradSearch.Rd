@@ -344,8 +344,6 @@ if used.
 \itemize{
 \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
 distribution (> 0),
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
@@ -397,8 +395,6 @@ graphs,
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
@@ -475,16 +471,12 @@ weights are distributed according to a binomial distribution,
 difference of BIC scores to add or remove edges. The Nandy et al.
 rule uses a single calculation of a partial correlation in place
 of the likelihood difference,
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
 \item \code{ebic} - Extended BIC score.
 \itemize{
 \item \code{gamma} - The gamma parameter in the EBIC score.
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
@@ -538,8 +530,6 @@ to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data.
 }
 \item \code{"discrete_bic"} - BIC score for discrete data.
 \itemize{
@@ -560,8 +550,6 @@ yields sparser graphs,
 \code{"ric"} - \eqn{2 \ln(p n)},
 \code{"ricc"} - \eqn{2(\ln(p n) + \ln\ln(p n))},
 \code{"gic6"} - \eqn{\ln n \ln(p n)}.
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
@@ -573,8 +561,6 @@ yields sparser graphs,
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data.
 }
 \itemize{
 \item \code{structure_prior = 0} - The default number of parents
@@ -591,8 +577,6 @@ If FALSE, the integration will be exact.
 \itemize{
 \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
 distribution (> 0),
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }
@@ -600,8 +584,6 @@ lambda to the diagonal, < 0 Pseudoinverse.
 \itemize{
 \item \code{risk_bound = 0.2} - This is the probability of getting
 the true model if a correct model is discovered. Could underfit.
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,
 \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
 lambda to the diagonal, < 0 Pseudoinverse.
 }

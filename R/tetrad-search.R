@@ -307,8 +307,8 @@ TetradSearch <- R6Class(
     #'          \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
     #'          distribution (> 0),
     #    #'          \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'          variables or so, set this to FALSE in order to calculate
-    #'          covariances on the fly from data,
+    #    #'          variables or so, set this to FALSE in order to calculate
+    #    #'          covariances on the fly from data,
     #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'          lambda to the diagonal, < 0 Pseudoinverse.
     #'      }
@@ -361,8 +361,8 @@ TetradSearch <- R6Class(
     #'      to tables with about that number of parents. The prior structure
     #'      weights are distributed according to a binomial distribution,
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data,
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
@@ -480,8 +480,8 @@ TetradSearch <- R6Class(
     #'        rule uses a single calculation of a partial correlation in place
     #'        of the likelihood difference,
     #    #'        \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'        variables or so, set this to FALSE in order to calculate
-    #'        covariances on the fly from data,
+    #    #'        variables or so, set this to FALSE in order to calculate
+    #    #'        covariances on the fly from data,
     #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'        lambda to the diagonal, < 0 Pseudoinverse.
     #'      }
@@ -489,8 +489,8 @@ TetradSearch <- R6Class(
     #'    \itemize{
     #'      \item \code{gamma} - The gamma parameter in the EBIC score.
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data,
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
@@ -545,8 +545,8 @@ TetradSearch <- R6Class(
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data.
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data.
     #'    }
     #'    \item \code{"discrete_bic"} - BIC score for discrete data.
     #'    \itemize{
@@ -568,8 +568,8 @@ TetradSearch <- R6Class(
     #'      \code{"ricc"} - \eqn{2(\ln(p n) + \ln\ln(p n))},
     #'      \code{"gic6"} - \eqn{\ln n \ln(p n)}.
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data,
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
@@ -582,8 +582,8 @@ TetradSearch <- R6Class(
     #'      to tables with about that number of parents. The prior structure
     #'      weights are distributed according to a binomial distribution,
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data.
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data.
     #'    }
     #    \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'    \itemize{
@@ -602,8 +602,8 @@ TetradSearch <- R6Class(
     #'      \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
     #'      distribution (> 0),
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data,
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
@@ -612,8 +612,8 @@ TetradSearch <- R6Class(
     #'      \item \code{risk_bound = 0.2} - This is the probability of getting
     #'      the true model if a correct model is discovered. Could underfit.
     #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #'      variables or so, set this to FALSE in order to calculate
-    #'      covariances on the fly from data,
+    #    #'      variables or so, set this to FALSE in order to calculate
+    #    #'      covariances on the fly from data,
     #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'      lambda to the diagonal, < 0 Pseudoinverse.
     #'    }
