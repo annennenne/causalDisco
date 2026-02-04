@@ -41,8 +41,8 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Check Java and install Tetrad
-        run: Rscript .github/workflows/pkgdown-install-tetrad.R
+      - name: Install Tetrad
+        run: Rscript .github/workflows/install-tetrad.R
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

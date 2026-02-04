@@ -32,6 +32,9 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
 
+      - name: Install Tetrad
+        run: Rscript .github/workflows/install-tetrad.R
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(
