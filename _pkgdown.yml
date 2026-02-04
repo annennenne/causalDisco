@@ -72,6 +72,10 @@ reference:
       - starts_with("plot")
       - make_tikz
 
+  - title: "Graph Metrics"
+    contents:
+      - has_concept("metrics")
+
   - title: "Knowledge helpers"
     contents:
       - starts_with("add")
@@ -96,18 +100,6 @@ reference:
       - unfreeze
       - +.knowledge
       - knowledge.knowledgeable_caugi
-
-  - title: "Evaluation & Confusion Metrics"
-    contents:
-      - precision
-      - recall
-      - specificity
-      - f1_score
-      - g1_score
-      - fdr
-      - npv
-      - false_omission_rate
-      - average_degree
 
   - title: "Miscellaneous"
     contents:

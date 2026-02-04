@@ -186,23 +186,6 @@ test_that("as.graphNEL drops tamat class", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# is_pdag / is_cpdag
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("is_pdag and is_cpdag validate graphs", {
-  # A <- B : valid PDAG; not a CPDAG (orientation not compelled)
-  m <- matrix(0L, 2, 2, dimnames = list(c("A", "B"), c("A", "B")))
-  m["B", "A"] <- 1L
-  expect_true(is_pdag(m))
-  expect_false(is_cpdag(m))
-
-  # A - B : valid PDAG and valid CPDAG (undirected edge in CPDAG encoding)
-  m["A", "B"] <- 1L
-  expect_true(is_pdag(m))
-  expect_true(is_cpdag(m))
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
 # graph_to_amat
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -227,95 +210,4 @@ test_that("graph_to_amat converts to adjacency matrix", {
   A_ft <- graph_to_amat(g, to_from = FALSE, type = "pdag")
   expect_equal(A_ft, t(A_tf))
   expect_identical(attr(A_ft, "tamat_type"), "pdag")
-})
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# max_edges
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("max_edges returns correct counts for small graphs", {
-  expect_equal(max_edges(1L), 0) # by definition
-  expect_equal(max_edges(2L), 1) # 1 edge
-  expect_equal(max_edges(3L), 3) # 3 edges
-  expect_equal(max_edges(4L), 6) # 6 edges
-  expect_equal(max_edges(6L), sum(1:5)) # triangular number
-})
-
-test_that("max_edges accepts integerish numerics (e.g., 3.0)", {
-  expect_equal(max_edges(3.0), 3)
-  expect_equal(max_edges(10.0), sum(seq_len(9L)))
-})
-
-test_that("max_edges rejects non-positive, non-integer, and invalid inputs", {
-  expect_error(max_edges(0L), "`p` must be a single positive integer")
-  expect_error(max_edges(-2L), "`p` must be a single positive integer")
-  expect_error(max_edges(2.5), "`p` must be a single positive integer")
-  expect_error(max_edges(NA_real_), "`p` must be a single positive integer")
-  expect_error(max_edges(NaN), "`p` must be a single positive integer")
-  expect_error(max_edges(Inf), "`p` must be a single positive integer")
-  expect_error(max_edges("3"), "`p` must be a single positive integer")
-  expect_error(max_edges(c(3L, 4L)), "`p` must be a single positive integer")
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
-# essgraph_to_amat
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("essgraph_to_amat builds adjacency", {
-  in_edges <- list(
-    integer(0),
-    1L,
-    c(1L, 2L)
-  )
-  fake_ess <- list(
-    field = function(name) {
-      if (name == ".in.edges") {
-        return(in_edges)
-      }
-      stop("unexpected field")
-    }
-  )
-  class(fake_ess) <- "EssGraph"
-
-  A <- essgraph_to_amat(fake_ess, p = 3)
-  expect_equal(dim(A), c(3, 3))
-  expect_equal(A[2, 1], 1)
-  expect_equal(A[3, 1], 1)
-  expect_equal(A[3, 2], 1)
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
-# average_degree
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("average_degree matches manual", {
-  m <- matrix(0L, 3, 3)
-  m[1, 2] <- m[2, 1] <- 1
-  m[1, 3] <- m[3, 1] <- 1
-  m[2, 3] <- m[3, 2] <- 1
-  expect_equal(average_degree(m), 2)
-
-  m2 <- matrix(0L, 3, 3)
-  m2[1, 2] <- m2[2, 1] <- 1
-  m2[2, 3] <- m2[3, 2] <- 1
-  expect_equal(average_degree(m2), 4 / 3)
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
-# n_edges
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("n_edges counts correctly", {
-  m <- matrix(0L, 4, 4)
-  m[lower.tri(m)] <- 1
-  m <- m + t(m)
-  m[m > 0] <- 1L
-  expect_equal(n_edges(m), 6)
-
-  p4 <- matrix(0L, 4, 4)
-  p4[1, 2] <- p4[2, 1] <- 1
-  p4[2, 3] <- p4[3, 2] <- 1
-  p4[3, 4] <- p4[4, 3] <- 1
-  expect_equal(n_edges(p4), 3)
 })

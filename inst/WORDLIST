@@ -7,7 +7,6 @@ Basak
 Bjarke
 Bjerre
 BnlearnSearch
-Bugfixes
 Bui
 CMD
 CPC
@@ -30,7 +29,6 @@ FCI
 FCIT
 FGES
 FN
-FP
 Fabricius
 Frederik
 GES
@@ -69,6 +67,7 @@ RCoT
 Raskutti
 Recognised
 Renviron
+SHD
 Satterthwaite
 Silverman
 Spirtes
@@ -77,7 +76,6 @@ TFCI
 TGES
 TP
 TPC
-TPDAG
 Tabu
 Temurin
 Terpstra
@@ -115,7 +113,6 @@ et
 factorised
 fci
 fges
-fixedEdges
 honouring
 independencies
 initializations
@@ -148,7 +145,6 @@ tetrad
 tges
 tibble
 tidyselect
-tikz
 tikzpicture
 tpag
 tpc

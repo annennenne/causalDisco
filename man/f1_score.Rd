@@ -4,16 +4,45 @@
 \alias{f1_score}
 \title{F1 score}
 \usage{
-f1_score(confusion)
+f1_score(truth, guess, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the true graph.}
+
+\item{guess}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
 A numeric in [0,1].
 }
 \description{
-Computes F1 score from a confusion matrix, see \link{confusion}.
-The F1 score is defined as  \eqn{2 * TP/(2 * TP + FP + FN)}, where TP are true positives,
-FP are false positives, and FN are false negatives. If TP + FP + FN = 0, 1 is returned.
+Computes F1 score from two \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+F1 score as \eqn{2 * TP/(2 * TP + FP + FN)}, where \code{TP} are true positives,
+\code{FP} are false positives, and \code{FN} are false negatives. If \code{TP + FP + FN = 0}, \code{1} is returned.
 }
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+f1_score(cg1, cg2, type = "adj")
+f1_score(cg1, cg2, type = "dir")
+
+}
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{g1_score}()},
+\code{\link{npv}()},
+\code{\link{precision}()},
+\code{\link{recall}()},
+\code{\link{shd}()},
+\code{\link{specificity}()}
+}
+\concept{metrics}

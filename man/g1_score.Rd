@@ -4,21 +4,49 @@
 \alias{g1_score}
 \title{G1 score}
 \usage{
-g1_score(confusion)
+g1_score(truth, guess, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the true graph.}
+
+\item{guess}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
 A numeric in [0,1].
 }
 \description{
-Computes G1 score from a confusion matrix, see \link{confusion}. G1 score is F1 score with
-reversed roles of 0/1 classifications, see Petersen et al. 2022.
-The G1 score is defined as  \eqn{2 * TN/(2 * TN + FN + FP)}, where TN are true negatives,
-FP are false positives, and FN are false negatives. If TN + FN + FP = 0, 1 is returned.
+Computes G1 score from two \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+G1 score defined as \eqn{2 * TN/(2 * TN + FN + FP)}, where \code{TN} are true negatives,
+\code{FP} are false positives, and FN are false negatives. If \code{TN + FN + FP = 0}, \code{1} is returned.
+}
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+g1_score(cg1, cg2, type = "adj")
+g1_score(cg1, cg2, type = "dir")
+
 }
 \references{
 Petersen, Anne Helby, et al. "Causal discovery for observational sciences using
 supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).
 }
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{f1_score}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{npv}()},
+\code{\link{precision}()},
+\code{\link{recall}()},
+\code{\link{shd}()},
+\code{\link{specificity}()}
+}
+\concept{metrics}
