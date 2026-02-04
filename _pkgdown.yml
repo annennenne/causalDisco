@@ -75,6 +75,7 @@ reference:
   - title: "Graph Metrics"
     contents:
       - has_concept("metrics")
+      - reexports
 
   - title: "Knowledge helpers"
     contents:
