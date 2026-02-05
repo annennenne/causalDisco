@@ -7,7 +7,7 @@
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @exportS3Method "+" knowledge
 `+.knowledge` <- function(kn1, kn2) {
   .check_if_pkgs_are_installed(
@@ -34,15 +34,15 @@
     dplyr::mutate(kn1$vars, .src = src1),
     dplyr::mutate(kn2$vars, .src = src2)
   ) |>
-    dplyr::distinct(.src, var, tier) |>
-    dplyr::group_by(var) |>
+    dplyr::distinct(.data$.src, .data$var, .data$tier) |>
+    dplyr::group_by(.data$var) |>
     dplyr::filter(
-      dplyr::n_distinct(.src) > 1L, # var present in both
-      dplyr::n_distinct(tier, na.rm = TRUE) > 1L # and tiers differ
+      dplyr::n_distinct(.data$.src) > 1L, # var present in both
+      dplyr::n_distinct(.data$tier, na.rm = TRUE) > 1L # and tiers differ
     ) |>
     dplyr::summarise(
-      tier_1 = paste(unique(tier[.src == src1]), collapse = ", "),
-      tier_2 = paste(unique(tier[.src == src2]), collapse = ", "),
+      tier_1 = paste(unique(.data$tier[.data$.src == src1]), collapse = ", "),
+      tier_2 = paste(unique(.data$tier[.data$.src == src2]), collapse = ", "),
       .groups = "drop"
     )
 
@@ -71,7 +71,7 @@
 
   # var tiers
   vtiers <- dplyr::bind_rows(kn1$vars, kn2$vars) |>
-    dplyr::distinct(var, .keep_all = TRUE)
+    dplyr::distinct(.data$var, .keep_all = TRUE)
 
   # merge vars
   out$vars$tier <- vtiers$tier[match(out$vars$var, vtiers$var)]
@@ -83,8 +83,8 @@
   # merge edges (status, from, to, tier_from, tier_to are all character)
   out$edges <- dplyr::distinct(dplyr::bind_rows(kn1$edges, kn2$edges)) |>
     dplyr::mutate(
-      tier_from = out$vars$tier[match(from, out$vars$var)],
-      tier_to = out$vars$tier[match(to, out$vars$var)]
+      tier_from = out$vars$tier[match(.data$from, out$vars$var)],
+      tier_to = out$vars$tier[match(.data$to, out$vars$var)]
     )
 
   # validate

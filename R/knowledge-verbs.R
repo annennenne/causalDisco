@@ -193,7 +193,7 @@ add_tier <- function(kn, tier, before = NULL, after = NULL) {
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @export
 add_to_tier <- function(kn, ...) {
   .check_if_pkgs_are_installed(
@@ -274,7 +274,7 @@ add_to_tier <- function(kn, ...) {
 
   # tidy variable table: order by tier rank, then name
   rank <- match(kn$vars$tier, kn$tiers$label)
-  kn$vars <- dplyr::arrange(kn$vars, rank, var)
+  kn$vars <- dplyr::arrange(kn$vars, rank, .data$var)
 
   kn
 }
@@ -439,7 +439,7 @@ get_tiers <- function(kn) {
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @export
 remove_vars <- function(kn, ...) {
   .check_if_pkgs_are_installed(
@@ -465,13 +465,13 @@ remove_vars <- function(kn, ...) {
   }
 
   # drop them from the var table
-  kn$vars <- dplyr::filter(kn$vars, !var %in% vars)
+  kn$vars <- dplyr::filter(kn$vars, !.data$var %in% vars)
 
   # drop any edges that mention them
   kn$edges <- dplyr::filter(
     kn$edges,
-    !from %in% vars,
-    !to %in% vars
+    !.data$from %in% vars,
+    !.data$to %in% vars
   )
 
   kn
@@ -542,7 +542,7 @@ remove_edge <- function(kn, from, to) {
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @export
 remove_tiers <- function(kn, ...) {
   .check_if_pkgs_are_installed(
@@ -571,7 +571,7 @@ remove_tiers <- function(kn, ...) {
   }
 
   # drop the tier rows
-  kn$tiers <- dplyr::filter(kn$tiers, !label %in% to_drop)
+  kn$tiers <- dplyr::filter(kn$tiers, !.data$label %in% to_drop)
 
   # reset any vars that were in those tiers
   kn$vars$tier[kn$vars$tier %in% to_drop] <- NA_character_
@@ -593,7 +593,7 @@ remove_tiers <- function(kn, ...) {
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @keywords internal
 #' @noRd
 forbid_tier_violations <- function(kn) {
@@ -620,12 +620,12 @@ forbid_tier_violations <- function(kn) {
     dplyr::mutate(rank = tier_ranks[tier])
 
   # select & rename for "from" vs "to"
-  vf <- vars |> dplyr::select(var_from = var, rank_from = rank)
-  vt <- vars |> dplyr::select(var_to = var, rank_to = rank)
+  vf <- vars |> dplyr::select(var_from = .data$var, rank_from = rank)
+  vt <- vars |> dplyr::select(var_to = .data$var, rank_to = rank)
 
   # true cartesian crossing of those two tibbles
   bad <- tidyr::crossing(vf, vt) |>
-    dplyr::filter(rank_from > rank_to)
+    dplyr::filter(.data$rank_from > .data$rank_to)
 
   # add all those forbidden edges, dropping self-loops
   if (nrow(bad)) {

@@ -104,6 +104,7 @@ knowledgeable_caugi.tetrad_graph <- function(
 }
 
 #' @inheritParams knowledgeable_caugi
+#' @importFrom rlang .data
 #' @export
 knowledgeable_caugi.EssGraph <- function(
   graph,
@@ -141,13 +142,17 @@ knowledgeable_caugi.EssGraph <- function(
 
   collapsed <- edges |>
     dplyr::mutate(
-      canon_from = pmin(from, to),
-      canon_to = pmax(from, to)
+      canon_from = pmin(.data$from, .data$to),
+      canon_to = pmax(.data$from, .data$to)
     ) |>
-    dplyr::group_by(canon_from, canon_to) |>
+    dplyr::group_by(.data$canon_from, .data$canon_to) |>
     dplyr::summarise(
-      has_fw = any(from == canon_from & to == canon_to),
-      has_bw = any(from == canon_to & to == canon_from),
+      has_fw = any(
+        .data$from == .data$canon_from & .data$to == .data$canon_to
+      ),
+      has_bw = any(
+        .data$from == .data$canon_to & .data$to == .data$canon_from
+      ),
       .groups = "drop"
     ) |>
     dplyr::transmute(
@@ -161,7 +166,7 @@ knowledgeable_caugi.EssGraph <- function(
         has_fw ~ canon_to,
         TRUE ~ canon_from
       ),
-      edge = dplyr::if_else(has_fw & has_bw, "---", "-->")
+      edge = dplyr::if_else(.data$has_fw & .data$has_bw, "---", "-->")
     )
 
   cg <- caugi::caugi(

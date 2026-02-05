@@ -94,7 +94,7 @@ as_tetrad_knowledge <- function(kn) {
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @export
 as_pcalg_constraints <- function(
   kn,
@@ -165,8 +165,8 @@ as_pcalg_constraints <- function(
   if (!directed_as_undirected) {
     bad <- kn$edges |>
       dplyr::anti_join(kn$edges, by = c("from" = "to", "to" = "from")) |>
-      dplyr::mutate(desc = paste0(from, " --> ", to)) |>
-      dplyr::pull(desc)
+      dplyr::mutate(desc = paste0(.data$from, " --> ", .data$to)) |>
+      dplyr::pull(.data$desc)
     if (length(bad)) {
       stop(
         "pcalg does not support asymmetric edges.\n",
@@ -178,7 +178,7 @@ as_pcalg_constraints <- function(
   }
 
   # fill forbidden
-  forb <- dplyr::filter(kn$edges, status == "forbidden")
+  forb <- dplyr::filter(kn$edges, .data$status == "forbidden")
   for (k in seq_len(nrow(forb))) {
     i <- match(forb$from[k], labels, nomatch = NA_integer_)
     j <- match(forb$to[k], labels, nomatch = NA_integer_)
@@ -191,7 +191,7 @@ as_pcalg_constraints <- function(
   }
 
   # fill required
-  req <- dplyr::filter(kn$edges, status == "required")
+  req <- dplyr::filter(kn$edges, .data$status == "required")
   for (k in seq_len(nrow(req))) {
     i <- match(req$from[k], labels, nomatch = NA_integer_)
     j <- match(req$to[k], labels, nomatch = NA_integer_)
@@ -224,7 +224,7 @@ as_pcalg_constraints <- function(
 #'
 #' @family knowledge functions
 #' @concept knowledge
-#'
+#' @importFrom rlang .data
 #' @export
 as_bnlearn_knowledge <- function(kn) {
   .check_if_pkgs_are_installed(
@@ -237,14 +237,14 @@ as_bnlearn_knowledge <- function(kn) {
   is_knowledge(kn)
 
   # whitelist holds all required edges in a "from", "to" dataframe
-  whitelist <- dplyr::filter(kn$edges, status == "required") |>
-    dplyr::select(from, to) |>
+  whitelist <- dplyr::filter(kn$edges, .data$status == "required") |>
+    dplyr::select(.data$from, .data$to) |>
     as.data.frame()
 
   # blacklist holds all forbidden edges (including tier violations)
   blacklist <- forbid_tier_violations(kn)$edges |>
-    dplyr::filter(status == "forbidden") |>
-    dplyr::select(from, to) |>
+    dplyr::filter(.data$status == "forbidden") |>
+    dplyr::select(.data$from, .data$to) |>
     as.data.frame()
 
   list(

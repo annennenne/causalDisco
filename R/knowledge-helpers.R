@@ -48,6 +48,7 @@
 #' @param tiers A data frame with a column `label` listing tier labels
 #'
 #' @example inst/roxygen-examples/dot-validate_tier_rule-example.R
+#' @importFrom rlang .data
 #' @noRd
 #' @keywords internal
 .validate_tier_rule <- function(edges_df, tiers) {
@@ -62,10 +63,10 @@
 
   bad <- dplyr::filter(
     edges_df,
-    !is.na(tier_from),
-    !is.na(tier_to),
-    status != "forbidden",
-    rank(tier_from) > rank(tier_to)
+    !is.na(.data$tier_from),
+    !is.na(.data$tier_to),
+    .data$status != "forbidden",
+    rank(.data$tier_from) > rank(.data$tier_to)
   )
   if (nrow(bad)) {
     stop(
@@ -87,6 +88,7 @@
 #'   `tier_from`, and `tier_to`.
 #'
 #' @example inst/roxygen-examples/dot-validate_forbidden_required-example.R
+#' @importFrom rlang .data
 #' @noRd
 #' @keywords internal
 .validate_forbidden_required <- function(edges_df) {
@@ -99,10 +101,10 @@
 
   # same ordered edge both forbidden and required
   clash_fr <- edges_df |>
-    dplyr::group_by(from, to) |>
-    dplyr::filter(all(c("forbidden", "required") %in% status)) |>
+    dplyr::group_by(.data$from, .data$to) |>
+    dplyr::filter(all(c("forbidden", "required") %in% .data$status)) |>
     dplyr::ungroup() |>
-    dplyr::distinct(from, to)
+    dplyr::distinct(.data$from, .data$to)
 
   if (nrow(clash_fr)) {
     stop(
@@ -113,7 +115,7 @@
   }
 
   # required edge in both directions
-  req <- dplyr::filter(edges_df, status == "required")
+  req <- dplyr::filter(edges_df, .data$status == "required")
 
   if (nrow(req) > 1) {
     # normalise each pair to an unordered signature "A||B"
@@ -335,7 +337,7 @@
   # fall back to tidyselect
   vars <- tryCatch(
     names(tidyselect::eval_select(
-      rlang::expr(all_of(!!q)), # !!q unquotes the symbol/variable
+      rlang::expr(dplyr::all_of(!!q)), # !!q unquotes the symbol/variable
       rlang::set_names(seq_along(kn$vars$var), kn$vars$var)
     )),
     error = function(e) character(0)

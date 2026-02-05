@@ -6,6 +6,7 @@
 #' @param edges A data.table containing the edges of the causal graph with columns 'from' and 'to'.
 #' @param kn A knowledge() object containing tier information in kn$vars (with columns 'var' and 'tier').
 #' @return A tibble of edges that violate the tier constraints. If no violations are found, an empty tibble is returned.
+#' @importFrom rlang .data
 #' @keywords internal
 #' @noRd
 check_tier_violations <- function(edges, kn) {
@@ -14,22 +15,22 @@ check_tier_violations <- function(edges, kn) {
   # Make tier ordered by appearance
   tier_map <- kn$vars |>
     dplyr::mutate(
-      tier = factor(tier, levels = unique(tier), ordered = TRUE),
-      tier_num = as.integer(tier)
+      tier = factor(.data$tier, levels = unique(.data$tier), ordered = TRUE),
+      tier_num = as.integer(.data$tier)
     ) |>
-    dplyr::select(var, tier_num)
+    dplyr::select(.data$var, .data$tier_num)
 
   edges_with_tiers <- edges |>
     dplyr::as_tibble() |>
     dplyr::left_join(tier_map, by = c("from" = "var")) |>
-    dplyr::rename(tier_from = tier_num) |>
+    dplyr::rename(tier_from = .data$tier_num) |>
     dplyr::left_join(tier_map, by = c("to" = "var")) |>
-    dplyr::rename(tier_to = tier_num)
+    dplyr::rename(tier_to = .data$tier_num)
 
   violations <- edges_with_tiers |>
     dplyr::filter(
-      !edge %in% c("<->", "o-o"),
-      tier_from > tier_to
+      !.data$edge %in% c("<->", "o-o"),
+      .data$tier_from > .data$tier_to
     )
 
   violations
@@ -46,35 +47,36 @@ check_tier_violations <- function(edges, kn) {
 #' @return A tibble of edges that violate the constraints. If no violations are found, an empty tibble is returned.
 #' @keywords internal
 #' @noRd
+#' @importFrom rlang .data
 check_edge_constraints <- function(edges, kn) {
   edges_tbl <- edges |> dplyr::as_tibble()
   constraints <- kn$edges |> dplyr::as_tibble()
 
   # ---- REQUIRED CHECKS ----
-  required_edges <- constraints |> dplyr::filter(status == "required")
+  required_edges <- constraints |> dplyr::filter(.data$status == "required")
 
   required_allowed <- c("-->", "o->")
 
   required_violations <- required_edges |>
     dplyr::left_join(edges_tbl, by = c("from", "to")) |>
-    dplyr::filter(is.na(edge) | !(edge %in% required_allowed)) |>
+    dplyr::filter(is.na(.data$edge) | !(.data$edge %in% required_allowed)) |>
     dplyr::mutate(
       violation_type = "missing_required"
     ) |>
-    dplyr::select(from, to, edge, violation_type)
+    dplyr::select(.data$from, .data$to, .data$edge, .data$violation_type)
 
   # ---- FORBIDDEN CHECKS ----
-  forbidden_edges <- constraints |> dplyr::filter(status == "forbidden")
+  forbidden_edges <- constraints |> dplyr::filter(.data$status == "forbidden")
 
   forbidden_allowed <- c("<->", "<-o", "<--", "o-o")
 
   forbidden_violations <- forbidden_edges |>
     dplyr::inner_join(edges_tbl, by = c("from", "to")) |>
-    dplyr::filter(!edge %in% forbidden_allowed) |>
+    dplyr::filter(!.data$edge %in% forbidden_allowed) |>
     dplyr::mutate(
       violation_type = "present_forbidden"
     ) |>
-    dplyr::select(from, to, edge, violation_type)
+    dplyr::select(.data$from, .data$to, .data$edge, .data$violation_type)
 
   # ---- COMBINE ----
   dplyr::bind_rows(required_violations, forbidden_violations)

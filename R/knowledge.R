@@ -64,7 +64,7 @@
 #'
 #' @importFrom tidyselect eval_select everything starts_with ends_with
 #' @importFrom tidyselect starts_with ends_with contains matches num_range
-#' @importFrom rlang !!
+#' @importFrom rlang !! .data
 #'
 #' @example inst/roxygen-examples/knowledge-example.R
 #'
@@ -155,7 +155,7 @@ knowledge <- function(...) {
           kn$tiers,
           tibble::tibble(label = new_lbl)
         ) |>
-          dplyr::arrange(suppressWarnings(as.numeric(label)), label)
+          dplyr::arrange(suppressWarnings(as.numeric(.data$label)), .data$label)
       }
 
       kn$vars <<- dplyr::mutate(kn$vars, tier = vec_lab)
@@ -466,14 +466,14 @@ knowledge <- function(...) {
     # Sort kn$tiers
     kn$tiers <- kn$tiers |>
       dplyr::mutate(.tier_num = tier_num_tiers) |>
-      dplyr::arrange(.tier_num) |>
-      dplyr::select(-.tier_num)
+      dplyr::arrange(.data$.tier_num) |>
+      dplyr::select(-.data$.tier_num)
 
     # Sort kn$vars by numeric tier
     kn$vars <- kn$vars |>
       dplyr::mutate(.tier_num = as.numeric(tier)) |>
-      dplyr::arrange(.tier_num, var) |>
-      dplyr::select(-.tier_num)
+      dplyr::arrange(.data$.tier_num, .data$var) |>
+      dplyr::select(-.data$.tier_num)
   }
 
   kn
@@ -798,8 +798,8 @@ deparse_knowledge <- function(kn, df_name = NULL) {
   if (nrow(kn$edges)) {
     # group edges by 'from' and 'status'
     edge_groups <- kn$edges |>
-      dplyr::group_by(from, status) |>
-      dplyr::summarise(to_vars = list(to), .groups = "drop")
+      dplyr::group_by(.data$from, .data$status) |>
+      dplyr::summarise(to_vars = list(.data$to), .groups = "drop")
 
     edge_fmls <- vapply(
       seq_len(nrow(edge_groups)),
