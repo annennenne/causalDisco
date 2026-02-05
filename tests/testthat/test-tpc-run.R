@@ -56,7 +56,7 @@ test_that("tpc_run demands suff_stat for non-builtin test functions", {
   set.seed(1)
   df <- data.frame(a = rnorm(10), b = rnorm(10))
   kn <- knowledge() |> add_vars(names(df))
-  strange_test <- function(x, y, S, suff_stat) 0
+  strange_test <- function(x, y, s, suff_stat) 0
 
   expect_error(
     tpc_run(data = df, knowledge = kn, test = strange_test),
