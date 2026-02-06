@@ -408,7 +408,7 @@ independence test
 \item \code{alpha = 0.05} - Significance level for the
 independence test,
 \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
-types are \code{"polynomial"}, \code{"legrende"}, \code{"hermite"}, and
+types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"}, and
 \code{"chebyshev"},
 \item \code{truncation_limit = 3} - Basis functions 1 through
 this number will be used. The Degenerate Gaussian category
@@ -591,7 +591,7 @@ lambda to the diagonal, < 0 Pseudoinverse.
 using basis-function embedding
 \itemize{
 \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
-types are \code{"polynomial"}, \code{"legrende"}, \code{"hermite"},
+types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"},
 and \code{"chebyshev"},
 \item \code{penalty_discount = 2} - Penalty discount factor used in
 BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
