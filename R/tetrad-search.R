@@ -1960,6 +1960,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(alpha, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(do_one_equation_only, len = 1)
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       self$set_params(
         ALPHA = alpha,
@@ -1980,6 +1981,7 @@ TetradSearch <- R6Class(
     ) {
       checkmate::assert_number(alpha, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       self$set_params(
         ALPHA = alpha,
@@ -2118,6 +2120,7 @@ TetradSearch <- R6Class(
     ) {
       checkmate::assert_number(alpha, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       self$set_params(
         ALPHA = alpha,
@@ -2334,6 +2337,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
+      checkmate::assert_logical(use_for_mc, len = 1)
       if (precompute_covariances != TRUE) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
@@ -2376,6 +2380,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(alpha, lower = 0, finite = TRUE)
       checkmate::assert_int(truncation_limit, lower = 0)
       checkmate::assert_character(basis_type, len = 1)
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       basis_type_int <- switch(
         tolower(basis_type),
