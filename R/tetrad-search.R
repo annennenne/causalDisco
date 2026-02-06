@@ -1998,7 +1998,7 @@ TetradSearch <- R6Class(
       use_for_mc = FALSE,
       alpha = NULL
     ) {
-      # alpha is not in Tetrad
+      # poisson_prior does not use alpha
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
@@ -2006,6 +2006,7 @@ TetradSearch <- R6Class(
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
+      checkmate::assert_logical(use_for_mc, len = 1)
 
       self$set_params(
         POISSON_LAMBDA = poisson_lambda,
@@ -2132,7 +2133,8 @@ TetradSearch <- R6Class(
       threshold = FALSE,
       cutoff = 0.5,
       prior_ess = 10,
-      use_for_mc = FALSE
+      use_for_mc = FALSE,
+      alpha = NULL
     ) {
       checkmate::assert_logical(threshold, len = 1)
       checkmate::assert_logical(use_for_mc, len = 1)
@@ -2327,6 +2329,7 @@ TetradSearch <- R6Class(
       use_for_mc = FALSE,
       alpha = NULL
     ) {
+      # sem_bic doesn't use alpha
       checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
