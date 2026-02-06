@@ -55,3 +55,19 @@ my_tfci(tpc_example)
 # Also possible: using tfci_run()
 tfci_run(tpc_example, test = cor_test, knowledge = kn)
 }
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{pc}()},
+\code{\link{sp_fci}()},
+\code{\link{tges}()},
+\code{\link{tpc}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}

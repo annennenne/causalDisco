@@ -66,3 +66,19 @@ score_bic <- new(
 res_bic <- tges_run(score_bic)
 res_bic
 }
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{pc}()},
+\code{\link{sp_fci}()},
+\code{\link{tfci}()},
+\code{\link{tpc}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}

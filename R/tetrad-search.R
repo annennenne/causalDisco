@@ -726,7 +726,7 @@ TetradSearch <- R6Class(
     #'    \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
     #'     backward equivalence search from the GES algorithm as one of its
     #'     steps,
-    #'    \item \code{use_heuristic} - If TRUE, use the max p heuristic
+    #'    \item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic
     #'     version,
     #'    \item \code{complete_rule_set_used = TRUE} -  FALSE if the (simpler)
     #'     final orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -892,9 +892,12 @@ TetradSearch <- R6Class(
     #'      \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
     #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
     #'       completeness, should be used; TRUE if the (fuller) set due to
-    #'       J. Zhang, should be used guaranteeing additional tail completeness.
+    #'       J. Zhang, should be used guaranteeing additional tail completeness,
     #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-    #'       PAG (where feasible).
+    #'       PAG (where feasible),
+    #'      \item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic.
+    #'      \item \code{start_complete = FALSE} - If TRUE, start from a complete
+    #'      graph.
     #'    }
     #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation)
     #'   algorithm.
@@ -1047,7 +1050,8 @@ TetradSearch <- R6Class(
     #'       completeness, should be used; TRUE if the (fuller) set due to
     #'       J. Zhang, should be used guaranteeing additional tail completeness,
     #'       \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-    #'       PAG (where feasible).
+    #'       PAG (where feasible),
+    #'       \item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic version.
     #'    }
     #' }
     #' @return Invisibly returns \code{self}.
@@ -2803,10 +2807,14 @@ TetradSearch <- R6Class(
       max_degree = -1,
       max_disc_path_length = -1,
       complete_rule_set_used = TRUE,
-      guarantee_pag = FALSE
+      guarantee_pag = FALSE,
+      use_heuristic = FALSE,
+      start_complete = FALSE,
+      num_threads = 1
     ) {
       checkmate::assert_number(depth, lower = -1, finite = TRUE)
       checkmate::assert_number(max_degree, finite = TRUE)
+      checkmate::assert_int(num_threads, lower = 1)
 
       checkmate::assert_number(max_disc_path_length, finite = TRUE)
       if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
@@ -2818,13 +2826,18 @@ TetradSearch <- R6Class(
 
       checkmate::assert_logical(complete_rule_set_used, len = 1)
       checkmate::assert_logical(guarantee_pag, len = 1)
+      checkmate::assert_logical(use_heuristic, len = 1)
+      checkmate::assert_logical(start_complete, len = 1)
 
       self$set_params(
         DEPTH = depth,
         MAX_DEGREE = max_degree,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
-        GUARANTEE_PAG = guarantee_pag
+        GUARANTEE_PAG = guarantee_pag,
+        USE_MAX_P_ORIENTATION_HEURISTIC = use_heuristic,
+        START_FROM_COMPLETE_GRAPH = start_complete,
+        NUM_THREADS = num_threads
       )
 
       self$alg <- rJava::.jnew(
@@ -2987,7 +3000,8 @@ TetradSearch <- R6Class(
       depth = -1,
       max_disc_path_length = -1,
       complete_rule_set_used = TRUE,
-      guarantee_pag = FALSE
+      guarantee_pag = FALSE,
+      use_heuristic = FALSE
     ) {
       checkmate::assert_int(max_disc_path_length)
       if (!(max_disc_path_length >= 0 || max_disc_path_length == -1)) {
@@ -3001,12 +3015,14 @@ TetradSearch <- R6Class(
 
       checkmate::assert_logical(complete_rule_set_used, len = 1)
       checkmate::assert_logical(guarantee_pag, len = 1)
+      checkmate::assert_logical(use_heuristic, len = 1)
 
       self$set_params(
         MAX_DISCRIMINATING_PATH_LENGTH = max_disc_path_length,
         COMPLETE_RULE_SET_USED = complete_rule_set_used,
         DEPTH = depth,
-        GUARANTEE_PAG = guarantee_pag
+        GUARANTEE_PAG = guarantee_pag,
+        USE_MAX_P_ORIENTATION_HEURISTIC = use_heuristic
       )
 
       self$alg <- rJava::.jnew(

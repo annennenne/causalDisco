@@ -27,6 +27,8 @@
 #' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
 #' (`knowledgeable_caugi`) object.
 #'
+#' @family causal discovery algorithms
+#' @concept cd_algorithms
 #' @export
 fci <- function(
   engine = c("tetrad", "pcalg"),

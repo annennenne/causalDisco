@@ -27,6 +27,8 @@
 #' A function of class \code{"pc"} that takes a single argument \code{data}
 #' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge` object.
 #'
+#' @family causal discovery algorithms
+#' @concept cd_algorithms
 #' @export
 pc <- function(
   engine = c("tetrad", "pcalg", "bnlearn"),

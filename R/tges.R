@@ -23,6 +23,8 @@
 #' (a data frame) and returns a `caugi` (of class "PDAG") and `knowledge` (`knowledgeable_caugi`)
 #' object.
 #'
+#' @family causal discovery algorithms
+#' @concept cd_algorithms
 #' @export
 tges <- function(
   engine = c("causalDisco"),

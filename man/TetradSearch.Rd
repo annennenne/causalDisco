@@ -634,7 +634,7 @@ Set to -1 for unlimited,
 \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
-\item \code{use_heuristic} - If TRUE, use the max p heuristic
+\item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic
 version,
 \item \code{complete_rule_set_used = TRUE} -  FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -680,9 +680,12 @@ discriminating path,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness.
+J. Zhang, should be used guaranteeing additional tail completeness,
 \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-PAG (where feasible).
+PAG (where feasible),
+\item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic.
+\item \code{start_complete = FALSE} - If TRUE, start from a complete
+graph.
 }
 \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation)
 algorithm.
@@ -793,7 +796,8 @@ final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,
 \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-PAG (where feasible).
+PAG (where feasible),
+\item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic version.
 }
 }}
 }

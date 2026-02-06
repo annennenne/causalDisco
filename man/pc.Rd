@@ -127,3 +127,19 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   disco(tpc_example, pc_tetrad)
 }
 }
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{sp_fci}()},
+\code{\link{tfci}()},
+\code{\link{tges}()},
+\code{\link{tpc}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}

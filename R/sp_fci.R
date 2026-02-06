@@ -1,8 +1,9 @@
-#' @title BOSS-FCI Algorithm for Causal Discovery
+#' @title SP-FCI Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the BOSS-FCI (Best Order Score Search FCI) algorithm for causal discovery using one of several engines. This
-#' uses BOSS in place of FGES for the initial step in the GFCI algorithm.
+#' Run the SP-FCI (Sparsest Permutation–based Fast Causal Inference) algorithm for causal discovery using one of
+#' several engines. This algorithm wraps the SP (Sparsest Permutation) score-based search in an
+#' FCI-style. Can be computationally intensive.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -19,14 +20,14 @@
 #' @example inst/roxygen-examples/boss-fci-example.R
 #'
 #' @return
-#' A function of class \code{"boss_fci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
+#' A function of class \code{"sp_fci"} that takes a single argument \code{data}
+#' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
 #' (`knowledgeable_caugi`) object.
 #'
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export
-boss_fci <- function(
+sp_fci <- function(
   engine = "tetrad",
   score,
   test,
@@ -37,7 +38,7 @@ boss_fci <- function(
     pkgs = c(
       "rlang"
     ),
-    function_name = "boss_fci"
+    function_name = "sp_fci"
   )
 
   engine <- match.arg(engine)
@@ -46,25 +47,25 @@ boss_fci <- function(
   builder <- function(knowledge = NULL) {
     runner <- switch(
       engine,
-      tetrad = rlang::exec(boss_fci_tetrad_runner, score, test, alpha, !!!args)
+      tetrad = rlang::exec(sp_fci_tetrad_runner, score, test, alpha, !!!args)
     )
     runner
   }
 
-  method <- disco_method(builder, "boss_fci")
+  method <- disco_method(builder, "sp_fci")
   attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PAG"
+  attr(method, "graph_class") <- "PDAG"
   method
 }
 
 #' @keywords internal
-boss_fci_tetrad_runner <- function(score, test, alpha, ...) {
+sp_fci_tetrad_runner <- function(score, test, alpha, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "rJava",
       "rlang"
     ),
-    function_name = "boss_fci_tetrad_runner"
+    function_name = "sp_fci_tetrad_runner"
   )
 
   search <- TetradSearch$new()
@@ -73,7 +74,7 @@ boss_fci_tetrad_runner <- function(score, test, alpha, ...) {
     search,
     args,
     "tetrad",
-    "boss_fci",
+    "sp_fci",
     score = score,
     test = test
   )
@@ -96,9 +97,9 @@ boss_fci_tetrad_runner <- function(score, test, alpha, ...) {
   }
 
   if (length(args_to_pass$alg_args) > 0) {
-    rlang::exec(search$set_alg, "boss_fci", !!!args_to_pass$alg_args)
+    rlang::exec(search$set_alg, "sp_fci", !!!args_to_pass$alg_args)
   } else {
-    search$set_alg("boss_fci")
+    search$set_alg("sp_fci")
   }
 
   runner <- list(

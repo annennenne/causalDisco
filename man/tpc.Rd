@@ -59,3 +59,19 @@ my_tpc(tpc_example)
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
 }
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{pc}()},
+\code{\link{sp_fci}()},
+\code{\link{tfci}()},
+\code{\link{tges}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}

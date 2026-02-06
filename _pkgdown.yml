@@ -21,16 +21,7 @@ reference:
   - title: "Causal Discovery Algorithms"
     desc: "Core search algorithms implemented or wrapped by causalDisco."
     contents:
-      - boss
-      - boss_fci
-      - fci
-      - ges
-      - grasp
-      - grasp_fci
-      - pc
-      - tfci
-      - tges
-      - tpc
+      - has_concept("cd_algorithms")
 
   - title: "R6 Classes"
     contents:
