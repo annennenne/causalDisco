@@ -133,6 +133,10 @@ plot(disco_cd_tges)
 
 ## TODO
 
+- Update doc (and implement algs we want) from bnlearn and pcalg like I did with Tetrad.
+
+- Add references to algs/scores/tests?
+
 - Check all args (that we want) are available from Tetrad.
 
 - Register a custom edge type for caugi to represent forbidden edges differently than normal directed edges.
