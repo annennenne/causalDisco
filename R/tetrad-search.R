@@ -33,6 +33,15 @@ TetradSearch <- R6Class(
     #'   \code{set_score()}. Supply one of the method strings for
     #'   \code{set_score()}. Recognised values are:
     #'
+    #'   **Continuous - Gaussian**
+    #'   \itemize{
+    #'      \item \code{"ebic"} - Extended BIC score.
+    #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
+    #'      \item \code{"poisson_prior"} - Poisson prior score.'
+    #'      \item \code{"rank_bic"} - Rank-based BIC score.
+    #'      \item \code{"sem_bic"} - SEM BIC score.
+    #'      \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
+    #'   }
     #'
     #'   **Discrete - categorical**
     #'   \itemize{
@@ -40,25 +49,15 @@ TetradSearch <- R6Class(
     #'      \item \code{"discrete_bic"} - BIC score for discrete data.
     #'   }
     #'
-    #'   **Continuous - Gaussian**
-    #'   \itemize{
-    #'      \item \code{"ebic"} - Extended BIC score.
-    #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-    #'      \item \code{"poisson_prior"} - Poisson prior score.
-    #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
-    #'      \item \code{"rank_bic"} - Rank-based BIC score.
-    #'      \item \code{"sem_bic"} - SEM BIC score.
-    #'   }
-    #'
     #'   **Mixed Discrete/Gaussian**
     #'   \itemize{
-    #'      \item \code{"conditional_gaussian"} - Conditional Gaussian BIC score.
-    #'      \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
     #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
     #'        This is a generalization of the Degenerate Gaussian score.
-    #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
     #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
     #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+    #'      \item \code{"conditional_gaussian"} - Conditional Gaussian BIC score.
+    #'      \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
+    #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
     #'   }
     #'
     # #'   **General (non-linear Gaussian?)**
@@ -71,36 +70,38 @@ TetradSearch <- R6Class(
     #'   \code{set_test()}. Supply one of the method strings for
     #'   \code{set_test()}. Recognised values are:
     #'
-    #'   **Discrete - categorical**
-    #'   \itemize{
-    #'     \item \code{"chi_square"} - chi-squared test
-    #'     \item \code{"g_square"}   - likelihood-ratio \eqn{G^2} test.
-    #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
-    #'        probabilistic conditional independence judgments.
-    #'   }
     #'
     #'   **Continuous - Gaussian**
     #'   \itemize{
     #'     \item \code{"fisher_z"} - Fisher \eqn{Z} (partial correlation) test.
     #'     \item \code{"poisson_prior"} - Poisson prior test.
-    #'     \item \code{"sem_bic"} - SEM BIC test.
     #'     \item \code{"rank_independence"} - Rank-based independence test.
+    #'     \item \code{"sem_bic"} - SEM BIC test.
     #'   }
     #'
-    #'   **Mixed Discrete/Gaussian**
+    #'   **Discrete - categorical**
     #'   \itemize{
-    #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
-    #'     \item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
-    #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio.
-    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test.
+    #'     \item \code{"chi_square"} - chi-squared test
+    #'     \item \code{"g_square"} - likelihood-ratio \eqn{G^2} test.
+    #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
+    #'        probabilistic conditional independence judgments.
     #'   }
     #'
     #'   **General**
     #'   \itemize{
-    #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
     #'     \item \code{"gin"} - Generalized Independence Noise test.
+    #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang.
     #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
     #'   }
+    #'
+    #'   **Mixed Discrete/Gaussian**
+    #'   \itemize{
+    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test.
+    #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio.
+    #'     \item \code{"conditional_gaussian"} - Conditional Gaussian test as a likelihood ratio test.
+    #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
+    #'   }
+    #'
     test = NULL,
 
     #' @field alg Java object representing the search algorithm.
@@ -118,6 +119,7 @@ TetradSearch <- R6Class(
     #'   \item \code{"direct_lingam"} - DirectLiNGAM algorithm.
     #'   \item \code{"fask"} - FASK algorithm.
     #'   \item \code{"fci"} - FCI algorithm.
+    #'   \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
     #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
     #'   \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
     #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
@@ -125,7 +127,6 @@ TetradSearch <- R6Class(
     #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
     #'   \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
     #'   \item \code{"ica_lingd"} - ICA-LiNG-D algorithm.
-    #'   \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
     #'   \item \code{"pc"} - Peter-Clark (PC) algorithm.
     #'   \item \code{"pc_max"} - PCMax algorithm.
     #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm.
@@ -185,204 +186,191 @@ TetradSearch <- R6Class(
     #' @description Sets the independence test to use in Tetrad.
     #' @param method (character) Name of the test method (e.g., "chi_square", "fisher_z").
     #'   \itemize{
-    #'     \item \code{"chi_square"} - chi-squared test
-    #'     \item \code{"g_square"}   - likelihood-ratio \(G^2\) test
+    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test
     #'     \item \code{"basis_function_lrt"} - basis-function likelihood-ratio
-    #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
-    #'        probabilistic conditional independence judgments.
-    #'     \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
-    #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
+    #'     \item \code{"chi_square"} - chi-squared test
     #'     \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
+    #'     \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test
+    #'     \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
+    #'     \item \code{"gin"} - Generalized Independence Noise test
     #'     \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'     \item \code{"poisson_prior"} - Poisson prior test
-    #'     \item \code{"gin"} - Generalized Independence Noise test
+    #'     \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui to calculate
+    #'        probabilistic conditional independence judgments.
     #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT)
-    #'     \item \code{"sem_bic"} - SEM BIC test
     #'     \item \code{"rank_independence"} - Rank-based independence test
-    #'     \item \code{"basis_function_blocks"} - Basis-function blocks test
+    #'     \item \code{"sem_bic"} - SEM BIC test
     #'   }
     #' @param ... Additional arguments passed to the private test-setting methods.
     #'   For the following tests, the following parameters are available:
-    #'     \itemize{
+    #'   \itemize{
+    #'      \item \code{"basis_function_blocks"} - Basis-function blocks test.
+    #'       \itemize{
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
+    #'         types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"}, and
+    #'         \code{"chebyshev"},
+    #'         \item \code{truncation_limit = 3} - Basis functions 1 through
+    #'         this number will be used. The Degenerate Gaussian category
+    #'         indicator variables for mixed data are also used.
+    #'      }
+    #'      \item \code{"basis_function_lrt"} - basis-function likelihood-ratio
+    #'       \itemize{
+    #'         \item \code{truncation_limit = 3} - Basis functions 1 through
+    #'         this number will be used. The Degenerate Gaussian category
+    #'         indicator variables for mixed data are also used,
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         likelihood-ratio test,
+    #'         \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'         lambda to the diagonal, < 0 Pseudoinverse,
+    #'         \item \code{do_one_equation_only = FALSE} - If TRUE, only one
+    #'         equation should be used when expanding the basis.
+    #'       }
     #'       \item \code{"chi_square"} - chi-squared test
     #'       \itemize{
-    #'          \item \code{min_count = 1} - Minimum count for the chi-squared
-    #'          test per cell. Increasing this can improve accuracy of the test
-    #'          estimates,
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          independence test,
-    #'          \item \code{cell_table_type = "ad"} - The type of cell table to
-    #'          use for optimization. Available types are:
-    #'          \code{"ad"} - AD tree, \code{"count"} - Count sample.
+    #'         \item \code{min_count = 1} - Minimum count for the chi-squared
+    #'         test per cell. Increasing this can improve accuracy of the test
+    #'         estimates,
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{cell_table_type = "ad"} - The type of cell table to
+    #'         use for optimization. Available types are:
+    #'         \code{"ad"} - AD tree, \code{"count"} - Count sample.
     #'       }
-    #'       \item \code{"g_square"}   - likelihood-ratio \(G^2\) test
+    #'       \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
     #'       \itemize{
-    #'          \item \code{min_count = 1} - Minimum count for the independence
-    #'          test. Increasing this can improve accuracy of chi square
-    #'          estimates,
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          chi-squared test,
-    #'          \item \code{cell_table_type = "ad"} - The type of cell table to
-    #'          use for optimization. Available types are:
-    #'          \code{"ad"} - AD tree, \code{"count"} - Count sample.
-    #'       }
-    #'       \item \code{"basis_function_lrt"} - basis-function likelihood-ratio
-    #'       \itemize{
-    #'          \item \code{truncation_limit = 3} - Basis functions 1 through
-    #'          this number will be used. The Degenerate Gaussian category
-    #'          indicator variables for mixed data are also used,
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          likelihood-ratio test,
-    #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'          lambda to the diagonal, < 0 Pseudoinverse,
-    #'          \item \code{do_one_equation_only = FALSE} - If TRUE, only one
-    #'          equation should be used when expanding the basis.
-    #'       }
-    #'       \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui
-    #'        to calculate probabilistic conditional independence judgments.
-    #'       \itemize{
-    #'          \item \code{threshold = FALSE} - Set to TRUE if using the cutoff
-    #'          threshold for the independence test,
-    #'          \item \code{cutoff = 0.5} - Cutoff for the independence test,
-    #'          \item \code{prior_ess = 10} - Prior equivalent sample size
-    #'          for the independence test. This number is added to the sample
-    #'          size for each conditional probability table in the model and is
-    #'          divided equally among the cells in the table.
-    #'       }
-    #'       \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
-    #'       \itemize{
-    #'          \item \code{alpha = 0.05} - Significance level
-    #'          for the independence test,
-    #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'          lambda to the diagonal, < 0 Pseudoinverse.
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{discretize = TRUE} - If TRUE for the conditional
+    #'         Gaussian likelihood, when scoring X --> D where X is continuous
+    #'         and D discrete, one should to simply discretize X for just
+    #'         those cases.
+    #'         If FALSE, the integration will be exact,
+    #'         \item \code{num_categories_to_discretize = 3} - In case the exact
+    #'         algorithm is not used for discrete children and continuous
+    #'         parents is not used, this parameter gives the number of
+    #'         categories to use for this second (discretized) backup copy of
+    #'         the continuous variables,
+    #'         \item \code{min_sample_size_per_cell = 4} - Minimum sample size
+    #'         per cell for the independence test.
     #'       }
     #'       \item \code{"degenerate_gaussian"} - Degenerate Gaussian
     #'       likelihood ratio test
     #'       \itemize{
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          independence test,
-    #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'          lambda to the diagonal, < 0 Pseudoinverse.
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'         lambda to the diagonal, < 0 Pseudoinverse.
     #'       }
-    #'       \item \code{"conditional_gaussian"} - Mixed discrete/continuous test
+    #'       \item \code{"fisher_z"} - Fisher \(Z\) (partial correlation) test
     #'       \itemize{
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'           independence test,
-    #'          \item \code{discretize = TRUE} - If TRUE for the conditional
-    #'           Gaussian likelihood, when scoring X --> D where X is continuous
-    #'           and D discrete, one should to simply discretize X for just
-    #'           those cases.
-    #'           If FALSE, the integration will be exact,
-    #'          \item \code{num_categories_to_discretize = 3} - In case the exact
-    #'           algorithm is not used for discrete children and continuous
-    #'           parents is not used, this parameter gives the number of
-    #'           categories to use for this second (discretized) backup copy of
-    #'           the continuous variables,
-    #'          \item \code{min_sample_size_per_cell = 4} - Minimum sample size
-    #'          per cell for the independence test.
+    #'         \item \code{alpha = 0.05} - Significance level for the independence test,
+    #'         \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'         lambda to the diagonal, < 0 Pseudoinverse.
+    #'       }
+    #'       \item \code{"gin"} - Generalized Independence Noise test.
+    #'       \itemize{
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{gin_backend = "dcor"} - Unconditional test for residual
+    #'         independence. Available types are \code{"dcor"} - Distance correlation (for non-linear)
+    #'         and \code{"pearson"} - Pearson correlation (for linear),
+    #'         \item \code{num_permutations = 200} - Number of permutations used for
+    #'         \code{"dcor"} backend. If \code{"pearson"} backend is used, this parameter is ignored.
+    #'         \item \code{gin_ridge = 1e-8} - Ridge parameter used when computing residuals.
+    #'         A small number >= 0.
+    #'         \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
     #'       }
     #'       \item \code{"kci"} - Kernel Conditional Independence Test (KCI) by Kun Zhang
     #'       \itemize{
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          independence test,
-    #'          \item \code{approximate = TRUE} - If TRUE, use the approximate
-    #'          Gamma approximation algorithm. If FALSE, use the exact,
-    #'          \item \code{scaling_factor = 1} - For Gaussian kernel: The
-    #'          scaling factor * Silverman bandwidth.
-    #'          \item \code{num_bootstraps = 1000} - Number of bootstrap
-    #'          samples to use for the KCI test. Only used if \code{approximate = FALSE}.
-    #'          \item \code{threshold = 1e-3} - Threshold for the KCI test.
-    #'          Threshold to determine how many eigenvalues to use --
-    #'          the lower the more (0 to 1).
-    #'          \item \code{kernel_type = "gaussian"} - The type of kernel to
-    #'          use. Available types are \code{"gaussian"}, \code{"linear"}, or
-    #'          \code{"polynomial"}.
-    #'          \item \code{polyd = 5} - The degree of the polynomial kernel,
-    #'          if used.
-    #'          \item \code{polyc = 1} - The constant of the polynomial kernel,
-    #'          if used.
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{approximate = TRUE} - If TRUE, use the approximate
+    #'         Gamma approximation algorithm. If FALSE, use the exact,
+    #'         \item \code{scaling_factor = 1} - For Gaussian kernel: The
+    #'         scaling factor * Silverman bandwidth.
+    #'         \item \code{num_bootstraps = 1000} - Number of bootstrap
+    #'         samples to use for the KCI test. Only used if \code{approximate = FALSE}.
+    #'         \item \code{threshold = 1e-3} - Threshold for the KCI test.
+    #'         Threshold to determine how many eigenvalues to use --
+    #'         the lower the more (0 to 1).
+    #'         \item \code{kernel_type = "gaussian"} - The type of kernel to
+    #'         use. Available types are \code{"gaussian"}, \code{"linear"}, or
+    #'         \code{"polynomial"}.
+    #'         \item \code{polyd = 5} - The degree of the polynomial kernel,
+    #'         if used.
+    #'         \item \code{polyc = 1} - The constant of the polynomial kernel,
+    #'         if used.
     #'       }
     #'       \item \code{"poisson_prior"} - Poisson prior test
     #'       \itemize{
-    #'          \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
-    #'          distribution (> 0),
-    #    #'          \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'          variables or so, set this to FALSE in order to calculate
-    #    #'          covariances on the fly from data,
-    #'          \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'          lambda to the diagonal, < 0 Pseudoinverse.
-    #'      }
-    #'      \item \code{"gin"} - Generalized Independence Noise test.
-    #'      \itemize{
-    #'          \item \code{alpha = 0.05} - Significance level for the
-    #'          independence test,
-    #'          \item \code{gin_backend = "dcor"} - Unconditional test for residual
-    #'          independence. Available types are \code{"dcor"} - Distance correlation (for non-linear)
-    #'          and \code{"pearson"} - Pearson correlation (for linear),
-    #'          \item \code{num_permutations = 200} - Number of permutations used for
-    #'          \code{"dcor"} backend. If \code{"pearson"} backend is used, this parameter is ignored.
-    #'          \item \code{gin_ridge = 1e-8} - Ridge parameter used when computing residuals.
-    #'          A small number >= 0.
-    #'          \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
+    #'         \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
+    #'         distribution (> 0),
+    #     #'   \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'   variables or so, set this to FALSE in order to calculate
+    #     #'   covariances on the fly from data,
+    #'         \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'         lambda to the diagonal, < 0 Pseudoinverse.
+    #'       }
+    #'       \item \code{"probabilistic"} - Uses BCInference by Cooper and Bui
+    #'       to calculate probabilistic conditional independence judgments.
+    #'       \itemize{
+    #'         \item \code{threshold = FALSE} - Set to TRUE if using the cutoff
+    #'         threshold for the independence test,
+    #'         \item \code{cutoff = 0.5} - Cutoff for the independence test,
+    #'         \item \code{prior_ess = 10} - Prior equivalent sample size
+    #'         for the independence test. This number is added to the sample
+    #'         size for each conditional probability table in the model and is
+    #'         divided equally among the cells in the table.
+    #'       }
+    #'       \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
+    #'       \itemize{
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test,
+    #'         \item \code{rcit_approx = "lpb4"} - Null approximation method. Recognized values are:
+    #'         \code{"lpb4"} - Lindsay-Pilla-Basak method with 4 support points,
+    #'         \code{"hbe"} - Hall-Buckley-Eagleson method,
+    #'         \code{"gamma"} - Gamma (Satterthwaite-Welch),
+    #'         \code{"chi_square"} - Chi-square (normalized),
+    #'         \code{"permutation"} - Permutation-based (computationally intensive),
+    #'         \item \code{rcit_ridge = 1e-3} - Ridge parameter used when computing residuals.
+    #'         A small number >= 0,
+    #'         \item \code{num_feat = 10} - Number of random features to use
+    #'         for the regression of X and Y on Z. Values between 5 and 20 often suffice.
+    #'         \item \code{num_fourier_feat_xy = 5} - Number of random Fourier features to use for
+    #'         the tested variables X and Y. Small values often suffice (e.g., 3 to 10),
+    #'         \item \code{num_fourier_feat_z = 100} - Number of random Fourier features to use for
+    #'         the conditioning set Z. Values between 50 and 300 often suffice,
+    #'         \item \code{center_features = TRUE} - If TRUE, center the random features to have mean zero. Recommended
+    #'         for better numerical stability,
+    #'         \item \code{use_rcit = TRUE} - If TRUE, use RCIT; if FALSE, use RCoT
+    #'         (Randomized Conditional Correlation Test),
+    #'         \item \code{num_permutations = 500} - Number of permutations used for
+    #'         the independence test when \code{rcit_approx = "permutation"} is selected.
+    #'         \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
+    #'       }
+    #'       \item \code{"rank_independence"} - Rank-based independence test.
+    #'       \itemize{
+    #'         \item \code{alpha = 0.05} - Significance level for the
+    #'         independence test.
+    #'       }
+    #'       \item \code{"sem_bic"} - SEM BIC test.
+    #'       \itemize{
+    #'         \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'         BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'         graphs,
+    #'         \item \code{structure_prior = 0} - The default number of parents
+    #'         for any conditional probability table. Higher weight is accorded
+    #'         to tables with about that number of parents. The prior structure
+    #'         weights are distributed according to a binomial distribution,
+    #     #'   \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'   variables or so, set this to FALSE in order to calculate
+    #     #'   covariances on the fly from data,
+    #'         \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'         lambda to the diagonal, < 0 Pseudoinverse.
+    #'       }
     #'     }
-    #'     \item \code{"rcit"} - Randomized Conditional Independence Test (RCIT).
-    #'     \itemize{
-    #'        \item \code{alpha = 0.05} - Significance level for the
-    #'        independence test,
-    #'        \item \code{rcit_approx = "lpb4"} - Null approximation method. Recognized values are:
-    #'        \code{"lpb4"} - Lindsay-Pilla-Basak method with 4 support points,
-    #'        \code{"hbe"} - Hall-Buckley-Eagleson method,
-    #'        \code{"gamma"} - Gamma (Satterthwaite-Welch),
-    #'        \code{"chi_square"} - Chi-square (normalized),
-    #'        \code{"permutation"} - Permutation-based (computationally intensive),
-    #'        \item \code{rcit_ridge = 1e-3} - Ridge parameter used when computing residuals.
-    #'        A small number >= 0,
-    #'        \item \code{num_feat = 10} - Number of random features to use
-    #'        for the regression of X and Y on Z. Values between 5 and 20 often suffice.
-    #'        \item \code{num_fourier_feat_xy = 5} - Number of random Fourier features to use for
-    #'        the tested variables X and Y. Small values often suffice (e.g., 3 to 10),
-    #'        \item \code{num_fourier_feat_z = 100} - Number of random Fourier features to use for
-    #'        the conditioning set Z. Values between 50 and 300 often suffice,
-    #'        \item \code{center_features = TRUE} - If TRUE, center the random features to have mean zero. Recommended
-    #'        for better numerical stability,
-    #'        \item \code{use_rcit = TRUE} - If TRUE, use RCIT; if FALSE, use RCoT
-    #'        (Randomized Conditional Correlation Test),
-    #'        \item \code{num_permutations = 500} - Number of permutations used for
-    #'        the independence test when \code{rcit_approx = "permutation"} is selected.
-    #'        \item \code{seed = -1} - Random seed for the independence test. If -1, no seed is set.
-    #'    }
-    #'    \item \code{"sem_bic"} - SEM BIC test.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
-    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
-    #'      graphs,
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'      for any conditional probability table. Higher weight is accorded
-    #'      to tables with about that number of parents. The prior structure
-    #'      weights are distributed according to a binomial distribution,
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{"rank_independence"} - Rank-based independence test.
-    #'    \itemize{
-    #'      \item \code{alpha = 0.05} - Significance level for the
-    #'      independence test
-    #'    }
-    #'    \item \code{"basis_function_blocks"} - Basis-function blocks test.
-    #'    \itemize{
-    #'      \item \code{alpha = 0.05} - Significance level for the
-    #'      independence test,
-    #'      \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
-    #'      types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"}, and
-    #'      \code{"chebyshev"},
-    #'      \item \code{truncation_limit = 3} - Basis functions 1 through
-    #'      this number will be used. The Degenerate Gaussian category
-    #'      indicator variables for mixed data are also used.
-    #'    }
-    #' }
     #' @param use_for_mc (logical) If TRUE, sets this test for the Markov checker \code{mc_test}.
     #' @return Invisibly returns \code{self}, for chaining.
     set_test = function(method, ..., use_for_mc = FALSE) {
@@ -446,27 +434,160 @@ TetradSearch <- R6Class(
     #' @description Sets the scoring function to use in Tetrad.
     #' @param method (character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
     #'   \itemize{
-    #'      \item \code{"sem_bic"} - SEM BIC score.
-    #'      \item \code{"ebic"} - Extended BIC score.
     #'      \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
     #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
     #'          This is a generalization of the Degenerate Gaussian score.
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+    #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
     #'      \item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
     #'      \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
     #'      \item \code{"discrete_bic"} - BIC score for discrete data.
+    #'      \item \code{"ebic"} - Extended BIC score.
     #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
     #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-    #      \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+    #       \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
     #'      \item \code{"poisson_prior"} - Poisson prior score.
-    #'      \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
-    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
-    #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
     #'      \item \code{"rank_bic"} - Rank-based BIC score.
+    #'      \item \code{"sem_bic"} - SEM BIC score.
+    #'      \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
     #'   }
+
     #' @param ... Additional arguments passed to the private score-setting methods.
     #'    For the following scores, the following parameters are available:
-    #'    \itemize{
-    #'    \item \code{sem_bic} - SEM BIC score.
+    #'   \itemize{
+    #'      \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
+    #'      \itemize{
+    #'        \item \code{sample_prior = 10} - This sets the prior equivalent
+    #'        sample size. This number is added to the sample size for each
+    #'        conditional probability table in the model and is divided equally
+    #'        among the cells in the table,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
+    #'      }
+    #'      \item \code{"basis_function_bic"} - BIC score for basis-function models.
+    #'      This is a generalization of the Degenerate Gaussian score.
+    #'      \itemize{
+    #'        \item \code{truncation_limit = 3} - Basis functions 1 though this
+    #'        number will be used. The Degenerate Gaussian category indicator
+    #'        variables for mixed data are also used,
+    #'        \item \code{penalty_discount = 2} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse,
+    #'        \item \code{do_one_equation_only = FALSE} - If TRUE, only one
+    #'        equation should be used when expanding the basis.
+    #'      }
+    #'      \item \code{"basis_function_blocks_bic"} - BIC score for mixed data using basis-function models.
+    #'      \itemize{
+    #'        \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
+    #'        types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"}, and
+    #'        \code{"chebyshev"},
+    #'        \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'        BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'        graphs,
+    #'        \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
+    #'        The Degenerate Gaussian category indicator variables for mixed data are also used.
+    #'      }
+    #'      \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'        BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'        graphs,
+    #'        \item \code{jitter = 1e-8} - Small non-negative constant added to the diagonal of
+    #'        covariance/correlation matrices for numerical stability,
+    #'        \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
+    #'        The Degenerate Gaussian category indicator variables for mixed data are also used.
+    #'      }
+    #'      \item \code{"conditional_gaussian"} - Mixed discrete/continuous BIC score.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{discretize = TRUE} - If TRUE for the conditional
+    #'         Gaussian likelihood, when scoring X --> D where X is continuous and
+    #'         D discrete, one should to simply discretize X for just those cases.
+    #'         If FALSE, the integration will be exact,
+    #'        \item \code{num_categories_to_discretize = 3} -  In case the exact
+    #'         algorithm is not used for discrete children and continuous parents
+    #'         is not used, this parameter gives the number of categories to use
+    #'         for this second (discretized) backup copy of the continuous
+    #'         variables,
+    #'        \item \code{structure_prior = 0} - The default number of parents
+    #'          for any conditional probability table. Higher weight is accorded
+    #'          to tables with about that number of parents. The prior structure
+    #'          weights are distributed according to a binomial distribution.
+    #'      }
+    #'      \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{structure_prior = 0} - The default number of parents
+    #'        for any conditional probability table. Higher weight is accorded
+    #'        to tables with about that number of parents. The prior structure
+    #'        weights are distributed according to a binomial distribution,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
+    #     #'   \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'   variables or so, set this to FALSE in order to calculate
+    #     #'   covariances on the fly from data.
+    #'      }
+    #'      \item \code{"discrete_bic"} - BIC score for discrete data.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 2} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{structure_prior = 0} - The default number of parents
+    #'        for any conditional probability table. Higher weight is accorded
+    #'        to tables with about that number of parents. The prior structure
+    #'        weights are distributed according to a binomial distribution.
+    #'      }
+    #'      \item \code{"ebic"} - Extended BIC score.
+    #'      \itemize{
+    #'        \item \code{gamma} - The gamma parameter in the EBIC score.
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
+    #'      }
+    #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{sem_gic_rule = "bic"} - The following rules are available:
+    #'        \code{"bic"} - \eqn{\ln n},
+    #'        \code{"gic2"} - \eqn{p n^{1/3}},
+    #'        \code{"ric"} - \eqn{2 \ln(p n)},
+    #'        \code{"ricc"} - \eqn{2(\ln(p n) + \ln\ln(p n))},
+    #'        \code{"gic6"} - \eqn{\ln n \ln(p n)}.
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
+    #'      }
+    #'      \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
+    #'      \itemize{
+    #'        \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
+    #'        yields sparser graphs,
+    #'        \item \code{structure_prior = 0} - The default number of parents
+    #'        for any conditional probability table. Higher weight is accorded
+    #'        to tables with about that number of parents. The prior structure
+    #'        weights are distributed according to a binomial distribution,
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data.
+    #'      }
+    #       \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
+    #'      \item \code{"poisson_prior"} - Poisson prior score.
+    #'      \itemize{
+    #'        \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
+    #'        distribution (> 0),
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'        lambda to the diagonal, < 0 Pseudoinverse.
+    #'      }
+    #'      \item \code{"sem_bic"} - SEM BIC score.
     #'      \itemize{
     #'        \item \code{penalty_discount = 2} - Penalty discount factor used in
     #'        BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
@@ -475,178 +596,30 @@ TetradSearch <- R6Class(
     #'        for any conditional probability table. Higher weight is accorded
     #'        to tables with about that number of parents. The prior structure
     #'        weights are distributed according to a binomial distribution,
-    #'        \item \code{sem_bic_rule = 1} - The Chickering Rule uses the
-    #'        difference of BIC scores to add or remove edges. The Nandy et al.
-    #'        rule uses a single calculation of a partial correlation in place
-    #'        of the likelihood difference,
-    #    #'        \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'        variables or so, set this to FALSE in order to calculate
-    #    #'        covariances on the fly from data,
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data,
     #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'        lambda to the diagonal, < 0 Pseudoinverse.
     #'      }
-    #'    \item \code{ebic} - Extended BIC score.
-    #'    \itemize{
-    #'      \item \code{gamma} - The gamma parameter in the EBIC score.
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{bdeu} - Bayes Dirichlet Equivalent score with uniform priors.
-    #'    \itemize{
-    #'      \item \code{sample_prior = 10} - This sets the prior equivalent
-    #'      sample size. This number is added to the sample size for each
-    #'      conditional probability table in the model and is divided equally
-    #'      among the cells in the table,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
+    #'      \item \code{"rank_bic"} - Rank-based BIC score.
+    #'      \itemize{
+    #'        \item \code{gamma = 0.8} - Gamma parameter for Extended BIC (Chen and Chen, 2008). Between 0 and 1,
+    #'        \item \code{penalty_discount = 2} - Penalty discount factor used in
+    #'        BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+    #'        graphs.
+    #'      }
+    #'      \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
+    #'      \itemize{
+    #'        \item \code{risk_bound = 0.2} - This is the probability of getting
+    #'        the true model if a correct model is discovered. Could underfit.
+    #     #'      \item \code{precompute_covariances = TRUE} - For more than 5000
+    #     #'      variables or so, set this to FALSE in order to calculate
+    #     #'      covariances on the fly from data,
+    #'        \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
     #'        lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{basis_function_bic} - BIC score for basis-function models.
-    #'      This is a generalization of the Degenerate Gaussian score.
-    #'    \itemize{
-    #'      \item \code{truncation_limit = 3} - Basis functions 1 though this
-    #'      number will be used. The Degenerate Gaussian category indicator
-    #'      variables for mixed data are also used,
-    #'      \item \code{penalty_discount = 2} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse,
-    #'      \item \code{do_one_equation_only = FALSE} - If TRUE, only one
-    #'      equation should be used when expanding the basis.
-    #'    }
-    #'    \item \code{conditional_gaussian} - Mixed discrete/continuous BIC score.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{discretize = TRUE} - If TRUE for the conditional
-    #'       Gaussian likelihood, when scoring X --> D where X is continuous and
-    #'       D discrete, one should to simply discretize X for just those cases.
-    #'       If FALSE, the integration will be exact,
-    #'      \item \code{num_categories_to_discretize = 3} -  In case the exact
-    #'       algorithm is not used for discrete children and continuous parents
-    #'       is not used, this parameter gives the number of categories to use
-    #'       for this second (discretized) backup copy of the continuous
-    #'       variables,
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'        for any conditional probability table. Higher weight is accorded
-    #'        to tables with about that number of parents. The prior structure
-    #'        weights are distributed according to a binomial distribution.
-    #'    }
-    #'    \item \code{"degenerate_gaussian"} - Degenerate Gaussian BIC score.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'      for any conditional probability table. Higher weight is accorded
-    #'      to tables with about that number of parents. The prior structure
-    #'      weights are distributed according to a binomial distribution,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data.
-    #'    }
-    #'    \item \code{"discrete_bic"} - BIC score for discrete data.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 2} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'      for any conditional probability table. Higher weight is accorded
-    #'      to tables with about that number of parents. The prior structure
-    #'      weights are distributed according to a binomial distribution.
-    #'    }
-    #'    \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{sem_gic_rule = "bic"} - The following rules are available:
-    #'      \code{"bic"} - \eqn{\ln n},
-    #'      \code{"gic2"} - \eqn{p n^{1/3}},
-    #'      \code{"ric"} - \eqn{2 \ln(p n)},
-    #'      \code{"ricc"} - \eqn{2(\ln(p n) + \ln\ln(p n))},
-    #'      \code{"gic6"} - \eqn{\ln n \ln(p n)}.
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 1} - Penalty discount. Higher penalty
-    #'      yields sparser graphs,
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'      for any conditional probability table. Higher weight is accorded
-    #'      to tables with about that number of parents. The prior structure
-    #'      weights are distributed according to a binomial distribution,
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data.
-    #'    }
-    #    \item \code{"mixed_variable_polynomial"} - Mixed variable polynomial BIC score.
-    #'    \itemize{
-    #'      \item \code{structure_prior = 0} - The default number of parents
-    #'      for any conditional probability table. Higher weight is accorded
-    #'      to tables with about that number of parents. The prior structure
-    #'      weights are distributed according to a binomial distribution,
-    #'      \item \code{f_degree = 0} - The f degree.
-    #'      \item \code{discretize = FALSE} - If TRUE for the conditional
-    #'      Gaussian likelihood, when scoring X --> D where X is continuous and
-    #'      D discrete, one should to simply discretize X for just those cases.
-    #'      If FALSE, the integration will be exact.
-    #'    }
-    #'    \item \code{"poisson_prior"} - Poisson prior score.
-    #'    \itemize{
-    #'      \item \code{poisson_lambda = 1} - Lambda parameter for the Poisson
-    #'      distribution (> 0),
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{"zhang_shen_bound"} - Gaussian Extended BIC score.
-    #'    \itemize{
-    #'      \item \code{risk_bound = 0.2} - This is the probability of getting
-    #'      the true model if a correct model is discovered. Could underfit.
-    #    #'      \item \code{precompute_covariances = TRUE} - For more than 5000
-    #    #'      variables or so, set this to FALSE in order to calculate
-    #    #'      covariances on the fly from data,
-    #'      \item \code{singularity_lambda = 0.0} - Small number >= 0: Add
-    #'      lambda to the diagonal, < 0 Pseudoinverse.
-    #'    }
-    #'    \item \code{"basis_function_blocks_bic"} - BIC score for mixed data
-    #'    using basis-function embedding
-    #'    \itemize{
-    #'      \item \code{basis_type = "polynomial"} - The type of basis to use. Supported
-    #'      types are \code{"polynomial"}, \code{"legendre"}, \code{"hermite"},
-    #'      and \code{"chebyshev"},
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
-    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
-    #'      graphs,
-    #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
-    #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
-    #'    }
-    #'    \item \code{"basis_function_sem_bic"} - SEM BIC score for basis-function models.
-    #'    \itemize{
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
-    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
-    #'      graphs,
-    #'      \item \code{jitter = 1e-8} - Small non-negative constant added to the diagonal of
-    #'      covariance/correlation matrices for numerical stability,
-    #'      \item \code{truncation_limit = 3} - Basis functions 1 through this number will be used.
-    #'      The Degenerate Gaussian category indicator variables for mixed data are also used.
-    #'    }
-    #'    \item \code{"rank_bic"} - Rank BIC score.
-    #'    \itemize{
-    #'      \item \code{gamma = 0.8} - Gamma parameter for Extended BIC (Chen and Chen, 2008). Between 0 and 1,
-    #'      \item \code{penalty_discount = 2} - Penalty discount factor used in
-    #'      BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
-    #'      graphs.
-    #'    }
-    #'  }
+    #'      }
+    #'   }
     #'
     #' @return Invisibly returns \code{self}.
     set_score = function(method, ...) {
