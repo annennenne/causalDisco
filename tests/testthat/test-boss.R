@@ -116,3 +116,33 @@ test_that("boss Tetrad disco respects forbidden background knowledge", {
     info = "Required edge not found in the output graph."
   )
 })
+
+test_that("boss Tetrad disco works with additional alg args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  boss_tetrad <- boss(
+    engine = "tetrad",
+    score = "poisson_prior",
+    num_starts = 3,
+    use_bes = FALSE,
+    use_data_order = FALSE,
+    output_cpdag = FALSE
+  )
+  out <- disco(num_data, boss_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})
+
+test_that("boss Tetrad disco works with additional score args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  boss_tetrad <- boss(
+    engine = "tetrad",
+    score = "poisson_prior",
+    poisson_lambda = 2,
+    singularity_lambda = 0.1
+  )
+  out <- disco(num_data, boss_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})

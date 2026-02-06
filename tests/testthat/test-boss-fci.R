@@ -137,7 +137,7 @@ test_that("boss_fci Tetrad disco respects forbidden background knowledge", {
   )
 })
 
-test_that("boss_fci Tetrad disco works with additional args", {
+test_that("boss_fci Tetrad disco works with additional alg args", {
   skip_if_no_tetrad()
   data(num_data)
   boss_fci_tetrad <- boss_fci(
@@ -150,6 +150,23 @@ test_that("boss_fci Tetrad disco works with additional args", {
     use_heuristic = FALSE,
     complete_rule_set_used = FALSE,
     guarantee_pag = TRUE
+  )
+  out <- disco(num_data, boss_fci_tetrad)
+
+  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+})
+
+test_that("boss_fci Tetrad disco works with additional score+test args", {
+  skip_if_no_tetrad()
+  data(num_data)
+  boss_fci_tetrad <- boss_fci(
+    engine = "tetrad",
+    score = "poisson_prior",
+    test = "basis_function_blocks",
+    poisson_lambda = 2,
+    singularity_lambda = 0.1,
+    basis_type = "legendre",
+    truncation_limit = 2
   )
   out <- disco(num_data, boss_fci_tetrad)
 
