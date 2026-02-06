@@ -108,32 +108,45 @@ TetradSearch <- R6Class(
     #'  Supply one of the method strings for \code{set_alg()}.
     #'  Recognised values are:
     #'
+    #' **Constraint-based**
     #' \itemize{
-    #'   \item \code{"boss"} - BOSS algorithm.
-    #'   \item \code{"boss_fci"} - BOSS-FCI algorithm.
-    #'   \item \code{"ccd"} - Cyclic Causal Discovery.
-    #'   \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
-    #'   \item \code{"cpc"} - Conservative PC algorithm.
-    #'   \item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
-    #'   \item \code{"dagma"} - DAGMA algorithm.
-    #'   \item \code{"direct_lingam"} - DirectLiNGAM algorithm.
-    #'   \item \code{"fask"} - FASK algorithm.
+    #    \item \code{"cpc"} - Conservative PC algorithm.
     #'   \item \code{"fci"} - FCI algorithm.
-    #'   \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
-    #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
-    #'   \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
-    #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
-    #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
-    #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
-    #'   \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
-    #'   \item \code{"ica_lingd"} - ICA-LiNG-D algorithm.
+    #    \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
     #'   \item \code{"pc"} - Peter-Clark (PC) algorithm.
-    #'   \item \code{"pc_max"} - PCMax algorithm.
-    #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm.
+    #    \item \code{"pc_max"} - PCMax algorithm.
     #'   \item \code{"rfci"} - Restricted FCI algorithm.
-    #'   \item \code{"sp"} - Sparsest Permutation algorithm.
+    #' }
+    #'
+    #' **Hybrid**
+    #' \itemize{
+    #'   \item \code{"boss_fci"} - BOSS-FCI algorithm.
+    #    \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
+    #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
+    #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
     #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI.
     #' }
+    #'
+    #' **Score-based**
+    #' \itemize{
+    #'   \item \code{"boss"} - BOSS algorithm.
+    #    \item \code{"dagma"} - DAGMA algorithm.
+    #    \item \code{"fask"} - FASK algorithm.
+    #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
+    #    \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
+    #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
+    #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm.
+    #    \item \code{"sp"} - Sparsest Permutation algorithm.
+    #' }
+    #'
+    #  **Miscellaneous**
+    #  \itemize{
+    #   \item \code{"ccd"} - Cyclic Causal Discovery.
+    #   \item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
+    #   \item \code{"direct_lingam"} - DirectLiNGAM algorithm.
+    #   \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
+    #   \item \code{"ica_lingd"} - ICA-LiNG-D algorithm.
+    #  }
     alg = NULL,
 
     #' @field mc_test Java independence-test object used by the Markov checker.
@@ -722,86 +735,86 @@ TetradSearch <- R6Class(
     #'    \item \code{guarantee_pag = FALSE} - Ensure the output is a legal PAG
     #'     (where feasible).
     #'   }
-    #'   \item \code{"ccd"} - Cyclic Causal Discovery.
-    #'    \itemize{
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{apply_r1 = TRUE} - Set this parameter to FALSE if a
-    #'       chain of directed edges pointing in the same direction, when only
-    #'       the first few such orientations are justified based on the data.
-    #'    }
-    #'   \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in
-    #'    CPC.
-    #'    \itemize{
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{max_disc_path_length = -1} - Maximum length for any
-    #'      discriminating path,
-    #'      \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
-    #'      final orientation rules set due to P. Spirtes, guaranteeing arrow
-    #'      completeness, should be used; TRUE if the (fuller) set due to
-    #'      J. Zhang, should be used guaranteeing additional tail completeness.
-    #'    }
-    #'   \item \code{"cpc"} - Conservative PC algorithm.
-    #'    \itemize{
-    #'      \item \code{conflict_rule = 1} -
-    #'      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
-    #'      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
-    #'      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
-    #'      should be prioritized, while \code{3} means that existing colliders should be prioritized,
-    #'      ignoring subsequent conflicting information.
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
-    #'       the PC adjacency search is used, which for k > 0 fixes the graph
-    #'       for depth k + 1 to that of the previous depth k.
-    #'      \item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
-    #'       a legal CPDAG.
-    #'    }
-    #'   \item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
-    #'    \itemize{
-    #'      \item \code{targets = ""} - Target names (comma or space separated),
-    #'      \item \code{file_out_path = "cstar_out"} -  Path to a directory in
-    #'       which results can be stored
-    #'      \item \code{selection_min_effect = 0.0} - Minimum effect size for
-    #'       listing effects in the CStaR table
-    #'      \item \code{num_subsamples = 50} -  CStaR works by generating
-    #'       subsamples and summarizing across them;
-    #'       this specifies the number of subsamples to generate.
-    #'       Must be >= 1,
-    #'      \item \code{top_bracket = 10} - Top bracket to look for causes in,
-    #'      \item \code{parallelized = FALSE} - If TRUE, the algorithm should
-    #'       be parallelized,
-    #'      \item \code{cpdag_algorithm = "restricted_boss"} - The CPDAG algorithm to use.
-    #'      \code{"pc"} corresponds to PC Stable, \code{"fges"} selects the FGES algorithm,
-    #'      \code{"boss"} selects the BOSS algorithm, and \code{"restricted_boss"} selects
-    #'      the restricted BOSS variant.
-    #'      \item \code{remove_effect_nodes = TRUE} - If TRUE, the effect nodes
-    #'       should be removed from possible causes,
-    #'      \item \code{sample_style = "subsample"} - The sampling style to use. Available options are
-    #'      \code{"subsample"} and \code{"bootstrap"}.
-    #'    }
-    #'   \item \code{"dagma"} - DAGMA algorithm.
-    #'    \itemize{
-    #'      \item \code{lambda1 = 0.05} - Tuning parameter for DAGMA,
-    #'      \item \code{w_threshold = 0.1} - Second tuning parameter for DAGMA,
-    #'      \item \code{cpdag = TRUE} - The algorithm returns a DAG;
-    #'      if this is set to TRUE, this DAG is converted to a CPDAG.
-    #'    }
-    #'   \item \code{"direct_lingam"} - DirectLiNGAM algorithm. No parameters.
-    #'   \item \code{"fask"} - FASK algorithm.
-    #'    \itemize{
-    #'      \item \code{alpha = 0.05} - Significance level for the
-    #'       independence test,
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{fask_delta = -0.3} - The bias for orienting with
-    #'       negative coefficients (\code{0} means no bias) for \code{FASK v1},
-    #'      \item \code{left_right_rule = 1} - The FASK left right rule v2 is
-    #'       default, but two other (related) left-right rules are given for
-    #'       relation to the literature, and the v1 FASK rule is included for
-    #'       backward compatibility,
-    #'      \item \code{skew_edge_threshold = 0.3} - For FASK, this includes an
-    #'       adjacency X --- Y in the model if
-    #'       |corr(X, Y | X > 0) - corr(X, Y | Y > 0)|
-    #'       exceeds some threshold.
-    #'    }
+    #    \item \code{"ccd"} - Cyclic Causal Discovery.
+    #     \itemize{
+    #       \item \code{depth = -1} - Maximum size of conditioning set,
+    #       \item \code{apply_r1 = TRUE} - Set this parameter to FALSE if a
+    #        chain of directed edges pointing in the same direction, when only
+    #        the first few such orientations are justified based on the data.
+    #     }
+    #    \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in
+    #     CPC.
+    #     \itemize{
+    #       \item \code{depth = -1} - Maximum size of conditioning set,
+    #       \item \code{max_disc_path_length = -1} - Maximum length for any
+    #       discriminating path,
+    #       \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
+    #       final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #       completeness, should be used; TRUE if the (fuller) set due to
+    #       J. Zhang, should be used guaranteeing additional tail completeness.
+    #     }
+    #    \item \code{"cpc"} - Conservative PC algorithm.
+    #     \itemize{
+    #       \item \code{conflict_rule = 1} -
+    #       The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
+    #       corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
+    #       [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
+    #       should be prioritized, while \code{3} means that existing colliders should be prioritized,
+    #       ignoring subsequent conflicting information.
+    #       \item \code{depth = -1} - Maximum size of conditioning set,
+    #       \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
+    #        the PC adjacency search is used, which for k > 0 fixes the graph
+    #        for depth k + 1 to that of the previous depth k.
+    #       \item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
+    #        a legal CPDAG.
+    #     }
+    #    \item \code{"cstar"} - CStaR algorithm (Causal Stability Ranking).
+    #     \itemize{
+    #       \item \code{targets = ""} - Target names (comma or space separated),
+    #       \item \code{file_out_path = "cstar_out"} -  Path to a directory in
+    #        which results can be stored
+    #       \item \code{selection_min_effect = 0.0} - Minimum effect size for
+    #        listing effects in the CStaR table
+    #       \item \code{num_subsamples = 50} -  CStaR works by generating
+    #        subsamples and summarizing across them;
+    #        this specifies the number of subsamples to generate.
+    #        Must be >= 1,
+    #       \item \code{top_bracket = 10} - Top bracket to look for causes in,
+    #       \item \code{parallelized = FALSE} - If TRUE, the algorithm should
+    #        be parallelized,
+    #       \item \code{cpdag_algorithm = "restricted_boss"} - The CPDAG algorithm to use.
+    #       \code{"pc"} corresponds to PC Stable, \code{"fges"} selects the FGES algorithm,
+    #       \code{"boss"} selects the BOSS algorithm, and \code{"restricted_boss"} selects
+    #       the restricted BOSS variant.
+    #       \item \code{remove_effect_nodes = TRUE} - If TRUE, the effect nodes
+    #       should be removed from possible causes,
+    #       \item \code{sample_style = "subsample"} - The sampling style to use. Available options are
+    #       \code{"subsample"} and \code{"bootstrap"}.
+    #    }
+    #    \item \code{"dagma"} - DAGMA algorithm.
+    #     \itemize{
+    #       \item \code{lambda1 = 0.05} - Tuning parameter for DAGMA,
+    #       \item \code{w_threshold = 0.1} - Second tuning parameter for DAGMA,
+    #       \item \code{cpdag = TRUE} - The algorithm returns a DAG;
+    #       if this is set to TRUE, this DAG is converted to a CPDAG.
+    #    }
+    #    \item \code{"direct_lingam"} - DirectLiNGAM algorithm. No parameters.
+    #    \item \code{"fask"} - FASK algorithm.
+    #     \itemize{
+    #       \item \code{alpha = 0.05} - Significance level for the
+    #       independence test,
+    #       \item \code{depth = -1} - Maximum size of conditioning set,
+    #       \item \code{fask_delta = -0.3} - The bias for orienting with
+    #       negative coefficients (\code{0} means no bias) for \code{FASK v1},
+    #       \item \code{left_right_rule = 1} - The FASK left right rule v2 is
+    #       default, but two other (related) left-right rules are given for
+    #       relation to the literature, and the v1 FASK rule is included for
+    #       backward compatibility,
+    #       \item \code{skew_edge_threshold = 0.3} - For FASK, this includes an
+    #       adjacency `X --- Y` in the model if
+    #       `|corr(X, Y | X > 0) - corr(X, Y | Y > 0)|`
+    #       exceeds some threshold.
+    #    }
     #'   \item \code{"fci"} - FCI algorithm.
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -817,30 +830,30 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
     #'       PAG (where feasible).
     #'    }
-    #'   \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm
-    #'    \itemize{
-    #'      \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
-    #'       backward equivalence search from the GES algorithm as one of its
-    #'       steps,
-    #'      \item \code{use_data_order = TRUE} - If TRUE, the data variable
-    #'       order should be used for the first initial permutation,
-    #'      \item \code{num_starts = 1} - The number of times the algorithm
-    #'       should be started from different initializations. By default, the
-    #'       algorithm will be run through at least once using the initialized
-    #'       parameters,
-    #'      \item \code{max_disc_path_length = -1} - Maximum length for any
-    #'       discriminating path,
-    #'      \item \code{start_with = "BOSS"} - What algorithm to run first to get
-    #'       the initial CPDAG that the rest of the FCIT procedure refines. Available
-    #'       options are: \code{"BOSS"}, \code{"GRaSP"}, and \code{"SP"}.
-    #'      \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
-    #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
-    #'       completeness, should be used; TRUE if the (fuller) set due to
-    #'       J. Zhang, should be used guaranteeing additional tail completeness,
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-    #'       PAG (where feasible).
-    #'    }
+    #    \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm
+    #    \itemize{
+    #      \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
+    #      backward equivalence search from the GES algorithm as one of its
+    #      steps,
+    #      \item \code{use_data_order = TRUE} - If TRUE, the data variable
+    #      order should be used for the first initial permutation,
+    #      \item \code{num_starts = 1} - The number of times the algorithm
+    #      should be started from different initializations. By default, the
+    #      algorithm will be run through at least once using the initialized
+    #      parameters,
+    #      \item \code{max_disc_path_length = -1} - Maximum length for any
+    #      discriminating path,
+    #      \item \code{start_with = "BOSS"} - What algorithm to run first to get
+    #      the initial CPDAG that the rest of the FCIT procedure refines. Available
+    #      options are: \code{"BOSS"}, \code{"GRaSP"}, and \code{"SP"}.
+    #      \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
+    #      final orientation rules set due to P. Spirtes, guaranteeing arrow
+    #      completeness, should be used; TRUE if the (fuller) set due to
+    #      J. Zhang, should be used guaranteeing additional tail completeness,
+    #      \item \code{depth = -1} - Maximum size of conditioning set,
+    #      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
+    #      PAG (where feasible).
+    #   }
     #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
     #'    \itemize{
     #'      \item \code{symmetric_first_step = FALSE} - If TRUE, scores for both
@@ -853,22 +866,22 @@ TetradSearch <- R6Class(
     #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
     #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
     #'    }
-    #'   \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov
-    #'   Blanket (FGES-MB) algorithm.
-    #'    \itemize{
-    #'      \item \code{targets = ""} - Target names (comma or space separated),
-    #'      \item \code{max_degree = -1} - Maximum degree of any node in the
-    #'       graph. Set to -1 for unlimited,
-    #'      \item \code{trimming_style = "mb_dags"} - The trimming style to use:
-    #'       \code{"none"} applies no trimming. \code{"adj"} trims to the adjacencies
-    #'       of the targets. \code{"mb_dags"} trims to Union(MB(targets)) U targets.
-    #'       \code{"semidir_paths"} trims to nodes with semidirected paths to the targets.
-    #'       \item \code{number_of_expansions = 2} - Number of expansions of the
-    #'          algorithm away from the target,
-    #'      \item \code{faithfulness_assumed = FALSE} - If TRUE, assume that if
-    #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
-    #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
-    #'    }
+    #    \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov
+    #    Blanket (FGES-MB) algorithm.
+    #     \itemize{
+    #       \item \code{targets = ""} - Target names (comma or space separated),
+    #       \item \code{max_degree = -1} - Maximum degree of any node in the
+    #       graph. Set to -1 for unlimited,
+    #       \item \code{trimming_style = "mb_dags"} - The trimming style to use:
+    #       \code{"none"} applies no trimming. \code{"adj"} trims to the adjacencies
+    #       of the targets. \code{"mb_dags"} trims to Union(MB(targets)) U targets.
+    #       \code{"semidir_paths"} trims to nodes with semidirected paths to the targets.
+    #       \item \code{number_of_expansions = 2} - Number of expansions of the
+    #       algorithm away from the target,
+    #       \item \code{faithfulness_assumed = FALSE} - If TRUE, assume that if
+    #        \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
+    #        \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
+    #    }
     #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,
@@ -936,30 +949,30 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_pag = FALSE} - If TRUE, ensure the output is a
     #'       legal PAG (where feasible).
     #'    }
-    #'   \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
-    #'    \itemize{
-    #'      \item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
-    #'       (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
-    #'      \item \code{ica_max_iter = 5000} -  Maximum number if iterations of
-    #'       the optimization procedure of ICA.
-    #'      \item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
-    #'      \item \code{threshold_b = 0.1} - The estimated B matrix is
-    #'       thresholded by setting small entries less than this threshold to
-    #'       zero.
-    #'    }
-    #'   \item \code{"ica_lingd"} - ICA-LiNG-D algorithm
-    #'    \itemize{
-    #'      \item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
-    #'       (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
-    #'      \item \code{ica_max_iter = 5000} -  Maximum number if iterations of
-    #'       the optimization procedure of ICA.
-    #'      \item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
-    #'      \item \code{threshold_b = 0.1} - The estimated B matrix is
-    #'       thresholded by setting small entries less than this threshold to
-    #'       zero.
-    #'      \item \code{threshold_w} - The estimated W matrix is thresholded by
-    #'       setting small entries less than this threshold to zero.
-    #'    }
+    #     \item \code{"ica_lingam"} - ICA LiNGAM algorithm.
+    #     \itemize{
+    #       \item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
+    #       (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
+    #       \item \code{ica_max_iter = 5000} -  Maximum number if iterations of
+    #       the optimization procedure of ICA.
+    #       \item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
+    #       \item \code{threshold_b = 0.1} - The estimated B matrix is
+    #       thresholded by setting small entries less than this threshold to
+    #       zero.
+    #    }
+    #    \item \code{"ica_lingd"} - ICA-LiNG-D algorithm
+    #    \itemize{
+    #      \item \code{ica_a = 1.1} - The 'a' parameter of Fast ICA
+    #      (see Hyvarinen, A. (2001)). It ranges between 1 and 2.
+    #      \item \code{ica_max_iter = 5000} -  Maximum number if iterations of
+    #      the optimization procedure of ICA.
+    #      \item \code{ica_tolerance = 1e-8} - Fast ICA tolerance parameter.
+    #      \item \code{threshold_b = 0.1} - The estimated B matrix is
+    #      thresholded by setting small entries less than this threshold to
+    #      zero.
+    #      \item \code{threshold_w} - The estimated W matrix is thresholded by
+    #      setting small entries less than this threshold to zero.
+    #   }
     #'
     #'   \item \code{"pc"} - Peter-Clark (PC) algorithm
     #'    \itemize{
@@ -976,23 +989,23 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
     #'       a legal CPDAG.
     #'    }
-    #'   \item \code{"pc_max"} - PCMax algorithm
-    #'    \itemize{
-    #'      \item \code{conflict_rule = 1} -
-    #'      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
-    #'      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
-    #'      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
-    #'      should be prioritized, while \code{3} means that existing colliders should be prioritized,
-    #'      ignoring subsequent conflicting information.
-    #'      \item \code{depth = -1} - Maximum size of conditioning set,
-    #'      \item \code{use_heuristic = TRUE} - If TRUE, use the max p heuristic
-    #'       version
-    #'      \item \code{max_disc_path_length = -1} - The maximum path length to
-    #'       use for the max p heuristic version. If -1, no limit is used.
-    #'      \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
-    #'       the PC adjacency search is used, which for k > 0 fixes the graph
-    #'       for depth k + 1 to that of the previous depth k.
-    #'    }
+    #   \item \code{"pc_max"} - PCMax algorithm
+    #   \itemize{
+    #      \item \code{conflict_rule = 1} -
+    #      The value of \code{conflict_rule} determines how collider conflicts are handled. \code{1}
+    #      corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, see
+    #      [pcalg::pc()]. \code{2} means that all collider conflicts using bidirected edges
+    #      should be prioritized, while \code{3} means that existing colliders should be prioritized,
+    #      ignoring subsequent conflicting information.
+    #      \item \code{depth = -1} - Maximum size of conditioning set,
+    #      \item \code{use_heuristic = TRUE} - If TRUE, use the max p heuristic
+    #      version
+    #      \item \code{max_disc_path_length = -1} - The maximum path length to
+    #      use for the max p heuristic version. If -1, no limit is used.
+    #      \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
+    #      the PC adjacency search is used, which for k > 0 fixes the graph
+    #      for depth k + 1 to that of the previous depth k.
+    #  }
     #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm
     #'    \itemize{
     #'      \item \code{targets = ""} - Target names (comma or space separated),
@@ -1023,7 +1036,7 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
     #'       PAG (where feasible).
     #'    }
-    #'   \item \code{"sp"} - Sparsest Permutation algorithm. No parameters.
+    #    \item \code{"sp"} - Sparsest Permutation algorithm. No parameters.
     #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,

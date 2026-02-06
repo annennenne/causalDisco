@@ -9,11 +9,11 @@ requirements, and nonstandard outputs.
 
 ## Documented and Present in Tetrad
 
-### Do **not** implement (for now)
+### Do **not** implement (for now) (commented out from doc)
 
 - `ccd` (test-based)
   Produces a **cyclic PAG**, where edge semantics differ from standard PAGs.
-  (Tetrad says no background knowledge, but seems only required is not allowed?)
+  Tetrad says no background knowledge, but seems only required knowledge is not allowed?
 
 - `CStaR` (score + test)
   Unclear how to run this algorithm in Tetrad (nonstandard workflow).
@@ -46,11 +46,13 @@ requirements, and nonstandard outputs.
 
 ## Not Present in Current Tetrad but Listed in Our Documentation
 
-### Remove from documentation
+### Commented out from documentation
 
 - `cfci`
 - `cpc`
+- `fcit`
 - `pc_max`
+- `sp`
 
 ---
 
