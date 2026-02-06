@@ -118,8 +118,8 @@ TetradSearch <- R6Class(
     #'   \item \code{"direct_lingam"} - DirectLiNGAM algorithm.
     #'   \item \code{"fask"} - FASK algorithm.
     #'   \item \code{"fci"} - FCI algorithm.
-    #'   \item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
-    #'   \item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
+    #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
+    #'   \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
     #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
     #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
     #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
@@ -868,7 +868,7 @@ TetradSearch <- R6Class(
     #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
     #'       PAG (where feasible).
     #'    }
-    #'   \item \code{"fges"} - Fast Greedy Equivalence Search (FGES) algorithm.
+    #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
     #'    \itemize{
     #'      \item \code{symmetric_first_step = FALSE} - If TRUE, scores for both
     #'       X --> Y and X <-- Y will be calculated and the higher score used.
@@ -880,7 +880,7 @@ TetradSearch <- R6Class(
     #'       \eqn{X \perp\!\!\!\perp Y} (by an independence test) then
     #'       \eqn{X \perp\!\!\!\perp Y} | Z for nonempty Z.
     #'    }
-    #'   \item \code{"fges_mb"} - Fast Greedy Equivalence Search with Markov
+    #'   \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov
     #'   Blanket (FGES-MB) algorithm.
     #'    \itemize{
     #'      \item \code{targets = ""} - Target names (comma or space separated),
