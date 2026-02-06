@@ -37,22 +37,22 @@ CausalDiscoSearch <- R6::R6Class(
     #' @field test A function that will be used to test independence.
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
-    #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-    #'    See [cor_test()].
     #'    \item \code{"reg"} - Regression test for discrete or binary data.
     #'    See [reg_test()].
+    #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
+    #'    See [cor_test()].
     #'  }
     test = NULL,
 
     #' @field alg A function that will be used to run the search algorithm.
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
-    #'   \item \code{"tpc"}  - TPC algorithm.
-    #'   See [tpc()].
     #'   \item \code{"tfci"} - TFCI algorithm.
     #'   See [tfci()].
     #'   \item \code{"tges"} - TGES algorithm.
     #'   See [tges()].
+    #'   \item \code{"tpc"}  - TPC algorithm.
+    #'   See [tpc()].
     #' }
     alg = NULL,
 

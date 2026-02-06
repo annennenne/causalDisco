@@ -85,9 +85,9 @@ See \code{\link[pcalg:binCItest]{pcalg::binCItest()}} and \code{\link[pcalg:disC
 \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
-\item \code{"pc"} - PC algorithm. See \code{\link[pcalg:pc]{pcalg::pc()}}.
 \item \code{"fci"} - FCI algorithm. See \code{\link[pcalg:fci]{pcalg::fci()}}.
 \item \code{"ges"} - GES algorithm. See \code{\link[pcalg:ges]{pcalg::ges()}}.
+\item \code{"pc"} - PC algorithm. See \code{\link[pcalg:pc]{pcalg::pc()}}.
 }}
 
 \item{\code{params}}{A list of parameters for the test and algorithm.

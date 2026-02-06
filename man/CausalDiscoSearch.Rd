@@ -102,21 +102,21 @@ See \code{\link{TemporalBDeu}}.
 \item{\code{test}}{A function that will be used to test independence.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
-\item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-See \code{\link[=cor_test]{cor_test()}}.
 \item \code{"reg"} - Regression test for discrete or binary data.
 See \code{\link[=reg_test]{reg_test()}}.
+\item \code{"fisher_z"} - Fisher Z test for Gaussian data.
+See \code{\link[=cor_test]{cor_test()}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
-\item \code{"tpc"}  - TPC algorithm.
-See \code{\link[=tpc]{tpc()}}.
 \item \code{"tfci"} - TFCI algorithm.
 See \code{\link[=tfci]{tfci()}}.
 \item \code{"tges"} - TGES algorithm.
 See \code{\link[=tges]{tges()}}.
+\item \code{"tpc"}  - TPC algorithm.
+See \code{\link[=tpc]{tpc()}}.
 }}
 
 \item{\code{params}}{A list of parameters for the test and algorithm.

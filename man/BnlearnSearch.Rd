@@ -58,38 +58,38 @@ search object. Can be set with \code{set_data()}.}
 \code{"pred-loglik"}) are also accepted and automatically translated to snake_case.
 Recognised values are:
 
-\strong{Discrete – categorical}
-\itemize{
-\item \code{"loglik"} - log-likelihood
-\item \code{"aic"} - Akaike Information Criterion
-\item \code{"bic"} - Bayesian Information Criterion
-\item \code{"ebic"} - Extended BIC
-\item \code{"pred_loglik"} - predictive log-likelihood
-\item \code{"bde"} - Bayesian Dirichlet equivalent (uniform)
-\item \code{"bds"} - Bayesian Dirichlet score
-\item \code{"mbde"} - modified BDE
-\item \code{"bdla"} - locally averaged BDE
-\item \code{"k2"} - K2 score
-\item \code{"fnml"} - factorised NML
-\item \code{"qnml"} - quotient NML
-\item \code{"nal"} - node-average log-likelihood
-\item \code{"pnal"} - penalised node-average log-likelihood
-}
-
 \strong{Continuous - Gaussian}
 \itemize{
-\item \code{"loglik_g"}, \code{"aic_g"}, \code{"bic_g"},
-\code{"ebic_g"}, \code{"pred_loglik_g"}
-\item \code{"bge"} - Gaussian posterior density
-\item \code{"nal_g"} - node-average log-likelihood
-\item \code{"pnal_g"} - penalised node-average log-likelihood
+\item \code{"aic_g"}, \code{"bic_g"}, \code{"ebic_g"}, \code{"loglik_g"}, \code{"pred_loglik_g"} -
+gaussian versions of the respective scores for discrete data.
+\item \code{"bge"} - Gaussian posterior density.
+\item \code{"nal_g"} - node-average log-likelihood.
+\item \code{"pnal_g"} - penalised node-average log-likelihood.
+}
+
+\strong{Discrete – categorical}
+\itemize{
+\item \code{"aic"} - Akaike Information Criterion.
+\item \code{"bdla"} - locally averaged BDE.
+\item \code{"bde"} - Bayesian Dirichlet equivalent (uniform).
+\item \code{"bds"} - Bayesian Dirichlet score.
+\item \code{"bic"} - Bayesian Information Criterion.
+\item \code{"ebic"} - Extended BIC.
+\item \code{"fnml"} - factorised NML.
+\item \code{"k2"} - K2 score.
+\item \code{"loglik"} - log-likelihood.
+\item \code{"mbde"} - modified BDE.
+\item \code{"nal"} - node-average log-likelihood.
+\item \code{"pnal"} - penalised node-average log-likelihood.
+\item \code{"pred_loglik"} - predictive log-likelihood.
+\item \code{"qnml"} - quotient NML.
 }
 
 \strong{Mixed Discrete/Gaussian}
 \itemize{
-\item \code{"loglik_cg"}, \code{"aic_cg"}, \code{"bic_cg"},
-\code{"ebic_cg"}, \code{"pred_loglik_cg"},
-\code{"nal_cg"}, \code{"pnal_cg"}
+\item \code{"aic_cg"}, \code{"bic_cg"}, \code{"ebic_cg"}, \code{"loglik_cg"}, \code{"nal_cg"},
+\code{"pnal_cg"}, \code{"pred_loglik_cg"} - conditional Gaussian versions of the respective scores for
+discrete data.
 }}
 
 \item{\code{test}}{Character scalar naming the conditional-independence test
@@ -97,19 +97,33 @@ passed to \pkg{bnlearn}. Can be set with \code{$set_score()}. Kebab-case test na
 (as used in \pkg{bnlearn}, e.g. "mi-adf") are also accepted and automatically translated to snake_case.
 Recognised values are:
 
+\strong{Continuous - Gaussian}
+\itemize{
+\item \code{"cor"} – Pearson correlation
+\item \code{"fisher_z"} / \code{"zf"} – Fisher Z test
+\item \code{"mc_cor"} – Monte Carlo Pearson correlation
+\item \code{"mc_mi_g"} – Monte Carlo mutual information (Gaussian)
+\item \code{"mc_zf"} – Monte Carlo Fisher Z
+\item \code{"mi_g"} – mutual information (Gaussian)
+\item \code{"mi_g_sh"} – mutual information (Gaussian, shrinkage)
+\item \code{"smc_cor"} – sequential Monte Carlo Pearson correlation
+\item \code{"smc_mi_g"} – sequential Monte Carlo mutual information (Gaussian)
+\item \code{"smc_zf"} – sequential Monte Carlo Fisher Z
+}
+
 \strong{Discrete – categorical}
 \itemize{
+\item \code{"mc_mi"} – Monte Carlo mutual information
+\item \code{"mc_x2"} – Monte Carlo chi-squared
 \item \code{"mi"} – mutual information
 \item \code{"mi_adf"} – mutual information with adjusted d.f.
-\item \code{"mc_mi"} – Monte Carlo mutual information
-\item \code{"smc_mi"} – sequential Monte Carlo mutual information
-\item \code{"sp_mi"} – semi-parametric mutual information
 \item \code{"mi_sh"} – mutual information (shrinkage)
+\item \code{"smc_mi"} – sequential Monte Carlo mutual information
+\item \code{"smc_x2"} – sequential Monte Carlo chi-squared
+\item \code{"sp_mi"} – semi-parametric mutual information
+\item \code{"sp_x2"} – semi-parametric chi-squared
 \item \code{"x2"} – chi-squared
 \item \code{"x2_adf"} – chi-squared with adjusted d.f.
-\item \code{"mc_x2"} – Monte Carlo chi-squared
-\item \code{"smc_x2"} – sequential Monte Carlo chi-squared
-\item \code{"sp_x2"} – semi-parametric chi-squared
 }
 
 \strong{Discrete – ordered factors}
@@ -117,20 +131,6 @@ Recognised values are:
 \item \code{"jt"} – Jonckheere–Terpstra
 \item \code{"mc_jt"} – Monte Carlo Jonckheere–Terpstra
 \item \code{"smc_jt"} – sequential Monte Carlo Jonckheere–Terpstra
-}
-
-\strong{Continuous - Gaussian}
-\itemize{
-\item \code{"cor"} – Pearson correlation
-\item \code{"mc_cor"} – Monte Carlo Pearson correlation
-\item \code{"smc_cor"} – sequential Monte Carlo Pearson correlation
-\item \code{"zf"} / \code{"fisher_z"} – Fisher Z test
-\item \code{"mc_zf"} – Monte Carlo Fisher Z
-\item \code{"smc_zf"} – sequential Monte Carlo Fisher Z
-\item \code{"mi_g"} – mutual information (Gaussian)
-\item \code{"mc_mi_g"} – Monte Carlo mutual information (Gaussian)
-\item \code{"smc_mi_g"} – sequential Monte Carlo mutual information (Gaussian)
-\item \code{"mi_g_sh"} – mutual information (Gaussian, shrinkage)
 }
 
 \strong{Mixed Discrete/Gaussian}
@@ -145,38 +145,38 @@ Recognised values are:
 
 \strong{Constraint-based}
 \itemize{
-\item \code{"pc"} – PC-stable algorithm
+\item \code{"fast_iamb"} – Fast-IAMB
 \item \code{"gs"} – Grow-Shrink
 \item \code{"iamb"} – Incremental Association Markov Blanket
-\item \code{"fast_iamb"} – Fast-IAMB
-\item \code{"inter_iamb"} – Interleaved-IAMB
 \item \code{"iamb_fdr"} – IAMB with FDR control
+\item \code{"inter_iamb"} – Interleaved-IAMB
+\item \code{"pc"} – PC-stable algorithm
+}
+
+\strong{Hybrid}
+\itemize{
+\item \code{"h2pc"} – Hybrid HPC–PC
+\item \code{"mmhc"} – Max–Min Hill-Climbing
+\item \code{"rsmax2"} – Restricted Maximisation (two-stage)
 }
 
 \strong{Local / skeleton discovery}
 \itemize{
+\item \code{"hpc"} – Hybrid Parents and Children
 \item \code{"mmpc"} – Max–Min Parents and Children
 \item \code{"si_hiton_pc"} – Semi-Interleaved HITON-PC
-\item \code{"hpc"} – Hybrid Parents and Children
+}
+
+\strong{Pairwise mutual-information learners}
+\itemize{
+\item \code{"aracne"} – ARACNE network
+\item \code{"chow_liu"} – Chow–Liu tree
 }
 
 \strong{Score-based}
 \itemize{
 \item \code{"hc"} – Hill-Climbing
 \item \code{"tabu"} – Tabu search
-}
-
-\strong{Hybrid}
-\itemize{
-\item \code{"mmhc"} – Max–Min Hill-Climbing
-\item \code{"rsmax2"} – Restricted Maximisation (two-stage)
-\item \code{"h2pc"} – Hybrid HPC–PC
-}
-
-\strong{Pairwise mutual-information learners}
-\itemize{
-\item \code{"chow_liu"} – Chow–Liu tree
-\item \code{"aracne"} – ARACNE network
 }}
 
 \item{\code{params}}{A list of extra tuning parameters stored by \code{set_params()}
