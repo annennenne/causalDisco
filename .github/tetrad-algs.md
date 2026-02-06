@@ -38,10 +38,6 @@ requirements, and nonstandard outputs.
 - `ges_mb` (score-based)
   Requires explicit specification of a Markov blanket.
 
-### Implement
-
-- `gfci` (score + test)
-
 ---
 
 ## Not Present in Current Tetrad but Listed in Our Documentation
@@ -100,6 +96,10 @@ requirements, and nonstandard outputs.
   Returns an **RFCI-PAG**, not a standard PAG.  
   Already implemented in `pcalg`.
   
+- `dPAG-sampling-rfci` (neither score- nor test-based)
+  Returns an **RFCI-PAG**, not a standard PAG (I assume)?
+  Discrete datasets only.
+  
 - `RSkew` (neither score- nor test-based)
   Requires data and an **undirected graph** as input.  
   Orients edges in the supplied graph.
@@ -110,9 +110,4 @@ requirements, and nonstandard outputs.
   
 ### Implement
 
-- `CDNOD-BOSS` (score-based)
-
-- `SP-FCI` (score + test)
-
-- `dPAG-sampling-rfci` (neither score- nor test-based)
-  Discrete datasets only.
+- `CDNOD-BOSS` (score-based) (coming in 7.6.11?)
