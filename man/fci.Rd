@@ -29,7 +29,7 @@ A function of class \code{"fci"} that takes a single argument \code{data}
 Run the FCI algorithm for causal discovery using one of several engines.
 }
 \details{
-For specific details on the supported scores, tests, and parameters for each engine, see:
+For specific details on the supported tests and parameters for each engine, see:
 \itemize{
 \item \code{\link{TetradSearch}} for \pkg{Tetrad},
 \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
@@ -114,9 +114,11 @@ Other causal discovery algorithms:
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
 \code{\link{gs}()},
+\code{\link{hc}()},
 \code{\link{iamb-family}},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},
+\code{\link{tabu}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},
 \code{\link{tpc}()}

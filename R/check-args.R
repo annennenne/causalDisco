@@ -338,8 +338,27 @@ check_args_and_distribute_args_bnlearn <- function(
       )
     }
 
-    # ---- Bnlearn has B, fun, and args as the only ... arguments for constraint based algorithms (passed to tests) ----
-    allowed_dot_args <- c("B", "fun", "args")
+    # ---- bnlearn has B, fun, and args as the only ... arguments for constraint based algorithms (passed to tests) ----
+    allowed_dot_args_tests <- c("B", "fun", "args")
+
+    # ---- bnlearn has iss, iss.mu, iss.w, nu, l, exp, k, gamma, prior, beta, newdata, fun, args as the only ...
+    # arguments for score based algorithms (passed to scores) ----
+    allowed_dot_args_scores <- c(
+      "iss",
+      "iss.mu",
+      "iss.w",
+      "nu",
+      "l",
+      "exp",
+      "k",
+      "gamma",
+      "prior",
+      "beta",
+      "newdata",
+      "fun",
+      "args"
+    )
+    allowed_dot_args <- c(allowed_dot_args_tests, allowed_dot_args_scores)
     truly_unrecognised <- setdiff(unclaimed, allowed_dot_args)
 
     if (!allow_dots && length(truly_unrecognised) > 0) {

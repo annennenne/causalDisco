@@ -19,7 +19,7 @@
 #' @param ... Additional arguments passed to the chosen engine (e.g., test or algorithm parameters).
 #'
 #' @details
-#' Each function supports the same engines and parameters. For details on scores, tests,
+#' Each function supports the same engines and parameters. For details on tests
 #' and parameters for each engine, see:
 #' \itemize{
 #'   \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.

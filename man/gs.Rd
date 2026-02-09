@@ -26,7 +26,7 @@ A function of class \code{"gs"} that takes a single argument \code{data}
 Run the GS (Grow-Shrink) algorithm for causal discovery using one of several engines.
 }
 \details{
-For specific details on the supported scores, tests, and parameters for each engine, see:
+For specific details on the supported tests and parameters for each engine, see:
 \itemize{
 \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
 }
@@ -74,9 +74,11 @@ Other causal discovery algorithms:
 \code{\link{gfci}()},
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
+\code{\link{hc}()},
 \code{\link{iamb-family}},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},
+\code{\link{tabu}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},
 \code{\link{tpc}()}

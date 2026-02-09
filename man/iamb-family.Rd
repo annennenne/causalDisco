@@ -41,7 +41,7 @@ Functions for causal discovery using variants of the Incremental Association alg
 }
 }
 \details{
-Each function supports the same engines and parameters. For details on scores, tests,
+Each function supports the same engines and parameters. For details on tests
 and parameters for each engine, see:
 \itemize{
 \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
@@ -115,8 +115,10 @@ Other causal discovery algorithms:
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
 \code{\link{gs}()},
+\code{\link{hc}()},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},
+\code{\link{tabu}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},
 \code{\link{tpc}()}
