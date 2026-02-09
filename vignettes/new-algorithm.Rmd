@@ -69,7 +69,7 @@ hpc <- function(
 }
 ```
 
-The builder function calls `hpc_bnlearn_runner()` (which we haven't yet defined!), which is responsible for running the
+The builder function calls `hpc_bnlearn_runner()` (which we haven't defined yet), which is responsible for running the
 algorithm on the data.
 This function receives the test, the significance level, and any additional arguments passed via `...`.
 
