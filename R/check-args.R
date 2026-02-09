@@ -310,28 +310,22 @@ check_args_and_distribute_args_bnlearn <- function(
   allow_dots = FALSE
 ) {
   .check_if_pkgs_are_installed(
-    pkgs = c(
-      "bnlearn"
-    ),
+    pkgs = "bnlearn",
     function_name = "check_args_and_distribute_args_bnlearn"
   )
 
-  # find bnlearn function
   if (!exists(alg, envir = asNamespace("bnlearn"))) {
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   }
 
-  # get the formal arguments of the function
   bn_fun <- get(alg, envir = asNamespace("bnlearn"))
   alg_formals <- names(formals(bn_fun))
   dots_allowed <- "..." %in% alg_formals
 
-  # which user supplied arguments are valid?
   unclaimed <- setdiff(names(args), alg_formals)
 
   if (length(unclaimed) > 0) {
     if (!dots_allowed) {
-      # learner has no '...' : throw error
       stop(
         "The following arguments are not valid for bnlearn::",
         alg,
@@ -341,19 +335,23 @@ check_args_and_distribute_args_bnlearn <- function(
       )
     }
 
-    if (dots_allowed && !allow_dots) {
-      # learner has '...' but caller did not allow extras
+    # ---- Bnlearn has B, fun, and args as the only ... arguments for constraint based algorithms (passed to tests) ----
+    allowed_dot_args <- c("B", "fun", "args")
+    truly_unrecognised <- setdiff(unclaimed, allowed_dot_args)
+
+    if (!allow_dots && length(truly_unrecognised) > 0) {
       stop(
         "bnlearn::",
         alg,
-        " has a '...' formal, but these arguments are not ",
-        "recognised: ",
-        paste(unclaimed, collapse = ", "),
-        ".  Set allow_dots = TRUE if you really want to forward them."
+        " has a '...' formal, but these arguments are not recognised: ",
+        paste(truly_unrecognised, collapse = ", "),
+        ". Allowed dot-arguments are: ",
+        paste(allowed_dot_args, collapse = ", "),
+        ". Set allow_dots = TRUE to forward arbitrary extras.",
+        call. = FALSE
       )
     }
   }
 
-  # we do not distribute arguments here, as it is not needed
   args
 }
