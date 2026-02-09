@@ -95,4 +95,5 @@ reference:
 
   - title: "Miscellaneous"
     contents:
+      - has_concept("extending_causalDisco")
       - engine_registry

@@ -112,6 +112,7 @@ Collate:
     'disco.R'
     'edges.R'
     'engine-registry.R'
+    'extend-causaldisco-algs.R'
     'fci.R'
     'ges.R'
     'gfci.R'

@@ -83,6 +83,14 @@ check_args_and_distribute_args_tetrad <- function(
   test = NULL,
   score = NULL
 ) {
+  if (tolower(alg) %in% names(tetrad_alg_registry)) {
+    return(list(
+      alg_args = args$alg %||% args,
+      test_args = args$test %||% list(),
+      score_args = args$score %||% list()
+    ))
+  }
+
   if (is.null(test) && is.null(score)) {
     stop("Neither test or score is specified.", call. = FALSE)
   }

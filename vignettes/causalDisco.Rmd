@@ -106,7 +106,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 # Code to generate the plot image
 # Settings from pkgdown::fig_settings()
 ragg::agg_png(
-  filename = "ges-ebic-tetrad.png",
+  filename = "vignettes/ges-ebic-tetrad.png",
   width  = 7.291667,
   height = 4.506593,
   units  = "in",

@@ -4,8 +4,10 @@
 
 test_that("engine guard in check_args_and_distribute_args() rejects unsupported engines", {
   reg <- engine_registry
+  search <- TetradSearch$new()
   expect_error(
     check_args_and_distribute_args(
+      search,
       args = list(),
       engine = "not-an-engine",
       alg = "pc"
@@ -243,8 +245,7 @@ test_that("bnlearn: algorithm existence, dots handling, and passthrough", {
         "bnlearn::",
         wd,
         " has a '...' formal, but these arguments are not ",
-        "recognised: unclaimed",
-        ".  Set allow_dots = TRUE if you really want to forward them."
+        "recognised: unclaimed."
       ),
       fixed = TRUE
     )

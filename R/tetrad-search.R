@@ -1057,6 +1057,13 @@ TetradSearch <- R6Class(
     #' @return Invisibly returns \code{self}.
     set_alg = function(method, ...) {
       method <- tolower(method)
+
+      # Custom / registered algorithms
+      if (exists(method, envir = tetrad_alg_registry, inherits = FALSE)) {
+        tetrad_alg_registry[[method]](self, ...)
+        return(invisible(self))
+      }
+
       switch(
         method,
         "fges" = {
