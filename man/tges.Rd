@@ -70,6 +70,7 @@ res_bic
 Other causal discovery algorithms: 
 \code{\link{boss}()},
 \code{\link{boss_fci}()},
+\code{\link{fast_iamb}()},
 \code{\link{fci}()},
 \code{\link{ges}()},
 \code{\link{gfci}()},

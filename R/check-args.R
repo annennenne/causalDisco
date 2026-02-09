@@ -314,11 +314,14 @@ check_args_and_distribute_args_bnlearn <- function(
     function_name = "check_args_and_distribute_args_bnlearn"
   )
 
-  if (!exists(alg, envir = asNamespace("bnlearn"))) {
+  # Convert algorithm name to match bnlearn function naming convention (e.g., "fast_iamb" to "fast.iamb")
+  alg_period <- gsub("_", ".", alg)
+
+  if (!exists(alg_period, envir = asNamespace("bnlearn"))) {
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   }
 
-  bn_fun <- get(alg, envir = asNamespace("bnlearn"))
+  bn_fun <- get(alg_period, envir = asNamespace("bnlearn"))
   alg_formals <- names(formals(bn_fun))
   dots_allowed <- "..." %in% alg_formals
 

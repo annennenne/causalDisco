@@ -96,6 +96,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 \seealso{
 Other causal discovery algorithms: 
 \code{\link{boss}()},
+\code{\link{fast_iamb}()},
 \code{\link{fci}()},
 \code{\link{ges}()},
 \code{\link{gfci}()},

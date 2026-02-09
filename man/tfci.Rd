@@ -59,6 +59,7 @@ tfci_run(tpc_example, test = cor_test, knowledge = kn)
 Other causal discovery algorithms: 
 \code{\link{boss}()},
 \code{\link{boss_fci}()},
+\code{\link{fast_iamb}()},
 \code{\link{fci}()},
 \code{\link{ges}()},
 \code{\link{gfci}()},

@@ -63,6 +63,7 @@ tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
 Other causal discovery algorithms: 
 \code{\link{boss}()},
 \code{\link{boss_fci}()},
+\code{\link{fast_iamb}()},
 \code{\link{fci}()},
 \code{\link{ges}()},
 \code{\link{gfci}()},

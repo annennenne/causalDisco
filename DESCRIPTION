@@ -111,6 +111,7 @@ Collate:
     'disco.R'
     'edges.R'
     'engine-registry.R'
+    'fast-iamb.R'
     'fci.R'
     'ges.R'
     'gfci.R'
