@@ -1,148 +1,43 @@
-test_that("boss Tetrad disco respects tier knowledge", {
+test_that("boss Tetrad algorithm run without error and return correct classes", {
   skip_if_no_tetrad()
 
-  data(tpc_example)
+  test_tier_knowledge(
+    alg_fun = boss,
+    engine = "tetrad",
+    score = "sem_bic"
+  )
 
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ starts_with("child"),
-      youth ~ starts_with("youth"),
-      old ~ starts_with("old")
+  test_forbidden_knowledge(
+    alg_fun = boss,
+    engine = "tetrad",
+    score = "sem_bic"
+  )
+
+  test_that("required works", {
+    skip("boss Tetrad runs forever with required. See #1950 in Tetrad.")
+    test_required_knowledge(
+      alg_fun = boss,
+      engine = "tetrad",
+      score = "sem_bic"
+    )
+  })
+
+  test_additional_alg_args(
+    alg_fun = boss,
+    engine = "tetrad",
+    score = "sem_bic",
+    alg_args = list(
+      num_starts = 3,
+      use_bes = FALSE,
+      use_data_order = FALSE,
+      output_cpdag = FALSE
     )
   )
 
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
-
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      1 ~ starts_with("old"),
-      2 ~ starts_with("youth"),
-      3 ~ starts_with("child")
-    )
-  )
-
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(tpc_example, tetrad_boss, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-})
-
-test_that("boss Tetrad disco respects required background knowledge", {
-  skip_if_no_tetrad()
-
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %-->% youth_x3
-  )
-  skip(
-    "boss_fci Tetrad runs forever with required. See #1950 in Tetrad."
-  )
-
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Required edge not found in the output graph."
-  )
-
-  # With tier+required knowledge
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ starts_with("child"),
-      youth ~ starts_with("youth"),
-      old ~ starts_with("old")
-    ),
-    youth_x3 %-->% oldage_x5
-  )
-
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations_tiers) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-
-  violations_req <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations_req) == 0,
-    info = "Required edge not found in the output graph."
-  )
-})
-
-test_that("boss Tetrad disco respects forbidden background knowledge", {
-  skip_if_no_tetrad()
-
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %!-->% youth_x3,
-    child_x2 %!-->% child_x1
-  )
-
-  tetrad_boss <- boss(engine = "tetrad", score = "sem_bic")
-  output <- disco(data = tpc_example, method = tetrad_boss, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Required edge not found in the output graph."
-  )
-})
-
-test_that("boss Tetrad disco works with additional alg args", {
-  skip_if_no_tetrad()
-  data(num_data)
-  boss_tetrad <- boss(
+  test_additional_test_or_score_args(
+    alg_fun = boss,
     engine = "tetrad",
     score = "poisson_prior",
-    num_starts = 3,
-    use_bes = FALSE,
-    use_data_order = FALSE,
-    output_cpdag = FALSE
+    test_args = list(poisson_lambda = 2, singularity_lambda = 0.1)
   )
-  out <- disco(num_data, boss_tetrad)
-
-  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
-})
-
-test_that("boss Tetrad disco works with additional score args", {
-  skip_if_no_tetrad()
-  data(num_data)
-  boss_tetrad <- boss(
-    engine = "tetrad",
-    score = "poisson_prior",
-    poisson_lambda = 2,
-    singularity_lambda = 0.1
-  )
-  out <- disco(num_data, boss_tetrad)
-
-  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
 })

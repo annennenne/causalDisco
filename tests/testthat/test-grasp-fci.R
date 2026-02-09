@@ -1,182 +1,62 @@
-test_that("grasp_fci Tetrad disco respects tier knowledge", {
+test_that("grasp_fci Tetrad algorithm run without error and return correct classes", {
   skip_if_no_tetrad()
 
-  data(tpc_example)
+  test_tier_knowledge(
+    alg_fun = grasp_fci,
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
 
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ starts_with("child"),
-      youth ~ starts_with("youth"),
-      old ~ starts_with("old")
+  test_forbidden_knowledge(
+    alg_fun = grasp_fci,
+    engine = "tetrad",
+    score = "sem_bic",
+    test = "fisher_z"
+  )
+
+  test_that("required works", {
+    skip(
+      "grasp_fci Tetrad does not yet support required background knowledge correctly."
+    )
+    test_required_knowledge(
+      alg_fun = grasp_fci,
+      engine = "tetrad",
+      score = "sem_bic",
+      test = "fisher_z"
+    )
+  })
+
+  test_additional_alg_args(
+    alg_fun = grasp_fci,
+    engine = "tetrad",
+    score = "poisson_prior",
+    test = "rank_independence",
+    alg_args = list(
+      depth = 3,
+      stable_fas = FALSE,
+      max_disc_path_length = 5,
+      covered_depth = 3,
+      singular_depth = 2,
+      nonsingular_depth = 2,
+      ordered_alg = TRUE,
+      raskutti_uhler = TRUE,
+      use_data_order = FALSE,
+      num_starts = 3,
+      guarantee_pag = TRUE
     )
   )
 
-  tetrad_grasp_fci <- grasp_fci(
+  test_additional_test_or_score_args(
+    alg_fun = grasp_fci,
     engine = "tetrad",
-    test = "fisher_z",
-    score = "sem_bic"
-  )
-  output <- disco(data = tpc_example, method = tetrad_grasp_fci, knowledge = kn)
-
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      1 ~ starts_with("old"),
-      2 ~ starts_with("youth"),
-      3 ~ starts_with("child")
+    score = "rank_bic",
+    test = "poisson_prior",
+    test_args = list(
+      poisson_lambda = 2,
+      singularity_lambda = 0.1,
+      gamma = 0.5,
+      penalty_discount = 3
     )
   )
-
-  tetrad_grasp_fci <- grasp_fci(
-    engine = "tetrad",
-    test = "fisher_z",
-    score = "sem_bic"
-  )
-  output <- disco(tpc_example, tetrad_grasp_fci, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-})
-
-test_that("grasp_fci Tetrad disco respects required background knowledge", {
-  skip_if_no_tetrad()
-  # TODO Works in unreleased version, so will work in next released version (7.6.11?)
-  skip(
-    "grasp_fci Tetrad does not yet support required background knowledge correctly."
-  )
-
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %-->% youth_x3
-  )
-
-  tetrad_grasp_fci <- grasp_fci(
-    engine = "tetrad",
-    test = "fisher_z",
-    score = "sem_bic"
-  )
-  output <- disco(data = tpc_example, method = tetrad_grasp_fci, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Required edge not found in the output graph."
-  )
-
-  # With tier+required knowledge
-
-  kn <- knowledge(
-    tpc_example,
-    tier(
-      child ~ starts_with("child"),
-      youth ~ starts_with("youth"),
-      old ~ starts_with("old")
-    ),
-    youth_x3 %-->% oldage_x5
-  )
-
-  tetrad_grasp_fci <- grasp_fci(
-    engine = "tetrad",
-    test = "fisher_z",
-    score = "sem_bic"
-  )
-  output <- disco(data = tpc_example, method = tetrad_grasp_fci, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations_tiers <- causalDisco:::check_tier_violations(edges, kn)
-  expect_true(
-    nrow(violations_tiers) == 0,
-    info = "Tier violations were found in the output graph."
-  )
-
-  violations_req <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations_req) == 0,
-    info = "Required edge not found in the output graph."
-  )
-})
-
-test_that("grasp_fci Tetrad disco respects forbidden background knowledge", {
-  skip_if_no_tetrad()
-
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %!-->% youth_x3,
-    child_x2 %!-->% child_x1
-  )
-
-  tetrad_grasp_fci <- grasp_fci(
-    engine = "tetrad",
-    test = "fisher_z",
-    score = "sem_bic"
-  )
-  output <- disco(data = tpc_example, method = tetrad_grasp_fci, knowledge = kn)
-  edges <- output$caugi@edges
-
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
-  expect_true(
-    nrow(violations) == 0,
-    info = "Required edge not found in the output graph."
-  )
-})
-
-test_that("grasp_fci Tetrad disco works with additional algorithm args", {
-  skip_if_no_tetrad()
-  data(num_data)
-  grasp_fci_tetrad <- grasp_fci(
-    engine = "tetrad",
-    test = "poisson_prior",
-    score = "rank_bic",
-    alpha = 0.05,
-    depth = 3,
-    stable_fas = FALSE,
-    max_disc_path_length = 5,
-    covered_depth = 3,
-    singular_depth = 2,
-    nonsingular_depth = 2,
-    ordered_alg = TRUE,
-    raskutti_uhler = TRUE,
-    use_data_order = FALSE,
-    num_starts = 3,
-    guarantee_pag = TRUE
-  )
-  out <- disco(num_data, grasp_fci_tetrad)
-
-  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
-})
-
-test_that("grasp_fci Tetrad disco works with additional test and score args", {
-  skip_if_no_tetrad()
-  data(num_data)
-  grasp_fci_tetrad <- grasp_fci(
-    engine = "tetrad",
-    test = "poisson_prior",
-    score = "rank_bic",
-    alpha = 0.05,
-    poisson_lambda = 2,
-    singularity_lambda = 0.1,
-    gamma = 0.5,
-    penalty_discount = 3
-  )
-  out <- disco(num_data, grasp_fci_tetrad)
-
-  expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
 })
