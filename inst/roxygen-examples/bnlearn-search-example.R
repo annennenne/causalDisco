@@ -23,6 +23,26 @@ my_pc2 <- pc(
 )
 disco(data = num_data, method = my_pc2)
 
+# With knowledge
+
+kn <- knowledge(
+  num_data,
+  starts_with("X") %-->% Y
+)
+
+disco(data = num_data, method = my_pc2, knowledge = kn)
+
+# Using additional test args (bootstrap samples)
+
+my_iamb <- iamb(
+  engine = "bnlearn",
+  test = "mc_zf",
+  alpha = 0.05,
+  B = 100
+)
+
+disco(data = num_data, method = my_iamb)
+
 # Using R6 class:
 s <- BnlearnSearch$new()
 
