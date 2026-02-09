@@ -114,6 +114,7 @@ Other causal discovery algorithms:
 \code{\link{gfci}()},
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
+\code{\link{gs}()},
 \code{\link{iamb}()},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},

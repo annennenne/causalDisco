@@ -117,6 +117,7 @@ Collate:
     'gfci.R'
     'grasp-fci.R'
     'grasp.R'
+    'gs.R'
     'iamb.R'
     'install-java.R'
     'install-tetrad.R'
