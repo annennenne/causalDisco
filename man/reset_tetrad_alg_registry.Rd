@@ -2,7 +2,7 @@
 % Please edit documentation in R/extend-causaldisco-algs.R
 \name{reset_tetrad_alg_registry}
 \alias{reset_tetrad_alg_registry}
-\title{Reset the Tetrad algorithm registry}
+\title{Reset the Tetrad Algorithm Registry}
 \usage{
 reset_tetrad_alg_registry()
 }

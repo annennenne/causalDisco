@@ -2,7 +2,7 @@
 % Please edit documentation in R/extend-causaldisco-algs.R
 \name{distribute_engine_args}
 \alias{distribute_engine_args}
-\title{Validate and distribute engine arguments}
+\title{Distribute and Validate Engine Arguments}
 \usage{
 distribute_engine_args(search, args, engine, alg)
 }
@@ -16,7 +16,9 @@ distribute_engine_args(search, args, engine, alg)
 \item{alg}{Algorithm name}
 }
 \description{
-Validate and distribute engine arguments
+This function checks the provided arguments against the expected arguments for the specified engine and algorithm,
+and distributes them appropriately to the search object. It ensures that the arguments are valid for the given
+engine and algorithm, and then sets them on the search object.
 }
 \seealso{
 Other Extending causalDisco: 

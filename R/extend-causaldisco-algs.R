@@ -1,5 +1,8 @@
-# Provides the public api for extending causalDisco with new algorithms.
-#' Create a causalDisco method
+#' Add a New causalDisco Method
+#'
+#' This function allows you to create a new causal discovery method that can be used with the [disco()] function.
+#' You provide a builder function that constructs a runner object, along with metadata about the algorithm, and it
+#' returns a closure that can be called with a data frame to perform causal discovery and return a `caugi` object.
 #'
 #' @param builder A function returning a runner
 #' @param name Algorithm name
@@ -18,7 +21,11 @@ new_disco_method <- function(builder, name, engine, graph_class) {
   method
 }
 
-#' Validate and distribute engine arguments
+#' Distribute and Validate Engine Arguments
+#'
+#' This function checks the provided arguments against the expected arguments for the specified engine and algorithm,
+#' and distributes them appropriately to the search object. It ensures that the arguments are valid for the given
+#' engine and algorithm, and then sets them on the search object.
 #'
 #' @param search R6 object, either `TetradSearch`, `BnlearnSearch`, `PcalgSearch`, or `CausalDiscoSearch`.
 #' @param args List of arguments to distribute
@@ -34,7 +41,11 @@ distribute_engine_args <- function(search, args, engine, alg) {
 
 tetrad_alg_registry <- new.env(parent = emptyenv())
 
-#' Register a new Tetrad algorithm
+#' Register a New Tetrad Algorithm
+#'
+#' Registers a new Tetrad algorithm by adding it to the internal registry. The `setup_fun()` should be a function that
+#' takes the same arguments as the runner function for the algorithm and sets up the Tetrad search object accordingly.
+#' This allows you to extend the set of Tetrad algorithms that can be used with causalDisco.
 #'
 #' @param name Algorithm name (string)
 #' @param setup_fun A function that sets up the Tetrad search object for the
@@ -51,9 +62,10 @@ register_tetrad_algorithm <- function(name, setup_fun) {
   tetrad_alg_registry[[name]] <- setup_fun
 }
 
-#' Reset the Tetrad algorithm registry
+#' Reset the Tetrad Algorithm Registry
 #'
 #' Clears all registered algorithms.
+#'
 #' @family Extending causalDisco
 #' @concept extending_causalDisco
 #'

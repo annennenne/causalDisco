@@ -2,7 +2,7 @@
 % Please edit documentation in R/extend-causaldisco-algs.R
 \name{register_tetrad_algorithm}
 \alias{register_tetrad_algorithm}
-\title{Register a new Tetrad algorithm}
+\title{Register a New Tetrad Algorithm}
 \usage{
 register_tetrad_algorithm(name, setup_fun)
 }
@@ -13,7 +13,9 @@ register_tetrad_algorithm(name, setup_fun)
 algorithm. It should take the same arguments as the runner function for the algorithm.}
 }
 \description{
-Register a new Tetrad algorithm
+Registers a new Tetrad algorithm by adding it to the internal registry. The \code{setup_fun()} should be a function that
+takes the same arguments as the runner function for the algorithm and sets up the Tetrad search object accordingly.
+This allows you to extend the set of Tetrad algorithms that can be used with causalDisco.
 }
 \seealso{
 Other Extending causalDisco: 

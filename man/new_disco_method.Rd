@@ -2,7 +2,7 @@
 % Please edit documentation in R/extend-causaldisco-algs.R
 \name{new_disco_method}
 \alias{new_disco_method}
-\title{Create a causalDisco method}
+\title{Add a New causalDisco Method}
 \usage{
 new_disco_method(builder, name, engine, graph_class)
 }
@@ -20,7 +20,9 @@ A function of class \code{"disco_method"} that takes a single argument
 \code{data} (a data frame) and returns a \code{caugi} object.
 }
 \description{
-Create a causalDisco method
+This function allows you to create a new causal discovery method that can be used with the \code{\link[=disco]{disco()}} function.
+You provide a builder function that constructs a runner object, along with metadata about the algorithm, and it
+returns a closure that can be called with a data frame to perform causal discovery and return a \code{caugi} object.
 }
 \seealso{
 Other Extending causalDisco: 
