@@ -94,6 +94,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Collate: 
     'aaa-globals.R'
+    'aaa-iamb-family.R'
     'aaa-init-helpers.R'
     'bnlearn-search.R'
     'boss-fci.R'
@@ -111,14 +112,13 @@ Collate:
     'disco.R'
     'edges.R'
     'engine-registry.R'
-    'fast-iamb.R'
     'fci.R'
     'ges.R'
     'gfci.R'
     'grasp-fci.R'
     'grasp.R'
     'gs.R'
-    'iamb.R'
+    'iamb-family.R'
     'install-java.R'
     'install-tetrad.R'
     'knowledge-conversions.R'

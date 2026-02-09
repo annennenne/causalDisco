@@ -80,14 +80,13 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 \seealso{
 Other causal discovery algorithms: 
 \code{\link{boss_fci}()},
-\code{\link{fast_iamb}()},
 \code{\link{fci}()},
 \code{\link{ges}()},
 \code{\link{gfci}()},
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
 \code{\link{gs}()},
-\code{\link{iamb}()},
+\code{\link{iamb-family}},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},
 \code{\link{tfci}()},
