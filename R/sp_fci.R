@@ -21,7 +21,7 @@
 #'
 #' @return
 #' A function of class \code{"sp_fci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
+#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
 #' (`knowledgeable_caugi`) object.
 #'
 #' @family causal discovery algorithms
@@ -54,7 +54,7 @@ sp_fci <- function(
 
   method <- disco_method(builder, "sp_fci")
   attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
+  attr(method, "graph_class") <- "PAG"
   method
 }
 
