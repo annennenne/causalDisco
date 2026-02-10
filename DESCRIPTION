@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.5.9044
+Version: 0.9.5.9045
 Authors@R: c(
     person(given = "Bjarke Hautop", family = "Kristensen", email = "bjarke.kristensen@sund.ku.dk", role = c("aut", "cre")),
     person(given = "Frederik", family = "Fabricius-Bjerre", email = "frederik@fabriciusbjerre.dk", role = "aut"),
