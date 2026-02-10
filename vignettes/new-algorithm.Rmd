@@ -24,18 +24,17 @@ requires a different integration pattern.
 
 # bnlearn and pcalg
 
-Suppose we want to add the Hybrid Parents and Children (HPC) algorithm from bnlearn. We can add it to
-causalDisco by creating a new function `hpc()`.
+Suppose we want to add the Hybrid Parents and Children (HPC) algorithm from bnlearn. We can integrate it into
+causalDisco by creating a new function `hpc()`. 
 
 HPC is a constraint-based algorithm, so it requires a conditional independence test and a significance level alpha.
 It returns a PDAG, so we set the `graph_class` attribute to `"PDAG"`.
 
-The function takes an engine argument, which specifies which implementation of the algorithm to use. Even though HPC
-is only available via bnlearn here, using an engine argument allows the interface to remain consistent with other
-algorithms that may have multiple backends. The `...` argument allows us to pass additional arguments to the underlying
-algorithm and test. 
+The function takes an `engine` argument, which specifies which implementation of the algorithm to use. Even though we
+only add HPC from bnlearn in this example, we set up the structure to allow for multiple engines in the future.
+The `...` argument allows us to pass additional arguments to the underlying   algorithm and test.
 
-The code for the `hpc()` function then looks as follows:
+The code for the `hpc()` function is as follows:
 
 ```{r hpc function}
 hpc <- function(
@@ -69,13 +68,18 @@ hpc <- function(
 }
 ```
 
-The builder function calls `hpc_bnlearn_runner()` (which we haven't defined yet), which is responsible for running the
-algorithm on the data.
-This function receives the test, the significance level, and any additional arguments passed via `...`.
+We see that the `hpc()` function needs two components: 
 
-It creates a new `BnlearnSearch` object, configures the test and algorithm, and returns a *runner*: a list containing
-two functions, `set_knowledge()` and `run()`. The `set_knowledge()` function applies background knowledge to the search
-object (constructed from `knowledge()`), while `run()` executes the algorithm on a data set.
+1. **Builder function:** Constructs a *runner* for the algorithm. It configures the algorithm with the provided
+parameters and optional background knowledge.
+
+2. **Method object:** Created via `new_disco_method()`. It encapsulates the builder and metadata about the method.
+This allows us to be able to call `disco()` to execute the algorithm on a dataset.
+
+Next, we define the runner. The runner handles configuring the search object with the chosen test, alpha level,
+and any additional arguments, and it actually runs the search on the data when called. For bnlearn algorithms,
+we use the `BnlearnSearch` R6 class to manage search configuration and execution. We also use
+`distribute_engine_args()` to determine which extra arguments should be passed to the test, the algorithm, or both.
 
 ```{r hpc runner}
 hpc_bnlearn_runner <- function(test, alpha, ...) {
@@ -104,8 +108,7 @@ hpc_bnlearn_runner <- function(test, alpha, ...) {
 ```
 
 Once defined, the HPC algorithm can be used like any other method in causalDisco. We first construct the method using
-`hpc()`, and then pass it to `disco()`. We use the `tpc_example` dataset included with causalDisco for demonstration
-purposes.
+`hpc()`, and then pass it to `disco()`. Here we demonstrate using the included `tpc_example` dataset:
 
 ```{r hpc example}
 data(tpc_example)
