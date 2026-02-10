@@ -92,10 +92,10 @@ causalDisco::check_tetrad_install()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.2"
+#> [1] "25.0.1"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
 ```
 
 ## Example
@@ -160,13 +160,6 @@ plot(disco_cd_tges)
 
 ## TODO
 
-- Update doc (and implement algs we want) from bnlearn and pcalg like I
-  did with Tetrad.
-
-- Add references to algs/scores/tests?
-
-- Check all args (that we want) are available from Tetrad.
-
 - Register a custom edge type for caugi to represent forbidden edges
   differently than normal directed edges. Would simplify plotting logic
   and easier to extend later.
@@ -181,151 +174,6 @@ caugi::register_caugi_edge(
   symmetric = FALSE
 )
 ```
-
-If we want custom modifications to plotting we could do smth like this
-(colors a rectangle around A –\> B edge):
-
-``` r
-library(caugi)
-#> 
-#> Attaching package: 'caugi'
-#> The following objects are masked from 'package:causalDisco':
-#> 
-#>     edges, nodes
-library(ggplot2)
-library(ggplotify)
-
-cg <- caugi(A %-->% B, C, D)
-layout <- caugi_layout(cg)
-print(layout)
-#>   name   x   y
-#> 1    A 0.0 0.0
-#> 2    B 0.0 1.0
-#> 3    C 0.1 0.5
-#> 4    D 0.2 0.5
-layout$x <- c(0.5, 0.5, 0, 1)
-layout$y <- c(0, 1, 0.5, 0.5)
-print(layout)
-#>   name   x   y
-#> 1    A 0.5 0.0
-#> 2    B 0.5 1.0
-#> 3    C 0.0 0.5
-#> 4    D 1.0 0.5
-plot_cg <- plot(cg, layout = layout)
-
-# Wrap the grid plot as ggplot
-gg <- as.ggplot(plot_cg@grob)
-
-# Add rectangle
-gg +
-  annotate(
-    "rect",
-    xmin = layout$x[1] - 0.05,
-    xmax = layout$x[2] + 0.05,
-    ymin = layout$y[1],
-    ymax = layout$y[2],
-    fill = "red",
-    alpha = 0.3
-  )
-```
-
-<img src="man/figures/README-plot wip-1.png" alt="" width="100%" />
-
-#### Tetrad issues
-
-- Tetrad does not use required correctly in `fci` algorithm
-
-``` r
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %-->% youth_x3
-  )
-  
-  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges(output$caugi)
-}
-#>         from   edge        to
-#>       <char> <char>    <char>
-#> 1:  child_x2    o-o  child_x1
-#> 2:  child_x2    o-> oldage_x5
-#> 3:  child_x2    o-o  youth_x4
-#> 4: oldage_x5    --> oldage_x6
-#> 5:  youth_x3    o-> oldage_x5
-#> 6:  youth_x4    --> oldage_x6
-```
-
-Fixed in unreleased version of Tetrad (see \#1947 in Tetrad issues).
-
-- Tetrad introduces cycle in `pc` algorithm when required edges are used
-  (in unreleased Tetrad version it gives `X1 %---% X2` instead, i.e. not
-  respecting the required knowledge). See \#1951.
-
-``` r
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data(num_data)
-
-  kn <- knowledge(
-    num_data,
-    X1 %-->% X2,
-    X3 %-->% Z
-  )
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
-  disco(data = num_data, method = tetrad_pc, knowledge = kn)
-}
-#> Warning: Cannot mutate graph to class 'PDAG'. The graph contains a directed
-#> cycle.
-#> 
-#> ── caugi graph ─────────────────────────────────────────────────────────────────
-#> Graph class: UNKNOWN
-#> 
-#> ── Edges ──
-#> 
-#>   from  edge  to   
-#>   <chr> <chr> <chr>
-#> 1 X1    -->   X2   
-#> 2 X1    -->   Y    
-#> 3 X2    -->   X3   
-#> 4 X2    -->   Y    
-#> 5 X3    -->   Y    
-#> 6 X3    -->   Z    
-#> 7 Z     -->   X1   
-#> 8 Z     -->   Y
-#> ── Nodes ──
-#>   name 
-#>   <chr>
-#> 1 X1   
-#> 2 X2   
-#> 3 X3   
-#> 4 Z    
-#> 5 Y
-#> ── Knowledge object ────────────────────────────────────────────────────────────
-#> ── Variables ──
-#> 
-#>   [1mvar[22m   [1mtier[22m 
-#>   <chr> <chr>
-#> 1 X1    <NA> 
-#> 2 X2    <NA> 
-#> 3 X3    <NA> 
-#> 4 Y     <NA> 
-#> 5 Z     <NA>
-#> ── Edges ──
-#>  ✔  X1 → X2
-#>  ✔  X3 → Z
-```
-
-### Documentation
-
-- Make it clear in `?BnlearnSearch` (and similar for the others) that
-  all algorithms aren’t currently fully supported. Shouldn’t take long
-  to implement the missing ones though? So just do that…
-
-- Figure out how to not repeat the documentation of e.g. penalty
-  discount in TetradSearch R6 class.
 
 ### CRAN TODO
 

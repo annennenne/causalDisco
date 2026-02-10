@@ -28,7 +28,8 @@ It wraps multiple causal discovery backends under a common, consistent syntax.
 
 Causal discovery methods exist in many ecosystems, for example in bnlearn, pcalg, or Tetrad, but their APIs vary widely.
 
-causalDisco unifies them under one clear grammar, making it easy to compare results, switch algorithms, and focus on scientific questions rather than package quirks.
+causalDisco unifies them under one clear grammar, making it easy to compare results, switch algorithms, and focus on
+scientific questions rather than package quirks.
 
 Time to hit the disco 🪩
 
@@ -133,12 +134,6 @@ plot(disco_cd_tges)
 
 ## TODO
 
-- Update doc (and implement algs we want) from bnlearn and pcalg like I did with Tetrad.
-
-- Add references to algs/scores/tests?
-
-- Check all args (that we want) are available from Tetrad.
-
 - Register a custom edge type for caugi to represent forbidden edges differently than normal directed edges.
 Would simplify plotting logic and easier to extend later.
 
@@ -152,83 +147,6 @@ caugi::register_caugi_edge(
   symmetric = FALSE
 )
 ```
-
-If we want custom modifications to plotting we could do smth like this (colors a rectangle around A --> B edge):
-
-```{r plot wip}
-library(caugi)
-library(ggplot2)
-library(ggplotify)
-
-cg <- caugi(A %-->% B, C, D)
-layout <- caugi_layout(cg)
-print(layout)
-layout$x <- c(0.5, 0.5, 0, 1)
-layout$y <- c(0, 1, 0.5, 0.5)
-print(layout)
-plot_cg <- plot(cg, layout = layout)
-
-# Wrap the grid plot as ggplot
-gg <- as.ggplot(plot_cg@grob)
-
-# Add rectangle
-gg +
-  annotate(
-    "rect",
-    xmin = layout$x[1] - 0.05,
-    xmax = layout$x[2] + 0.05,
-    ymin = layout$y[1],
-    ymax = layout$y[2],
-    fill = "red",
-    alpha = 0.3
-  )
-```
-  
-#### Tetrad issues
-
-- Tetrad does not use required correctly in `fci` algorithm
-
-```{r tetrad required fci bug}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data(tpc_example)
-
-  kn <- knowledge(
-    tpc_example,
-    child_x1 %-->% youth_x3
-  )
-  
-  tetrad_fci <- fci(engine = "tetrad", test = "conditional_gaussian", alpha = 0.05)
-  output <- disco(data = tpc_example, method = tetrad_fci, knowledge = kn)
-  edges(output$caugi)
-}
-```
-
-Fixed in unreleased version of Tetrad (see #1947 in Tetrad issues).
-
-- Tetrad introduces cycle in `pc` algorithm when required edges are used (in unreleased Tetrad version it
-gives `X1 %---% X2` instead, i.e. not respecting the required knowledge). See #1951.
-
-```{r tetrad required pc bug}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  data(num_data)
-
-  kn <- knowledge(
-    num_data,
-    X1 %-->% X2,
-    X3 %-->% Z
-  )
-  
-  tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
-  disco(data = num_data, method = tetrad_pc, knowledge = kn)
-}
-```
-
-### Documentation 
-
-- Make it clear in `?BnlearnSearch` (and similar for the others) that all algorithms aren't currently fully supported.
-Shouldn't take long to implement the missing ones though? So just do that...
-
-- Figure out how to not repeat the documentation of e.g. penalty discount in TetradSearch R6 class.
 
 ### CRAN TODO
 
