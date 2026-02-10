@@ -18,14 +18,14 @@ check_tier_violations <- function(edges, kn) {
       tier = factor(.data$tier, levels = unique(.data$tier), ordered = TRUE),
       tier_num = as.integer(.data$tier)
     ) |>
-    dplyr::select(.data$var, .data$tier_num)
+    dplyr::select("var", "tier_num")
 
   edges_with_tiers <- edges |>
     dplyr::as_tibble() |>
     dplyr::left_join(tier_map, by = c("from" = "var")) |>
-    dplyr::rename(tier_from = .data$tier_num) |>
+    dplyr::rename(tier_from = "tier_num") |>
     dplyr::left_join(tier_map, by = c("to" = "var")) |>
-    dplyr::rename(tier_to = .data$tier_num)
+    dplyr::rename(tier_to = "tier_num")
 
   violations <- edges_with_tiers |>
     dplyr::filter(
@@ -63,7 +63,7 @@ check_edge_constraints <- function(edges, kn) {
     dplyr::mutate(
       violation_type = "missing_required"
     ) |>
-    dplyr::select(.data$from, .data$to, .data$edge, .data$violation_type)
+    dplyr::select("from", "to", "edge", "violation_type")
 
   # ---- FORBIDDEN CHECKS ----
   forbidden_edges <- constraints |> dplyr::filter(.data$status == "forbidden")
@@ -76,7 +76,7 @@ check_edge_constraints <- function(edges, kn) {
     dplyr::mutate(
       violation_type = "present_forbidden"
     ) |>
-    dplyr::select(.data$from, .data$to, .data$edge, .data$violation_type)
+    dplyr::select("from", "to", "edge", "violation_type")
 
   # ---- COMBINE ----
   dplyr::bind_rows(required_violations, forbidden_violations)

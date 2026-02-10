@@ -620,8 +620,8 @@ forbid_tier_violations <- function(kn) {
     dplyr::mutate(rank = tier_ranks[tier])
 
   # select & rename for "from" vs "to"
-  vf <- vars |> dplyr::select(var_from = .data$var, rank_from = rank)
-  vt <- vars |> dplyr::select(var_to = .data$var, rank_to = rank)
+  vf <- vars |> dplyr::select(var_from = "var", rank_from = rank)
+  vt <- vars |> dplyr::select(var_to = "var", rank_to = rank)
 
   # true cartesian crossing of those two tibbles
   bad <- tidyr::crossing(vf, vt) |>

@@ -238,13 +238,13 @@ as_bnlearn_knowledge <- function(kn) {
 
   # whitelist holds all required edges in a "from", "to" dataframe
   whitelist <- dplyr::filter(kn$edges, .data$status == "required") |>
-    dplyr::select(.data$from, .data$to) |>
+    dplyr::select("from", "to") |>
     as.data.frame()
 
   # blacklist holds all forbidden edges (including tier violations)
   blacklist <- forbid_tier_violations(kn)$edges |>
     dplyr::filter(.data$status == "forbidden") |>
-    dplyr::select(.data$from, .data$to) |>
+    dplyr::select("from", "to") |>
     as.data.frame()
 
   list(
