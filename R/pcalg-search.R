@@ -48,9 +48,9 @@ PcalgSearch <- R6::R6Class(
     #' @field alg A function that will be used to run the search algorithm.
     #' Can be set with \code{$set_alg()}. Recognized values are:
     #' \itemize{
-    #'   \item \code{"fci"} - FCI algorithm. See [pcalg::fci()].
-    #'   \item \code{"ges"} - GES algorithm. See [pcalg::ges()].
-    #'   \item \code{"pc"} - PC algorithm. See [pcalg::pc()].
+    #'   \item \code{"fci"} - FCI algorithm. See [fci()] and the underlying [pcalg::fci()].
+    #'   \item \code{"ges"} - GES algorithm. See [ges()] and the underlying [pcalg::ges()].
+    #'   \item \code{"pc"} - PC algorithm. See [pc()] and the underlying [pcalg::pc()].
     #' }
     alg = NULL,
 

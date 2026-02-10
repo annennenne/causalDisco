@@ -129,25 +129,24 @@ Recognised values are:
 
 \strong{Constraint-based}
 \itemize{
-\item \code{"fci"} - FCI algorithm.
-\item \code{"pc"} - Peter-Clark (PC) algorithm.
-\item \code{"rfci"} - Restricted FCI algorithm.
+\item \code{"fci"} - FCI algorithm. See \code{\link[=fci]{fci()}}.
+\item \code{"pc"} - Peter-Clark (PC) algorithm. See \code{\link[=pc]{pc()}}.
+\item \code{"rfci"} - Restricted FCI algorithm. See \code{\link[pcalg:rfci]{pcalg::rfci()}}.
 }
 
 \strong{Hybrid}
 \itemize{
-\item \code{"boss_fci"} - BOSS-FCI algorithm.
-\item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
-\item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
-\item \code{"sp_fci"} - Sparsest Permutation using FCI.
+\item \code{"boss_fci"} - BOSS-FCI algorithm. See \code{\link[=boss_fci]{boss_fci()}}.
+\item \code{"gfci"} - GFCI algorithm. See \code{\link[=gfci]{gfci()}}.
+\item \code{"grasp_fci"} - GRaSP-FCI algorithm. See \code{\link[=grasp_fci]{grasp_fci()}}.
+\item \code{"sp_fci"} - Sparsest Permutation using FCI. See \code{\link[=sp_fci]{sp_fci()}}.
 }
 
 \strong{Score-based}
 \itemize{
-\item \code{"boss"} - BOSS algorithm.
-\item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
-\item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
-\item \code{"restricted_boss"} - Restricted BOSS algorithm.
+\item \code{"boss"} - BOSS algorithm. See \code{\link[=boss]{boss()}}.
+\item \code{"ges" ("fges")} - (Fast) Greedy Equivalence Search (GES) algorithm. See \code{\link[=ges]{ges()}}.
+\item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm. See \code{\link[=grasp]{grasp()}}.
 }}
 
 \item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
@@ -755,21 +754,6 @@ the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
 \item \code{guarantee_cpdag = FALSE} - If TRUE, ensure the output is
 a legal CPDAG.
-}
-\item \code{"restricted_boss"} - Restricted BOSS algorithm
-\itemize{
-\item \code{targets = ""} - Target names (comma or space separated),
-\item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
-backward equivalence search from the GES algorithm as one of its
-steps,
-\item \code{num_starts = 1} - The number of times the algorithm
-should be started from different initializations. By default, the
-algorithm will be run through at least once using the initialized
-parameters,
-\item \code{allow_internal_randomness = TRUE} -  If TRUE, the
-algorithm allow the algorithm to use certain heuristic random
-steps. This can improve performance, but may make the algorithm
-non-deterministic.
 }
 \item \code{"rfci"} - Restricted FCI algorithm
 \itemize{

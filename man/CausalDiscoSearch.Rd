@@ -94,9 +94,9 @@ when data is set. Can be set with \code{$set_score()}. Recognized values
 are:
 \itemize{
 \item \code{"tbic"} - Temporal BIC score for Gaussian data.
-See \code{\link{TemporalBIC}}
+See \link{TemporalBIC}.
 \item \code{"tbdeu"} - Temporal BDeu score for discrete data.
-See \code{\link{TemporalBDeu}}.
+See \link{TemporalBDeu}.
 }}
 
 \item{\code{test}}{A function that will be used to test independence.

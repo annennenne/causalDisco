@@ -111,31 +111,31 @@ TetradSearch <- R6Class(
     #' **Constraint-based**
     #' \itemize{
     #    \item \code{"cpc"} - Conservative PC algorithm.
-    #'   \item \code{"fci"} - FCI algorithm.
+    #'   \item \code{"fci"} - FCI algorithm. See [fci()].
     #    \item \code{"fcit"} - FCI Targeted Testing (FCIT) algorithm.
-    #'   \item \code{"pc"} - Peter-Clark (PC) algorithm.
+    #'   \item \code{"pc"} - Peter-Clark (PC) algorithm. See [pc()].
     #    \item \code{"pc_max"} - PCMax algorithm.
-    #'   \item \code{"rfci"} - Restricted FCI algorithm.
+    #'   \item \code{"rfci"} - Restricted FCI algorithm. See [rfci()].
     #' }
     #'
     #' **Hybrid**
     #' \itemize{
-    #'   \item \code{"boss_fci"} - BOSS-FCI algorithm.
+    #'   \item \code{"boss_fci"} - BOSS-FCI algorithm. See [boss_fci()].
     #    \item \code{"cfci"} - Adjusts FCI to use conservative orientation as in CPC.
-    #'   \item \code{"gfci"} - GFCI algorithm. Combines FGES and FCI.
-    #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
-    #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI.
+    #'   \item \code{"gfci"} - GFCI algorithm. See [gfci()].
+    #'   \item \code{"grasp_fci"} - GRaSP-FCI algorithm. See [grasp_fci()].
+    #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI. See [sp_fci()].
     #' }
     #'
     #' **Score-based**
     #' \itemize{
-    #'   \item \code{"boss"} - BOSS algorithm.
+    #'   \item \code{"boss"} - BOSS algorithm. See [boss()].
     #    \item \code{"dagma"} - DAGMA algorithm.
     #    \item \code{"fask"} - FASK algorithm.
-    #'   \item \code{"ges" ("fges")} - Fast Greedy Equivalence Search (FGES) algorithm.
+    #'   \item \code{"ges" ("fges")} - (Fast) Greedy Equivalence Search (GES) algorithm. See [ges()].
     #    \item \code{"ges_mb" ("fges_mb")} - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.
-    #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.
-    #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm.
+    #'   \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm. See [grasp()].
+    # #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm. See [restricted_boss()].
     #    \item \code{"sp"} - Sparsest Permutation algorithm.
     #' }
     #'
@@ -1009,21 +1009,21 @@ TetradSearch <- R6Class(
     #      the PC adjacency search is used, which for k > 0 fixes the graph
     #      for depth k + 1 to that of the previous depth k.
     #  }
-    #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm
-    #'    \itemize{
-    #'      \item \code{targets = ""} - Target names (comma or space separated),
-    #'      \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
-    #'       backward equivalence search from the GES algorithm as one of its
-    #'       steps,
-    #'      \item \code{num_starts = 1} - The number of times the algorithm
-    #'       should be started from different initializations. By default, the
-    #'       algorithm will be run through at least once using the initialized
-    #'       parameters,
-    #'      \item \code{allow_internal_randomness = TRUE} -  If TRUE, the
-    #'       algorithm allow the algorithm to use certain heuristic random
-    #'       steps. This can improve performance, but may make the algorithm
-    #'       non-deterministic.
-    #'    }
+    # #'   \item \code{"restricted_boss"} - Restricted BOSS algorithm
+    # #'    \itemize{
+    # #'      \item \code{targets = ""} - Target names (comma or space separated),
+    # #'      \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
+    # #'       backward equivalence search from the GES algorithm as one of its
+    # #'       steps,
+    # #'      \item \code{num_starts = 1} - The number of times the algorithm
+    # #'       should be started from different initializations. By default, the
+    # #'       algorithm will be run through at least once using the initialized
+    # #'       parameters,
+    # #'      \item \code{allow_internal_randomness = TRUE} -  If TRUE, the
+    # #'       algorithm allow the algorithm to use certain heuristic random
+    # #'       steps. This can improve performance, but may make the algorithm
+    # #'       non-deterministic.
+    # #'    }
     #'   \item \code{"rfci"} - Restricted FCI algorithm
     #'    \itemize{
     #'      \item \code{depth = -1} - Maximum size of conditioning set,

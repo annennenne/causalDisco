@@ -1,4 +1,3 @@
-ARACNE
 Adoptium
 BCInference
 BDE
@@ -16,13 +15,13 @@ DAGs
 DSL
 EBIC
 Eagleson
+Ekstrøm
 Ellegaard
 EssGraph
 FCI
 FGES
 FN
 Fabricius
-Frederik
 GES
 GFCI
 GIC
@@ -31,7 +30,6 @@ GRaSP
 Glymour
 Graphviz
 HC
-HITON
 HPC
 Hautop
 Helby
@@ -39,9 +37,7 @@ JDK
 Jonckheere
 KCI
 Kun
-Liu
 MCAR
-Maximisation
 NML
 OpenJDK
 Osler
@@ -71,7 +67,6 @@ Tetrad
 TetradSearch
 Tidyselect
 TikZ
-Tobias
 Uhler's
 Welch
 Zanga

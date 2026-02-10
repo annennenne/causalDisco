@@ -7,7 +7,7 @@
 NULL
 
 # We import bnlearn and R6 using @importFrom here to avoid false positives about packages not used,
-# see this github repo: TODO: ADD link
+# see this github repo: https://github.com/BjarkeHautop/R6PkgTest
 #' @title R6 Interface to bnlearn Search Algorithms
 #'
 #' @description A wrapper that lets you drive \pkg{bnlearn} algorithms within the \pkg{causalDisco} framework.
@@ -123,38 +123,42 @@ BnlearnSearch <- R6Class(
     #'
     #'   **Constraint-based**
     #'   \itemize{
-    #'     \item \code{"fast_iamb"} – Fast-IAMB
-    #'     \item \code{"gs"} – Grow-Shrink
-    #'     \item \code{"iamb"} – Incremental Association Markov Blanket
-    #'     \item \code{"iamb_fdr"} – IAMB with FDR control
-    #'     \item \code{"inter_iamb"} – Interleaved-IAMB
-    #'     \item \code{"pc"} – PC-stable algorithm
+    #'     \item \code{"fast_iamb"} – Fast-IAMB algorithm. See [fast_iamb()] and the underlying [bnlearn::fast.iamb()].
+    #'     \item \code{"gs"} – Grow-Shrink algorithm. See [gs()] and the underlying [bnlearn::gs()].
+    #'     \item \code{"iamb"} – Incremental Association Markov Blanket algorithm.
+    #'     See [iamb()] and the underlying [bnlearn::iamb()].
+    #'     \item \code{"iamb_fdr"} – IAMB with FDR control algorithm. See [iamb_fdr()] and the underlying
+    #'     [bnlearn::iamb.fdr()].
+    #'     \item \code{"inter_iamb"} – Interleaved-IAMB algorithm. See [inter_iamb()] and the underlying
+    #'     [bnlearn::inter.iamb()].
+    #'     \item \code{"pc"} – PC-stable algorithm. See [pc()] and the underlying
+    #'     [bnlearn::pc.stable()].
     #'   }
     #'
-    #'   **Hybrid**
-    #'   \itemize{
-    #'     \item \code{"h2pc"} – Hybrid HPC–PC
-    #'     \item \code{"mmhc"} – Max–Min Hill-Climbing
-    #'     \item \code{"rsmax2"} – Restricted Maximisation (two-stage)
-    #'   }
+    # #'   **Hybrid**
+    # #'   \itemize{
+    # #'     \item \code{"h2pc"} – Hybrid HPC–PC
+    # #'     \item \code{"mmhc"} – Max–Min Hill-Climbing
+    # #'     \item \code{"rsmax2"} – Restricted Maximisation (two-stage)
+    # #'   }
     #'
-    #'   **Local / skeleton discovery**
-    #'   \itemize{
-    #'     \item \code{"hpc"} – Hybrid Parents and Children
-    #'     \item \code{"mmpc"} – Max–Min Parents and Children
-    #'     \item \code{"si_hiton_pc"} – Semi-Interleaved HITON-PC
-    #'   }
+    # #'   **Local / skeleton discovery**
+    # #'   \itemize{
+    # #'     \item \code{"hpc"} – Hybrid Parents and Children
+    # #'     \item \code{"mmpc"} – Max–Min Parents and Children
+    # #'     \item \code{"si_hiton_pc"} – Semi-Interleaved HITON-PC
+    # #'   }
     #'
-    #'   **Pairwise mutual-information learners**
-    #'   \itemize{
-    #'     \item \code{"aracne"} – ARACNE network
-    #'     \item \code{"chow_liu"} – Chow–Liu tree
-    #'   }
+    # #'   **Pairwise mutual-information learners**
+    # #'   \itemize{
+    # #'     \item \code{"aracne"} – ARACNE network
+    # #'     \item \code{"chow_liu"} – Chow–Liu tree
+    # #'   }
     #'
     #'   **Score-based**
     #'   \itemize{
-    #'     \item \code{"hc"} – Hill-Climbing
-    #'     \item \code{"tabu"} – Tabu search
+    #'     \item \code{"hc"} – Hill-Climbing algorithm. See [hc()] and the underlying [bnlearn::hc()].
+    #'     \item \code{"tabu"} – Tabu search algorithm. See [tabu()] and the underlying [bnlearn::tabu()].
     #'   }
     alg = NULL,
 

@@ -167,38 +167,22 @@ Recognised values are:
 
 \strong{Constraint-based}
 \itemize{
-\item \code{"fast_iamb"} – Fast-IAMB
-\item \code{"gs"} – Grow-Shrink
-\item \code{"iamb"} – Incremental Association Markov Blanket
-\item \code{"iamb_fdr"} – IAMB with FDR control
-\item \code{"inter_iamb"} – Interleaved-IAMB
-\item \code{"pc"} – PC-stable algorithm
-}
-
-\strong{Hybrid}
-\itemize{
-\item \code{"h2pc"} – Hybrid HPC–PC
-\item \code{"mmhc"} – Max–Min Hill-Climbing
-\item \code{"rsmax2"} – Restricted Maximisation (two-stage)
-}
-
-\strong{Local / skeleton discovery}
-\itemize{
-\item \code{"hpc"} – Hybrid Parents and Children
-\item \code{"mmpc"} – Max–Min Parents and Children
-\item \code{"si_hiton_pc"} – Semi-Interleaved HITON-PC
-}
-
-\strong{Pairwise mutual-information learners}
-\itemize{
-\item \code{"aracne"} – ARACNE network
-\item \code{"chow_liu"} – Chow–Liu tree
+\item \code{"fast_iamb"} – Fast-IAMB algorithm. See \code{\link[=fast_iamb]{fast_iamb()}} and the underlying \code{\link[bnlearn:constraint]{bnlearn::fast.iamb()}}.
+\item \code{"gs"} – Grow-Shrink algorithm. See \code{\link[=gs]{gs()}} and the underlying \code{\link[bnlearn:constraint]{bnlearn::gs()}}.
+\item \code{"iamb"} – Incremental Association Markov Blanket algorithm.
+See \code{\link[=iamb]{iamb()}} and the underlying \code{\link[bnlearn:constraint]{bnlearn::iamb()}}.
+\item \code{"iamb_fdr"} – IAMB with FDR control algorithm. See \code{\link[=iamb_fdr]{iamb_fdr()}} and the underlying
+\code{\link[bnlearn:constraint]{bnlearn::iamb.fdr()}}.
+\item \code{"inter_iamb"} – Interleaved-IAMB algorithm. See \code{\link[=inter_iamb]{inter_iamb()}} and the underlying
+\code{\link[bnlearn:constraint]{bnlearn::inter.iamb()}}.
+\item \code{"pc"} – PC-stable algorithm. See \code{\link[=pc]{pc()}} and the underlying
+\code{\link[bnlearn:constraint]{bnlearn::pc.stable()}}.
 }
 
 \strong{Score-based}
 \itemize{
-\item \code{"hc"} – Hill-Climbing
-\item \code{"tabu"} – Tabu search
+\item \code{"hc"} – Hill-Climbing algorithm. See \code{\link[=hc]{hc()}} and the underlying \code{\link[bnlearn:hc]{bnlearn::hc()}}.
+\item \code{"tabu"} – Tabu search algorithm. See \code{\link[=tabu]{tabu()}} and the underlying \code{\link[bnlearn:hc]{bnlearn::tabu()}}.
 }}
 
 \item{\code{params}}{A list of extra tuning parameters stored by \code{set_params()}

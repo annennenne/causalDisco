@@ -28,9 +28,9 @@ CausalDiscoSearch <- R6::R6Class(
     #'  are:
     #'  \itemize{
     #'     \item \code{"tbic"} - Temporal BIC score for Gaussian data.
-    #'     See \code{\link{TemporalBIC}}
+    #'     See [TemporalBIC].
     #'     \item \code{"tbdeu"} - Temporal BDeu score for discrete data.
-    #'     See \code{\link{TemporalBDeu}}.
+    #'     See [TemporalBDeu].
     #'     }
     score = NULL,
 
