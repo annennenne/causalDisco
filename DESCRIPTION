@@ -1,38 +1,13 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
 Version: 0.9.5.9044
-Authors@R:
-      c(
-        person(
-          given = "Bjarke Hautop",
-          family = "Kristensen",
-          role = c("aut", "cre"),
-          email = "bjarke.kristensen@sund.ku.dk"
-        ),
-        person(
-          given = "Frederik Fabricius-Bjerre",
-          role = "aut",
-          email = "frederik@fabriciusbjerre.dk"
-        ),
-        person(
-          given = "Anne Helby",
-          family = "Petersen",
-          role = "aut",
-          email = "ahpe@sund.ku.dk"
-        ),
-        person(
-          given = "Claus Thorn",
-          family = "Ekstrøm",
-          role = "ctb",
-          email = "ekstrom@sund.ku.dk"
-        ),
-        person(
-          given = "Tobias Ellegaard",
-          family = "Larsen",
-          role = "ctb",
-          email = "tobias.ellegaard@sund.ku.dk"
-        )
-      )
+Authors@R: c(
+    person(given = "Bjarke Hautop", family = "Kristensen", email = "bjarke.kristensen@sund.ku.dk", role = c("aut", "cre")),
+    person(given = "Frederik", family = "Fabricius-Bjerre", email = "frederik@fabriciusbjerre.dk", role = "aut"),
+    person(given = "Anne", family = "Helby Petersen", email = "ahpe@sund.ku.dk", role = "aut"),
+    person(given = "Claus", family = "Thorn Ekstrøm", email = "ekstrom@sund.ku.dk", role = "ctb"),
+    person(given = "Tobias", family = "Ellegaard Larsen", email = "tobias.ellegaard@sund.ku.dk", role = "ctb")
+  )
 Description: Various tools for inferring causal models from observational
     data. The package includes an implementation of the temporal
     Peter-Clark (TPC) algorithm. Petersen, Osler and Ekstrøm (2021)
@@ -40,58 +15,54 @@ Description: Various tools for inferring causal models from observational
     evaluating differences in adjacency matrices, which can be used for
     evaluating performance of causal discovery procedures.
 License: GPL-2
-URL: https://github.com/annennenne/causalDisco, https://bjarkehautop.github.io/causalDisco/
+URL: https://github.com/annennenne/causalDisco,
+    https://bjarkehautop.github.io/causalDisco/
 BugReports: https://github.com/annennenne/causalDisco/issues
-SystemRequirements: Java (>= 21) for Tetrad functionality (optional; includes installer;
-    see inst/java/LICENSE and inst/java/COPYRIGHT);
-    Source code: https://github.com/cmu-phil/tetrad
 Depends: 
     R (>= 4.2.0)
-biocViews:
 Imports:
+    bnlearn,
     caugi (>= 1.0.0),
     checkmate,
+    cli,
     dplyr,
+    glue,
     grDevices,
+    gtools,
     methods,
+    micd,
+    mice,
     pcalg,
     purrr,
     R6,
+    readr,
     rlang,
     S7,
+    stringr,
     tibble,
+    tidyr,
     tidyselect
 Suggests: 
-    bnlearn,
-    cli,
-    clipr,
-    glue,
-    graph,
-    gtools,
-    magick,
+    knitr,
     MASS,
-    micd,
-    mice,
     mockery,
-    ggplot2,
-    RColorBrewer,
-    Rgraphviz,
-    readr,
     rJava,
     rmarkdown,
-    scales,
-    stringr,
-    testthat (>= 3.0.0),
-    tidyr,
-    withr,
     spelling,
-    knitr,
-    data.table
+    testthat (>= 3.0.0),
+    withr
+VignetteBuilder: 
+    knitr
+biocViews:
 Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+SystemRequirements: Java (>= 21) for Tetrad functionality (optional;
+    includes installer; see inst/java/LICENSE and inst/java/COPYRIGHT);
+    Source code: https://github.com/cmu-phil/tetrad
 Collate: 
     'aaa-globals.R'
     'aaa-iamb-family.R'
@@ -152,5 +123,3 @@ Collate:
     'tges.R'
     'tpc.R'
     'zzz.R'
-Language: en-US
-VignetteBuilder: knitr

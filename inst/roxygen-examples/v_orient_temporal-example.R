@@ -28,8 +28,3 @@ skel <- pcalg::skeleton(
   fixedGaps = pc_cons$fixed_gaps,
   fixedEdges = pc_cons$fixed_edges
 )
-
-amat_skel <- causalDisco:::graph_to_amat(skel)
-amat_prune <- causalDisco:::order_restrict_amat_cpdag(amat_skel, kn)
-amat_orient <- causalDisco:::v_orient_temporal(amat_prune, skel@sepset)
-amat_orient[1:6, 1:6]

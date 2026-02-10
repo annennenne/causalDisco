@@ -149,11 +149,7 @@ tfci_run <- function(
     knowledge = knowledge,
     unfaithful_triples = unfaithful_triples
   )
-
-  # pack up tpag result
-  amat <- graph_to_amat(res, to_from = FALSE)
-  amat <- methods::as(amat, "matrix")
-  cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PAG")
+  cg <- caugi::as_caugi(res, collapse = TRUE, class = "PAG")
 
   knowledgeable_caugi(cg, knowledge)
 }

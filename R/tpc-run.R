@@ -136,9 +136,7 @@ tpc_run <- function(
   from_to <- TRUE
   res <- tpdag(skel, knowledge = knowledge, from_to = from_to)
 
-  amat <- graph_to_amat(res, to_from = FALSE)
-  amat <- methods::as(amat, "matrix")
-  cg <- caugi::as_caugi(amat, collapse = TRUE, class = "PDAG")
+  cg <- caugi::as_caugi(res, collapse = TRUE, class = "PDAG")
   knowledgeable_caugi(cg, knowledge)
 }
 
@@ -479,14 +477,15 @@ tpdag <- function(skel, knowledge, from_to) {
     ),
     function_name = "tpdag"
   )
-  thisAmat <- graph_to_amat(skel)
-  tempSkelAmat <- order_restrict_amat_cpdag(
-    thisAmat,
+  cg <- caugi::as_caugi(skel@graph, collapse = TRUE, class = "PDAG")
+  amat <- caugi::as_adjacency(cg)
+  skel_amat <- order_restrict_amat_cpdag(
+    amat,
     knowledge = knowledge,
     from_to = from_to
   )
   pcalg::addBgKnowledge(
-    v_orient_temporal(tempSkelAmat, skel@sepset),
+    v_orient_temporal(skel_amat, skel@sepset),
     checkInput = FALSE
   )
 }

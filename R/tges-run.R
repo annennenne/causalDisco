@@ -174,48 +174,6 @@ create_list_from_adj_matrix <- function(adj_matrix) {
   result_list
 }
 
-#' Normalize outputs to an adjacency matrix
-#'
-#' Accepts several return types from `pcalg::addBgKnowledge()` and converts them
-#' to an adjacency matrix if possible.
-#'
-#' @param obj One of:
-#'   * `NULL` (returns `NULL`),
-#'   * a numeric matrix (returned unchanged),
-#'   * a `graphNEL` object,
-#'   * an S4 object with a `graph` slot that contains a `graphNEL`.
-#'
-#' @return A numeric adjacency matrix, or `NULL` if `obj` cannot be normalized.
-#'
-#' @keywords internal
-#' @noRd
-to_adj_mat <- function(obj) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "methods",
-      "pcalg"
-    ),
-    function_name = "to_adj_mat"
-  )
-
-  if (is.matrix(obj)) {
-    return(obj)
-  }
-  if (inherits(obj, "graphNEL")) {
-    return(graph_to_amat(obj, to_from = FALSE))
-  }
-  # pcAlgo-like: unwrap @graph if present
-  if (isS4(obj)) {
-    if ("graph" %in% methods::slotNames(obj)) {
-      g <- methods::slot(obj, "graph")
-      if (inherits(g, "graphNEL")) {
-        return(graph_to_amat(g, to_from = FALSE))
-      }
-    }
-  }
-  NULL
-}
-
 # ──────────────────────────────────────────────────────────────────────────────
 # ───────────────────────── Graph / Score  ─────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────

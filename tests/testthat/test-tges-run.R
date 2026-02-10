@@ -32,32 +32,6 @@ test_that("create_list_from_adj_matrix inverts create_adj_matrix_from_list", {
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers: to_adj_mat
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("to_adj_mat handles NULL, matrix, graphNEL, and pcAlgo-like @graph", {
-  expect_null(to_adj_mat(NULL))
-
-  M <- matrix(c(0, 1, 0, 0, 0, 1, 0, 0, 0), nrow = 3, byrow = TRUE)
-  expect_identical(to_adj_mat(M), M)
-
-  gnel <- graph::graphNEL(nodes = c("A", "B", "C"), edgemode = "directed")
-  gnel <- graph::addEdge("A", "B", gnel)
-  gnel <- graph::addEdge("B", "C", gnel)
-  amat_from_gnel <- to_adj_mat(gnel)
-  expect_true(is.matrix(amat_from_gnel))
-  expect_identical(dim(amat_from_gnel), c(3L, 3L))
-  expect_identical(rownames(amat_from_gnel), c("A", "B", "C"))
-  expect_identical(colnames(amat_from_gnel), c("A", "B", "C"))
-  expect_equal(amat_from_gnel["A", "B"], 1)
-  expect_equal(amat_from_gnel["B", "C"], 1)
-
-  methods::setClass("pcAlgoLike", slots = list(graph = "graphNEL"))
-  pal <- methods::new("pcAlgoLike", graph = gnel)
-  expect_identical(to_adj_mat(pal), amat_from_gnel)
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Scores
 # ──────────────────────────────────────────────────────────────────────────────
 

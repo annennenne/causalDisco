@@ -1,5 +1,4 @@
 test_that("tpc causalDisco arguments to tfci_run can be passed along correctly", {
-  # Just test no warning given
   data(tpc_example)
 
   my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", method = "stable")
