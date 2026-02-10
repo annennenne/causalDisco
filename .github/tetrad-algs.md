@@ -9,7 +9,7 @@ requirements, and nonstandard outputs.
 
 ## Documented and Present in Tetrad
 
-### Do **not** implement (for now) (commented out from doc)
+### Do **not** implement (commented out from doc)
 
 - `ccd` (test-based)
   Produces a **cyclic PAG**, where edge semantics differ from standard PAGs.
@@ -37,6 +37,9 @@ requirements, and nonstandard outputs.
 
 - `ges_mb` (score-based)
   Requires explicit specification of a Markov blanket.
+  
+- `restricted_boss` (score-based)
+  Requires user to specify target names.
 
 ---
 
@@ -56,11 +59,11 @@ requirements, and nonstandard outputs.
 
 ### Do **not** implement (for now)
 
-- `DM-PC` (test-based)  
+- `DM-PC` (test-based)
   Searches for intermediate latent variables.  
   Example output may include structures like `v → L1 → x` on `non_linear.csv`.
 
-- `FAS` (test-based)  
+- `FAS` (test-based)
   Adjacency (skeleton) search only; corresponds to the first phase of PC.
 
 - `FASK-PW` (neither score- nor test-based)
@@ -70,29 +73,29 @@ requirements, and nonstandard outputs.
 - `Factor Analysis` (neither score- nor test-based)
   Currently not functional in Tetrad and undocumented.
 
-- `GIN` (test-based)  
+- `GIN` (test-based)
   Does not accept background knowledge.
 
-- `ImaGES` (score-based)  
+- `ImaGES` (score-based)
   Accepts multiple datasets under the assumption of a shared graph structure.  
   Potentially useful for multiple imputation settings.
 
-- `ImaGES-BOSS` (score-based)  
+- `ImaGES-BOSS` (score-based)
   Accepts multiple datasets under the assumption of a shared graph structure.  
   Potentially useful for multiple imputation settings.
 
-- `IOD` (test-based)  
+- `IOD` (test-based)
   Running in Tetrad fails with:  
   `illegal state: continued fraction diverged to NaN for value inf`.
 
-- `R3` (no score/test separation)  
+- `R3` (no score/test separation)
   Requires data and an **undirected graph** as input.  
   Orients edges in the supplied graph.
   
-- `PC-MB` (test-based)  
+- `PC-MB` (test-based)
   Requires explicit specification of a Markov blanket.
   
-- `rfci` (test-based)  
+- `rfci` (test-based)
   Returns an **RFCI-PAG**, not a standard PAG.  
   Already implemented in `pcalg`.
   
@@ -104,7 +107,7 @@ requirements, and nonstandard outputs.
   Requires data and an **undirected graph** as input.  
   Orients edges in the supplied graph.
   
-- `Skew` (no score/test separation)  
+- `Skew` (no score/test separation)
   Requires data and an **undirected graph** as input.  
   Orients edges in the supplied graph.
   
