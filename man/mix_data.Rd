@@ -40,4 +40,5 @@ head(mix_data)
 \seealso{
 \link{num_data}, \link{cat_data}
 }
+\concept{dataset}
 \keyword{datasets}

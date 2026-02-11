@@ -198,6 +198,7 @@ create_list_from_adj_matrix <- function(adj_matrix) {
 #' @importClassesFrom pcalg EssGraph
 #' @importFrom methods new
 #' @keywords internal
+#' @noRd
 TEssGraph <- setRefClass(
   "TEssGraph",
   contains = "EssGraph",

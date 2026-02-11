@@ -53,8 +53,7 @@ reference:
   - title: "Example Datasets"
     desc: "Small simulated datasets to illustrate causalDisco workflows."
     contents:
-      - tpc_example
-      - matches(".*_data.*")
+      - has_concept("dataset")
 
   - title: "Printing, Summarizing, and Plotting Objects"
     contents:

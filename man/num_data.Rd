@@ -36,6 +36,6 @@ num_data <- data.frame(X1, X2, X3, Z, Y)
 \examples{
 data(num_data)
 head(num_data)
-
 }
+\concept{dataset}
 \keyword{datasets}

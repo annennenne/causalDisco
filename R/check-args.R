@@ -76,6 +76,7 @@ check_args_and_distribute_args <- function(
 #' Check arguments and distribute them to TetradSearch class functions
 #'
 #' @keywords internal
+#' @noRd
 check_args_and_distribute_args_tetrad <- function(
   search,
   args,
@@ -137,6 +138,7 @@ check_args_and_distribute_args_tetrad <- function(
 #' Check arguments and distribute them to pcalg class functions
 #'
 #' @keywords internal
+#' @noRd
 check_args_and_distribute_args_pcalg <- function(
   args,
   alg,
@@ -203,6 +205,7 @@ check_args_and_distribute_args_pcalg <- function(
 #' Check arguments and distribute them to causalDisco class functions
 #'
 #' @keywords internal
+#' @noRd
 check_args_and_distribute_args_causalDisco <- function(
   args,
   alg,
@@ -312,6 +315,7 @@ check_args_and_distribute_args_causalDisco <- function(
 #' @title Check arguments for BnlearnSearch class functions
 #'
 #' @keywords internal
+#' @noRd
 check_args_and_distribute_args_bnlearn <- function(
   args,
   alg,

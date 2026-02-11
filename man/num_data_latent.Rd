@@ -35,4 +35,5 @@ head(num_data_latent)
 \seealso{
 \link{num_data}
 }
+\concept{dataset}
 \keyword{datasets}

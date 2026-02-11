@@ -91,6 +91,7 @@
 
 #' @title Build sufficient statistic for pcalg/micd/causalDisco tests
 #' @keywords internal
+#' @noRd
 .get_suff_stat <- function(
   X,
   method,

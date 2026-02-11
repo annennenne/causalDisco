@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for causal structure learning from observational data, with emphasis on temporally ordered variables. The package implements the Temporal Peter–Clark (TPC) algorithm of Petersen, Osler and Ekstrøm (2021) \doi{10.1093/aje/kwab087}, as well as temporal extensions of Greedy Equivalence Search (GES) and Fast Causal Inference (FCI). It provides a unified framework for specifying background knowledge, which can be incorporated into the implemented algorithms and into procedures from the R packages bnlearn and pcalg, as well as the Java application Tetrad. The package further includes utilities for visualization, comparison, and evaluation of graph structures, facilitating benchmarking and methodological studies.
+Tools for causal structure learning from observational data, with emphasis on temporally ordered variables. The package implements the Temporal Peter–Clark (TPC) algorithm (Petersen, Osler and Ekstrøm (2021) \doi{10.1093/aje/kwab087}), the Temporal Greedy Equivalence Search (TGES) of (Larsen, Ekstrøm and Petersen (2025) \url{https://arxiv.org/abs/2502.06232}) and Temporal Fast Causal Inference (TFCI). It provides a unified framework for specifying background knowledge, which can be incorporated into the implemented algorithms and into procedures from the R packages bnlearn and pcalg, as well as the Java application Tetrad (\doi{10.1207/s15327906mbr3301_3}). The package further includes utilities for visualization, comparison, and evaluation of graph structures, facilitating benchmarking and methodological studies.
 }
 \section{System requirements}{
 

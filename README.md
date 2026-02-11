@@ -53,7 +53,7 @@ pak::pkg_install("https://github.com/BjarkeHautop/causalDisco", dependencies = T
 causalDisco depends on the package
 [caugi](https://github.com/frederikfabriciusbjerre/caugi), which
 requires Rust to be installed on your system. See
-<https://www.rust-lang.org/tools/install> for instructions on how to
+<https://rust-lang.org/tools/install/> for instructions on how to
 install Rust.
 
 ### Installing Java / JDK

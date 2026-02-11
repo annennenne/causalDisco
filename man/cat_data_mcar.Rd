@@ -40,4 +40,5 @@ head(cat_data_mcar)
 \seealso{
 \link{cat_data}
 }
+\concept{dataset}
 \keyword{datasets}

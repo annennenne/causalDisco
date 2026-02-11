@@ -232,6 +232,7 @@ is_interactive <- function() {
 #'
 #' @example inst/roxygen-examples/dot-check_if_pkgs_are_installed-example.R
 #' @keywords internal
+#' @noRd
 .check_if_pkgs_are_installed <- function(
   pkgs,
   function_name = NULL,

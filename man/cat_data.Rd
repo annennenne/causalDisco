@@ -37,4 +37,5 @@ head(cat_data)
 \seealso{
 \link{num_data}
 }
+\concept{dataset}
 \keyword{datasets}

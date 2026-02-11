@@ -19,7 +19,7 @@
 #' @examples
 #' data(tpc_example)
 #' head(tpc_example)
-#'
+#' @concept dataset
 "tpc_example"
 
 #' Simulated Numerical Data
@@ -50,7 +50,7 @@
 #' @examples
 #' data(num_data)
 #' head(num_data)
-#'
+#' @concept dataset
 "num_data"
 
 #' Simulated Categorical Data
@@ -81,6 +81,7 @@
 #' head(cat_data)
 #'
 #' @seealso [num_data]
+#' @concept dataset
 "cat_data"
 
 #' Simulated Ordered Categorical Data
@@ -111,6 +112,7 @@
 #' head(cat_ord_data)
 #'
 #' @seealso [num_data]
+#' @concept dataset
 "cat_ord_data"
 
 #' Simulated Mixed Data
@@ -144,6 +146,7 @@
 #' head(mix_data)
 #'
 #' @seealso [num_data], [cat_data]
+#' @concept dataset
 "mix_data"
 
 #' Simulated Categorical Data with MCAR
@@ -177,6 +180,7 @@
 #' head(cat_data_mcar)
 #'
 #' @seealso [cat_data]
+#' @concept dataset
 "cat_data_mcar"
 
 #' Simulated Numerical Data with Latent Variable
@@ -205,4 +209,5 @@
 #' head(num_data_latent)
 #'
 #' @seealso [num_data]
+#' @concept dataset
 "num_data_latent"
