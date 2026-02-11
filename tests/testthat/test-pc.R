@@ -462,7 +462,7 @@ test_that("pc disco learns colliders with all engines", {
       ),
     info = "bnlearn PC did not learn the collider structure A -> B <- C"
   )
-
+  skip_if_no_tetrad()
   expect_true(
     any(
       edges_tetrad$from == "A" &
@@ -523,6 +523,8 @@ test_that("pc disco learns same structure with all engines", {
     edges_bnlearn_norm,
     info = "pcalg and bnlearn PC did not learn the same structure"
   )
+
+  skip_if_no_tetrad()
 
   tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
   pc_result_tetrad <- disco(data_simple, method = tetrad_pc)

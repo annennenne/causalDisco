@@ -241,7 +241,7 @@ test_that("disco plotting with required works", {
     child_x1 %-->% youth_x3
   )
 
-  cd_pc <- pc(engine = "tetrad", test = "fisher_z")
+  cd_pc <- pc(engine = "bnlearn", test = "fisher_z")
   disco_cd_tges <- disco(data = tpc_example, method = cd_pc, knowledge = kn)
 
   plot(disco_cd_tges)

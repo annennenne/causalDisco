@@ -3,6 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("engine guard in check_args_and_distribute_args() rejects unsupported engines", {
+  skip_if_no_tetrad()
   reg <- engine_registry
   search <- TetradSearch$new()
   expect_error(
