@@ -150,7 +150,13 @@ caugi::register_caugi_edge(
 
 ### CRAN TODO
 
-- Update Description: field in DESCRIPTION to mention it wraps other packages, ...
+- Update Description: Gave a suggested DESCRIPTION.
+
+- Change example in README to not require Tetrad?
+
+- Update hexsticker logo.
+
+- Push to discocoders and update the links, pkgdown, ...
 
 ## Bugs & requests
 
