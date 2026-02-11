@@ -50,7 +50,7 @@ error on any \code{NA}), \code{"cc"} (complete-case analysis), or
 
 \item{orientation_method}{Method for handling conflicting separating sets when orienting
 edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
-\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
+\code{"maj.rule"}. See \code{\link[pcalg:pc]{pcalg::pc()}} for further details.}
 
 \item{directed_as_undirected}{Logical; if \code{TRUE}, treat any directed
 edges in \code{knowledge} as undirected during skeleton learning. This
@@ -82,7 +82,7 @@ subsequent phase where the algorithm searches for possible D-SEP sets. (3) Prior
 to other orientation steps, any cross-tier edges get an arrowhead placed at their
 latest node.
 
-After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2pag}
+After this, the usual FCI orientation rules are applied; see \code{\link[pcalg:udag2pag]{pcalg::udag2pag()}}
 for details.
 }
 \examples{

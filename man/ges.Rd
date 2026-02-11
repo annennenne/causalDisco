@@ -29,8 +29,8 @@ Run the GES algorithm for causal discovery using one of several engines.
 \details{
 For specific details on the supported scores, and parameters for each engine, see:
 \itemize{
-\item \code{\link{TetradSearch}} for \pkg{Tetrad} (note, Tetrad refers to it as "fges"),
-\item \code{\link{PcalgSearch}} for \pkg{pcalg}.
+\item \link{TetradSearch} for \pkg{Tetrad} (note, Tetrad refers to it as "fges"),
+\item \link{PcalgSearch} for \pkg{pcalg}.
 }
 }
 \examples{

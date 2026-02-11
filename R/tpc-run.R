@@ -460,14 +460,14 @@ order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
 #' orientation, then delegate to \code{pcalg::addBgKnowledge()} for final
 #' orientation under background knowledge.
 #'
-#' @param skel A \code{\link[pcalg]{pcAlgo-class}} skeleton result.
+#' @param skel A [pcalg::pcAlgo-class] skeleton result.
 #' @param knowledge A \code{knowledge} object with tiers (and optionally edges).
 #' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
 #' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
 #' @example inst/roxygen-examples/tpdag-example.R
 #'
-#' @return A \code{\link[pcalg]{pcAlgo-class}} object with an oriented graph.
+#' @return A [pcalg::pcAlgo-class] object with an oriented graph.
 #' @keywords internal
 #' @noRd
 tpdag <- function(skel, knowledge, from_to) {

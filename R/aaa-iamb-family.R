@@ -22,7 +22,7 @@
 #' Each function supports the same engines and parameters. For details on tests
 #' and parameters for each engine, see:
 #' \itemize{
-#'   \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
+#'   \item [BnlearnSearch] for \pkg{bnlearn}.
 #' }
 #'
 #' @example inst/roxygen-examples/iamb-family-example.R

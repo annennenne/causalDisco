@@ -28,10 +28,10 @@ PcalgSearch <- R6::R6Class(
     #'  are:
     #'  \itemize{
     #'     \item \code{"sem_bic"} - BIC score for Gaussian observed data.
-    #'     See \code{\link[pcalg]{GaussL0penObsScore-class}}.
+    #'     See [pcalg::GaussL0penObsScore-class].
     #'     \item \code{"sem_bic_int"} - BIC score for Gaussian data from jointly
     #'     interventional and observational Gaussian data.
-    #'     See \code{\link[pcalg]{GaussL0penIntScore-class}}.
+    #'     See [pcalg::GaussL0penIntScore-class].
     #'     }
     score = NULL,
 

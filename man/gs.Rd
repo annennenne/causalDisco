@@ -28,7 +28,7 @@ Run the GS (Grow-Shrink) algorithm for causal discovery using one of several eng
 \details{
 For specific details on the supported tests and parameters for each engine, see:
 \itemize{
-\item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
+\item \link{BnlearnSearch} for \pkg{bnlearn}.
 }
 }
 \examples{

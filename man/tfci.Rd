@@ -28,7 +28,7 @@ object.
 Run the temporal FCI algorithm for causal discovery using causalDisco.
 }
 \details{
-For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+For specific details on the supported tests, see \link{CausalDiscoSearch}. For additional parameters passed
 via \code{...}, see \code{\link[=tfci_run]{tfci_run()}}.
 }
 \examples{

@@ -14,7 +14,7 @@
 #' @details
 #' For specific details on the supported tests and parameters for each engine, see:
 #' \itemize{
-#'  \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
+#'  \item [BnlearnSearch] for \pkg{bnlearn}.
 #' }
 #'
 #' @example inst/roxygen-examples/gs-example.R

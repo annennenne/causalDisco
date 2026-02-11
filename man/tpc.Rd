@@ -28,7 +28,7 @@ A function of class \code{"tpc"} that takes a single argument \code{data}
 Run the temporal PC algorithm for causal discovery using causalDisco.
 }
 \details{
-For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+For specific details on the supported tests, see \link{CausalDiscoSearch}. For additional parameters passed
 via \code{...}, see \code{\link[=tpc_run]{tpc_run()}}.
 }
 \examples{

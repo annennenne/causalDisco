@@ -10,8 +10,8 @@ tges_run(score, verbose = FALSE)
 \item{score}{tiered scoring object to be used.
 At the moment only scores supported are
 \itemize{
-\item \code{\linkS4class{TemporalBIC}} and
-\item \code{\linkS4class{TemporalBDeu}}.
+\item \link{TemporalBIC} and
+\item \link{TemporalBDeu}.
 }}
 
 \item{verbose}{indicates whether debug output should be printed.}

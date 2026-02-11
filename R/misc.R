@@ -6,7 +6,7 @@
 #'
 #' @param amat An adjacency matrix
 #'
-#' @return A \code{graphNEL} object, see  \code{\link[graph]{graphNEL-class}}.
+#' @return A \code{graphNEL} object, see  [graph::graphNEL-class].
 #'
 #' @keywords internal
 #' @noRd
@@ -35,7 +35,7 @@ as.graphNEL <- function(amat) {
 #'  DAG, CPDAG, MPDAG, TPDAG and PDAG adjacency matrices, i.e. adjacency matrices
 #'  where A(i,j) = A(j,i) = 1 is interpreted as an undirected edge. \code{"ag"}
 #'  may be used for ADMGs, MAGs, PAGs and TPAGs, where further possible arrowhead
-#'  options are available (see \link{amat})
+#'  options are available (see [amat]).
 #'
 #' @details
 #' A "to-from" \code{pdag} adjacency matrix is encoded as follows: A(i,j) = 1 and A(j,i) = 0
@@ -49,7 +49,7 @@ as.graphNEL <- function(amat) {
 #' A(i,j) = 1 and A(j,i) = 1 means there is an undirected edge between i and j, i - j.
 #' A(i,j) = 0 and A(j,i) = 0 means there is no edge between i and j.
 #'
-#' See \link{amat} for details about how an \code{ag} adjacency matrix is encoded.
+#' See [amat] for details about how an \code{ag} adjacency matrix is encoded.
 #'
 #' @keywords internal
 #' @noRd

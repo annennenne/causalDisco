@@ -13,7 +13,7 @@
 #' (e.g. test or algorithm parameters).
 #'
 #' @details
-#' For specific details on the supported tests, see \code{\link{CausalDiscoSearch}}. For additional parameters passed
+#' For specific details on the supported tests, see [CausalDiscoSearch]. For additional parameters passed
 #' via \code{...}, see [tpc_run()].
 #'
 #' @example inst/roxygen-examples/tpc-example.R

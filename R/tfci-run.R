@@ -18,7 +18,7 @@
 #' to other orientation steps, any cross-tier edges get an arrowhead placed at their
 #' latest node.
 #'
-#' After this, the usual FCI orientation rules are applied; see \link[pcalg]{udag2pag}
+#' After this, the usual FCI orientation rules are applied; see [pcalg::udag2pag()]
 #' for details.
 #'
 #' @inheritParams tpc_run
@@ -27,7 +27,7 @@
 #'   is the preferred way to supply temporal background knowledge.
 #' @param orientation_method Method for handling conflicting separating sets when orienting
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
-#'   \code{"maj.rule"}. See \link[pcalg]{pc} for further details.
+#'   \code{"maj.rule"}. See [pcalg::pc()] for further details.
 #'
 #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 #'

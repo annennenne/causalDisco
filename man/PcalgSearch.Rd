@@ -67,10 +67,10 @@ when data is set. Can be set with \code{$set_score()}. Recognized values
 are:
 \itemize{
 \item \code{"sem_bic"} - BIC score for Gaussian observed data.
-See \code{\link[pcalg]{GaussL0penObsScore-class}}.
+See \link[pcalg:GaussL0penObsScore-class]{pcalg::GaussL0penObsScore}.
 \item \code{"sem_bic_int"} - BIC score for Gaussian data from jointly
 interventional and observational Gaussian data.
-See \code{\link[pcalg]{GaussL0penIntScore-class}}.
+See \link[pcalg:GaussL0penIntScore-class]{pcalg::GaussL0penIntScore}.
 }}
 
 \item{\code{test}}{A function that will be used to test independence.

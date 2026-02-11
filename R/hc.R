@@ -13,7 +13,7 @@
 #' @details
 #' For specific details on the supported scores and parameters for each engine, see:
 #' \itemize{
-#'  \item \code{\link{BnlearnSearch}} for \pkg{bnlearn}.
+#'  \item [BnlearnSearch] for \pkg{bnlearn}.
 #' }
 #'
 #' Note that this function **always returns a fully directed DAG**.

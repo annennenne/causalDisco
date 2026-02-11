@@ -8,8 +8,8 @@
 #'
 #' @param score tiered scoring object to be used.
 #'    At the moment only scores supported are
-#'    * \code{\linkS4class{TemporalBIC}} and
-#'    * \code{\linkS4class{TemporalBDeu}}.
+#'    * [TemporalBIC] and
+#'    * [TemporalBDeu].
 #' @param verbose	indicates whether debug output should be printed.
 #'
 #' @author Tobias Ellegaard Larsen

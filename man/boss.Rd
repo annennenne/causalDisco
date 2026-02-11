@@ -28,7 +28,7 @@ Run the BOSS (Best Order Score Search) algorithm for causal discovery using one 
 \details{
 For specific details on the supported scores, and parameters for each engine, see:
 \itemize{
-\item \code{\link{TetradSearch}} for \pkg{Tetrad}.
+\item \link{TetradSearch} for \pkg{Tetrad}.
 }
 }
 \examples{

@@ -31,10 +31,10 @@ Run a causal discovery method on a data frame.
 \details{
 For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
 \itemize{
-\item \code{\link{TetradSearch}} for \pkg{Tetrad},
-\item \code{\link{PcalgSearch}} for \pkg{pcalg},
-\item \code{\link{BnlearnSearch}} for \pkg{bnlearn},
-\item \code{\link{CausalDiscoSearch}} for \pkg{causalDisco}.
+\item \link{TetradSearch} for \pkg{Tetrad},
+\item \link{PcalgSearch} for \pkg{pcalg},
+\item \link{BnlearnSearch} for \pkg{bnlearn},
+\item \link{CausalDiscoSearch} for \pkg{causalDisco}.
 }
 }
 \examples{

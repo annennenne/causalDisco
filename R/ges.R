@@ -15,8 +15,8 @@
 #' @details
 #' For specific details on the supported scores, and parameters for each engine, see:
 #' \itemize{
-#'  \item \code{\link{TetradSearch}} for \pkg{Tetrad} (note, Tetrad refers to it as "fges"),
-#'  \item \code{\link{PcalgSearch}} for \pkg{pcalg}.
+#'  \item [TetradSearch] for \pkg{Tetrad} (note, Tetrad refers to it as "fges"),
+#'  \item [PcalgSearch] for \pkg{pcalg}.
 #' }
 #'
 #' @example inst/roxygen-examples/ges-example.R
