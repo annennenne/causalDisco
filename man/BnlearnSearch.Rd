@@ -177,12 +177,6 @@ See \code{\link[=iamb]{iamb()}} and the underlying \code{\link[bnlearn:constrain
 \code{\link[bnlearn:constraint]{bnlearn::inter.iamb()}}.
 \item \code{"pc"} – PC-stable algorithm. See \code{\link[=pc]{pc()}} and the underlying
 \code{\link[bnlearn:constraint]{bnlearn::pc.stable()}}.
-}
-
-\strong{Score-based}
-\itemize{
-\item \code{"hc"} – Hill-Climbing algorithm. See \code{\link[=hc]{hc()}} and the underlying \code{\link[bnlearn:hc]{bnlearn::hc()}}.
-\item \code{"tabu"} – Tabu search algorithm. See \code{\link[=tabu]{tabu()}} and the underlying \code{\link[bnlearn:hc]{bnlearn::tabu()}}.
 }}
 
 \item{\code{params}}{A list of extra tuning parameters stored by \code{set_params()}

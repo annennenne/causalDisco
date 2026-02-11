@@ -155,11 +155,11 @@ BnlearnSearch <- R6Class(
     # #'     \item \code{"chow_liu"} – Chow–Liu tree
     # #'   }
     #'
-    #'   **Score-based**
-    #'   \itemize{
-    #'     \item \code{"hc"} – Hill-Climbing algorithm. See [hc()] and the underlying [bnlearn::hc()].
-    #'     \item \code{"tabu"} – Tabu search algorithm. See [tabu()] and the underlying [bnlearn::tabu()].
-    #'   }
+    # #'   **Score-based**
+    # #'   \itemize{
+    # #'     \item \code{"hc"} – Hill-Climbing algorithm. See [hc()] and the underlying [bnlearn::hc()].
+    # #'     \item \code{"tabu"} – Tabu search algorithm. See [tabu()] and the underlying [bnlearn::tabu()].
+    # #'   }
     alg = NULL,
 
     #' @field params A list of extra tuning parameters stored by `set_params()`

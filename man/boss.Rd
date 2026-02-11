@@ -86,11 +86,9 @@ Other causal discovery algorithms:
 \code{\link{grasp}()},
 \code{\link{grasp_fci}()},
 \code{\link{gs}()},
-\code{\link{hc}()},
 \code{\link{iamb-family}},
 \code{\link{pc}()},
 \code{\link{sp_fci}()},
-\code{\link{tabu}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},
 \code{\link{tpc}()}

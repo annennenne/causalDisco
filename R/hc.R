@@ -28,9 +28,10 @@
 #' A function of class \code{"hc"} that takes a single argument \code{data}
 #' (a data frame) and returns a `caugi` (of class "DAG") and a `knowledge` object.
 #'
-#' @family causal discovery algorithms
-#' @concept cd_algorithms
-#' @export
+# #' @family causal discovery algorithms
+# #' @concept cd_algorithms
+#' @keywords internal
+#' @noRd
 hc <- function(
   engine = c("bnlearn"),
   score,
