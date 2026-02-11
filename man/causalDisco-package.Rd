@@ -8,11 +8,9 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Various tools for inferring causal models from observational data. The package includes an implementation of the temporal Peter-Clark (TPC) algorithm. Petersen, Osler and Ekstrøm (2021) \doi{10.1093/aje/kwab087}. It also includes general tools for evaluating differences in adjacency matrices, which can be used for evaluating performance of causal discovery procedures.
+Tools for causal structure learning from observational data, with emphasis on temporally ordered variables. The package implements the Temporal Peter–Clark (TPC) algorithm of Petersen, Osler and Ekstrøm (2021) \doi{10.1093/aje/kwab087}, as well as temporal extensions of Greedy Equivalence Search (GES) and Fast Causal Inference (FCI). It provides a unified framework for specifying background knowledge, which can be incorporated into the implemented algorithms and into procedures from the R packages bnlearn and pcalg, as well as the Java application Tetrad. The package further includes utilities for visualization, comparison, and evaluation of graph structures, facilitating benchmarking and methodological studies.
 }
 \section{System requirements}{
-
-Cargo (Rust's package manager), rustc >= 1.80.0, xz.
 
 Java (>= 21) for Tetrad functionality (optional; includes installer; see inst/java/LICENSE and inst/java/COPYRIGHT);
 Source code: \url{https://github.com/cmu-phil/tetrad}.
@@ -21,9 +19,9 @@ Source code: \url{https://github.com/cmu-phil/tetrad}.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/annennenne/causalDisco}
+  \item \url{https://github.com/disco-coders/causalDisco}
   \item \url{https://bjarkehautop.github.io/causalDisco/}
-  \item Report bugs at \url{https://github.com/annennenne/causalDisco/issues}
+  \item Report bugs at \url{https://github.com/disco-coders/causalDisco/issues}
 }
 
 }
