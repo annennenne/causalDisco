@@ -1,8 +1,16 @@
 # Ensure Tetrad is installed for local testing.
-# - Skip Tetrad tests on CRAN to avoid rare memory issues that could cause false negatives.
+# - Skip Tetrad tests on CRAN (avoid installing Java and Tetrad on CRAN).
+# This also avoids rare memory issues on Tetrad (only observed on 7.6.8 and not on current version though).
+# rare memory issues (don't think the current version can though?)
 # - GitHub Actions workflow uses .github/workflows/install-tetrad.R.
-skip_on_cran()
-tetrad_installed <- check_tetrad_install()$installed
-if (!tetrad_installed) {
-  install_tetrad()
+
+on_cran <- identical(Sys.getenv("NOT_CRAN"), "false")
+
+if (!on_cran) {
+  tetrad_installed <- check_tetrad_install()$installed
+  if (!tetrad_installed) {
+    install_tetrad()
+  }
+} else {
+  message("Skipping Tetrad installation on CRAN")
 }

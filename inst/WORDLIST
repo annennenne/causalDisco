@@ -76,10 +76,9 @@ adjacencies
 aje
 al
 alg
-algs
 amat
-args
 bdeu
+benchmarking
 bic
 bidirected
 bnlearn
@@ -115,11 +114,9 @@ preprint
 rJava
 reinstallation
 rlang
-rustc
 sem
 simDAG
 simGausFromDAG
-smth
 tamat
 tbic
 tetrad
@@ -133,4 +130,3 @@ tskeleton
 un
 underfit
 untiered
-xz
