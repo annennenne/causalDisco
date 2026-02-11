@@ -130,13 +130,27 @@ class `PcalgSearch` instead of `BnlearnSearch` in the runner (i.e., `PcalgSearch
 We will illustrate how to make a custom version (which actually does the same as our implementation,
 just with some defensive programming omitted) of the Boss algorithm from Tetrad.
 
-Tetrad algorithms require a different integration pattern, since Tetrad is a Java application rather than an R package.
-To add a new Tetrad algorithm, we first register it using `register_tetrad_algorithm()`. This function takes
-the name of the algorithm and a setup function that configures a `TetradSearch` object to run the algorithm.
-The setup function receives the `TetradSearch` object as its first argument, and any additional arguments passed via
-`...` when constructing the method. It is responsible for configuring the `TetradSearch` object with the appropriate
-parameters and score, and for instantiating the correct Tetrad algorithm class. The class path can, for example, be
-found by looking at the Tetrad source code.
+Tetrad algorithms follow a different integration pattern because Tetrad is a Java application rather than an R package.
+
+To add a new Tetrad algorithm, first register it with `register_tetrad_algorithm()`. This function requires:
+
+* The algorithm name.
+* A setup function that configures a `TetradSearch` object to execute the algorithm.
+
+The setup function receives the TetradSearch object as its first argument, along with any additional parameters passed
+via `...` when the method is constructed. Its responsibilities are to:
+
+1. Configure the TetradSearch object with the appropriate parameters and score.
+2. Instantiate the correct Tetrad algorithm class.
+
+The fully qualified class name can be identified by inspecting the Tetrad source code at:
+
+https://github.com/cmu-phil/tetrad
+
+Be sure to browse the version corresponding to the installed Tetrad release.
+The relevant Java classes are located under:
+
+https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java
 
 ```{r}
 register_tetrad_algorithm(
