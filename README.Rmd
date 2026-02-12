@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# causalDisco <img src="man/figures/hex.png" width="80" height="80" align="right" alt="" />
+# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.svg" align="right" height="139" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/BjarkeHautop/causalDisco)

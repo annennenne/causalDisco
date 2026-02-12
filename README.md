@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# causalDisco <img src="man/figures/hex.png" width="80" height="80" align="right" alt="" />
+# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.svg" align="right" height="139" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
 
@@ -92,10 +92,10 @@ causalDisco::check_tetrad_install()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.1"
+#> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
 ```
 
 ## Example
