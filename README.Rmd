@@ -101,7 +101,8 @@ pcalg_ges <- ges(
 disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
 
 # We can also pass background knowledge to the algorithms that support it. Here we use tiered knowledge,
-# which is a common way to encode temporal ordering of variables.
+# which is a common way to encode temporal ordering of variables. You can use tidyselect helpers to specify which
+# variables belong to which tier.
 kn <- knowledge(
   tpc_example,
   tier(
@@ -114,7 +115,7 @@ kn <- knowledge(
 cd_tpc <- tpc(
   engine = "causalDisco", # Use the causalDisco implementation
   test = "fisher_z", # Use Fisher's Z test for conditional independence
-  alpha = 0.05 # Significance level for the test05
+  alpha = 0.05 # Significance level for the test
 )
 disco_cd_tpc <- disco(data = tpc_example, method = cd_tpc, knowledge = kn)
 
