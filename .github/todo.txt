@@ -10,6 +10,20 @@
 
 - If no tier knowledge drop tier columns in output from knowledge (currently just says NA)?
 
+- Register a custom edge type for caugi to represent forbidden edges differently than normal directed edges.
+Would simplify plotting logic and easier to extend later.
+
+```{r register edge, eval = FALSE}
+# Doesn't work atm because CRAN version requires length 3 (will work in next release)
+caugi::register_caugi_edge(
+  glyph = "!-->",
+  tail_mark = "arrow",
+  head_mark = "tail",
+  class = "directed",
+  symmetric = FALSE
+)
+```
+
 # LONGTERM
 
 - Allow star - star (adjaceny) knowledge

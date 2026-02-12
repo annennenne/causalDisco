@@ -5,7 +5,6 @@ BDeu
 Basak
 Bjarke
 Bjerre
-BnlearnSearch
 Bui
 CMD
 CPDAG
@@ -17,7 +16,6 @@ EBIC
 Eagleson
 Ekstrøm
 Ellegaard
-EssGraph
 FCI
 FGES
 FN
@@ -25,11 +23,9 @@ Fabricius
 GES
 GFCI
 GIC
-GIES
 GRaSP
 Glymour
 Graphviz
-HC
 HPC
 Hautop
 Helby
@@ -54,13 +50,11 @@ Satterthwaite
 Shen
 Silverman
 Spirtes
-TABU
 TETRAD
 TFCI
 TGES
 TP
 TPC
-Tabu
 Temurin
 Terpstra
 Tetrad
@@ -83,7 +77,6 @@ bic
 bidirected
 bnlearn
 caugi
-causalInference
 cd
 confounder
 df
@@ -101,8 +94,8 @@ interventional
 ith
 kwab
 maketikz
+mbr
 md
-micd
 nDAGs
 nonsingular
 oldage

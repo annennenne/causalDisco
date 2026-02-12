@@ -84,7 +84,9 @@ causalDisco::check_tetrad_install()
 ## Example
 
 With causalDisco you can currently run causal discovery algorithms from the package causalDisco itself,
-the Java library Tetrad, the R package bnlearn, and the R package pcalg.
+the the R packages bnlearn and pcalg, and the Java application Tetrad with a consistent syntax. Here we provide
+a simple example of how to use these different backends with the same code structure.
+We also show how to incorporate tiered background knowledge, which is supported by all backends.
 
 ```{r example}
 library(causalDisco)
@@ -92,7 +94,14 @@ library(causalDisco)
 # Load data
 data(tpc_example)
 
-# Define background tiered knowledge object
+pcalg_ges <- ges(
+  engine = "pcalg", # Use the pcalg implementation
+  score = "sem_bic" # Use BIC score for model selection
+)
+disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
+
+# We can also pass background knowledge to the algorithms that support it. Here we use tiered knowledge,
+# which is a common way to encode temporal ordering of variables.
 kn <- knowledge(
   tpc_example,
   tier(
@@ -102,7 +111,20 @@ kn <- knowledge(
   )
 )
 
-# Use Tetrad PC algorithm with conditional Gaussian test
+cd_tpc <- tpc(
+  engine = "causalDisco", # Use the causalDisco implementation
+  test = "fisher_z", # Use Fisher's Z test for conditional independence
+  alpha = 0.05 # Significance level for the test05
+)
+disco_cd_tpc <- disco(data = tpc_example, method = cd_tpc, knowledge = kn)
+
+bnlearn_pc <- pc(
+  engine = "bnlearn", # Use the bnlearn implementation
+  test = "cor", # Use correlation test for conditional independence
+  alpha = 0.05 # Significance level for the test
+)
+disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+
 # Requires Tetrad to be installed
 if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(
@@ -112,51 +134,17 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   )
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 }
-
-# Use causalDisco's own implementation of the tges algorithm with temporal BIC score
-cd_tges <- tges(
-  engine = "causalDisco", # Use the causalDisco implementation
-  score = "tbic" # Use temporal BIC score
-)
-disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 ```
 
 You can visualize the resulting causal graph using the `plot()` function:
 
 ```{r plot}
 #| fig.alt: "A causal graph with the known tiers indicated by vertical positioning of the nodes."
-plot(disco_cd_tges)
+plot(disco_cd_tpc)
 ```
 
-## Questions
-
-- Updated all the vignettes - anything missing?
-
-## TODO
-
-- Register a custom edge type for caugi to represent forbidden edges differently than normal directed edges.
-Would simplify plotting logic and easier to extend later.
-
-```{r register edge, eval = FALSE}
-# Doesn't work atm because CRAN version requires length 3 (will work in next release)
-caugi::register_caugi_edge(
-  glyph = "!-->",
-  tail_mark = "arrow",
-  head_mark = "tail",
-  class = "directed",
-  symmetric = FALSE
-)
-```
-
-### CRAN TODO
-
-- Update Description: Gave a suggested DESCRIPTION.
-
-- Change example in README to not require Tetrad?
-
-- Update hexsticker logo.
-
-- Push to discocoders and update the links, pkgdown, ...
+Please see the package vignettes for more detailed introductions to the package and its features, such as how to
+incorporate knowledge, run causal discovery, and visualize results.
 
 ## Bugs & requests
 
