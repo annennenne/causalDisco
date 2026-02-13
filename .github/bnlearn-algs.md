@@ -19,6 +19,11 @@ since skeleton discovery isn't that useful.
 since they learn undirected dependency structures based solely on pairwise mutual information, rather than
 DAGs or CPDAGs, and therefore fall outside the project’s focus on directed graphical model structure learning.
 
+**Score-based**
+  - `hc` - hill-climbing
+  - `tabu` - Tabu search
+  
+since they always returns DAGs (even when causal direction is not possible to infer).
 
 ## Maybe add? (commented out from doc for now)
 
