@@ -38,14 +38,14 @@ Then you can install the development version of causalDisco from GitHub
 using pak:
 
 ``` r
-pak::pkg_install("https://github.com/BjarkeHautop/causalDisco")
+pak::pkg_install("BjarkeHautop/causalDisco")
 ```
 
 or with all suggested packages (note that this requires a valid Java /
 JDK installation for rJava as described below):
 
 ``` r
-pak::pkg_install("https://github.com/BjarkeHautop/causalDisco", dependencies = TRUE)
+pak::pkg_install("BjarkeHautop/causalDisco", dependencies = TRUE)
 ```
 
 ### Installing Rust
