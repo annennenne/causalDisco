@@ -100,13 +100,12 @@ pcalg_ges <- ges(
 )
 disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
 
-# We can also pass background knowledge to the algorithms that support it. Here we use tiered knowledge,
-# which is a common way to encode temporal ordering of variables. You can use tidyselect helpers to specify which
-# variables belong to which tier.
+# We can also pass background knowledge to the engines that support it. Here we use tiered knowledge,
+# which is a common way to encode temporal ordering of variables.
 kn <- knowledge(
   tpc_example,
   tier(
-    child ~ starts_with("child"),
+    child ~ starts_with("child"), # Using the tidyselect syntax to select variables for each tier
     youth ~ starts_with("youth"),
     old ~ starts_with("old")
   )
@@ -121,8 +120,8 @@ disco_cd_tpc <- disco(data = tpc_example, method = cd_tpc, knowledge = kn)
 
 bnlearn_pc <- pc(
   engine = "bnlearn", # Use the bnlearn implementation
-  test = "cor", # Use correlation test for conditional independence
-  alpha = 0.05 # Significance level for the test
+  test = "cor", # Use Pearson correlation test for conditional independence
+  alpha = 0.05
 )
 disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 
@@ -131,7 +130,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   tetrad_pc <- pc(
     engine = "tetrad", # Use the Tetrad implementation
     test = "conditional_gaussian", # Use conditional Gaussian test
-    alpha = 0.05 # Significance level for the test
+    alpha = 0.05
   )
   disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
 }

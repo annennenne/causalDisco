@@ -6,8 +6,8 @@
 #' @example inst/roxygen-examples/bnlearn-search-example.R
 NULL
 
-# We import bnlearn and R6 using @importFrom here to avoid false positives about packages not used,
-# see this github repo: https://github.com/BjarkeHautop/R6PkgTest
+# We import a function from bnlearn and R6 using @importFrom here to avoid false positives about packages not used,
+# see this discussion: https://stat.ethz.ch/pipermail/r-package-devel/2026q1/012259.html
 #' @title R6 Interface to bnlearn Search Algorithms
 #'
 #' @description A wrapper that lets you drive \pkg{bnlearn} algorithms within the \pkg{causalDisco} framework.
@@ -21,7 +21,7 @@ NULL
 #' @rdname BnlearnSearch
 #'
 #' @export
-BnlearnSearch <- R6Class(
+BnlearnSearch <- R6::R6Class(
   "BnlearnSearch",
   public = list(
     #' @template data-field
