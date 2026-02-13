@@ -19,8 +19,8 @@ library(causalDisco)
 ```
 
 This vignette demonstrates how to visualize causal graphs. We cover plotting `knowledge` objects and
-`knowledgeable_caugi` objects, customizing layouts and styles, and exporting graphs to TikZ for inclusion in
-LaTeX documents.
+`knowledgeable_caugi` objects, customizing layouts and styles, and exporting graphs to readable TikZ for inclusion and
+further customization in LaTeX documents.
 
 # Plotting
 
@@ -46,7 +46,7 @@ plot(kn)
 ```
 
 By default, required edges are shown in blue and forbidden edges in red.
-You can customize these colors using `required_col` and `forbidden_col`:
+You can customize these colors using the `required_col` and `forbidden_col` arguments:
 
 ```{r knowledge plot different colors}
 plot(kn, required_col = "skyblue", forbidden_col = "orange")
@@ -55,7 +55,7 @@ plot(kn, required_col = "skyblue", forbidden_col = "orange")
 Different node layouts, node styles, and edge styles can be specified using the `layout`, `node_style`, and `edge_style`
 parameters.
 We provide a quick example and refer to the `causalDisco::plot()` function (and the underlying `caugi::plot()` function)
-documentation for more details.
+documentation for more details. Here we use the "fruchterman-reingold" layout and customize node and edge styles:
 
 ```{r knowledge plot custom styles}
 plot(
@@ -73,6 +73,17 @@ plot(
     arrow_size = 4 # Arrow size (mm)
   )
 )
+```
+
+You can also pass a custom layout to `plot()`:
+
+```{r}
+my_layout <- data.frame(
+  name = c("X1", "X2", "X3", "Y", "Z"),
+  x = c(1, 2, 3, 4, 5),
+  y = c(1, 2, 1, 2, 1)
+)
+plot(kn, layout = my_layout)
 ```
 
 ### Plotting Tiered Knowledge
@@ -100,8 +111,9 @@ hierarchical relationships in the data.
 
 ## Plotting Knowledgeable Caugi Objects
 
-Here we create a `knowledgeable_caugi` object by combining a causal discovery result with prior knowledge,
-and visualize it using the `plot` function.
+Here we run a causal discovery algorithm to get a `knowledgeable_caugi`, which is the knowledge object alongside the
+learned causal graph as a `caugi` object. We can then plot this combined object to see both the prior knowledge and
+the learned relationships
 
 ```{r knowledgeable caugi plot}
 data(num_data)
@@ -143,11 +155,11 @@ Where we can see the tiers reflected in the layout of the graph.
 
 The `make_tikz()` function exports plots as clean, fully editable TikZ code for inclusion in LaTeX documents.
 
-Unlike many graph export tools, edges are attached to nodes rather than positioned using hard-coded coordinates,
-making the output easier to modify and maintain.
+Unlike some graph export tools, edges are attached to nodes rather than positioned using hard-coded coordinates,
+making the output easier to modify.
 
-This functionality works for `knowledge`, `knowledgeable_caugi`, and `caugi::caugi` objects, allowing you to customize layouts,
-styles, and edges further in your LaTeX document. It calls the underlying `causalDisco::plot()` method
+This functionality works for `knowledge`, `knowledgeable_caugi`, and `caugi::caugi` objects, allowing you to customize
+layouts, styles, and edges further in your LaTeX document. It calls the underlying `causalDisco::plot()` method
 (which calls `caugi::plot()`) to generate the initial plot object before converting it to TikZ code.
 Thus, you can supply any arguments to `make_tikz()` that are supported by `causalDisco::plot()` and `caugi::plot()`.
 
@@ -177,8 +189,8 @@ Setting `full_doc = TRUE` generates a complete standalone LaTeX document that ca
 Using `full_doc = FALSE` instead returns only the tikzpicture environment, which is convenient for inclusion
 inside an existing LaTeX document.
 
-The TikZ export also supports edge bending, which can substantially improve readability when edges overlap (in particular for tiered
-knowledge).
+The TikZ export also supports edge bending, which can substantially improve readability when edges passes thorugh other
+nodes, as can easily happen in tiered knowledge structures. 
 This feature is not available in the standard `caugi::plot()` function. Here is an example, where the edge using the
 standard straight style edge overlaps the node `youth_x3`, while the bent edge avoids this overlap:
 
@@ -251,4 +263,3 @@ plot_obj <- caugi::plot(cg, node_style = list(fill = "red"))
 tikz_caugi_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
 cat(tikz_caugi_snippet)
 ```
-

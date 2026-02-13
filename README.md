@@ -105,7 +105,7 @@ the package causalDisco itself, the the R packages bnlearn and pcalg,
 and the Java application Tetrad with a consistent syntax. Here we
 provide a simple example of how to use these different backends with the
 same code structure. We also show how to incorporate tiered background
-knowledge, which is supported by all backends.
+knowledge.
 
 ``` r
 library(causalDisco)

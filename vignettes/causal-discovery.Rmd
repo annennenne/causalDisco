@@ -64,7 +64,8 @@ attr(data_linear, "generating_model")
 
 The goal is now to recover the causal structure from the data alone.
 
-We will use the PC algorithm to learn the causal structure, which assumes that there are no unobserved confounders.
+We will use the PC algorithm to learn the causal structure. One of its key assumptions is causal sufficiency,
+meaning that there are no unobserved confounders.
 We can use the PC algorithm from any of the "tetrad", "pcalg", or "bnlearn" engines to learn the structure from the
 data. The motivation for having multiple engines is that they may implement different algorithms, tests, or
 scoring methods, or the same algorithm may be implemented differently across engines.
