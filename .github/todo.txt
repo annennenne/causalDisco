@@ -2,8 +2,6 @@
 
 - Square nodes
 
-- Label to edges (you already can in `grid.text()`, so maybe not needed?).
-
 # TODO
 
 - Check if skipped tests can be removed (could just add a version check on tetrad in tests?)

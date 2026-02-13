@@ -2,7 +2,7 @@
 % Please edit documentation in R/disco.R
 \name{disco}
 \alias{disco}
-\title{Disco!!}
+\title{Perform Causal Discovery}
 \usage{
 disco(data, method, knowledge = NULL)
 }
@@ -12,9 +12,18 @@ disco(data, method, knowledge = NULL)
 \item{method}{A \code{disco_method} object representing a causal discovery
 algorithm. Available methods are
 \itemize{
-\item \code{\link[=pc]{pc()}} - PC algorithm,
+\item \code{\link[=boss]{boss()}} - BOSS algorithm,
+\item \code{\link[=boss_fci]{boss_fci()}} - BOSS-FCI algorithm,
 \item \code{\link[=fci]{fci()}} - FCI algorithm,
+\item \code{\link[=gfci]{gfci()}} - GFCI algorithm,
 \item \code{\link[=ges]{ges()}} - GES algorithm,
+\item \code{\link[=grasp]{grasp()}} - GRaSP algorithm,
+\item \code{\link[=grasp_fci]{grasp_fci()}} - GRaSP-FCI algorithm,
+\item \code{\link[=gs]{gs()}} - GS algorithm,
+\item \code{\link[=iamb]{iamb()}}, \code{\link[=iamb_fdr]{iamb_fdr()}}, \code{\link[=fast_iamb]{fast_iamb()}}, \code{\link[=inter_iamb]{inter_iamb()}} - IAMB algorithms,
+\item \code{\link[=pc]{pc()}} - PC algorithm,
+\item \code{\link[=sp_fci]{sp_fci()}} - SP-FCI algorithm,
+\item \code{\link[=tfci]{tfci()}} - TFCI algorithm,
 \item \code{\link[=tges]{tges()}} - TGES algorithm,
 \item \code{\link[=tpc]{tpc()}} - TPC algorithm.
 }}
@@ -26,15 +35,16 @@ applied without additional knowledge.}
 A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
 }
 \description{
-Run a causal discovery method on a data frame.
+Apply a causal discovery method to a data frame to infer causal relationships on observational data.
+Supports multiple algorithms and optionally incorporates prior knowledge.
 }
 \details{
 For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
 \itemize{
-\item \link{TetradSearch} for \pkg{Tetrad},
-\item \link{PcalgSearch} for \pkg{pcalg},
 \item \link{BnlearnSearch} for \pkg{bnlearn},
-\item \link{CausalDiscoSearch} for \pkg{causalDisco}.
+\item \link{CausalDiscoSearch} for \pkg{causalDisco},
+\item \link{PcalgSearch} for \pkg{pcalg},
+\item \link{TetradSearch} for \pkg{Tetrad}.
 }
 }
 \examples{

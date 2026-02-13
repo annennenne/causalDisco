@@ -1,15 +1,25 @@
-#' @title Disco!!
+#' @title Perform Causal Discovery
 #'
 #' @description
-#' Run a causal discovery method on a data frame.
+#' Apply a causal discovery method to a data frame to infer causal relationships on observational data.
+#' Supports multiple algorithms and optionally incorporates prior knowledge.
 #'
 #' @param data A data frame.
 #' @param method A `disco_method` object representing a causal discovery
 #' algorithm. Available methods are
 #' \itemize{
-#'  \item [pc()] - PC algorithm,
+#'  \item [boss()] - BOSS algorithm,
+#'  \item [boss_fci()] - BOSS-FCI algorithm,
 #'  \item [fci()] - FCI algorithm,
+#'  \item [gfci()] - GFCI algorithm,
 #'  \item [ges()] - GES algorithm,
+#'  \item [grasp()] - GRaSP algorithm,
+#'  \item [grasp_fci()] - GRaSP-FCI algorithm,
+#'  \item [gs()] - GS algorithm,
+#'  \item [iamb()], [iamb_fdr()], [fast_iamb()], [inter_iamb()] - IAMB algorithms,
+#'  \item [pc()] - PC algorithm,
+#'  \item [sp_fci()] - SP-FCI algorithm,
+#'  \item [tfci()] - TFCI algorithm,
 #'  \item [tges()] - TGES algorithm,
 #'  \item [tpc()] - TPC algorithm.
 #' }
@@ -19,10 +29,10 @@
 #' @details
 #' For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:
 #' \itemize{
-#'  \item [TetradSearch] for \pkg{Tetrad},
-#'  \item [PcalgSearch] for \pkg{pcalg},
 #'  \item [BnlearnSearch] for \pkg{bnlearn},
-#'  \item [CausalDiscoSearch] for \pkg{causalDisco}.
+#'  \item [CausalDiscoSearch] for \pkg{causalDisco},
+#'  \item [PcalgSearch] for \pkg{pcalg},
+#'  \item [TetradSearch] for \pkg{Tetrad}.
 #' }
 #'
 #' @example inst/roxygen-examples/disco-example.R

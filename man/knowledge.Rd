@@ -111,6 +111,12 @@ kn <- knowledge(
   )
 )
 
+# Numeric vector shortcut
+kn <- knowledge(
+  tpc_example,
+  tier(c(1, 1, 2, 2, 3, 3))
+)
+
 # Custom tier naming
 kn <- knowledge(
   tpc_example,

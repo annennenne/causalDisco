@@ -4,5 +4,6 @@
 #'
 #' Available engines: `r paste(.engines, collapse = ", ")`.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 engine_registry <- as.list(.engines)

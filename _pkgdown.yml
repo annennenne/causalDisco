@@ -90,7 +90,7 @@ reference:
       - +.knowledge
       - knowledge.knowledgeable_caugi
 
-  - title: "Miscellaneous"
+  - title: "Extend causalDisco"
+    desc: "Functions for extending causalDisco with new algorithms from the available engines."
     contents:
       - has_concept("extending_causalDisco")
-      - engine_registry
