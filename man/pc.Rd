@@ -2,107 +2,146 @@
 % Please edit documentation in R/pc.R
 \name{pc}
 \alias{pc}
-\title{Perform causal discovery using the PC algorithm}
+\title{PC Algorithm for Causal Discovery}
 \usage{
-pc(
-  data = NULL,
-  sparsity = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  output = "cpdag",
-  varnames = NULL,
-  conservative = TRUE,
-  ...
-)
+pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data.frame with data. All variables should be
-assigned to exactly one period by prefixing them with the period name
-(see example below).}
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
+\item{\code{"pcalg"}}{\pkg{pcalg} R package.}
+\item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
+}}
 
-\item{sparsity}{The sparsity level to be used for independence
-testing (i.e. significance level threshold to use for each test).}
+\item{test}{Character; name of the conditional‐independence test.}
 
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
+\item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{suffStat}{Sufficient statistic. If this argument is supplied, the
-sufficient statistic is not computed from the inputted data. The format and
-contents of the sufficient statistic depends on which test is being used.}
-
-\item{method}{Which method to use for skeleton construction, must be
-\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-See \code{\link[pcalg]{skeleton}} for details.}
-
-\item{methodNA}{Method for handling missing information (\code{NA} values).
-Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-observations with missing information test-by-test) (further details below).}
-
-\item{methodOri}{Method for handling conflicting separating sets when orienting
-edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
-\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
-
-\item{output}{One of \code{"cpdag"}, \code{"skeleton"} or \code{"pcAlgo"}. If
-\code{"skeleton"}, a skeleton is constructed and outputted,
-but the edges are not directed. If \code{"cpdag"} (the default),
-the edges are directed, resulting in a completed partially directed
-acyclic graph (CPDAG). If \code{"pcAlgo"} the CPDAG is outputted as the
-object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
-intended for compatability with tools from that package.}
-
-\item{varnames}{A character vector of variable names. It only needs to be supplied
-if the \code{data} argument is not used, and data are hence passed exclusively
-through the \code{suffStat} argument.}
-
-\item{conservative}{Logital, if \code{TRUE} the conservative version of PC is used
-(see \code{\link[pcalg]{pc}} for details).}
-
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to
-\code{\link[pcalg]{pc}} otherwise.}
+\item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
 \value{
-A \code{tpdag} or \code{tskeleton} object. Both return types are
-S3 objects, i.e., lists with entries: \code{$amat} (the estimated adjacency
-matrix), \code{$order} (character vector with the order, as inputted to
-this function), \code{$psi} (the significance level used for testing), and
-\code{$ntests} (the number of tests conducted).
+A function of class \code{"pc"} that takes a single argument \code{data}
+(a data frame) and returns a \code{caugi} (of class "PDAG") and a \code{knowledge} object.
 }
 \description{
-This is a wrapper function for the \code{\link[pcalg]{pc}} function as
-implemented in the pcalg package. All computations are carried out by the
-pcalg package.
+Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
 }
 \details{
-Note that all independence test procedures implemented
-in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
-
-The methods for handling missing information require that the \code{data},
-rather than the \code{suffStat} argument is used for inputting data; the latter
-assumes no missing information and hence always sets \code{methodNA = "none"}.
-If the test is \code{corTest}, test-wise deletion is performed when computing the
-sufficient statistic (correlation matrix) (so for each pair of variables, only
-complete cases are used). If the test is \code{regTest}, test-wise deletion
-is performed for each conditional independence test instead.
+For specific details on the supported tests and parameters for each engine, see:
+\itemize{
+\item \link{TetradSearch} for \pkg{Tetrad},
+\item \link{PcalgSearch} for \pkg{pcalg},
+\item \link{BnlearnSearch} for \pkg{bnlearn}.
+}
 }
 \examples{
-# PC on included example data, use sparsity psi = 0.01, default test (regression-based
-#information loss):
-data(tpcExample)
-pc(tpcExample, sparsity = 0.01)
+data(tpc_example)
+
+#### Using pcalg engine ####
+# Recommended path using disco()
+pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, pc_pcalg)
+
+# or using pc_pcalg directly
+pc_pcalg(tpc_example)
+
+# With all algorithm arguments specified
+pc_pcalg <- pc(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.05,
+  fixedGaps = NULL,
+  fixedEdges = NULL,
+  NAdelete = FALSE,
+  m.max = 10,
+  u2pd = "relaxed",
+  skel.method = "original",
+  conservative = TRUE,
+  maj.rule = FALSE,
+  solve.confl = TRUE,
+  numCores = 1,
+  verbose = FALSE
+)
+
+#### Using bnlearn engine with required knowledge ####
+kn <- knowledge(
+  tpc_example,
+  starts_with("child") \%-->\% starts_with("youth")
+)
 
 
-# PC on included example data, use sparsity psi = 0.01, use test for vanishing partial
-# correlations:
-data(tpcExample)
-pc(tpcExample, sparsity = 0.01, test = corTest)
+# Recommended path using disco()
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, pc_bnlearn, knowledge = kn)
 
+# or using pc_bnlearn directly
+pc_bnlearn <- pc_bnlearn |> set_knowledge(kn)
+pc_bnlearn(tpc_example)
+
+
+# With all algorithm arguments specified
+pc_bnlearn <- pc(
+  engine = "bnlearn",
+  test = "fisher_z",
+  alpha = 0.05,
+  max.sx = 2,
+  debug = FALSE,
+  undirected = TRUE
+)
+
+disco(tpc_example, pc_bnlearn)
+
+#### Using tetrad engine with tier knowledge ####
+# Requires Tetrad to be installed
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  kn <- knowledge(
+    tpc_example,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  # Recommended path using disco()
+  pc_tetrad <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  disco(tpc_example, pc_tetrad, knowledge = kn)
+
+  # or using pc_tetrad directly
+  pc_tetrad <- pc_tetrad |> set_knowledge(kn)
+  pc_tetrad(tpc_example)
 }
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  pc_tetrad <- pc(
+    engine = "tetrad",
+    test = "fisher_z",
+    alpha = 0.05,
+    conflict_rule = 2,
+    depth = 10,
+    stable_fas = FALSE,
+    guarantee_cpdag = TRUE
+  )
+  disco(tpc_example, pc_tetrad)
+}
+}
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{gs}()},
+\code{\link{iamb-family}},
+\code{\link{sp_fci}()},
+\code{\link{tfci}()},
+\code{\link{tges}()},
+\code{\link{tpc}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}

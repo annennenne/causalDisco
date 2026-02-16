@@ -1,0 +1,96 @@
+url: https://bjarkehautop.github.io/causalDisco/
+template:
+  bootstrap: 5
+  math-rendering: katex
+
+reference:
+
+  - title: "Overview"
+    desc: >
+      Package overview
+    contents:
+      - causalDisco-package
+  - title: "Causal Discovery Interface"
+    desc: "High-level interface for running causal discovery."
+    contents:
+      - disco
+      - knowledge
+
+  - title: "Causal Discovery Algorithms"
+    desc: "Core search algorithms implemented or wrapped by causalDisco."
+    contents:
+      - has_concept("cd_algorithms")
+
+  - title: "R6 Classes"
+    contents:
+      - ends_with("Search")
+
+  - title: "Setup for Tetrad Engine"
+    desc: "Functions for installing and verifying the Tetrad Java backend."
+    contents:
+      - install_java
+      - install_tetrad
+      - check_tetrad_install
+
+  - title: "causalDisco Algorithm Run Functions"
+    desc: "Low-level functions that execute causalDisco search algorithms and detail their parameters."
+    contents:
+      - ends_with("run")
+
+  - title: "Tests for TPC"
+    desc: "Test functions implemented for use in the TPC algorithm."
+    contents:
+      - cor_test
+      - reg_test
+
+  - title: "Simulation"
+    contents:
+      - starts_with("generate")
+      - starts_with("sim")
+
+  - title: "Example Datasets"
+    desc: "Small simulated datasets to illustrate causalDisco workflows."
+    contents:
+      - has_concept("dataset")
+
+  - title: "Printing, Summarizing, and Plotting Objects"
+    contents:
+      - starts_with("print")
+      - starts_with("summary")
+      - starts_with("plot")
+      - make_tikz
+
+  - title: "Graph Metrics"
+    contents:
+      - has_concept("metrics")
+      - reexports
+
+  - title: "Knowledge helpers"
+    contents:
+      - starts_with("add")
+      - starts_with("remove")
+      - starts_with("require")
+      - starts_with("forbid")
+      - get_tiers
+      - reorder_tiers
+      - seq_tiers
+      - reposition_tier
+      - convert_tiers_to_forbidden
+      - set_knowledge
+      - as_tetrad_knowledge
+      - as_bnlearn_knowledge
+      - as_pcalg_constraints
+      - knowledge_to_caugi
+      - knowledgeable_caugi
+      - new_knowledgeable_caugi
+      - edges
+      - nodes
+      - deparse_knowledge
+      - unfreeze
+      - +.knowledge
+      - knowledge.knowledgeable_caugi
+
+  - title: "Extend causalDisco"
+    desc: "Functions for extending causalDisco with new algorithms from the available engines."
+    contents:
+      - has_concept("extending_causalDisco")

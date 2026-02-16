@@ -1,188 +1,515 @@
-#' Precision
-#' 
-#' Computes precision (aka positive predictive value) from a confusion matrix, 
-#' see \link{confusion}. 
-#' Precision is defined as TP/(TP + FP), where TP are true positives and 
-#' FP are false positives. If TP + FP = 0, 0 is returned. 
-#' 
-#' @param confusion Confusion matrix as obtained from \link{confusion}
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#' @title Confusion Matrix
+#'
+#' @description
+#' Compute confusion matrix for two PDAG `caugi` graphs.
+#'
+#' @param truth A `caugi` object representing the truth graph.
+#' @param est A `caugi` object representing the estimated graph.
+#' @param type Character string specifying the comparison type:
+#'   \itemize{
+#'     \item \code{"adj"}: adjacency comparison.
+#'     \item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+#'   }
+#'
+#' @details Adjacency comparison: The confusion matrix is a cross-tabulation
+#' of adjacencies. Hence, a truth positive means that the two inputs agree on
+#' the presence of an adjacency. A truth negative means that the two inputs agree
+#' on no adjacency. A false positive means that the estimated graph places an adjacency
+#' where there should be none. A false negative means that the estimated graph does
+#' not place an adjacency where there should have been one.
+#'
+#' Orientation comparison: The orientation confusion matrix is conditional on agreement on
+#' adjacency. This means that only adjacencies that are shared in both input matrices are
+#' considered, and agreement wrt. orientation is then computed only among these edges
+#' that occur in both matrices. A truth positive is a correctly placed arrowhead (1),
+#' a false positive marks placement of arrowhead (1) where there should have been a tail (0),
+#' a false negative marks placement of tail (0) where there should have been an arrowhead (1),
+#' and a truth negative marks correct placement of a tail (0).
+#'
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @return A list with entries \code{tp} (truth positives), \code{tn} (truth negatives),
+#' \code{fp} (false positives), and \code{fn} (false negatives).
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' confusion(cg1, cg2)
+#' confusion(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-precision <- function(confusion) {
-  tp <- confusion$tp
-  fp <- confusion$fp
-  ifelse(tp + fp != 0, tp/(tp + fp), 1)
+confusion <- function(truth, est, type = c("adj", "dir")) {
+  type <- match.arg(type)
+  if (!inherits(est, "caugi::caugi") || !inherits(truth, "caugi::caugi")) {
+    stop("Both inputs must be caugi objects.", call. = FALSE)
+  }
+  caugi::same_nodes(truth, est, throw_error = truth)
+
+  est_amat <- amat(est)
+  truth_amat <- amat(truth)
+
+  if (
+    attr(est_amat, "graph_class") != "PDAG" ||
+      attr(truth_amat, "graph_class") != "PDAG"
+  ) {
+    stop(
+      "Confusion matrix only supports `-->` and `---` edges (PDAG).",
+      call. = FALSE
+    )
+  }
+
+  nodes <- union(rownames(est_amat), rownames(truth_amat))
+
+  # Helper to expand an adjacency matrix to full node set
+  expand_amat <- function(A, nodes) {
+    out <- matrix(
+      0L,
+      nrow = length(nodes),
+      ncol = length(nodes),
+      dimnames = list(nodes, nodes)
+    )
+    out[rownames(A), colnames(A)] <- A
+    out
+  }
+
+  est <- expand_amat(est_amat, nodes)
+  tru <- expand_amat(truth_amat, nodes)
+
+  if (type == "adj") {
+    adj_confusion(est, tru)
+  } else {
+    dir_confusion(est, tru)
+  }
+}
+
+
+#' @title Evaluate Causal Graph Estimates
+#'
+#' @description
+#' Computes various metrics to evaluate the difference between estimated
+#' and truth causal graph. Designed primarily for assessing the
+#' performance of causal discovery algorithms.
+#'
+#' Metrics are supplied as a list with three slots: \code{$adj}, \code{$dir}, and \code{$other}.
+#' \describe{
+#'   \item{\code{$adj}}{Metrics applied to the adjacency confusion matrix (see [confusion()]).}
+#'   \item{\code{$dir}}{Metrics applied to the conditional orientation confusion matrix (see [confusion()]).}
+#'   \item{\code{$other}}{Metrics applied directly to the adjacency matrices without computing confusion matrices.}
+#' }
+#'
+#' Adjacency confusion matrix and conditional orientation confusion matrix only works for
+#' `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @param truth truth `caugi` object.
+#' @param est Estimated `caugi` object.
+#' @param metrics List of metrics, see details. If \code{metrics = "all"}, all available metrics are computed.
+#'
+#' @return A data.frame with one column for each computed metric. Adjacency metrics are prefixed with "adj_",
+#' orientation metrics are prefixed with "dir_", other metrics do not get a prefix.
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' evaluate(cg1, cg2)
+#' evaluate(
+#'   cg1,
+#'   cg2,
+#'   metrics = list(
+#'     adj = c("precision", "recall"),
+#'     dir = c("f1_score"),
+#'     other = c("shd")
+#'   )
+#' )
+#'
+#' @family metrics
+#' @concept metrics
+#' @export
+evaluate <- function(truth, est, metrics = "all") {
+  caugi::same_nodes(truth, est, throw_error = truth)
+  .resolve_cm_metric <- function(m) {
+    get(paste0(".", m, "_cm"), mode = "function")
+  }
+
+  if (identical(metrics, "all")) {
+    metrics <- .metric_registry
+  } else {
+    metrics <- utils::modifyList(
+      list(adj = character(), dir = character(), other = character()),
+      metrics
+    )
+
+    for (slot in names(metrics)) {
+      invalid <- setdiff(metrics[[slot]], .metric_registry[[slot]])
+      if (length(invalid) > 0) {
+        stop(
+          sprintf(
+            "Invalid %s metric(s): %s. Must be one of: %s",
+            slot,
+            paste(invalid, collapse = ", "),
+            paste(.metric_registry[[slot]], collapse = ", ")
+          ),
+          call. = FALSE
+        )
+      }
+    }
+  }
+
+  adj <- metrics$adj %||% character()
+  dir <- metrics$dir %||% character()
+  other <- metrics$other %||% character()
+
+  adj_metrics <- dir_metrics <- other_metrics <- list()
+  adj_names <- dir_names <- other_names <- character()
+
+  if (length(adj) > 0) {
+    adj_conf <- confusion(truth, est, type = "adj")
+    for (m in adj) {
+      adj_metrics[[length(adj_metrics) + 1]] <- .resolve_cm_metric(m)(adj_conf)
+    }
+    adj_names <- paste0("adj_", adj)
+  }
+
+  if (length(dir) > 0) {
+    dir_conf <- confusion(truth, est, type = "dir")
+    for (m in dir) {
+      dir_metrics[[length(dir_metrics) + 1]] <- .resolve_cm_metric(m)(dir_conf)
+    }
+    dir_names <- paste0("dir_", dir)
+  }
+
+  if (length(other) > 0) {
+    for (m in other) {
+      if (m == "shd") {
+        other_metrics[[length(other_metrics) + 1]] <- shd(truth, est)
+      } else if (m == "hd") {
+        other_metrics[[length(other_metrics) + 1]] <- hd(truth, est)
+      } else if (m == "aid") {
+        other_metrics[[length(other_metrics) + 1]] <- aid(truth, est)
+      }
+    }
+    other_names <- other
+  }
+
+  out <- unlist(c(adj_metrics, dir_metrics, other_metrics), use.names = FALSE)
+  names(out) <- c(adj_names, dir_names, other_names)
+  as.data.frame(as.list(out))
+}
+
+
+.metric_registry <- list(
+  adj = c(
+    "precision",
+    "recall",
+    "specificity",
+    "false_omission_rate",
+    "fdr",
+    "npv",
+    "f1_score",
+    "g1_score"
+  ),
+  dir = c(
+    "precision",
+    "recall",
+    "specificity",
+    "false_omission_rate",
+    "fdr",
+    "npv",
+    "f1_score",
+    "g1_score"
+  ),
+  other = c("shd", "hd", "aid")
+)
+
+#' Precision
+#'
+#' @description Computes precision from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' precision as `TP/(TP + FP)`, where TP are truth positives and
+#' `FP` are false positives. If `TP + FP = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in `[0,1]`.
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' precision(cg1, cg2, type = "adj")
+#' precision(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
+#' @export
+precision <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .precision_cm(cm)
+}
+
+.precision_cm <- function(cm) {
+  tp <- cm$tp
+  fp <- cm$fp
+  if (tp + fp != 0) tp / (tp + fp) else 1
 }
 
 #' Recall
-#' 
-#' Computes recall from a confusion matrix, see \link{confusion}. 
-#' Recall is defined as TP/(TP + FN), where TP are true positives and 
-#' FN are false negatives. If TP + FN = 0, 0 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @description Computes recall from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' recall as `TP/(TP + FN)`, where `TP` are truth positives and
+#' `FN` are false negatives. If `TP + FN = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in `[0,1]`.
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' recall(cg1, cg2, type = "adj")
+#' recall(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-recall <- function(confusion) {
-  tp <- confusion$tp
-  fn <- confusion$fn
-  ifelse(tp + fn != 0, tp/(tp + fn), 1)
+recall <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .recall_cm(cm)
+}
+
+.recall_cm <- function(cm) {
+  tp <- cm$tp
+  fn <- cm$fn
+  if (tp + fn != 0) tp / (tp + fn) else 1
 }
 
 #' Specificity
-#' 
-#' Computes specificity from a confusion matrix, see \link{confusion}. 
-#' Specificity is defined as TN/(TN + FP), where TN are true negatives and 
-#' FP are false positives. If TN + FP = 0, 0 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @description Computes specificity from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' specificity as `TN/(TN + FP)`, where `TN` are truth negatives and
+#' `FP` are false positives. If `TN + FP = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' specificity(cg1, cg2, type = "adj")
+#' specificity(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-specificity <- function(confusion) {
-  tn <- confusion$tn
-  fp <- confusion$fp
-  ifelse(tn + fp != 0, tn/(tn + fp), 1)
+specificity <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .specificity_cm(cm)
+}
+
+.specificity_cm <- function(cm) {
+  tn <- cm$tn
+  fp <- cm$fp
+  ifelse(tn + fp != 0, tn / (tn + fp), 1)
 }
 
 #' False Omission Rate
-#' 
-#' Computes false omission rate from a confusion matrix, see \link{confusion}. 
-#' False omission rate is defined as FN/(FN + TN), where FN are false negatives and
-#' TN are true negatives. If FN + TN = 0, 0 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @description Computes false omission rate from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' false omission rate as `FN/(FN + TN)`, where `FN` are false negatives and
+#' `TN` are truth negatives. If `FN + TN = 0, 1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' false_omission_rate(cg1, cg2, type = "adj")
+#' false_omission_rate(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-FOR <- function(confusion) {
-  fn <- confusion$fn
-  tn <- confusion$tn
-  ifelse(fn + tn != 0, fn/(fn + tn), 1)
+false_omission_rate <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .false_omission_rate_cm(cm)
+}
+
+.false_omission_rate_cm <- function(cm) {
+  fn <- cm$fn
+  tn <- cm$tn
+  ifelse(fn + tn != 0, fn / (fn + tn), 1)
 }
 
 #' False Discovery Rate
-#' 
-#' Computes false discovery rate from a confusion matrix, see \link{confusion}. 
-#' False discovery rate is defined as FP/(FP + TP), where FP are false positives and 
-#' TP are true positives. If FP + TP = 0, 0 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @description Computes false discovery rate from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' false discovery rate as `FP/(FP + TP)`, where `FP` are false positives and
+#' `TP` are truth positives. If `FP + TP = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' fdr(cg1, cg2, type = "adj")
+#' fdr(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-FDR <- function(confusion) {
-  fp <- confusion$fp
-  tp <- confusion$tp
-  ifelse(fp + tp != 0, fp/(fp + tp), 1)
+fdr <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .fdr_cm(cm)
 }
 
-#' Negative predictive value
-#' 
-#' Computes negative predictive value recall from a confusion matrix, see \link{confusion}. 
-#' Negative predictive value is defined as TN/(TN + FN), where TN are true negatives and 
-#' FN are false negatives. If TP + FN = 0, 0 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+.fdr_cm <- function(cm) {
+  fp <- cm$fp
+  tp <- cm$tp
+  ifelse(fp + tp != 0, fp / (fp + tp), 1)
+}
+
+#' Negative Predictive Value
+#'
+#' @description Computes negative predictive value from two PDAG `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' negative predictive value as `TN/(TN + FN)`, where `TN` are truth negatives and
+#' `FN` are false negatives. If `TN + FN = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' npv(cg1, cg2, type = "adj")
+#' npv(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-NPV <- function(confusion) {
-  tn <- confusion$tn
-  fn <- confusion$fn
-  ifelse(tn + fn != 0, tn/(tn + fn), 1)
+npv <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .npv_cm(cm)
+}
+
+.npv_cm <- function(cm) {
+  tn <- cm$tn
+  fn <- cm$fn
+  ifelse(tn + fn != 0, tn / (tn + fn), 1)
 }
 
 #' F1 score
-#' 
-#' Computes F1 score from a confusion matrix, see \link{confusion}. 
-#' The F1 score is defined as  \eqn{2 * TP/(2 * TP + FP + FN)}, where TP are true positives,
-#' FP are false positives, and FN are false negatives. If TP + FP + FN = 0, 1 is returned. 
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @description Computes F1 score from two `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where `TP` are truth positives,
+#' `FP` are false positives, and `FN` are false negatives. If `TP + FP + FN = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' f1_score(cg1, cg2, type = "adj")
+#' f1_score(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-F1 <- function(confusion) {
-  tp <- confusion$tp
-  fp <- confusion$fp
-  fn <- confusion$fn
-  ifelse(tp + fp + fn != 0, 2*tp/(2*tp + fp + fn), 1)
+f1_score <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .f1_score_cm(cm)
+}
+
+.f1_score_cm <- function(cm) {
+  tp <- cm$tp
+  fp <- cm$fp
+  fn <- cm$fn
+  ifelse(tp + fp + fn != 0, 2 * tp / (2 * tp + fp + fn), 1)
 }
 
 #' G1 score
-#' 
-#' Computes G1 score from a confusion matrix, see \link{confusion}. G1 score is F1 score with
-#' reversed roles of 0/1 classifications, see Petersen et al. 2022. 
-#' The G1 score is defined as  \eqn{2 * TN/(2 * TN + FN + FP)}, where TN are true negatives,
-#' FP are false positives, and FN are false negatives. If TN + FN + FP = 0, 1 is returned. 
-#' 
-#' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using 
+#'
+#' @description Computes G1 score from two `caugi` objects.
+#' It converts the `caugi` objects to adjacency matrices and computes
+#' G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where `TN` are truth negatives,
+#' `FP` are false positives, and FN are false negatives. If `TN + FN + FP = 0`, `1` is returned.
+#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using
 #' supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).
-#' 
-#' @inheritParams precision
-#' 
-#' @return A numeric in \[0,1\]. 
-#' 
+#'
+#' @inheritParams confusion
+#'
+#' @return A numeric in \[0,1\].
+#'
+#' @examples
+#' cg1 <- caugi::caugi(A %-->% B + C)
+#' cg2 <- caugi::caugi(B %-->% A + C)
+#' g1_score(cg1, cg2, type = "adj")
+#' g1_score(cg1, cg2, type = "dir")
+#'
+#' @family metrics
+#' @concept metrics
 #' @export
-G1 <- function(confusion) {
-  tn <- confusion$tn
-  fn <- confusion$fn
-  fp <- confusion$fp
-  ifelse(tn + fn + fp != 0, 2*tn/(2*tn + fn + fp), 1)
+g1_score <- function(truth, est, type = c("adj", "dir")) {
+  caugi::same_nodes(truth, est, throw_error = TRUE)
+  type <- match.arg(type)
+  cm <- confusion(truth, est, type = type)
+  .g1_score_cm(cm)
 }
 
-
-
-#' Structural hamming distance between adjacency matrices
-#' 
-#' Computes the structural hamming distance between two adjacency matrices. This implementation 
-#' is a modification of the \code{\link[pcalg]{shd}} function from the pcalg package, but here we
-#' avoid working on the heavy \code{graphNEL} objects for representing graphs that are used in the 
-#' pcalg package. 
-#' 
-#' Note that the function is symmetric in the two inputted adjacency matrices. 
-#' 
-#' @param est_amat Estimated adjacency matrix
-#' @param true_amat True adjacency matrix
-#' 
-#' @return A numeric (a non-negative integer).
-#' 
-#'@export
-shd <- function(est_amat, true_amat) {
-  m1 <- est_amat
-  m2 <- true_amat
-  shd <- 0
-  s1 <- m1 + t(m1)
-  s2 <- m2 + t(m2)
-  s1[s1 == 2] <- 1
-  s2[s2 == 2] <- 1
-  ds <- s1 - s2
-  ind <- which(ds > 0)
-  m1[ind] <- 0
-  shd <- shd + length(ind)/2
-  ind <- which(ds < 0)
-  m1[ind] <- m2[ind]
-  shd <- shd + length(ind)/2
-  d <- abs(m1 - m2)
-  shd + sum((d + t(d)) > 0)/2
+.g1_score_cm <- function(cm) {
+  tn <- cm$tn
+  fn <- cm$fn
+  fp <- cm$fp
+  ifelse(tn + fn + fp != 0, 2 * tn / (2 * tn + fn + fp), 1)
 }
 
+#' @importFrom caugi shd
+#' @family metrics
+#' @concept metrics
+#' @export
+caugi::shd
 
-# shd.tamat <- function(est_amat, true_amat) {
-#   shd.default(est_amat$amat, true_amat)
-# }
-# 
-# 
-# shd.tpdag <- function(est_amat, true_amat) {
-#   shd.default(est_amat$amat, true_amat)
-# }
+#' @importFrom caugi hd
+#' @concept metrics
+#' @export
+caugi::hd
+
+#' @importFrom caugi aid
+#' @concept metrics
+#' @export
+caugi::aid

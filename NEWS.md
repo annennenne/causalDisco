@@ -1,3 +1,9 @@
+# causalDisco (development version)
+
+* This release should be considered essentially a **new package** with many new features and breaking changes.
+
+* Please see the vignettes and documentation for details on using the new features.
+
 # causalDisco 0.9.5
 - Fixed warnings and notes from R CMD check regarding documentation.
 

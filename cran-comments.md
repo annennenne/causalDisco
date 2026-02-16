@@ -2,4 +2,4 @@
 
 0 errors | 0 warnings | 1 note
 
-This package has a new maintainer.
+Note: Possibly misspelled words in DESCRIPTION (false positives).

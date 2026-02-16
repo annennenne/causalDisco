@@ -1,194 +1,194 @@
-#' Perform causal discovery using the PC algorithm
+#' @title PC Algorithm for Causal Discovery
 #'
-#' @param data A data.frame with data. All variables should be
-#' assigned to exactly one period by prefixing them with the period name
-#' (see example below).
-#' @param sparsity The sparsity level to be used for independence
-#' testing (i.e. significance level threshold to use for each test).
-#' @param test A procedure for testing conditional independence.
-#' The default, \code{regTest} uses a regression-based information
-#' loss test. Another available option is \code{corTest} which
-#' tests for vanishing partial correlations. User supplied functions
-#' may also be used, see details below about the required syntax.
-#' @param suffStat Sufficient statistic. If this argument is supplied, the
-#' sufficient statistic is not computed from the inputted data. The format and
-#' contents of the sufficient statistic depends on which test is being used.
-#' @param method Which method to use for skeleton construction, must be
-#' \code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-#' See \code{\link[pcalg]{skeleton}} for details.
-#' @param methodNA Method for handling missing information (\code{NA} values).
-#' Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-#' are present), \code{"cc"} (complete case analysis, deletes all observations
-#' that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-#' observations with missing information test-by-test) (further details below).
-#' @param methodOri Method for handling conflicting separating sets when orienting
-#' edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
-#' \code{"maj.rule"}. See \link[pcalg]{pc} for further details.
-#' @param output One of \code{"cpdag"}, \code{"skeleton"} or \code{"pcAlgo"}. If
-#' \code{"skeleton"}, a skeleton is constructed and outputted,
-#' but the edges are not directed. If \code{"cpdag"} (the default),
-#' the edges are directed, resulting in a completed partially directed
-#' acyclic graph (CPDAG). If \code{"pcAlgo"} the CPDAG is outputted as the
-#' object class \code{\link[pcalg]{pcAlgo-class}} from the pcalg package. This is
-#' intended for compatability with tools from that package.
-#'@param varnames A character vector of variable names. It only needs to be supplied
-#' if the \code{data} argument is not used, and data are hence passed exclusively
-#' through the \code{suffStat} argument.
-#' @param conservative Logital, if \code{TRUE} the conservative version of PC is used
-#' (see \code{\link[pcalg]{pc}} for details).
-#' @param ... Further optional arguments which are passed to
-#' \code{\link[pcalg]{skeleton}} if \code{output = "skeleton"} or to
-#' \code{\link[pcalg]{pc}} otherwise.
+#' @description
+#' Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
 #'
-#' @description This is a wrapper function for the \code{\link[pcalg]{pc}} function as
-#' implemented in the pcalg package. All computations are carried out by the
-#' pcalg package.
-#'
+#' @param engine Character; which engine to use. Must be one of:
+#'   \describe{
+#'     \item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
+#'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
+#'     \item{\code{"bnlearn"}}{\pkg{bnlearn} R package.}
+#'   }
+#' @param test Character; name of the conditional‐independence test.
+#' @param alpha Numeric; significance level for the CI tests.
+#' @param ... Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).
 #'
 #' @details
-#' Note that all independence test procedures implemented
-#' in the \code{pcalg} package may be used, see \code{\link[pcalg]{pc}}.
+#' For specific details on the supported tests and parameters for each engine, see:
+#' \itemize{
+#'  \item [TetradSearch] for \pkg{Tetrad},
+#'  \item [PcalgSearch] for \pkg{pcalg},
+#'  \item [BnlearnSearch] for \pkg{bnlearn}.
+#' }
 #'
-#' The methods for handling missing information require that the \code{data},
-#' rather than the \code{suffStat} argument is used for inputting data; the latter
-#' assumes no missing information and hence always sets \code{methodNA = "none"}.
-#' If the test is \code{corTest}, test-wise deletion is performed when computing the
-#' sufficient statistic (correlation matrix) (so for each pair of variables, only
-#' complete cases are used). If the test is \code{regTest}, test-wise deletion
-#' is performed for each conditional independence test instead.
-#
-#' @return A \code{tpdag} or \code{tskeleton} object. Both return types are
-#' S3 objects, i.e., lists with entries: \code{$amat} (the estimated adjacency
-#' matrix), \code{$order} (character vector with the order, as inputted to
-#' this function), \code{$psi} (the significance level used for testing), and
-#' \code{$ntests} (the number of tests conducted).
+#' @example inst/roxygen-examples/pc-example.R
 #'
+#' @return
+#' A function of class \code{"pc"} that takes a single argument \code{data}
+#' (a data frame) and returns a `caugi` (of class "PDAG") and a `knowledge` object.
 #'
-#'
-#' @examples
-#' # PC on included example data, use sparsity psi = 0.01, default test (regression-based
-#' #information loss):
-#' data(tpcExample)
-#' pc(tpcExample, sparsity = 0.01)
-#'
-#'
-#' # PC on included example data, use sparsity psi = 0.01, use test for vanishing partial
-#' # correlations:
-#' data(tpcExample)
-#' pc(tpcExample, sparsity = 0.01, test = corTest)
-#'
-#' @importFrom pcalg skeleton
-#' @importFrom stats na.omit
-#'
-#' @include tpc.R
-#'
+#' @family causal discovery algorithms
+#' @concept cd_algorithms
 #' @export
-pc <- function(data = NULL, sparsity = 10^(-1), test = regTest,
-                suffStat = NULL, method = "stable.fast",
-                methodNA = "none",
-                methodOri = "conservative",
-                output = "cpdag",
-                varnames = NULL,
-                conservative = TRUE, ...) {
+pc <- function(
+  engine = c("tetrad", "pcalg", "bnlearn"),
+  test,
+  alpha = 0.05,
+  ...
+) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang"
+    ),
+    function_name = "pc"
+  )
 
-  #check arguments
-  if (!output %in% c("cpdag", "skeleton", "pcAlgo")) {
-    stop("Output must be cpdag, skeleton or pcAlgo.")
-  }
-  if (!methodNA %in% c("none", "cc", "twd")) {
-    stop("Invalid choice of method for handling NA values.")
-  }
-  if (is.null(data) & is.null(suffStat)) {
-    stop("Either data or sufficient statistic must be supplied.")
-  }
-  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
-    stop("Orientation method must be one of standard, conservative or maj.rule.")
-  }
+  engine <- match.arg(engine)
+  args <- rlang::list2(...)
 
-
-  #handle orientation method argument
-  conservative <- FALSE
-  maj.rule <- FALSE
-  if (methodOri == "conservative") conservative <- TRUE
-  if (methodOri == "maj.rule") maj.rule <- TRUE
-
-
-  # handle missing information
-  # note: twd is handled by the test: they have this as default, so the code here
-  # is used to ensure that missing info is only passed along if we in fact want to
-  # use twd
-  if (any(is.na(data))) {
-    if (methodNA == "none") {
-      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
-    } else if (methodNA == "cc") {
-      data <- na.omit(data)
-      if (nrow(data) == 0) {
-        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
-      }
-    }
+  # build a `runner builder` that knows how to make a runner given knowledge
+  builder <- function(knowledge = NULL) {
+    runner <- switch(
+      engine,
+      tetrad = rlang::exec(
+        pc_tetrad_runner,
+        test = test,
+        alpha = alpha,
+        !!!args
+      ),
+      pcalg = rlang::exec(pc_pcalg_runner, test = test, alpha = alpha, !!!args),
+      bnlearn = rlang::exec(
+        pc_bnlearn_runner,
+        test = test,
+        alpha = alpha,
+        !!!args
+      )
+    )
+    runner
   }
 
-  #variable names
-  if (is.null(data)) {
-    vnames <- varnames
+  method <- disco_method(builder, "pc")
+  attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PDAG"
+  method
+}
+
+#' @keywords internal
+pc_tetrad_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rJava",
+      "rlang"
+    ),
+    function_name = "pc_tetrad_runner"
+  )
+
+  search <- TetradSearch$new()
+  args <- list(...)
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "tetrad",
+    "pc",
+    test = test
+  )
+
+  if (length(args_to_pass$test_args) > 0) {
+    rlang::exec(
+      search$set_test,
+      method = test,
+      alpha = alpha,
+      !!!args_to_pass$test_args
+    )
   } else {
-    vnames <- names(data)
+    search$set_test(method = test, alpha = alpha)
   }
 
-  #Construct sufficient statistic for built-in tests
-  if (is.null(suffStat)) {
-    thisTestName <- deparse(substitute(test))
-    if (thisTestName == "regTest") {
-      thisSuffStat <- makeSuffStat(data, type = "regTest")
-    } else if (thisTestName == "corTest") {
-      thisSuffStat <- makeSuffStat(data, type = "corTest")
-    } else {
-      stop(paste("suffStat needs to be supplied",
-                 "when using a non-builtin test."))
-    }
+  if (length(args_to_pass$alg_args) > 0) {
+    # splice
+    rlang::exec(search$set_alg, "pc", !!!args_to_pass$alg_args)
   } else {
-    thisSuffStat <- suffStat
-    methodNA <- "none" #can't handle NA for user-supplied suff. stat./test
+    search$set_alg("pc")
   }
 
-
-
-
-  if (output == "skeleton") {
-    #Learn skeleton
-    skel <- skeleton(suffStat = thisSuffStat,
-                     indepTest = test,
-                     alpha = sparsity,
-                     labels = vnames,
-                     method = method, ...)
-    ntests <- sum(skel@n.edgetests)
-    out <- list(amat = graph2amat(skel), psi = sparsity,
-                ntest = ntests)
-    class(out) <- "skeleton"
-  } else { #case: output == "cpdag" or "pcAlgo"
-
-    #Direct edges
-    res <- pcalg::pc(suffStat = thisSuffStat,
-                     indepTest = test,
-                     alpha = sparsity,
-                     labels = vnames,
-                     skel.method = method,
-                     conservative = conservative,
-                     maj.rule = maj.rule,
-                     ...)
-    ntests <- sum(res@n.edgetests)
-
-    #Pack up output
-    if (output == "cpdag") {
-      out <- list(amat = graph2amat(res, toFrom = FALSE), psi = sparsity,
-                  ntests = ntests)
-      class(out) <- "cpdag"
-    } else if (output == "pcAlgo") {
-      out <- res
-    }
-  }
-
-  out
+  runner <- list(
+    set_knowledge = function(knowledge) search$set_knowledge(knowledge),
+    run = function(data) search$run_search(data)
+  )
+  runner
 }
 
 
+#' @keywords internal
+pc_pcalg_runner <- function(
+  test,
+  alpha,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "pc_pcalg_runner"
+  )
+
+  search <- PcalgSearch$new()
+  args <- list(...)
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "pcalg",
+    "pc",
+    test = test
+  )
+
+  search$set_params(args_to_pass$alg_args)
+  search$set_test(test, alpha)
+  search$set_alg("pc")
+
+  runner <- list(
+    set_knowledge = function(knowledge) {
+      search$set_knowledge(
+        knowledge,
+        directed_as_undirected = directed_as_undirected_knowledge
+      )
+    },
+    run = function(data) {
+      search$run_search(data)
+    }
+  )
+  runner
+}
+
+#' @keywords internal
+pc_bnlearn_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "bnlearn"
+    ),
+    function_name = "pc_bnlearn_runner"
+  )
+
+  args <- list(...)
+  search <- BnlearnSearch$new()
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "bnlearn",
+    "pc.stable"
+  )
+
+  search$set_test(test, alpha)
+  search$set_alg("pc", args_to_pass)
+
+  runner <- list(
+    set_knowledge = function(knowledge) {
+      search$set_knowledge(knowledge)
+    },
+    run = function(data) {
+      search$run_search(data)
+    }
+  )
+  runner
+}

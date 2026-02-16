@@ -1,0 +1,187 @@
+---
+title: "Causal Discovery"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Causal Discovery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(causalDisco)
+```
+
+This vignette provides a very brief introduction to causal discovery using simulated data. For a thorough introduction to causal
+discovery concepts, we recommend Glymour et al. (2019) [Review of Causal Discovery Methods Based on Graphical Models](https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00524/full) or Zanga et al. (2022) [A Survey on Causal Discovery: Theory and Practice](https://arxiv.org/abs/2305.10032).
+
+The goal of causal discovery is to infer the causal relationships among a set of observed variables using observational
+data.
+
+# Example of causal discovery
+
+Suppose we have this DAG:
+
+```{r dag}
+cg <- caugi::caugi(
+    Z %-->% X1,
+    X3 %-->% X2,
+    X1 %-->% Y,
+    X2 %-->% Y
+)
+```
+
+We define a layout which we will use for plotting the graphs in this vignette:
+
+```{r plot dag}
+layout <- caugi::caugi_layout_sugiyama(cg)
+plot(cg, layout = layout, main = "True DAG")
+```
+
+We can create data from a linear Gaussian model corresponding to the above DAG using `generate_dag_data()`. We generate
+10000 samples with a fixed random seed from the DAG above:
+
+```{r simple causal discovery}
+data_linear <- generate_dag_data(
+  cg,
+  n = 10000,
+  seed = 1405
+)
+head(data_linear)
+```
+
+The R code used to generate the data is stored as an attribute of the data frame:
+
+```{r generating model}
+attr(data_linear, "generating_model")
+```
+
+The goal is now to recover the causal structure from the data alone.
+
+We will use the PC algorithm to learn the causal structure. One of its key assumptions is causal sufficiency,
+meaning that there are no unobserved confounders.
+We can use the PC algorithm from any of the "tetrad", "pcalg", or "bnlearn" engines to learn the structure from the
+data. The motivation for having multiple engines is that they may implement different algorithms, tests, or
+scoring methods, or the same algorithm may be implemented differently across engines.
+
+Below, we set up the PC algorithm using Fisher's Z test, a significance level of 0.05, and `pcalg` as the engine. To do
+so, we first define the PC method using the `pc()` function, and then pass it to the `disco()` function along with
+the data.
+
+```{r pc algorithm simple}
+pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_result_pcalg <- disco(data = data_linear, method = pc_pcalg)
+```
+
+We can visualize the results using the `plot()` function, where we explicitly provide the layout defined above so graphs
+are easier to compare.
+
+```{r plot pc results simple}
+plot(pc_result_pcalg, layout = layout, main = "PC (pcalg)")
+```
+
+The PC algorithm recovers the correct causal structure up to Markov equivalence, represented as a CPDAG. A CPDAG
+represents the equivalence class of DAGs that encode the same conditional independencies.
+
+The first notable feature of this plot is that some edges are directed, while others are undirected.
+For example, the edge from `X1` to `Y` is directed, indicating a causal effect of `X1` on `Y`, but not in the
+reverse direction. In contrast, the edge between `X2` and `X3` is undirected, indicating that the data alone do
+not provide sufficient information to determine the causal direction.
+Both orientations `X2 %-->% X3` and `X3 %-->% X2` are compatible with the observed conditional independencies.
+
+We demonstrate the non-identifiability of the causal direction between `X2` and `X3` by reversing the direction
+of this edge in the data-generating process above and applying the PC algorithm to the resulting data set.
+
+```{r pc algorithm reversed}
+cg_reverse <- caugi::caugi(
+  Z %-->% X1,
+  X2 %-->% X3,
+  X1 %-->% Y,
+  X2 %-->% Y
+)
+
+data_linear_reverse <- generate_dag_data(
+  cg_reverse,
+  n = 10000,
+  seed = 1405
+)
+
+pc_result_reverse <- disco(data = data_linear_reverse, method = pc_pcalg)
+plot(pc_result_reverse, layout = layout, main = "PC (pcalg) reversed")
+```
+
+We learn the same causal structure as before, demonstrating that the direction of influence between `X2` and `X3`
+cannot be determined from the data alone.
+
+# Unobserved confounding
+
+In practice, unobserved confounders may be present, violating the assumptions of the PC algorithm. Suppose
+we have the following DAG with an unobserved confounder `U` between `X1` and `X2`:
+
+```{r dag unobserved confounder}
+cg_unobserved <- caugi::caugi(
+  Z %-->% X1,
+  X3 %-->% X2,
+  X1 %-->% Y,
+  X2 %-->% Y,
+  U %-->% X1 + X2
+)
+```
+
+We can visualize this DAG, marking the unobserved variable `U` in red and using dashed edges to indicate
+that it is unobserved:
+
+```{r plot dag unobserved confounder}
+plot(
+  cg_unobserved,
+  edge_style = list(
+    by_edge = list(
+      U = list(col = "red", fill = "red", lty = "dashed")
+    )
+  ),
+  node_style = list(
+    by_node = list(
+      U = list(col = "red", fill = "red")
+    )
+  ),
+  main = "True DAG with unobserved confounder"
+)
+```
+
+We can generate data from this DAG using `generate_dag_data()`, and then afterwards remove the unobserved variable
+`U` from the data frame:
+
+```{r data unobserved confounder}
+data_unobserved <- generate_dag_data(
+  cg_unobserved,
+  n = 10000,
+  seed = 1405
+)
+data_unobserved <- data_unobserved[, names(data_unobserved) != "U"]
+head(data_unobserved)
+```
+
+We can then apply the PC algorithm as before:
+
+```{r pc algorithm unobserved confounder}
+pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_result_unobserved <- disco(data = data_unobserved, method = pc_pcalg_unobserved)
+plot(pc_result_unobserved, layout = layout, main = "PC (pcalg) unobserved confounder")
+```
+
+We see that the PC algorithm does not recover the correct causal structure due to the presence of the
+unobserved confounder. In particular, it found an incorrect edge between `X1` and `X2`.
+
+# Next steps
+
+For more information about how to incorporate knowledge into causal discovery methods, see the
+[knowledge vignette](knowledge.html).
+
+For more information about how to visualize causal discovery results, see the
+[visualization vignette](visualization.html).

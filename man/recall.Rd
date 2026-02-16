@@ -4,16 +4,47 @@
 \alias{recall}
 \title{Recall}
 \usage{
-recall(confusion)
+recall(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the truth graph.}
+
+\item{est}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
-A numeric in [0,1].
+A numeric in \verb{[0,1]}.
 }
 \description{
-Computes recall from a confusion matrix, see \link{confusion}.
-Recall is defined as TP/(TP + FN), where TP are true positives and
-FN are false negatives. If TP + FN = 0, 0 is returned.
+Computes recall from two PDAG \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+recall as \code{TP/(TP + FN)}, where \code{TP} are truth positives and
+\code{FN} are false negatives. If \code{TP + FN = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+recall(cg1, cg2, type = "adj")
+recall(cg1, cg2, type = "dir")
+
+}
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{evaluate}()},
+\code{\link{f1_score}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{g1_score}()},
+\code{\link{npv}()},
+\code{\link{precision}()},
+\code{\link{reexports}},
+\code{\link{specificity}()}
+}
+\concept{metrics}

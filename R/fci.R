@@ -1,129 +1,151 @@
-#' Perform causal discovery using the FCI algorithm 
-#' 
-#' @description This is a wrapper function for the \code{\link[pcalg]{fci}} function as
-#' implemented in the pcalg package. All computations are carried out by the 
-#' pcalg package. The default output object however matches that of \link{tfci}, see
-#' this function for details about how the adjacency matrix is encoded.
+#' @title FCI Algorithm for Causal Discovery
 #'
-#' @inheritParams tfci
-#' @param output One of \code{"pag"} or \code{"fciAlgo"}. If \code{"pag"} 
-#' a partial ancestral graph (PAG) object is outputted. 
-#' If \code{"fciAlgo"} the PAG is outputted as the 
-#' object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is
-#' intended for compatability with tools from that package. 
+#' @description
+#' Run the FCI algorithm for causal discovery using one of several engines.
 #'
-#' @include tpc.R
-#' 
-#' @importFrom pcalg pdsep skeleton
-#' @importFrom stats na.omit
-#' 
-#' @examples
-#' # simulate linear Gaussian data w unobserved variable L1
-#' n <- 100
-#' L1 <- rnorm(n) 
-#' X1 <- rnorm(n)
-#' X2 <- L1 + X1 + rnorm(n)
-#' X3 <- X1 + rnorm(n)
-#' X4 <- X3 + L1 + rnorm(n)
-#' d <- data.frame(p1_X1 = X1,
-#'                 p1_X2 = X2,
-#'                 p2_X3 = X3,
-#'                 p2_X4 = X4)
-#' 
-#' # use FCI algorithm to recover PAG                
-#' fci(d, test = corTest)
-#' 
-#' 
+#' @param engine Character; which engine to use. Must be one of:
+#'   \describe{
+#'     \item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
+#'     \item{\code{"pcalg"}}{\pkg{pcalg} R package.}
+#'   }
+#' @param test Character; name of the conditional‐independence test.
+#' @param alpha Numeric; significance level for the CI tests.
+#' @param ... Additional arguments passed to the chosen engine
+#' (e.g. test or algorithm parameters).
+#'
+#' @details
+#' For specific details on the supported tests and parameters for each engine, see:
+#' \itemize{
+#'  \item [TetradSearch] for \pkg{Tetrad},
+#'  \item [PcalgSearch] for \pkg{pcalg}.
+#' }
+#'
+#' @example inst/roxygen-examples/fci-example.R
+#'
+#' @return
+#' A function of class \code{"fci"} that takes a single argument \code{data}
+#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
+#' (`knowledgeable_caugi`) object.
+#'
+#' @family causal discovery algorithms
+#' @concept cd_algorithms
 #' @export
-fci <- function(data = NULL, sparsity = 10^(-1), test = regTest,
-                 suffStat = NULL, method = "stable.fast",
-                 methodNA = "none",
-                 methodOri = "conservative",
-                 output = "pag", 
-                 varnames = NULL, ...) {
-  
-  #check arguments
-  if (!output %in% c("pag", "fciAlgo")) {
-    stop("Output must be pag or fciAlgo.")
+fci <- function(
+  engine = c("tetrad", "pcalg"),
+  test,
+  alpha = 0.05,
+  ...
+) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang"
+    ),
+    function_name = "fci"
+  )
+
+  engine <- match.arg(engine)
+  args <- rlang::list2(...)
+
+  builder <- function(knowledge = NULL) {
+    runner <- switch(
+      engine,
+      tetrad = rlang::exec(
+        fci_tetrad_runner,
+        test = test,
+        alpha = alpha,
+        !!!args
+      ),
+      pcalg = rlang::exec(fci_pcalg_runner, test = test, alpha = alpha, !!!args)
+    )
+    runner
   }
-  if (!methodNA %in% c("none", "cc", "twd")) {
-    stop("Invalid choice of method for handling NA values.")
-  }
-  if (is.null(data) & is.null(suffStat)) {
-    stop("Either data or sufficient statistic must be supplied.")
-  }
-  if (!(methodOri %in% c("standard", "conservative", "maj.rule"))) {
-    stop("Orientation method must be one of standard, conservative or maj.rule.")
-  }
-  
-  
-  #handle orientation method argument
-  conservative <- FALSE
-  maj.rule <- FALSE
-  if (methodOri == "conservative") conservative <- TRUE
-  if (methodOri == "maj.rule") maj.rule <- TRUE
-  
-  # handle missing information
-  # note: twd is handled by the test: they have this as default, so the code here
-  # is used to ensure that missing info is only passed along if we in fact want to 
-  # use twd
-  if (any(is.na(data))) {
-    if (methodNA == "none") {
-      stop("Inputted data contain NA values, but no method for handling missing NAs was supplied.")
-    } else if (methodNA == "cc") {
-      data <- na.omit(data)
-      if (nrow(data) == 0) {
-        stop("Complete case analysis chosen, but inputted data contain no complete cases.")
-      }  
-    }
-  }
-  
-  #variable names
-  if (is.null(data)) {
-    vnames <- varnames
-  } else {
-    vnames <- names(data)
-  }
-  
-  
-  #Construct sufficient statistic for built-in tests
-  if (is.null(suffStat)) {
-    thisTestName <- deparse(substitute(test))
-    if (thisTestName == "regTest") {
-      thisSuffStat <- makeSuffStat(data, type = "regTest")
-    } else if (thisTestName == "corTest") {
-      thisSuffStat <- makeSuffStat(data, type = "corTest")
-    } else {
-      stop(paste("suffStat needs to be supplied",
-                 "when using a non-builtin test."))
-    }
-  } else {
-    thisSuffStat <- suffStat
-    methodNA <- "none" #can't handle NA for user-supplied suff. stat./test
-  }
-  
-  # do fci
-  res <- pcalg::fci(suffStat = thisSuffStat,
-                    indepTest = test,
-                    alpha = sparsity,
-                    labels = vnames,
-                    skel.method = method,
-                    conservative = conservative,
-                    maj.rule = maj.rule,
-                    ...)
-  
-  
-  ntests <- sum(res@n.edgetests)
-  
-  #Pack up output
-  if (output == "pag") {
-    out <- list(amat = graph2amat(res, type = "ag"), psi = sparsity) #,
-#                ntests = ntests)
-    class(out) <- "pag"
-  } else if (output == "fciAlgo") {
-    out <- res
-  }
-  
-  out
+  method <- disco_method(builder, "fci")
+  attr(method, "engine") <- engine
+  attr(method, "graph_class") <- "PAG"
+  method
 }
 
+# Set available engines
+attr(fci, "engines") <- c("tetrad", "pcalg")
+
+fci_tetrad_runner <- function(test, alpha, ...) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "rlang",
+      "rJava"
+    ),
+    function_name = "fci_tetrad_runner"
+  )
+
+  search <- TetradSearch$new()
+  args <- list(...)
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "tetrad",
+    "fci",
+    test = test
+  )
+
+  if (length(args_to_pass$test_args) > 0) {
+    rlang::exec(
+      search$set_test,
+      method = test,
+      alpha = alpha,
+      !!!args_to_pass$test_args
+    )
+  } else {
+    search$set_test(method = test, alpha = alpha)
+  }
+
+  if (length(args_to_pass$alg_args) > 0) {
+    rlang::exec(search$set_alg, "fci", !!!args_to_pass$alg_args)
+  } else {
+    search$set_alg("fci")
+  }
+
+  runner <- list(
+    set_knowledge = function(knowledge) search$set_knowledge(knowledge),
+    run = function(data) search$run_search(data)
+  )
+  runner
+}
+
+fci_pcalg_runner <- function(
+  test,
+  alpha,
+  ...,
+  directed_as_undirected_knowledge = FALSE
+) {
+  .check_if_pkgs_are_installed(
+    pkgs = c(
+      "pcalg"
+    ),
+    function_name = "fci_pcalg_runner"
+  )
+  args <- list(...)
+  search <- PcalgSearch$new()
+  args_to_pass <- check_args_and_distribute_args(
+    search,
+    args,
+    "pcalg",
+    "fci",
+    test = test
+  )
+  search$set_params(args_to_pass$alg_args)
+  search$set_test(test, alpha)
+  search$set_alg("fci")
+
+  runner <- list(
+    set_knowledge = function(knowledge) {
+      search$set_knowledge(
+        knowledge,
+        directed_as_undirected = directed_as_undirected_knowledge
+      )
+    },
+    run = function(data) {
+      search$run_search(data)
+    }
+  )
+  runner
+}

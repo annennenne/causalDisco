@@ -1,95 +1,181 @@
-# causalDisco <img src="graphics/hex.png" width="121px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
 
-`causalDisco` is in an R package with tools for causal discovery on observational data.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
+
+<!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/BjarkeHautop/causalDisco)
+[![R-CMD-check](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
+<!-- badges: end -->
+
+causalDisco provides a unified interface for causal discovery on
+observational data. It wraps multiple causal discovery backends under a
+common, consistent syntax.
+
+## Motivation
+
+Causal discovery methods exist in many ecosystems, for example in
+bnlearn, pcalg, or Tetrad, but their APIs vary widely.
+
+causalDisco unifies them under one clear grammar, making it easy to
+compare results, switch algorithms, and focus on scientific questions
+rather than package quirks.
+
+Time to hit the disco 🪩
 
 ## Installation
 
-To install the development version of `causalDisco` run the following
-commands from within R (requires that the `remotes` package is already installed)
+### Install causalDisco
 
-```{r}
-remotes::install_github("annennenne/causalDisco")
+To install causalDisco ensure you first have installed Rust as described
+below.
+
+Then you can install the development version of causalDisco from GitHub
+using pak:
+
+``` r
+pak::pkg_install("BjarkeHautop/causalDisco")
 ```
 
-Note that the package requires installation of the `pcalg` package as well, which depends on packages available only Bioconductor. There is an installation guide for `pcalg` [here](https://github.com/asreview/pcalg).  
+or with all suggested packages (note that this requires a valid Java /
+JDK installation for rJava as described below):
 
-## Temporal causal discovery
+``` r
+pak::pkg_install("BjarkeHautop/causalDisco", dependencies = TRUE)
+```
 
-causalDisco includes an implementation of *temporal PC*, a temporal version of the PC algorithm. The following examples shows how this function may be used to produce a temporal partially directed acyclic graph (TPDAG) for an observed data set with temporal information. 
-```{r}
+### Installing Rust
+
+causalDisco depends on the package
+[caugi](https://github.com/frederikfabriciusbjerre/caugi), which
+requires Rust to be installed on your system. See
+<https://rust-lang.org/tools/install/> for instructions on how to
+install Rust.
+
+### Installing Java / JDK
+
+causalDisco provides an interface to the Java library
+[Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
+algorithms. To use algorithms from Tetrad you need to install a Java
+Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
+available at <https://adoptium.net> for all major operating systems.
+
+Alternatively, we provide a helper function to install Temurin JDK 25 on
+macOS and Windows:
+
+``` r
+causalDisco::install_java()
+```
+
+The current supported version of Tetrad can then be installed by calling
+
+``` r
+causalDisco::install_tetrad()
+```
+
+To verify everything is set up correctly you can run
+`check_tetrad_install()`:
+
+``` r
+causalDisco::check_tetrad_install()
+#> $installed
+#> [1] TRUE
+#> 
+#> $version
+#> [1] "7.6.10"
+#> 
+#> $java_ok
+#> [1] TRUE
+#> 
+#> $java_version
+#> [1] "25.0.2"
+#> 
+#> $message
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
+```
+
+## Example
+
+With causalDisco you can currently run causal discovery algorithms from
+the package causalDisco itself, the the R packages bnlearn and pcalg,
+and the Java application Tetrad with a consistent syntax. Here we
+provide a simple example of how to use these different backends with the
+same code structure. We also show how to incorporate tiered background
+knowledge.
+
+``` r
 library(causalDisco)
+#> causalDisco startup:
+#>   Java heap size requested: 2 GB
+#>   Tetrad version: 7.6.10
+#>   Java successfully initialized with 2 GB.
+#>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
+#>   Restart R to apply changes.
 
-#Simulate data
-set.seed(123)
-n <- 500
+# Load data
+data(tpc_example)
 
-child_x <- rnorm(n)^2
-child_y <- 0.5*child_x + rnorm(n)
-child_z <- sample(c(0,1), n, replace = TRUE, 
-                  prob = c(0.3, 0.7))
-adult_x <- child_x + rnorm(n)
-adult_z <- as.numeric(child_z + rnorm(n) > 0)
-adult_w <- 2*adult_z + rnorm(n)
-adult_y <- 2*sqrt(child_x) + adult_w^2 + rnorm(n)
+pcalg_ges <- ges(
+  engine = "pcalg", # Use the pcalg implementation
+  score = "sem_bic" # Use BIC score for model selection
+)
+disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
 
-simdata <- data.frame(child_x, child_y, child_z,
-                      adult_x, adult_z, adult_w,
-                      adult_y)
+# We can also pass background knowledge to the engines that support it. Here we use tiered knowledge,
+# which is a common way to encode temporal ordering of variables.
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"), # Using the tidyselect syntax to select variables for each tier
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
 
+cd_tpc <- tpc(
+  engine = "causalDisco", # Use the causalDisco implementation
+  test = "fisher_z", # Use Fisher's Z test for conditional independence
+  alpha = 0.05 # Significance level for the test
+)
+disco_cd_tpc <- disco(data = tpc_example, method = cd_tpc, knowledge = kn)
 
-#Define order
-simorder <- c("child", "adult")
+bnlearn_pc <- pc(
+  engine = "bnlearn", # Use the bnlearn implementation
+  test = "cor", # Use Pearson correlation test for conditional independence
+  alpha = 0.05
+)
+disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 
-#Perform TPC with sparsity psi = 0.01
-results <- tpc(simdata, order = simorder, sparsity = 10^(-2))
-
-#Plot results
-plot(results)
-
-
-#Plot results with custom labels for variables and periods
-varlabs <- list(`child_x` = "x", `child_y` = "y",
-                `child_z` = "z", `adult_x` = "x",
-                `adult_z` = "z", `adult_w` = "w",
-                `adult_y` = "y")
-perlabs <- c("Childhood", "Adulthood")
-plot(results, varLabels = varlabs, periodLabels = perlabs)
+# Requires Tetrad to be installed
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  tetrad_pc <- pc(
+    engine = "tetrad", # Use the Tetrad implementation
+    test = "conditional_gaussian", # Use conditional Gaussian test
+    alpha = 0.05
+  )
+  disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
+}
 ```
 
-Here is an example for using the package for plotting a user supplied adjacency matrix with order information:
+You can visualize the resulting causal graph using the `plot()`
+function:
 
-```{r}
-library(causalDisco)
-
-#Adjacency matrix for the data generating mechanism for simdata
-vnames <- c("child_x", "child_y", "child_z", "adult_x", 
-            "adult_z", "adult_w", "adult_y")
-thisamat <- matrix(c(0, 0, 0, 0, 0, 0, 0,
-                     1, 0, 0, 0, 0, 0, 0,
-                     0, 0, 0, 0, 0, 0, 0, 
-                     1, 0, 0, 0, 0, 0, 0,
-                     0, 0, 1, 0, 0, 0, 0, 
-                     0, 0, 0, 0, 1, 0, 0,
-                     1, 0, 0, 0, 0, 1, 0),
-                    7, 7, 
-                    byrow = TRUE,
-                    dimnames = list(vnames, vnames))
-thisorder <- c("child", "adult")
-
-#Make temporal adjacency matrix
-thistamat <- tamat(thisamat, thisorder)
-
-#Plot
-plot(thistamat)
+``` r
+plot(disco_cd_tpc)
 ```
 
+<img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
-## Webtool
-
-The causalDisco webtool provides an overview of R procedures for working with causal discovery in R, including example code. The webtool can be accessed [here](https://shiny.sund.ku.dk/zms499/causalDisco). Source code for the webtool is available in this repository. 
-
+Please see the package vignettes for more detailed introductions to the
+package and its features, such as how to incorporate knowledge, run
+causal discovery, and visualize results.
 
 ## Bugs & requests
 
-If you find bugs or have a request for a new feature, please [open an issue](https://github.com/annennenne/causalDisco/issues).
+Bug reports and feature requests are welcome:
+
+[open an issue](https://github.com/BjarkeHautop/causalDisco/issues).

@@ -4,17 +4,47 @@
 \alias{precision}
 \title{Precision}
 \usage{
-precision(confusion)
+precision(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{confusion}{Confusion matrix as obtained from \link{confusion}}
+\item{truth}{A \code{caugi} object representing the truth graph.}
+
+\item{est}{A \code{caugi} object representing the estimated graph.}
+
+\item{type}{Character string specifying the comparison type:
+\itemize{
+\item \code{"adj"}: adjacency comparison.
+\item \code{"dir"}: orientation comparison conditional on shared adjacencies.
+}}
 }
 \value{
-A numeric in [0,1].
+A numeric in \verb{[0,1]}.
 }
 \description{
-Computes precision (aka positive predictive value) from a confusion matrix,
-see \link{confusion}.
-Precision is defined as TP/(TP + FP), where TP are true positives and
-FP are false positives. If TP + FP = 0, 0 is returned.
+Computes precision from two PDAG \code{caugi} objects.
+It converts the \code{caugi} objects to adjacency matrices and computes
+precision as \code{TP/(TP + FP)}, where TP are truth positives and
+\code{FP} are false positives. If \code{TP + FP = 0}, \code{1} is returned.
+Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
+\examples{
+cg1 <- caugi::caugi(A \%-->\% B + C)
+cg2 <- caugi::caugi(B \%-->\% A + C)
+precision(cg1, cg2, type = "adj")
+precision(cg1, cg2, type = "dir")
+
+}
+\seealso{
+Other metrics: 
+\code{\link{confusion}()},
+\code{\link{evaluate}()},
+\code{\link{f1_score}()},
+\code{\link{false_omission_rate}()},
+\code{\link{fdr}()},
+\code{\link{g1_score}()},
+\code{\link{npv}()},
+\code{\link{recall}()},
+\code{\link{reexports}},
+\code{\link{specificity}()}
+}
+\concept{metrics}

@@ -2,87 +2,124 @@
 % Please edit documentation in R/fci.R
 \name{fci}
 \alias{fci}
-\title{Perform causal discovery using the FCI algorithm}
+\title{FCI Algorithm for Causal Discovery}
 \usage{
-fci(
-  data = NULL,
-  sparsity = 10^(-1),
-  test = regTest,
-  suffStat = NULL,
-  method = "stable.fast",
-  methodNA = "none",
-  methodOri = "conservative",
-  output = "pag",
-  varnames = NULL,
-  ...
-)
+fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data.frame with data. All variables should be
-assigned to exactly one period by prefixing them with the period name
-(see example below).}
+\item{engine}{Character; which engine to use. Must be one of:
+\describe{
+\item{\code{"tetrad"}}{\pkg{Tetrad} Java library.}
+\item{\code{"pcalg"}}{\pkg{pcalg} R package.}
+}}
 
-\item{sparsity}{The sparsity level to be used for independence
-testing (i.e. significance level threshold to use for each test).}
+\item{test}{Character; name of the conditional‐independence test.}
 
-\item{test}{A procedure for testing conditional independence.
-The default, \code{regTest} uses a regression-based information
-loss test. Another available option is \code{corTest} which
-tests for vanishing partial correlations. User supplied functions
-may also be used, see details below about the required syntax.}
+\item{alpha}{Numeric; significance level for the CI tests.}
 
-\item{suffStat}{Sufficient statistic. If this argument is supplied, the
-sufficient statistic is not computed from the inputted data. The format and
-contents of the sufficient statistic depends on which test is being used.}
-
-\item{method}{Which method to use for skeleton construction, must be
-\code{"stable"}, \code{"original"}, or \code{"stable.fast"} (the default).
-See \code{\link[pcalg]{skeleton}} for details.}
-
-\item{methodNA}{Method for handling missing information (\code{NA} values).
-Must be one of \code{"none"} (default, an error is thrown if \code{NA}s
-are present), \code{"cc"} (complete case analysis, deletes all observations
-that have any \code{NA} values), or \code{"twd"} (test wise deletion, omits
-observations with missing information test-by-test) (further details below).}
-
-\item{methodOri}{Method for handling conflicting separating sets when orienting
-edges, must be one of \code{"standard"}, \code{"conservative"} (the default) or
-\code{"maj.rule"}. See \link[pcalg]{pc} for further details.}
-
-\item{output}{One of \code{"pag"} or \code{"fciAlgo"}. If \code{"pag"}
-a partial ancestral graph (PAG) object is outputted.
-If \code{"fciAlgo"} the PAG is outputted as the
-object class \code{\link[pcalg]{fciAlgo-class}} from the pcalg package. This is
-intended for compatability with tools from that package.}
-
-\item{varnames}{A character vector of variable names. It only needs to be supplied
-if the \code{data} argument is not used, and data are hence passed exclusively
-through the \code{suffStat} argument.}
-
-\item{...}{Further optional arguments which are passed to
-\code{\link[pcalg]{skeleton}} for the skeleton constructing phase.}
+\item{...}{Additional arguments passed to the chosen engine
+(e.g. test or algorithm parameters).}
+}
+\value{
+A function of class \code{"fci"} that takes a single argument \code{data}
+(a data frame) and returns a \code{caugi} (of class "UNKNOWN") and a \code{knowledge}
+(\code{knowledgeable_caugi}) object.
 }
 \description{
-This is a wrapper function for the \code{\link[pcalg]{fci}} function as
-implemented in the pcalg package. All computations are carried out by the
-pcalg package. The default output object however matches that of \link{tfci}, see
-this function for details about how the adjacency matrix is encoded.
+Run the FCI algorithm for causal discovery using one of several engines.
+}
+\details{
+For specific details on the supported tests and parameters for each engine, see:
+\itemize{
+\item \link{TetradSearch} for \pkg{Tetrad},
+\item \link{PcalgSearch} for \pkg{pcalg}.
+}
 }
 \examples{
-# simulate linear Gaussian data w unobserved variable L1
-n <- 100
-L1 <- rnorm(n) 
-X1 <- rnorm(n)
-X2 <- L1 + X1 + rnorm(n)
-X3 <- X1 + rnorm(n)
-X4 <- X3 + L1 + rnorm(n)
-d <- data.frame(p1_X1 = X1,
-                p1_X2 = X2,
-                p2_X3 = X3,
-                p2_X4 = X4)
+data(tpc_example)
 
-# use FCI algorithm to recover PAG                
-fci(d, test = corTest)
+# Recommended path using disco()
+fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, fci_pcalg)
 
+# or using fci_pcalg directly
+fci_pcalg(tpc_example)
 
+# With all algorithm arguments specified
+fci_pcalg <- fci(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.05,
+  skel.method = "original",
+  type = "anytime",
+  fixedGaps = NULL,
+  fixedEdges = NULL,
+  NAdelete = FALSE,
+  m.max = 10,
+  pdsep.max = 2,
+  rules = c(rep(TRUE, 9), FALSE),
+  doPdsep = FALSE,
+  biCC = TRUE,
+  conservative = TRUE,
+  maj.rule = FALSE,
+  numCores = 1,
+  selectionBias = FALSE,
+  jci = "1",
+  verbose = FALSE
+)
+disco(tpc_example, fci_pcalg)
+
+#### Using tetrad engine with tier knowledge ####
+# Requires Tetrad to be installed
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  kn <- knowledge(
+    tpc_example,
+    tier(
+      child ~ tidyselect::starts_with("child"),
+      youth ~ tidyselect::starts_with("youth"),
+      oldage ~ tidyselect::starts_with("oldage")
+    )
+  )
+
+  # Recommended path using disco()
+  fci_tetrad <- fci(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  disco(tpc_example, fci_tetrad, knowledge = kn)
+
+  # or using fci_tetrad directly
+  fci_tetrad <- fci_tetrad |> set_knowledge(kn)
+  fci_tetrad(tpc_example)
 }
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  fci_tetrad <- fci(
+    engine = "tetrad",
+    test = "fisher_z",
+    alpha = 0.05,
+    complete_rule_set_used = FALSE,
+    max_disc_path_length = 4,
+    depth = 10,
+    stable_fas = FALSE,
+    guarantee_pag = TRUE
+  )
+  disco(tpc_example, fci_tetrad)
+}
+}
+\seealso{
+Other causal discovery algorithms: 
+\code{\link{boss}()},
+\code{\link{boss_fci}()},
+\code{\link{ges}()},
+\code{\link{gfci}()},
+\code{\link{grasp}()},
+\code{\link{grasp_fci}()},
+\code{\link{gs}()},
+\code{\link{iamb-family}},
+\code{\link{pc}()},
+\code{\link{sp_fci}()},
+\code{\link{tfci}()},
+\code{\link{tges}()},
+\code{\link{tpc}()}
+}
+\concept{causal discovery algorithms}
+\concept{cd_algorithms}
