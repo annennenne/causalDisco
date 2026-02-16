@@ -34,15 +34,14 @@ Time to hit the disco 🪩
 To install causalDisco ensure you first have installed Rust as described
 below.
 
-Then you can install the development version of causalDisco from GitHub
-using pak:
+Then you can install the stable version of causalDisco from CRAN with
+suggested dependencies using
 
 ``` r
-pak::pkg_install("disco-coders/causalDisco")
+install.packages("causalDisco", dependencies = TRUE)
 ```
 
-or with all suggested packages (note that this requires a valid Java /
-JDK installation for rJava as described below):
+or the development version of causalDisco from GitHub using pak:
 
 ``` r
 pak::pkg_install("disco-coders/causalDisco", dependencies = TRUE)
