@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="139" alt="causalDisco website" /></a>
+# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/BjarkeHautop/causalDisco)
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 causalDisco provides a unified interface for causal discovery on observational data.
-It wraps multiple causal discovery backends under a common, consistent syntax. 
+It wraps multiple causal discovery backends under a common, consistent syntax.
 
 ## Motivation
 

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="139" alt="causalDisco website" /></a>
+# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
 
