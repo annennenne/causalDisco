@@ -4,201 +4,249 @@
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: not installed
-#>   Tetrad is not installed. Run install_tetrad() to install it.
+#>   Tetrad version: 7.6.10
+#>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 ```
 
-This vignette provides an overview of the `causalDisco` package, which
-offers tools for causal discovery from observational data. It covers the
-main features of the package, including various causal discovery
-algorithms, knowledge incorporation, and result visualization.
+This vignette provides a very brief introduction to causal discovery
+using simulated data. For a thorough introduction to causal discovery
+concepts, we recommend Glymour et al. (2019) [Review of Causal Discovery
+Methods Based on Graphical
+Models](https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00524/full)
+or Zanga et al. (2022) [A Survey on Causal Discovery: Theory and
+Practice](https://arxiv.org/abs/2305.10032).
 
-TODO: CHANGE EXAMPLE …
+The goal of causal discovery is to infer the causal relationships among
+a set of observed variables using observational data.
 
-## Simple example of causal discovery
+## Example of causal discovery
 
-The example discussed in this section is inspired by the Julia package
-[CausalDiscovery.jl](https://mschauer.github.io/CausalInference.jl/latest/)
-with their PC algorithm example, which can be found here [PC algorithm
-example in
-CausalDiscovery.jl](https://mschauer.github.io/CausalInference.jl/latest/examples/pc_basic_examples/).
-
-We will consider data from the following DAG, which is also discussed in
-chapter 2 of Judea Pearl’s book.
-
-![](dag.png)
-
-We create data from a linear Gaussian model corresponding to the above
-DAG:
+Suppose we have this DAG:
 
 ``` r
-set.seed(1405)
-n <- 1000
-x <- rnorm(n)
-v <- x + rnorm(n) * 0.5
-w <- x + rnorm(n) * 0.5
-z <- v + w + rnorm(n) * 0.5
-s <- z + rnorm(n) * 0.5
-
-data_linear <- data.frame(x = x, v = v, w = w, z = z, s = s)
-head(data_linear)
-#>            x           v          w          z          s
-#> 1  0.2724785  0.07687489  1.2131219  1.4542158  0.2649549
-#> 2  0.3572619  0.81022383  0.4049109  1.5767672  1.5394264
-#> 3 -0.8616620 -0.68388923 -0.3195188 -1.1415913 -1.2647045
-#> 4  0.8083350  1.61458098  1.2132504  3.0666677  3.0334703
-#> 5  0.6127352  0.42484707  0.4253022  0.7889983  0.7937421
-#> 6 -0.6240686 -0.23225274 -0.7201852 -0.4876655 -0.7977492
+cg <- caugi::caugi(
+    Z %-->% X1,
+    X3 %-->% X2,
+    X1 %-->% Y,
+    X2 %-->% Y
+)
 ```
 
-We can use the PC algorithm from either the “tetrad”, “pcalg”, or
-“bnlearn” engine to discover the causal structure. Below, we set up the
-PC method with Fisher’s Z test and a significance level of 0.05 and
-“pcalg” and “bnlearn” engines.
+We define a layout which we will use for plotting the graphs in this
+vignette:
+
+``` r
+layout <- caugi::caugi_layout_sugiyama(cg)
+plot(cg, layout = layout, main = "True DAG")
+```
+
+![](causal-discovery_files/figure-html/plot%20dag-1.png)
+
+We can create data from a linear Gaussian model corresponding to the
+above DAG using
+[`generate_dag_data()`](https://disco-coders.github.io/causalDisco/reference/generate_dag_data.md).
+We generate 10000 samples with a fixed random seed from the DAG above:
+
+``` r
+data_linear <- generate_dag_data(
+  cg,
+  n = 10000,
+  seed = 1405
+)
+head(data_linear)
+#> # A tibble: 6 × 5
+#>        Z      X3     X1      X2       Y
+#>    <dbl>   <dbl>  <dbl>   <dbl>   <dbl>
+#> 1  0.632  0.297   0.773 -0.256  -0.730 
+#> 2 -1.67  -1.10   -1.20   1.10   -0.722 
+#> 3 -0.214  0.713   1.09   0.0264  0.261 
+#> 4 -1.61  -0.171  -1.21  -0.0346  0.0746
+#> 5  1.57   0.0517  0.402 -0.874   1.40  
+#> 6 -1.08   0.178  -1.09   0.189   0.0591
+```
+
+The R code used to generate the data is stored as an attribute of the
+data frame:
+
+``` r
+attr(data_linear, "generating_model")
+#> $dgp
+#> $dgp$X3
+#> rnorm(n, sd = 0.95)
+#> 
+#> $dgp$X2
+#> X3 * 0.159 + rnorm(n, sd = 0.507)
+#> 
+#> $dgp$Z
+#> rnorm(n, sd = 1.794)
+#> 
+#> $dgp$X1
+#> Z * 0.3 + rnorm(n, sd = 1.634)
+#> 
+#> $dgp$Y
+#> X1 * 0.61 + X2 * 0.31 + rnorm(n, sd = 1.216)
+```
+
+The goal is now to recover the causal structure from the data alone.
+
+We will use the PC algorithm to learn the causal structure. One of its
+key assumptions is causal sufficiency, meaning that there are no
+unobserved confounders. We can use the PC algorithm from any of the
+“tetrad”, “pcalg”, or “bnlearn” engines to learn the structure from the
+data. The motivation for having multiple engines is that they may
+implement different algorithms, tests, or scoring methods, or the same
+algorithm may be implemented differently across engines.
+
+Below, we set up the PC algorithm using Fisher’s Z test, a significance
+level of 0.05, and `pcalg` as the engine. To do so, we first define the
+PC method using the
+[`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md)
+function, and then pass it to the
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
+function along with the data.
 
 ``` r
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-
-pc_result_pcalg <- disco(data_linear, method = pc_pcalg)
-pc_result_bnlearn <- disco(data_linear, method = pc_bnlearn)
+pc_result_pcalg <- disco(data = data_linear, method = pc_pcalg)
 ```
 
-We can visualize the results from each engine:
+We can visualize the results using the
+[`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
+function, where we explicitly provide the layout defined above so graphs
+are easier to compare.
 
 ``` r
-par(mfrow = c(1, 2))
-plot(pc_result_pcalg, main = "PC (pcalg)")
-plot(pc_result_bnlearn, main = "PC (bnlearn)")
+plot(pc_result_pcalg, layout = layout, main = "PC (pcalg)")
 ```
 
 ![](causal-discovery_files/figure-html/plot%20pc%20results%20simple-1.png)
 
+The PC algorithm recovers the correct causal structure up to Markov
+equivalence, represented as a CPDAG. A CPDAG represents the equivalence
+class of DAGs that encode the same conditional independencies.
+
+The first notable feature of this plot is that some edges are directed,
+while others are undirected. For example, the edge from `X1` to `Y` is
+directed, indicating a causal effect of `X1` on `Y`, but not in the
+reverse direction. In contrast, the edge between `X2` and `X3` is
+undirected, indicating that the data alone do not provide sufficient
+information to determine the causal direction. Both orientations
+`X2 %-->% X3` and `X3 %-->% X2` are compatible with the observed
+conditional independencies.
+
+We demonstrate the non-identifiability of the causal direction between
+`X2` and `X3` by reversing the direction of this edge in the
+data-generating process above and applying the PC algorithm to the
+resulting data set.
+
 ``` r
-par(mfrow = c(1, 1))
-```
+cg_reverse <- caugi::caugi(
+  Z %-->% X1,
+  X2 %-->% X3,
+  X1 %-->% Y,
+  X2 %-->% Y
+)
 
-(Note, that it doesn’t work correctly for bnlearn, since
-[`as_caugi()`](https://caugi.org/reference/as_caugi.html) in caugi had a
-bug. I fixed it in PR \#149, so it will work in the next release of
-caugi.)
+data_linear_reverse <- generate_dag_data(
+  cg_reverse,
+  n = 10000,
+  seed = 1405
+)
 
-The first notable feature of this plot is that some edges have arrows,
-while others do not. For instance, the edge from `v` to `z` is directed,
-indicating that `v` influences `z`, but not vice versa. In contrast, the
-edge between `x` and `w` has no arrows at either end, showing that the
-direction of causal influence cannot be determined from the data alone.
-Both directions; `x` to `w` and `w` to `x`, are consistent with the
-observed data. We can demonstrate this by reversing the direction of
-influence in the data-generating process above and applying the PC
-algorithm to the new data set:
-
-``` r
-set.seed(1405)
-n <- 1000
-v <- rnorm(n)
-x <- v + rnorm(n) * 0.5
-w <- x + rnorm(n) * 0.5
-z <- v + w + rnorm(n) * 0.5
-s <- z + rnorm(n) * 0.5
-
-data_linear_reversed <- data.frame(x = x, v = v, w = w, z = z, s = s)
-
-pc_pcalg_reversed <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_reversed <- disco(data_linear_reversed, method = pc_pcalg_reversed)
-plot(pc_result_reversed, main = "PC (pcalg) reversed")
+pc_result_reverse <- disco(data = data_linear_reverse, method = pc_pcalg)
+plot(pc_result_reverse, layout = layout, main = "PC (pcalg) reversed")
 ```
 
 ![](causal-discovery_files/figure-html/pc%20algorithm%20reversed-1.png)
 
 We learn the same causal structure as before, demonstrating that the
-direction of influence between `x` and `w` cannot be determined from the
-data alone.
+direction of influence between `X2` and `X3` cannot be determined from
+the data alone.
 
-### Non-linear example
+## Unobserved confounding
 
-Here, we simulate data the same DAG structure as above, but with a
-non-linear relationships between the variables.
-
-``` r
-set.seed(1405)
-n <- 1000
-x <- runif(n, min = 0, max = 2 * pi)
-v <- sin(x) + rnorm(n) * 0.25
-w <- cos(x) + rnorm(n) * 0.25
-z <- 3 * v^2 - w + rnorm(n) * 0.25
-s <- z^2 + rnorm(n) * 0.25
-
-data_nonlinear <- data.frame(x = x, v = v, w = w, z = z, s = s)
-```
-
-If we try to use the PC algorithm with Fisher’s Z test again it will not
-perform well due to the non-linear relationships in the data.
+In practice, unobserved confounders may be present, violating the
+assumptions of the PC algorithm. Suppose we have the following DAG with
+an unobserved confounder `U` between `X1` and `X2`:
 
 ``` r
-pc_pcalg_nonlinear <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_nonlinear <- disco(data_nonlinear, method = pc_pcalg_nonlinear)
-plot(pc_result_nonlinear, main = "PC (pcalg) non-linear")
-```
-
-![](causal-discovery_files/figure-html/pc%20algorithm%20non-linear-1.png)
-
-As expected, the PC algorithm with Fisher’s Z test does not recover the
-correct causal structure in this non-linear setting at all. Note, that
-increasing the sample size does not help.
-
-To handle non-linear relationships, we can for instance use the Kernel
-Conditional Independence Test (KCI) in Tetrad.
-
-``` r
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
-  pc_tetrad_nonlinear <- pc(engine = "tetrad", test = "kci")
-  pc_result_nonlinear_kci <- disco(data_nonlinear, method = pc_tetrad_nonlinear)
-  plot(pc_result_nonlinear_kci, main = "PC (Tetrad KCI) non-linear")
-}
-```
-
-![](nonlinear-tetrad-kci.png)
-
-The result of the PC algorithm using the KCI test look like what we’d
-expect to see. Note, that this test is much more computationally
-demanding than using Fisher’s Z test.
-
-## Incorporating prior knowledge
-
-As the dimensional grows the problem of finding the corresponding graph
-given observational data becomes exponentially harder. Thus, if there is
-any prior information available, this can help make the problem easier.
-We show how to incorporate prior knowledge into the causal discovery
-process using the same linear data as above. Suppose we knew that `v`
-and `w` do not cause `x`. This can be specified as follows:
-
-``` r
-kn <- knowledge(
-  data_linear,
-  v %!-->% x,  # v does not cause x
-  w %!-->% x   # w does not cause x
+cg_unobserved <- caugi::caugi(
+  Z %-->% X1,
+  X3 %-->% X2,
+  X1 %-->% Y,
+  X2 %-->% Y,
+  U %-->% X1 + X2
 )
-plot(kn)
 ```
 
-![](causal-discovery_files/figure-html/prior%20knowledge-1.png)
-
-We can then incorporate this knowledge into the PC algorithm as follows:
+We can visualize this DAG, marking the unobserved variable `U` in red
+and using dashed edges to indicate that it is unobserved:
 
 ``` r
-pc_pcalg <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-pc_result_with_knowledge <- disco(data_linear, method = pc_pcalg, knowledge = kn)
-plot(pc_result_with_knowledge$caugi)
+plot(
+  cg_unobserved,
+  edge_style = list(
+    by_edge = list(
+      U = list(col = "red", fill = "red", lty = "dashed")
+    )
+  ),
+  node_style = list(
+    by_node = list(
+      U = list(col = "red", fill = "red")
+    )
+  ),
+  main = "True DAG with unobserved confounder"
+)
 ```
 
-![](causal-discovery_files/figure-html/pc%20algorithm%20with%20knowledge-1.png)
+![](causal-discovery_files/figure-html/plot%20dag%20unobserved%20confounder-1.png)
 
-It now correctly recovers the true DAG structure with this extra
-knowledge.
+We can generate data from this DAG using
+[`generate_dag_data()`](https://disco-coders.github.io/causalDisco/reference/generate_dag_data.md),
+and then afterwards remove the unobserved variable `U` from the data
+frame:
 
-For more information about how to incorporate knowledge, see the
-[knowledge
-vignette](https://bjarkehautop.github.io/causalDisco/articles/knowledge.md).
+``` r
+data_unobserved <- generate_dag_data(
+  cg_unobserved,
+  n = 10000,
+  seed = 1405
+)
+data_unobserved <- data_unobserved[, names(data_unobserved) != "U"]
+head(data_unobserved)
+#> # A tibble: 6 × 5
+#>         Z      X3     X1     X2       Y
+#>     <dbl>   <dbl>  <dbl>  <dbl>   <dbl>
+#> 1  0.608   1.42   -1.31  -1.69   1.99  
+#> 2 -0.716  -0.357  -0.490 -0.561  0.955 
+#> 3  1.22    1.49   -0.124 -1.48   1.52  
+#> 4 -0.752  -0.188   0.877  1.35  -1.39  
+#> 5 -0.0863  0.0156  1.54  -0.926 -0.0833
+#> 6 -0.799  -0.929   0.802  0.253 -0.939
+```
+
+We can then apply the PC algorithm as before:
+
+``` r
+pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+pc_result_unobserved <- disco(data = data_unobserved, method = pc_pcalg_unobserved)
+plot(pc_result_unobserved, layout = layout, main = "PC (pcalg) unobserved confounder")
+```
+
+![](causal-discovery_files/figure-html/pc%20algorithm%20unobserved%20confounder-1.png)
+
+We see that the PC algorithm does not recover the correct causal
+structure due to the presence of the unobserved confounder. In
+particular, it found an incorrect edge between `X1` and `X2`.
+
+## Next steps
+
+For more information about how to incorporate knowledge into causal
+discovery methods, see the [knowledge
+vignette](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
+
+For more information about how to visualize causal discovery results,
+see the [visualization
+vignette](https://disco-coders.github.io/causalDisco/articles/visualization.md).

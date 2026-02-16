@@ -7,7 +7,7 @@ algorithm.
 
 ## See also
 
-[`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md).
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
 
 ## Public fields
 
@@ -22,35 +22,35 @@ algorithm.
   be set with `$set_score()`. Recognized values are:
 
   - `"tbic"` - Temporal BIC score for Gaussian data. See
-    [`TemporalBIC`](https://bjarkehautop.github.io/causalDisco/reference/TemporalBIC-class.md)
+    [TemporalBIC](https://disco-coders.github.io/causalDisco/reference/TemporalBIC-class.md).
 
   - `"tbdeu"` - Temporal BDeu score for discrete data. See
-    [`TemporalBDeu`](https://bjarkehautop.github.io/causalDisco/reference/TemporalBDeu-class.md).
+    [TemporalBDeu](https://disco-coders.github.io/causalDisco/reference/TemporalBDeu-class.md).
 
 - `test`:
 
   A function that will be used to test independence. Can be set with
   `$set_test()`. Recognized values are:
 
-  - `"fisher_z"` - Fisher Z test for Gaussian data. See
-    [`cor_test()`](https://bjarkehautop.github.io/causalDisco/reference/cor_test.md).
-
   - `"reg"` - Regression test for discrete or binary data. See
-    [`reg_test()`](https://bjarkehautop.github.io/causalDisco/reference/reg_test.md).
+    [`reg_test()`](https://disco-coders.github.io/causalDisco/reference/reg_test.md).
+
+  - `"fisher_z"` - Fisher Z test for Gaussian data. See
+    [`cor_test()`](https://disco-coders.github.io/causalDisco/reference/cor_test.md).
 
 - `alg`:
 
   A function that will be used to run the search algorithm. Can be set
   with `$set_alg()`. Recognized values are:
 
-  - `"tpc"` - TPC algorithm. See
-    [`tpc()`](https://bjarkehautop.github.io/causalDisco/reference/tpc.md).
-
   - `"tfci"` - TFCI algorithm. See
-    [`tfci()`](https://bjarkehautop.github.io/causalDisco/reference/tfci.md).
+    [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md).
 
   - `"tges"` - TGES algorithm. See
-    [`tges()`](https://bjarkehautop.github.io/causalDisco/reference/tges.md).
+    [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md).
+
+  - `"tpc"` - TPC algorithm. See
+    [`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md).
 
 - `params`:
 
@@ -205,7 +205,7 @@ Sets the algorithm for the search.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/set_knowledge.md)
+### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
 Sets the background knowledge for the search with a `knowledge` object.
 
@@ -226,9 +226,9 @@ Sets the background knowledge for the search with a `knowledge` object.
   handles background knowledge when using
   [`pcalg::skeleton()`](https://rdrr.io/pkg/pcalg/man/skeleton.html)
   under the hood in
-  [`tpc()`](https://bjarkehautop.github.io/causalDisco/reference/tpc.md)
+  [`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
   and
-  [`tfci()`](https://bjarkehautop.github.io/causalDisco/reference/tfci.md).
+  [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md).
 
 ------------------------------------------------------------------------
 
@@ -274,12 +274,9 @@ The objects of this class are cloneable with this method.
 
 data(tpc_example)
 
-# small toy dataset
-dat <- head(tpc_example, 50)
-
 # background knowledge (tiers + one exogenous var)
 kn <- knowledge(
-  dat,
+  tpc_example,
   tier(
     child ~ starts_with("child"),
     youth ~ starts_with("youth"),
@@ -289,17 +286,15 @@ kn <- knowledge(
 
 # Recommended (TPC example):
 my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
-result <- disco(data = dat, method = my_tpc, knowledge = kn)
+result <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
 plot(result)
-
 
 
 # or
 my_tpc <- my_tpc |>
   set_knowledge(kn)
-result <- my_tpc(dat)
+result <- my_tpc(tpc_example)
 plot(result)
-
 
 
 # Using R6 class:
@@ -310,78 +305,144 @@ s_tpc$set_params(list(verbose = FALSE))
 s_tpc$set_test("fisher_z", alpha = 0.2)
 s_tpc$set_alg("tpc")
 s_tpc$set_knowledge(kn, directed_as_undirected = TRUE)
-s_tpc$set_data(dat)
+s_tpc$set_data(tpc_example)
 res_tpc <- s_tpc$run_search()
 print(res_tpc)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # Switch to TFCI on the same object (reuses suffStat/test)
 s_tpc$set_alg("tfci")
 res_tfci <- s_tpc$run_search()
 print(res_tfci)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # --- Score-based: TGES --------------------------------------------------------
 s_tges <- CausalDiscoSearch$new()
 s_tges$set_score("tbic") # Gaussian temporal score
 s_tges$set_alg("tges")
-s_tges$set_data(dat, set_suff_stat = FALSE) # suff stat not used for TGES
+s_tges$set_data(tpc_example, set_suff_stat = FALSE) # suff stat not used for TGES
 s_tges$set_knowledge(kn)
 res_tges <- s_tges$run_search()
 print(res_tges)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  ---   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 
 # --- Intentional error demonstrations ----------------------------------------
 
 # run_search() without setting an algorithm
-try(CausalDiscoSearch$new()$run_search(dat))
+try(CausalDiscoSearch$new()$run_search(tpc_example))
 #> Error : Test must be set before sufficient statistic.
 
 # set_suff_stat() requires data and test first
 s_err <- CausalDiscoSearch$new()
 try(s_err$set_suff_stat()) # no data & no test
 #> Error : Data must be set before sufficient statistic.
-s_err$set_data(dat, set_suff_stat = FALSE)
+s_err$set_data(tpc_example, set_suff_stat = FALSE)
 try(s_err$set_suff_stat()) # no test
 #> Error : Test must be set before sufficient statistic.
 

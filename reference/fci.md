@@ -1,4 +1,4 @@
-# The FCI algorithm for causal discovery
+# FCI Algorithm for Causal Discovery
 
 Run the FCI algorithm for causal discovery using one of several engines.
 
@@ -38,37 +38,147 @@ fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 ## Value
 
 A function of class `"fci"` that takes a single argument `data` (a data
-frame) and returns a `caugi` and a `knowledge` (`knowledgeable_caugi`)
-object.
+frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
+(`knowledgeable_caugi`) object.
 
 ## Details
 
-For specific details on the supported scores, tests, and parameters for
-each engine, see:
+For specific details on the supported tests and parameters for each
+engine, see:
 
-- [`TetradSearch`](https://bjarkehautop.github.io/causalDisco/reference/TetradSearch.md)
+- [TetradSearch](https://disco-coders.github.io/causalDisco/reference/TetradSearch.md)
   for Tetrad,
 
-- [`PcalgSearch`](https://bjarkehautop.github.io/causalDisco/reference/PcalgSearch.md)
+- [PcalgSearch](https://disco-coders.github.io/causalDisco/reference/PcalgSearch.md)
   for pcalg.
+
+## See also
+
+Other causal discovery algorithms:
+[`boss()`](https://disco-coders.github.io/causalDisco/reference/boss.md),
+[`boss_fci()`](https://disco-coders.github.io/causalDisco/reference/boss_fci.md),
+[`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md),
+[`gfci()`](https://disco-coders.github.io/causalDisco/reference/gfci.md),
+[`grasp()`](https://disco-coders.github.io/causalDisco/reference/grasp.md),
+[`grasp_fci()`](https://disco-coders.github.io/causalDisco/reference/grasp_fci.md),
+[`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
+[`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+[`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
+[`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),
+[`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
 
 ## Examples
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
 # Recommended path using disco()
 fci_pcalg <- fci(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 disco(tpc_example, fci_pcalg)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 
 # or using fci_pcalg directly
 fci_pcalg(tpc_example)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# With all algorithm arguments specified
+fci_pcalg <- fci(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.05,
+  skel.method = "original",
+  type = "anytime",
+  fixedGaps = NULL,
+  fixedEdges = NULL,
+  NAdelete = FALSE,
+  m.max = 10,
+  pdsep.max = 2,
+  rules = c(rep(TRUE, 9), FALSE),
+  doPdsep = FALSE,
+  biCC = TRUE,
+  conservative = TRUE,
+  maj.rule = FALSE,
+  numCores = 1,
+  selectionBias = FALSE,
+  jci = "1",
+  verbose = FALSE
+)
+disco(tpc_example, fci_pcalg)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
@@ -90,4 +200,69 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
   fci_tetrad <- fci_tetrad |> set_knowledge(kn)
   fci_tetrad(tpc_example)
 }
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# With all algorithm arguments specified
+if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  fci_tetrad <- fci(
+    engine = "tetrad",
+    test = "fisher_z",
+    alpha = 0.05,
+    complete_rule_set_used = FALSE,
+    max_disc_path_length = 4,
+    depth = 10,
+    stable_fas = FALSE,
+    guarantee_pag = TRUE
+  )
+  disco(tpc_example, fci_tetrad)
+}
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  o->   child_x2 
+#> 2 child_x2  <->   oldage_x5
+#> 3 child_x2  <->   youth_x4 
+#> 4 oldage_x6 <->   oldage_x5
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  <->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 ```

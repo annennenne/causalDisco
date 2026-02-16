@@ -1,4 +1,4 @@
-# The Temporal GES algorithm for causal discovery
+# TGES Algorithm for Causal Discovery
 
 Run the Temporal GES algorithm for causal discovery using the
 causalDisco engine.
@@ -31,15 +31,32 @@ tges(engine = c("causalDisco"), score, ...)
 ## Value
 
 A function of class `"tges"` that takes a single argument `data` (a data
-frame) and returns a `caugi` and `knowledge` (`knowledgeable_caugi`)
-object.
+frame) and returns a `caugi` (of class "PDAG") and `knowledge`
+(`knowledgeable_caugi`) object.
 
 ## Details
 
 For specific details on the supported scores, see
-[`CausalDiscoSearch`](https://bjarkehautop.github.io/causalDisco/reference/CausalDiscoSearch.md).
+[CausalDiscoSearch](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md).
 For additional parameters passed via `...`, see
-[`tges_run()`](https://bjarkehautop.github.io/causalDisco/reference/tges_run.md).
+[`tges_run()`](https://disco-coders.github.io/causalDisco/reference/tges_run.md).
+
+## See also
+
+Other causal discovery algorithms:
+[`boss()`](https://disco-coders.github.io/causalDisco/reference/boss.md),
+[`boss_fci()`](https://disco-coders.github.io/causalDisco/reference/boss_fci.md),
+[`fci()`](https://disco-coders.github.io/causalDisco/reference/fci.md),
+[`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md),
+[`gfci()`](https://disco-coders.github.io/causalDisco/reference/gfci.md),
+[`grasp()`](https://disco-coders.github.io/causalDisco/reference/grasp.md),
+[`grasp_fci()`](https://disco-coders.github.io/causalDisco/reference/grasp_fci.md),
+[`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
+[`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+[`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
+[`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
+[`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
 
 ## Examples
 
@@ -58,39 +75,83 @@ my_tges <- tges(engine = "causalDisco", score = "tbic")
 
 disco(tpc_example, my_tges, knowledge = kn)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  ---   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # another way to run it
 
 my_tges <- my_tges |>
   set_knowledge(kn)
 my_tges(tpc_example)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  ---   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 
 
 # or you can run directly with tges_run()
 
-data("tpc_example")
+data(tpc_example)
 
 score_bic <- new(
   "TemporalBIC",
@@ -102,6 +163,28 @@ score_bic <- new(
 res_bic <- tges_run(score_bic)
 res_bic
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  ---   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 ```

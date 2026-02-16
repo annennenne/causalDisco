@@ -1,4 +1,4 @@
-# Simulated data example
+# Simulated Life-Course Data
 
 A small simulated data example intended to showcase the TPC algorithm.
 Note that the variable name prefixes defines which period they are
@@ -17,7 +17,7 @@ A data.frame with 200 rows and 6 variables.
 - child_x1:
 
   Structural equation: \\X_1 := \epsilon_1\\ with \\\epsilon_1 \sim
-  \mathrm{Unif}(0,1)\\
+  \mathrm{Unif}\\0,1\\\\
 
 - child_x2:
 
@@ -27,7 +27,7 @@ A data.frame with 200 rows and 6 variables.
 - youth_x3:
 
   Structural equation: \\X_3 := \epsilon_3\\ with \\\epsilon_3 \sim
-  \mathrm{Unif}(0, 1)\\
+  \mathrm{Unif}\\0, 1\\\\
 
 - youth_x4:
 
@@ -53,4 +53,12 @@ Building for Life-Course Epidemiology, American Journal of Epidemiology.
 
 ``` r
 data(tpc_example)
+head(tpc_example)
+#>   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5
+#> 1        0 -0.7104066 -0.07355602        1  6.4984994  3.0740123
+#> 2        0  0.2568837 -1.16865142        1  0.3254685  1.9726530
+#> 3        0 -0.2466919 -0.63474826        1  4.1298927  1.9666697
+#> 4        1  1.6524574  0.97115845        0 -7.9064009 -4.5160676
+#> 5        0 -0.9516186  0.67069597        0  1.7089134  0.7903853
+#> 6        1  1.9549723 -0.65054654        0 -6.9758928 -3.2107342
 ```

@@ -1,4 +1,4 @@
-# Causal Discovery Using the Temporal PC Algorithm (TPC)
+# Run the TPC Algorithm for Causal Discovery
 
 Run a tier-aware variant of the PC algorithm that respects background
 knowledge about a partial temporal order. Supply the temporal order via
@@ -12,14 +12,12 @@ future release.
 tpc_run(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
   method = "stable.fast",
   na_method = "none",
   orientation_method = "conservative",
-  output = "caugi",
   directed_as_undirected = FALSE,
   varnames = NULL,
   ...
@@ -38,17 +36,9 @@ tpc_run(
 - knowledge:
 
   A `knowledge` object created with
-  [`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md),
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md),
   encoding tier assignments and optional forbidden/required edges. This
   is the preferred way to provide temporal background knowledge.
-
-- order:
-
-  A character vector of period prefixes in temporal order. Deprecated;
-  use `knowledge` instead. If supplied, it is converted internally to
-  tier knowledge using
-  [`tidyselect::starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html)
-  for each prefix.
 
 - alpha:
 
@@ -87,16 +77,6 @@ tpc_run(
   Conflict-handling method when orienting edges. Currently only the
   conservative method is available.
 
-- output:
-
-  One of `"tpdag"`, `"tskeleton"`, `"pcAlgo"`, or `"caugi"`. If
-  `"tskeleton"`, return the temporal skeleton without directions. If
-  `"tpdag"` (default), return a temporal partially directed acyclic
-  graph (TPDAG). If `"pcAlgo"`, return a
-  [`pcAlgo-class`](https://rdrr.io/pkg/pcalg/man/pcAlgo-class.html)
-  object for compatibility with pcalg. If `"caugi"`, return a `caugi`
-  and a `knowledge` (`knowledgeable_caugi`) object.
-
 - directed_as_undirected:
 
   Logical; if `TRUE`, treat any directed edges in `knowledge` as
@@ -117,12 +97,7 @@ tpc_run(
 
 ## Value
 
-If `output = "tpdag"` or `"tskeleton"`, an S3 list with entries `$tamat`
-(temporal adjacency matrix), `$psi` (alpha level), and `$ntests` (number
-of tests run). If `output = "pcAlgo"`, a
-[`pcAlgo-class`](https://rdrr.io/pkg/pcalg/man/pcAlgo-class.html)
-object. If `output = "caugi"`, a `caugi` and a `knowledge`
-(`knowledgeable_caugi`) object.
+A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 
 ## Details
 
@@ -167,73 +142,139 @@ my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
 disco(tpc_example, my_tpc, knowledge = kn)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # or using my_tpc directly
 
 my_tpc <- my_tpc |> set_knowledge(kn)
 my_tpc(tpc_example)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 ```

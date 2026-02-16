@@ -1,4 +1,4 @@
-# Test for vanishing partial correlations
+# Test for Vanishing Partial Correlations
 
 This function simply calls the
 [`pcalg::gaussCItest()`](https://rdrr.io/pkg/pcalg/man/condIndFisherZ.html)

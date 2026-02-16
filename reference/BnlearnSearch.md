@@ -1,7 +1,8 @@
 # R6 Interface to bnlearn Search Algorithms
 
-A wrapper that lets you drive `bnlearns`’s structure-learning algorithms
-within the `causalDisco` framework.
+A wrapper that lets you drive bnlearn algorithms within the causalDisco
+framework. For arguments to the test, score, and algorithm, see the
+bnlearn documentation.
 
 ## Value
 
@@ -21,50 +22,52 @@ An R6 object with the methods documented below.
   `"pred-loglik"`) are also accepted and automatically translated to
   snake_case. Recognised values are:
 
+  **Continuous - Gaussian**
+
+  - `"aic_g"`, `"bic_g"`, `"ebic_g"`, `"loglik_g"`, `"pred_loglik_g"` -
+    gaussian versions of the respective scores for discrete data.
+
+  - `"bge"` - Gaussian posterior density.
+
+  - `"nal_g"` - node-average log-likelihood.
+
+  - `"pnal_g"` - penalised node-average log-likelihood.
+
   **Discrete – categorical**
 
-  - `"loglik"` - log-likelihood
+  - `"aic"` - Akaike Information Criterion.
 
-  - `"aic"` - Akaike Information Criterion
+  - `"bdla"` - locally averaged BDE.
 
-  - `"bic"` - Bayesian Information Criterion
+  - `"bde"` - Bayesian Dirichlet equivalent (uniform).
 
-  - `"ebic"` - Extended BIC
+  - `"bds"` - Bayesian Dirichlet score.
 
-  - `"pred_loglik"` - predictive log-likelihood
+  - `"bic"` - Bayesian Information Criterion.
 
-  - `"bde"` - Bayesian Dirichlet equivalent (uniform)
+  - `"ebic"` - Extended BIC.
 
-  - `"bds"` - Bayesian Dirichlet score
+  - `"fnml"` - factorised NML.
 
-  - `"mbde"` - modified BDE
+  - `"k2"` - K2 score.
 
-  - `"bdla"` - locally averaged BDE
+  - `"loglik"` - log-likelihood.
 
-  - `"k2"` - K2 score
+  - `"mbde"` - modified BDE.
 
-  - `"fnml"` - factorised NML
+  - `"nal"` - node-average log-likelihood.
 
-  - `"qnml"` - quotient NML
+  - `"pnal"` - penalised node-average log-likelihood.
 
-  - `"nal"` - node-average log-likelihood
+  - `"pred_loglik"` - predictive log-likelihood.
 
-  - `"pnal"` - penalised node-average log-likelihood
+  - `"qnml"` - quotient NML.
 
-  **Gaussian**
+  **Mixed Discrete/Gaussian**
 
-  - `"loglik_g"`, `"aic_g"`, `"bic_g"`, `"ebic_g"`, `"pred_loglik_g"`
-
-  - `"bge"` - Gaussian posterior density
-
-  - `"nal_g"` - node-average log-likelihood
-
-  - `"pnal_g"` - penalised node-average log-likelihood
-
-  **Conditional Gaussian**
-
-  - `"loglik_cg"`, `"aic_cg"`, `"bic_cg"`, `"ebic_cg"`,
-    `"pred_loglik_cg"`, `"nal_cg"`, `"pnal_cg"`
+  - `"aic_cg"`, `"bic_cg"`, `"ebic_cg"`, `"loglik_cg"`, `"nal_cg"`,
+    `"pnal_cg"`, `"pred_loglik_cg"` - conditional Gaussian versions of
+    the respective scores for discrete data.
 
 - `test`:
 
@@ -73,29 +76,51 @@ An R6 object with the methods documented below.
   used in bnlearn, e.g. "mi-adf") are also accepted and automatically
   translated to snake_case. Recognised values are:
 
+  **Continuous - Gaussian**
+
+  - `"cor"` – Pearson correlation
+
+  - `"fisher_z"` / `"zf"` – Fisher Z test
+
+  - `"mc_cor"` – Monte Carlo Pearson correlation
+
+  - `"mc_mi_g"` – Monte Carlo mutual information (Gaussian)
+
+  - `"mc_zf"` – Monte Carlo Fisher Z
+
+  - `"mi_g"` – mutual information (Gaussian)
+
+  - `"mi_g_sh"` – mutual information (Gaussian, shrinkage)
+
+  - `"smc_cor"` – sequential Monte Carlo Pearson correlation
+
+  - `"smc_mi_g"` – sequential Monte Carlo mutual information (Gaussian)
+
+  - `"smc_zf"` – sequential Monte Carlo Fisher Z
+
   **Discrete – categorical**
+
+  - `"mc_mi"` – Monte Carlo mutual information
+
+  - `"mc_x2"` – Monte Carlo chi-squared
 
   - `"mi"` – mutual information
 
   - `"mi_adf"` – mutual information with adjusted d.f.
 
-  - `"mc_mi"` – Monte Carlo mutual information
+  - `"mi_sh"` – mutual information (shrinkage)
 
   - `"smc_mi"` – sequential Monte Carlo mutual information
 
+  - `"smc_x2"` – sequential Monte Carlo chi-squared
+
   - `"sp_mi"` – semi-parametric mutual information
 
-  - `"mi_sh"` – mutual information (shrinkage)
+  - `"sp_x2"` – semi-parametric chi-squared
 
   - `"x2"` – chi-squared
 
   - `"x2_adf"` – chi-squared with adjusted d.f.
-
-  - `"mc_x2"` – Monte Carlo chi-squared
-
-  - `"smc_x2"` – sequential Monte Carlo chi-squared
-
-  - `"sp_x2"` – semi-parametric chi-squared
 
   **Discrete – ordered factors**
 
@@ -105,78 +130,51 @@ An R6 object with the methods documented below.
 
   - `"smc_jt"` – sequential Monte Carlo Jonckheere–Terpstra
 
-  **Gaussian**
-
-  - `"cor"` – Pearson correlation
-
-  - `"mc_cor"` – Monte Carlo Pearson correlation
-
-  - `"smc_cor"` – sequential Monte Carlo Pearson correlation
-
-  - `"zf"` / `"fisher_z"` – Fisher Z test
-
-  - `"mc_zf"` – Monte Carlo Fisher Z
-
-  - `"smc_zf"` – sequential Monte Carlo Fisher Z
-
-  - `"mi_g"` – mutual information (Gaussian)
-
-  - `"mc_mi_g"` – Monte Carlo mutual information (Gaussian)
-
-  - `"smc_mi_g"` – sequential Monte Carlo mutual information (Gaussian)
-
-  - `"mi_g_sh"` – mutual information (Gaussian, shrinkage)
-
-  **Conditional Gaussian**
+  **Mixed Discrete/Gaussian**
 
   - `"mi_cg"` – mutual information (conditional Gaussian)
+
+  For Monte Carlo tests, set the number of permutations using the `B`
+  argument.
 
 - `alg`:
 
   Function generated by `$set_alg()` that runs a structure-learning
-  algorithm from bnlearn. Recognised values are:
+  algorithm from bnlearn. Period.case alg names (as used in bnlearn,
+  e.g. "fast.iamb") are also accepted and automatically translated to
+  snake_case. Recognised values are:
 
   **Constraint-based**
 
-  - `"pc"` – PC-stable algorithm
+  - `"fast_iamb"` – Fast-IAMB algorithm. See
+    [`fast_iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md)
+    and the underlying
+    [`bnlearn::fast.iamb()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
-  - `"gs"` – Grow-Shrink
+  - `"gs"` – Grow-Shrink algorithm. See
+    [`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md)
+    and the underlying
+    [`bnlearn::gs()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
-  - `"iamb"` – Incremental Association Markov Blanket
+  - `"iamb"` – Incremental Association Markov Blanket algorithm. See
+    [`iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md)
+    and the underlying
+    [`bnlearn::iamb()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
-  - `"fast.iamb"` – Fast-IAMB
+  - `"iamb_fdr"` – IAMB with FDR control algorithm. See
+    [`iamb_fdr()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md)
+    and the underlying
+    [`bnlearn::iamb.fdr()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
-  - `"inter.iamb"` – Interleaved-IAMB
+  - `"inter_iamb"` – Interleaved-IAMB algorithm. See
+    [`inter_iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md)
+    and the underlying
+    [`bnlearn::inter.iamb()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
-  - `"iamb.fdr"` – IAMB with FDR control
-
-  **Local / skeleton discovery**
-
-  - `"mmpc"` – Max–Min Parents and Children
-
-  - `"si.hiton.pc"` – Semi-Interleaved HITON-PC
-
-  - `"hpc"` – Hybrid Parents and Children
-
-  **Score-based**
-
-  - `"hc"` – Hill-Climbing
-
-  - `"tabu"` – Tabu search
-
-  **Hybrid**
-
-  - `"mmhc"` – Max–Min Hill-Climbing
-
-  - `"rsmax2"` – Restricted Maximisation (two-stage)
-
-  - `"h2pc"` – Hybrid HPC–PC
-
-  **Pairwise mutual-information learners**
-
-  - `"chow.liu"` – Chow–Liu tree
-
-  - `"aracne"` – ARACNE network
+  - `"pc"` – PC-stable algorithm. See
+    [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md)
+    and the underlying
+    [`bnlearn::pc.stable()`](https://rdrr.io/pkg/bnlearn/man/constraint.html).
 
 - `params`:
 
@@ -187,7 +185,7 @@ An R6 object with the methods documented below.
 
   A list with elements `whitelist` and `blacklist` containing
   prior-knowledge constraints added via
-  [`set_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/set_knowledge.md).
+  [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md).
 
 ## Methods
 
@@ -311,7 +309,7 @@ Set the causal discovery algorithm to use.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/set_knowledge.md)
+### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
 Set the prior knowledge for the search algorithm using a knowledge
 object.
@@ -368,22 +366,136 @@ The objects of this class are cloneable with this method.
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpc_example")
+data(num_data)
 
 # Recommended:
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-result <- my_pc(tpc_example)
+result <- my_pc(num_data)
 
 # or
-result <- disco(data = tpc_example, method = my_pc)
+result <- disco(data = num_data, method = my_pc)
 
 plot(result)
 
 
+# Example with detailed settings:
+my_pc2 <- pc(
+  engine = "bnlearn",
+  test = "mi_g",
+  alpha = 0.01
+)
+disco(data = num_data, method = my_pc2)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    ---   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Z     -->   Y    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# With knowledge
+
+kn <- knowledge(
+  num_data,
+  starts_with("X") %-->% Y
+)
+
+disco(data = num_data, method = my_pc2, knowledge = kn)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    ---   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Z     -->   Y    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> 
+#> ── Variables ──
+#> 
+#>   var   tier 
+#>   <chr> <chr>
+#> 1 X1    NA   
+#> 2 X2    NA   
+#> 3 X3    NA   
+#> 4 Y     NA   
+#> 5 Z     NA   
+#> ── Edges ──
+#> 
+#>  ✔  X1 → Y
+#>  ✔  X2 → Y
+#>  ✔  X3 → Y
+
+# Using additional test args (bootstrap samples)
+
+my_iamb <- iamb(
+  engine = "bnlearn",
+  test = "mc_zf",
+  alpha = 0.05,
+  B = 100
+)
+
+disco(data = num_data, method = my_iamb)
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    -->   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Y     -->   Z    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
 # Using R6 class:
 s <- BnlearnSearch$new()
 
-s$set_data(tpc_example)
+s$set_data(num_data)
 s$set_test(method = "fisher_z", alpha = 0.05)
 s$set_alg("pc")
 

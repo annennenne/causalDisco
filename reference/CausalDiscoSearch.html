@@ -3,7 +3,7 @@
 package, which wraps and adds temporal order to pcalg algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm."><meta property="og:description" content="This class implements the search algorithms from the causalDisco
 package, which wraps and adds temporal order to pcalg algorithms.
-It allows to set the data, sufficient statistics, test, score, and algorithm."><meta property="og:image" content="https://bjarkehautop.github.io/causalDisco/logo.png"></head><body>
+It allows to set the data, sufficient statistics, test, score, and algorithm."><meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -11,7 +11,7 @@ It allows to set the data, sufficient statistics, test, score, and algorithm."><
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,11 +25,13 @@ It allows to set the data, sufficient statistics, test, score, and algorithm."><
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/annennenne/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/disco-coders/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -38,13 +40,13 @@ It allows to set the data, sufficient statistics, test, score, and algorithm."><
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>R6 Interface to causalDisco Search Algorithms</h1>
-      <small class="dont-index">Source: <a href="https://github.com/annennenne/causalDisco/blob/master/R/causalDisco_search.R" class="external-link"><code>R/causalDisco_search.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/master/R/causalDisco-search.R" class="external-link"><code>R/causalDisco-search.R</code></a></small>
       <div class="d-none name"><code>CausalDiscoSearch.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>This class implements the search algorithms from the causalDisco
-package, which wraps and adds temporal order to pcalg algorithms.
+    <p>This class implements the search algorithms from the <span class="pkg">causalDisco</span>
+package, which wraps and adds temporal order to <span class="pkg">pcalg</span> algorithms.
 It allows to set the data, sufficient statistics, test, score, and algorithm.</p>
     </div>
 
@@ -64,29 +66,29 @@ search object. Can be set with <code>set_data()</code>.</p></dd>
 <dd><p>A function that will be used to build the score,
 when data is set. Can be set with <code>$set_score()</code>. Recognized values
 are:</p><ul><li><p><code>"tbic"</code> - Temporal BIC score for Gaussian data.
-See <code><a href="TemporalBIC-class.html">TemporalBIC</a></code></p></li>
+See <a href="TemporalBIC-class.html">TemporalBIC</a>.</p></li>
 <li><p><code>"tbdeu"</code> - Temporal BDeu score for discrete data.
-See <code><a href="TemporalBDeu-class.html">TemporalBDeu</a></code>.</p></li>
+See <a href="TemporalBDeu-class.html">TemporalBDeu</a>.</p></li>
 </ul></dd>
 
 
 <dt><code>test</code></dt>
 <dd><p>A function that will be used to test independence.
-Can be set with <code>$set_test()</code>. Recognized values are:</p><ul><li><p><code>"fisher_z"</code> - Fisher Z test for Gaussian data.
-See <code><a href="cor_test.html">cor_test()</a></code>.</p></li>
-<li><p><code>"reg"</code> - Regression test for discrete or binary data.
+Can be set with <code>$set_test()</code>. Recognized values are:</p><ul><li><p><code>"reg"</code> - Regression test for discrete or binary data.
 See <code><a href="reg_test.html">reg_test()</a></code>.</p></li>
+<li><p><code>"fisher_z"</code> - Fisher Z test for Gaussian data.
+See <code><a href="cor_test.html">cor_test()</a></code>.</p></li>
 </ul></dd>
 
 
 <dt><code>alg</code></dt>
 <dd><p>A function that will be used to run the search algorithm.
-Can be set with <code>$set_alg()</code>. Recognized values are:</p><ul><li><p><code>"tpc"</code>  - TPC algorithm.
-See <code><a href="tpc.html">tpc()</a></code>.</p></li>
-<li><p><code>"tfci"</code> - TFCI algorithm.
+Can be set with <code>$set_alg()</code>. Recognized values are:</p><ul><li><p><code>"tfci"</code> - TFCI algorithm.
 See <code><a href="tfci.html">tfci()</a></code>.</p></li>
 <li><p><code>"tges"</code> - TGES algorithm.
 See <code><a href="tges.html">tges()</a></code>.</p></li>
+<li><p><code>"tpc"</code>  - TPC algorithm.
+See <code><a href="tpc.html">tpc()</a></code>.</p></li>
 </ul></dd>
 
 
@@ -304,12 +306,9 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># small toy dataset</span></span></span>
-<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="fl">50</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># background knowledge (tiers + one exogenous var)</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="knowledge.html">knowledge</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">dat</span>,</span></span>
+<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">child</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="va">youth</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>,</span></span>
@@ -319,18 +318,16 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Recommended (TPC example):</span></span></span>
 <span class="r-in"><span><span class="va">my_tpc</span> <span class="op">&lt;-</span> <span class="fu"><a href="tpc.html">tpc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"causalDisco"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, method <span class="op">=</span> <span class="va">my_tpc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">my_tpc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="CausalDiscoSearch-1.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="CausalDiscoSearch-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># or</span></span></span>
 <span class="r-in"><span><span class="va">my_tpc</span> <span class="op">&lt;-</span> <span class="va">my_tpc</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="set_knowledge.html">set_knowledge</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">my_tpc</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="CausalDiscoSearch-3.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="CausalDiscoSearch-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">my_tpc</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="CausalDiscoSearch-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using R6 class:</span></span></span>
 <span class="r-in"><span></span></span>
@@ -340,78 +337,144 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 <span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"tpc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">kn</span>, directed_as_undirected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res_tpc</span> <span class="op">&lt;-</span> <span class="va">s_tpc</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://caugi.org/reference/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tpc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tpc</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">PDAG</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  --&gt;   child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 ---   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Tiers</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">label</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> old  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Variables</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">var</span>       <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x3  youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x4  youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x5 old  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x6 old  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Switch to TFCI on the same object (reuses suffStat/test)</span></span></span>
 <span class="r-in"><span><span class="va">s_tpc</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"tfci"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res_tfci</span> <span class="op">&lt;-</span> <span class="va">s_tpc</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://caugi.org/reference/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tfci</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tfci</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">UNKNOWN</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x2  o-o   child_x1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  o-&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  o-&gt;   youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  o-&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Tiers</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">label</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> old  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Variables</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">var</span>       <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  child</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x3  youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x4  youth</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x5 old  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x6 old  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># --- Score-based: TGES --------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">s_tges</span> <span class="op">&lt;-</span> <span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">s_tges</span><span class="op">$</span><span class="fu">set_score</span><span class="op">(</span><span class="st">"tbic"</span><span class="op">)</span> <span class="co"># Gaussian temporal score</span></span></span>
 <span class="r-in"><span><span class="va">s_tges</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"tges"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">s_tges</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">dat</span>, set_suff_stat <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># suff stat not used for TGES</span></span></span>
+<span class="r-in"><span><span class="va">s_tges</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">tpc_example</span>, set_suff_stat <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># suff stat not used for TGES</span></span></span>
 <span class="r-in"><span><span class="va">s_tges</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res_tges</span> <span class="op">&lt;-</span> <span class="va">s_tges</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://caugi.org/reference/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tges</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_tges</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">PDAG</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  ---   child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># --- Intentional error demonstrations ----------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># run_search() without setting an algorithm</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Test must be set before sufficient statistic.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set_suff_stat() requires data and test first</span></span></span>
 <span class="r-in"><span><span class="va">s_err</span> <span class="op">&lt;-</span> <span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">s_err</span><span class="op">$</span><span class="fu">set_suff_stat</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># no data &amp; no test</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Data must be set before sufficient statistic.</span>
-<span class="r-in"><span><span class="va">s_err</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">dat</span>, set_suff_stat <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s_err</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">tpc_example</span>, set_suff_stat <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">s_err</span><span class="op">$</span><span class="fu">set_suff_stat</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># no test</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Test must be set before sufficient statistic.</span>
 <span class="r-in"><span></span></span>
@@ -433,7 +496,7 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Anne Helby Petersen, Frederik Fabricius-Bjerre, Bjarke Hautop Kristensen.</p>
+  <p>Developed by Bjarke Hautop Kristensen, Frederik Fabricius-Bjerre, Anne Helby Petersen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

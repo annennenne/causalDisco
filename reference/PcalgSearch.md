@@ -1,8 +1,8 @@
 # R6 Interface to pcalg Search Algorithms
 
-This class implements the search algorithms from the pcalg package. It
-allows to set the data, sufficient statistics, test, score, and
-algorithm.
+A wrapper that lets you drive pcalg algorithms within the causalDisco
+framework. For arguments to the test, score, and algorithm, see the
+pcalg documentation, which we link to in the respective sections below.
 
 ## Public fields
 
@@ -17,11 +17,11 @@ algorithm.
   be set with `$set_score()`. Recognized values are:
 
   - `"sem_bic"` - BIC score for Gaussian observed data. See
-    [`GaussL0penObsScore-class`](https://rdrr.io/pkg/pcalg/man/GaussL0penObsScore-class.html).
+    [pcalg::GaussL0penObsScore](https://rdrr.io/pkg/pcalg/man/GaussL0penObsScore-class.html).
 
   - `"sem_bic_int"` - BIC score for Gaussian data from jointly
     interventional and observational Gaussian data. See
-    [`GaussL0penIntScore-class`](https://rdrr.io/pkg/pcalg/man/GaussL0penIntScore-class.html).
+    [pcalg::GaussL0penIntScore](https://rdrr.io/pkg/pcalg/man/GaussL0penIntScore-class.html).
 
 - `test`:
 
@@ -41,14 +41,20 @@ algorithm.
   A function that will be used to run the search algorithm. Can be set
   with `$set_alg()`. Recognized values are:
 
-  - `"pc"` - PC algorithm. See
-    [`pcalg::pc()`](https://rdrr.io/pkg/pcalg/man/pc.html).
-
   - `"fci"` - FCI algorithm. See
+    [`fci()`](https://disco-coders.github.io/causalDisco/reference/fci.md)
+    and the underlying
     [`pcalg::fci()`](https://rdrr.io/pkg/pcalg/man/fci.html).
 
   - `"ges"` - GES algorithm. See
+    [`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md)
+    and the underlying
     [`pcalg::ges()`](https://rdrr.io/pkg/pcalg/man/ges.html).
+
+  - `"pc"` - PC algorithm. See
+    [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md)
+    and the underlying
+    [`pcalg::pc()`](https://rdrr.io/pkg/pcalg/man/pc.html).
 
 - `params`:
 
@@ -221,7 +227,7 @@ Sets the algorithm for the search.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/set_knowledge.md)
+### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
 Sets the knowledge for the search algorithm. Due to the nature of pcalg,
 we cannot set knowledge before we run it on data. So we set the function
@@ -287,26 +293,143 @@ The objects of this class are cloneable with this method.
 # use the disco() or any method function, for example pc(), instead.
 
 # Load data
-data("tpc_example")
+data(num_data)
 
 # Recommended:
-pc(engine = "pcalg", test = "fisher_z")(tpc_example)
-#> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
-#> 
-
-# or
 my_pc <- pc(engine = "pcalg", test = "fisher_z")
-my_pc(tpc_example)
+my_pc(num_data)
 #> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    ---   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Z     -->   Y    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
 #> ── Knowledge object ────────────────────────────────────────────────────────────
-#> 
 
 # or
-disco(data = tpc_example, method = my_pc)
+disco(data = num_data, method = my_pc)
 #> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    ---   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Z     -->   Y    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# Example with detailed settings:
+my_pc2 <- pc(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.01,
+  m.max = 4,
+  skel.method = "original"
+)
+
+disco(data = num_data, method = my_pc2)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X2    ---   X3   
+#> 3 X2    -->   Y    
+#> 4 X3    -->   Y    
+#> 5 Z     -->   X1   
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# With knowledge
+
+kn <- knowledge(
+  num_data,
+  X1 %!-->% X2,
+  X2 %!-->% X1
+)
+
+disco(data = num_data, method = my_pc2, knowledge = kn)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X2    ---   X3   
+#> 3 X2    -->   Y    
+#> 4 X3    -->   Y    
+#> 5 Z     -->   X1   
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
+#> ── Variables ──
+#> 
+#>   var   tier 
+#>   <chr> <chr>
+#> 1 X1    NA   
+#> 2 X2    NA   
+#> 3 X3    NA   
+#> 4 Y     NA   
+#> 5 Z     NA   
+#> ── Edges ──
+#> 
+#>  ✖  X1 → X2
+#>  ✖  X2 → X1
 
 # Using R6 class:
 s <- PcalgSearch$new()
@@ -318,7 +441,28 @@ s$set_alg("pc")
 g <- s$run_search()
 
 print(g)
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  ---   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  ---   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
 #> ── Knowledge object ────────────────────────────────────────────────────────────
-#> 
 ```

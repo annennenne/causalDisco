@@ -1,6 +1,8 @@
-# Disco!!
+# Perform Causal Discovery
 
-Run a causal discovery method on a data frame.
+Apply a causal discovery method to a data frame to infer causal
+relationships on observational data. Supports multiple algorithms and
+optionally incorporates prior knowledge.
 
 ## Usage
 
@@ -19,19 +21,49 @@ disco(data, method, knowledge = NULL)
   A `disco_method` object representing a causal discovery algorithm.
   Available methods are
 
-  - [`pc()`](https://bjarkehautop.github.io/causalDisco/reference/pc.md) -
-    PC algorithm,
+  - [`boss()`](https://disco-coders.github.io/causalDisco/reference/boss.md) -
+    BOSS algorithm,
 
-  - [`fci()`](https://bjarkehautop.github.io/causalDisco/reference/fci.md) -
+  - [`boss_fci()`](https://disco-coders.github.io/causalDisco/reference/boss_fci.md) -
+    BOSS-FCI algorithm,
+
+  - [`fci()`](https://disco-coders.github.io/causalDisco/reference/fci.md) -
     FCI algorithm,
 
-  - [`ges()`](https://bjarkehautop.github.io/causalDisco/reference/ges.md) -
+  - [`gfci()`](https://disco-coders.github.io/causalDisco/reference/gfci.md) -
+    GFCI algorithm,
+
+  - [`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md) -
     GES algorithm,
 
-  - [`tges()`](https://bjarkehautop.github.io/causalDisco/reference/tges.md) -
+  - [`grasp()`](https://disco-coders.github.io/causalDisco/reference/grasp.md) -
+    GRaSP algorithm,
+
+  - [`grasp_fci()`](https://disco-coders.github.io/causalDisco/reference/grasp_fci.md) -
+    GRaSP-FCI algorithm,
+
+  - [`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md) -
+    GS algorithm,
+
+  - [`iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+    [`iamb_fdr()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+    [`fast_iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+    [`inter_iamb()`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md) -
+    IAMB algorithms,
+
+  - [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md) -
+    PC algorithm,
+
+  - [`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md) -
+    SP-FCI algorithm,
+
+  - [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md) -
+    TFCI algorithm,
+
+  - [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md) -
     TGES algorithm,
 
-  - [`tpc()`](https://bjarkehautop.github.io/causalDisco/reference/tpc.md) -
+  - [`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md) -
     TPC algorithm.
 
 - knowledge:
@@ -48,22 +80,22 @@ A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
 For specific details on the supported algorithms, scores, tests, and
 parameters for each engine, see:
 
-- [`TetradSearch`](https://bjarkehautop.github.io/causalDisco/reference/TetradSearch.md)
-  for Tetrad,
-
-- [`PcalgSearch`](https://bjarkehautop.github.io/causalDisco/reference/PcalgSearch.md)
-  for pcalg,
-
-- [`BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.md)
+- [BnlearnSearch](https://disco-coders.github.io/causalDisco/reference/BnlearnSearch.md)
   for bnlearn,
 
-- [`CausalDiscoSearch`](https://bjarkehautop.github.io/causalDisco/reference/CausalDiscoSearch.md)
-  for causalDisco.
+- [CausalDiscoSearch](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md)
+  for causalDisco,
+
+- [PcalgSearch](https://disco-coders.github.io/causalDisco/reference/PcalgSearch.md)
+  for pcalg,
+
+- [TetradSearch](https://disco-coders.github.io/causalDisco/reference/TetradSearch.md)
+  for Tetrad.
 
 ## Examples
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
 # use pc with engine bnlearn and test fisher_z
 my_pc <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.01)
@@ -89,5 +121,4 @@ pc_tiered_bnlearn <- disco(
   knowledge = kn
 )
 plot(pc_tiered_bnlearn)
-
 ```

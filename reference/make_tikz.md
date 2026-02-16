@@ -1,175 +1,292 @@
-# Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
+# Generate TikZ Code from a Object
 
-Generate Latex tikz code for plotting a temporal DAG, PDAG or PAG.
+Generates LaTeX TikZ code from a `knowledgeable_caugi`, `knowledge`, or
+[`caugi::caugi`](https://caugi.org/reference/caugi.html) object,
+preserving node positions, labels, and visual styles. Edges are rendered
+with arrows, line widths, and colors. The output is readable LaTeX code
+that can be directly compiled or modified.
 
 ## Usage
 
 ``` r
 make_tikz(
-  model,
-  x_jit = 2,
-  y_jit = 2,
-  mark_periods = TRUE,
-  period_gap = 4,
-  annotate_edges = NULL,
-  add_axis = TRUE,
-  var_labels = NULL,
-  period_labels = NULL,
-  annotation_labels = NULL,
-  clipboard = TRUE,
-  raw_out = FALSE,
-  color_annotate = NULL,
-  bend_edges = FALSE
+  x,
+  ...,
+  scale = 10,
+  full_doc = TRUE,
+  bend_edges = FALSE,
+  bend_angle = 25,
+  tier_label_pos = c("above", "below", "left", "right")
 )
 ```
 
 ## Arguments
 
-- model:
+- x:
 
-  `tpdag`, `tskeleton`, `tpag`, or `tamat` object to plot.
+  A `knowledgeable_caugi`, `knowledge`, or
+  [`caugi::caugi`](https://caugi.org/reference/caugi.html) object.
 
-- x_jit:
+- ...:
 
-  How much should nodes within a period be jittered horizontally.
+  Additional arguments passed to
+  [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
+  and [`caugi::plot()`](https://caugi.org/reference/plot.html).
 
-- y_jit:
+- scale:
 
-  Vertical distance between nodes within a period.
+  Numeric scalar. Scaling factor for node coordinates. Default is `10`.
 
-- mark_periods:
+- full_doc:
 
-  If `TRUE`, gray boxes are drawn behind each period.
-
-- period_gap:
-
-  Horizontal gap between different periods.
-
-- annotate_edges:
-
-  If `TRUE`, add a text annotation to edges. If `annotation_labels` are
-  supplied, these labels will be used. Otherwise, the value in the
-  inputted adjacency matrix corresponding to the edge will be used.
-  Cannot be used for `tpag` input objects (or `ag` amat types).
-
-- add_axis:
-
-  If `TRUE`, a horizontal axis with period labels are added.
-
-- var_labels:
-
-  Optional labels for nodes (variables). Should be given as a named
-  list, where the name is the variable name, and the entry is the label,
-  e.g. `list(vname = "Label for vname")`.
-
-- period_labels:
-
-  Optional labels for periods. Should be given as a named list, where
-  the name is the period name (as stored in the `tamat`), and the entry
-  is the label, e.g. `list(periodname = "Label for period")`.
-
-- annotation_labels:
-
-  Optional labels for edge annotations. Only used if
-  `annotate_edges = TRUE`. Should be given as a named list, where the
-  name is the edge annotation (as stored in the `tamat`), and the entry
-  is the label, e.g. `list(h = "High")`.
-
-- clipboard:
-
-  If `TRUE`, the tikz code is not printed, but instead copied to the
-  clipboard, so it can easily be pasted into a Latex document.
-
-- raw_out:
-
-  If `TRUE`, the tikz code is only returned as a character vector.
-
-- color_annotate:
-
-  Named list of colors to use to mark edge annotations instead of
-  labels. This overrules `annotate_edges` and both are not available at
-  the same time. The list should be given with annotations as names and
-  colors as entries, e.g. `list(h = "blue")`. Cannot be used for `tpag`
-  input objects (or `ag` amat types).
+  Logical. If `TRUE` (default), generates a full standalone LaTeX
+  document. If `FALSE`, returns only the `tikzpicture` environment.
 
 - bend_edges:
 
-  If `TRUE`, all edges are bend 10 degrees to the right, thereby
-  avoiding having edges exactly on top of each other.
+  Logical. If `TRUE`, edges are drawn with bent edges. Default is
+  `FALSE`. Edges connecting the same pair of nodes in both directions
+  (`A %-->% B` and `B %-->% A`) are automatically bent left and right to
+  avoid overlap. Bend direction is automatically chosen to reduce
+  overlap.
+
+- bend_angle:
+
+  Numeric scalar. Angle in degrees for bending arrows when
+  `bend_edges = TRUE`. Default is `25`.
+
+- tier_label_pos:
+
+  Character string specifying the position of tier labels relative to
+  the tier rectangles. Must be one of `"above"`, `"below"`, `"left"`, or
+  `"right"`. Default is `"above"`.
 
 ## Value
 
-Silently returns a character vector with lines of tikz code. The
-function furthermore has a side-effect. If `clipboard = TRUE`, the
-side-effect is that the tikz code is also copied to the clipboard. If
-`clipboard = FALSE`, the tikz code is instead printed in the console.
+A character string containing LaTeX TikZ code. Depending on `full_doc`,
+this is either:
+
+- a complete LaTeX document (`full_doc = TRUE`), or
+
+- only the `tikzpicture` environment (`full_doc = FALSE`).
 
 ## Details
 
-Note that it is necessary to read in relevant tikz libraries in the
-Latex preamble. The relevant lines of code are (depending a bit on
-parameter settings):  
-`\usepackage{tikz}`  
-`\usetikzlibrary{arrows.meta,arrows,shapes,decorations,automata,backgrounds,petri}`  
-`\usepackage{pgfplots}`
+The function calls
+[`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
+to generate a
+[`caugi::caugi_plot`](https://caugi.org/reference/caugi_plot.html)
+object, then traverses the plot object's grob structure to extract nodes
+and edges. Supported features include:
+
+- **Nodes**
+
+  - Fill color and draw color (supports both named colors and custom RGB
+    values)
+
+  - Font size
+
+  - Coordinates are scaled by the `scale` parameter
+
+- **Edges**
+
+  - Line color and width
+
+  - Arrow scale
+
+  - Optional bending to reduce overlapping arrows
+
+The generated TikZ code uses global style settings, and edges are
+connected to nodes by name (as opposed to hard-coded coordinates),
+making it easy to modify the output further if needed.
 
 ## Examples
 
 ``` r
-# Make tikz figure code from tpdag, print code to screen
-data(tpc_example)
+################# Convert Knowledge to Tikz ################
+
+data(num_data)
 kn <- knowledge(
-  tpc_example,
-  tier(
-    child ~ tidyselect::starts_with("child"),
-    youth ~ tidyselect::starts_with("youth"),
-    oldage ~ tidyselect::starts_with("oldage")
-  )
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
 )
 
-tpdag_example <- tpc_run(tpc_example,
-  kn,
-  alpha = 0.01,
-  test = cor_test,
-  output = "tpdag"
-)
-make_tikz(tpdag_example, clipboard = FALSE)
-#> %TIKZ FIG MADE BY CAUSALDISCO
+# Full standalone document
+tikz_kn <- make_tikz(kn, scale = 10, full_doc = TRUE)
+cat(tikz_kn)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \documentclass[tikz,border=2mm]{standalone}
+#> \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+#> 
+#> \begin{document}
+#> \tikzset{every node/.style={fill=lightgray}, every path/.style={draw=red}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
 #> \begin{tikzpicture}
-#> [every node/.style={font=\small, align = center}, every edge/.append style={nodes={font=\itshape\scriptsize}}]
-#> \node (1) at (2,1) {x2};
-#> \node at (1,-0.5) {child};
-#> \node (2) at (0,3) {x1};
-#> \node (3) at (8,1) {x4};
-#> \node at (7,-0.5) {youth};
-#> \node (4) at (6,3) {x3};
-#> \node (5) at (14,1) {x6};
-#> \node at (13,-0.5) {oldage};
-#> \node (6) at (12,3) {x5};
-#> \draw [->] (1) edge (3);
-#> \draw [->] (1) edge (6);
-#> \draw [->] (3) edge (5);
-#> \draw [->] (4) edge (6);
-#> \draw [->] (6) edge (5);
-#> \draw [-] (2) edge (1);
-#> \draw [-] (-1,0) edge (15,0);
-#> \begin{pgfonlayer}{background}
-#> \filldraw [join=round,black!10]
-#> (0,0) rectangle (2,4)
-#> (6,0) rectangle (8,4)
-#> (12,0) rectangle (14,4)
-#> ; \end{pgfonlayer}
+#> \node[draw, circle] (X1) at (1.667,0) {X1};
+#> \node[draw, circle] (X2) at (1.667,3.333) {X2};
+#> \node[draw, circle] (X3) at (3.333,6.667) {X3};
+#> \node[draw, circle] (Y) at (0,6.667) {Y};
+#> \node[draw, circle] (Z) at (0,10) {Z};
+#> \path (X1) edge[draw=blue, -Latex] (X2)
+#>       (X2) edge[, -Latex] (X3)
+#>       (X2) edge[, -Latex] (Y)
+#>       (Y) edge[, -Latex] (Z);
+#> \end{tikzpicture}
+#> \end{document}
+
+# Only the tikzpicture environment
+tikz_kn_snippet <- make_tikz(kn, full_doc = FALSE)
+cat(tikz_kn_snippet)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill=lightgray}, every path/.style={draw=red}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (X1) at (1.667,0) {X1};
+#> \node[draw, circle] (X2) at (1.667,3.333) {X2};
+#> \node[draw, circle] (X3) at (3.333,6.667) {X3};
+#> \node[draw, circle] (Y) at (0,6.667) {Y};
+#> \node[draw, circle] (Z) at (0,10) {Z};
+#> \path (X1) edge[draw=blue, -Latex] (X2)
+#>       (X2) edge[, -Latex] (X3)
+#>       (X2) edge[, -Latex] (Y)
+#>       (Y) edge[, -Latex] (Z);
 #> \end{tikzpicture}
 
-# Make tikz figure code from tamat, copy code to clipboard
-dag_example <- sim_dag(5)
-rownames(dag_example) <- colnames(dag_example) <- c(
-  "child_x", "child_y",
-  "child_z", "adult_x",
-  "adult_y"
+# With bent edges
+tikz_bent <- make_tikz(
+  kn,
+  full_doc = FALSE,
+  bend_edges = TRUE
 )
-output_tamat <- causalDisco:::tamat(dag_example, order = c("child", "adult"))
-if (FALSE) { # \dontrun{
-make_tikz(output_tamat)
-} # }
+cat(tikz_bent)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill=lightgray}, every path/.style={draw=red}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (X1) at (1.667,0) {X1};
+#> \node[draw, circle] (X2) at (1.667,3.333) {X2};
+#> \node[draw, circle] (X3) at (3.333,6.667) {X3};
+#> \node[draw, circle] (Y) at (0,6.667) {Y};
+#> \node[draw, circle] (Z) at (0,10) {Z};
+#> \path (X1) edge[draw=blue, bend left=25, -Latex] (X2)
+#>       (X2) edge[bend left=25, -Latex] (X3)
+#>       (X2) edge[bend right=25, -Latex] (Y)
+#>       (Y) edge[bend left=25, -Latex] (Z);
+#> \end{tikzpicture}
+
+# With a color not supported by default TikZ colors; will fall back to RGB
+tikz_darkblue <- make_tikz(
+  kn,
+  node_style = list(fill = "darkblue"),
+  full_doc = FALSE
+)
+cat(tikz_darkblue)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill={rgb:red,0.000;green,0.000;blue,0.545}}, every path/.style={draw=red}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (X1) at (1.667,0) {X1};
+#> \node[draw, circle] (X2) at (1.667,3.333) {X2};
+#> \node[draw, circle] (X3) at (3.333,6.667) {X3};
+#> \node[draw, circle] (Y) at (0,6.667) {Y};
+#> \node[draw, circle] (Z) at (0,10) {Z};
+#> \path (X1) edge[draw=blue, -Latex] (X2)
+#>       (X2) edge[, -Latex] (X3)
+#>       (X2) edge[, -Latex] (Y)
+#>       (Y) edge[, -Latex] (Z);
+#> \end{tikzpicture}
+
+# With tiered knowledge
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+tikz_tiered_kn <- make_tikz(
+  kn_tiered,
+  full_doc = FALSE
+)
+cat(tikz_tiered_kn)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill=lightgray}}
+#> \tikzset{arrows={[scale=1]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (child_x1) at (0,0) {child\_x1};
+#> \node[draw, circle] (child_x2) at (0,10) {child\_x2};
+#> \node[draw, circle] (youth_x3) at (5,0) {youth\_x3};
+#> \node[draw, circle] (youth_x4) at (5,10) {youth\_x4};
+#> \node[draw, circle] (oldage_x5) at (10,0) {oldage\_x5};
+#> \node[draw, circle] (oldage_x6) at (10,10) {oldage\_x6};
+#> \begin{scope}[on background layer]
+#> \node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(child_x1)(child_x2)] (child) {};
+#> \node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(oldage_x5)(oldage_x6)] (old) {};
+#> \node[draw, rectangle, fill=blue!20, rounded corners, inner sep=0.5cm, fit=(youth_x3)(youth_x4)] (youth) {};
+#> \end{scope}
+#> \node[anchor=south, draw=none, fill=none] at ($(child.north)+(0cm,0.2cm)$) {child};
+#> \node[anchor=south, draw=none, fill=none] at ($(old.north)+(0cm,0.2cm)$) {old};
+#> \node[anchor=south, draw=none, fill=none] at ($(youth.north)+(0cm,0.2cm)$) {youth};
+#> \path ;
+#> \end{tikzpicture}
+
+
+################# Convert Knowledgeable Caugi to Tikz ################
+
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
+)
+
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
+disco_kn <- disco(data = num_data, method = pc_bnlearn, knowledge = kn)
+
+tikz_snippet <- make_tikz(disco_kn, scale = 10, full_doc = FALSE)
+cat(tikz_snippet)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill=lightgray}, every path/.style={draw=blue}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (X1) at (2.609,3.549) {X1};
+#> \node[draw, circle] (X2) at (7.431,3.545) {X2};
+#> \node[draw, circle] (X3) at (10,0) {X3};
+#> \node[draw, circle] (Z) at (0,0.013) {Z};
+#> \node[draw, circle] (Y) at (5.007,0.226) {Y};
+#> \path (X1) edge[, -Latex] (X2)
+#>       (X1) edge[, -Latex] (Y)
+#>       (X1) edge[, -] (Z)
+#>       (X3) edge[, -Latex] (X2)
+#>       (X3) edge[, -Latex] (Y)
+#>       (Y) edge[, -Latex] (X2)
+#>       (Z) edge[, -Latex] (Y);
+#> \end{tikzpicture}
+
+################# Convert caugi objects to Tikz ################
+
+cg <- caugi::caugi(A %-->% B + C)
+
+tikz_snippet <- make_tikz(
+  cg,
+  node_style = list(fill = "red"),
+  scale = 10,
+  full_doc = FALSE
+)
+cat(tikz_snippet)
+#> %%% Generated by causalDisco (version 0.9.5.9048)
+#> \tikzset{every node/.style={fill=red}}
+#> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
+#> \begin{tikzpicture}
+#> \node[draw, circle] (A) at (5,0) {A};
+#> \node[draw, circle] (B) at (10,10) {B};
+#> \node[draw, circle] (C) at (0,10) {C};
+#> \path (A) edge[, -Latex] (B)
+#>       (A) edge[, -Latex] (C);
+#> \end{tikzpicture}
 ```

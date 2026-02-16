@@ -34,18 +34,18 @@ A list with elements:
 ``` r
 check_tetrad_install()
 #> $installed
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $version
-#> NULL
+#> [1] "7.6.10"
 #> 
 #> $java_ok
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $java_version
-#> [1] "17.0.17"
+#> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Java >= 21 is required but found version 17.0.17. Please update Java or run install_java()."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
 #> 
 ```

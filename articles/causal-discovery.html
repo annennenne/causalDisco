@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -50,7 +52,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/annennenne/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/disco-coders/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -66,173 +68,216 @@
       <img src="../logo.png" class="logo" alt=""><h1>Causal Discovery</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/annennenne/causalDisco/blob/master/vignettes/causal-discovery.Rmd" class="external-link"><code>vignettes/causal-discovery.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/master/vignettes/causal-discovery.Rmd" class="external-link"><code>vignettes/causal-discovery.Rmd</code></a></small>
       <div class="d-none name"><code>causal-discovery.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/annennenne/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
 <span><span class="co">#&gt;   Java heap size requested: 2 GB</span></span>
-<span><span class="co">#&gt;   Tetrad version: not installed</span></span>
-<span><span class="co">#&gt;   Tetrad is not installed. Run install_tetrad() to install it.</span></span>
+<span><span class="co">#&gt;   Tetrad version: 7.6.10</span></span>
+<span><span class="co">#&gt;   Java successfully initialized with 2 GB.</span></span>
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
-<p>This vignette provides an overview of the <code>causalDisco</code>
-package, which offers tools for causal discovery from observational
-data. It covers the main features of the package, including various
-causal discovery algorithms, knowledge incorporation, and result
-visualization.</p>
-<p>TODO: CHANGE EXAMPLE …</p>
+<p>This vignette provides a very brief introduction to causal discovery
+using simulated data. For a thorough introduction to causal discovery
+concepts, we recommend Glymour et al. (2019) <a href="https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00524/full" class="external-link">Review
+of Causal Discovery Methods Based on Graphical Models</a> or Zanga et
+al. (2022) <a href="https://arxiv.org/abs/2305.10032" class="external-link">A Survey on Causal
+Discovery: Theory and Practice</a>.</p>
+<p>The goal of causal discovery is to infer the causal relationships
+among a set of observed variables using observational data.</p>
 <div class="section level2">
-<h2 id="simple-example-of-causal-discovery">Simple example of causal discovery<a class="anchor" aria-label="anchor" href="#simple-example-of-causal-discovery"></a>
+<h2 id="example-of-causal-discovery">Example of causal discovery<a class="anchor" aria-label="anchor" href="#example-of-causal-discovery"></a>
 </h2>
-<p>The example discussed in this section is inspired by the Julia
-package <a href="https://mschauer.github.io/CausalInference.jl/latest/" class="external-link">CausalDiscovery.jl</a>
-with their PC algorithm example, which can be found here <a href="https://mschauer.github.io/CausalInference.jl/latest/examples/pc_basic_examples/" class="external-link">PC
-algorithm example in CausalDiscovery.jl</a>.</p>
-<p>We will consider data from the following DAG, which is also discussed
-in chapter 2 of Judea Pearl’s book.</p>
-<p><img src="dag.png"></p>
-<p>We create data from a linear Gaussian model corresponding to the
-above DAG:</p>
+<p>Suppose we have this DAG:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1405</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op">+</span> <span class="va">w</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="va">z</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span></span>
-<span><span class="va">data_linear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, v <span class="op">=</span> <span class="va">v</span>, w <span class="op">=</span> <span class="va">w</span>, z <span class="op">=</span> <span class="va">z</span>, s <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_linear</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            x           v          w          z          s</span></span>
-<span><span class="co">#&gt; 1  0.2724785  0.07687489  1.2131219  1.4542158  0.2649549</span></span>
-<span><span class="co">#&gt; 2  0.3572619  0.81022383  0.4049109  1.5767672  1.5394264</span></span>
-<span><span class="co">#&gt; 3 -0.8616620 -0.68388923 -0.3195188 -1.1415913 -1.2647045</span></span>
-<span><span class="co">#&gt; 4  0.8083350  1.61458098  1.2132504  3.0666677  3.0334703</span></span>
-<span><span class="co">#&gt; 5  0.6127352  0.42484707  0.4253022  0.7889983  0.7937421</span></span>
-<span><span class="co">#&gt; 6 -0.6240686 -0.23225274 -0.7201852 -0.4876655 -0.7977492</span></span></code></pre></div>
-<p>We can use the PC algorithm from either the “tetrad”, “pcalg”, or
-“bnlearn” engine to discover the causal structure. Below, we set up the
-PC method with Fisher’s Z test and a significance level of 0.05 and
-“pcalg” and “bnlearn” engines.</p>
+<code class="sourceCode R"><span><span class="va">cg</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
+<span>    <span class="va">Z</span> <span class="op">%--&gt;%</span> <span class="va">X1</span>,</span>
+<span>    <span class="va">X3</span> <span class="op">%--&gt;%</span> <span class="va">X2</span>,</span>
+<span>    <span class="va">X1</span> <span class="op">%--&gt;%</span> <span class="va">Y</span>,</span>
+<span>    <span class="va">X2</span> <span class="op">%--&gt;%</span> <span class="va">Y</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We define a layout which we will use for plotting the graphs in this
+vignette:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pc_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span><span class="va">pc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">pc_result_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_linear</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span>
-<span><span class="va">pc_result_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_linear</span>, method <span class="op">=</span> <span class="va">pc_bnlearn</span><span class="op">)</span></span></code></pre></div>
-<p>We can visualize the results from each engine:</p>
+<code class="sourceCode R"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi_layout_sugiyama.html" class="external-link">caugi_layout_sugiyama</a></span><span class="op">(</span><span class="va">cg</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">cg</span>, layout <span class="op">=</span> <span class="va">layout</span>, main <span class="op">=</span> <span class="st">"True DAG"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="causal-discovery_files/figure-html/plot%20dag-1.png" class="r-plt" alt="" width="700"></p>
+<p>We can create data from a linear Gaussian model corresponding to the
+above DAG using <code><a href="../reference/generate_dag_data.html">generate_dag_data()</a></code>. We generate 10000
+samples with a fixed random seed from the DAG above:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_pcalg</span>, main <span class="op">=</span> <span class="st">"PC (pcalg)"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_bnlearn</span>, main <span class="op">=</span> <span class="st">"PC (bnlearn)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causal-discovery_files/figure-html/plot%20pc%20results%20simple-1.png" class="r-plt" alt="" width="700"></p>
+<code class="sourceCode R"><span><span class="va">data_linear</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
+<span>  <span class="va">cg</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_linear</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt;        Z      X3     X1      X2       Y</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  0.632  0.297   0.773 -<span style="color: #BB0000;">0.256</span>  -<span style="color: #BB0000;">0.730</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">1.67</span>  -<span style="color: #BB0000;">1.10</span>   -<span style="color: #BB0000;">1.20</span>   1.10   -<span style="color: #BB0000;">0.722</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> -<span style="color: #BB0000;">0.214</span>  0.713   1.09   0.026<span style="text-decoration: underline;">4</span>  0.261 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -<span style="color: #BB0000;">1.61</span>  -<span style="color: #BB0000;">0.171</span>  -<span style="color: #BB0000;">1.21</span>  -<span style="color: #BB0000;">0.034</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.074<span style="text-decoration: underline;">6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>  1.57   0.051<span style="text-decoration: underline;">7</span>  0.402 -<span style="color: #BB0000;">0.874</span>   1.40  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">1.08</span>   0.178  -<span style="color: #BB0000;">1.09</span>   0.189   0.059<span style="text-decoration: underline;">1</span></span></span></code></pre></div>
+<p>The R code used to generate the data is stored as an attribute of the
+data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>(Note, that it doesn’t work correctly for bnlearn, since
-<code><a href="https://caugi.org/reference/as_caugi.html" class="external-link">as_caugi()</a></code> in caugi had a bug. I fixed it in PR #149, so it
-will work in the next release of caugi.)</p>
-<p>The first notable feature of this plot is that some edges have
-arrows, while others do not. For instance, the edge from <code>v</code>
-to <code>z</code> is directed, indicating that <code>v</code> influences
-<code>z</code>, but not vice versa. In contrast, the edge between
-<code>x</code> and <code>w</code> has no arrows at either end, showing
-that the direction of causal influence cannot be determined from the
-data alone. Both directions; <code>x</code> to <code>w</code> and
-<code>w</code> to <code>x</code>, are consistent with the observed data.
-We can demonstrate this by reversing the direction of influence in the
-data-generating process above and applying the PC algorithm to the new
-data set:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">data_linear</span>, <span class="st">"generating_model"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $dgp</span></span>
+<span><span class="co">#&gt; $dgp$X3</span></span>
+<span><span class="co">#&gt; rnorm(n, sd = 0.95)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dgp$X2</span></span>
+<span><span class="co">#&gt; X3 * 0.159 + rnorm(n, sd = 0.507)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dgp$Z</span></span>
+<span><span class="co">#&gt; rnorm(n, sd = 1.794)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dgp$X1</span></span>
+<span><span class="co">#&gt; Z * 0.3 + rnorm(n, sd = 1.634)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dgp$Y</span></span>
+<span><span class="co">#&gt; X1 * 0.61 + X2 * 0.31 + rnorm(n, sd = 1.216)</span></span></code></pre></div>
+<p>The goal is now to recover the causal structure from the data
+alone.</p>
+<p>We will use the PC algorithm to learn the causal structure. One of
+its key assumptions is causal sufficiency, meaning that there are no
+unobserved confounders. We can use the PC algorithm from any of the
+“tetrad”, “pcalg”, or “bnlearn” engines to learn the structure from the
+data. The motivation for having multiple engines is that they may
+implement different algorithms, tests, or scoring methods, or the same
+algorithm may be implemented differently across engines.</p>
+<p>Below, we set up the PC algorithm using Fisher’s Z test, a
+significance level of 0.05, and <code>pcalg</code> as the engine. To do
+so, we first define the PC method using the <code><a href="../reference/pc.html">pc()</a></code> function,
+and then pass it to the <code><a href="../reference/disco.html">disco()</a></code> function along with the
+data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1405</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op">+</span> <span class="va">w</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
-<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="va">z</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span></span>
+<code class="sourceCode R"><span><span class="va">pc_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="va">pc_result_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_linear</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span></code></pre></div>
+<p>We can visualize the results using the <code><a href="../reference/plot.html">plot()</a></code> function,
+where we explicitly provide the layout defined above so graphs are
+easier to compare.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_pcalg</span>, layout <span class="op">=</span> <span class="va">layout</span>, main <span class="op">=</span> <span class="st">"PC (pcalg)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="causal-discovery_files/figure-html/plot%20pc%20results%20simple-1.png" class="r-plt" alt="" width="700"></p>
+<p>The PC algorithm recovers the correct causal structure up to Markov
+equivalence, represented as a CPDAG. A CPDAG represents the equivalence
+class of DAGs that encode the same conditional independencies.</p>
+<p>The first notable feature of this plot is that some edges are
+directed, while others are undirected. For example, the edge from
+<code>X1</code> to <code>Y</code> is directed, indicating a causal
+effect of <code>X1</code> on <code>Y</code>, but not in the reverse
+direction. In contrast, the edge between <code>X2</code> and
+<code>X3</code> is undirected, indicating that the data alone do not
+provide sufficient information to determine the causal direction. Both
+orientations <code>X2 %--&gt;% X3</code> and <code>X3 %--&gt;% X2</code>
+are compatible with the observed conditional independencies.</p>
+<p>We demonstrate the non-identifiability of the causal direction
+between <code>X2</code> and <code>X3</code> by reversing the direction
+of this edge in the data-generating process above and applying the PC
+algorithm to the resulting data set.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cg_reverse</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
+<span>  <span class="va">Z</span> <span class="op">%--&gt;%</span> <span class="va">X1</span>,</span>
+<span>  <span class="va">X2</span> <span class="op">%--&gt;%</span> <span class="va">X3</span>,</span>
+<span>  <span class="va">X1</span> <span class="op">%--&gt;%</span> <span class="va">Y</span>,</span>
+<span>  <span class="va">X2</span> <span class="op">%--&gt;%</span> <span class="va">Y</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">data_linear_reversed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, v <span class="op">=</span> <span class="va">v</span>, w <span class="op">=</span> <span class="va">w</span>, z <span class="op">=</span> <span class="va">z</span>, s <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span>
+<span><span class="va">data_linear_reverse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
+<span>  <span class="va">cg_reverse</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pc_pcalg_reversed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span><span class="va">pc_result_reversed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_linear_reversed</span>, method <span class="op">=</span> <span class="va">pc_pcalg_reversed</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_reversed</span>, main <span class="op">=</span> <span class="st">"PC (pcalg) reversed"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">pc_result_reverse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_linear_reverse</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_reverse</span>, layout <span class="op">=</span> <span class="va">layout</span>, main <span class="op">=</span> <span class="st">"PC (pcalg) reversed"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="causal-discovery_files/figure-html/pc%20algorithm%20reversed-1.png" class="r-plt" alt="" width="700"></p>
 <p>We learn the same causal structure as before, demonstrating that the
-direction of influence between <code>x</code> and <code>w</code> cannot
-be determined from the data alone.</p>
-<div class="section level3">
-<h3 id="non-linear-example">Non-linear example<a class="anchor" aria-label="anchor" href="#non-linear-example"></a>
-</h3>
-<p>Here, we simulate data the same DAG structure as above, but with a
-non-linear relationships between the variables.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1405</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span><span class="op">)</span></span>
-<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.25</span></span>
-<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.25</span></span>
-<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">*</span> <span class="va">v</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">w</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.25</span></span>
-<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="va">z</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.25</span></span>
-<span></span>
-<span><span class="va">data_nonlinear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, v <span class="op">=</span> <span class="va">v</span>, w <span class="op">=</span> <span class="va">w</span>, z <span class="op">=</span> <span class="va">z</span>, s <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span></code></pre></div>
-<p>If we try to use the PC algorithm with Fisher’s Z test again it will
-not perform well due to the non-linear relationships in the data.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pc_pcalg_nonlinear</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span><span class="va">pc_result_nonlinear</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_nonlinear</span>, method <span class="op">=</span> <span class="va">pc_pcalg_nonlinear</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_nonlinear</span>, main <span class="op">=</span> <span class="st">"PC (pcalg) non-linear"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causal-discovery_files/figure-html/pc%20algorithm%20non-linear-1.png" class="r-plt" alt="" width="700"></p>
-<p>As expected, the PC algorithm with Fisher’s Z test does not recover
-the correct causal structure in this non-linear setting at all. Note,
-that increasing the sample size does not help.</p>
-<p>To handle non-linear relationships, we can for instance use the
-Kernel Conditional Independence Test (KCI) in Tetrad.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">pc_tetrad_nonlinear</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, test <span class="op">=</span> <span class="st">"kci"</span><span class="op">)</span></span>
-<span>  <span class="va">pc_result_nonlinear_kci</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_nonlinear</span>, method <span class="op">=</span> <span class="va">pc_tetrad_nonlinear</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_nonlinear_kci</span>, main <span class="op">=</span> <span class="st">"PC (Tetrad KCI) non-linear"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p><img src="nonlinear-tetrad-kci.png"></p>
-<p>The result of the PC algorithm using the KCI test look like what we’d
-expect to see. Note, that this test is much more computationally
-demanding than using Fisher’s Z test.</p>
-</div>
+direction of influence between <code>X2</code> and <code>X3</code>
+cannot be determined from the data alone.</p>
 </div>
 <div class="section level2">
-<h2 id="incorporating-prior-knowledge">Incorporating prior knowledge<a class="anchor" aria-label="anchor" href="#incorporating-prior-knowledge"></a>
+<h2 id="unobserved-confounding">Unobserved confounding<a class="anchor" aria-label="anchor" href="#unobserved-confounding"></a>
 </h2>
-<p>As the dimensional grows the problem of finding the corresponding
-graph given observational data becomes exponentially harder. Thus, if
-there is any prior information available, this can help make the problem
-easier. We show how to incorporate prior knowledge into the causal
-discovery process using the same linear data as above. Suppose we knew
-that <code>v</code> and <code>w</code> do not cause <code>x</code>. This
-can be specified as follows:</p>
+<p>In practice, unobserved confounders may be present, violating the
+assumptions of the PC algorithm. Suppose we have the following DAG with
+an unobserved confounder <code>U</code> between <code>X1</code> and
+<code>X2</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cg_unobserved</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
+<span>  <span class="va">Z</span> <span class="op">%--&gt;%</span> <span class="va">X1</span>,</span>
+<span>  <span class="va">X3</span> <span class="op">%--&gt;%</span> <span class="va">X2</span>,</span>
+<span>  <span class="va">X1</span> <span class="op">%--&gt;%</span> <span class="va">Y</span>,</span>
+<span>  <span class="va">X2</span> <span class="op">%--&gt;%</span> <span class="va">Y</span>,</span>
+<span>  <span class="va">U</span> <span class="op">%--&gt;%</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We can visualize this DAG, marking the unobserved variable
+<code>U</code> in red and using dashed edges to indicate that it is
+unobserved:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
-<span>  <span class="va">data_linear</span>,</span>
-<span>  <span class="va">v</span> <span class="op">%!--&gt;%</span> <span class="va">x</span>,  <span class="co"># v does not cause x</span></span>
-<span>  <span class="va">w</span> <span class="op">%!--&gt;%</span> <span class="va">x</span>   <span class="co"># w does not cause x</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causal-discovery_files/figure-html/prior%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
-<p>We can then incorporate this knowledge into the PC algorithm as
-follows:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">cg_unobserved</span>,</span>
+<span>  edge_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    by_edge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      U <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, fill <span class="op">=</span> <span class="st">"red"</span>, lty <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  node_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    by_node <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      U <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"True DAG with unobserved confounder"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="causal-discovery_files/figure-html/plot%20dag%20unobserved%20confounder-1.png" class="r-plt" alt="" width="700"></p>
+<p>We can generate data from this DAG using
+<code><a href="../reference/generate_dag_data.html">generate_dag_data()</a></code>, and then afterwards remove the
+unobserved variable <code>U</code> from the data frame:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pc_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span><span class="va">pc_result_with_knowledge</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">data_linear</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pc_result_with_knowledge</span><span class="op">$</span><span class="va">caugi</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causal-discovery_files/figure-html/pc%20algorithm%20with%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
-<p>It now correctly recovers the true DAG structure with this extra
-knowledge.</p>
-<p>For more information about how to incorporate knowledge, see the <a href="knowledge.html">knowledge vignette</a>.</p>
+<code class="sourceCode R"><span><span class="va">data_unobserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
+<span>  <span class="va">cg_unobserved</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">data_unobserved</span> <span class="op">&lt;-</span> <span class="va">data_unobserved</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_unobserved</span><span class="op">)</span> <span class="op">!=</span> <span class="st">"U"</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_unobserved</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt;         Z      X3     X1     X2       Y</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  0.608   1.42   -<span style="color: #BB0000;">1.31</span>  -<span style="color: #BB0000;">1.69</span>   1.99  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">0.716</span>  -<span style="color: #BB0000;">0.357</span>  -<span style="color: #BB0000;">0.490</span> -<span style="color: #BB0000;">0.561</span>  0.955 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  1.22    1.49   -<span style="color: #BB0000;">0.124</span> -<span style="color: #BB0000;">1.48</span>   1.52  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -<span style="color: #BB0000;">0.752</span>  -<span style="color: #BB0000;">0.188</span>   0.877  1.35  -<span style="color: #BB0000;">1.39</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> -<span style="color: #BB0000;">0.086</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.015<span style="text-decoration: underline;">6</span>  1.54  -<span style="color: #BB0000;">0.926</span> -<span style="color: #BB0000;">0.083</span><span style="color: #BB0000; text-decoration: underline;">3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">0.799</span>  -<span style="color: #BB0000;">0.929</span>   0.802  0.253 -<span style="color: #BB0000;">0.939</span></span></span></code></pre></div>
+<p>We can then apply the PC algorithm as before:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pc_pcalg_unobserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="va">pc_result_unobserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_unobserved</span>, method <span class="op">=</span> <span class="va">pc_pcalg_unobserved</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_unobserved</span>, layout <span class="op">=</span> <span class="va">layout</span>, main <span class="op">=</span> <span class="st">"PC (pcalg) unobserved confounder"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="causal-discovery_files/figure-html/pc%20algorithm%20unobserved%20confounder-1.png" class="r-plt" alt="" width="700"></p>
+<p>We see that the PC algorithm does not recover the correct causal
+structure due to the presence of the unobserved confounder. In
+particular, it found an incorrect edge between <code>X1</code> and
+<code>X2</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="next-steps">Next steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
+</h2>
+<p>For more information about how to incorporate knowledge into causal
+discovery methods, see the <a href="knowledge.html">knowledge
+vignette</a>.</p>
+<p>For more information about how to visualize causal discovery results,
+see the <a href="visualization.html">visualization vignette</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -241,7 +286,7 @@ knowledge.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Anne Helby Petersen, Frederik Fabricius-Bjerre, Bjarke Hautop Kristensen.</p>
+  <p>Developed by Bjarke Hautop Kristensen, Frederik Fabricius-Bjerre, Anne Helby Petersen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

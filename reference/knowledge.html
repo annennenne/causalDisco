@@ -11,7 +11,7 @@ tier(1 ~ V1 + V2, exposure ~ E)
 V1 %--&amp;gt;% V3    # infix syntax for required edge from V1 to V3
 V2 %!--&amp;gt;% V3    # infix syntax for an edge from V2 to V3 that is forbidden
 exogenous(V1, V2)
-"><meta property="og:image" content="https://bjarkehautop.github.io/causalDisco/logo.png"></head><body>
+"><meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +19,7 @@ exogenous(V1, V2)
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,11 +33,13 @@ exogenous(V1, V2)
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/annennenne/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/disco-coders/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -46,7 +48,7 @@ exogenous(V1, V2)
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Knowledge Mini-DSL Constructor</h1>
-      <small class="dont-index">Source: <a href="https://github.com/annennenne/causalDisco/blob/master/R/knowledge.R" class="external-link"><code>R/knowledge.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/master/R/knowledge.R" class="external-link"><code>R/knowledge.R</code></a></small>
       <div class="d-none name"><code>knowledge.Rd</code></div>
     </div>
 
@@ -56,7 +58,7 @@ extended with variable relationships expressed via formulas, selectors, or infix
 <p></p><div class="sourceCode r"><pre><code><span><span class="fu">tier</span><span class="op">(</span><span class="fl">1</span> <span class="op">~</span> <span class="va">V1</span> <span class="op">+</span> <span class="va">V2</span>, <span class="va">exposure</span> <span class="op">~</span> <span class="va">E</span><span class="op">)</span></span>
 <span><span class="va">V1</span> <span class="op">%--&gt;%</span> <span class="va">V3</span>    <span class="co"># infix syntax for required edge from V1 to V3</span></span>
 <span><span class="va">V2</span> <span class="op">%!--&gt;%</span> <span class="va">V3</span>    <span class="co"># infix syntax for an edge from V2 to V3 that is forbidden</span></span>
-<span><span class="fu"><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous</a></span><span class="op">(</span><span class="va">V1</span>, <span class="va">V2</span><span class="op">)</span></span></code></pre><p></p></div>
+<span><span class="fu">exogenous</span><span class="op">(</span><span class="va">V1</span>, <span class="va">V2</span><span class="op">)</span></span></code></pre><p></p></div>
     </div>
 
     <div class="section level2">
@@ -72,8 +74,8 @@ extended with variable relationships expressed via formulas, selectors, or infix
 <dd><p>Arguments to define the knowledge object:</p><ul><li><p>Optionally, a single data frame (first argument) whose column names
 initialize and freeze the variable set.</p></li>
 <li><p>Zero or more mini-DSL calls:
-<code>tier()</code>, <code><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous()</a></code>, <code>exo()</code>, or infix operators <code>%--&gt;%</code>, <code>%!--&gt;%</code>.</p><ul><li><p><code>tier()</code>: One or more two-sided formulas (<code>tier(1 ~ x + y)</code>), or a numeric vector.</p></li>
-<li><p><code><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous()</a></code> / <code>exo()</code>: Variable names or tidyselect selectors.
+<code>tier()</code>, <code>exogenous()</code>, <code>exo()</code>, or infix operators <code>%--&gt;%</code>, <code>%!--&gt;%</code>.</p><ul><li><p><code>tier()</code>: One or more two-sided formulas (<code>tier(1 ~ x + y)</code>), or a numeric vector.</p></li>
+<li><p><code>exogenous()</code> / <code>exo()</code>: Variable names or tidyselect selectors.
 Arguments are evaluated in order; only these calls are allowed.</p></li>
 </ul></li>
 </ul></dd>
@@ -85,7 +87,7 @@ Arguments are evaluated in order; only these calls are allowed.</p></li>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Create a <code>knowledge</code> object using a concise mini-DSL with <code>tier()</code>, <code><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous()</a></code> and infix edge operators
+    <p>Create a <code>knowledge</code> object using a concise mini-DSL with <code>tier()</code>, <code>exogenous()</code> and infix edge operators
 <code>%--&gt;%</code> and <code>%!--&gt;%</code>.</p>
 <p>The first argument can be a data frame, which will be used to populate the
 <code>knowledge</code> object with variable names. If you later add variables with
@@ -99,10 +101,15 @@ specifies variables. Variables can also be selected using tidyselect syntax:
 <code>tier(1 ~ starts_with("V"))</code>.</p></li>
 <li><p><code>%--&gt;%</code> and <code>%!--&gt;%</code>: Infix operators to define required and forbidden edges, respectively.
 Both sides of the operator can use tidyselect syntax to select multiple variables.</p></li>
-<li><p><code><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous()</a></code> / <code>exo()</code>: Mark variables as exogenous.</p></li>
+<li><p><code>exogenous()</code> / <code>exo()</code>: Mark variables as exogenous.</p></li>
 <li><p>Numeric vector shortcut for <code>tier()</code>:
 <code>tier(c(1, 2, 1))</code> assigns tiers by index to all existing variables.</p></li>
-</ul></div>
+</ul><p>Multiple calls or operators are additive: each call adds new edges to the knowledge object.
+For example:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">V1</span> <span class="op">%--&gt;%</span> <span class="va">V3</span></span>
+<span><span class="va">V2</span> <span class="op">%--&gt;%</span> <span class="va">V3</span></span></code></pre><p></p></div>
+<p>results in both edges being required - i.e., the union of all specified required edges.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other knowledge functions:
@@ -114,10 +121,11 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <code><a href="as_bnlearn_knowledge.html">as_bnlearn_knowledge()</a></code>,
 <code><a href="as_pcalg_constraints.html">as_pcalg_constraints()</a></code>,
 <code><a href="as_tetrad_knowledge.html">as_tetrad_knowledge()</a></code>,
+<code><a href="convert_tiers_to_forbidden.html">convert_tiers_to_forbidden()</a></code>,
 <code><a href="deparse_knowledge.html">deparse_knowledge()</a></code>,
 <code><a href="forbid_edge.html">forbid_edge()</a></code>,
-<code><a href="forbid_tier_violations.html">forbid_tier_violations()</a></code>,
 <code><a href="get_tiers.html">get_tiers()</a></code>,
+<code><a href="knowledge_to_caugi.html">knowledge_to_caugi()</a></code>,
 <code><a href="remove_edge.html">remove_edge()</a></code>,
 <code><a href="remove_tiers.html">remove_tiers()</a></code>,
 <code><a href="remove_vars.html">remove_vars()</a></code>,
@@ -132,11 +140,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># knowledge objects are made with the knowledge() function</span></span></span>
-<span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># knowledge objects contain tier information, forbidden and required edges</span></span></span>
+<span class="r-in"><span><span class="co"># Knowledge objects can contain tier information, forbidden and required edges</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fl">1</span> <span class="op">~</span> <span class="va">V1</span> <span class="op">+</span> <span class="va">V2</span>,</span></span>
@@ -146,7 +150,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>  <span class="va">V3</span> <span class="op">%!--&gt;%</span> <span class="va">V1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># if a data frame is provided, variable names are checked against it</span></span></span>
+<span class="r-in"><span><span class="co"># If a data frame is provided, variable names are checked against it</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
@@ -156,7 +160,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># throws error</span></span></span>
+<span class="r-in"><span><span class="co"># Throws error if variable not in data</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">tpc_example</span>,</span></span>
@@ -164,49 +168,54 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>      <span class="fl">1</span> <span class="op">~</span> <span class="va">child_x1</span> <span class="op">+</span> <span class="va">child_x2</span>,</span></span>
 <span class="r-in"><span>      <span class="fl">2</span> <span class="op">~</span> <span class="va">youth_x3</span> <span class="op">+</span> <span class="va">youth_x4</span>,</span></span>
 <span class="r-in"><span>      <span class="fl">3</span> <span class="op">~</span> <span class="va">oldage_x5</span> <span class="op">+</span> <span class="va">woops</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span> <span class="co"># wrong name</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Tiers</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">label</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Variables</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">var</span>       <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> youth_x3  2    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x4  2    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> oldage_x5 3    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> oldage_x6 <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># using tidyselect helpers</span></span></span>
+<span class="r-in"><span><span class="co"># Using tidyselect helpers</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fl">1</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>, <span class="co"># can use tidyselect helpers</span></span></span>
-<span class="r-in"><span>    <span class="fl">2</span> <span class="op">~</span> <span class="va">youth_x3</span> <span class="op">+</span> <span class="va">youth_x4</span>, <span class="co"># do not need quotes for tiers or variables</span></span></span>
+<span class="r-in"><span>    <span class="fl">1</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fl">2</span> <span class="op">~</span> <span class="fu">ends_with</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_x3"</span>, <span class="st">"_x4"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fl">3</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"oldage"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span> <span class="co"># doesn't have to match data naming</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># custom tier naming</span></span></span>
+<span class="r-in"><span><span class="co"># Numeric vector shortcut</span></span></span>
+<span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Custom tier naming</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="st">"child"</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>, <span class="co"># can use tidyselect helpers</span></span></span>
-<span class="r-in"><span>    <span class="va">youth</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>, <span class="co"># do not need quotes for tiers</span></span></span>
+<span class="r-in"><span>    <span class="va">child</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">youth</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="va">elderly</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"oldage"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span> <span class="co"># doesn't have to match data naming</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># There is also required and forbidden edges, which are specified like so</span></span></span>
@@ -219,19 +228,31 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span><span class="co"># You can also add exogenous variables</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://caugi.org/reference/exogenous.html" class="external-link">exogenous</a></span><span class="op">(</span><span class="va">child_x1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">exogenous</span><span class="op">(</span><span class="va">child_x1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">exo</span><span class="op">(</span><span class="va">child_x2</span><span class="op">)</span> <span class="co"># shorthand</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mix different operators</span></span></span>
+<span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fl">1</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span> <span class="op">+</span> <span class="va">youth_x4</span>,</span></span>
+<span class="r-in"><span>    <span class="fl">2</span> <span class="op">~</span> <span class="va">youth_x3</span> <span class="op">+</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"oldage"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="va">child_x1</span> <span class="op">%--&gt;%</span> <span class="va">youth_x3</span>,</span></span>
+<span class="r-in"><span>  <span class="va">oldage_x6</span> <span class="op">%!--&gt;%</span> <span class="va">oldage_x5</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">exo</span><span class="op">(</span><span class="va">child_x2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># You can also build knowledge with a verb pipeline</span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">knowledge</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="add_vars.html">add_vars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># knowledge now only takes these variables</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="add_vars.html">add_vars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Knowledge now only takes these variables</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="add_tier.html">add_tier</a></span><span class="op">(</span><span class="va">One</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="add_to_tier.html">add_to_tier</a></span><span class="op">(</span><span class="st">"One"</span> <span class="op">~</span> <span class="va">A</span> <span class="op">+</span> <span class="va">B</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="add_to_tier.html">add_to_tier</a></span><span class="op">(</span><span class="va">One</span> <span class="op">~</span> <span class="va">A</span> <span class="op">+</span> <span class="va">B</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="add_tier.html">add_tier</a></span><span class="op">(</span><span class="fl">2</span>, after <span class="op">=</span> <span class="va">One</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="add_to_tier.html">add_to_tier</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">~</span> <span class="va">C</span> <span class="op">+</span> <span class="va">D</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="forbid_edge.html">forbid_edge</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">~</span> <span class="va">C</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="forbid_edge.html">forbid_edge</a></span><span class="op">(</span><span class="va">A</span> <span class="op">~</span> <span class="va">C</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="require_edge.html">require_edge</a></span><span class="op">(</span><span class="va">A</span> <span class="op">~</span> <span class="va">B</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Mix DSL start + verb refinement</span></span></span>
@@ -246,19 +267,19 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>  <span class="fu"><a href="add_exogenous.html">add_exogenous</a></span><span class="op">(</span><span class="va">V3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using seq_tiers for larger datasets</span></span></span>
-<span class="r-in"><span><span class="va">tpc_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">large_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, <span class="co"># 100 random numbers in (0,1)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>    ncol <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>    byrow <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X_"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span> <span class="co"># label the columns X_1,..., X_100</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">large_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X_"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
+<span class="r-in"><span>  <span class="va">large_data</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>      <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,</span></span>
@@ -268,7 +289,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>  <span class="va">X_1</span> <span class="op">%--&gt;%</span> <span class="va">X_2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">tpc_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">small_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  X_1 <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  X_2 <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>  tier3_A <span class="op">=</span> <span class="fl">3</span>,</span></span>
@@ -276,12 +297,12 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 <span class="r-in"><span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">kn_seq_tiers2</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
+<span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu">knowledge</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">small_data</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu">ends_with</span><span class="op">(</span><span class="st">"_{i}"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># X_1, X_2</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu">starts_with</span><span class="op">(</span><span class="st">"tier{i}"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># tier3_</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"Y{i}_ok"</span><span class="op">)</span><span class="op">)</span> <span class="co"># exact match</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu">ends_with</span><span class="op">(</span><span class="st">"_{i}"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu">starts_with</span><span class="op">(</span><span class="st">"tier{i}"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="seq_tiers.html">seq_tiers</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"Y{i}_ok"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>
@@ -291,7 +312,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Anne Helby Petersen, Frederik Fabricius-Bjerre, Bjarke Hautop Kristensen.</p>
+  <p>Developed by Bjarke Hautop Kristensen, Frederik Fabricius-Bjerre, Anne Helby Petersen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

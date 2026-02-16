@@ -4,22 +4,27 @@
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: not installed
-#>   Tetrad is not installed. Run install_tetrad() to install it.
+#>   Tetrad version: 7.6.10
+#>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 ```
 
-This vignette demonstrates how to use the `knowledge` function to
-incorporate prior knowledge into causal discovery algorithms. The
-different supported knowledge types are explained below, along with
-examples of how to create knowledge objects and use them with causal
-discovery methods. All knowledge types can be freely combined.
+This vignette demonstrates how to use the
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+function to incorporate prior knowledge into causal discovery
+algorithms. The different supported knowledge types are explained below,
+along with examples of how to create knowledge objects and use them with
+causal discovery methods. All knowledge types can be freely combined.
+Multiple calls or operators are additive: each call adds new edges to
+the knowledge object. For example if we require an edge from `A` to `B`
+and then require an edge from A to C, the resulting knowledge object
+will require both edges from `A` to `B` and from `A` to `C`.
 
 At a conceptual level, all knowledge is represented as constraints on
-edges, specifying which edges are allowed, disallowed, or required. Some
-knowledge types provide higher-level abstractions for expressing common
-modeling assumptions more conveniently.
+edges, specifying which edges are required and forbidden. Some knowledge
+types provide higher-level abstractions for expressing common modeling
+assumptions more conveniently.
 
 ## Required and forbidden knowledge
 
@@ -40,13 +45,13 @@ syntax too verbose.
 
 ### Specifying required and forbidden edges
 
-Suppose we want to require an edge from A to B, and forbid an edge from
-B to C:
+Suppose we want to require an edge from A to B, from A to C, and forbid
+an edge from B to C:
 
 ``` r
 kn_1 <- knowledge(
-  A %-->% B,
-  B %!-->% C
+  A %-->% c(B, C), # Require edges from A to B and A to C
+  B %!-->% C # Forbid edge from B to C
 )
 ```
 
@@ -58,12 +63,14 @@ plot(kn_1)
 
 ![](knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png)
 
-The blue solid edge represents the required edge from A to B, while the
-red dashed edge represents the forbidden edge from B to C.
+The blue edge represents the required edge from A to B, while the red
+edge represents the forbidden edge from B to C.
 
 If one wishes to remove some edges (either required or forbidden)
-knowledge from an existing knowledge object, the `remove_edge` function
-can be used. For example, to remove the required edge from A to B:
+knowledge from an existing knowledge object, the
+[`remove_edge()`](https://disco-coders.github.io/causalDisco/reference/remove_edge.md)
+function can be used. For example, to remove the required edge from A to
+B:
 
 ``` r
 kn_1_removed <- remove_edge(kn_1, from = A, to = B)
@@ -78,7 +85,7 @@ We will use the `tpc_example` dataset from the causalDisco package for
 the following examples:
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 head(tpc_example)
 #>   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5
 #> 1        0 -0.7104066 -0.07355602        1  6.4984994  3.0740123
@@ -89,27 +96,32 @@ head(tpc_example)
 #> 6        1  1.9549723 -0.65054654        0 -6.9758928 -3.2107342
 ```
 
-We can pass the dataset to `knowledge`, which also checks that the
-specified variables exist:
+We can pass the dataset to `knowledge` as the first argument, which also
+checks that the specified variables exist in the dataset:
 
 ``` r
 kn_2 <- knowledge(
   tpc_example,
-  child_x1 %-->% youth_x3,
-  child_x2 %!-->% oldage_x5
+  child_x1 %-->% youth_x3, # Require edge from child_x1 to youth_x3
+  child_x2 %!-->% oldage_x5 # Forbid edge from child_x2 to oldage_x5
 )
 ```
 
-This knowledge object can also be visualized:
+This knowledge object can also be visualized (we manually adjust the
+layout for better appearance):
 
 ``` r
-plot(kn_2)
+cg <- knowledge_to_caugi(kn_2)$caugi
+layout <- caugi::caugi_layout_sugiyama(cg)
+layout[6, 2] <- layout[4, 2]
+
+plot(kn_2, layout = layout)
 ```
 
 ![](knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png)
 
 The plot then plots all variables in the dataset, with the required
-edges as blue solid edges and forbidden edges as red dashed edges.
+edges as blue edges and forbidden edges as red edges.
 
 #### Using tidyselect helpers
 
@@ -158,12 +170,13 @@ additional knowledge is supplied.
 
 ### Creating a tiered knowledge object
 
-Suppose we observe variables over time: first the A’s, then the B’s, and
-finally the C’s. This ordering implies that causal influences cannot go
-backward in time (e.g., B’s cannot cause A’s). A tiered knowledge object
-captures this temporal structure by specifying tiers and their
-associated variables. If numeric tiers are used, lower numbers indicate
-earlier tiers; otherwise, tiers are ordered by their appearance.
+Suppose we observe variables over time: first the `A`’s, then the `B`’s,
+and finally the `C`’s. This ordering implies that causal direction
+cannot go backward in time (e.g., `B`’s cannot cause `A`’s). A tiered
+knowledge object captures this temporal structure by specifying tiers
+and their associated variables. If numeric tiers are used, lower numbers
+indicate earlier tiers; otherwise, tiers are ordered by their
+appearance.
 
 The following specifications encode the same tier structure:
 
@@ -213,7 +226,7 @@ kn_mixed <- knowledge(
 )
 ```
 
-We can visualize the tiers using:
+We can visualize the tiers:
 
 ``` r
 plot(kn)
@@ -223,6 +236,44 @@ plot(kn)
 
 The plot then shows the tiers as layers, with the earliest tiers to the
 left and latest to the right.
+
+We can convert the meaning of the tiered knowledge into explicit
+forbidden edges using
+[`convert_tiers_to_forbidden()`](https://disco-coders.github.io/causalDisco/reference/convert_tiers_to_forbidden.md):
+
+``` r
+kn_converted <- convert_tiers_to_forbidden(kn)
+print(kn_converted)
+#> 
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> 
+#> ── Variables ──
+#> 
+#>   var   tier 
+#>   <chr> <chr>
+#> 1 A1    NA   
+#> 2 A2    NA   
+#> 3 B1    NA   
+#> 4 B2    NA   
+#> 5 C1    NA   
+#> 6 C2    NA
+#> ── Edges ──
+#>  ✖  B1 → A1
+#>  ✖  B1 → A2
+#>  ✖  B2 → A1
+#>  ✖  B2 → A2
+#>  ✖  C1 → A1
+#>  ✖  C1 → A2
+#>  ✖  C1 → B1
+#>  ✖  C1 → B2
+#>  ✖  C2 → A1
+#>  ✖  C2 → A2
+#>  ✖  C2 → B1
+#>  ✖  C2 → B2
+plot(kn_converted)
+```
+
+![](knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png)
 
 Tidyselect helpers such as `starts_with` can also be used to define
 tiers in a concise way, just as with required and forbidden edges.
@@ -238,14 +289,18 @@ kn_tier_tidyselect <- knowledge(
     old   ~ starts_with("old")
   )
 )
+plot(kn_tier_tidyselect)
 ```
+
+![](knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png)
 
 ## Exogenous variables knowledge
 
 Exogenous variables are those that have no incoming edges in the causal
 graph. That is, variables which are known causes but are not affected by
 other variables. Exogenous variables can be specified using the
-`exogenous` function within `knowledge`.
+`exogenous()` function within
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
 
 ### Specifying exogenous variables
 
@@ -259,9 +314,8 @@ kn_exo_1 <- knowledge(
 )
 ```
 
-Instead of `exogenous`, you can also use the shorthand functions `exo`.
-
-This knowledge object can be visualized:
+Instead of `exogenous`, you can also use the shorthand function `exo()`.
+This `knowledge` object can be visualized:
 
 ``` r
 plot(kn_exo_1)
@@ -269,22 +323,22 @@ plot(kn_exo_1)
 
 ![](knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png)
 
-Below we add both child_x1 and child_x2 as exogenous variables using
+Below we add both `child_x1` and `child_x2` as exogenous variables using
 tidyselect helpers:
 
 ``` r
 kn_exo_2 <- knowledge(
   tpc_example,
-  exogenous(starts_with("child"))
+  exo(starts_with("child"))
 )
-plot(kn_exo_2)
+plot(kn_exo_2, layout = "bipartite", orientation = "columns")
 ```
 
 ![](knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png)
 
 ## Combining different knowledge types
 
-Different knowledge types can be freely combined in a single knowledge
+Different knowledge types can be freely combined in a single `knowledge`
 object. For example, we can combine tiered knowledge with required and
 forbidden edges:
 
@@ -308,8 +362,12 @@ plot(kn_combined)
 ## Using knowledge with causal discovery
 
 Once prior knowledge has been specified, it can be supplied to causal
-discovery algorithms. For example, we can use the temporal GES algorithm
-tges with engine “causalDisco” and temporal BIC (“tbic”):
+discovery algorithms by passing the `knowledge` object to the
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
+function via the `knowledge` parameter. For example, we can use the
+Temporal GES algorithm
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md)
+with engine “causalDisco” and temporal BIC (“tbic”):
 
 ``` r
 kn <- knowledge(
@@ -332,20 +390,26 @@ plot the resulting causal graph:
 plot(disco_cd_tges)
 ```
 
-![](knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png)![](knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-2.png)
+![](knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png)
 
 The black edges are those inferred from the data.
 
 ## Engine specific information about knowledge
 
+By engine we mean the underlying implementation of the causal discovery
+algorithm, i.e. the engine you specify to an algorithm such as
+`pc(engine = "bnlearn")` or `tges(engine = "causalDisco")`.
+
 ### bnlearn
 
-All knowledge types are supported with bnlearn engine. Note, that you
-can get a harmless(?) warning from bnlearn when using required
-knowledge.
+All knowledge types are supported with bnlearn engine. When required
+knowledge is provided, bnlearn may emit a warning during structure
+learning. This occurs when the algorithm identifies a candidate
+v-structure (collider) from the data whose orientation conflicts with
+edges already oriented due to background knowledge.
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
@@ -359,30 +423,30 @@ output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 #> both arcs are oriented in the opposite direction.
 ```
 
-But the resulting causal graph respects the knowledge correctly
-nevertheless.
+The resulting causal graph will still respect the provided knowledge.
 
 ``` r
 plot(output)
 ```
 
-![](knowledge_files/figure-html/plot%20bnlearn-1.png)![](knowledge_files/figure-html/plot%20bnlearn-2.png)
+![](knowledge_files/figure-html/plot%20bnlearn-1.png)
 
 ### causalDisco
 
-WIP. Currently causalDisco only works correctly with tiered and
-forbidden knowledge.
+causalDisco engine only supports tiered and forbidden knowledge. If
+required knowledge is provided, it will give a warning and ignore the
+required knowledge.
 
 ### pcalg
 
-Only forbidden knowledge symmetric knowledge is supported for pcalg.
-That is, edges that are forbidden in both directions. Thus, the only
-type of knowledge that can be used with pcalg is knowledge created using
-forbidden edges (`%!-->%`) without any directed knowledge or tiers, such
-as this:
+Only forbidden symmetric knowledge is supported for pcalg engine. That
+is, edges that are forbidden in both directions. Thus, the only type of
+knowledge that can be used with pcalg is knowledge created using
+forbidden edges (`%!-->%`) without any required or tier knowledge. An
+example is shown below:
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 kn <- knowledge(
   tpc_example,
   child_x1 %!-->% youth_x3,
@@ -394,4 +458,4 @@ output <- disco(data = tpc_example, method = pc_pcalg, knowledge = kn)
 
 ### Tetrad
 
-WIP. All knowledge types are supported with Tetrad engine.
+All knowledge types are supported with Tetrad engine.

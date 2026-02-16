@@ -1,4 +1,4 @@
-# The Temporal Peter-Clark (PC) algorithm for causal discovery
+# TPC Algorithm for Causal Discovery
 
 Run the temporal PC algorithm for causal discovery using causalDisco.
 
@@ -34,15 +34,32 @@ tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 ## Value
 
 A function of class `"tpc"` that takes a single argument `data` (a data
-frame) and returns a `caugi` and a `knowledge` (`knowledgeable_caugi`)
-object.
+frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
+(`knowledgeable_caugi`) object.
 
 ## Details
 
 For specific details on the supported tests, see
-[`CausalDiscoSearch`](https://bjarkehautop.github.io/causalDisco/reference/CausalDiscoSearch.md).
+[CausalDiscoSearch](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md).
 For additional parameters passed via `...`, see
-[`tpc_run()`](https://bjarkehautop.github.io/causalDisco/reference/tpc_run.md).
+[`tpc_run()`](https://disco-coders.github.io/causalDisco/reference/tpc_run.md).
+
+## See also
+
+Other causal discovery algorithms:
+[`boss()`](https://disco-coders.github.io/causalDisco/reference/boss.md),
+[`boss_fci()`](https://disco-coders.github.io/causalDisco/reference/boss_fci.md),
+[`fci()`](https://disco-coders.github.io/causalDisco/reference/fci.md),
+[`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md),
+[`gfci()`](https://disco-coders.github.io/causalDisco/reference/gfci.md),
+[`grasp()`](https://disco-coders.github.io/causalDisco/reference/grasp.md),
+[`grasp_fci()`](https://disco-coders.github.io/causalDisco/reference/grasp_fci.md),
+[`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
+[`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+[`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
+[`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md)
 
 ## Examples
 
@@ -65,73 +82,139 @@ my_tpc <- tpc(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
 disco(tpc_example, my_tpc, knowledge = kn)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # or using my_tpc directly
 
 my_tpc <- my_tpc |> set_knowledge(kn)
 my_tpc(tpc_example)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: PDAG
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x1  -->   child_x2 
+#> 2 child_x2  -->   oldage_x5
+#> 3 child_x2  -->   youth_x4 
+#> 4 oldage_x5 ---   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 child
 #> 2 youth
 #> 3 old  
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  child
 #> 2 child_x2  child
 #> 3 youth_x3  youth
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-#> 
 ```

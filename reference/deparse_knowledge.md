@@ -1,8 +1,8 @@
-# Deparse a knowledge object to knowledge() mini-DSL code
+# Deparse a Knowledge Object into Knowledge DSL Code
 
 Given a `knowledge` object, return a single string containing the R code
 (using
-[`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md),
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md),
 `tier()`, `%-->%`, and `%!-->%`. that would rebuild that same object.
 
 ## Usage
@@ -21,9 +21,9 @@ deparse_knowledge(kn, df_name = NULL)
 
   Optional name of the data frame you used (used as the first argument
   to
-  [`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md)).
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)).
   If `NULL`,
-  [`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md)
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
   is called with no data frame.
 
 ## Value
@@ -33,26 +33,27 @@ A single string (with newlines) of R code.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/plus-.knowledge.md),
-[`add_exogenous()`](https://bjarkehautop.github.io/causalDisco/reference/add_exogenous.md),
-[`add_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_tier.md),
-[`add_to_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_to_tier.md),
-[`add_vars()`](https://bjarkehautop.github.io/causalDisco/reference/add_vars.md),
-[`as_bnlearn_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_bnlearn_knowledge.md),
-[`as_pcalg_constraints()`](https://bjarkehautop.github.io/causalDisco/reference/as_pcalg_constraints.md),
-[`as_tetrad_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_tetrad_knowledge.md),
-[`forbid_edge()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_edge.md),
-[`forbid_tier_violations()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_tier_violations.md),
-[`get_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/get_tiers.md),
-[`knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/knowledge.md),
-[`remove_edge()`](https://bjarkehautop.github.io/causalDisco/reference/remove_edge.md),
-[`remove_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/remove_tiers.md),
-[`remove_vars()`](https://bjarkehautop.github.io/causalDisco/reference/remove_vars.md),
-[`reorder_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/reorder_tiers.md),
-[`reposition_tier()`](https://bjarkehautop.github.io/causalDisco/reference/reposition_tier.md),
-[`require_edge()`](https://bjarkehautop.github.io/causalDisco/reference/require_edge.md),
-[`seq_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/seq_tiers.md),
-[`unfreeze()`](https://bjarkehautop.github.io/causalDisco/reference/unfreeze.md)
+[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
+[`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
+[`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
+[`add_vars()`](https://disco-coders.github.io/causalDisco/reference/add_vars.md),
+[`as_bnlearn_knowledge()`](https://disco-coders.github.io/causalDisco/reference/as_bnlearn_knowledge.md),
+[`as_pcalg_constraints()`](https://disco-coders.github.io/causalDisco/reference/as_pcalg_constraints.md),
+[`as_tetrad_knowledge()`](https://disco-coders.github.io/causalDisco/reference/as_tetrad_knowledge.md),
+[`convert_tiers_to_forbidden()`](https://disco-coders.github.io/causalDisco/reference/convert_tiers_to_forbidden.md),
+[`forbid_edge()`](https://disco-coders.github.io/causalDisco/reference/forbid_edge.md),
+[`get_tiers()`](https://disco-coders.github.io/causalDisco/reference/get_tiers.md),
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md),
+[`knowledge_to_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.md),
+[`remove_edge()`](https://disco-coders.github.io/causalDisco/reference/remove_edge.md),
+[`remove_tiers()`](https://disco-coders.github.io/causalDisco/reference/remove_tiers.md),
+[`remove_vars()`](https://disco-coders.github.io/causalDisco/reference/remove_vars.md),
+[`reorder_tiers()`](https://disco-coders.github.io/causalDisco/reference/reorder_tiers.md),
+[`reposition_tier()`](https://disco-coders.github.io/causalDisco/reference/reposition_tier.md),
+[`require_edge()`](https://disco-coders.github.io/causalDisco/reference/require_edge.md),
+[`seq_tiers()`](https://disco-coders.github.io/causalDisco/reference/seq_tiers.md),
+[`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
 
 ## Examples
 
@@ -84,15 +85,10 @@ cat(code)
 #> )
 
 # Explicitly add all forbidden edges implied by tiers
-kn <- forbid_tier_violations(kn)
+kn <- convert_tiers_to_forbidden(kn)
 code <- deparse_knowledge(kn, df_name = "tpc_example")
 cat(code)
 #> knowledge(tpc_example,
-#>   tier(
-#>     child ~ child_x1 + child_x2,
-#>     youth ~ youth_x3 + youth_x4,
-#>     old ~ oldage_x5 + oldage_x6
-#>   ),
 #>   child_x1 %-->% youth_x3,
 #>   oldage_x5 %!-->% c(child_x1, child_x2, youth_x3, youth_x4),
 #>   oldage_x6 %!-->% c(child_x1, child_x2, youth_x3, youth_x4),

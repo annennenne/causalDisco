@@ -1,52 +1,53 @@
-# Simulate a random DAG
+# Simulate a Random DAG
 
 Simulates a random directed acyclic graph adjacency (DAG) matrix with
-the provided edge sparsity. The edge sparsity is the percentage of edges
-that are absent, relative to a fully connected DAG.
+`n` nodes and either `m` edges, edge creation probability `p`, or edge
+creation probability range `p_range`.
 
 ## Usage
 
 ``` r
-sim_dag(p, sparsity = NULL, sparsity_lim = c(0, 0.8), permute = TRUE)
+sim_dag(n, m = NULL, p = NULL)
 ```
 
 ## Arguments
 
-- p:
+- n:
 
   The number of nodes.
 
-- sparsity:
+- m:
 
-  A numeric in \[0,1\] giving the proportion of possible edges that
-  should be removed. If `sparsity` is supplied, the value in
-  `sparsity_lim` is ignored.
+  Integer in `0, n*(n-1)/2`. Number of edges in the graph. Exactly one
+  of `m` or `p` must be supplied.
 
-- sparsity_lim:
+- p:
 
-  A numeric vector of length 2 giving the interval from which a sparsity
-  value is drawn when `sparsity = NULL`. Both values must lie in
-  \[0,1\].
-
-- permute:
-
-  If `FALSE`, the adjacency matrix will include nodes in their causal
-  ordering. This is avoided by setting `permute = TRUE`, in which case
-  the node order is permuted randomly.
+  Numeric in `[0,1]`. Probability of edge creation. Exactly one of `m`
+  or `p` must be supplied.
 
 ## Value
 
-An adjacency matrix.
+The sampled `caugi` object.
+
+## See also
+
+[`caugi::generate_graph()`](https://caugi.org/reference/generate_graph.html)
 
 ## Examples
 
 ``` r
-# Simulate a DAG adjacency matrix with 5 nodes and sparsity 0.5
-sim_dag(5, sparsity = 0.5)
-#>    x1 x2 x3 x4 x5
-#> x1  0  0  0  1  0
-#> x2  0  0  0  1  0
-#> x3  0  0  0  0  1
-#> x4  0  0  0  0  0
-#> x5  1  0  0  1  0
+# Simulate a DAG with 5 nodes and 3 edges
+sim_dag(n = 5, m = 3)
+#> <caugi object; 5 nodes, 3 edges; simple: TRUE; built: TRUE; ptr=0x56289413b000>
+#>   graph_class: DAG
+#>   nodes: V1, V2, V3, V4, V5
+#>   edges: V3-->V1, V4-->V1, V5-->V1
+
+# Simulate a DAG with 5 nodes and edge creation probability of 0.2
+sim_dag(n = 5, p = 0.2)
+#> <caugi object; 5 nodes, 1 edges; simple: TRUE; built: TRUE; ptr=0x562889c437e0>
+#>   graph_class: DAG
+#>   nodes: V1, V2, V3, V4, V5
+#>   edges: V4-->V5
 ```

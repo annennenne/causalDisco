@@ -1,4 +1,4 @@
-# Causal Discovery Using the Temporal FCI (TFCI) Algorithm
+# Run the TFCI Algorithm for Causal Discovery
 
 Use a modification of the FCI algorithm that makes use of background
 knowledge in the format of a partial ordering. This may, for instance,
@@ -11,7 +11,6 @@ come about when variables can be assigned to distinct tiers or periods
 tfci_run(
   data = NULL,
   knowledge = NULL,
-  order = NULL,
   alpha = 0.05,
   test = reg_test,
   suff_stat = NULL,
@@ -38,14 +37,6 @@ tfci_run(
   A *knowledge* object describing tiers/periods and optional
   forbidden/required edges. This replaces the legacy `order` interface
   and is the preferred way to supply temporal background knowledge.
-
-- order:
-
-  **Deprecated**. A character vector with period-prefixes in their
-  temporal order (e.g., `c("p1", "p2")`). If supplied (and `knowledge`
-  is `NULL`), a temporary `knowledge` object is constructed using
-  [tidyselect::starts_with](https://tidyselect.r-lib.org/reference/starts_with.html)
-  for each prefix. Supplying both `knowledge` and `order` is an error.
 
 - alpha:
 
@@ -83,8 +74,9 @@ tfci_run(
 
   Method for handling conflicting separating sets when orienting edges;
   must be one of `"standard"`, `"conservative"` (the default) or
-  `"maj.rule"`. See [pc](https://rdrr.io/pkg/pcalg/man/pc.html) for
-  further details.
+  `"maj.rule"`. See
+  [`pcalg::pc()`](https://rdrr.io/pkg/pcalg/man/pc.html) for further
+  details.
 
 - directed_as_undirected:
 
@@ -120,12 +112,13 @@ for possible D-SEP sets. (3) Prior to other orientation steps, any
 cross-tier edges get an arrowhead placed at their latest node.
 
 After this, the usual FCI orientation rules are applied; see
-[udag2pag](https://rdrr.io/pkg/pcalg/man/udag2pag.html) for details.
+[`pcalg::udag2pag()`](https://rdrr.io/pkg/pcalg/man/udag2pag.html) for
+details.
 
 ## Examples
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
@@ -141,71 +134,137 @@ my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
 disco(tpc_example, my_tfci, knowledge = kn)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 
 # or using my_tfci directly
 my_tfci <- my_tfci |> set_knowledge(kn)
 my_tfci(tpc_example)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 
 # Also possible: using tfci_run()
 tfci_run(tpc_example, test = cor_test, knowledge = kn)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 ```

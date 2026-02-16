@@ -1,6 +1,6 @@
-# Set background knowledge into a disco_method
+# Set Background Knowledge to Disco Method
 
-Set background knowledge into a disco_method
+Set Background Knowledge to Disco Method
 
 ## Usage
 

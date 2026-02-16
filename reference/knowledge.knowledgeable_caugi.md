@@ -1,4 +1,4 @@
-# Extract the knowledge from a knowledgeable_caugi
+# Extract Knowledge from a Knowledgeable Caugi
 
 S3 method to extract the `knowledge` object from a
 `knowledgeable_caugi`.

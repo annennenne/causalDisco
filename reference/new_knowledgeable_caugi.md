@@ -1,6 +1,6 @@
-# Create a new `knowledgeable_caugi` object
+# Create a Knowledgeable Caugi Object
 
-Create a new `knowledgeable_caugi` object
+Create a Knowledgeable Caugi Object
 
 ## Usage
 

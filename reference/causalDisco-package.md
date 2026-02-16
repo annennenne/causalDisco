@@ -1,27 +1,39 @@
-# Causal Disco package
+# causalDisco: Causal Discovery in R
 
-Various tools for inferring causal models from observational data. The
-package includes an implementation of the temporal Peter-Clark (TPC)
-algorithm. Petersen, Osler and Ekstrøm (2021)
-[doi:10.1093/aje/kwab087](https://doi.org/10.1093/aje/kwab087) . It also
-includes general tools for evaluating differences in adjacency matrices,
-which can be used for evaluating performance of causal discovery
-procedures.
+Tools for causal structure learning from observational data, with
+emphasis on temporally ordered variables. The package implements the
+Temporal Peter–Clark (TPC) algorithm (Petersen, Osler & Ekstrøm, 2021;
+[doi:10.1093/aje/kwab087](https://doi.org/10.1093/aje/kwab087) ), the
+Temporal Greedy Equivalence Search (TGES) algorithm (Larsen, Ekstrøm &
+Petersen, 2025;
+[doi:10.48550/arXiv.2502.06232](https://doi.org/10.48550/arXiv.2502.06232)
+) and Temporal Fast Causal Inference (TFCI). It provides a unified
+framework for specifying background knowledge, which can be incorporated
+into the implemented algorithms from the R packages 'bnlearn' (Scutari,
+2010; [doi:10.18637/jss.v035.i03](https://doi.org/10.18637/jss.v035.i03)
+) and 'pcalg' (Kalish et al., 2012;
+[doi:10.18637/jss.v047.i11](https://doi.org/10.18637/jss.v047.i11) ), as
+well as the Java application 'Tetrad' (Scheines et al., 1998;
+[doi:10.1207/s15327906mbr3301_3](https://doi.org/10.1207/s15327906mbr3301_3)
+). The package further includes utilities for visualization, comparison,
+and evaluation of graph structures, facilitating performance evaluation
+and methodological studies.
 
 ## System requirements
 
-Requires Java (version 21 or newer) to run the Tetrad Java library.
-Requires Cargo (Rust's package manager), rustc \>= 1.80.0, xz
+Java (\>= 21) for Tetrad functionality (optional; includes installer;
+see inst/java/LICENSE and inst/java/COPYRIGHT); Source code:
+<https://github.com/cmu-phil/tetrad>.
 
 ## See also
 
 Useful links:
 
-- <https://github.com/annennenne/causalDisco>
+- <https://github.com/disco-coders/causalDisco>
 
-- <https://bjarkehautop.github.io/causalDisco/>
+- <https://disco-coders.github.io/causalDisco/>
 
-- Report bugs at <https://github.com/annennenne/causalDisco/issues>
+- Report bugs at <https://github.com/disco-coders/causalDisco/issues>
 
 ## Author
 
@@ -29,12 +41,12 @@ Useful links:
 
 Authors:
 
-- Anne Helby Petersen <ahpe@sund.ku.dk>
+- Frederik Fabricius-Bjerre <frederik@fabriciusbjerre.dk>
 
-- Frederik Fabricius-Bjerre <ffb@di.ku.dk>
+- Anne Helby Petersen <ahpe@sund.ku.dk>
 
 Other contributors:
 
-- Tobias Ellegaard Larsen <tobias.ellegaard@sund.ku.dk> \[contributor\]
-
 - Claus Thorn Ekstrøm <ekstrom@sund.ku.dk> \[contributor\]
+
+- Tobias Ellegaard Larsen <tobias.ellegaard@sund.ku.dk> \[contributor\]

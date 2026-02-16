@@ -4,7 +4,7 @@ A reference class for categorical observational data Scoring with Tiered
 Background Knowledge. This class represents a score for causal discovery
 using tiered background knowledge from observational categorical data;
 it is used in the causal discovery function
-[`tges()`](https://bjarkehautop.github.io/causalDisco/reference/tges.md).
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md).
 
 ## Arguments
 
@@ -53,7 +53,7 @@ All reference classes extend and inherit methods from `envRefClass`.
 
 ## See also
 
-[`tges()`](https://bjarkehautop.github.io/causalDisco/reference/tges.md)
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md)
 
 ## Author
 

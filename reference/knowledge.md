@@ -24,16 +24,14 @@ knowledge(...)
   - Optionally, a single data frame (first argument) whose column names
     initialize and freeze the variable set.
 
-  - Zero or more mini-DSL calls: `tier()`,
-    [`exogenous()`](https://caugi.org/reference/exogenous.html),
-    `exo()`, or infix operators `%-->%`, `%!-->%`.
+  - Zero or more mini-DSL calls: `tier()`, `exogenous()`, `exo()`, or
+    infix operators `%-->%`, `%!-->%`.
 
     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a
       numeric vector.
 
-    - [`exogenous()`](https://caugi.org/reference/exogenous.html) /
-      `exo()`: Variable names or tidyselect selectors. Arguments are
-      evaluated in order; only these calls are allowed.
+    - `exogenous()` / `exo()`: Variable names or tidyselect selectors.
+      Arguments are evaluated in order; only these calls are allowed.
 
 ## Value
 
@@ -42,8 +40,7 @@ A populated `knowledge` object.
 ## Details
 
 Create a `knowledge` object using a concise mini-DSL with `tier()`,
-[`exogenous()`](https://caugi.org/reference/exogenous.html) and infix
-edge operators `%-->%` and `%!-->%`.
+`exogenous()` and infix edge operators `%-->%` and `%!-->%`.
 
 The first argument can be a data frame, which will be used to populate
 the `knowledge` object with variable names. If you later add variables
@@ -54,7 +51,7 @@ the function `unfreeze(knowledge)`.
 If no data frame is provided, the object is initially empty. Variables
 can then be added via `tier()`, `forbidden()`, `required()`, infix
 operators, or
-[`add_vars()`](https://bjarkehautop.github.io/causalDisco/reference/add_vars.md).
+[`add_vars()`](https://disco-coders.github.io/causalDisco/reference/add_vars.md).
 
 - `tier()`: Assigns variables to tiers. Tiers may be numeric or string
   labels. The left-hand side (LHS) of the formula is the tier; the
@@ -65,46 +62,51 @@ operators, or
   edges, respectively. Both sides of the operator can use tidyselect
   syntax to select multiple variables.
 
-- [`exogenous()`](https://caugi.org/reference/exogenous.html) / `exo()`:
-  Mark variables as exogenous.
+- `exogenous()` / `exo()`: Mark variables as exogenous.
 
 - Numeric vector shortcut for `tier()`: `tier(c(1, 2, 1))` assigns tiers
   by index to all existing variables.
 
+Multiple calls or operators are additive: each call adds new edges to
+the knowledge object. For example:
+
+    V1 %-->% V3
+    V2 %-->% V3
+
+results in both edges being required - i.e., the union of all specified
+required edges.
+
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/plus-.knowledge.md),
-[`add_exogenous()`](https://bjarkehautop.github.io/causalDisco/reference/add_exogenous.md),
-[`add_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_tier.md),
-[`add_to_tier()`](https://bjarkehautop.github.io/causalDisco/reference/add_to_tier.md),
-[`add_vars()`](https://bjarkehautop.github.io/causalDisco/reference/add_vars.md),
-[`as_bnlearn_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_bnlearn_knowledge.md),
-[`as_pcalg_constraints()`](https://bjarkehautop.github.io/causalDisco/reference/as_pcalg_constraints.md),
-[`as_tetrad_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/as_tetrad_knowledge.md),
-[`deparse_knowledge()`](https://bjarkehautop.github.io/causalDisco/reference/deparse_knowledge.md),
-[`forbid_edge()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_edge.md),
-[`forbid_tier_violations()`](https://bjarkehautop.github.io/causalDisco/reference/forbid_tier_violations.md),
-[`get_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/get_tiers.md),
-[`remove_edge()`](https://bjarkehautop.github.io/causalDisco/reference/remove_edge.md),
-[`remove_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/remove_tiers.md),
-[`remove_vars()`](https://bjarkehautop.github.io/causalDisco/reference/remove_vars.md),
-[`reorder_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/reorder_tiers.md),
-[`reposition_tier()`](https://bjarkehautop.github.io/causalDisco/reference/reposition_tier.md),
-[`require_edge()`](https://bjarkehautop.github.io/causalDisco/reference/require_edge.md),
-[`seq_tiers()`](https://bjarkehautop.github.io/causalDisco/reference/seq_tiers.md),
-[`unfreeze()`](https://bjarkehautop.github.io/causalDisco/reference/unfreeze.md)
+[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
+[`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
+[`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
+[`add_vars()`](https://disco-coders.github.io/causalDisco/reference/add_vars.md),
+[`as_bnlearn_knowledge()`](https://disco-coders.github.io/causalDisco/reference/as_bnlearn_knowledge.md),
+[`as_pcalg_constraints()`](https://disco-coders.github.io/causalDisco/reference/as_pcalg_constraints.md),
+[`as_tetrad_knowledge()`](https://disco-coders.github.io/causalDisco/reference/as_tetrad_knowledge.md),
+[`convert_tiers_to_forbidden()`](https://disco-coders.github.io/causalDisco/reference/convert_tiers_to_forbidden.md),
+[`deparse_knowledge()`](https://disco-coders.github.io/causalDisco/reference/deparse_knowledge.md),
+[`forbid_edge()`](https://disco-coders.github.io/causalDisco/reference/forbid_edge.md),
+[`get_tiers()`](https://disco-coders.github.io/causalDisco/reference/get_tiers.md),
+[`knowledge_to_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.md),
+[`remove_edge()`](https://disco-coders.github.io/causalDisco/reference/remove_edge.md),
+[`remove_tiers()`](https://disco-coders.github.io/causalDisco/reference/remove_tiers.md),
+[`remove_vars()`](https://disco-coders.github.io/causalDisco/reference/remove_vars.md),
+[`reorder_tiers()`](https://disco-coders.github.io/causalDisco/reference/reorder_tiers.md),
+[`reposition_tier()`](https://disco-coders.github.io/causalDisco/reference/reposition_tier.md),
+[`require_edge()`](https://disco-coders.github.io/causalDisco/reference/require_edge.md),
+[`seq_tiers()`](https://disco-coders.github.io/causalDisco/reference/seq_tiers.md),
+[`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
 
 ## Examples
 
 ``` r
 data(tpc_example)
 
-# knowledge objects are made with the knowledge() function
-kn <- knowledge()
-
-
-# knowledge objects contain tier information, forbidden and required edges
+# Knowledge objects can contain tier information, forbidden and required edges
 kn <- knowledge(
   tier(
     1 ~ V1 + V2,
@@ -114,7 +116,7 @@ kn <- knowledge(
   V3 %!-->% V1
 )
 
-# if a data frame is provided, variable names are checked against it
+# If a data frame is provided, variable names are checked against it
 kn <- knowledge(
   tpc_example,
   tier(
@@ -124,7 +126,7 @@ kn <- knowledge(
   )
 )
 
-# throws error
+# Throws error if variable not in data
 try(
   knowledge(
     tpc_example,
@@ -132,49 +134,54 @@ try(
       1 ~ child_x1 + child_x2,
       2 ~ youth_x3 + youth_x4,
       3 ~ oldage_x5 + woops
-    ) # wrong name
+    )
   )
 )
 #> 
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
-#> 
 #> ── Tiers ──
 #> 
-#>   label
+#>   tier 
+#>   <chr>
 #> 1 1    
 #> 2 2    
 #> 3 3    
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier 
+#>   <chr>     <chr>
 #> 1 child_x1  1    
 #> 2 child_x2  1    
 #> 3 youth_x3  2    
 #> 4 youth_x4  2    
 #> 5 oldage_x5 3    
 #> 6 oldage_x6 NA   
-#> 
 
-# using tidyselect helpers
+# Using tidyselect helpers
 kn <- knowledge(
   tpc_example,
   tier(
-    1 ~ starts_with("child"), # can use tidyselect helpers
-    2 ~ youth_x3 + youth_x4, # do not need quotes for tiers or variables
+    1 ~ starts_with("child"),
+    2 ~ ends_with(c("_x3", "_x4")),
     3 ~ starts_with("oldage")
-  ) # doesn't have to match data naming
+  )
 )
 
-# custom tier naming
+# Numeric vector shortcut
+kn <- knowledge(
+  tpc_example,
+  tier(c(1, 1, 2, 2, 3, 3))
+)
+
+# Custom tier naming
 kn <- knowledge(
   tpc_example,
   tier(
-    "child" ~ starts_with("child"), # can use tidyselect helpers
-    youth ~ starts_with("youth"), # do not need quotes for tiers
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
     elderly ~ starts_with("oldage")
-  ) # doesn't have to match data naming
+  )
 )
 
 # There is also required and forbidden edges, which are specified like so
@@ -191,15 +198,27 @@ kn <- knowledge(
   exo(child_x2) # shorthand
 )
 
+# Mix different operators
+kn <- knowledge(
+  tpc_example,
+  tier(
+    1 ~ starts_with("child") + youth_x4,
+    2 ~ youth_x3 + starts_with("oldage")
+  ),
+  child_x1 %-->% youth_x3,
+  oldage_x6 %!-->% oldage_x5,
+  exo(child_x2)
+)
+
 # You can also build knowledge with a verb pipeline
 kn <-
   knowledge() |>
-  add_vars(c("A", "B", "C", "D")) |> # knowledge now only takes these variables
+  add_vars(c("A", "B", "C", "D")) |> # Knowledge now only takes these variables
   add_tier(One) |>
-  add_to_tier("One" ~ A + B) |>
+  add_to_tier(One ~ A + B) |>
   add_tier(2, after = One) |>
   add_to_tier(2 ~ C + D) |>
-  forbid_edge("A" ~ C) |>
+  forbid_edge(A ~ C) |>
   require_edge(A ~ B)
 
 # Mix DSL start + verb refinement
@@ -214,19 +233,19 @@ kn <-
   add_exogenous(V3)
 
 # Using seq_tiers for larger datasets
-tpc_example <- as.data.frame(
+large_data <- as.data.frame(
   matrix(
-    runif(100), # 100 random numbers in (0,1)
+    runif(100),
     nrow = 1,
     ncol = 100,
     byrow = TRUE
   )
 )
 
-names(tpc_example) <- paste0("X_", 1:100) # label the columns X_1,..., X_100
+names(large_data) <- paste0("X_", 1:100)
 
 kn <- knowledge(
-  tpc_example,
+  large_data,
   tier(
     seq_tiers(
       1:100,
@@ -236,7 +255,7 @@ kn <- knowledge(
   X_1 %-->% X_2
 )
 
-tpc_example <- data.frame(
+small_data <- data.frame(
   X_1 = 1,
   X_2 = 2,
   tier3_A = 3,
@@ -244,12 +263,12 @@ tpc_example <- data.frame(
   check.names = FALSE
 )
 
-kn_seq_tiers2 <- knowledge(
-  tpc_example,
+kn <- knowledge(
+  small_data,
   tier(
-    seq_tiers(1:2, ends_with("_{i}")), # X_1, X_2
-    seq_tiers(3, starts_with("tier{i}")), # tier3_
-    seq_tiers(5, matches("Y{i}_ok")) # exact match
+    seq_tiers(1:2, ends_with("_{i}")),
+    seq_tiers(3, starts_with("tier{i}")),
+    seq_tiers(5, matches("Y{i}_ok"))
   )
 )
 ```

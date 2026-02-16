@@ -1,42 +1,77 @@
 # Plot a Knowledge Object
 
-Plot a knowledge object (tiers + required + forbidden)
+Visualize a `knowledge` object as a directed graph using
+[`caugi::plot()`](https://caugi.org/reference/plot.html).
 
 ## Usage
 
 ``` r
 # S3 method for class 'knowledge'
-plot(x, x_jitter = 0, vertex_size_scale = 1, ...)
+plot(x, required_col = "blue", forbidden_col = "red", ...)
 ```
 
 ## Arguments
 
 - x:
 
-  A `knowledge` object.
+  A `knowledge` object, created using
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
 
-- x_jitter:
+- required_col:
 
-  Amount of jitter to apply to x positions of tiered nodes (default 0).
+  Character(1). Color for edges marked as "required". Default `"blue"`.
 
-- vertex_size_scale:
+- forbidden_col:
 
-  Scaling factor for vertex sizes (default 1).
+  Character(1). Color for edges marked as "forbidden". Default `"red"`.
 
 - ...:
 
-  Additional arguments passed to igraph `plot`.
+  Additional arguments passed to
+  [`caugi::plot()`](https://caugi.org/reference/plot.html), e.g.,
+  `node_style`, `edge_style`.
 
 ## Value
 
-A plot of the knowledge structure.
+Invisibly returns the caugi object used for plotting. The main effect is
+the plot.
+
+## Details
+
+- **Required edges** are drawn in **blue** by default (can be changed
+  via `required_col`).
+
+- **Forbidden edges** are drawn in **red** by default (can be changed
+  via `forbidden_col`). If A to B and B to a is forbidden, a edge `<->`
+  is drawn.
+
+- If tiered knowledge is provided, nodes are arranged according to their
+  tiers.
+
+- Users can override other edge styling (e.g., line width, arrow size)
+  via the `edge_style` argument. To override the color of a specific
+  edge, use `edge_style$by_edge[[from]][[to]]$col`.
+
+- Nodes are arranged by tiers if tier information is provided in the
+  knowledge object.
+
+- If some nodes are missing tier assignments, a warning is issued and
+  the plot falls back to untiered plotting.
+
+- The function automatically handles edges marked as "required" or
+  "forbidden" in the knowledge object.
+
+- Other edge styling (line width, arrow size, etc.) can be supplied via
+  `edge_style`. The only way to override edge colors for specific edges
+  is to specify them directly in `edge_style$by_edge[[from]][[to]]$col`.
 
 ## Examples
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
-kn <- knowledge(
+# Define a knowledge object with tiers
+kn_tiered <- knowledge(
   tpc_example,
   tier(
     child ~ starts_with("child"),
@@ -45,6 +80,59 @@ kn <- knowledge(
   )
 )
 
-plot(kn)
+# Simple plot (default column orientation)
+plot(kn_tiered)
+
+
+# Plot with row orientation
+plot(kn_tiered, orientation = "rows")
+
+
+# Plot with custom node styling, edge width/arrow size and edge colors
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 %-->% child_x2, # required edge
+  youth_x4 %!-->% youth_x3  # forbidden edge
+)
+plot(
+  kn,
+  node_style = list(
+    fill = "lightblue", # Fill color
+    col = "darkblue", # Border color
+    lwd = 2, # Border width
+    padding = 4, # Text padding (mm)
+    size = 1.2 # Size multiplier
+  ),
+  edge_style = list(
+    lwd = 1.5, # Edge width
+    arrow_size = 4 # Arrow size (mm)
+  ),
+  required_col = "darkgreen",
+  forbidden_col = "darkorange"
+)
+
+
+# Define a knowledge object without tiers
+kn_untiered <- knowledge(
+  tpc_example,
+  child_x1 %-->% c(child_x2, youth_x3),
+  youth_x4 %!-->% oldage_x5
+)
+# Plot with default layout
+plot(kn_untiered)
+
+
+# With a custom defined layout
+custom_layout <- data.frame(
+ name = c("child_x1", "child_x2", "youth_x3", "youth_x4", "oldage_x5", "oldage_x6"),
+ x = c(0, 1, 2, 2, 3, 4),
+ y = c(0, 1, 0, -1, 0, 1)
+)
+plot(kn_untiered, layout = custom_layout)
 
 ```

@@ -1,4 +1,4 @@
-# Regression-based information loss test
+# Regression-based Information Loss Test
 
 We test whether `x` and `y` are associated, given `conditioning_set`
 using a generalized linear model.

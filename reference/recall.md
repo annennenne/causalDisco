@@ -1,23 +1,60 @@
 # Recall
 
-Computes recall from a confusion matrix, see
-[confusion](https://bjarkehautop.github.io/causalDisco/reference/confusion.md).
-Recall is defined as TP/(TP + FN), where TP are true positives and FN
-are false negatives. If TP + FN = 0, 0 is returned.
+Computes recall from two PDAG `caugi` objects. It converts the `caugi`
+objects to adjacency matrices and computes recall as `TP/(TP + FN)`,
+where `TP` are truth positives and `FN` are false negatives. If
+`TP + FN = 0`, `1` is returned. Only supports `caugi` objects with these
+edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
 ``` r
-recall(confusion)
+recall(truth, est, type = c("adj", "dir"))
 ```
 
 ## Arguments
 
-- confusion:
+- truth:
 
-  Confusion matrix as obtained from
-  [confusion](https://bjarkehautop.github.io/causalDisco/reference/confusion.md)
+  A `caugi` object representing the truth graph.
+
+- est:
+
+  A `caugi` object representing the estimated graph.
+
+- type:
+
+  Character string specifying the comparison type:
+
+  - `"adj"`: adjacency comparison.
+
+  - `"dir"`: orientation comparison conditional on shared adjacencies.
 
 ## Value
 
-A numeric in \[0,1\].
+A numeric in `[0,1]`.
+
+## See also
+
+Other metrics:
+[`confusion()`](https://disco-coders.github.io/causalDisco/reference/confusion.md),
+[`evaluate()`](https://disco-coders.github.io/causalDisco/reference/evaluate.md),
+[`f1_score()`](https://disco-coders.github.io/causalDisco/reference/f1_score.md),
+[`false_omission_rate()`](https://disco-coders.github.io/causalDisco/reference/false_omission_rate.md),
+[`fdr()`](https://disco-coders.github.io/causalDisco/reference/fdr.md),
+[`g1_score()`](https://disco-coders.github.io/causalDisco/reference/g1_score.md),
+[`npv()`](https://disco-coders.github.io/causalDisco/reference/npv.md),
+[`precision()`](https://disco-coders.github.io/causalDisco/reference/precision.md),
+`reexports`,
+[`specificity()`](https://disco-coders.github.io/causalDisco/reference/specificity.md)
+
+## Examples
+
+``` r
+cg1 <- caugi::caugi(A %-->% B + C)
+cg2 <- caugi::caugi(B %-->% A + C)
+recall(cg1, cg2, type = "adj")
+#> [1] 0.5
+recall(cg1, cg2, type = "dir")
+#> [1] 0
+```

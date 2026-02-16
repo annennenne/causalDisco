@@ -5,7 +5,7 @@ algorithms from Tetrad, run them on an R data set, and retrieve the
 resulting graph or statistics."><meta property="og:description" content="High-level wrapper around the Java-based Tetrad causal-discovery
 library. The class lets you choose independence tests, scores, and search
 algorithms from Tetrad, run them on an R data set, and retrieve the
-resulting graph or statistics."><meta property="og:image" content="https://bjarkehautop.github.io/causalDisco/logo.png"></head><body>
+resulting graph or statistics."><meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@ resulting graph or statistics."><meta property="og:image" content="https://bjark
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,11 +27,13 @@ resulting graph or statistics."><meta property="og:image" content="https://bjark
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/annennenne/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/disco-coders/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -40,14 +42,14 @@ resulting graph or statistics."><meta property="og:image" content="https://bjark
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>R6 Interface to Tetrad Search Algorithms</h1>
-      <small class="dont-index">Source: <a href="https://github.com/annennenne/causalDisco/blob/master/R/tetrad_search.R" class="external-link"><code>R/tetrad_search.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/master/R/tetrad-search.R" class="external-link"><code>R/tetrad-search.R</code></a></small>
       <div class="d-none name"><code>TetradSearch.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>High-level wrapper around the Java-based <strong>Tetrad</strong> causal-discovery
+    <p>High-level wrapper around the Java-based <span class="pkg">Tetrad</span> causal-discovery
 library. The class lets you choose independence tests, scores, and search
-algorithms from Tetrad, run them on an R data set, and retrieve the
+algorithms from <span class="pkg">Tetrad</span>, run them on an R data set, and retrieve the
 resulting graph or statistics.</p>
     </div>
 
@@ -56,7 +58,7 @@ resulting graph or statistics.</p>
     <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
     <p></p><div class="r6-fields"><dl><dt><code>data</code></dt>
 <dd><p>Java object that stores the (possibly converted) data set
-used by Tetrad.</p></dd>
+used by <span class="pkg">Tetrad</span>.</p></dd>
 
 
 <dt><code>rdata</code></dt>
@@ -67,19 +69,21 @@ used by Tetrad.</p></dd>
 <dd><p>Java object holding the scoring function selected with
 <code>set_score()</code>. Supply one of the method strings for
 <code>set_score()</code>. Recognised values are:</p>
-<ul><li><p><code>"sem_bic"</code> - SEM BIC score.</p></li>
-<li><p><code>"ebic"</code> - Extended BIC score.</p></li>
-<li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p></li>
-<li><p><code>"basis_function_bic"</code> - BIC score for basis-function models.
-This is a generalization of the Degenerate Gaussian score.</p></li>
-<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous BIC score.</p></li>
-<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian BIC score.</p></li>
-<li><p><code>"discrete_bic"</code> - BIC score for discrete data.</p></li>
+<p><strong>Continuous - Gaussian</strong></p><ul><li><p><code>"ebic"</code> - Extended BIC score.</p></li>
 <li><p><code>"gic"</code> - Generalized Information Criterion (GIC) score.</p></li>
+<li><p><code>"poisson_prior"</code> - Poisson prior score.'</p></li>
+<li><p><code>"rank_bic"</code> - Rank-based BIC score.</p></li>
+<li><p><code>"sem_bic"</code> - SEM BIC score.</p></li>
+<li><p><code>"zhang_shen_bound"</code> - Zhang and Shen bound score.</p></li>
+</ul><p><strong>Discrete - categorical</strong></p><ul><li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p></li>
+<li><p><code>"discrete_bic"</code> - BIC score for discrete data.</p></li>
+</ul><p><strong>Mixed Discrete/Gaussian</strong></p><ul><li><p><code>"basis_function_bic"</code> - BIC score for basis-function models.
+This is a generalization of the Degenerate Gaussian score.</p></li>
+<li><p><code>"basis_function_blocks_bic"</code> - BIC score for mixed data using basis-function models.</p></li>
+<li><p><code>"basis_function_sem_bic"</code> - SEM BIC score for basis-function models.</p></li>
+<li><p><code>"conditional_gaussian"</code> - Conditional Gaussian BIC score.</p></li>
+<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian BIC score.</p></li>
 <li><p><code>"mag_degenerate_gaussian_bic"</code> - MAG Degenerate Gaussian BIC Score.</p></li>
-<li><p><code>"mixed_variable_polynomial"</code> - Mixed variable polynomial BIC score.</p></li>
-<li><p><code>"poisson_prior"</code> - Poisson prior score.</p></li>
-<li><p><code>"zhang_shen_bound"</code> - Gaussian Extended BIC score.</p></li>
 </ul></dd>
 
 
@@ -87,15 +91,21 @@ This is a generalization of the Degenerate Gaussian score.</p></li>
 <dd><p>Java object holding the independence test selected with
 <code>set_test()</code>. Supply one of the method strings for
 <code>set_test()</code>. Recognised values are:</p>
-<ul><li><p><code>"chi_square"</code> - chi-squared test</p></li>
-<li><p><code>"g_square"</code>   - likelihood-ratio \(G^2\) test</p></li>
-<li><p><code>"basis_function_lrt"</code> - basis-function likelihood-ratio</p></li>
+<p><strong>Continuous - Gaussian</strong></p><ul><li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test.</p></li>
+<li><p><code>"poisson_prior"</code> - Poisson prior test.</p></li>
+<li><p><code>"rank_independence"</code> - Rank-based independence test.</p></li>
+<li><p><code>"sem_bic"</code> - SEM BIC test.</p></li>
+</ul><p><strong>Discrete - categorical</strong></p><ul><li><p><code>"chi_square"</code> - chi-squared test</p></li>
+<li><p><code>"g_square"</code> - likelihood-ratio \(G^2\) test.</p></li>
 <li><p><code>"probabilistic"</code> - Uses BCInference by Cooper and Bui to calculate
 probabilistic conditional independence judgments.</p></li>
-<li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test</p></li>
-<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian test as a likelihood ratio test</p></li>
-<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous test</p></li>
-<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang</p></li>
+</ul><p><strong>General</strong></p><ul><li><p><code>"gin"</code> - Generalized Independence Noise test.</p></li>
+<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang.</p></li>
+<li><p><code>"rcit"</code> - Randomized Conditional Independence Test (RCIT).</p></li>
+</ul><p><strong>Mixed Discrete/Gaussian</strong></p><ul><li><p><code>"basis_function_blocks"</code> - Basis-function blocks test.</p></li>
+<li><p><code>"basis_function_lrt"</code> - basis-function likelihood-ratio.</p></li>
+<li><p><code>"conditional_gaussian"</code> - Conditional Gaussian test as a likelihood ratio test.</p></li>
+<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian test as a likelihood ratio test.</p></li>
 </ul></dd>
 
 
@@ -103,30 +113,16 @@ probabilistic conditional independence judgments.</p></li>
 <dd><p>Java object representing the search algorithm.
 Supply one of the method strings for <code>set_alg()</code>.
 Recognised values are:</p>
-<ul><li><p><code>"boss"</code> - BOSS algorithm.</p></li>
-<li><p><code>"boss_fci"</code> - BOSS-FCI algorithm.</p></li>
-<li><p><code>"ccd"</code> - Cyclic Causal Discovery.</p></li>
-<li><p><code>"cfci"</code> - Adjusts FCI to use conservative orientation as in CPC.</p></li>
-<li><p><code>"cpc"</code> - Conservative PC algorithm.</p></li>
-<li><p><code>"cstar"</code> - CStaR algorithm (Causal Stability Ranking).</p></li>
-<li><p><code>"dagma"</code> - DAGMA algorithm.</p></li>
-<li><p><code>"direct_lingam"</code> - DirectLiNGAM algorithm.</p></li>
-<li><p><code>"fask"</code> - FASK algorithm.</p></li>
-<li><p><code>"fci"</code> - FCI algorithm.</p></li>
-<li><p><code>"fges"</code> - Fast Greedy Equivalence Search (FGES) algorithm.</p></li>
-<li><p><code>"fges_mb"</code> - Fast Greedy Equivalence Search with Markov Blanket (FGES-MB) algorithm.</p></li>
-<li><p><code>"gfci"</code> - GFCI algorithm. Combines FGES and FCI.</p></li>
-<li><p><code>"grasp"</code> - GRaSP (Greedy Relations of Sparsest Permutation) algorithm.</p></li>
-<li><p><code>"grasp_fci"</code> - GRaSP-FCI algorithm. Combines GRaSP and FCI.</p></li>
-<li><p><code>"ica_lingam"</code> - ICA LiNGAM algorithm.</p></li>
-<li><p><code>"ica_lingd"</code> - ICA-LiNG-D algorithm</p></li>
-<li><p><code>"fcit"</code> - FCI Targeted Testing (FCIT) algorithm</p></li>
-<li><p><code>"pc"</code> - Peter-Clark (PC) algorithm</p></li>
-<li><p><code>"pc_max"</code> - PCMax algorithm</p></li>
-<li><p><code>"restricted_boss"</code> - Restricted BOSS algorithm</p></li>
-<li><p><code>"rfci"</code> - Restricted FCI algorithm</p></li>
-<li><p><code>"sp"</code> - Sparsest Permutation algorithm</p></li>
-<li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI</p></li>
+<p><strong>Constraint-based</strong></p><ul><li><p><code>"fci"</code> - FCI algorithm. See <code><a href="fci.html">fci()</a></code>.</p></li>
+<li><p><code>"pc"</code> - Peter-Clark (PC) algorithm. See <code><a href="pc.html">pc()</a></code>.</p></li>
+<li><p><code>"rfci"</code> - Restricted FCI algorithm. See <code><a href="https://rdrr.io/pkg/pcalg/man/rfci.html" class="external-link">pcalg::rfci()</a></code>.</p></li>
+</ul><p><strong>Hybrid</strong></p><ul><li><p><code>"boss_fci"</code> - BOSS-FCI algorithm. See <code><a href="boss_fci.html">boss_fci()</a></code>.</p></li>
+<li><p><code>"gfci"</code> - GFCI algorithm. See <code><a href="gfci.html">gfci()</a></code>.</p></li>
+<li><p><code>"grasp_fci"</code> - GRaSP-FCI algorithm. See <code><a href="grasp_fci.html">grasp_fci()</a></code>.</p></li>
+<li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI. See <code><a href="sp_fci.html">sp_fci()</a></code>.</p></li>
+</ul><p><strong>Score-based</strong></p><ul><li><p><code>"boss"</code> - BOSS algorithm. See <code><a href="boss.html">boss()</a></code>.</p></li>
+<li><p><code>"ges" ("fges")</code> - (Fast) Greedy Equivalence Search (GES) algorithm. See <code><a href="ges.html">ges()</a></code>.</p></li>
+<li><p><code>"grasp"</code> - GRaSP (Greedy Relations of Sparsest Permutation) algorithm. See <code><a href="grasp.html">grasp()</a></code>.</p></li>
 </ul></dd>
 
 
@@ -201,75 +197,60 @@ resampling, if that feature was requested.</p></dd>
 <h3 id="method-set-test-">Method <code>set_test()</code><a class="anchor" aria-label="anchor" href="#method-set-test-"></a></h3>
 <p>Sets the independence test to use in Tetrad.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="va">method</span>, <span class="va">...</span>, mc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="va">method</span>, <span class="va">...</span>, use_for_mc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
-<dd><p>(character) Name of the test method (e.g., "chi_square", "fisher_z").</p><ul><li><p><code>"chi_square"</code> - chi-squared test</p></li>
-<li><p><code>"g_square"</code>   - likelihood-ratio \(G^2\) test</p></li>
+<dd><p>(character) Name of the test method (e.g., "chi_square", "fisher_z").</p><ul><li><p><code>"basis_function_blocks"</code> - Basis-function blocks test</p></li>
 <li><p><code>"basis_function_lrt"</code> - basis-function likelihood-ratio</p></li>
+<li><p><code>"chi_square"</code> - chi-squared test</p></li>
+<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous test</p></li>
+<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian test as a likelihood ratio test</p></li>
+<li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test</p></li>
+<li><p><code>"gin"</code> - Generalized Independence Noise test</p></li>
+<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang</p></li>
+<li><p><code>"poisson_prior"</code> - Poisson prior test</p></li>
 <li><p><code>"probabilistic"</code> - Uses BCInference by Cooper and Bui to calculate
 probabilistic conditional independence judgments.</p></li>
-<li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test</p></li>
-<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian test as a likelihood ratio test</p></li>
-<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous test</p></li>
-<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang</p></li>
+<li><p><code>"rcit"</code> - Randomized Conditional Independence Test (RCIT)</p></li>
+<li><p><code>"rank_independence"</code> - Rank-based independence test</p></li>
+<li><p><code>"sem_bic"</code> - SEM BIC test</p></li>
 </ul></dd>
 
 
 <dt><code>...</code></dt>
 <dd><p>Additional arguments passed to the private test-setting methods.
-For the following tests, the following parameters are available:</p><ul><li><p><code>"chi_square"</code> - chi-squared test</p><ul><li><p><code>min_count = 1</code> - Minimum count for the chi-squared
-test per cell. Increasing this can improve accuracy of the test
-estimates,</p></li>
-<li><p><code>alpha = 0.01</code> - Significance level for the
+For the following tests, the following parameters are available:</p><ul><li><p><code>"basis_function_blocks"</code> - Basis-function blocks test.</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
 independence test,</p></li>
-<li><p><code>cell_table_type = "ad"</code> - The type of cell table to
-use for optimization. Available types are:
-<code>"ad"</code> - AD tree, <code>"count"</code> - Count sample.</p></li>
-</ul></li>
-<li><p><code>"g_square"</code>   - likelihood-ratio \(G^2\) test</p><ul><li><p><code>min_count = 1</code> - Minimum count for the independence
-test. Increasing this can improve accuracy of chi square
-estimates,</p></li>
-<li><p><code>alpha = 0.01</code> - Significance level for the
-chi-squared test,</p></li>
-<li><p><code>cell_table_type = "ad"</code> - The type of cell table to
-use for optimization. Available types are:
-<code>"ad"</code> - AD tree, <code>"count"</code> - Count sample.</p></li>
+<li><p><code>basis_type = "polynomial"</code> - The type of basis to use. Supported
+types are <code>"polynomial"</code>, <code>"legendre"</code>, <code>"hermite"</code>, and
+<code>"chebyshev"</code>,</p></li>
+<li><p><code>truncation_limit = 3</code> - Basis functions 1 through
+this number will be used. The Degenerate Gaussian category
+indicator variables for mixed data are also used.</p></li>
 </ul></li>
 <li><p><code>"basis_function_lrt"</code> - basis-function likelihood-ratio</p><ul><li><p><code>truncation_limit = 3</code> - Basis functions 1 through
 this number will be used. The Degenerate Gaussian category
 indicator variables for mixed data are also used,</p></li>
-<li><p><code>alpha = 0.01</code> - Significance level for the
+<li><p><code>alpha = 0.05</code> - Significance level for the
 likelihood-ratio test,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse,</p></li>
 <li><p><code>do_one_equation_only = FALSE</code> - If TRUE, only one
 equation should be used when expanding the basis.</p></li>
 </ul></li>
-<li><p><code>"probabilistic"</code> - Uses BCInference by Cooper and Bui
-to calculate probabilistic conditional independence judgments.</p><ul><li><p><code>threshold = FALSE</code> - Set to TRUE if using the cutoff
-threshold for the independence test,</p></li>
-<li><p><code>cutoff = 0.5</code> - Cutoff for the independence test,</p></li>
-<li><p><code>prior_ess = 10</code> - Prior equivalent sample size
-for the independence test. This number is added to the sample
-size for each conditional probability table in the model and is
-divided equally among the cells in the table.</p></li>
-</ul></li>
-<li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test</p><ul><li><p><code>alpha = 0.01</code> - Significance level
-for the independence test,</p></li>
-<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
-lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
-</ul></li>
-<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian
-likelihood ratio test</p><ul><li><p><code>alpha = 0.01</code> - Significance level for the
+<li><p><code>"chi_square"</code> - chi-squared test</p><ul><li><p><code>min_count = 1</code> - Minimum count for the chi-squared
+test per cell. Increasing this can improve accuracy of the test
+estimates,</p></li>
+<li><p><code>alpha = 0.05</code> - Significance level for the
 independence test,</p></li>
-<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
-lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+<li><p><code>cell_table_type = "ad"</code> - The type of cell table to
+use for optimization. Available types are:
+<code>"ad"</code> - AD tree, <code>"count"</code> - Count sample.</p></li>
 </ul></li>
-<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous test</p><ul><li><p><code>alpha = 0.01</code> - Significance level for the
+<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous test</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
 independence test,</p></li>
 <li><p><code>discretize = TRUE</code> - If TRUE for the conditional
 Gaussian likelihood, when scoring X –&gt; D where X is continuous
@@ -284,14 +265,35 @@ the continuous variables,</p></li>
 <li><p><code>min_sample_size_per_cell = 4</code> - Minimum sample size
 per cell for the independence test.</p></li>
 </ul></li>
-<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang</p><ul><li><p><code>alpha = 0.01</code> - Significance level for the
+<li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian
+likelihood ratio test</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
+independence test,</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+</ul></li>
+<li><p><code>"fisher_z"</code> - Fisher \(Z\) (partial correlation) test</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the independence test,</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+</ul></li>
+<li><p><code>"gin"</code> - Generalized Independence Noise test.</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
+independence test,</p></li>
+<li><p><code>gin_backend = "dcor"</code> - Unconditional test for residual
+independence. Available types are <code>"dcor"</code> - Distance correlation (for non-linear)
+and <code>"pearson"</code> - Pearson correlation (for linear),</p></li>
+<li><p><code>num_permutations = 200</code> - Number of permutations used for
+<code>"dcor"</code> backend. If <code>"pearson"</code> backend is used, this parameter is ignored.</p></li>
+<li><p><code>gin_ridge = 1e-8</code> - Ridge parameter used when computing residuals.
+A small number &gt;= 0.</p></li>
+<li><p><code>seed = -1</code> - Random seed for the independence test. If -1, no seed is set.</p></li>
+</ul></li>
+<li><p><code>"kci"</code> - Kernel Conditional Independence Test (KCI) by Kun Zhang</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
 independence test,</p></li>
 <li><p><code>approximate = TRUE</code> - If TRUE, use the approximate
 Gamma approximation algorithm. If FALSE, use the exact,</p></li>
 <li><p><code>scaling_factor = 1</code> - For Gaussian kernel: The
 scaling factor * Silverman bandwidth.</p></li>
-<li><p><code>num_bootstraps = 5000</code> - Number of bootstrap
-samples to use for the KCI test.</p></li>
+<li><p><code>num_bootstraps = 1000</code> - Number of bootstrap
+samples to use for the KCI test. Only used if <code>approximate = FALSE</code>.</p></li>
 <li><p><code>threshold = 1e-3</code> - Threshold for the KCI test.
 Threshold to determine how many eigenvalues to use –
 the lower the more (0 to 1).</p></li>
@@ -303,10 +305,61 @@ if used.</p></li>
 <li><p><code>polyc = 1</code> - The constant of the polynomial kernel,
 if used.</p></li>
 </ul></li>
+<li><p><code>"poisson_prior"</code> - Poisson prior test</p><ul><li><p><code>poisson_lambda = 1</code> - Lambda parameter for the Poisson
+distribution (&gt; 0),</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+</ul></li>
+<li><p><code>"probabilistic"</code> - Uses BCInference by Cooper and Bui
+to calculate probabilistic conditional independence judgments.</p><ul><li><p><code>threshold = FALSE</code> - Set to TRUE if using the cutoff
+threshold for the independence test,</p></li>
+<li><p><code>cutoff = 0.5</code> - Cutoff for the independence test,</p></li>
+<li><p><code>prior_ess = 10</code> - Prior equivalent sample size
+for the independence test. This number is added to the sample
+size for each conditional probability table in the model and is
+divided equally among the cells in the table.</p></li>
+</ul></li>
+<li><p><code>"rcit"</code> - Randomized Conditional Independence Test (RCIT).</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
+independence test,</p></li>
+<li><p><code>rcit_approx = "lpb4"</code> - Null approximation method. Recognized values are:
+<code>"lpb4"</code> - Lindsay-Pilla-Basak method with 4 support points,
+<code>"hbe"</code> - Hall-Buckley-Eagleson method,
+<code>"gamma"</code> - Gamma (Satterthwaite-Welch),
+<code>"chi_square"</code> - Chi-square (normalized),
+<code>"permutation"</code> - Permutation-based (computationally intensive),</p></li>
+<li><p><code>rcit_ridge = 1e-3</code> - Ridge parameter used when computing residuals.
+A small number &gt;= 0,</p></li>
+<li><p><code>num_feat = 10</code> - Number of random features to use
+for the regression of X and Y on Z. Values between 5 and 20 often suffice.</p></li>
+<li><p><code>num_fourier_feat_xy = 5</code> - Number of random Fourier features to use for
+the tested variables X and Y. Small values often suffice (e.g., 3 to 10),</p></li>
+<li><p><code>num_fourier_feat_z = 100</code> - Number of random Fourier features to use for
+the conditioning set Z. Values between 50 and 300 often suffice,</p></li>
+<li><p><code>center_features = TRUE</code> - If TRUE, center the random features to have mean zero. Recommended
+for better numerical stability,</p></li>
+<li><p><code>use_rcit = TRUE</code> - If TRUE, use RCIT; if FALSE, use RCoT
+(Randomized Conditional Correlation Test),</p></li>
+<li><p><code>num_permutations = 500</code> - Number of permutations used for
+the independence test when <code>rcit_approx = "permutation"</code> is selected.</p></li>
+<li><p><code>seed = -1</code> - Random seed for the independence test. If -1, no seed is set.</p></li>
+</ul></li>
+<li><p><code>"rank_independence"</code> - Rank-based independence test.</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
+independence test.</p></li>
+</ul></li>
+<li><p><code>"sem_bic"</code> - SEM BIC test.</p><ul><li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,</p></li>
+<li><p><code>structure_prior = 0</code> - The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+</ul></li>
 </ul></dd>
 
 
-<dt><code>mc</code></dt>
+<dt><code>use_for_mc</code></dt>
 <dd><p>(logical) If TRUE, sets this test for the Markov checker <code>mc_test</code>.</p></dd>
 
 
@@ -327,55 +380,34 @@ if used.</p></li>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
-<dd><p>(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").</p><ul><li><p><code>"sem_bic"</code> - SEM BIC score.</p></li>
-<li><p><code>"ebic"</code> - Extended BIC score.</p></li>
-<li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p></li>
+<dd><p>(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").</p><ul><li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p></li>
 <li><p><code>"basis_function_bic"</code> - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.</p></li>
+<li><p><code>"basis_function_blocks_bic"</code> - BIC score for mixed data using basis-function models.</p></li>
+<li><p><code>"basis_function_sem_bic"</code> - SEM BIC score for basis-function models.</p></li>
 <li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous BIC score.</p></li>
 <li><p><code>"degenerate_gaussian"</code> - Degenerate Gaussian BIC score.</p></li>
 <li><p><code>"discrete_bic"</code> - BIC score for discrete data.</p></li>
+<li><p><code>"ebic"</code> - Extended BIC score.</p></li>
 <li><p><code>"gic"</code> - Generalized Information Criterion (GIC) score.</p></li>
 <li><p><code>"mag_degenerate_gaussian_bic"</code> - MAG Degenerate Gaussian BIC Score.</p></li>
 <li><p><code>"poisson_prior"</code> - Poisson prior score.</p></li>
-<li><p><code>"zhang_shen_bound"</code> - Gaussian Extended BIC score.</p></li>
+<li><p><code>"rank_bic"</code> - Rank-based BIC score.</p></li>
+<li><p><code>"sem_bic"</code> - SEM BIC score.</p></li>
+<li><p><code>"zhang_shen_bound"</code> - Zhang and Shen bound score.</p></li>
 </ul></dd>
 
 
 <dt><code>...</code></dt>
 <dd><p>Additional arguments passed to the private score-setting methods.
-For the following scores, the following parameters are available:</p><ul><li><p><code>sem_bic</code> - SEM BIC score.</p><ul><li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
-BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
-graphs,</p></li>
-<li><p><code>structure_prior = 0</code> - The default number of parents
-for any conditional probability table. Higher weight is accorded
-to tables with about that number of parents. The prior structure
-weights are distributed according to a binomial distribution,</p></li>
-<li><p><code>sem_bic_rule = 1</code> - The Chickering Rule uses the
-difference of BIC scores to add or remove edges. The Nandy et al.
-rule uses a single calculation of a partial correlation in place
-of the likelihood difference,</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,</p></li>
-<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
-lambda to the diagonal, &lt; 0 Pseudoinverse</p></li>
-</ul></li>
-<li><p><code>ebic</code> - Extended BIC score.</p><ul><li><p><code>gamma</code> - The gamma parameter in the EBIC score.</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,</p></li>
-<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
-lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
-</ul></li>
-<li><p><code>bdeu</code> - Bayes Dirichlet Equivalent score with uniform priors.</p><ul><li><p><code>sample_prior = 10</code> - This sets the prior equivalent
+For the following scores, the following parameters are available:</p><ul><li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p><ul><li><p><code>sample_prior = 10</code> - This sets the prior equivalent
 sample size. This number is added to the sample size for each
 conditional probability table in the model and is divided equally
 among the cells in the table,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
-<li><p><code>basis_function_bic</code> - BIC score for basis-function models.
+<li><p><code>"basis_function_bic"</code> - BIC score for basis-function models.
 This is a generalization of the Degenerate Gaussian score.</p><ul><li><p><code>truncation_limit = 3</code> - Basis functions 1 though this
 number will be used. The Degenerate Gaussian category indicator
 variables for mixed data are also used,</p></li>
@@ -386,7 +418,24 @@ lambda to the diagonal, &lt; 0 Pseudoinverse,</p></li>
 <li><p><code>do_one_equation_only = FALSE</code> - If TRUE, only one
 equation should be used when expanding the basis.</p></li>
 </ul></li>
-<li><p><code>conditional_gaussian</code> - Mixed discrete/continuous BIC score.</p><ul><li><p><code>penalty_discount = 1</code> - Penalty discount. Higher penalty
+<li><p><code>"basis_function_blocks_bic"</code> - BIC score for mixed data using basis-function models.</p><ul><li><p><code>basis_type = "polynomial"</code> - The type of basis to use. Supported
+types are <code>"polynomial"</code>, <code>"legendre"</code>, <code>"hermite"</code>, and
+<code>"chebyshev"</code>,</p></li>
+<li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,</p></li>
+<li><p><code>truncation_limit = 3</code> - Basis functions 1 through this number will be used.
+The Degenerate Gaussian category indicator variables for mixed data are also used.</p></li>
+</ul></li>
+<li><p><code>"basis_function_sem_bic"</code> - SEM BIC score for basis-function models.</p><ul><li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,</p></li>
+<li><p><code>jitter = 1e-8</code> - Small non-negative constant added to the diagonal of
+covariance/correlation matrices for numerical stability,</p></li>
+<li><p><code>truncation_limit = 3</code> - Basis functions 1 through this number will be used.
+The Degenerate Gaussian category indicator variables for mixed data are also used.</p></li>
+</ul></li>
+<li><p><code>"conditional_gaussian"</code> - Mixed discrete/continuous BIC score.</p><ul><li><p><code>penalty_discount = 1</code> - Penalty discount. Higher penalty
 yields sparser graphs,</p></li>
 <li><p><code>discretize = TRUE</code> - If TRUE for the conditional
 Gaussian likelihood, when scoring X –&gt; D where X is continuous and
@@ -410,14 +459,17 @@ to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data.</p></li>
 </ul></li>
-<li><p><code>"discrete_bic"</code> - BIC score for discrete data.</p><ul><li><p><code>structure_prior = 0</code> - The default number of parents
+<li><p><code>"discrete_bic"</code> - BIC score for discrete data.</p><ul><li><p><code>penalty_discount = 2</code> - Penalty discount. Higher penalty
+yields sparser graphs,</p></li>
+<li><p><code>structure_prior = 0</code> - The default number of parents
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution.</p></li>
+</ul></li>
+<li><p><code>"ebic"</code> - Extended BIC score.</p><ul><li><p><code>gamma</code> - The gamma parameter in the EBIC score.</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
 <li><p><code>"gic"</code> - Generalized Information Criterion (GIC) score.</p><ul><li><p><code>penalty_discount = 1</code> - Penalty discount. Higher penalty
 yields sparser graphs,</p></li>
@@ -427,9 +479,6 @@ yields sparser graphs,</p></li>
 <code>"ric"</code> - \(2 \ln(p n)\),
 <code>"ricc"</code> - \(2(\ln(p n) + \ln\ln(p n))\),
 <code>"gic6"</code> - \(\ln n \ln(p n)\).</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
@@ -439,32 +488,29 @@ yields sparser graphs,</p></li>
 for any conditional probability table. Higher weight is accorded
 to tables with about that number of parents. The prior structure
 weights are distributed according to a binomial distribution,</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data.</p></li>
-</ul><ul><li><p><code>structure_prior = 0</code> - The default number of parents
-for any conditional probability table. Higher weight is accorded
-to tables with about that number of parents. The prior structure
-weights are distributed according to a binomial distribution,</p></li>
-<li><p><code>f_degree = 0</code> - The f degree.</p></li>
-<li><p><code>discretize = FALSE</code> - If TRUE for the conditional
-Gaussian likelihood, when scoring X –&gt; D where X is continuous and
-D discrete, one should to simply discretize X for just those cases.
-If FALSE, the integration will be exact.</p></li>
 </ul></li>
-<li><p><code>"poisson_prior"</code> - Poisson prior score.</p><ul><li><p><code>poission_lambda = 2</code> - Lambda parameter for the Poisson
+<li><p><code>"poisson_prior"</code> - Poisson prior score.</p><ul><li><p><code>poisson_lambda = 1</code> - Lambda parameter for the Poisson
 distribution (&gt; 0),</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
-<li><p><code>"zhang_shen_bound"</code> - Gaussian Extended BIC score.</p><ul><li><p><code>risk_bound = 0.2</code> - This is the probability of getting
+<li><p><code>"sem_bic"</code> - SEM BIC score.</p><ul><li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs,</p></li>
+<li><p><code>structure_prior = 0</code> - The default number of parents
+for any conditional probability table. Higher weight is accorded
+to tables with about that number of parents. The prior structure
+weights are distributed according to a binomial distribution,</p></li>
+<li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
+lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
+</ul></li>
+<li><p><code>"rank_bic"</code> - Rank-based BIC score.</p><ul><li><p><code>gamma = 0.8</code> - Gamma parameter for Extended BIC (Chen and Chen, 2008). Between 0 and 1,</p></li>
+<li><p><code>penalty_discount = 2</code> - Penalty discount factor used in
+BIC = 2L - ck log N, where c is the penalty. Higher c yield sparser
+graphs.</p></li>
+</ul></li>
+<li><p><code>"zhang_shen_bound"</code> - Zhang and Shen bound score.</p><ul><li><p><code>risk_bound = 0.2</code> - This is the probability of getting
 the true model if a correct model is discovered. Could underfit.</p></li>
-<li><p><code>precompute_covariances = TRUE</code> - For more than 5000
-variables or so, set this to FALSE in order to calculate
-covariances on the fly from data,</p></li>
 <li><p><code>singularity_lambda = 0.0</code> - Small number &gt;= 0: Add
 lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
@@ -515,7 +561,7 @@ Set to -1 for unlimited,</p></li>
 <li><p><code>use_bes = TRUE</code> - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,</p></li>
-<li><p><code>use_heuristic</code> - If TRUE, use the max p heuristic
+<li><p><code>use_heuristic = FALSE</code> - If TRUE, use the max p heuristic
 version,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> -  FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -523,74 +569,6 @@ completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal PAG
 (where feasible).</p></li>
-</ul></li>
-<li><p><code>"ccd"</code> - Cyclic Causal Discovery.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>apply_r1 = TRUE</code> - Set this parameter to FALSE if a
-chain of directed edges pointing in the same direction, when only
-the first few such orientations are justified based on the data.</p></li>
-</ul></li>
-<li><p><code>"cfci"</code> - Adjusts FCI to use conservative orientation as in
-CPC.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
-<li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
-final orientation rules set due to P. Spirtes, guaranteeing arrow
-completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
-</ul></li>
-<li><p><code>"cpc"</code> - Conservative PC algorithm.</p><ul><li><p><code>conflict_rule = 1</code> -
-The value of <code>conflict_rule</code> determines how collider conflicts are handled. <code>1</code>
-corresponds to the "overwrite" rule as introduced in the <span class="pkg">pcalg</span> package, see
-<code><a href="https://rdrr.io/pkg/pcalg/man/pc.html" class="external-link">pcalg::pc()</a></code>. <code>2</code> means that all collider conflicts using bidirected edges
-should be prioritized, while <code>3</code> means that existing colliders should be prioritized,
-ignoring subsequent conflicting information.</p></li>
-<li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
-the PC adjacency search is used, which for k &gt; 0 fixes the graph
-for depth k + 1 to that of the previous depth k.</p></li>
-<li><p><code>guarantee_cpdag = FALSE</code> - If TRUE, ensure the output is
-a legal CPDAG.</p></li>
-</ul></li>
-<li><p><code>"cstar"</code> - CStaR algorithm (Causal Stability Ranking).</p><ul><li><p><code>targets = ""</code> - Target names (comma or space separated),</p></li>
-<li><p><code>file_out_path = "cstar_out"</code> -  Path to a directory in
-which results can be stored</p></li>
-<li><p><code>selection_min_effect = 0.0</code> - Minimum effect size for
-listing effects in the CStaR table</p></li>
-<li><p><code>num_subsamples = 50</code> -  CStaR works by generating
-subsamples and summarizing across them;
-this specifies the number of subsamples to generate.
-Must be &gt;= 1,</p></li>
-<li><p><code>top_bracket = 10</code> - Top bracket to look for causes in,</p></li>
-<li><p><code>parallelized = FALSE</code> - If TRUE, the algorithm should
-be parallelized,</p></li>
-<li><p><code>cpdag_algorithm = "restricted_boss"</code> - The CPDAG algorithm to use.
-<code>"pc"</code> corresponds to PC Stable, <code>"fges"</code> selects the FGES algorithm,
-<code>"boss"</code> selects the BOSS algorithm, and <code>"restricted_boss"</code> selects
-the restricted BOSS variant.</p></li>
-<li><p><code>remove_effect_nodes = TRUE</code> - If TRUE, the effect nodes
-should be removed from possible causes,</p></li>
-<li><p><code>sample_style = "subsample"</code> - The sampling style to use. Available options are
-<code>"subsample"</code> and <code>"bootstrap"</code>.</p></li>
-</ul></li>
-<li><p><code>"dagma"</code> - DAGMA algorithm.</p><ul><li><p><code>lambda1 = 0.05</code> - Tuning parameter for DAGMA,</p></li>
-<li><p><code>w_threshold = 0.1</code> - Second tuning parameter for DAGMA,</p></li>
-<li><p><code>cpdag = TRUE</code> - The algorithm returns a DAG;
-if this is set to TRUE, this DAG is converted to a CPDAG.</p></li>
-</ul></li>
-<li><p><code>"direct_lingam"</code> - DirectLiNGAM algorithm. No parameters.</p></li>
-<li><p><code>"fask"</code> - FASK algorithm.</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
-independence test,</p></li>
-<li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>fask_delta = -0.3</code> - The bias for orienting with
-negative coefficients (<code>0</code> means no bias) for <code>FASK v1</code>,</p></li>
-<li><p><code>left_right_rule = 1</code> - The FASK left right rule v2 is
-default, but two other (related) left-right rules are given for
-relation to the literature, and the v1 FASK rule is included for
-backward compatibility,</p></li>
-<li><p><code>skew_edge_threshold = 0.3</code> - For FASK, this includes an
-adjacency X — Y in the model if
-|corr(X, Y | X &gt; 0) - corr(X, Y | Y &gt; 0)|
-exceeds some threshold.</p></li>
 </ul></li>
 <li><p><code>"fci"</code> - FCI algorithm.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
@@ -605,48 +583,12 @@ J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
 PAG (where feasible).</p></li>
 </ul></li>
-<li><p><code>"fcit"</code> - FCI Targeted Testing (FCIT) algorithm</p><ul><li><p><code>use_bes = TRUE</code> - If TRUE, the algorithm uses the
-backward equivalence search from the GES algorithm as one of its
-steps,</p></li>
-<li><p><code>use_data_order = TRUE</code> - If TRUE, the data variable
-order should be used for the first initial permutation,</p></li>
-<li><p><code>num_starts = 1</code> - The number of times the algorithm
-should be started from different initializations. By default, the
-algorithm will be run through at least once using the initialized
-parameters,</p></li>
-<li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
-<li><p><code>start_with = "BOSS"</code> - What algorithm to run first to get
-the initial CPDAG that the rest of the FCIT procedure refines. Available
-options are: <code>"BOSS"</code>, <code>"GRaSP"</code>, and <code>"SP"</code>.</p></li>
-<li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
-final orientation rules set due to P. Spirtes, guaranteeing arrow
-completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness,</p></li>
-<li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
-PAG (where feasible).</p></li>
-</ul></li>
-<li><p><code>"fges"</code> - Fast Greedy Equivalence Search (FGES) algorithm.</p><ul><li><p><code>symmetric_first_step = FALSE</code> - If TRUE, scores for both
+<li><p><code>"ges" ("fges")</code> - Fast Greedy Equivalence Search (FGES) algorithm.</p><ul><li><p><code>symmetric_first_step = FALSE</code> - If TRUE, scores for both
 X –&gt; Y and X &lt;– Y will be calculated and the higher score used.</p></li>
 <li><p><code>max_degree = -1</code> - Maximum degree of any node in the
 graph. Set to -1 for unlimited,</p></li>
 <li><p><code>parallelized = FALSE</code> - If TRUE, the algorithm should
 be parallelized,</p></li>
-<li><p><code>faithfulness_assumed = FALSE</code> - If TRUE, assume that if
-\(X \perp\!\!\!\perp Y\) (by an independence test) then
-\(X \perp\!\!\!\perp Y\) | Z for nonempty Z.</p></li>
-</ul></li>
-<li><p><code>"fges_mb"</code> - Fast Greedy Equivalence Search with Markov
-Blanket (FGES-MB) algorithm.</p><ul><li><p><code>targets = ""</code> - Target names (comma or space separated),</p></li>
-<li><p><code>max_degree = -1</code> - Maximum degree of any node in the
-graph. Set to -1 for unlimited,</p></li>
-<li><p><code>trimming_style = "mb_dags"</code> - The trimming style to use:
-<code>"none"</code> applies no trimming. <code>"adj"</code> trims to the adjacencies
-of the targets. <code>"mb_dags"</code> trims to Union(MB(targets)) U targets.
-<code>"semidir_paths"</code> trims to nodes with semidirected paths to the targets.</p></li>
-<li><p><code>number_of_expansions = 2</code> - Number of expansions of the
-algorithm away from the target,</p></li>
 <li><p><code>faithfulness_assumed = FALSE</code> - If TRUE, assume that if
 \(X \perp\!\!\!\perp Y\) (by an independence test) then
 \(X \perp\!\!\!\perp Y\) | Z for nonempty Z.</p></li>
@@ -659,9 +601,12 @@ discriminating path,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
-J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
+J. Zhang, should be used guaranteeing additional tail completeness,</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
-PAG (where feasible).</p></li>
+PAG (where feasible),</p></li>
+<li><p><code>use_heuristic = FALSE</code> - If TRUE, use the max p heuristic.</p></li>
+<li><p><code>start_complete = FALSE</code> - If TRUE, start from a complete
+graph.</p></li>
 </ul></li>
 <li><p><code>"grasp"</code> - GRaSP (Greedy Relations of Sparsest Permutation)
 algorithm.</p><ul><li><p><code>covered_depth = 4</code> - The depth of recursion for first
@@ -712,26 +657,6 @@ parameters,</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - If TRUE, ensure the output is a
 legal PAG (where feasible).</p></li>
 </ul></li>
-<li><p><code>"ica_lingam"</code> - ICA LiNGAM algorithm.</p><ul><li><p><code>ica_a = 1.1</code> - The 'a' parameter of Fast ICA
-(see Hyvarinen, A. (2001)). It ranges between 1 and 2.</p></li>
-<li><p><code>ica_max_iter = 5000</code> -  Maximum number if iterations of
-the optimization procedure of ICA.</p></li>
-<li><p><code>ica_tolerance = 1e-8</code> - Fast ICA tolerance parameter.</p></li>
-<li><p><code>threshold_b = 0.1</code> - The estimated B matrix is
-thresholded by setting small entries less than this threshold to
-zero.</p></li>
-</ul></li>
-<li><p><code>"ica_lingd"</code> - ICA-LiNG-D algorithm</p><ul><li><p><code>ica_a = 1.1</code> - The 'a' parameter of Fast ICA
-(see Hyvarinen, A. (2001)). It ranges between 1 and 2.</p></li>
-<li><p><code>ica_max_iter = 5000</code> -  Maximum number if iterations of
-the optimization procedure of ICA.</p></li>
-<li><p><code>ica_tolerance = 1e-8</code> - Fast ICA tolerance parameter.</p></li>
-<li><p><code>threshold_b = 0.1</code> - The estimated B matrix is
-thresholded by setting small entries less than this threshold to
-zero.</p></li>
-<li><p><code>threshold_w</code> - The estimated W matrix is thresholded by
-setting small entries less than this threshold to zero.</p></li>
-</ul></li>
 <li><p><code>"pc"</code> - Peter-Clark (PC) algorithm</p><ul><li><p><code>conflict_rule = 1</code> -
 The value of <code>conflict_rule</code> determines how collider conflicts are handled. <code>1</code>
 corresponds to the "overwrite" rule as introduced in the <span class="pkg">pcalg</span> package, see
@@ -744,34 +669,6 @@ the PC adjacency search is used, which for k &gt; 0 fixes the graph
 for depth k + 1 to that of the previous depth k.</p></li>
 <li><p><code>guarantee_cpdag = FALSE</code> - If TRUE, ensure the output is
 a legal CPDAG.</p></li>
-</ul></li>
-<li><p><code>"pc_max"</code> - PCMax algorithm</p><ul><li><p><code>conflict_rule = 1</code> -
-The value of <code>conflict_rule</code> determines how collider conflicts are handled. <code>1</code>
-corresponds to the "overwrite" rule as introduced in the <span class="pkg">pcalg</span> package, see
-<code><a href="https://rdrr.io/pkg/pcalg/man/pc.html" class="external-link">pcalg::pc()</a></code>. <code>2</code> means that all collider conflicts using bidirected edges
-should be prioritized, while <code>3</code> means that existing colliders should be prioritized,
-ignoring subsequent conflicting information.</p></li>
-<li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
-<li><p><code>use_heuristic = TRUE</code> - If TRUE, use the max p heuristic
-version</p></li>
-<li><p><code>max_disc_path_length = -1</code> - The maximum path length to
-use for the max p heuristic version. If -1, no limit is used.</p></li>
-<li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
-the PC adjacency search is used, which for k &gt; 0 fixes the graph
-for depth k + 1 to that of the previous depth k.</p></li>
-</ul></li>
-<li><p><code>"restricted_boss"</code> - Restricted BOSS algorithm</p><ul><li><p><code>targets = ""</code> - Target names (comma or space separated),</p></li>
-<li><p><code>use_bes = TRUE</code> - If TRUE, the algorithm uses the
-backward equivalence search from the GES algorithm as one of its
-steps,</p></li>
-<li><p><code>num_starts = 1</code> - The number of times the algorithm
-should be started from different initializations. By default, the
-algorithm will be run through at least once using the initialized
-parameters,</p></li>
-<li><p><code>allow_internal_randomness = TRUE</code> -  If TRUE, the
-algorithm allow the algorithm to use certain heuristic random
-steps. This can improve performance, but may make the algorithm
-non-deterministic.</p></li>
 </ul></li>
 <li><p><code>"rfci"</code> - Restricted FCI algorithm</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
@@ -786,7 +683,6 @@ J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
 PAG (where feasible).</p></li>
 </ul></li>
-<li><p><code>"sp"</code> - Sparsest Permutation algorithm. No parameters.</p></li>
 <li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
 discriminating path,</p></li>
@@ -795,7 +691,8 @@ final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness,</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
-PAG (where feasible).</p></li>
+PAG (where feasible),</p></li>
+<li><p><code>use_heuristic = FALSE</code> - If TRUE, use the max p heuristic version.</p></li>
 </ul></li>
 </ul></dd>
 
@@ -817,7 +714,7 @@ PAG (where feasible).</p></li>
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>knowledge_obj</code></dt>
-<dd><p>An object containing Tetrad knowledge (must implement <code>get_tetrad_knowledge</code>).</p></dd>
+<dd><p>An object containing <span class="pkg">Tetrad</span> knowledge.</p></dd>
 
 
 </dl><p></p></div>
@@ -900,7 +797,7 @@ generated.</p></dd>
 
 <dt><code>int_cols_as_cont</code></dt>
 <dd><p>(logical) If <code>TRUE</code>, integer columns are treated
-as continuous, since Tetrad does not support ordinal data, but only
+as continuous, since <span class="pkg">Tetrad</span> does not support ordinal data, but only
 either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 
 
@@ -1134,26 +1031,60 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Requires Tetrad to be installed</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"tpc_example"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Recommended:</span></span></span>
-<span class="r-in"><span>  <span class="va">my_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, test <span class="op">=</span> <span class="st">"conditional_gaussian"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu">my_pc</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">my_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">my_pc</span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># or</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">my_pc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">my_pc</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># Example with detailed settings:</span></span></span>
+<span class="r-in"><span>  <span class="va">my_pc2</span> <span class="op">&lt;-</span> <span class="fu"><a href="pc.html">pc</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>,</span></span>
+<span class="r-in"><span>    test <span class="op">=</span> <span class="st">"sem_bic"</span>,</span></span>
+<span class="r-in"><span>    penalty_discount <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    structure_prior <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    singularity_lambda <span class="op">=</span> <span class="fl">0.1</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">my_pc2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Using R6 class:</span></span></span>
 <span class="r-in"><span>  <span class="va">s</span> <span class="op">&lt;-</span> <span class="va">TetradSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">s</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">s</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"conditional_gaussian"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">s</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">s</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">s</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"pc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="va">s</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://caugi.org/reference/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">UNKNOWN</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from  edge  to   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> X1    --&gt;   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> X1    ---   Z    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> X2    ---   X3   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> X2    --&gt;   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> X3    --&gt;   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Z     --&gt;   Y    </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> X1   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> X2   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> X3   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Z    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Y    </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -1161,7 +1092,7 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Anne Helby Petersen, Frederik Fabricius-Bjerre, Bjarke Hautop Kristensen.</p>
+  <p>Developed by Bjarke Hautop Kristensen, Frederik Fabricius-Bjerre, Anne Helby Petersen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

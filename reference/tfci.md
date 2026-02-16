@@ -1,4 +1,4 @@
-# The Temporal Fast Causal Inference (FCI) algorithm for causal discovery
+# TFCI Algorithm for Causal Discovery
 
 Run the temporal FCI algorithm for causal discovery using causalDisco.
 
@@ -34,20 +34,37 @@ tfci(engine = c("causalDisco"), test, alpha = 0.05, ...)
 ## Value
 
 A function of class `"tfci"` that takes a single argument `data` (a data
-frame) and returns a `caugi` and `knowledge` (`knowledgeable_caugi`)
-object.
+frame) and returns a `caugi` (of class "UNKNOWN") and `knowledge`
+(`knowledgeable_caugi`) object.
 
 ## Details
 
 For specific details on the supported tests, see
-[`CausalDiscoSearch`](https://bjarkehautop.github.io/causalDisco/reference/CausalDiscoSearch.md).
+[CausalDiscoSearch](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md).
 For additional parameters passed via `...`, see
-[`tfci_run()`](https://bjarkehautop.github.io/causalDisco/reference/tfci_run.md).
+[`tfci_run()`](https://disco-coders.github.io/causalDisco/reference/tfci_run.md).
+
+## See also
+
+Other causal discovery algorithms:
+[`boss()`](https://disco-coders.github.io/causalDisco/reference/boss.md),
+[`boss_fci()`](https://disco-coders.github.io/causalDisco/reference/boss_fci.md),
+[`fci()`](https://disco-coders.github.io/causalDisco/reference/fci.md),
+[`ges()`](https://disco-coders.github.io/causalDisco/reference/ges.md),
+[`gfci()`](https://disco-coders.github.io/causalDisco/reference/gfci.md),
+[`grasp()`](https://disco-coders.github.io/causalDisco/reference/grasp.md),
+[`grasp_fci()`](https://disco-coders.github.io/causalDisco/reference/grasp_fci.md),
+[`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
+[`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
+[`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
+[`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),
+[`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
 
 ## Examples
 
 ``` r
-data("tpc_example")
+data(tpc_example)
 
 kn <- knowledge(
   tpc_example,
@@ -63,71 +80,137 @@ my_tfci <- tfci(engine = "causalDisco", test = "fisher_z", alpha = 0.05)
 
 disco(tpc_example, my_tfci, knowledge = kn)
 #> 
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 
 # or using my_tfci directly
 my_tfci <- my_tfci |> set_knowledge(kn)
 my_tfci(tpc_example)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 
 # Also possible: using tfci_run()
 tfci_run(tpc_example, test = cor_test, knowledge = kn)
-#> ── Knowledge object ────────────────────────────────────────────────────────────
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
 #> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o->   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 #> 
 #> ── Tiers ──
 #> 
-#>   label 
+#>   tier  
+#>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
-#> 
 #> ── Variables ──
 #> 
 #>   var       tier  
+#>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
 #> 3 youth_x3  youth 
 #> 4 youth_x4  youth 
 #> 5 oldage_x5 oldage
 #> 6 oldage_x6 oldage
-#> 
 ```

@@ -7,7 +7,7 @@ template rather than many nearly identical formulas."><meta property="og:descrip
 where each formula maps a numeric tier index to a tidyselect specification
 that contains the placeholder i.  The placeholder i is replaced
 by each element of tiers in turn, allowing you to write a single
-template rather than many nearly identical formulas."><meta property="og:image" content="https://bjarkehautop.github.io/causalDisco/logo.png"></head><body>
+template rather than many nearly identical formulas."><meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -15,7 +15,7 @@ template rather than many nearly identical formulas."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +29,13 @@ template rather than many nearly identical formulas."><meta property="og:image" 
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/annennenne/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/disco-coders/causalDisco/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -42,7 +44,7 @@ template rather than many nearly identical formulas."><meta property="og:image" 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Generate a Bundle of Tier–Variable Formulas</h1>
-      <small class="dont-index">Source: <a href="https://github.com/annennenne/causalDisco/blob/master/R/knowledge-verbs.R" class="external-link"><code>R/knowledge-verbs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/master/R/knowledge-verbs.R" class="external-link"><code>R/knowledge-verbs.R</code></a></small>
       <div class="d-none name"><code>seq_tiers.Rd</code></div>
     </div>
 
@@ -93,11 +95,12 @@ automatically).</p>
 <code><a href="as_bnlearn_knowledge.html">as_bnlearn_knowledge()</a></code>,
 <code><a href="as_pcalg_constraints.html">as_pcalg_constraints()</a></code>,
 <code><a href="as_tetrad_knowledge.html">as_tetrad_knowledge()</a></code>,
+<code><a href="convert_tiers_to_forbidden.html">convert_tiers_to_forbidden()</a></code>,
 <code><a href="deparse_knowledge.html">deparse_knowledge()</a></code>,
 <code><a href="forbid_edge.html">forbid_edge()</a></code>,
-<code><a href="forbid_tier_violations.html">forbid_tier_violations()</a></code>,
 <code><a href="get_tiers.html">get_tiers()</a></code>,
 <code><a href="knowledge.html">knowledge()</a></code>,
+<code><a href="knowledge_to_caugi.html">knowledge_to_caugi()</a></code>,
 <code><a href="remove_edge.html">remove_edge()</a></code>,
 <code><a href="remove_tiers.html">remove_tiers()</a></code>,
 <code><a href="remove_vars.html">remove_vars()</a></code>,
@@ -117,27 +120,26 @@ automatically).</p>
 <span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span><span class="fu">seq_tiers</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^child_x{i}$"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://caugi.org/reference/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Tiers</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">label</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Variables</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">var</span>       <span style="font-weight: bold;">tier</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  2    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> oldage_x5 <span style="color: #BB0000;">NA</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x6 <span style="color: #BB0000;">NA</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  <span style="color: #BB0000;">NA</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -145,7 +147,7 @@ automatically).</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Anne Helby Petersen, Frederik Fabricius-Bjerre, Bjarke Hautop Kristensen.</p>
+  <p>Developed by Bjarke Hautop Kristensen, Frederik Fabricius-Bjerre, Anne Helby Petersen.</p>
 </div>
 
 <div class="pkgdown-footer-right">
