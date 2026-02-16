@@ -113,7 +113,7 @@ Code should be formatted with Air before committing. We recommend enabling forma
   (e.g., kebab-case) for convenience.
 
 See, for example,
-[`BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.html),
+[`BnlearnSearch`](https://disco-coders.github.io/causalDisco/reference/BnlearnSearch.html),
 where this approach is implemented.
 
 ### File Names

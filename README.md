@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# causalDisco <a href="https://bjarkehautop.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
+# causalDisco <a href="https://disco-coders.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/BjarkeHautop/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/BjarkeHautop/causalDisco)
-[![R-CMD-check](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BjarkeHautop/causalDisco/actions/workflows/R-CMD-check.yaml)
+coverage](https://codecov.io/gh/disco-coders/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/disco-coders/causalDisco)
+[![R-CMD-check](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
@@ -38,14 +38,14 @@ Then you can install the development version of causalDisco from GitHub
 using pak:
 
 ``` r
-pak::pkg_install("BjarkeHautop/causalDisco")
+pak::pkg_install("disco-coders/causalDisco")
 ```
 
 or with all suggested packages (note that this requires a valid Java /
 JDK installation for rJava as described below):
 
 ``` r
-pak::pkg_install("BjarkeHautop/causalDisco", dependencies = TRUE)
+pak::pkg_install("disco-coders/causalDisco", dependencies = TRUE)
 ```
 
 ### Installing Rust
@@ -178,4 +178,4 @@ causal discovery, and visualize results.
 
 Bug reports and feature requests are welcome:
 
-[open an issue](https://github.com/BjarkeHautop/causalDisco/issues).
+[open an issue](https://github.com/disco-coders/causalDisco/issues).
