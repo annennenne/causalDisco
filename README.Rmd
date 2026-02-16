@@ -95,7 +95,7 @@ data(tpc_example)
 
 pcalg_ges <- ges(
   engine = "pcalg", # Use the pcalg implementation
-  score = "sem_bic" # Use BIC score for model selection
+  score = "sem_bic" # Use BIC score for the GES algorithm
 )
 disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
 
