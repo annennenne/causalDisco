@@ -20,7 +20,7 @@ Source code: \url{https://github.com/cmu-phil/tetrad}.
 Useful links:
 \itemize{
   \item \url{https://github.com/disco-coders/causalDisco}
-  \item \url{https://bjarkehautop.github.io/causalDisco/}
+  \item \url{https://disco-coders.github.io/causalDisco/}
   \item Report bugs at \url{https://github.com/disco-coders/causalDisco/issues}
 }
 
