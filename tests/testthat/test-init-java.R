@@ -3,6 +3,10 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("init_java starts JVM once and adds the specific jar", {
+  java_ok <- check_tetrad_install()$java_ok
+  if (!java_ok) {
+    skip("Java not available; skipping init_java tests")
+  }
   with_mock_rjava({
     pkg <- "causalDisco"
     ns <- asNamespace(pkg)
@@ -32,6 +36,11 @@ test_that("init_java starts JVM once and adds the specific jar", {
 
 
 test_that("init_java errors when no Tetrad JARs are found", {
+  java_ok <- check_tetrad_install()$java_ok
+  if (!java_ok) {
+    skip("Java not available; skipping init_java tests")
+  }
+
   with_mock_rjava({
     pkg <- "causalDisco"
     ns <- asNamespace(pkg)
