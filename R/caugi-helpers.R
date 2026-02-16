@@ -19,7 +19,8 @@
 #' )
 #' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #' nodes(disco_cd_tges$caugi)
-#' @export
+#' @keywords internal
+#' @noRd
 nodes <- function(cg) {
   tibble::as_tibble(caugi::nodes(cg))
 }
@@ -31,7 +32,6 @@ nodes <- function(cg) {
 #'
 #' @param cg A `caugi` object.
 #' @return A tibble containing the edges.
-#' @export
 #'
 #' @examples
 #' data(tpc_example)
@@ -46,6 +46,8 @@ nodes <- function(cg) {
 #' )
 #' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #' edges(disco_cd_tges$caugi)
+#' @keywords internal
+#' @noRd
 edges <- function(cg) {
   tibble::as_tibble(caugi::edges(cg))
 }
