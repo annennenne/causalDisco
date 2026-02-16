@@ -137,24 +137,24 @@ of <code>parent</code> in the equation for <code>child</code>.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sim_data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        A        B        C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">0.530</span>  0.008<span style="text-decoration: underline;">75</span> -<span style="color: #BB0000;">0.147</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  0.680 -<span style="color: #BB0000;">1.10</span>     0.357  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0.543  0.948   -<span style="color: #BB0000;">0.542</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  1.04  -<span style="color: #BB0000;">0.907</span>    0.003<span style="text-decoration: underline;">63</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> -<span style="color: #BB0000;">2.17</span>   1.28     0.236  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">0.817</span>  2.83    -<span style="color: #BB0000;">2.01</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        A      B      C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">0.311</span>  1.49   1.66 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">0.530</span>  0.186  0.105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  0.681 -<span style="color: #BB0000;">1.12</span>  -<span style="color: #BB0000;">0.909</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  0.543  0.579  0.234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  1.04  -<span style="color: #BB0000;">1.09</span>  -<span style="color: #BB0000;">1.09</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">2.17</span>   1.77   1.93 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">sim_data</span>, <span class="st">"generating_model"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dgp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dgp$A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rnorm(n, sd = 0.83)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rnorm(n, sd = 1.433)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dgp$B</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A * -0.67 + rnorm(n, sd = 1.125)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A * -0.643 + rnorm(n, sd = 0.972)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dgp$C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A * -0.792 + B * -0.667 + rnorm(n, sd = 0.718)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A * -0.673 + B * 0.535 + rnorm(n, sd = 0.67)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

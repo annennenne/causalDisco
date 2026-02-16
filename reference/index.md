@@ -214,10 +214,6 @@ Small simulated datasets to illustrate causalDisco workflows.
   : Knowledgeable Caugi Object
 - [`new_knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/new_knowledgeable_caugi.md)
   : Create a Knowledgeable Caugi Object
-- [`edges()`](https://disco-coders.github.io/causalDisco/reference/edges.md)
-  : Retrieve Edges
-- [`nodes()`](https://disco-coders.github.io/causalDisco/reference/nodes.md)
-  : Retrieve Nodes
 - [`deparse_knowledge()`](https://disco-coders.github.io/causalDisco/reference/deparse_knowledge.md)
   : Deparse a Knowledge Object into Knowledge DSL Code
 - [`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
