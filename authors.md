@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/disco-coders/causalDisco/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/disco-coders/causalDisco/blob/main/DESCRIPTION)
 
 Kristensen B, Fabricius-Bjerre F, Helby Petersen A (2026). *causalDisco:
 Tools for Causal Discovery on Observational Data*. R package version
