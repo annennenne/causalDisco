@@ -121,7 +121,7 @@ enabling format-on-save in your editor.
   conventions (e.g., kebab-case) for convenience.
 
 See, for example,
-[`BnlearnSearch`](https://bjarkehautop.github.io/causalDisco/reference/BnlearnSearch.html),
+[`BnlearnSearch`](https://disco-coders.github.io/causalDisco/reference/BnlearnSearch.html),
 where this approach is implemented.
 
 ### File Names

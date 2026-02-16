@@ -32,4 +32,4 @@ work. This helps ensure alignment and avoids duplicate effort.
 
 For additional information about the code structure and developer
 guidelines please see
-[DEVELOPERS.md](https://github.com/BjarkeHautop/causalDisco/blob/master/.github/DEVELOPERS.md).
+[DEVELOPERS.md](https://github.com/disco-coders/causalDisco/blob/master/.github/DEVELOPERS.md).

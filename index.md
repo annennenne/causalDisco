@@ -26,14 +26,14 @@ Then you can install the development version of causalDisco from GitHub
 using pak:
 
 ``` r
-pak::pkg_install("BjarkeHautop/causalDisco")
+pak::pkg_install("disco-coders/causalDisco")
 ```
 
 or with all suggested packages (note that this requires a valid Java /
 JDK installation for rJava as described below):
 
 ``` r
-pak::pkg_install("BjarkeHautop/causalDisco", dependencies = TRUE)
+pak::pkg_install("disco-coders/causalDisco", dependencies = TRUE)
 ```
 
 ### Installing Rust
@@ -168,4 +168,4 @@ causal discovery, and visualize results.
 
 Bug reports and feature requests are welcome:
 
-[open an issue](https://github.com/BjarkeHautop/causalDisco/issues).
+[open an issue](https://github.com/disco-coders/causalDisco/issues).
