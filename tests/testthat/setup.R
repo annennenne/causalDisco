@@ -11,7 +11,12 @@ if (!on_cran) {
   java_ok <- status$java_ok
   tetrad_installed <- status$installed
   if (!java_ok) {
-    install_java()
+    os <- get_os()
+    if (os == "windows" || os == "darwin") {
+      install_java()
+    } else {
+      message("Unsupported OS for automatic Java installation: ", os)
+    }
   }
   if (!tetrad_installed) {
     install_tetrad()
