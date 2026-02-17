@@ -35,7 +35,12 @@ To install causalDisco ensure you first have installed Rust as described
 below.
 
 Then you can install the stable version of causalDisco from CRAN with
-suggested dependencies using
+
+``` r
+install.packages("causalDisco")
+```
+
+or with suggested dependencies (for Tetrad integration) using
 
 ``` r
 install.packages("causalDisco", dependencies = TRUE)
@@ -76,8 +81,7 @@ The current supported version of Tetrad can then be installed by calling
 causalDisco::install_tetrad()
 ```
 
-To verify everything is set up correctly you can run
-`verify_tetrad()`:
+To verify everything is set up correctly you can run `verify_tetrad()`:
 
 ``` r
 causalDisco::verify_tetrad()

@@ -41,19 +41,19 @@ To install causalDisco ensure you first have installed Rust as described below.
 
 Then you can install the stable version of causalDisco from CRAN with
 
-```{r}
+```{r install, eval=FALSE}
 install.packages("causalDisco")
 ```
 
 or with suggested dependencies (for Tetrad integration) using
 
-```{r install, eval=FALSE}
+```{r install w depends, eval=FALSE}
 install.packages("causalDisco", dependencies = TRUE)
 ```
 
 or the development version of causalDisco from GitHub using pak:
 
-```{r install w depend, eval=FALSE}
+```{r pak install w depend, eval=FALSE}
 pak::pkg_install("disco-coders/causalDisco", dependencies = TRUE)
 ```
 
