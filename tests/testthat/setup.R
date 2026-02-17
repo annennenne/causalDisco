@@ -7,7 +7,12 @@
 on_cran <- identical(Sys.getenv("NOT_CRAN"), "false")
 
 if (!on_cran) {
-  tetrad_installed <- check_tetrad_install()$installed
+  status <- check_tetrad_install()
+  java_ok <- status$java_ok
+  tetrad_installed <- status$installed
+  if (!java_ok) {
+    install_java()
+  }
   if (!tetrad_installed) {
     install_tetrad()
   }
