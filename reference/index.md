@@ -72,7 +72,7 @@ Functions for installing and verifying the Tetrad Java backend.
   : Install Eclipse Temurin JDK 25
 - [`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md)
   : Install Tetrad GUI
-- [`check_tetrad_install()`](https://disco-coders.github.io/causalDisco/reference/check_tetrad_install.md)
+- [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md)
   : Check Tetrad Installation
 
 ## causalDisco Algorithm Run Functions

@@ -1264,7 +1264,7 @@ The objects of this class are cloneable with this method.
 # use the disco() or any method function, for example pc(), instead.
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   data(num_data)
 
   # Recommended:

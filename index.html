@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9049</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9050</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,9 +108,9 @@
 <p>The current supported version of Tetrad can then be installed by calling</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">causalDisco</span><span class="fu">::</span><span class="fu"><a href="reference/install_tetrad.html">install_tetrad</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>To verify everything is set up correctly you can run <code><a href="reference/check_tetrad_install.html">check_tetrad_install()</a></code>:</p>
+<p>To verify everything is set up correctly you can run <code><a href="reference/verify_tetrad.html">verify_tetrad()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">causalDisco</span><span class="fu">::</span><span class="fu"><a href="reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">causalDisco</span><span class="fu">::</span><span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $installed</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -175,7 +175,7 @@
 <span><span class="va">disco_bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">bnlearn_pc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Requires Tetrad to be installed</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">tetrad_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pc.html">pc</a></span><span class="op">(</span></span>
 <span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>, <span class="co"># Use the Tetrad implementation</span></span>
 <span>    test <span class="op">=</span> <span class="st">"conditional_gaussian"</span>, <span class="co"># Use conditional Gaussian test</span></span>

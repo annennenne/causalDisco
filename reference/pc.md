@@ -286,7 +286,7 @@ disco(tpc_example, pc_bnlearn)
 
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(
@@ -331,7 +331,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 
 # With all algorithm arguments specified
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   pc_tetrad <- pc(
     engine = "tetrad",
     test = "fisher_z",

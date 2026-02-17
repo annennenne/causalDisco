@@ -32,7 +32,6 @@
 <url><loc>https://disco-coders.github.io/causalDisco/reference/cat_data_mcar.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/cat_ord_data.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/causalDisco-package.html</loc></url>
-<url><loc>https://disco-coders.github.io/causalDisco/reference/check_tetrad_install.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/confusion.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/convert_tiers_to_forbidden.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/cor_test.html</loc></url>
@@ -102,6 +101,7 @@
 <url><loc>https://disco-coders.github.io/causalDisco/reference/tpc_example.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/tpc_run.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/unfreeze.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/reference/verify_tetrad.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/tetrad-algs.html</loc></url>
 </urlset>
 

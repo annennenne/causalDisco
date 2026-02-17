@@ -107,7 +107,7 @@ score. Below we will use the Extended Bayesian Information Criterion
 Tetrad is written in Java, so to use it we first need to ensure that
 Java is installed and that the Tetrad jar files are available. This can
 be done using the
-[`check_tetrad_install()`](https://disco-coders.github.io/causalDisco/reference/check_tetrad_install.md)
+[`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md)
 function. If they aren’t installed, we provide the helper functions
 [`install_java()`](https://disco-coders.github.io/causalDisco/reference/install_java.md)
 and
@@ -115,7 +115,7 @@ and
 to set them up.
 
 ``` r
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   ges_tetrad <- ges(
     engine = "tetrad", # Use the Tetrad implementation
     score = "ebic" # Use the EBIC score

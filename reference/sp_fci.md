@@ -75,7 +75,7 @@ Other causal discovery algorithms:
 data(tpc_example)
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   # Recommended path using disco()
   boss_fci_tetrad <- boss_fci(
     engine = "tetrad",
@@ -114,7 +114,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 
 #### With tier knowledge ####
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(
@@ -163,7 +163,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 
 # With all algorithm arguments specified
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   boss_fci_tetrad <- boss_fci(
     engine = "tetrad",
     score = "poisson_prior",
@@ -185,7 +185,8 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 #> 
 #>   from     edge  to       
 #>   <chr>    <chr> <chr>    
-#> 1 child_x2 o-o   oldage_x5
+#> 1 child_x2 o-o   youth_x4 
+#> 2 youth_x3 o-o   oldage_x5
 #> ── Nodes ──
 #> 
 #>   name     

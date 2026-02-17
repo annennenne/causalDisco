@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9049</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9050</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -327,7 +327,7 @@ a PDAG, so we set the <code>graph_class</code> attribute to
 other method in causalDisco.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Ensure Tetrad is installed and Java is working before running the algorithm</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">my_boss_variant_tetrad</span> <span class="op">&lt;-</span> <span class="fu">my_boss_variant</span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, score <span class="op">=</span> <span class="st">"sem_bic"</span><span class="op">)</span></span>
 <span>  <span class="va">my_boss_variant_tetrad_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">my_boss_variant_tetrad</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">my_boss_variant_tetrad_result</span><span class="op">)</span></span>

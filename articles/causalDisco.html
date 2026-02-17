@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9049</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9050</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -159,12 +159,11 @@ score. Below we will use the Extended Bayesian Information Criterion
 (EBIC) score from Tetrad.</p>
 <p>Tetrad is written in Java, so to use it we first need to ensure that
 Java is installed and that the Tetrad jar files are available. This can
-be done using the <code><a href="../reference/check_tetrad_install.html">check_tetrad_install()</a></code> function. If they
-aren’t installed, we provide the helper functions
-<code><a href="../reference/install_java.html">install_java()</a></code> and <code><a href="../reference/install_tetrad.html">install_tetrad()</a></code> to set
-them up.</p>
+be done using the <code><a href="../reference/verify_tetrad.html">verify_tetrad()</a></code> function. If they aren’t
+installed, we provide the helper functions <code><a href="../reference/install_java.html">install_java()</a></code>
+and <code><a href="../reference/install_tetrad.html">install_tetrad()</a></code> to set them up.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/check_tetrad_install.html">check_tetrad_install</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ges_tetrad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ges.html">ges</a></span><span class="op">(</span></span>
 <span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>, <span class="co"># Use the Tetrad implementation</span></span>
 <span>    score <span class="op">=</span> <span class="st">"ebic"</span> <span class="co"># Use the EBIC score</span></span>

@@ -281,7 +281,7 @@ causalDisco.
 
 ``` r
 # Ensure Tetrad is installed and Java is working before running the algorithm
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
   my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
   plot(my_boss_variant_tetrad_result)
