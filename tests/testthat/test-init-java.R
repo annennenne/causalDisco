@@ -3,7 +3,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("init_java starts JVM once and adds the specific jar", {
-  java_ok <- check_tetrad_install()$java_ok
+  java_ok <- verify_tetrad()$java_ok
   if (!java_ok) {
     skip("Java not available; skipping init_java tests")
   }
@@ -36,7 +36,7 @@ test_that("init_java starts JVM once and adds the specific jar", {
 
 
 test_that("init_java errors when no Tetrad JARs are found", {
-  java_ok <- check_tetrad_install()$java_ok
+  java_ok <- verify_tetrad()$java_ok
   if (!java_ok) {
     skip("Java not available; skipping init_java tests")
   }

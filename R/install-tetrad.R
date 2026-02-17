@@ -58,9 +58,9 @@ get_java_version <- function() {
 #'  - `java_version`: Character, the installed Java version.
 #'  - `message`: Character, a message describing the status.
 #' @examples
-#' check_tetrad_install()
+#' verify_tetrad()
 #' @export
-check_tetrad_install <- function(
+verify_tetrad <- function(
   version = getOption("causalDisco.tetrad.version")
 ) {
   tetrad_dir <- get_tetrad_dir()

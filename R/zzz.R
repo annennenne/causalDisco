@@ -43,7 +43,7 @@
   options(java.heap.size = paste0(heap_gb, "g"))
 
   # Check Tetrad installation
-  tetrad_status <- check_tetrad_install()
+  tetrad_status <- verify_tetrad()
   tetrad_version <- ifelse(
     tetrad_status$installed,
     tetrad_status$version,

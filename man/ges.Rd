@@ -59,7 +59,7 @@ disco(tpc_example, ges_pcalg)
 
 #### Using tetrad engine with tier knowledge ####
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(
@@ -79,7 +79,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 
 # With all algorithm arguments specified
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   ges_tetrad <- ges(
     engine = "tetrad",
     score = "ebic",

@@ -89,11 +89,11 @@ however GES is a score-based algorithm, so instead of a test and an alpha level,
 we will use the Extended Bayesian Information Criterion (EBIC) score from Tetrad.
 
 Tetrad is written in Java, so to use it we first need to ensure that Java is installed and that the Tetrad jar files are
-available. This can be done using the `check_tetrad_install()` function. If they aren't installed, we provide the
+available. This can be done using the `verify_tetrad()` function. If they aren't installed, we provide the
 helper functions `install_java()` and `install_tetrad()` to set them up.
 
 ```{r ges algorithm ebic tetrad, eval = FALSE}
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   ges_tetrad <- ges(
     engine = "tetrad", # Use the Tetrad implementation
     score = "ebic" # Use the EBIC score

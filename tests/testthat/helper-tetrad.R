@@ -1,10 +1,10 @@
 # skip the whole test if Java/rJava/Tetrad jars aren't ready
 skip_if_no_tetrad <- function() {
-  if (is.null(check_tetrad_install()$version)) {
+  if (is.null(verify_tetrad()$version)) {
     testthat::skip("Tetrad not installed or version unknown")
   }
 
-  if (!check_tetrad_install()$java_ok) {
+  if (!verify_tetrad()$java_ok) {
     testthat::skip("Java version not sufficient for Tetrad (need >= 21)")
   }
 

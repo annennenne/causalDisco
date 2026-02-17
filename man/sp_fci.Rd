@@ -41,7 +41,7 @@ For specific details on the supported scores, and parameters for each engine, se
 data(tpc_example)
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   # Recommended path using disco()
   boss_fci_tetrad <- boss_fci(
     engine = "tetrad",
@@ -55,7 +55,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 
 #### With tier knowledge ####
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(
@@ -79,7 +79,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 
 # With all algorithm arguments specified
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   boss_fci_tetrad <- boss_fci(
     engine = "tetrad",
     score = "poisson_prior",

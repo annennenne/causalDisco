@@ -30,7 +30,7 @@ reference:
     contents:
       - install_java
       - install_tetrad
-      - check_tetrad_install
+      - verify_tetrad
 
   - title: "causalDisco Algorithm Run Functions"
     desc: "Low-level functions that execute causalDisco search algorithms and detail their parameters."

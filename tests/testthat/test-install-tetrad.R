@@ -116,11 +116,11 @@ expect_output_list <- function(x) {
 
 # ---- Branch 1: Java not found ----
 test_that("Returns message when Java is missing", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() {
+  mockery::stub(verify_tetrad, "get_java_version", function() {
     NA_character_
   })
 
-  out <- check_tetrad_install("1.0")
+  out <- verify_tetrad("1.0")
   expect_output_list(out)
 
   expect_false(out$installed)
@@ -132,9 +132,9 @@ test_that("Returns message when Java is missing", {
 
 # ---- Branch 2: Java < 21 ----
 test_that("Returns message when Java version is too old", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() "17.0.9")
+  mockery::stub(verify_tetrad, "get_java_version", function() "17.0.9")
 
-  out <- check_tetrad_install("1.0")
+  out <- verify_tetrad("1.0")
   expect_output_list(out)
 
   expect_false(out$installed)
@@ -146,10 +146,10 @@ test_that("Returns message when Java version is too old", {
 
 # ---- Branch 3: Java OK but tetrad_dir is NULL ----
 test_that("Returns message when tetrad directory is missing", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() "21.0.1")
-  mockery::stub(check_tetrad_install, "get_tetrad_dir", function() NULL)
+  mockery::stub(verify_tetrad, "get_java_version", function() "21.0.1")
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() NULL)
 
-  out <- check_tetrad_install("1.0")
+  out <- verify_tetrad("1.0")
   expect_output_list(out)
 
   expect_false(out$installed)
@@ -161,13 +161,13 @@ test_that("Returns message when tetrad directory is missing", {
 
 # ---- Branch 4: Java OK, tetrad dir exists, JAR missing ----
 test_that("Returns message when Tetrad JAR does not exist", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() "21.0.1")
-  mockery::stub(check_tetrad_install, "get_tetrad_dir", function() "/fake/path")
+  mockery::stub(verify_tetrad, "get_java_version", function() "21.0.1")
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() "/fake/path")
 
   # JAR missing
-  mockery::stub(check_tetrad_install, "file.exists", function(...) FALSE)
+  mockery::stub(verify_tetrad, "file.exists", function(...) FALSE)
 
-  out <- check_tetrad_install("1.0")
+  out <- verify_tetrad("1.0")
   expect_output_list(out)
 
   expect_false(out$installed)
@@ -179,13 +179,13 @@ test_that("Returns message when Tetrad JAR does not exist", {
 
 # ---- Branch 5: Java OK, tetrad dir exists, JAR exists → SUCCESS ----
 test_that("Successful detection when Java and Tetrad are OK", {
-  mockery::stub(check_tetrad_install, "get_java_version", function() "22.1.0")
-  mockery::stub(check_tetrad_install, "get_tetrad_dir", function() "/fake/path")
+  mockery::stub(verify_tetrad, "get_java_version", function() "22.1.0")
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() "/fake/path")
 
   # JAR exists
-  mockery::stub(check_tetrad_install, "file.exists", function(...) TRUE)
+  mockery::stub(verify_tetrad, "file.exists", function(...) TRUE)
 
-  out <- check_tetrad_install("2.0")
+  out <- verify_tetrad("2.0")
   expect_output_list(out)
 
   expect_true(out$installed)

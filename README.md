@@ -77,10 +77,10 @@ causalDisco::install_tetrad()
 ```
 
 To verify everything is set up correctly you can run
-`check_tetrad_install()`:
+`verify_tetrad()`:
 
 ``` r
-causalDisco::check_tetrad_install()
+causalDisco::verify_tetrad()
 #> $installed
 #> [1] TRUE
 #> 
@@ -150,7 +150,7 @@ bnlearn_pc <- pc(
 disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   tetrad_pc <- pc(
     engine = "tetrad", # Use the Tetrad implementation
     test = "conditional_gaussian", # Use conditional Gaussian test

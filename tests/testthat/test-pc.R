@@ -418,7 +418,7 @@ test_that("pc disco learns colliders with all engines", {
   B <- 0.8 * A + 0.5 * C + rnorm(n)
   data_simple <- data.frame(A, B, C)
 
-  if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+  if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
     tetrad_pc <- pc(engine = "tetrad", test = "fisher_z", alpha = 0.05)
     output_tetrad <- disco(data = data_simple, method = tetrad_pc)
     edges_tetrad <- output_tetrad$caugi@edges

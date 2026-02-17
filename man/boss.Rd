@@ -35,7 +35,7 @@ For specific details on the supported scores, and parameters for each engine, se
 data(tpc_example)
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   # Recommended path using disco()
   boss_tetrad <- boss(engine = "tetrad", score = "sem_bic")
   disco(tpc_example, boss_tetrad)
@@ -45,7 +45,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 
 #### With tier knowledge ####
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
     tier(
@@ -65,7 +65,7 @@ if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
 }
 
 # With all algorithm arguments specified
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   boss_tetrad <- boss(
     engine = "tetrad",
     score = "gic",

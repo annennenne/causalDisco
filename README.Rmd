@@ -39,7 +39,13 @@ Time to hit the disco 🪩
 
 To install causalDisco ensure you first have installed Rust as described below.
 
-Then you can install the stable version of causalDisco from CRAN with suggested dependencies using
+Then you can install the stable version of causalDisco from CRAN with
+
+```{r}
+install.packages("causalDisco")
+```
+
+or with suggested dependencies (for Tetrad integration) using
 
 ```{r install, eval=FALSE}
 install.packages("causalDisco", dependencies = TRUE)
@@ -74,10 +80,10 @@ The current supported version of Tetrad can then be installed by calling
 causalDisco::install_tetrad()
 ```
 
-To verify everything is set up correctly you can run `check_tetrad_install()`:
+To verify everything is set up correctly you can run `verify_tetrad()`:
 
 ```{r check tetrad install}
-causalDisco::check_tetrad_install()
+causalDisco::verify_tetrad()
 ```
 
 ## Example
@@ -125,7 +131,7 @@ bnlearn_pc <- pc(
 disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 
 # Requires Tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   tetrad_pc <- pc(
     engine = "tetrad", # Use the Tetrad implementation
     test = "conditional_gaussian", # Use conditional Gaussian test

@@ -1,5 +1,5 @@
 # Requires tetrad to be installed
-if (check_tetrad_install()$installed && check_tetrad_install()$java_ok) {
+if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   set.seed(1405)
   my_df <- data.frame(
     cont = rnorm(6),
