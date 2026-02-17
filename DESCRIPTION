@@ -47,7 +47,6 @@ Imports:
     tidyselect
 Suggests: 
     knitr,
-    MASS,
     mockery,
     rJava,
     rmarkdown,

@@ -141,8 +141,10 @@ test_that("cor_test matches gaussCItest", {
   set.seed(1405)
   p <- 4
   n <- 800
-  X <- MASS::mvrnorm(n, mu = rep(0, p), Sigma = diag(p))
+
+  X <- matrix(rnorm(n * p), nrow = n, ncol = p)
   colnames(X) <- LETTERS[1:p]
+
   Cmat <- stats::cor(X)
   suff <- list(C = Cmat, n = n)
 
