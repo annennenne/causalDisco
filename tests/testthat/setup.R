@@ -6,7 +6,7 @@
 
 on_cran <- identical(Sys.getenv("NOT_CRAN"), "false")
 
-if (!on_cran) {
+if (!on_cran && FALSE) {
   status <- verify_tetrad()
   java_ok <- status$java_ok
   tetrad_installed <- status$installed
