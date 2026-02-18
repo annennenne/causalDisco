@@ -280,7 +280,7 @@ test_that("set_knowledge defers building constraints and validates input", {
     "Engine pcalg does not use required edges; ignoring them.",
     fixed = TRUE
   )
-  expect_s3_class(out, "knowledgeable_caugi")
+  expect_s3_class(out, "disco")
 })
 
 test_that("knowledge builder errors if data missing", {
@@ -321,7 +321,7 @@ test_that("set_knowledge defers building constraints and validates input", {
     "Engine pcalg does not use required edges; ignoring them.",
     fixed = TRUE
   )
-  expect_s3_class(out, "knowledgeable_caugi")
+  expect_s3_class(out, "disco")
 })
 
 
@@ -369,14 +369,14 @@ test_that("run_search without score_function (pc) works; with score_function (ge
   s_pc$set_data(my_df, set_suff_stat = TRUE)
   s_pc$set_alg("pc")
   res_pc <- s_pc$run_search()
-  expect_s3_class(res_pc, "knowledgeable_caugi")
+  expect_s3_class(res_pc, "disco")
 
   # GES without knowledge
   s_ges <- PcalgSearch$new()
   s_ges$set_alg("ges")
   s_ges$set_score("sem_bic")
   res_ges <- s_ges$run_search(my_df)
-  expect_s3_class(res_ges, "knowledgeable_caugi")
+  expect_s3_class(res_ges, "disco")
 
   # GES with knowledge warns on fixedEdges
   kn_req <- knowledge(my_df, A %-->% B)

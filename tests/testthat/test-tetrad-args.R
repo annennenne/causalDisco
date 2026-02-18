@@ -5,7 +5,7 @@ test_that("tetrad test argument works (discrete)", {
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(pc_result), "disco")
     pc_result
   }
 
@@ -26,7 +26,7 @@ test_that("tetrad test argument works (continuous)", {
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "tetrad", test = test)
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(pc_result), "disco")
     pc_result
   }
 
@@ -53,7 +53,7 @@ test_that("tetrad test argument works (mixed)", {
       pc_method <- pc(engine = "tetrad", test = "rcit", use_rcit = FALSE)
     }
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(pc_result), "disco")
     pc_result
   }
 
@@ -79,7 +79,7 @@ test_that("tetrad score argument works (continuous)", {
   run_ges_test <- function(data, score) {
     ges_method <- ges(engine = "tetrad", score = score)
     ges_result <- disco(data, method = ges_method)
-    expect_equal(class(ges_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(ges_result), "disco")
     ges_result
   }
 
@@ -103,7 +103,7 @@ test_that("tetrad score argument works (discrete)", {
   run_ges_test <- function(data, score) {
     ges_method <- ges(engine = "tetrad", score = score)
     ges_result <- disco(data, method = ges_method)
-    expect_equal(class(ges_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(ges_result), "disco")
     ges_result
   }
 
@@ -122,7 +122,7 @@ test_that("tetrad score argument works (mixed)", {
   run_ges_test <- function(data, score) {
     ges_method <- ges(engine = "tetrad", score = score)
     ges_result <- disco(data, method = ges_method)
-    expect_equal(class(ges_result), c("knowledgeable_caugi", "knowledge"))
+    expect_equal(class(ges_result), "disco")
     ges_result
   }
 

@@ -4,7 +4,7 @@
 \alias{plot}
 \title{Plot Method for causalDisco Objects}
 \arguments{
-\item{x}{An object to plot (class \code{knowledge} or \code{knowledgeable_caugi}).}
+\item{x}{An object to plot (class \link{knowledge} or \link{disco}).}
 
 \item{...}{Additional arguments passed to class-specific plot methods and to \code{\link[caugi:plot]{caugi::plot()}}.}
 }
@@ -12,9 +12,9 @@
 Invisibly returns the input object. The primary effect is the generated plot.
 }
 \description{
-This is the generic \code{plot()} function for objects of class \code{knowledge}
-or \code{knowledgeable_caugi}. It dispatches to the class-specific plotting methods
-\code{\link[=plot.knowledge]{plot.knowledge()}} and \code{\link[=plot.knowledgeable_caugi]{plot.knowledgeable_caugi()}}.
+This is the generic \code{plot()} function for objects of class \link{knowledge}
+or \link{disco}. It dispatches to the class-specific plotting methods
+\code{\link[=plot.knowledge]{plot.knowledge()}} and \code{\link[=plot.disco]{plot.disco()}}.
 }
 \examples{
 data(tpc_example)
@@ -34,5 +34,5 @@ plot(disco_cd_tges)
 
 }
 \seealso{
-\code{\link[=plot.knowledge]{plot.knowledge()}}, \code{\link[=plot.knowledgeable_caugi]{plot.knowledgeable_caugi()}}, \code{\link[caugi:plot]{caugi::plot()}}
+\code{\link[=plot.knowledge]{plot.knowledge()}}, \code{\link[=plot.disco]{plot.disco()}}, \code{\link[caugi:plot]{caugi::plot()}}
 }

@@ -251,7 +251,7 @@ test_additional_alg_args <- function(
           test_args = test_args
         )
       )
-      expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+      expect_equal(class(out), "disco")
     }
   )
 }
@@ -289,7 +289,7 @@ test_additional_test_or_score_args <- function(
           test_args = test_args
         )
       )
-      expect_equal(class(out), c("knowledgeable_caugi", "knowledge"))
+      expect_equal(class(out), "disco")
     }
   )
 }

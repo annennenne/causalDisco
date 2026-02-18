@@ -37,7 +37,7 @@
 #'
 #' @example inst/roxygen-examples/disco-example.R
 #'
-#' @returns A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+#' @returns A `caugi` and a `knowledge` (`disco`) object.
 #'
 #' @export
 disco <- function(data, method, knowledge = NULL) {

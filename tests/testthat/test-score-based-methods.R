@@ -16,7 +16,7 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
     expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
 
     res <- m(num_data)
-    expect_s3_class(res, "knowledgeable_caugi")
+    expect_s3_class(res, "disco")
   }
 })
 
@@ -32,7 +32,7 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
     )
 
     res0 <- m(num_data)
-    expect_s3_class(res0, "knowledgeable_caugi")
+    expect_s3_class(res0, "disco")
 
     m2 <- set_knowledge(m, kn)
     expect_s3_class(m2, c("ges", "disco_method", "function"))
@@ -44,10 +44,10 @@ test_that("ges(): set_knowledge returns a new method and injects knowledge", {
         fixed = TRUE
       )
     } else {
-      expect_s3_class(m2(num_data), "knowledgeable_caugi")
+      expect_s3_class(m2(num_data), "disco")
     }
 
-    expect_s3_class(m(num_data), "knowledgeable_caugi")
+    expect_s3_class(m(num_data), "disco")
   }
 })
 
@@ -76,7 +76,7 @@ test_that("ges(): disco() injects knowledge and validates method type", {
       )
     } else {
       res <- disco(num_data, method = m, knowledge = kn)
-      expect_s3_class(res, "knowledgeable_caugi")
+      expect_s3_class(res, "disco")
     }
   }
 })
@@ -113,7 +113,7 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t, "list")
   expect_true(is.function(runner_t$run))
-  expect_s3_class(runner_t$run(num_data), "knowledgeable_caugi")
+  expect_s3_class(runner_t$run(num_data), "disco")
 
   # also with more arguments
   runner_t2 <- ges_tetrad_runner(
@@ -123,7 +123,7 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_t2, "list")
   expect_true(is.function(runner_t2$run))
-  expect_s3_class(runner_t2$run(num_data), "knowledgeable_caugi")
+  expect_s3_class(runner_t2$run(num_data), "disco")
 
   # pcalg
   runner_p <- ges_pcalg_runner(
@@ -132,5 +132,5 @@ test_that("ges runners wire arguments correctly for each engine", {
   )
   expect_type(runner_p, "list")
   expect_true(is.function(runner_p$run))
-  expect_s3_class(runner_p$run(num_data), "knowledgeable_caugi")
+  expect_s3_class(runner_p$run(num_data), "disco")
 })

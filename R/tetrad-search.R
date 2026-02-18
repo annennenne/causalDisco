@@ -1411,7 +1411,7 @@ TetradSearch <- R6Class(
     #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
     #' as continuous, since \pkg{Tetrad} does not support ordinal data, but only
     #' either continuous or nominal data. Default is `TRUE.`
-    #' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+    #' @return A `caugi` and a `knowledge` (`disco`) object.
     #' Also populates \code{self$java}.
     run_search = function(
       data = NULL,

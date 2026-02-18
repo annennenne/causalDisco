@@ -56,7 +56,7 @@
 #' }
 #'
 #' @return
-#' A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+#' A `caugi` and a `knowledge` (`disco`) object.
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'

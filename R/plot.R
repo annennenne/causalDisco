@@ -1,6 +1,6 @@
-#' Plot a Knowledgeable Caugi Object
+#' Plot a disco Object
 #'
-#' Visualize a causal graph stored within a `knowledgeable_caugi` object. This function
+#' Visualize a causal graph stored within a `disco` object. This function
 #' extends [plot.knowledge()] by combining the causal graph from a `caugi` object with
 #' background knowledge.
 #'
@@ -12,7 +12,7 @@
 #'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
 #' @inheritParams plot.knowledge
-#' @param x A `knowledgeable_caugi` object containing both the causal graph and the associated knowledge.
+#' @param x A `disco` object containing both the causal graph and the associated knowledge.
 #' @param ... Additional arguments passed to [caugi::plot()] and [plot.knowledge()].
 #'
 #' @return Invisibly returns the underlying `caugi` object. The main effect is the plot.
@@ -114,7 +114,7 @@
 #'
 #' @seealso [caugi::plot()]
 #' @export
-plot.knowledgeable_caugi <- function(
+plot.disco <- function(
   x,
   required_col = "blue",
   ...
@@ -381,16 +381,16 @@ plot_caugi_common <- function(
 
 #' Plot Method for causalDisco Objects
 #'
-#' This is the generic `plot()` function for objects of class \code{knowledge}
-#' or \code{knowledgeable_caugi}. It dispatches to the class-specific plotting methods
-#' [plot.knowledge()] and [plot.knowledgeable_caugi()].
+#' This is the generic `plot()` function for objects of class [knowledge]
+#' or [disco]. It dispatches to the class-specific plotting methods
+#' [plot.knowledge()] and [plot.disco()].
 #'
-#' @param x An object to plot (class \code{knowledge} or \code{knowledgeable_caugi}).
+#' @param x An object to plot (class [knowledge] or [disco]).
 #' @param ... Additional arguments passed to class-specific plot methods and to [caugi::plot()].
 #'
 #' @return Invisibly returns the input object. The primary effect is the generated plot.
 #'
-#' @seealso [plot.knowledge()], [plot.knowledgeable_caugi()], [caugi::plot()]
+#' @seealso [plot.knowledge()], [plot.disco()], [caugi::plot()]
 #'
 #' @examples
 #' data(tpc_example)

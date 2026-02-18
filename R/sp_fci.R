@@ -22,7 +22,7 @@
 #' @return
 #' A function of class \code{"sp_fci"} that takes a single argument \code{data}
 #' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
-#' (`knowledgeable_caugi`) object.
+#' (`disco`) object.
 #'
 #' @family causal discovery algorithms
 #' @concept cd_algorithms

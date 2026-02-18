@@ -62,7 +62,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
 \value{
-A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
+A \code{caugi} and a \code{knowledge} (\code{disco}) object.
 }
 \description{
 Use a modification of the FCI algorithm that makes use of background knowledge

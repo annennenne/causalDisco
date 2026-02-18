@@ -20,7 +20,7 @@
 #'
 #' @return
 #' A function of class \code{"tfci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and `knowledge` (`knowledgeable_caugi`)
+#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and `knowledge` (`disco`)
 #' object.
 #'
 #' @family causal discovery algorithms
