@@ -25,13 +25,15 @@ Each should be an expression referencing all parent nodes.}
 \item{standardize}{Logical. If \code{TRUE}, each column of the output is standardized
 to mean 0 and standard deviation 1.}
 
-\item{coef_range}{Numeric vector of length 2. Specifies the minimum and maximum
-absolute value of edge coefficients. Coefficients are randomly assigned a
-positive or negative sign. Must satisfy \code{coef_range[1] > 0} and \code{coef_range[2] >= coef_range[1]}.}
+\item{coef_range}{Numeric vector of length 2 specifying the minimum and maximum
+absolute value of edge coefficients. For each edge, an absolute value is sampled
+uniformly from this range and then assigned a positive or negative sign with equal
+probability. Must satisfy \code{coef_range[1] > 0} and \code{coef_range[2] >= coef_range[1]}.}
 
-\item{error_sd}{Numeric vector of length 2. Specifies the range of standard deviations
-for the additive Gaussian noise at each node. A separate SD is sampled for each node
-from a log-uniform distribution. Must satisfy \code{error_sd[1] > 0} and \code{error_sd[2] >= error_sd[1]}.}
+\item{error_sd}{Numeric vector of length 2 specifying the minimum and maximum
+standard deviation of the additive Gaussian noise at each node. For each node,
+a standard deviation is sampled from a log-uniform distribution over this range.
+Must satisfy \code{error_sd[1] > 0} and \code{error_sd[2] >= error_sd[1]}.}
 
 \item{seed}{Optional integer. Sets the random seed for reproducibility.}
 }
