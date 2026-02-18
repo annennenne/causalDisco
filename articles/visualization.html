@@ -123,8 +123,8 @@ using the <code>layout</code>, <code>node_style</code>, and
 <code>edge_style</code> parameters. We provide a quick example and refer
 to the <code><a href="../reference/plot.html">causalDisco::plot()</a></code> function (and the underlying
 <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function) documentation for more details.
-Here we use the “fruchterman-reingold” layout and customize node and
-edge styles:</p>
+Here we use the <code>"fruchterman-reingold"</code> layout and customize
+node and edge styles:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">kn</span>,</span>
@@ -139,11 +139,48 @@ edge styles:</p>
 <span>  edge_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    lwd <span class="op">=</span> <span class="fl">1.5</span>, <span class="co"># Edge width</span></span>
 <span>    arrow_size <span class="op">=</span> <span class="fl">4</span> <span class="co"># Arrow size (mm)</span></span>
-<span>  <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
+<span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png" class="r-plt" alt="" width="700"></p>
-<p>You can also pass a custom layout to <code><a href="../reference/plot.html">plot()</a></code>:</p>
+<p>Note that to override the colors for required and forbidden edges
+only for a specific edge, the edge needs to be targeted explicitly in
+the <code>by_edge</code> list of the <code>edge_style</code> argument.
+For example, to make the required edge from <code>X1</code> to
+<code>X2</code> orange and the forbidden edge from <code>X2</code> to
+<code>Y</code> yellow, while letting all other edges use the default
+colors, we can do:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">kn</span>,</span>
+<span>  layout <span class="op">=</span> <span class="st">"fruchterman-reingold"</span>,</span>
+<span>  node_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    fill <span class="op">=</span> <span class="st">"lightblue"</span>, <span class="co"># Fill color</span></span>
+<span>    col <span class="op">=</span> <span class="st">"darkblue"</span>, <span class="co"># Border color</span></span>
+<span>    lwd <span class="op">=</span> <span class="fl">2</span>, <span class="co"># Border width</span></span>
+<span>    padding <span class="op">=</span> <span class="fl">4</span>, <span class="co"># Text padding (mm)</span></span>
+<span>    size <span class="op">=</span> <span class="fl">1.2</span> <span class="co"># Size multiplier</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  edge_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    lwd <span class="op">=</span> <span class="fl">1.5</span>, <span class="co"># Edge width</span></span>
+<span>    arrow_size <span class="op">=</span> <span class="fl">4</span>, <span class="co"># Arrow size (mm)</span></span>
+<span>    <span class="co"># Per-edge overrides</span></span>
+<span>    by_edge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      X1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"orange"</span>, fill <span class="op">=</span> <span class="st">"orange"</span>, lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"yellow"</span>, fill <span class="op">=</span> <span class="st">"yellow"</span>, lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
+<span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png" class="r-plt" alt="" width="700"></p>
+<p>You can also pass a custom layout to <code><a href="../reference/plot.html">plot()</a></code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"Y"</span>, <span class="st">"Z"</span><span class="op">)</span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>,</span>
@@ -156,7 +193,7 @@ edge styles:</p>
 </h4>
 <p>We can also visualize tiered knowledge structures. Here is an example
 using a dataset with variables measured at different life stages:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -183,7 +220,7 @@ data.</p>
 alongside the learned causal graph as a <code>caugi</code> object. We
 can then plot this combined object to see both the prior knowledge and
 the learned relationships</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">num_data</span>,</span>
@@ -200,7 +237,7 @@ the learned relationships</p>
 black edges show those learned from the data, and forbidden edges are
 not plotted (to avoid confusion and clutter).</p>
 <p>With tiered knowledge, the plotting works similarly:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -238,7 +275,7 @@ arguments to <code><a href="../reference/make_tikz.html">make_tikz()</a></code> 
 </h3>
 <p>We first demonstrate TikZ export for a <code>knowledge</code>
 object.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">num_data</span>,</span>
@@ -298,7 +335,7 @@ happen in tiered knowledge structures. This feature is not available in
 the standard <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function. Here is an example,
 where the edge using the standard straight style edge overlaps the node
 <code>youth_x3</code>, while the bent edge avoids this overlap:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -312,7 +349,7 @@ where the edge using the standard straight style edge overlaps the node
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tiered</span><span class="op">)</span></span></code></pre></div>
 <p><img src="visualization_files/figure-html/tikz%20bend%20edges-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tikz_bent_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span></span>
 <span>  <span class="va">kn_tiered</span>,</span>
@@ -351,7 +388,7 @@ where the edge using the standard straight style edge overlaps the node
 <p>The output of <code><a href="../reference/disco.html">disco()</a></code> gives a
 <code>knowledgeable_caugi</code> object, which can also be exported to
 TikZ:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -374,7 +411,7 @@ TikZ:</p>
 <span><span class="va">disco_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span>
 <span><span class="va">tikz_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">disco_plot</span>, tier_node_map <span class="op">=</span> <span class="va">tiers</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 0.9.5.9050)</span></span>
 <span><span class="co">#&gt; \tikzset{every node/.style={fill=lightgray}}</span></span>
@@ -399,14 +436,14 @@ TikZ:</p>
 </h3>
 <p>The same export mechanism also applies to standard <code>caugi</code>
 objects:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cg</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
 <span>  <span class="va">A</span> <span class="op">%--&gt;%</span> <span class="va">B</span> <span class="op">+</span> <span class="va">C</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">plot_obj</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cg</span>, node_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tikz_caugi_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">plot_obj</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="visualization_files/figure-html/tikz%20export%20caugi-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_caugi_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 0.9.5.9050)</span></span>
 <span><span class="co">#&gt; \tikzset{every node/.style={fill=red}}</span></span>

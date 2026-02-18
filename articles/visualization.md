@@ -62,7 +62,7 @@ provide a quick example and refer to the
 [`causalDisco::plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
 function (and the underlying
 [`caugi::plot()`](https://caugi.org/reference/plot.html) function)
-documentation for more details. Here we use the “fruchterman-reingold”
+documentation for more details. Here we use the `"fruchterman-reingold"`
 layout and customize node and edge styles:
 
 ``` r
@@ -79,11 +79,51 @@ plot(
   edge_style = list(
     lwd = 1.5, # Edge width
     arrow_size = 4 # Arrow size (mm)
-  )
+  ),
+  required_col = "blue", # Color for required edges
+  forbidden_col = "red" # Color for forbidden edges
 )
 ```
 
 ![](visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png)
+
+Note that to override the colors for required and forbidden edges only
+for a specific edge, the edge needs to be targeted explicitly in the
+`by_edge` list of the `edge_style` argument. For example, to make the
+required edge from `X1` to `X2` orange and the forbidden edge from `X2`
+to `Y` yellow, while letting all other edges use the default colors, we
+can do:
+
+``` r
+plot(
+  kn,
+  layout = "fruchterman-reingold",
+  node_style = list(
+    fill = "lightblue", # Fill color
+    col = "darkblue", # Border color
+    lwd = 2, # Border width
+    padding = 4, # Text padding (mm)
+    size = 1.2 # Size multiplier
+  ),
+  edge_style = list(
+    lwd = 1.5, # Edge width
+    arrow_size = 4, # Arrow size (mm)
+    # Per-edge overrides
+    by_edge = list(
+      X1 = list(
+        X2 = list(col = "orange", fill = "orange", lwd = 3)
+      ),
+      X2 = list(
+        Y = list(col = "yellow", fill = "yellow", lwd = 3)
+      )
+    )
+  ),
+  required_col = "blue", # Color for required edges
+  forbidden_col = "red" # Color for forbidden edges
+)
+```
+
+![](visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png)
 
 You can also pass a custom layout to
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):

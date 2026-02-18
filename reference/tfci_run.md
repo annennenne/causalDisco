@@ -27,10 +27,7 @@ tfci_run(
 
 - data:
 
-  A data frame with the observed variables. Columns are variables. When
-  using the deprecated `order` argument, variables should be prefixed
-  with their period name (see examples). When using `knowledge`,
-  prefixes are not required.
+  A data frame with the observed variables.
 
 - knowledge:
 

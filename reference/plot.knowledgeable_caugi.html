@@ -141,6 +141,34 @@ the default caugi layout is used. Edges marked as required are automatically col
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.knowledgeable_caugi-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To override a specific edge style which is required you need to target that individual node:</span></span></span>
+<span class="r-in"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="knowledge.html">knowledge</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">tpc_example</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">tier</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">child</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">youth</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">old</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"old"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="va">child_x1</span> <span class="op">%--&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">child_x2</span>, <span class="va">youth_x4</span><span class="op">)</span> <span class="co"># required edges</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">disco_bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">bnlearn_pc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4</span></span></span>
+<span class="r-in"><span><span class="co"># will be required_col (blue) since we only override the child_x1 to child_x2 edge.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">disco_bnlearn_pc</span>,</span></span>
+<span class="r-in"><span>  edge_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    by_edge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      child_x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        child_x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"orange"</span>, fill <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>      <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  required_col <span class="op">=</span> <span class="st">"blue"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.knowledgeable_caugi-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot without tiers</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kn_untiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="knowledge.html">knowledge</a></span><span class="op">(</span></span></span>
@@ -152,7 +180,7 @@ the default caugi layout is used. Edges marked as required are automatically col
 <span class="r-in"><span><span class="va">bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res_untiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">bnlearn_pc</span>, knowledge <span class="op">=</span> <span class="va">kn_untiered</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">res_untiered</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.knowledgeable_caugi-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.knowledgeable_caugi-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With a custom defined layout</span></span></span>
 <span class="r-in"><span><span class="va">custom_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
@@ -161,7 +189,7 @@ the default caugi layout is used. Edges marked as required are automatically col
 <span class="r-in"><span> y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.25</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">res_untiered</span>, layout <span class="op">=</span> <span class="va">custom_layout</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.knowledgeable_caugi-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.knowledgeable_caugi-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

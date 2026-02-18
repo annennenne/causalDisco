@@ -2,9 +2,7 @@
 
 Run a tier-aware variant of the PC algorithm that respects background
 knowledge about a partial temporal order. Supply the temporal order via
-a `knowledge` object. For backward compatibility, you may still pass
-`order`, but that interface is deprecated and will be removed in a
-future release.
+a `knowledge` object.
 
 ## Usage
 
@@ -28,10 +26,7 @@ tpc_run(
 
 - data:
 
-  A data frame with the observed variables. Columns are variables. When
-  using the deprecated `order` argument, variables should be prefixed
-  with their period name (see examples). When using `knowledge`,
-  prefixes are not required.
+  A data frame with the observed variables.
 
 - knowledge:
 
@@ -115,11 +110,6 @@ Temporal or tiered knowledge enters in two places:
 
 - during orientation, any cross-tier edge is restricted to point forward
   in time.
-
-The `order` argument is deprecated. If provided, it is converted to a
-`knowledge` object by assigning variables to tiers using
-[`tidyselect::starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html)
-for each prefix.
 
 ## Examples
 
