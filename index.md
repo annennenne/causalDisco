@@ -84,10 +84,10 @@ causalDisco::verify_tetrad()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.1"
+#> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
 ```
 
 ## Example
