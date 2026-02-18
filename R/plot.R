@@ -65,7 +65,7 @@
 #'   )
 #' )
 #'
-#' # To override a specific edge style which is required, you need to target that individual node:
+#' # To override a specific edge style which is required you need to target that individual node:
 #' kn <- knowledge(
 #'   tpc_example,
 #'   tier(
@@ -78,8 +78,8 @@
 #' bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z")
 #' disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 #'
-#' # Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4 will be required_col
-#' # (blue) since we only override the child_x1 to child_x2 edge.
+#' # Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4
+#' # will be required_col (blue) since we only override the child_x1 to child_x2 edge.
 #' plot(
 #'   disco_bnlearn_pc,
 #'   edge_style = list(
@@ -223,7 +223,8 @@ plot.knowledgeable_caugi <- function(
 #'   forbidden_col = "darkorange"
 #' )
 #'
-#' # To override a specific edge style which is required/forbidden, you need to target that individual node:
+#' # To override a specific edge style which is required/forbidden
+#' # you need to target that individual node:
 #' kn <- knowledge(
 #'   tpc_example,
 #'   tier(
@@ -235,9 +236,10 @@ plot.knowledgeable_caugi <- function(
 #'   youth_x4 %!-->% c(youth_x3, oldage_x5)  # forbidden edges
 #' )
 #'
-#' # Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4 will be required_col
-#' # (blue) since we only override the child_x1 to child_x2 edge. Similarly, edge from youth_x4 to youth_x3 will be
-#' # yellow, but edge from youth_x4 to oldage_x5 will be forbidden_col (red).
+#' # Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4
+#' # will be required_col (blue) since we only override the child_x1 to child_x2 edge.
+#' # Similarly, edge from youth_x4 to youth_x3 will be yellow, but edge from youth_x4
+#' # to oldage_x5 will be forbidden_col (red).
 #' plot(
 #'   kn,
 #'   edge_style = list(
