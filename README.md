@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/disco-coders/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/disco-coders/causalDisco)
+coverage](https://codecov.io/gh/disco-coders/causaldisco/branch/main/graph/badge.svg)](https://app.codecov.io/github/disco-coders/causaldisco/tree/main)
 [![R-CMD-check](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
@@ -95,10 +95,10 @@ causalDisco::verify_tetrad()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.1"
+#> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
 ```
 
 ## Example

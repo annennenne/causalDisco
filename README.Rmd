@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 # causalDisco <a href="https://disco-coders.github.io/causalDisco/"><img src="man/figures/logo.png" align="right" height="135" alt="causalDisco website" /></a>
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/disco-coders/causalDisco/graph/badge.svg)](https://app.codecov.io/gh/disco-coders/causalDisco)
+[![Codecov test coverage](https://codecov.io/gh/disco-coders/causaldisco/branch/main/graph/badge.svg)](https://app.codecov.io/github/disco-coders/causaldisco/tree/main)
 [![R-CMD-check](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/disco-coders/causalDisco/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/causalDisco)](https://CRAN.R-project.org/package=causalDisco)
 <!-- badges: end -->
