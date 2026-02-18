@@ -104,3 +104,12 @@ test_that("register_tetrad_algorithm registers a new algorithm", {
   expect_identical(registered_fun, setup_fun)
   reset_tetrad_alg_registry()
 })
+
+test_that("register_tetrad_algorithm errors if not a function", {
+  reset_tetrad_alg_registry()
+
+  expect_error(
+    register_tetrad_algorithm("not_a_function", "I am not a function"),
+    "must be a function"
+  )
+})

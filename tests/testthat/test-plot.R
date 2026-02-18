@@ -269,3 +269,58 @@ test_that("disco plotting with forbidden works", {
   plot(disco_cd_tges)
   expect_true(TRUE)
 })
+
+
+test_that("Plotting with many settings works", {
+  data(tpc_example)
+  kn <- knowledge(
+    tpc_example,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    ),
+    child_x1 %-->% child_x2, # required edge
+    youth_x4 %!-->% youth_x3 # forbidden edge
+  )
+  plot(
+    kn,
+    node_style = list(
+      fill = "lightblue", # Fill color
+      col = "darkblue", # Border color
+      lwd = 2, # Border width
+      padding = 4, # Text padding (mm)
+      size = 1.2 # Size multiplier
+    ),
+    edge_style = list(
+      lwd = 1.5, # Edge width
+      arrow_size = 4 # Arrow size (mm)
+    ),
+    required_col = "darkgreen",
+    forbidden_col = "darkorange"
+  )
+})
+
+test_that("Plotting with explicit edge style overriden per node works", {
+  data(tpc_example)
+  kn <- knowledge(
+    tpc_example,
+    tier(
+      child ~ starts_with("child"),
+      youth ~ starts_with("youth"),
+      old ~ starts_with("old")
+    ),
+    child_x1 %-->% child_x2, # required edge
+    youth_x4 %!-->% youth_x3 # forbidden edge
+  )
+  plot(
+    kn,
+    edge_style = list(
+      by_edge = list(
+        child_x1 = list(
+          child_x2 = list(col = "orange", fill = "orange", lwd = 3)
+        )
+      )
+    )
+  )
+})
