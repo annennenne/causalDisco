@@ -1,4 +1,4 @@
-# Extending causalDisco with New Algorithms
+# Extending causalDisco with new algorithms
 
 ``` r
 library(causalDisco)

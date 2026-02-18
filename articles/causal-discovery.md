@@ -47,13 +47,19 @@ plot(cg, layout = layout, main = "True DAG")
 We can create data from a linear Gaussian model corresponding to the
 above DAG using
 [`generate_dag_data()`](https://disco-coders.github.io/causalDisco/reference/generate_dag_data.md).
-We generate 10000 samples with a fixed random seed from the DAG above:
+We generate 10,000 samples with a fixed random seed from the DAG above,
+where we let the edge coefficients be sampled with absolute values
+between 0.1 and 0.9 and assigned random signs, and where the standard
+deviation of the additive Gaussian noise at each node is sampled from a
+log-uniform distribution between 0.3 and 2.
 
 ``` r
 data_linear <- generate_dag_data(
   cg,
   n = 10000,
-  seed = 1405
+  seed = 1405,
+  coef_range = c(0.1, 0.9),
+  error_sd = c(0.3, 2)
 )
 head(data_linear)
 #> # A tibble: 6 × 5
@@ -152,7 +158,9 @@ cg_reverse <- caugi::caugi(
 data_linear_reverse <- generate_dag_data(
   cg_reverse,
   n = 10000,
-  seed = 1405
+  seed = 1405,
+  coef_range = c(0.1, 0.9),
+  error_sd = c(0.3, 2)
 )
 
 pc_result_reverse <- disco(data = data_linear_reverse, method = pc_pcalg)
@@ -167,7 +175,7 @@ the data alone.
 
 ## Unobserved confounding
 
-In practice, unobserved confounders may be present, violating the
+In practice, unobserved confounding may be present, violating one of the
 assumptions of the PC algorithm. Suppose we have the following DAG with
 an unobserved confounder `U` between `X1` and `X2`:
 
@@ -212,7 +220,9 @@ frame:
 data_unobserved <- generate_dag_data(
   cg_unobserved,
   n = 10000,
-  seed = 1405
+  seed = 1405,
+  coef_range = c(0.1, 0.9),
+  error_sd = c(0.3, 2)
 )
 data_unobserved <- data_unobserved[, names(data_unobserved) != "U"]
 head(data_unobserved)

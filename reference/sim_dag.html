@@ -25,7 +25,7 @@ probability range p_range."><meta property="og:image" content="https://disco-cod
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
-    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -86,14 +86,14 @@ of <code>m</code> or <code>p</code> must be supplied.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Simulate a DAG with 5 nodes and 3 edges</span></span></span>
 <span class="r-in"><span><span class="fu">sim_dag</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, m <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 3 edges; simple: TRUE; built: TRUE; ptr=0x55b46cdf3d80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 3 edges; simple: TRUE; built: TRUE; ptr=0x55e5c17d52e0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   graph_class: DAG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nodes: V1, V2, V3, V4, V5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edges: V3--&gt;V1, V3--&gt;V2, V4--&gt;V1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Simulate a DAG with 5 nodes and edge creation probability of 0.2</span></span></span>
 <span class="r-in"><span><span class="fu">sim_dag</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 1 edges; simple: TRUE; built: TRUE; ptr=0x55b46e9bb240&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 1 edges; simple: TRUE; built: TRUE; ptr=0x55e5ce47a7f0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   graph_class: DAG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nodes: V1, V2, V3, V4, V5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edges: V4--&gt;V5</span>

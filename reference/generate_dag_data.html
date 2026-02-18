@@ -31,7 +31,7 @@ automatic linear generation."><meta property="og:image" content="https://disco-c
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
-    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -95,15 +95,17 @@ to mean 0 and standard deviation 1.</p></dd>
 
 
 <dt id="arg-coef-range">coef_range<a class="anchor" aria-label="anchor" href="#arg-coef-range"></a></dt>
-<dd><p>Numeric vector of length 2. Specifies the minimum and maximum
-absolute value of edge coefficients. Coefficients are randomly assigned a
-positive or negative sign. Must satisfy <code>coef_range[1] &gt; 0</code> and <code>coef_range[2] &gt;= coef_range[1]</code>.</p></dd>
+<dd><p>Numeric vector of length 2 specifying the minimum and maximum
+absolute value of edge coefficients. For each edge, an absolute value is sampled
+uniformly from this range and then assigned a positive or negative sign with equal
+probability. Must satisfy <code>coef_range[1] &gt; 0</code> and <code>coef_range[2] &gt;= coef_range[1]</code>.</p></dd>
 
 
 <dt id="arg-error-sd">error_sd<a class="anchor" aria-label="anchor" href="#arg-error-sd"></a></dt>
-<dd><p>Numeric vector of length 2. Specifies the range of standard deviations
-for the additive Gaussian noise at each node. A separate SD is sampled for each node
-from a log-uniform distribution. Must satisfy <code>error_sd[1] &gt; 0</code> and <code>error_sd[2] &gt;= error_sd[1]</code>.</p></dd>
+<dd><p>Numeric vector of length 2 specifying the minimum and maximum
+standard deviation of the additive Gaussian noise at each node. For each node,
+a standard deviation is sampled from a log-uniform distribution over this range.
+Must satisfy <code>error_sd[1] &gt; 0</code> and <code>error_sd[2] &gt;= error_sd[1]</code>.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>

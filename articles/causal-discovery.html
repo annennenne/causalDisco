@@ -42,7 +42,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
-    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with New Algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul>
 </li>
@@ -108,13 +108,19 @@ vignette:</p>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">cg</span>, layout <span class="op">=</span> <span class="va">layout</span>, main <span class="op">=</span> <span class="st">"True DAG"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="causal-discovery_files/figure-html/plot%20dag-1.png" class="r-plt" alt="" width="700"></p>
 <p>We can create data from a linear Gaussian model corresponding to the
-above DAG using <code><a href="../reference/generate_dag_data.html">generate_dag_data()</a></code>. We generate 10000
-samples with a fixed random seed from the DAG above:</p>
+above DAG using <code><a href="../reference/generate_dag_data.html">generate_dag_data()</a></code>. We generate 10,000
+samples with a fixed random seed from the DAG above, where we let the
+edge coefficients be sampled with absolute values between 0.1 and 0.9
+and assigned random signs, and where the standard deviation of the
+additive Gaussian noise at each node is sampled from a log-uniform
+distribution between 0.3 and 2.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_linear</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
 <span>  <span class="va">cg</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span>,</span>
+<span>  coef_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span><span class="op">)</span>,</span>
+<span>  error_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_linear</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
@@ -195,7 +201,9 @@ algorithm to the resulting data set.</p>
 <span><span class="va">data_linear_reverse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
 <span>  <span class="va">cg_reverse</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span>,</span>
+<span>  coef_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span><span class="op">)</span>,</span>
+<span>  error_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pc_result_reverse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_linear_reverse</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span>
@@ -208,9 +216,9 @@ cannot be determined from the data alone.</p>
 <div class="section level2">
 <h2 id="unobserved-confounding">Unobserved confounding<a class="anchor" aria-label="anchor" href="#unobserved-confounding"></a>
 </h2>
-<p>In practice, unobserved confounders may be present, violating the
-assumptions of the PC algorithm. Suppose we have the following DAG with
-an unobserved confounder <code>U</code> between <code>X1</code> and
+<p>In practice, unobserved confounding may be present, violating one of
+the assumptions of the PC algorithm. Suppose we have the following DAG
+with an unobserved confounder <code>U</code> between <code>X1</code> and
 <code>X2</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cg_unobserved</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
@@ -246,7 +254,9 @@ unobserved variable <code>U</code> from the data frame:</p>
 <code class="sourceCode R"><span><span class="va">data_unobserved</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_dag_data.html">generate_dag_data</a></span><span class="op">(</span></span>
 <span>  <span class="va">cg_unobserved</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1405</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">1405</span>,</span>
+<span>  coef_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span><span class="op">)</span>,</span>
+<span>  error_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">data_unobserved</span> <span class="op">&lt;-</span> <span class="va">data_unobserved</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_unobserved</span><span class="op">)</span> <span class="op">!=</span> <span class="st">"U"</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_unobserved</span><span class="op">)</span></span>
