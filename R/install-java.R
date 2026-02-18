@@ -46,9 +46,9 @@ detect_jdk_folder <- function(dir) {
 #  Windows Installer
 # ============================
 
-install_java_windows <- function(force = FALSE) {
+install_java_windows <- function(force = FALSE, install_dir = "~/temurin25") {
   arch <- detect_arch()
-  install_dir <- path.expand("~/temurin25")
+  install_dir <- path.expand(install_dir)
 
   # Read user PATH (registry)
   get_user_path <- function() {
@@ -155,9 +155,9 @@ install_java_windows <- function(force = FALSE) {
 #  macOS Installer
 # ============================
 
-install_java_mac <- function(force = FALSE) {
+install_java_mac <- function(force = FALSE, install_dir = "~/temurin25") {
   arch <- detect_arch()
-  install_dir <- path.expand("~/temurin25")
+  install_dir <- path.expand(install_dir)
 
   jdk_existing <- detect_jdk_folder(install_dir)
 
@@ -227,16 +227,25 @@ install_java_mac <- function(force = FALSE) {
 #' Linux is not supported by this helper, as Java is typically installed via the
 #' system package manager.
 #'
+#' @param install_dir Character; the directory where the JDK should be installed.
+#'    Default is `"~/temurin25"`. The function will create this directory if
+#'    it does not exist. If a JDK is already present in this directory, it will be
+#'    used unless `force = TRUE` is specified, in which case it will be reinstalled.
+#'
 #' @param force Logical; if `TRUE`, forces reinstallation even if the JDK is
-#'        already present. Default is `FALSE`.
+#'    already present. Default is `FALSE`.
 #'
 #' @examples
 #' \dontrun{
+#' # Install with default directory
 #' install_java()
+#'
+#' #' Install in a custom directory and force reinstall
+#' install_java(install_dir = "C:/Java/temurin25", force = TRUE)
 #' }
 #'
 #' @export
-install_java <- function(force = FALSE) {
+install_java <- function(install_dir = "~/temurin25", force = FALSE) {
   os <- get_os()
 
   if (os == "windows") {

@@ -4,9 +4,14 @@
 \alias{install_java}
 \title{Install Eclipse Temurin JDK 25}
 \usage{
-install_java(force = FALSE)
+install_java(install_dir = "~/temurin25", force = FALSE)
 }
 \arguments{
+\item{install_dir}{Character; the directory where the JDK should be installed.
+Default is \code{"~/temurin25"}. The function will create this directory if
+it does not exist. If a JDK is already present in this directory, it will be
+used unless \code{force = TRUE} is specified, in which case it will be reinstalled.}
+
 \item{force}{Logical; if \code{TRUE}, forces reinstallation even if the JDK is
 already present. Default is \code{FALSE}.}
 }
@@ -26,7 +31,11 @@ system package manager.
 }
 \examples{
 \dontrun{
+# Install with default directory
 install_java()
+
+#' Install in a custom directory and force reinstall
+install_java(install_dir = "C:/Java/temurin25", force = TRUE)
 }
 
 }
