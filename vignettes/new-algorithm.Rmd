@@ -1,5 +1,5 @@
 ---
-title: "Extending causalDisco with New Algorithms"
+title: "Extending causalDisco with new algorithms"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Extending causalDisco with new algorithms}

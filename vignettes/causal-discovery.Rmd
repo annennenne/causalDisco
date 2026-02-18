@@ -54,7 +54,7 @@ data_linear <- generate_dag_data(
   cg,
   n = 10000,
   seed = 1405,
-  coef_range = c(0,1, 0.9),
+  coef_range = c(0.1, 0.9),
   error_sd = c(0.3, 2)
 )
 head(data_linear)
@@ -114,7 +114,7 @@ data_linear_reverse <- generate_dag_data(
   cg_reverse,
   n = 10000,
   seed = 1405,
-  coef_range = c(0,1, 0.9),
+  coef_range = c(0.1, 0.9),
   error_sd = c(0.3, 2)
 )
 
@@ -167,7 +167,9 @@ We can generate data from this DAG using `generate_dag_data()`, and then afterwa
 data_unobserved <- generate_dag_data(
   cg_unobserved,
   n = 10000,
-  seed = 1405
+  seed = 1405,
+  coef_range = c(0.1, 0.9),
+  error_sd = c(0.3, 2)
 )
 data_unobserved <- data_unobserved[, names(data_unobserved) != "U"]
 head(data_unobserved)
