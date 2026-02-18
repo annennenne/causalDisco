@@ -11,7 +11,12 @@ if (!on_cran) {
   java_ok <- status$java_ok
   tetrad_installed <- status$installed
   if (!java_ok) {
-    install_java()
+    tryCatch(
+      install_java(),
+      error = function(e) {
+        paste("Java installation skipped:", e$message)
+      }
+    )
   }
   if (!tetrad_installed) {
     install_tetrad()
