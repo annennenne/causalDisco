@@ -78,6 +78,33 @@ plot(
   )
 )
 
+# To override a specific edge style which is required, you need to target that individual node:
+kn <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 \%-->\% c(child_x2, youth_x4) # required edges
+)
+bnlearn_pc <- pc(engine = "bnlearn", test = "fisher_z")
+disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+
+# Edge from child_x1 to child_x2 will be orange, but edge from child_x1 to youth_x4 will be required_col
+# (blue) since we only override the child_x1 to child_x2 edge.
+plot(
+  disco_bnlearn_pc,
+  edge_style = list(
+    by_edge = list(
+      child_x1 = list(
+        child_x2 = list(col = "orange", fill = "orange")
+      )
+    )
+  ),
+  required_col = "blue"
+)
+
 # Plot without tiers
 data(num_data)
 kn_untiered <- knowledge(
