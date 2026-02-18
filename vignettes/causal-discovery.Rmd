@@ -127,7 +127,7 @@ cannot be determined from the data alone.
 
 # Unobserved confounding
 
-In practice, unobserved confounders may be present, violating the assumptions of the PC algorithm. Suppose
+In practice, unobserved confounding may be present, violating one of the assumptions of the PC algorithm. Suppose
 we have the following DAG with an unobserved confounder `U` between `X1` and `X2`:
 
 ```{r dag unobserved confounder}
