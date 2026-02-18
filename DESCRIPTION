@@ -61,8 +61,7 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-SystemRequirements: Java (>= 21) for Tetrad functionality (optional;
-    includes installer; see inst/java/LICENSE and inst/java/COPYRIGHT);
+SystemRequirements: Java (>= 21) for Tetrad functionality (optional; includes installer);
     Source code: https://github.com/cmu-phil/tetrad
 Collate: 
     'aaa-globals.R'
