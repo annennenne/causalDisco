@@ -327,54 +327,6 @@ knowledge <- function(...) {
     kn <<- .add_edges(kn, status, from_vars, to_vars)
   }
 
-  edge_helper <- function(status, ...) {
-    specs <- rlang::list2(...)
-    if (!length(specs)) {
-      stop(
-        sprintf("%s() needs at least one two-sided formula.", status),
-        call. = FALSE
-      )
-    }
-
-    for (fml in specs) {
-      if (!rlang::is_formula(fml, lhs = TRUE)) {
-        stop("Arguments must be two-sided formulas.", call. = FALSE)
-      }
-
-      # resolve expressions on both sides
-      from_vars <- .formula_vars(kn, rlang::f_lhs(fml))
-      to_vars <- .formula_vars(kn, rlang::f_rhs(fml))
-      if (!is.character(from_vars) || !length(from_vars)) {
-        stop(
-          sprintf(
-            "Edge selection `%s` matched no variables on the left-hand side of the formula.",
-            paste(deparse(fml), collapse = "")
-          ),
-          call. = FALSE
-        )
-      }
-
-      if (!is.character(to_vars) || !length(to_vars)) {
-        stop(
-          sprintf(
-            "Edge selection `%s` matched no variables on the right-hand side of the formula.",
-            paste(deparse(fml), collapse = "")
-          ),
-          call. = FALSE
-        )
-      }
-
-      # Add missing variables
-      kn <<- add_vars(kn, c(from_vars, to_vars))
-
-      # Add edges
-      kn <<- .add_edges(kn, status, from_vars, to_vars)
-    }
-  }
-
-  forbidden <- function(...) edge_helper("forbidden", ...)
-  required <- function(...) edge_helper("required", ...)
-
   exogenous <- function(...) {
     # capture the raw expressions the user typed
     specs <- rlang::enexprs(...)
@@ -404,22 +356,10 @@ knowledge <- function(...) {
 
   # evaluate the call list
   allowed <- c("tier", "forbidden", "required", "exogenous", "exo")
-  deprecated <- c("forbidden", "required")
 
   for (expr in dots) {
     if (is.call(expr)) {
       fun <- as.character(expr[[1]])
-
-      if (fun %in% deprecated) {
-        warning(
-          sprintf(
-            "`%s()` is deprecated and will be removed in a future version. ",
-            fun
-          ),
-          "Please use the infix operators `%!-->%` (forbidden) and `%-->%` (required) instead.",
-          call. = FALSE
-        )
-      }
     }
 
     # Infix required

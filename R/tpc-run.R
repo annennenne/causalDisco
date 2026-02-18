@@ -7,14 +7,9 @@
 #' @description
 #' Run a tier-aware variant of the PC algorithm that respects background
 #' knowledge about a partial temporal order. Supply the temporal order via a
-#' \code{knowledge} object. For backward compatibility, you may still pass
-#' \code{order}, but that interface is deprecated and will be removed in a
-#' future release.
+#' \code{knowledge} object.
 #'
-#' @param data A data frame with the observed variables. Columns are variables.
-#'   When using the deprecated \code{order} argument, variables should be
-#'   prefixed with their period name (see examples). When using
-#'   \code{knowledge}, prefixes are not required.
+#' @param data A data frame with the observed variables.
 #' @param knowledge A \code{knowledge} object created with \code{knowledge()},
 #'   encoding tier assignments and optional forbidden/required edges. This is
 #'   the preferred way to provide temporal background knowledge.
@@ -59,9 +54,6 @@
 #'   \item during orientation, any cross-tier edge is restricted to point
 #'   forward in time.
 #' }
-#' The \code{order} argument is deprecated. If provided, it is converted to a
-#' \code{knowledge} object by assigning variables to tiers using
-#' \code{tidyselect::starts_with()} for each prefix.
 #'
 #' @return
 #' A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.

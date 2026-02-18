@@ -19,10 +19,7 @@ tfci_run(
 )
 }
 \arguments{
-\item{data}{A data frame with the observed variables. Columns are variables.
-When using the deprecated \code{order} argument, variables should be
-prefixed with their period name (see examples). When using
-\code{knowledge}, prefixes are not required.}
+\item{data}{A data frame with the observed variables.}
 
 \item{knowledge}{A \emph{knowledge} object describing tiers/periods and optional
 forbidden/required edges. This replaces the legacy \code{order} interface and
