@@ -81,8 +81,6 @@ reference:
       - as_bnlearn_knowledge
       - as_pcalg_constraints
       - knowledge_to_caugi
-      - knowledgeable_caugi
-      - new_knowledgeable_caugi
       - deparse_knowledge
       - unfreeze
       - +.knowledge
