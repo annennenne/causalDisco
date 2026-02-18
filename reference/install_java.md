@@ -18,10 +18,18 @@ via the system package manager.
 ## Usage
 
 ``` r
-install_java(force = FALSE)
+install_java(install_dir = "~/temurin25", force = FALSE)
 ```
 
 ## Arguments
+
+- install_dir:
+
+  Character; the directory where the JDK should be installed. Default is
+  `"~/temurin25"`. The function will create this directory if it does
+  not exist. If a JDK is already present in this directory, it will be
+  used unless `force = TRUE` is specified, in which case it will be
+  reinstalled.
 
 - force:
 
@@ -32,6 +40,10 @@ install_java(force = FALSE)
 
 ``` r
 if (FALSE) { # \dontrun{
+# Install with default directory
 install_java()
+
+#' Install in a custom directory and force reinstall
+install_java(install_dir = "C:/Java/temurin25", force = TRUE)
 } # }
 ```

@@ -84,20 +84,19 @@ causalDisco::verify_tetrad()
 #> [1] TRUE
 #> 
 #> $java_version
-#> [1] "25.0.2"
+#> [1] "25.0.1"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
+#> [1] "Tetrad found (version 7.6.10). Java version 25.0.1 is OK."
 ```
 
 ## Example
 
 With causalDisco you can currently run causal discovery algorithms from
 the package causalDisco itself, the the R packages bnlearn and pcalg,
-and the Java application Tetrad with a consistent syntax. Here we
-provide a simple example of how to use these different backends with the
-same code structure. We also show how to incorporate tiered background
-knowledge.
+and the Java library Tetrad with a consistent syntax. Here we provide a
+simple example of how to use these different backends with the same code
+structure. We also show how to incorporate tiered background knowledge.
 
 ``` r
 library(causalDisco)

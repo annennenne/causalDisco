@@ -85,8 +85,8 @@
 <p>This vignette illustrates how to add a new algorithm to
 <code>causalDisco</code> from bnlearn, pcalg and Tetrad. Both bnlearn
 and pcalg are R packages and therefore share the same interface, while
-Tetrad is a Java application and requires a slightly different
-integration pattern.</p>
+Tetrad is a Java library and requires a slightly different integration
+pattern.</p>
 <div class="section level2">
 <h2 id="bnlearn-and-pcalg">bnlearn and pcalg<a class="anchor" aria-label="anchor" href="#bnlearn-and-pcalg"></a>
 </h2>
@@ -204,8 +204,8 @@ instead of <code>BnlearnSearch</code> in the runner (i.e.,
 <p>We will illustrate how to make a custom version (which actually does
 the same as our implementation, just with some defensive programming
 omitted) of the Boss algorithm from Tetrad. Tetrad algorithms follow a
-slightly different integration pattern because Tetrad is a Java
-application rather than an R package.</p>
+slightly different integration pattern because Tetrad is a Java library
+rather than an R package.</p>
 <p>To add a new Tetrad algorithm, first register it with
 <code><a href="../reference/register_tetrad_algorithm.html">register_tetrad_algorithm()</a></code>. This function requires:</p>
 <ul>

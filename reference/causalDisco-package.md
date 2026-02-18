@@ -13,7 +13,7 @@ into the implemented algorithms from the R packages 'bnlearn' (Scutari,
 2010; [doi:10.18637/jss.v035.i03](https://doi.org/10.18637/jss.v035.i03)
 ) and 'pcalg' (Kalish et al., 2012;
 [doi:10.18637/jss.v047.i11](https://doi.org/10.18637/jss.v047.i11) ), as
-well as the Java application 'Tetrad' (Scheines et al., 1998;
+well as the Java library 'Tetrad' (Scheines et al., 1998;
 [doi:10.1207/s15327906mbr3301_3](https://doi.org/10.1207/s15327906mbr3301_3)
 ). The package further includes utilities for visualization, comparison,
 and evaluation of graph structures, facilitating performance evaluation

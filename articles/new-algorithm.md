@@ -12,8 +12,8 @@ library(causalDisco)
 
 This vignette illustrates how to add a new algorithm to `causalDisco`
 from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages
-and therefore share the same interface, while Tetrad is a Java
-application and requires a slightly different integration pattern.
+and therefore share the same interface, while Tetrad is a Java library
+and requires a slightly different integration pattern.
 
 ## bnlearn and pcalg
 
@@ -144,8 +144,8 @@ follow the same structure but use the R6 class `PcalgSearch` instead of
 We will illustrate how to make a custom version (which actually does the
 same as our implementation, just with some defensive programming
 omitted) of the Boss algorithm from Tetrad. Tetrad algorithms follow a
-slightly different integration pattern because Tetrad is a Java
-application rather than an R package.
+slightly different integration pattern because Tetrad is a Java library
+rather than an R package.
 
 To add a new Tetrad algorithm, first register it with
 [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md).

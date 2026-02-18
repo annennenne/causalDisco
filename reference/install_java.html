@@ -70,14 +70,21 @@ system package manager.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">install_java</span><span class="op">(</span>force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">install_java</span><span class="op">(</span>install_dir <span class="op">=</span> <span class="st">"~/temurin25"</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
+<dl><dt id="arg-install-dir">install_dir<a class="anchor" aria-label="anchor" href="#arg-install-dir"></a></dt>
+<dd><p>Character; the directory where the JDK should be installed.
+Default is <code>"~/temurin25"</code>. The function will create this directory if
+it does not exist. If a JDK is already present in this directory, it will be
+used unless <code>force = TRUE</code> is specified, in which case it will be reinstalled.</p></dd>
+
+
+<dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
 <dd><p>Logical; if <code>TRUE</code>, forces reinstallation even if the JDK is
 already present. Default is <code>FALSE</code>.</p></dd>
 
@@ -86,7 +93,11 @@ already present. Default is <code>FALSE</code>.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Install with default directory</span></span></span>
 <span class="r-in"><span><span class="fu">install_java</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#' Install in a custom directory and force reinstall</span></span></span>
+<span class="r-in"><span><span class="fu">install_java</span><span class="op">(</span>install_dir <span class="op">=</span> <span class="st">"C:/Java/temurin25"</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
