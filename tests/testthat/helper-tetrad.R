@@ -1,5 +1,6 @@
-# skip the whole test if Java/rJava/Tetrad jars aren't ready
+# skip the whole test if Java/rJava/Tetrad jars aren't ready (extra precaution also doing skip_on_cran())
 skip_if_no_tetrad <- function() {
+  testthat::skip_on_cran()
   if (is.null(verify_tetrad()$version)) {
     testthat::skip("Tetrad not installed or version unknown")
   }
