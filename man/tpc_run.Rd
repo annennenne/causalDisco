@@ -15,6 +15,7 @@ tpc_run(
   orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
+  num_cores = 1,
   ...
 )
 }
@@ -56,6 +57,8 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \item{varnames}{Character vector of variable names. Only needed when
 \code{data} is not supplied and all information is passed via
 \code{suff_stat}.}
+
+\item{num_cores}{Integer number of CPU cores to use for parallel skeleton learning.}
 
 \item{...}{Additional arguments passed to
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}

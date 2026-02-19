@@ -59,6 +59,8 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{data} is not supplied and all information is passed via
 \code{suff_stat}.}
 
+\item{num_cores}{Integer number of CPU cores to use for parallel skeleton learning.}
+
 \item{...}{Additional arguments passed to
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }

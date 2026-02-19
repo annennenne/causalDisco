@@ -37,6 +37,7 @@
 #' @param varnames Character vector of variable names. Only needed when
 #'   \code{data} is not supplied and all information is passed via
 #'   \code{suff_stat}.
+#' @param num_cores Integer number of CPU cores to use for parallel skeleton learning.
 #' @param ... Additional arguments passed to
 #'   [pcalg::skeleton()] during skeleton construction.
 #'
@@ -71,6 +72,7 @@ tpc_run <- function(
   orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
+  num_cores = 1,
   ...
 ) {
   prep <- constraint_based_prepare_inputs(
@@ -119,6 +121,7 @@ tpc_run <- function(
     method = method,
     fixedGaps = constraints$fixed_gaps,
     fixedEdges = constraints$fixed_edges,
+    numCores = num_cores,
     ...
   )
   ntests <- sum(skel@n.edgetests)
