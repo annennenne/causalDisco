@@ -23,4 +23,6 @@ if (!on_cran) {
   }
 } else {
   message("Skipping Tetrad installation on CRAN")
+  # To avoid CRAN CPU time NOTE
+  Sys.setenv(OMP_THREAD_LIMIT = Sys.getenv("OMP_THREAD_LIMIT", "2"))
 }
