@@ -3,7 +3,8 @@
 ## causalDisco (development version)
 
 - This release should be considered essentially a **new package** with
-  many new features and breaking changes.
+  many new features, and some breaking changes (mainly renaming
+  functions, arguments, and object classes) to be consistent.
 
 - Please see the vignettes and documentation for details on using the
   new features.

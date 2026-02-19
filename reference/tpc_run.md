@@ -18,6 +18,7 @@ tpc_run(
   orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
+  num_cores = 1,
   ...
 )
 ```
@@ -83,6 +84,10 @@ tpc_run(
 
   Character vector of variable names. Only needed when `data` is not
   supplied and all information is passed via `suff_stat`.
+
+- num_cores:
+
+  Integer number of CPU cores to use for parallel skeleton learning.
 
 - ...:
 

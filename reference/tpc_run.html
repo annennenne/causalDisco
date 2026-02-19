@@ -63,6 +63,7 @@ knowledge about a partial temporal order. Supply the temporal order via a
 <span>  orientation_method <span class="op">=</span> <span class="st">"conservative"</span>,</span>
 <span>  directed_as_undirected <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  varnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  num_cores <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -127,6 +128,10 @@ is due to the fact that <span class="pkg">pcalg</span> does not allow directed e
 <dd><p>Character vector of variable names. Only needed when
 <code>data</code> is not supplied and all information is passed via
 <code>suff_stat</code>.</p></dd>
+
+
+<dt id="arg-num-cores">num_cores<a class="anchor" aria-label="anchor" href="#arg-num-cores"></a></dt>
+<dd><p>Integer number of CPU cores to use for parallel skeleton learning.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
