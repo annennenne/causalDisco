@@ -49,7 +49,8 @@ test_tier_knowledge <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
   test_that(
     paste0(
@@ -74,11 +75,28 @@ test_tier_knowledge <- function(
           old ~ starts_with("old")
         )
       )
-      output <- disco(
-        data = tpc_example,
-        method = make_alg(alg_fun, engine, test, score, alg_args, test_args),
-        knowledge = kn
-      )
+      if (suppress_warnings) {
+        output <- suppressWarnings(
+          disco(
+            data = tpc_example,
+            method = make_alg(
+              alg_fun,
+              engine,
+              test,
+              score,
+              alg_args,
+              test_args
+            ),
+            knowledge = kn
+          )
+        )
+      } else {
+        output <- disco(
+          data = tpc_example,
+          method = make_alg(alg_fun, engine, test, score, alg_args, test_args),
+          knowledge = kn
+        )
+      }
       edges <- output$caugi@edges
       violations <- causalDisco:::check_tier_violations(edges, kn)
       expect_true(
@@ -95,11 +113,28 @@ test_tier_knowledge <- function(
           3 ~ starts_with("child")
         )
       )
-      output <- disco(
-        data = tpc_example,
-        method = make_alg(alg_fun, engine, test, score, alg_args, test_args),
-        knowledge = kn_numeric
-      )
+      if (suppress_warnings) {
+        output <- suppressWarnings(
+          disco(
+            data = tpc_example,
+            method = make_alg(
+              alg_fun,
+              engine,
+              test,
+              score,
+              alg_args,
+              test_args
+            ),
+            knowledge = kn_numeric
+          )
+        )
+      } else {
+        output <- disco(
+          data = tpc_example,
+          method = make_alg(alg_fun, engine, test, score, alg_args, test_args),
+          knowledge = kn_numeric
+        )
+      }
       edges <- output$caugi@edges
       violations <- causalDisco:::check_tier_violations(edges, kn_numeric)
       expect_true(
@@ -117,7 +152,8 @@ test_required_knowledge <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
   test_that(
     paste0(
@@ -135,11 +171,21 @@ test_required_knowledge <- function(
 
       # Required edge only
       kn <- knowledge(tpc_example, child_x1 %-->% youth_x3)
-      output <- disco(
-        tpc_example,
-        make_alg(alg_fun, engine, test, score, alg_args, test_args),
-        knowledge = kn
-      )
+      if (suppress_warnings) {
+        output <- suppressWarnings(
+          disco(
+            tpc_example,
+            make_alg(alg_fun, engine, test, score, alg_args, test_args),
+            knowledge = kn
+          )
+        )
+      } else {
+        output <- disco(
+          tpc_example,
+          make_alg(alg_fun, engine, test, score, alg_args, test_args),
+          knowledge = kn
+        )
+      }
       edges <- output$caugi@edges
       violations <- causalDisco:::check_edge_constraints(edges, kn)
       expect_true(
@@ -157,11 +203,21 @@ test_required_knowledge <- function(
         ),
         youth_x3 %-->% oldage_x5
       )
-      output <- disco(
-        tpc_example,
-        make_alg(alg_fun, engine, test, score, alg_args, test_args),
-        knowledge = kn
-      )
+      if (suppress_warnings) {
+        output <- suppressWarnings(
+          disco(
+            tpc_example,
+            make_alg(alg_fun, engine, test, score, alg_args, test_args),
+            knowledge = kn
+          )
+        )
+      } else {
+        output <- disco(
+          tpc_example,
+          make_alg(alg_fun, engine, test, score, alg_args, test_args),
+          knowledge = kn
+        )
+      }
       edges <- output$caugi@edges
       expect_true(
         nrow(causalDisco:::check_tier_violations(edges, kn)) == 0,
@@ -182,7 +238,8 @@ test_forbidden_knowledge <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
   test_that(
     paste0(
@@ -203,11 +260,21 @@ test_forbidden_knowledge <- function(
         child_x1 %!-->% youth_x3,
         child_x2 %!-->% child_x1
       )
-      output <- disco(
-        tpc_example,
-        make_alg(alg_fun, engine, test, score, alg_args, test_args),
-        knowledge = kn
-      )
+      if (suppress_warnings) {
+        output <- suppressWarnings(
+          disco(
+            tpc_example,
+            make_alg(alg_fun, engine, test, score, alg_args, test_args),
+            knowledge = kn
+          )
+        )
+      } else {
+        output <- disco(
+          tpc_example,
+          make_alg(alg_fun, engine, test, score, alg_args, test_args),
+          knowledge = kn
+        )
+      }
       edges <- output$caugi@edges
       violations <- causalDisco:::check_edge_constraints(edges, kn)
       expect_true(
@@ -225,7 +292,8 @@ test_additional_alg_args <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
   test_that(
     paste0(
@@ -240,17 +308,33 @@ test_additional_alg_args <- function(
     ),
     {
       data(num_data)
-      out <- disco(
-        num_data,
-        make_alg(
-          alg_fun,
-          engine,
-          test = test,
-          score = score,
-          alg_args = alg_args,
-          test_args = test_args
+      if (suppress_warnings) {
+        out <- suppressWarnings(
+          disco(
+            num_data,
+            make_alg(
+              alg_fun,
+              engine,
+              test = test,
+              score = score,
+              alg_args = alg_args,
+              test_args = test_args
+            )
+          )
         )
-      )
+      } else {
+        out <- disco(
+          num_data,
+          make_alg(
+            alg_fun,
+            engine,
+            test = test,
+            score = score,
+            alg_args = alg_args,
+            test_args = test_args
+          )
+        )
+      }
       expect_equal(class(out), "Disco")
     }
   )
@@ -263,7 +347,8 @@ test_additional_test_or_score_args <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
   test_that(
     paste0(
@@ -278,17 +363,33 @@ test_additional_test_or_score_args <- function(
     ),
     {
       data(num_data)
-      out <- disco(
-        num_data,
-        make_alg(
-          alg_fun,
-          engine,
-          test = test,
-          score = score,
-          alg_args = alg_args,
-          test_args = test_args
+      if (suppress_warnings) {
+        out <- suppressWarnings(
+          disco(
+            num_data,
+            make_alg(
+              alg_fun,
+              engine,
+              test = test,
+              score = score,
+              alg_args = alg_args,
+              test_args = test_args
+            )
+          )
         )
-      )
+      } else {
+        out <- disco(
+          num_data,
+          make_alg(
+            alg_fun,
+            engine,
+            test = test,
+            score = score,
+            alg_args = alg_args,
+            test_args = test_args
+          )
+        )
+      }
       expect_equal(class(out), "Disco")
     }
   )
@@ -302,15 +403,54 @@ run_all_tests <- function(
   test = NULL,
   score = NULL,
   alg_args = list(),
-  test_args = list()
+  test_args = list(),
+  suppress_warnings = FALSE
 ) {
-  test_tier_knowledge(alg_fun, engine, test, score, alg_args, test_args)
-  test_required_knowledge(alg_fun, engine, test, score, alg_args, test_args)
-  test_forbidden_knowledge(alg_fun, engine, test, score, alg_args, test_args)
+  test_tier_knowledge(
+    alg_fun,
+    engine,
+    test,
+    score,
+    alg_args,
+    test_args,
+    suppress_warnings = suppress_warnings
+  )
+  test_required_knowledge(
+    alg_fun,
+    engine,
+    test,
+    score,
+    alg_args,
+    test_args,
+    suppress_warnings = suppress_warnings
+  )
+  test_forbidden_knowledge(
+    alg_fun,
+    engine,
+    test,
+    score,
+    alg_args,
+    test_args,
+    suppress_warnings = suppress_warnings
+  )
   if (length(alg_args) > 0) {
-    test_additional_alg_args(alg_fun, engine, test, score, alg_args)
+    test_additional_alg_args(
+      alg_fun,
+      engine,
+      test,
+      score,
+      alg_args,
+      suppress_warnings = suppress_warnings
+    )
   }
   if (length(test_args) > 0) {
-    test_additional_test_or_score_args(alg_fun, engine, test, score, test_args)
+    test_additional_test_or_score_args(
+      alg_fun,
+      engine,
+      test,
+      score,
+      test_args,
+      suppress_warnings = suppress_warnings
+    )
   }
 }

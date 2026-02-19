@@ -10,20 +10,26 @@ test_that("pcalg test argument works", {
 
   data(cat_data)
   pc_pcalg_disc <- pc(engine = "pcalg", test = "g_square", alpha = 0.05)
-  pc_result_pcalg_disc <- suppressWarnings(disco(
-    cat_data,
-    method = pc_pcalg_disc
-  )) # Warnings too low sample size
+  # Warns too low sample size
+  pc_result_pcalg_disc <- suppressWarnings(
+    disco(
+      cat_data,
+      method = pc_pcalg_disc
+    )
+  )
   expect_equal(
     class(pc_result_pcalg_disc),
     "Disco"
   )
 
   fci_pcalg_disc <- fci(engine = "pcalg", test = "g_square", alpha = 0.05)
-  fci_result_pcalg_disc <- suppressWarnings(disco(
-    cat_data,
-    method = fci_pcalg_disc
-  )) # Warnings too low sample size
+  # Warns too low sample size
+  fci_result_pcalg_disc <- suppressWarnings(
+    disco(
+      cat_data,
+      method = fci_pcalg_disc
+    )
+  )
   expect_equal(
     class(fci_result_pcalg_disc),
     "Disco"
