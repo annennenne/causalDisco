@@ -1,4 +1,4 @@
-test_that("new_knowledgeable_caugi stops if not knowledge", {
+test_that("new_disco stops if not knowledge", {
   kn <- 1
   cg <- caugi::as_caugi(
     matrix(
@@ -27,12 +27,12 @@ test_that("new_knowledgeable_caugi stops if not knowledge", {
   )
 
   expect_error(
-    new_knowledgeable_caugi(cg, kn),
+    new_disco(cg, kn),
     "Input must be a knowledge instance."
   )
 })
 
-test_that("knowledgeable_caugi stops if not knowledge", {
+test_that("as_disco stops if not knowledge", {
   kn <- 1
   cg <- caugi::as_caugi(
     matrix(
@@ -61,23 +61,23 @@ test_that("knowledgeable_caugi stops if not knowledge", {
   )
 
   expect_error(
-    knowledgeable_caugi.default(cg, kn),
+    as_disco.default(cg, kn),
     "Input must be a knowledge instance."
   )
   expect_error(
-    knowledgeable_caugi.pcAlgo(cg, kn),
+    as_disco.pcAlgo(cg, kn),
     "Input must be a knowledge instance."
   )
   expect_error(
-    knowledgeable_caugi.fciAlgo(cg, kn),
+    as_disco.fciAlgo(cg, kn),
     "Input must be a knowledge instance."
   )
   expect_error(
-    knowledgeable_caugi.tetrad_graph(cg, kn),
+    as_disco.tetrad_graph(cg, kn),
     "Input must be a knowledge instance."
   )
   expect_error(
-    knowledgeable_caugi.EssGraph(cg, kn),
+    as_disco.EssGraph(cg, kn),
     "Input must be a knowledge instance."
   )
 })
@@ -114,7 +114,7 @@ test_that("knowledge helpers works", {
     ),
     class = "DAG"
   )
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
 
   nodes_kcg <- nodes(kcg$caugi)
   expected_nodes <- tibble::tibble(
@@ -165,7 +165,7 @@ test_that("knowledge helpers works", {
 })
 
 
-test_that("knowledgeable_caugi print and summary methods", {
+test_that("as_disco print and summary methods", {
   kn <- knowledge()
   cg <- caugi::as_caugi(
     matrix(
@@ -192,7 +192,7 @@ test_that("knowledgeable_caugi print and summary methods", {
     ),
     class = "DAG"
   )
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   print(kcg)
   print(kcg, wide = TRUE)
   print(kcg, compact = TRUE)
@@ -201,10 +201,10 @@ test_that("knowledgeable_caugi print and summary methods", {
   expect_true(TRUE)
 })
 
-test_that("knowledgeable_caugi print and summary methods works for empty kcg", {
+test_that("as_disco print and summary methods works for empty kcg", {
   kn <- knowledge()
   cg <- caugi::caugi()
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   print(kcg)
   print(kcg, wide = TRUE)
   print(kcg, compact = TRUE)

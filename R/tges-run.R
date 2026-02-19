@@ -105,7 +105,7 @@ tges_run <- function(score, verbose = FALSE) {
 
   essgraph$.nodes <- score$.nodes
 
-  essgraph |> knowledgeable_caugi()
+  as_disco(essgraph)
 }
 
 

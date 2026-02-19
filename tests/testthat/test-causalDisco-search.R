@@ -254,7 +254,7 @@ test_that("run_search errors are thrown in the right order", {
   )
 })
 
-test_that("run_search returns knowledgeable_caugi for tpc success path", {
+test_that("run_search returns disco for tpc success path", {
   set.seed(1405)
   my_df <- data.frame(
     p1_x = rnorm(100),
@@ -277,7 +277,7 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
   expect_s3_class(res, "disco")
 })
 
-test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
+test_that("tpc and tfci run end-to-end and return disco", {
   set.seed(1405)
   my_df <- data.frame(
     child_x = rnorm(100),

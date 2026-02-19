@@ -5,17 +5,16 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 test_that("knowledge object is created correctly using mini-DSL", {
-  kn <-
-    knowledge(
-      tier(
-        1 ~ V1 + V2,
-        2 ~ V3,
-        3 ~ c(V4, V5)
-      ),
-      V1 %!-->% V3,
-      V1 %-->% V2,
-      V2 %-->% V3
-    )
+  kn <- knowledge(
+    tier(
+      1 ~ V1 + V2,
+      2 ~ V3,
+      3 ~ c(V4, V5)
+    ),
+    V1 %!-->% V3,
+    V1 %-->% V2,
+    V2 %-->% V3
+  )
   expect_equal(
     kn$vars,
     tibble::tibble(

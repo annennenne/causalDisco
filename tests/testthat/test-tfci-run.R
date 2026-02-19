@@ -2,7 +2,7 @@
 # tfci_run()
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("tfci_run returns knowledgeable_caugi on example data", {
+test_that("tfci_run returns disco on example data", {
   set.seed(1405)
   data(tpc_example, package = "causalDisco")
 

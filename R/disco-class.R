@@ -1,4 +1,4 @@
-#' @title Knowledgeable Caugi Object
+#' @title disco Object
 #'
 #' @description
 #' This S3 class wraps `caugi` graph object and a `knowledge` object. It is the
@@ -17,21 +17,21 @@
 #' @seealso [caugi::caugi()]
 #' @keywords internal
 #' @noRd
-knowledgeable_caugi <- function(graph, kn = knowledge(), class = "PDAG") {
-  UseMethod("knowledgeable_caugi")
+as_disco <- function(graph, kn = knowledge(), class = "PDAG") {
+  UseMethod("as_disco")
 }
 
 # delegate field names used by `knowledge` methods
 .knowledge_fields <- c("vars", "tiers", "edges", "frozen")
 
-#' @title Create a Knowledgeable Caugi Object
+#' @title Create a disco Object
 #'
 #' @param cg A `caugi` object
 #' @param kn A `knowledge` object
 #' @returns A `disco` object containing the `caugi` and `knowledge` objects.
 #' @keywords internal
 #' @noRd
-new_knowledgeable_caugi <- function(cg, kn) {
+new_disco <- function(cg, kn) {
   if (!is_knowledge(kn)) {
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
@@ -45,9 +45,9 @@ new_knowledgeable_caugi <- function(cg, kn) {
   )
 }
 
-#' @inheritParams knowledgeable_caugi
+#' @inheritParams as_disco
 #' @export
-knowledgeable_caugi.default <- function(
+as_disco.default <- function(
   graph,
   kn = knowledge(),
   class = "PDAG"
@@ -60,12 +60,12 @@ knowledgeable_caugi.default <- function(
   } else {
     cg <- caugi::as_caugi(graph, collapse = TRUE, class = class)
   }
-  new_knowledgeable_caugi(cg, kn)
+  new_disco(cg, kn)
 }
 
-#' @inheritParams knowledgeable_caugi
+#' @inheritParams as_disco
 #' @export
-knowledgeable_caugi.pcAlgo <- function(
+as_disco.pcAlgo <- function(
   graph,
   kn = knowledge(),
   class = "PDAG"
@@ -74,12 +74,12 @@ knowledgeable_caugi.pcAlgo <- function(
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
   cg <- caugi::as_caugi(graph@graph, collapse = TRUE, class = class)
-  new_knowledgeable_caugi(cg, kn)
+  new_disco(cg, kn)
 }
 
-#' @inheritParams knowledgeable_caugi
+#' @inheritParams as_disco
 #' @export
-knowledgeable_caugi.fciAlgo <- function(
+as_disco.fciAlgo <- function(
   graph,
   kn = knowledge(),
   class = "PAG"
@@ -89,12 +89,12 @@ knowledgeable_caugi.fciAlgo <- function(
   }
   amat <- methods::as(graph, "matrix")
   cg <- caugi::as_caugi(amat, class = class)
-  new_knowledgeable_caugi(cg, kn)
+  new_disco(cg, kn)
 }
 
-#' @inheritParams knowledgeable_caugi
+#' @inheritParams as_disco
 #' @export
-knowledgeable_caugi.tetrad_graph <- function(
+as_disco.tetrad_graph <- function(
   graph,
   kn = knowledge(),
   class = "PDAG"
@@ -103,13 +103,13 @@ knowledgeable_caugi.tetrad_graph <- function(
     stop("`kn` must be a knowledge object.", call. = FALSE)
   }
   cg <- caugi::as_caugi(graph$amat, collapse = TRUE, class)
-  new_knowledgeable_caugi(cg, kn)
+  new_disco(cg, kn)
 }
 
-#' @inheritParams knowledgeable_caugi
+#' @inheritParams as_disco
 #' @importFrom rlang .data
 #' @export
-knowledgeable_caugi.EssGraph <- function(
+as_disco.EssGraph <- function(
   graph,
   kn = knowledge(),
   class = "PDAG"
@@ -140,7 +140,7 @@ knowledgeable_caugi.EssGraph <- function(
 
   if (nrow(edges) == 0L) {
     cg <- caugi::caugi(nodes = nodes, class = "PDAG")
-    return(new_knowledgeable_caugi(cg, kn))
+    return(new_disco(cg, kn))
   }
 
   collapsed <- edges |>
@@ -179,7 +179,7 @@ knowledgeable_caugi.EssGraph <- function(
     nodes = nodes,
     class = class
   )
-  new_knowledgeable_caugi(cg, kn)
+  new_disco(cg, kn)
 }
 
 #' @title Print a disco Object

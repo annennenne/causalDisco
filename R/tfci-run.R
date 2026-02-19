@@ -151,7 +151,7 @@ tfci_run <- function(
   )
   cg <- caugi::as_caugi(res, collapse = TRUE, class = "PAG")
 
-  knowledgeable_caugi(cg, knowledge)
+  as_disco(cg, knowledge)
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
