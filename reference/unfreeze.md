@@ -1,6 +1,6 @@
 # Unfreeze a Knowledge Object.
 
-This allows you to add new variables to the `knowledge` object, even
+This allows you to add new variables to the `Knowledge` object, even
 though it was frozen earlier by adding a data frame to the knowledge
 constructor
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
@@ -15,16 +15,16 @@ unfreeze(kn)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 ## Value
 
-The same `knowledge` object with the `frozen` attribute set to `FALSE`.
+The same `Knowledge` object with the `frozen` attribute set to `FALSE`.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
@@ -57,7 +57,7 @@ kn <- knowledge(tpc_example)
 # this would error while frozen
 try(add_vars(kn, "new_var"))
 #> Error : Unknown variable(s): [new_var]
-#> They are not present in the data frame provided to this knowledge object.
+#> They are not present in the data frame provided to this Knowledge object.
 
 # unfreeze and add the new variable successfully
 kn <- unfreeze(kn)

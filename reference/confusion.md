@@ -1,6 +1,7 @@
 # Confusion Matrix
 
-Compute confusion matrix for two PDAG `caugi` graphs.
+Compute confusion matrix for two PDAG
+[caugi::caugi](https://caugi.org/reference/caugi.html) graphs.
 
 ## Usage
 
@@ -12,11 +13,13 @@ confusion(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 
@@ -51,8 +54,8 @@ tail (0), a false negative marks placement of tail (0) where there
 should have been an arrowhead (1), and a truth negative marks correct
 placement of a tail (0).
 
-Only supports `caugi` objects with these edge types present `-->`,
-`<-->`, `---` and no edge.
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects with these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## See also
 

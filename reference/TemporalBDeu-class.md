@@ -108,7 +108,7 @@ simdata <- data.frame(as.factor(A), as.factor(B), as.factor(C))
 colnames(simdata) <- c("child_A", "child_B", "adult_C")
 prefix_order <- c("child", "adult")
 
-# Define knowledge object
+# Define Knowledge object
 kn <- knowledge(
   simdata,
   tier(

@@ -1,11 +1,13 @@
 # Negative Predictive Value
 
-Computes negative predictive value from two PDAG `caugi` objects. It
-converts the `caugi` objects to adjacency matrices and computes negative
-predictive value as `TN/(TN + FN)`, where `TN` are truth negatives and
-`FN` are false negatives. If `TN + FN = 0`, `1` is returned. Only
-supports `caugi` objects with these edge types present `-->`, `<-->`,
-`---` and no edge.
+Computes negative predictive value from two PDAG
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
+converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects to adjacency matrices and computes negative predictive value as
+`TN/(TN + FN)`, where `TN` are truth negatives and `FN` are false
+negatives. If `TN + FN = 0`, `1` is returned. Only supports
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
+these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
@@ -17,11 +19,13 @@ npv(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 

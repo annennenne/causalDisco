@@ -1,10 +1,14 @@
 # Convert Knowledge to Tetrad Knowledge
 
-Converts a `knowledge` object to a Tetrad
+Converts a `Knowledge` object to a Tetrad
 `edu.cmu.tetrad.data.Knowledge`. This requires `rJava`. This is used
-internally, when setting knowledge with `set_knowledge` for methods
-using the Tetrad engine. `set_knowledge` is used internally, when using
-the `disco` function with knowledge given.
+internally, when setting knowledge with
+[`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+for methods using the Tetrad engine.
+[`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+is used internally, when using the
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
+function with knowledge given.
 
 ## Usage
 
@@ -16,7 +20,7 @@ as_tetrad_knowledge(kn)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 ## Value
 
@@ -25,7 +29,7 @@ A Java `edu.cmu.tetrad.data.Knowledge` object.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

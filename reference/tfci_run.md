@@ -95,7 +95,7 @@ tfci_run(
 
 ## Value
 
-A `caugi` and a `knowledge` (`disco`) object.
+A `Disco` object (a list with a `caugi` and a `knowledge`object).
 
 ## Details
 

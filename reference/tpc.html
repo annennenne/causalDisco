@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9051</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9052</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,16 +75,28 @@
 
 </dl></div>
     <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A function of class <code>"tpc"</code> that takes a single argument <code>data</code>
-(a data frame) and returns a <code>caugi</code> (of class "PDAG") and a <code>knowledge</code>
-(<code>disco</code>) object.</p>
-    </div>
-    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For specific details on the supported tests, see <a href="CausalDiscoSearch.html">CausalDiscoSearch</a>. For additional parameters passed
 via <code>...</code>, see <code><a href="tpc_run.html">tpc_run()</a></code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="recommendation">Recommendation<a class="anchor" aria-label="anchor" href="#recommendation"></a></h2>
+
+
+<p>While it is possible to call the function returned directly with a data frame,
+we recommend using <code><a href="disco.html">disco()</a></code>. This provides a consistent interface and handles knowledge
+integration.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+
+
+<p>A function that takes a single argument <code>data</code> (a data frame). When called,
+this function returns a list containing:</p><ul><li><p><code>knowledge</code> A <code>Knowledge</code> object with the background knowledge
+used in the causal discovery algorithm. See <code><a href="knowledge.html">knowledge()</a></code> for how to construct it.</p></li>
+<li><p><code>caugi</code> A <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> object (of class <code>PDAG</code>) representing the learned causal graph
+from the causal discovery algorithm.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other causal discovery algorithms:

@@ -1,11 +1,11 @@
-# Print a disco Object
+# Print a Disco Object
 
-Print a disco Object
+Print a Disco Object
 
 ## Usage
 
 ``` r
-# S3 method for class 'disco'
+# S3 method for class 'Disco'
 print(x, compact = FALSE, wide_vars = FALSE, ...)
 ```
 
@@ -13,7 +13,7 @@ print(x, compact = FALSE, wide_vars = FALSE, ...)
 
 - x:
 
-  A `disco` object.
+  A `Disco` object.
 
 - compact:
 
@@ -29,7 +29,7 @@ print(x, compact = FALSE, wide_vars = FALSE, ...)
 
 ## Value
 
-Invisibly returns the `disco` object.
+Invisibly returns the `Disco` object.
 
 ## Examples
 

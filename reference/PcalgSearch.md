@@ -242,7 +242,7 @@ done when data is provided.
 
 - `knowledge_obj`:
 
-  A knowledge object that contains the fixed constraints.
+  A `Knowledge` object that contains the fixed constraints.
 
 - `directed_as_undirected`:
 

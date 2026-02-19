@@ -6,7 +6,7 @@ Visualize a `knowledge` object as a directed graph using
 ## Usage
 
 ``` r
-# S3 method for class 'knowledge'
+# S3 method for class 'Knowledge'
 plot(x, required_col = "blue", forbidden_col = "red", ...)
 ```
 
@@ -33,8 +33,9 @@ plot(x, required_col = "blue", forbidden_col = "red", ...)
 
 ## Value
 
-Invisibly returns the caugi object used for plotting. The main effect is
-the plot.
+Invisibly returns the
+[caugi::caugi](https://caugi.org/reference/caugi.html) object used for
+plotting. The main effect is the plot.
 
 ## Details
 
@@ -53,13 +54,13 @@ the plot.
   edge, use `edge_style$by_edge[[from]][[to]]$col`.
 
 - Nodes are arranged by tiers if tier information is provided in the
-  knowledge object.
+  `Knowledge` object.
 
 - If some nodes are missing tier assignments, a warning is issued and
   the plot falls back to untiered plotting.
 
 - The function automatically handles edges marked as "required" or
-  "forbidden" in the knowledge object.
+  "forbidden" in the `Knowledge` object.
 
 - Other edge styling (line width, arrow size, etc.) can be supplied via
   `edge_style`. The only way to override edge colors for specific edges
@@ -70,7 +71,7 @@ the plot.
 ``` r
 data(tpc_example)
 
-# Define a knowledge object with tiers
+# Define a `Knowledge` object with tiers
 kn_tiered <- knowledge(
   tpc_example,
   tier(
@@ -151,7 +152,7 @@ plot(
 )
 
 
-# Define a knowledge object without tiers
+# Define a `Knowledge` object without tiers
 kn_untiered <- knowledge(
   tpc_example,
   child_x1 %-->% c(child_x2, youth_x3),

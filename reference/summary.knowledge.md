@@ -5,7 +5,7 @@ Summarize a Knowledge Object
 ## Usage
 
 ``` r
-# S3 method for class 'knowledge'
+# S3 method for class 'Knowledge'
 summary(object, ...)
 ```
 
@@ -13,7 +13,7 @@ summary(object, ...)
 
 - object:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - ...:
 
@@ -21,7 +21,7 @@ summary(object, ...)
 
 ## Value
 
-Invisibly returns the `knowledge` object.
+Invisibly returns the `Knowledge` object.
 
 ## Examples
 

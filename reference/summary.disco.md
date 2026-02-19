@@ -1,11 +1,11 @@
-# Summarize a disco Object
+# Summarize a Disco Object
 
-Summarize a disco Object
+Summarize a Disco Object
 
 ## Usage
 
 ``` r
-# S3 method for class 'disco'
+# S3 method for class 'Disco'
 summary(object, ...)
 ```
 
@@ -13,7 +13,7 @@ summary(object, ...)
 
 - object:
 
-  A `disco` object.
+  A `Disco` object.
 
 - ...:
 
@@ -21,7 +21,7 @@ summary(object, ...)
 
 ## Value
 
-Invisibly returns the `disco` object.
+Invisibly returns the `Disco` object.
 
 ## Examples
 

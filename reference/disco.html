@@ -9,7 +9,7 @@ Supports multiple algorithms and optionally incorporates prior knowledge."><meta
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9051</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9052</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,14 +80,17 @@ algorithm. Available methods are</p><ul><li><p><code><a href="boss.html">boss()<
 
 
 <dt id="arg-knowledge">knowledge<a class="anchor" aria-label="anchor" href="#arg-knowledge"></a></dt>
-<dd><p>A <code>knowledge</code> object to be incorporated into the disco method. If <code>NULL</code> (default), the method is
-applied without additional knowledge.</p></dd>
+<dd><p>A <code>Knowledge</code> object to be incorporated into the causal discovery algorithm.
+If <code>NULL</code> (default), the causal discovery algorithm is run without background knowledge. See <code><a href="knowledge.html">knowledge()</a></code>
+for how to create a <code>Knowledge</code> object.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>caugi</code> and a <code>knowledge</code> (<code>disco</code>) object.</p>
-    </div>
+    <p>A <code>Disco</code> object (a list) containing the following components:</p><ul><li><p><code>knowledge</code> A <code>Knowledge</code> object with the background knowledge
+used in the causal discovery algorithm.</p></li>
+<li><p><code>caugi</code> A <a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a> object representing the learned causal graph from the causal discovery algorithm.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For specific details on the supported algorithms, scores, tests, and parameters for each engine, see:</p><ul><li><p><a href="BnlearnSearch.html">BnlearnSearch</a> for <span class="pkg">bnlearn</span>,</p></li>

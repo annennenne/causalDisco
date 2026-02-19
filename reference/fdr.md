@@ -1,11 +1,13 @@
 # False Discovery Rate
 
-Computes false discovery rate from two PDAG `caugi` objects. It converts
-the `caugi` objects to adjacency matrices and computes false discovery
-rate as `FP/(FP + TP)`, where `FP` are false positives and `TP` are
-truth positives. If `FP + TP = 0`, `1` is returned. Only supports
-`caugi` objects with these edge types present `-->`, `<-->`, `---` and
-no edge.
+Computes false discovery rate from two PDAG
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
+converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects to adjacency matrices and computes false discovery rate as
+`FP/(FP + TP)`, where `FP` are false positives and `TP` are truth
+positives. If `FP + TP = 0`, `1` is returned. Only supports
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
+these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
@@ -17,11 +19,13 @@ fdr(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 

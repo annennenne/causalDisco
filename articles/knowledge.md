@@ -14,12 +14,13 @@ This vignette demonstrates how to use the
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
 function to incorporate prior knowledge into causal discovery
 algorithms. The different supported knowledge types are explained below,
-along with examples of how to create knowledge objects and use them with
-causal discovery methods. All knowledge types can be freely combined.
-Multiple calls or operators are additive: each call adds new edges to
-the knowledge object. For example if we require an edge from `A` to `B`
-and then require an edge from A to C, the resulting knowledge object
-will require both edges from `A` to `B` and from `A` to `C`.
+along with examples of how to create `Knowledge` objects and use them
+with causal discovery methods. All knowledge types can be freely
+combined. Multiple calls or operators are additive: each call adds new
+edges to the `Knowledge` object. For example if we require an edge from
+`A` to `B` and then require an edge from A to C, the resulting
+`Knowledge` object will require both edges from `A` to `B` and from `A`
+to `C`.
 
 At a conceptual level, all knowledge is represented as constraints on
 edges, specifying which edges are required and forbidden. Some knowledge
@@ -55,7 +56,7 @@ kn_1 <- knowledge(
 )
 ```
 
-This knowledge object can be visualized:
+This `Knowledge` object can be visualized:
 
 ``` r
 plot(kn_1)
@@ -67,7 +68,7 @@ The blue edge represents the required edge from A to B, while the red
 edge represents the forbidden edge from B to C.
 
 If one wishes to remove some edges (either required or forbidden)
-knowledge from an existing knowledge object, the
+knowledge from an existing `Knowledge` object, the
 [`remove_edge()`](https://disco-coders.github.io/causalDisco/reference/remove_edge.md)
 function can be used. For example, to remove the required edge from A to
 B:
@@ -107,7 +108,7 @@ kn_2 <- knowledge(
 )
 ```
 
-This knowledge object can also be visualized (we manually adjust the
+This `Knowledge` object can also be visualized (we manually adjust the
 layout for better appearance):
 
 ``` r
@@ -168,12 +169,12 @@ Tiered knowledge enforces that edges may only point from earlier tiers
 to later tiers. Edges within the same tier are unrestricted unless
 additional knowledge is supplied.
 
-### Creating a tiered knowledge object
+### Creating a tiered `Knowledge` object
 
 Suppose we observe variables over time: first the `A`’s, then the `B`’s,
 and finally the `C`’s. This ordering implies that causal direction
 cannot go backward in time (e.g., `B`’s cannot cause `A`’s). A tiered
-knowledge object captures this temporal structure by specifying tiers
+`Knowledge` object captures this temporal structure by specifying tiers
 and their associated variables. If numeric tiers are used, lower numbers
 indicate earlier tiers; otherwise, tiers are ordered by their
 appearance.
@@ -278,8 +279,9 @@ plot(kn_converted)
 Tidyselect helpers such as `starts_with` can also be used to define
 tiers in a concise way, just as with required and forbidden edges.
 Different tidyselect helpers can be freely combined within a tier
-definition using `+`. For example, the following tiered knowledge object
-defines two tiers, “young” and “old”, by combining tidyselect helpers:
+definition using `+`. For example, the following tiered `Knowledge`
+object defines two tiers, “young” and “old”, by combining tidyselect
+helpers:
 
 ``` r
 kn_tier_tidyselect <- knowledge(

@@ -1,6 +1,6 @@
 # Deparse a Knowledge Object into Knowledge DSL Code
 
-Given a `knowledge` object, return a single string containing the R code
+Given a `Knowledge` object, return a single string containing the R code
 (using
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md),
 `tier()`, `%-->%`, and `%!-->%`. that would rebuild that same object.
@@ -15,7 +15,7 @@ deparse_knowledge(kn, df_name = NULL)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - df_name:
 
@@ -33,7 +33,7 @@ A single string (with newlines) of R code.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
@@ -58,7 +58,7 @@ Other knowledge functions:
 ## Examples
 
 ``` r
-# turn a knowledge object back into DSL code
+# turn a Knowledge object back into DSL code
 data(tpc_example)
 
 kn <- knowledge(

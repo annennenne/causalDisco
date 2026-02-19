@@ -12,7 +12,7 @@ reorder_tiers(kn, order, by_index = FALSE)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - order:
 
@@ -27,12 +27,12 @@ reorder_tiers(kn, order, by_index = FALSE)
 
 ## Value
 
-The same `knowledge` object with tiers rearranged.
+The same `Knowledge` object with tiers rearranged.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

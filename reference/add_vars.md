@@ -1,6 +1,6 @@
 # Add Variables to Knowledge
 
-Adds variables to the `knowledge` object. If the object is frozen, an
+Adds variables to the `Knowledge` object. If the object is frozen, an
 error is thrown if any of the variables are not present in the data
 frame provided to the object.
 
@@ -14,7 +14,7 @@ add_vars(kn, vars)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - vars:
 
@@ -22,12 +22,12 @@ add_vars(kn, vars)
 
 ## Value
 
-The updated `knowledge` object.
+The updated `Knowledge` object.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
@@ -54,7 +54,7 @@ Other knowledge functions:
 ``` r
 data(tpc_example)
 
-# create knowledge object using verbs
+# create Knowledge object using verbs
 kn1 <- knowledge() |>
   add_vars(names(tpc_example)) |>
   add_tier(child) |>
@@ -68,11 +68,11 @@ kn1 <- knowledge() |>
   add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
-# (meaning you cannot add variables to the knowledge object anymore)
+# (meaning you cannot add variables to the Knowledge object anymore)
 # this is to get a true on the identical check
 kn1$frozen <- TRUE
 
-# create identical knowledge object using DSL
+# create identical Knowledge object using DSL
 kn2 <- knowledge(
   tpc_example,
   tier(

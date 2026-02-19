@@ -12,7 +12,7 @@ reposition_tier(kn, tier, before = NULL, after = NULL, by_index = FALSE)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - tier:
 
@@ -35,12 +35,12 @@ reposition_tier(kn, tier, before = NULL, after = NULL, by_index = FALSE)
 
 ## Value
 
-The updated `knowledge` object.
+The updated `Knowledge` object.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

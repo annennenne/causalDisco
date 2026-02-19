@@ -5,7 +5,7 @@ Print a Knowledge Object
 ## Usage
 
 ``` r
-# S3 method for class 'knowledge'
+# S3 method for class 'Knowledge'
 print(x, compact = FALSE, wide_vars = FALSE, ...)
 ```
 
@@ -13,7 +13,7 @@ print(x, compact = FALSE, wide_vars = FALSE, ...)
 
 - x:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - compact:
 
@@ -29,7 +29,7 @@ print(x, compact = FALSE, wide_vars = FALSE, ...)
 
 ## Value
 
-Invisibly returns the `knowledge` object.
+Invisibly returns the `Knowledge` object.
 
 ## Examples
 

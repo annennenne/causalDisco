@@ -311,7 +311,7 @@ Set the causal discovery algorithm to use.
 
 ### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
-Set the prior knowledge for the search algorithm using a knowledge
+Set the prior knowledge for the search algorithm using a `Knowledge`
 object.
 
 #### Usage
@@ -322,7 +322,7 @@ object.
 
 - `knowledge_obj`:
 
-  A knowledge object containing prior knowledge.
+  A `Knowledge` object containing prior knowledge.
 
 ------------------------------------------------------------------------
 

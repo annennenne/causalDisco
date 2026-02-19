@@ -1,6 +1,6 @@
 # Convert Knowledge to bnlearn Knowledge
 
-Converts a `knowledge` object to a list of two data frames, namely
+Converts a `Knowledge` object to a list of two data frames, namely
 `whitelist` and `blacklist`, which can be used as arguments for bnlearn
 algorithms. The `whitelist` contains all required edges, and the
 `blacklist` contains all forbidden edges. Tiers will be made into
@@ -26,7 +26,7 @@ containing the edges in a `from`, `to` format.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),
@@ -51,7 +51,7 @@ Other knowledge functions:
 ## Examples
 
 ``` r
-# produce whitelist/blacklist dataframe for bnlearn
+# produce whitelist/blacklist data frame for bnlearn
 data(tpc_example)
 
 kn <- knowledge(

@@ -1,11 +1,14 @@
 # F1 score
 
-Computes F1 score from two `caugi` objects. It converts the `caugi`
+Computes F1 score from two
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
+converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes F1 score as \\2 \cdot TP/(2
 \cdot TP + FP + FN)\\, where `TP` are truth positives, `FP` are false
 positives, and `FN` are false negatives. If `TP + FP + FN = 0`, `1` is
-returned. Only supports `caugi` objects with these edge types present
-`-->`, `<-->`, `---` and no edge.
+returned. Only supports
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
+these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
@@ -17,11 +20,13 @@ f1_score(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 

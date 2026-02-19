@@ -6,7 +6,8 @@ can be used with the
 function. You provide a builder function that constructs a runner
 object, along with metadata about the algorithm, and it returns a
 closure that can be called with a data frame to perform causal discovery
-and return a `caugi` object.
+and return a [caugi::caugi](https://caugi.org/reference/caugi.html)
+object.
 
 ## Usage
 
@@ -35,7 +36,8 @@ new_disco_method(builder, name, engine, graph_class)
 ## Value
 
 A function of class `"disco_method"` that takes a single argument `data`
-(a data frame) and returns a `caugi` object.
+(a data frame) and returns a
+[caugi::caugi](https://caugi.org/reference/caugi.html) object.
 
 ## See also
 

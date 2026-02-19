@@ -5,7 +5,7 @@ Merge Knowledge Objects
 ## Usage
 
 ``` r
-# S3 method for class 'knowledge'
+# S3 method for class 'Knowledge'
 kn1 + kn2
 ```
 
@@ -13,11 +13,11 @@ kn1 + kn2
 
 - kn1:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - kn2:
 
-  Another `knowledge` object.
+  Another `Knowledge` object.
 
 ## See also
 
@@ -47,7 +47,7 @@ Other knowledge functions:
 ## Examples
 
 ``` r
-# Create two knowledge objects
+# Create two Knowledge objects
 kn1 <- knowledge(
   tier(
     1 ~ V1,

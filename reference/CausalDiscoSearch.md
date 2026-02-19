@@ -65,7 +65,7 @@ algorithm.
 
 - `knowledge`:
 
-  A `knowledge` object holding background knowledge.
+  A `Knowledge` object holding background knowledge.
 
 ## Methods
 
@@ -207,7 +207,7 @@ Sets the algorithm for the search.
 
 ### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
-Sets the background knowledge for the search with a `knowledge` object.
+Sets the background knowledge for the search with a `Knowledge` object.
 
 #### Usage
 
@@ -217,7 +217,7 @@ Sets the background knowledge for the search with a `knowledge` object.
 
 - `kn`:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - `directed_as_undirected`:
 
@@ -455,6 +455,6 @@ try(CausalDiscoSearch$new()$set_alg("not_an_alg"))
 #> Error : Unknown method type using causalDisco engine: not_an_alg
 
 # set_knowledge() requires a `knowledge` object
-try(CausalDiscoSearch$new()$set_knowledge(list(not = "knowledge")))
+try(CausalDiscoSearch$new()$set_knowledge(list(not = "Knowledge")))
 #> Error : Input must be a knowledge instance.
 ```

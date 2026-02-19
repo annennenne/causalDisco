@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9051</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9052</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,14 +85,14 @@
 <p>This vignette demonstrates how to use the <code><a href="../reference/knowledge.html">knowledge()</a></code>
 function to incorporate prior knowledge into causal discovery
 algorithms. The different supported knowledge types are explained below,
-along with examples of how to create knowledge objects and use them with
-causal discovery methods. All knowledge types can be freely combined.
-Multiple calls or operators are additive: each call adds new edges to
-the knowledge object. For example if we require an edge from
-<code>A</code> to <code>B</code> and then require an edge from A to C,
-the resulting knowledge object will require both edges from
-<code>A</code> to <code>B</code> and from <code>A</code> to
-<code>C</code>.</p>
+along with examples of how to create <code>Knowledge</code> objects and
+use them with causal discovery methods. All knowledge types can be
+freely combined. Multiple calls or operators are additive: each call
+adds new edges to the <code>Knowledge</code> object. For example if we
+require an edge from <code>A</code> to <code>B</code> and then require
+an edge from A to C, the resulting <code>Knowledge</code> object will
+require both edges from <code>A</code> to <code>B</code> and from
+<code>A</code> to <code>C</code>.</p>
 <p>At a conceptual level, all knowledge is represented as constraints on
 edges, specifying which edges are required and forbidden. Some knowledge
 types provide higher-level abstractions for expressing common modeling
@@ -124,14 +124,14 @@ forbid an edge from B to C:</p>
 <span>  <span class="va">A</span> <span class="op">%--&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">B</span>, <span class="va">C</span><span class="op">)</span>, <span class="co"># Require edges from A to B and A to C</span></span>
 <span>  <span class="va">B</span> <span class="op">%!--&gt;%</span> <span class="va">C</span> <span class="co"># Forbid edge from B to C</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This knowledge object can be visualized:</p>
+<p>This <code>Knowledge</code> object can be visualized:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
 <p>The blue edge represents the required edge from A to B, while the red
 edge represents the forbidden edge from B to C.</p>
 <p>If one wishes to remove some edges (either required or forbidden)
-knowledge from an existing knowledge object, the
+knowledge from an existing <code>Knowledge</code> object, the
 <code><a href="../reference/remove_edge.html">remove_edge()</a></code> function can be used. For example, to remove
 the required edge from A to B:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -163,8 +163,8 @@ dataset:</p>
 <span>  <span class="va">child_x1</span> <span class="op">%--&gt;%</span> <span class="va">youth_x3</span>, <span class="co"># Require edge from child_x1 to youth_x3</span></span>
 <span>  <span class="va">child_x2</span> <span class="op">%!--&gt;%</span> <span class="va">oldage_x5</span> <span class="co"># Forbid edge from child_x2 to oldage_x5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This knowledge object can also be visualized (we manually adjust the
-layout for better appearance):</p>
+<p>This <code>Knowledge</code> object can also be visualized (we
+manually adjust the layout for better appearance):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge_to_caugi.html">knowledge_to_caugi</a></span><span class="op">(</span><span class="va">kn_2</span><span class="op">)</span><span class="op">$</span><span class="va">caugi</span></span>
 <span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi_layout_sugiyama.html" class="external-link">caugi_layout_sugiyama</a></span><span class="op">(</span><span class="va">cg</span><span class="op">)</span></span>
@@ -213,15 +213,16 @@ be expressed using tiered knowledge.</p>
 tiers to later tiers. Edges within the same tier are unrestricted unless
 additional knowledge is supplied.</p>
 <div class="section level3">
-<h3 id="creating-a-tiered-knowledge-object">Creating a tiered knowledge object<a class="anchor" aria-label="anchor" href="#creating-a-tiered-knowledge-object"></a>
+<h3 id="creating-a-tiered-knowledge-object">Creating a tiered <code>Knowledge</code> object<a class="anchor" aria-label="anchor" href="#creating-a-tiered-knowledge-object"></a>
 </h3>
 <p>Suppose we observe variables over time: first the <code>A</code>’s,
 then the <code>B</code>’s, and finally the <code>C</code>’s. This
 ordering implies that causal direction cannot go backward in time (e.g.,
-<code>B</code>’s cannot cause <code>A</code>’s). A tiered knowledge
-object captures this temporal structure by specifying tiers and their
-associated variables. If numeric tiers are used, lower numbers indicate
-earlier tiers; otherwise, tiers are ordered by their appearance.</p>
+<code>B</code>’s cannot cause <code>A</code>’s). A tiered
+<code>Knowledge</code> object captures this temporal structure by
+specifying tiers and their associated variables. If numeric tiers are
+used, lower numbers indicate earlier tiers; otherwise, tiers are ordered
+by their appearance.</p>
 <p>The following specifications encode the same tier structure:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
@@ -310,8 +311,8 @@ forbidden edges using <code><a href="../reference/convert_tiers_to_forbidden.htm
 to define tiers in a concise way, just as with required and forbidden
 edges. Different tidyselect helpers can be freely combined within a tier
 definition using <code>+</code>. For example, the following tiered
-knowledge object defines two tiers, “young” and “old”, by combining
-tidyselect helpers:</p>
+<code>Knowledge</code> object defines two tiers, “young” and “old”, by
+combining tidyselect helpers:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_tier_tidyselect</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>

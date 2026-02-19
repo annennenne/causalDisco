@@ -939,7 +939,7 @@ Invisibly returns `self`.
 
 ### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
 
-Sets the background knowledge object.
+Sets the background `Knowledge` object.
 
 #### Usage
 
@@ -1036,8 +1036,8 @@ Runs the chosen Tetrad algorithm on the data.
 
 #### Returns
 
-A `caugi` and a `knowledge` (`disco`) object. Also populates
-`self$java`.
+A `Disco` object (a list with a `caugi` and a `Knowledge` object). Also
+populates `self$java`.
 
 ------------------------------------------------------------------------
 
@@ -1154,7 +1154,7 @@ Retrieves the current Java data object.
 
 ### Method `get_knowledge()`
 
-Returns the background knowledge object.
+Returns the background `Knowledge` object.
 
 #### Usage
 

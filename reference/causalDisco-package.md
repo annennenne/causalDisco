@@ -21,9 +21,8 @@ and methodological studies.
 
 ## System requirements
 
-Java (\>= 21) for Tetrad functionality (optional; includes installer;
-see inst/java/LICENSE and inst/java/COPYRIGHT); Source code:
-<https://github.com/cmu-phil/tetrad>.
+Java (\>= 21) for Tetrad functionality (optional; includes installer);
+Source code: <https://github.com/cmu-phil/tetrad>.
 
 ## See also
 

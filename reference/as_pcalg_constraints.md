@@ -44,7 +44,7 @@ variable order you supply.
 
 ## Errors
 
-- If the knowledge object contains tiered knowledge.
+- If the `Knowledge` object contains tiered knowledge.
 
 - If `directed_as_undirected = FALSE` and any edge lacks its symmetrical
   counterpart. This can only hold for forbidden edges.
@@ -52,7 +52,7 @@ variable order you supply.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

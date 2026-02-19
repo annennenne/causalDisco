@@ -15,7 +15,7 @@ High-level interface for running causal discovery.
 - [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
   : Perform Causal Discovery
 - [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
-  : Knowledge Mini-DSL Constructor
+  : Define Background Knowledge
 
 ## Causal Discovery Algorithms
 
@@ -124,22 +124,22 @@ Small simulated datasets to illustrate causalDisco workflows.
 
 ## Printing, Summarizing, and Plotting Objects
 
-- [`print(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.disco.md)
-  : Print a disco Object
-- [`print(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.knowledge.md)
+- [`print(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.disco.md)
+  : Print a Disco Object
+- [`print(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.knowledge.md)
   : Print a Knowledge Object
-- [`summary(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.disco.md)
-  : Summarize a disco Object
-- [`summary(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.knowledge.md)
+- [`summary(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.disco.md)
+  : Summarize a Disco Object
+- [`summary(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.knowledge.md)
   : Summarize a Knowledge Object
 - [`plot`](https://disco-coders.github.io/causalDisco/reference/plot.md)
   : Plot Method for causalDisco Objects
-- [`plot(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md)
-  : Plot a disco Object
-- [`plot(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
+- [`plot(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md)
+  : Plot a Disco Object
+- [`plot(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
   : Plot a Knowledge Object
 - [`make_tikz()`](https://disco-coders.github.io/causalDisco/reference/make_tikz.md)
-  : Generate TikZ Code from a Object
+  : Generate TikZ Code from a Causal Graph
 
 ## Graph Metrics
 
@@ -185,7 +185,7 @@ Small simulated datasets to illustrate causalDisco workflows.
 - [`remove_tiers()`](https://disco-coders.github.io/causalDisco/reference/remove_tiers.md)
   : Remove Tiers from Knowledge
 - [`remove_vars()`](https://disco-coders.github.io/causalDisco/reference/remove_vars.md)
-  : Remove Variables Along with Their Edges from Knowledge
+  : Remove Variables from Knowledge
 - [`require_edge()`](https://disco-coders.github.io/causalDisco/reference/require_edge.md)
   : Add Required Edges to Knowledge
 - [`forbid_edge()`](https://disco-coders.github.io/causalDisco/reference/forbid_edge.md)
@@ -214,7 +214,7 @@ Small simulated datasets to illustrate causalDisco workflows.
   : Deparse a Knowledge Object into Knowledge DSL Code
 - [`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
   : Unfreeze a Knowledge Object.
-- [`` `+`( ``*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md)
+- [`` `+`( ``*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md)
   : Merge Knowledge Objects
 
 ## Extend causalDisco

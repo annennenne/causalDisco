@@ -1,10 +1,13 @@
 # Precision
 
-Computes precision from two PDAG `caugi` objects. It converts the
-`caugi` objects to adjacency matrices and computes precision as
-`TP/(TP + FP)`, where TP are truth positives and `FP` are false
-positives. If `TP + FP = 0`, `1` is returned. Only supports `caugi`
-objects with these edge types present `-->`, `<-->`, `---` and no edge.
+Computes precision from two PDAG
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
+converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects to adjacency matrices and computes precision as `TP/(TP + FP)`,
+where TP are truth positives and `FP` are false positives. If
+`TP + FP = 0`, `1` is returned. Only supports
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
+these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
@@ -16,11 +19,13 @@ precision(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 

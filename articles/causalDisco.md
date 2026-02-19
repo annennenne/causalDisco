@@ -247,7 +247,7 @@ kn <- knowledge(
 For more details on how to define knowledge, see the [knowledge
 vignette](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
 
-You can view the knowledge object using
+You can view the `Knowledge` object using
 [`print()`](https://rdrr.io/r/base/print.html),
 [`summary()`](https://rdrr.io/r/base/summary.html) or
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):

@@ -68,12 +68,22 @@ disco(data, method, knowledge = NULL)
 
 - knowledge:
 
-  A `knowledge` object to be incorporated into the disco method. If
-  `NULL` (default), the method is applied without additional knowledge.
+  A `Knowledge` object to be incorporated into the causal discovery
+  algorithm. If `NULL` (default), the causal discovery algorithm is run
+  without background knowledge. See
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+  for how to create a `Knowledge` object.
 
 ## Value
 
-A `caugi` and a `knowledge` (`disco`) object.
+A `Disco` object (a list) containing the following components:
+
+- `knowledge` A `Knowledge` object with the background knowledge used in
+  the causal discovery algorithm.
+
+- `caugi` A [caugi::caugi](https://caugi.org/reference/caugi.html)
+  object representing the learned causal graph from the causal discovery
+  algorithm.
 
 ## Details
 

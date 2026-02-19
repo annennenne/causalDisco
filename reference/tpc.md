@@ -31,18 +31,33 @@ tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
   Additional arguments passed to the chosen engine (e.g. test or
   algorithm parameters).
 
-## Value
-
-A function of class `"tpc"` that takes a single argument `data` (a data
-frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
-(`disco`) object.
-
 ## Details
 
 For specific details on the supported tests, see
 [CausalDiscoSearch](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md).
 For additional parameters passed via `...`, see
 [`tpc_run()`](https://disco-coders.github.io/causalDisco/reference/tpc_run.md).
+
+## Recommendation
+
+While it is possible to call the function returned directly with a data
+frame, we recommend using
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md).
+This provides a consistent interface and handles knowledge integration.
+
+## Value
+
+A function that takes a single argument `data` (a data frame). When
+called, this function returns a list containing:
+
+- `knowledge` A `Knowledge` object with the background knowledge used in
+  the causal discovery algorithm. See
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+  for how to construct it.
+
+- `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
+  object (of class `PDAG`) representing the learned causal graph from
+  the causal discovery algorithm.
 
 ## See also
 

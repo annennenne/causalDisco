@@ -1,15 +1,15 @@
-# Plot a disco Object
+# Plot a Disco Object
 
-Visualize a causal graph stored within a `disco` object. This function
+Visualize a causal graph stored within a `Disco` object. This function
 extends
-[`plot.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
+[`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
 by combining the causal graph from a `caugi` object with background
 knowledge.
 
 ## Usage
 
 ``` r
-# S3 method for class 'disco'
+# S3 method for class 'Disco'
 plot(x, required_col = "blue", ...)
 ```
 
@@ -17,7 +17,7 @@ plot(x, required_col = "blue", ...)
 
 - x:
 
-  A `disco` object containing both the causal graph and the associated
+  A `Disco` object containing both the causal graph and the associated
   knowledge.
 
 - required_col:
@@ -28,7 +28,7 @@ plot(x, required_col = "blue", ...)
 
   Additional arguments passed to
   [`caugi::plot()`](https://caugi.org/reference/plot.html) and
-  [`plot.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md).
+  [`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md).
 
 ## Value
 
@@ -49,8 +49,8 @@ plot.
   `edge_style`. To override the color of a specific edge, specify it in
   `edge_style$by_edge[[from]][[to]]$col`.
 
-This function combines the causal graph and the knowledge object into a
-single plotting structure. If the knowledge contains tiers, nodes are
+This function combines the causal graph and the `Knowledge` object into
+a single plotting structure. If the knowledge contains tiers, nodes are
 laid out accordingly; otherwise, the default caugi layout is used. Edges
 marked as required are automatically colored (or can be overridden per
 edge using `edge_style$by_edge`).

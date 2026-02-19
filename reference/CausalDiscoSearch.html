@@ -11,7 +11,7 @@ It allows to set the data, sufficient statistics, test, score, and algorithm."><
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9051</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9052</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,7 +105,7 @@ sufficient statistic depends on which test is being used.</p></dd>
 
 
 <dt><code>knowledge</code></dt>
-<dd><p>A <code>knowledge</code> object holding background knowledge.</p></dd>
+<dd><p>A <code>Knowledge</code> object holding background knowledge.</p></dd>
 
 
 </dl><p></p></div>
@@ -236,7 +236,7 @@ sufficient statistic depends on which test is being used.</p></dd>
 
 </div><p></p><hr><a id="method-CausalDiscoSearch-set_knowledge"></a><div class="section">
 <h3 id="method-set-knowledge-">Method <code><a href="set_knowledge.html">set_knowledge()</a></code><a class="anchor" aria-label="anchor" href="#method-set-knowledge-"></a></h3>
-<p>Sets the background knowledge for the search with a <code>knowledge</code> object.</p><div class="section">
+<p>Sets the background knowledge for the search with a <code>Knowledge</code> object.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">kn</span>, directed_as_undirected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -244,7 +244,7 @@ sufficient statistic depends on which test is being used.</p></dd>
 <div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>kn</code></dt>
-<dd><p>A <code>knowledge</code> object.</p></dd>
+<dd><p>A <code>Knowledge</code> object.</p></dd>
 
 
 <dt><code>directed_as_undirected</code></dt>
@@ -487,7 +487,7 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Unknown method type using causalDisco engine: not_an_alg</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set_knowledge() requires a `knowledge` object</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>not <span class="op">=</span> <span class="st">"knowledge"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>not <span class="op">=</span> <span class="st">"Knowledge"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Input must be a knowledge instance.</span>
 </code></pre></div>
     </div>

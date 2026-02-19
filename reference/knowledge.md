@@ -1,6 +1,6 @@
-# Knowledge Mini-DSL Constructor
+# Define Background Knowledge
 
-Constructs a `knowledge` object optionally initialized with a data frame
+Constructs a `Knowledge` object optionally initialized with a data frame
 and extended with variable relationships expressed via formulas,
 selectors, or infix operators:
 
@@ -19,13 +19,13 @@ knowledge(...)
 
 - ...:
 
-  Arguments to define the knowledge object:
+  Arguments to define the `Knowledge` object:
 
   - Optionally, a single data frame (first argument) whose column names
     initialize and freeze the variable set.
 
-  - Zero or more mini-DSL calls: `tier()`, `exogenous()`, `exo()`, or
-    infix operators `%-->%`, `%!-->%`.
+  - Zero or more mini-DSL calls: `tier()`, `exogenous()`, (shorthand
+    `exo()`), or infix operators `%-->%`, `%!-->%`.
 
     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a
       numeric vector.
@@ -35,17 +35,17 @@ knowledge(...)
 
 ## Value
 
-A populated `knowledge` object.
+A populated `Knowledge` object.
 
 ## Details
 
-Create a `knowledge` object using a concise mini-DSL with `tier()`,
+Create a `Knowledge` object using a concise mini-DSL with `tier()`,
 `exogenous()` and infix edge operators `%-->%` and `%!-->%`.
 
 The first argument can be a data frame, which will be used to populate
-the `knowledge` object with variable names. If you later add variables
-with add\_\* verbs, this will throw a warning, since the knowledge
-object will be *frozen*. You can unfreeze a knowledge object by using
+the `Knowledge` object with variable names. If you later add variables
+with `add_*` verbs, this will throw a warning, since the `Knowledge`
+object will be *frozen*. You can unfreeze a `Knowledge` object by using
 the function `unfreeze(knowledge)`.
 
 If no data frame is provided, the object is initially empty. Variables
@@ -68,7 +68,7 @@ operators, or
   by index to all existing variables.
 
 Multiple calls or operators are additive: each call adds new edges to
-the knowledge object. For example:
+the `Knowledge` object. For example:
 
     V1 %-->% V3
     V2 %-->% V3
@@ -79,7 +79,7 @@ required edges.
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

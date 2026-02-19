@@ -13,7 +13,7 @@ remove_edge(kn, from, to)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 - from:
 
@@ -25,12 +25,12 @@ remove_edge(kn, from, to)
 
 ## Value
 
-The updated `knowledge` object.
+The updated `Knowledge` object.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

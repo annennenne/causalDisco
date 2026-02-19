@@ -1,6 +1,8 @@
 # Convert Knowledge to Caugi
 
-Converts a `knowledge` object to a `caugi` object used for plotting.
+Converts a `Knowledge` object to a
+[caugi::caugi](https://caugi.org/reference/caugi.html) object used for
+plotting.
 
 ## Usage
 
@@ -16,12 +18,13 @@ knowledge_to_caugi(kn)
 
 ## Value
 
-A list with the `caugi` object alongside information.
+A list with the [caugi::caugi](https://caugi.org/reference/caugi.html)
+object alongside information.
 
 ## See also
 
 Other knowledge functions:
-[`+.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

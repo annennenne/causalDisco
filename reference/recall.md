@@ -1,10 +1,13 @@
 # Recall
 
-Computes recall from two PDAG `caugi` objects. It converts the `caugi`
+Computes recall from two PDAG
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
+converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes recall as `TP/(TP + FN)`,
 where `TP` are truth positives and `FN` are false negatives. If
-`TP + FN = 0`, `1` is returned. Only supports `caugi` objects with these
-edge types present `-->`, `<-->`, `---` and no edge.
+`TP + FN = 0`, `1` is returned. Only supports
+[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
+these edge types present `-->`, `<-->`, `---` and no edge.
 
 ## Usage
 
@@ -16,11 +19,13 @@ recall(truth, est, type = c("adj", "dir"))
 
 - truth:
 
-  A `caugi` object representing the truth graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the truth graph.
 
 - est:
 
-  A `caugi` object representing the estimated graph.
+  A [caugi::caugi](https://caugi.org/reference/caugi.html) object
+  representing the estimated graph.
 
 - type:
 

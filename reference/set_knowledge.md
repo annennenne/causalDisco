@@ -19,4 +19,4 @@ set_knowledge(method, knowledge)
 
 - knowledge:
 
-  A knowledge object appropriate for the engine.
+  A `Knowledge` object appropriate for the engine.
