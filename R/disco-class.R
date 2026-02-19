@@ -12,7 +12,7 @@
 #' @param kn A `knowledge` object. Default is empty knowledge object.
 #' @param class A string describing the graph class.
 #'
-#' @returns A `disco` object containg a `caugi` and a `knowledge` object in a list.
+#' @returns A `disco` object containing a `caugi` and a `knowledge` object in a list.
 #'
 #' @seealso [caugi::caugi()]
 #' @keywords internal
