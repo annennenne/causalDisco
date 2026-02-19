@@ -23,7 +23,7 @@ skip_if_no_tetrad <- function() {
   }
 }
 
-# make knowledge object that respects the data-generating mechanism
+# make Knowledge object that respects the data-generating mechanism
 make_knowledge_test_object <- function(df) {
   tiered_kn <- knowledge(
     df,

@@ -28,9 +28,6 @@ inter_iamb(engine = c("bnlearn"), test, alpha = 0.05, ...)
 
 \item{...}{Additional arguments passed to the chosen engine (e.g., test or algorithm parameters).}
 }
-\value{
-Each function returns a \code{caugi} object (of class "PDAG") and a \code{knowledge} object.
-}
 \description{
 Functions for causal discovery using variants of the Incremental Association algorithm:
 \itemize{
@@ -47,6 +44,26 @@ and parameters for each engine, see:
 \item \link{BnlearnSearch} for \pkg{bnlearn}.
 }
 }
+\section{Recommendation}{
+
+While it is possible to call the function returned directly with a data frame,
+we recommend using \code{\link[=disco]{disco()}}. This provides a consistent interface and handles knowledge
+integration.
+}
+
+\section{Value}{
+
+A function that takes a single argument \code{data} (a data frame). When called,
+this function returns a list containing:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
+\item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
+This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
+natively supported in \code{caugi}, it is currently stored with class \code{UNKNOWN}.
+}
+}
+
 \examples{
 data(tpc_example)
 

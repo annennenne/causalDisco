@@ -7,7 +7,7 @@
 reorder_tiers(kn, order, by_index = FALSE)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{order}{A vector that lists \emph{every} tier exactly once, either by
 label (default) or by numeric index (\code{by_index = TRUE}).
@@ -17,7 +17,7 @@ Be careful if you have numeric tier labels.}
 labels. Defaults to \code{FALSE}.}
 }
 \value{
-The same \code{knowledge} object with tiers rearranged.
+The same \code{Knowledge} object with tiers rearranged.
 }
 \description{
 Reorder Tiers in Knowledge
@@ -40,7 +40,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

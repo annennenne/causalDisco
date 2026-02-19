@@ -1,7 +1,7 @@
 # This function should probably also check edge type.
 #' Check for tier violations in a causal graph
 #' This function checks whether any edges in the provided edge list violate the tier
-#' knowledge constraints defined in the knowledge object.
+#' knowledge constraints defined in the `Knowledge` object.
 #'
 #' @param edges A data.table containing the edges of the causal graph with columns 'from' and 'to'.
 #' @param kn A knowledge() object containing tier information in kn$vars (with columns 'var' and 'tier').
@@ -40,7 +40,7 @@ check_tier_violations <- function(edges, kn) {
 #' @title Check for edge constraint violations in a causal graph
 #' @description
 #' This function checks whether the provided edges violate any required or forbidden
-#' edge constraints defined in the knowledge object.
+#' edge constraints defined in the `Knowledge` object.
 #'
 #' @param edges A data.table containing the edges of the causal graph with columns 'from' and 'to'.
 #' @param kn A knowledge() object containing edge constraints in kn$edges (with columns 'from', 'to', and 'status').

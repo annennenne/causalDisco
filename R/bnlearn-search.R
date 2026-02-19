@@ -470,9 +470,9 @@ BnlearnSearch <- R6::R6Class(
     },
 
     #' @description
-    #' Set the prior knowledge for the search algorithm using a knowledge object.
+    #' Set the prior knowledge for the search algorithm using a `Knowledge` object.
     #'
-    #' @param knowledge_obj A knowledge object containing prior knowledge.
+    #' @param knowledge_obj A `Knowledge` object containing prior knowledge.
     set_knowledge = function(knowledge_obj) {
       is_knowledge(knowledge_obj)
       self$knowledge <- as_bnlearn_knowledge(knowledge_obj)

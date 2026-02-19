@@ -2,7 +2,7 @@
 % Please edit documentation in R/make-tikz.R
 \name{make_tikz}
 \alias{make_tikz}
-\title{Generate TikZ Code from a Object}
+\title{Generate TikZ Code from a Causal Graph}
 \usage{
 make_tikz(
   x,
@@ -15,7 +15,7 @@ make_tikz(
 )
 }
 \arguments{
-\item{x}{A \code{disco}, \code{knowledge}, or \code{caugi::caugi} object.}
+\item{x}{A \code{Disco}, \code{Knowledge}, or \code{caugi::caugi} object.}
 
 \item{...}{Additional arguments passed to \code{\link[=plot]{plot()}} and \code{\link[caugi:plot]{caugi::plot()}}.}
 
@@ -45,7 +45,7 @@ A character string containing LaTeX TikZ code. Depending on
 }
 }
 \description{
-Generates LaTeX TikZ code from a \code{disco}, \code{knowledge}, or
+Generates LaTeX TikZ code from a \code{Disco}, \code{Knowledge}, or
 \code{caugi::caugi} object, preserving node positions, labels, and visual styles.
 Edges are rendered with arrows, line widths, and colors.
 The output is readable LaTeX code that can be

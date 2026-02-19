@@ -7,7 +7,7 @@
 reposition_tier(kn, tier, before = NULL, after = NULL, by_index = FALSE)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{tier}{The tier to move (label or index, honouring \code{by_index}).}
 
@@ -21,7 +21,7 @@ another existing tier.}
 labels. Defaults to \code{FALSE}.}
 }
 \value{
-The updated \code{knowledge} object.
+The updated \code{Knowledge} object.
 }
 \description{
 Move a Tier Relative to Another in Knowledge
@@ -44,7 +44,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

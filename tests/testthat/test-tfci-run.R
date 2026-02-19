@@ -16,7 +16,7 @@ test_that("tfci_run returns disco on example data", {
     orientation_method = "conservative"
   )
 
-  expect_s3_class(res, "disco")
+  expect_s3_class(res, "Disco")
 })
 
 test_that("tfci_run works with reg_test as well", {
@@ -33,7 +33,7 @@ test_that("tfci_run works with reg_test as well", {
     orientation_method = "standard"
   )
 
-  expect_s3_class(res, "disco")
+  expect_s3_class(res, "Disco")
 })
 
 test_that("tfci_run respects forbidden knowledge (edge is removed)", {
@@ -54,7 +54,7 @@ test_that("tfci_run respects forbidden knowledge (edge is removed)", {
     test = cor_test
   )
 
-  expect_s3_class(res, "disco")
+  expect_s3_class(res, "Disco")
 })
 
 test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
@@ -84,7 +84,7 @@ test_that("tfci_run uses provided suff_stat (no data needed) and completes", {
     varnames = names(my_df)
   )
 
-  expect_s3_class(out, "disco")
+  expect_s3_class(out, "Disco")
 })
 
 
@@ -172,7 +172,7 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
     alpha = 0.2,
     test = reg_test
   )
-  expect_s3_class(res, "disco")
+  expect_s3_class(res, "Disco")
   kn_bad <- knowledge() |> add_vars(c("child_a"))
   expect_error(
     tfci_run(

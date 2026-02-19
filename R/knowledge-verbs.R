@@ -1,14 +1,14 @@
 # ────────────────────────────────── Add / Insert ─────────────────────────────────────
 #' @title Add Variables to Knowledge
 #'
-#' @description Adds variables to the `knowledge` object. If the object is
+#' @description Adds variables to the `Knowledge` object. If the object is
 #' frozen, an error is thrown if any of the variables are not present in the
 #' data frame provided to the object.
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param vars A character vector of variable names to add.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -33,7 +33,7 @@ add_vars <- function(kn, vars) {
     stop(
       "Unknown variable(s): [",
       paste(missing, collapse = ", "),
-      "]\nThey are not present in the data frame provided to this knowledge object.",
+      "]\nThey are not present in the data frame provided to this Knowledge object.",
       call. = FALSE
     )
   }
@@ -48,16 +48,16 @@ add_vars <- function(kn, vars) {
 #' @title Add a Tier to Knowledge
 #'
 #' @description
-#' Adds a new tier to the `knowledge` object, either at the start, end,
+#' Adds a new tier to the `Knowledge` object, either at the start, end,
 #' or before/after an existing tier.
 #'
-#' @param kn A knowledge object.
+#' @param kn A `Knowledge` object.
 #' @param tier Bare symbol / character (label) **or** numeric literal.
 #' @param before,after  Optional anchor relative to an existing tier label,
-#'  tier index, or variable.  Once the knowledge object already
+#'  tier index, or variable.  Once the `Knowledge` object already
 #'  has >= 1 tier, you must supply **exactly one** of these.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -142,7 +142,7 @@ add_tier <- function(kn, tier, before = NULL, after = NULL) {
   # must supply exactly one of before/after
   if ((before_sup + after_sup) != 1L) {
     stop(
-      "Once the knowledge object already has tiers, supply exactly one of ",
+      "Once the Knowledge object already has tiers, supply exactly one of ",
       "`before` or `after`.",
       call. = FALSE
     )
@@ -184,10 +184,10 @@ add_tier <- function(kn, tier, before = NULL, after = NULL) {
 
 #' @title Add Variables to a Tier in Knowledge
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param ...  One or more two-sided formulas `tier ~ vars`.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -287,10 +287,10 @@ add_to_tier <- function(kn, ...) {
 #' Formulas can use tidy-select on either side, so
 #' `forbid_edge(kn, starts_with("X") ~ Y)` forbids every `X_i --> Y`.
 #'
-#' @param kn  A `knowledge` object.
+#' @param kn  A `Knowledge` object.
 #' @param ...  One or more two-sided formulas.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -325,7 +325,7 @@ forbid_edge <- function(kn, ...) {
 #' may only be given in *one* direction (`X ~ Y` **or** `Y ~ X`, not both).
 #'
 #' @inheritParams forbid_edge
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -359,10 +359,10 @@ require_edge <- function(kn, ...) {
 #' Every possible incoming edge to these nodes is automatically forbidden.
 #' This is equivalent to writing `forbidden(everything() ~ vars)`.
 #'
-#' @param kn A knowledge object.
+#' @param kn A `Knowledge` object.
 #' @param vars Tidyselect specification or character vector of variables.
 #'
-#' @returns Updated knowledge object.
+#' @returns Updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/knowledge_verbs-example.R
 #'
@@ -382,12 +382,12 @@ add_exo <- add_exogenous
 
 #' @title Unfreeze a Knowledge Object.
 #'
-#' @description This allows you to add new variables to the `knowledge` object,
+#' @description This allows you to add new variables to the `Knowledge` object,
 #' even though it was frozen earlier by adding a data frame to the knowledge
 #' constructor `knowledge()`.
 #'
-#' @param kn A `knowledge` object.
-#' @returns The same `knowledge` object with the `frozen` attribute set to
+#' @param kn A `Knowledge` object.
+#' @returns The same `Knowledge` object with the `frozen` attribute set to
 #' `FALSE`.
 #'
 #' @example inst/roxygen-examples/unfreeze-example.R
@@ -406,9 +406,9 @@ unfreeze <- function(kn) {
 #' @title Get Tiers from Knowledge
 #'
 #' @description
-#' Get tiers from a `knowledge` object.
+#' Get tiers from a `Knowledge` object.
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #'
 #' @returns A tibble with the tiers.
 #'
@@ -424,16 +424,16 @@ get_tiers <- function(kn) {
 }
 
 # ───────────────────────────────── Remove / Delete ─────────────────────────────────────
-#' @title Remove Variables Along with Their Edges from Knowledge
+#' @title Remove Variables from Knowledge
 #'
 #' @description
 #' Drops the given variables from `kn$vars`, and automatically removes
 #' any edges that mention them.
 #'
-#' @param kn   A `knowledge` object.
-#' @param ...   Unquoted variable names or tidy‐select helpers.
+#' @param kn A `Knowledge` object.
+#' @param ... Unquoted variable names or tidy‐select helpers.
 #'
-#' @returns An updated `knowledge` object.
+#' @returns An updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
@@ -482,11 +482,11 @@ remove_vars <- function(kn, ...) {
 #' Drop a single directed edge specified by `from` and `to`.
 #' Errors if the edge does not exist.
 #'
-#' @param kn   A `knowledge` object.
+#' @param kn   A `Knowledge` object.
 #' @param from  The source node (unquoted or character).
 #' @param to    The target node (unquoted or character).
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
@@ -533,10 +533,10 @@ remove_edge <- function(kn, from, to) {
 #' @description
 #' Drops tier definitions (and un‐tiers any vars assigned to them).
 #'
-#' @param kn   A `knowledge` object.
+#' @param kn   A `Knowledge` object.
 #' @param ...   Tier labels (unquoted or character) or numeric indices.
 #'
-#' @returns An updated `knowledge` object.
+#' @returns An updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/remove_from_knowledge-example.R
 #'
@@ -582,12 +582,12 @@ remove_tiers <- function(kn, ...) {
 #' @title Forbid Tier Violations in Knowledge
 #'
 #' @description
-#' Given a `knowledge` object with variables already assigned to tiers,
+#' Given a `Knowledge` object with variables already assigned to tiers,
 #' forbids every directed edge that runs from a higher-numbered tier down
 #' into a lower-numbered tier.
 #'
-#' @param kn A `knowledge` object.
-#' @returns The same `knowledge` object with new forbidden edges added.
+#' @param kn A `Knowledge` object.
+#' @returns The same `Knowledge` object with new forbidden edges added.
 #'
 #' @example inst/roxygen-examples/forbid_tier_violations-example.R
 #'
@@ -647,8 +647,8 @@ forbid_tier_violations <- function(kn) {
 
 #' @title Convert Tiered Knowledge to Forbidden Knowledge
 #' @description Converts tier assignments into forbidden edges, and drops tiers in the output.
-#' @param kn A `knowledge` object.
-#' @returns A `knowledge` object with forbidden edges added, tiers removed.
+#' @param kn A `Knowledge` object.
+#' @returns A `Knowledge` object with forbidden edges added, tiers removed.
 #'
 #' @examples
 #' kn <- knowledge(

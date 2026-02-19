@@ -41,7 +41,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

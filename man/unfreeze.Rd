@@ -7,14 +7,14 @@
 unfreeze(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 }
 \value{
-The same \code{knowledge} object with the \code{frozen} attribute set to
+The same \code{Knowledge} object with the \code{frozen} attribute set to
 \code{FALSE}.
 }
 \description{
-This allows you to add new variables to the \code{knowledge} object,
+This allows you to add new variables to the \code{Knowledge} object,
 even though it was frozen earlier by adding a data frame to the knowledge
 constructor \code{knowledge()}.
 }
@@ -35,7 +35,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

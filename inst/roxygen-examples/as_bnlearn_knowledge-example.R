@@ -1,4 +1,4 @@
-# produce whitelist/blacklist dataframe for bnlearn
+# produce whitelist/blacklist data frame for bnlearn
 data(tpc_example)
 
 kn <- knowledge(

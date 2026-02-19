@@ -7,9 +7,9 @@
 g1_score(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the truth graph.}
+\item{truth}{A \link[caugi:caugi]{caugi::caugi} object representing the truth graph.}
 
-\item{est}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \link[caugi:caugi]{caugi::caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -21,11 +21,11 @@ g1_score(truth, est, type = c("adj", "dir"))
 A numeric in [0,1].
 }
 \description{
-Computes G1 score from two \code{caugi} objects.
-It converts the \code{caugi} objects to adjacency matrices and computes
+Computes G1 score from two \link[caugi:caugi]{caugi::caugi} objects.
+It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
 G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where \code{TN} are truth negatives,
 \code{FP} are false positives, and FN are false negatives. If \code{TN + FN + FP = 0}, \code{1} is returned.
-Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

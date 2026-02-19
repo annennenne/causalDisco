@@ -28,11 +28,17 @@ algorithm. Available methods are
 \item \code{\link[=tpc]{tpc()}} - TPC algorithm.
 }}
 
-\item{knowledge}{A \code{knowledge} object to be incorporated into the disco method. If \code{NULL} (default), the method is
-applied without additional knowledge.}
+\item{knowledge}{A \code{Knowledge} object to be incorporated into the causal discovery algorithm.
+If \code{NULL} (default), the causal discovery algorithm is run without background knowledge. See \code{\link[=knowledge]{knowledge()}}
+for how to create a \code{Knowledge} object.}
 }
 \value{
-A \code{caugi} and a \code{knowledge} (\code{disco}) object.
+A \code{Disco} object (a list) containing the following components:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm.
+\item \code{caugi} A \link[caugi:caugi]{caugi::caugi} object representing the learned causal graph from the causal discovery algorithm.
+}
 }
 \description{
 Apply a causal discovery method to a data frame to infer causal relationships on observational data.

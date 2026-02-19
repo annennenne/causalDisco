@@ -2,17 +2,17 @@
 % Please edit documentation in R/knowledge.R
 \name{knowledge}
 \alias{knowledge}
-\title{Knowledge Mini-DSL Constructor}
+\title{Define Background Knowledge}
 \usage{
 knowledge(...)
 }
 \arguments{
-\item{...}{Arguments to define the knowledge object:
+\item{...}{Arguments to define the \code{Knowledge} object:
 \itemize{
 \item Optionally, a single data frame (first argument) whose column names
 initialize and freeze the variable set.
 \item Zero or more mini-DSL calls:
-\code{tier()}, \code{exogenous()}, \code{exo()}, or infix operators \verb{\%-->\%}, \verb{\%!-->\%}.
+\code{tier()}, \code{exogenous()}, (shorthand \code{exo()}), or infix operators \verb{\%-->\%}, \verb{\%!-->\%}.
 \itemize{
 \item \code{tier()}: One or more two-sided formulas (\code{tier(1 ~ x + y)}), or a numeric vector.
 \item \code{exogenous()} / \code{exo()}: Variable names or tidyselect selectors.
@@ -21,10 +21,10 @@ Arguments are evaluated in order; only these calls are allowed.
 }}
 }
 \value{
-A populated \code{knowledge} object.
+A populated \code{Knowledge} object.
 }
 \description{
-Constructs a \code{knowledge} object optionally initialized with a data frame and
+Constructs a \code{Knowledge} object optionally initialized with a data frame and
 extended with variable relationships expressed via formulas, selectors, or infix operators:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{tier(1 ~ V1 + V2, exposure ~ E)
@@ -34,13 +34,13 @@ exogenous(V1, V2)
 }\if{html}{\out{</div>}}
 }
 \details{
-Create a \code{knowledge} object using a concise mini-DSL with \code{tier()}, \code{exogenous()} and infix edge operators
+Create a \code{Knowledge} object using a concise mini-DSL with \code{tier()}, \code{exogenous()} and infix edge operators
 \verb{\%-->\%} and \verb{\%!-->\%}.
 
 The first argument can be a data frame, which will be used to populate the
-\code{knowledge} object with variable names. If you later add variables with
-add_* verbs, this will throw a warning, since the knowledge object will
-be \emph{frozen}. You can unfreeze a knowledge object by using the function
+\code{Knowledge} object with variable names. If you later add variables with
+\verb{add_*} verbs, this will throw a warning, since the \code{Knowledge} object will
+be \emph{frozen}. You can unfreeze a \code{Knowledge} object by using the function
 \code{unfreeze(knowledge)}.
 
 If no data frame is provided, the object is initially empty. Variables can
@@ -57,7 +57,7 @@ Both sides of the operator can use tidyselect syntax to select multiple variable
 \code{tier(c(1, 2, 1))} assigns tiers by index to all existing variables.
 }
 
-Multiple calls or operators are additive: each call adds new edges to the knowledge object.
+Multiple calls or operators are additive: each call adds new edges to the \code{Knowledge} object.
 For example:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{V1 \%-->\% V3
@@ -217,7 +217,7 @@ kn <- knowledge(
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

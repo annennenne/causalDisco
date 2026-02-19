@@ -1,6 +1,6 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 0.9.5.9051
+Version: 0.9.5.9052
 Authors@R: c(
     person(given = "Bjarke Hautop", family = "Kristensen", email = "bjarke.kristensen@sund.ku.dk", role = c("aut", "cre")),
     person(given = "Frederik", family = "Fabricius-Bjerre", email = "frederik@fabriciusbjerre.dk", role = "aut"),
@@ -82,6 +82,7 @@ Collate:
     'disco-class.R'
     'disco-method.R'
     'disco.R'
+    'disco_doc_helpers.R'
     'edges.R'
     'engine-registry.R'
     'extend-causaldisco-algs.R'

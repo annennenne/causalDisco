@@ -7,14 +7,14 @@
 remove_edge(kn, from, to)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{from}{The source node (unquoted or character).}
 
 \item{to}{The target node (unquoted or character).}
 }
 \value{
-The updated \code{knowledge} object.
+The updated \code{Knowledge} object.
 }
 \description{
 Drop a single directed edge specified by \code{from} and \code{to}.
@@ -46,7 +46,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

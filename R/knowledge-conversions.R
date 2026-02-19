@@ -5,11 +5,11 @@
 #' @title Convert Knowledge to Tetrad Knowledge
 #'
 #' @description
-#' Converts a `knowledge` object to a Tetrad `edu.cmu.tetrad.data.Knowledge`.
+#' Converts a `Knowledge` object to a Tetrad `edu.cmu.tetrad.data.Knowledge`.
 #' This requires `rJava`. This is used internally, when setting knowledge with
-#' `set_knowledge` for methods using the Tetrad engine. `set_knowledge` is used
-#' internally, when using the `disco` function with knowledge given.
-#' @param kn A `knowledge` object.
+#' [set_knowledge()] for methods using the Tetrad engine. [set_knowledge()] is used
+#' internally, when using the [disco()] function with knowledge given.
+#' @param kn A `Knowledge` object.
 #'
 #' @returns A Java `edu.cmu.tetrad.data.Knowledge` object.
 #'
@@ -86,7 +86,7 @@ as_tetrad_knowledge <- function(kn) {
 #' corresponding to \pkg{pcalg} `fixed_gaps` and `fixed_edges` arguments.
 #'
 #' @section Errors:
-#' * If the knowledge object contains tiered knowledge.
+#' * If the `Knowledge` object contains tiered knowledge.
 #' * If \code{directed_as_undirected = FALSE} and any edge lacks its
 #'   symmetrical counterpart. This can only hold for forbidden edges.
 #'
@@ -124,13 +124,13 @@ as_pcalg_constraints <- function(
   if (length(labels) != length(unique(labels))) {
     stop("`labels` must be unique.", call. = FALSE)
   }
-  # check that labels and knowledge object are aligned
+  # check that labels and `Knowledge` object are aligned
   if (!setequal(labels, kn$vars$var)) {
     # all labels that aren't in knowledge
     bad_vars <- setdiff(labels, kn$vars$var)
     if (length(bad_vars)) {
       stop(
-        "`labels` contained variables that were not in the knowledge object: [",
+        "`labels` contained variables that were not in the Knowledge object: [",
         paste(bad_vars, collapse = ", "),
         "]",
         call. = FALSE
@@ -143,14 +143,14 @@ as_pcalg_constraints <- function(
         "`labels` must contain all variables in the knowledge",
         " object. The following is missing: [",
         paste(missing_vars, collapse = ", "),
-        "]\nYou can add variables to your knowledge object with add_vars().",
+        "]\nYou can add variables to your Knowledge object with add_vars().",
         call. = FALSE
       )
     } else {
       # nocov start
       # this is a future-proofing security measure, not reachable as of now
       stop(
-        "`labels` must contain all variables in the knowledge object.",
+        "`labels` must contain all variables in the Knowledge object.",
         call. = FALSE
       )
     }
@@ -209,7 +209,7 @@ as_pcalg_constraints <- function(
 #' Convert Knowledge to bnlearn Knowledge
 #'
 #' @description
-#' Converts a `knowledge` object to a list of two data frames, namely
+#' Converts a `Knowledge` object to a list of two data frames, namely
 #' `whitelist` and `blacklist`, which can be used as arguments for
 #' \pkg{bnlearn} algorithms. The `whitelist` contains all required edges, and the
 #' `blacklist` contains all forbidden edges. Tiers will be made into forbidden
@@ -236,7 +236,7 @@ as_bnlearn_knowledge <- function(kn) {
 
   is_knowledge(kn)
 
-  # whitelist holds all required edges in a "from", "to" dataframe
+  # whitelist holds all required edges in a "from", "to" data frame
   whitelist <- dplyr::filter(kn$edges, .data$status == "required") |>
     dplyr::select("from", "to") |>
     as.data.frame()
@@ -257,11 +257,11 @@ as_bnlearn_knowledge <- function(kn) {
 #' Convert Knowledge to Caugi
 #'
 #' @description
-#' Converts a `knowledge` object to a `caugi` object used for plotting.
+#' Converts a `Knowledge` object to a [caugi::caugi] object used for plotting.
 #'
 #' @param kn A \code{knowledge} object.
 #'
-#' @returns A list with the `caugi` object alongside information.
+#' @returns A list with the [caugi::caugi] object alongside information.
 #'
 #' @examples
 #' data(tpc_example)
@@ -337,9 +337,9 @@ knowledge_to_caugi <- function(kn) {
 }
 
 #' Combine knowledge and caugi object
-#' @param cg A `caugi` object.
-#' @param kcg A `disco` object.
-#' @returns A list with the updated `caugi` object alongside information.
+#' @param cg A [caugi::caugi] object.
+#' @param kcg A `Disco` object.
+#' @returns A list with the updated [caugi::caugi] object alongside information.
 #' @keywords internal
 #' @noRd
 combine_knowledge_and_caugi <- function(cg, kn) {
@@ -380,7 +380,7 @@ combine_knowledge_and_caugi <- function(cg, kn) {
     }
   }
 
-  # Build tiers from knowledge object
+  # Build tiers from `Knowledge` object
   if (all(is.na(kn$vars$tier))) {
     tiers <- list()
   } else {

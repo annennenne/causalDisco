@@ -7,12 +7,12 @@
 require_edge(kn, ...)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{...}{One or more two-sided formulas.}
 }
 \value{
-The updated \code{knowledge} object.
+The updated \code{Knowledge} object.
 }
 \description{
 Require one or more directed edges.
@@ -22,7 +22,7 @@ may only be given in \emph{one} direction (\code{X ~ Y} \strong{or} \code{Y ~ X}
 \examples{
 data(tpc_example)
 
-# create knowledge object using verbs
+# create Knowledge object using verbs
 kn1 <- knowledge() |>
   add_vars(names(tpc_example)) |>
   add_tier(child) |>
@@ -36,11 +36,11 @@ kn1 <- knowledge() |>
   add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
-# (meaning you cannot add variables to the knowledge object anymore)
+# (meaning you cannot add variables to the Knowledge object anymore)
 # this is to get a true on the identical check
 kn1$frozen <- TRUE
 
-# create identical knowledge object using DSL
+# create identical Knowledge object using DSL
 kn2 <- knowledge(
   tpc_example,
   tier(
@@ -67,7 +67,7 @@ try(
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

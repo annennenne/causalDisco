@@ -1,9 +1,9 @@
 #' @title Retrieve Nodes
 #'
 #' @description
-#' This function retrieves the nodes from a `caugi` object as a tibble.
+#' This function retrieves the nodes from a [caugi::caugi] object as a tibble.
 #'
-#' @param cg A `caugi` object.
+#' @param cg A [caugi::caugi] object.
 #' @return A tibble containing the nodes.
 #'
 #' @examples
@@ -28,9 +28,9 @@ nodes <- function(cg) {
 #' @title Retrieve Edges
 #'
 #' @description
-#' This function retrieves the edges from a `caugi` object as a tibble.
+#' This function retrieves the edges from a [caugi::caugi] object as a tibble.
 #'
-#' @param cg A `caugi` object.
+#' @param cg A [caugi::caugi] object.
 #' @return A tibble containing the edges.
 #'
 #' @examples

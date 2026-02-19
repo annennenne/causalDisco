@@ -304,7 +304,7 @@ Set the causal discovery algorithm to use.
 \if{html}{\out{<a id="method-BnlearnSearch-set_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-BnlearnSearch-set_knowledge}{}}}
 \subsection{Method \code{set_knowledge()}}{
-Set the prior knowledge for the search algorithm using a knowledge object.
+Set the prior knowledge for the search algorithm using a \code{Knowledge} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{BnlearnSearch$set_knowledge(knowledge_obj)}\if{html}{\out{</div>}}
 }
@@ -312,7 +312,7 @@ Set the prior knowledge for the search algorithm using a knowledge object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{knowledge_obj}}{A knowledge object containing prior knowledge.}
+\item{\code{knowledge_obj}}{A \code{Knowledge} object containing prior knowledge.}
 }
 \if{html}{\out{</div>}}
 }

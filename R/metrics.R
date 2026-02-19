@@ -1,10 +1,10 @@
 #' @title Confusion Matrix
 #'
 #' @description
-#' Compute confusion matrix for two PDAG `caugi` graphs.
+#' Compute confusion matrix for two PDAG [caugi::caugi] graphs.
 #'
-#' @param truth A `caugi` object representing the truth graph.
-#' @param est A `caugi` object representing the estimated graph.
+#' @param truth A [caugi::caugi] object representing the truth graph.
+#' @param est A [caugi::caugi] object representing the estimated graph.
 #' @param type Character string specifying the comparison type:
 #'   \itemize{
 #'     \item \code{"adj"}: adjacency comparison.
@@ -26,7 +26,7 @@
 #' a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 #' and a truth negative marks correct placement of a tail (0).
 #'
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @return A list with entries \code{tp} (truth positives), \code{tn} (truth negatives),
 #' \code{fp} (false positives), and \code{fn} (false negatives).
@@ -100,10 +100,10 @@ confusion <- function(truth, est, type = c("adj", "dir")) {
 #' }
 #'
 #' Adjacency confusion matrix and conditional orientation confusion matrix only works for
-#' `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
-#' @param truth truth `caugi` object.
-#' @param est Estimated `caugi` object.
+#' @param truth truth [caugi::caugi] object.
+#' @param est Estimated [caugi::caugi] object.
 #' @param metrics List of metrics, see details. If \code{metrics = "all"}, all available metrics are computed.
 #'
 #' @return A data.frame with one column for each computed metric. Adjacency metrics are prefixed with "adj_",
@@ -224,11 +224,11 @@ evaluate <- function(truth, est, metrics = "all") {
 
 #' Precision
 #'
-#' @description Computes precision from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes precision from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' precision as `TP/(TP + FP)`, where TP are truth positives and
 #' `FP` are false positives. If `TP + FP = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -258,11 +258,11 @@ precision <- function(truth, est, type = c("adj", "dir")) {
 
 #' Recall
 #'
-#' @description Computes recall from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes recall from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' recall as `TP/(TP + FN)`, where `TP` are truth positives and
 #' `FN` are false negatives. If `TP + FN = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -291,11 +291,11 @@ recall <- function(truth, est, type = c("adj", "dir")) {
 
 #' Specificity
 #'
-#' @description Computes specificity from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes specificity from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' specificity as `TN/(TN + FP)`, where `TN` are truth negatives and
 #' `FP` are false positives. If `TN + FP = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -325,11 +325,11 @@ specificity <- function(truth, est, type = c("adj", "dir")) {
 
 #' False Omission Rate
 #'
-#' @description Computes false omission rate from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes false omission rate from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' false omission rate as `FN/(FN + TN)`, where `FN` are false negatives and
 #' `TN` are truth negatives. If `FN + TN = 0, 1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -359,11 +359,11 @@ false_omission_rate <- function(truth, est, type = c("adj", "dir")) {
 
 #' False Discovery Rate
 #'
-#' @description Computes false discovery rate from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes false discovery rate from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' false discovery rate as `FP/(FP + TP)`, where `FP` are false positives and
 #' `TP` are truth positives. If `FP + TP = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -393,11 +393,11 @@ fdr <- function(truth, est, type = c("adj", "dir")) {
 
 #' Negative Predictive Value
 #'
-#' @description Computes negative predictive value from two PDAG `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes negative predictive value from two PDAG [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' negative predictive value as `TN/(TN + FN)`, where `TN` are truth negatives and
 #' `FN` are false negatives. If `TN + FN = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -427,11 +427,11 @@ npv <- function(truth, est, type = c("adj", "dir")) {
 
 #' F1 score
 #'
-#' @description Computes F1 score from two `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes F1 score from two [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where `TP` are truth positives,
 #' `FP` are false positives, and `FN` are false negatives. If `TP + FP + FN = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @inheritParams confusion
 #'
@@ -462,11 +462,11 @@ f1_score <- function(truth, est, type = c("adj", "dir")) {
 
 #' G1 score
 #'
-#' @description Computes G1 score from two `caugi` objects.
-#' It converts the `caugi` objects to adjacency matrices and computes
+#' @description Computes G1 score from two [caugi::caugi] objects.
+#' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where `TN` are truth negatives,
 #' `FP` are false positives, and FN are false negatives. If `TN + FN + FP = 0`, `1` is returned.
-#' Only supports `caugi` objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
 #'
 #' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using
 #' supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).

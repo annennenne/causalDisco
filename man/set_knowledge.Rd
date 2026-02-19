@@ -12,7 +12,7 @@ set_knowledge(method, knowledge)
 \arguments{
 \item{method}{A \code{"disco_method"} function.}
 
-\item{knowledge}{A knowledge object appropriate for the engine.}
+\item{knowledge}{A \code{Knowledge} object appropriate for the engine.}
 }
 \description{
 Set Background Knowledge to Disco Method

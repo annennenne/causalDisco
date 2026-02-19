@@ -1,7 +1,7 @@
-#' Plot a disco Object
+#' Plot a Disco Object
 #'
-#' Visualize a causal graph stored within a `disco` object. This function
-#' extends [plot.knowledge()] by combining the causal graph from a `caugi` object with
+#' Visualize a causal graph stored within a `Disco` object. This function
+#' extends [plot.Knowledge()] by combining the causal graph from a `caugi` object with
 #' background knowledge.
 #'
 #' - **Required edges** are drawn in **blue** by default (`required_col`), can be changed.
@@ -11,14 +11,14 @@
 #'   To override the color of a specific edge, specify it in
 #'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
-#' @inheritParams plot.knowledge
-#' @param x A `disco` object containing both the causal graph and the associated knowledge.
-#' @param ... Additional arguments passed to [caugi::plot()] and [plot.knowledge()].
+#' @inheritParams plot.Knowledge
+#' @param x A `Disco` object containing both the causal graph and the associated knowledge.
+#' @param ... Additional arguments passed to [caugi::plot()] and [plot.Knowledge()].
 #'
 #' @return Invisibly returns the underlying `caugi` object. The main effect is the plot.
 #'
 #' @details
-#' This function combines the causal graph and the knowledge object into a single plotting
+#' This function combines the causal graph and the `Knowledge` object into a single plotting
 #' structure. If the knowledge contains tiers, nodes are laid out accordingly; otherwise,
 #' the default caugi layout is used. Edges marked as required are automatically colored
 #' (or can be overridden per edge using `edge_style$by_edge`).
@@ -114,7 +114,7 @@
 #'
 #' @seealso [caugi::plot()]
 #' @export
-plot.disco <- function(
+plot.Disco <- function(
   x,
   required_col = "blue",
   ...
@@ -165,13 +165,13 @@ plot.disco <- function(
 #' @param forbidden_col Character(1). Color for edges marked as "forbidden". Default `"red"`.
 #' @param ... Additional arguments passed to [caugi::plot()], e.g., `node_style`, `edge_style`.
 #'
-#' @return Invisibly returns the caugi object used for plotting. The main effect is the plot.
+#' @return Invisibly returns the [caugi::caugi] object used for plotting. The main effect is the plot.
 #'
 #' @details
-#' - Nodes are arranged by tiers if tier information is provided in the knowledge object.
+#' - Nodes are arranged by tiers if tier information is provided in the `Knowledge` object.
 #' - If some nodes are missing tier assignments, a warning is issued and the plot falls back
 #'   to untiered plotting.
-#' - The function automatically handles edges marked as "required" or "forbidden" in the knowledge object.
+#' - The function automatically handles edges marked as "required" or "forbidden" in the `Knowledge` object.
 #' - Other edge styling (line width, arrow size, etc.) can be supplied via `edge_style`.
 #'   The only way to override edge colors for specific edges is to specify them directly
 #'   in `edge_style$by_edge[[from]][[to]]$col`.
@@ -179,7 +179,7 @@ plot.disco <- function(
 #' @examples
 #' data(tpc_example)
 #'
-#' # Define a knowledge object with tiers
+#' # Define a `Knowledge` object with tiers
 #' kn_tiered <- knowledge(
 #'   tpc_example,
 #'   tier(
@@ -256,7 +256,7 @@ plot.disco <- function(
 #'   forbidden_col = "red"
 #' )
 #'
-#' # Define a knowledge object without tiers
+#' # Define a `Knowledge` object without tiers
 #' kn_untiered <- knowledge(
 #'   tpc_example,
 #'   child_x1 %-->% c(child_x2, youth_x3),
@@ -274,7 +274,7 @@ plot.disco <- function(
 #' plot(kn_untiered, layout = custom_layout)
 #'
 #' @export
-plot.knowledge <- function(
+plot.Knowledge <- function(
   x,
   required_col = "blue",
   forbidden_col = "red",
@@ -316,7 +316,7 @@ plot.knowledge <- function(
 
 
 #' Common Plotting Function for Causal Graphs with Tiers and Edge Styles
-#' @param cg A caugi object representing the causal graph to be plotted.
+#' @param cg A [caugi::caugi] object representing the causal graph to be plotted.
 #' @param tiers A list of character vectors representing the tiers for tiered plotting.
 #' @param auto_edge_styles A list specifying automatic edge styles to be applied.
 #' This is typically generated based on required/forbidden edges in knowledge.
@@ -383,14 +383,14 @@ plot_caugi_common <- function(
 #'
 #' This is the generic `plot()` function for objects of class [knowledge]
 #' or [disco]. It dispatches to the class-specific plotting methods
-#' [plot.knowledge()] and [plot.disco()].
+#' [plot.Knowledge()] and [plot.Disco()].
 #'
 #' @param x An object to plot (class [knowledge] or [disco]).
 #' @param ... Additional arguments passed to class-specific plot methods and to [caugi::plot()].
 #'
 #' @return Invisibly returns the input object. The primary effect is the generated plot.
 #'
-#' @seealso [plot.knowledge()], [plot.disco()], [caugi::plot()]
+#' @seealso [plot.Knowledge()], [plot.Disco()], [caugi::plot()]
 #'
 #' @examples
 #' data(tpc_example)

@@ -1,4 +1,4 @@
-# print.knowledge() snapshot
+# print.Knowledge() snapshot
 
       [1mtier[22m 
       <chr>

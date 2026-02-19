@@ -205,7 +205,7 @@ test_that("labels errors are thrown for pcalg constraints conversion", {
   labels <- c("A", "B", "C", "D", "E")
   expect_error(
     as_pcalg_constraints(kn, labels = labels, directed_as_undirected = TRUE),
-    "`labels` contained variables that were not in the knowledge object: [E]",
+    "`labels` contained variables that were not in the Knowledge object: [E]",
     fixed = TRUE
   )
 })

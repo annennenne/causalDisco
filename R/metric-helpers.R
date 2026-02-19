@@ -1,6 +1,6 @@
 #' Convert to Adjacency Matrix
 #'
-#' Convert a `caugi` object to its corresponding "from-to" adjacency matrix representation.
+#' Convert a [caugi::caugi] object to its corresponding "from-to" adjacency matrix representation.
 #' If the graph is a PAG, the adjacency matrix will encode edge marks as follows:
 #' - `0`: No edge
 #' - `1`: Circle (o)
@@ -9,7 +9,7 @@
 #'
 #' For PDAGs, the adjacency matrix will use `1` to indicate the presence of an edge and `0` for no edge.
 #'
-#' @param x A `caugi` object.
+#' @param x A [caugi::caugi] object.
 #' @returns An adjacency matrix.
 #' @keywords internal
 #' @noRd

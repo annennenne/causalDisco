@@ -30,7 +30,7 @@ flexible options for customizing the appearance of nodes and edges.
 
 ## Plotting Knowledge Objects
 
-We start by creating a simple knowledge object and visualizing it with `plot()`.
+We start by creating a simple `Knowledge` object and visualizing it with `plot()`.
 This knowledge encodes the following relationships between variables in our dataset:
 
 ```{r knowledge plot}
@@ -147,7 +147,7 @@ hierarchical relationships in the data.
 
 ## Plotting Knowledgeable Caugi Objects
 
-Here we run a causal discovery algorithm to get a `knowledgeable_caugi`, which is the knowledge object alongside the
+Here we run a causal discovery algorithm to get a `Disco` object, which is the knowledge object alongside the
 learned causal graph as a `caugi` object. We can then plot this combined object to see both the prior knowledge and
 the learned relationships
 

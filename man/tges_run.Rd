@@ -17,7 +17,7 @@ At the moment only scores supported are
 \item{verbose}{indicates whether debug output should be printed.}
 }
 \value{
-A \code{caugi} and a \code{knowledge} (\code{disco}) object.
+A \code{Disco} object (a list with a \code{caugi} and a \code{knowledge} object).
 }
 \description{
 Perform causal discovery using the temporal greedy equivalence search algorithm.

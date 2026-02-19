@@ -18,10 +18,6 @@ gs(engine = c("bnlearn"), test, alpha = 0.05, ...)
 
 \item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
-\value{
-A function of class \code{"gs"} that takes a single argument \code{data}
-(a data frame) and returns a \code{caugi} (of class "PDAG") and a \code{knowledge} object.
-}
 \description{
 Run the GS (Grow-Shrink) algorithm for causal discovery using one of several engines.
 }
@@ -31,6 +27,25 @@ For specific details on the supported tests and parameters for each engine, see:
 \item \link{BnlearnSearch} for \pkg{bnlearn}.
 }
 }
+\section{Recommendation}{
+
+While it is possible to call the function returned directly with a data frame,
+we recommend using \code{\link[=disco]{disco()}}. This provides a consistent interface and handles knowledge
+integration.
+}
+
+\section{Value}{
+
+A function that takes a single argument \code{data} (a data frame). When called,
+this function returns a list containing:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
+\item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object (of class \code{PDAG}) representing the learned causal graph
+from the causal discovery algorithm.
+}
+}
+
 \examples{
 data(tpc_example)
 

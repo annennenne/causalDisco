@@ -3,12 +3,12 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 # ────────────────────────────── New knowledge  ────────────────────────────────
-#' @title Create a `knowledge` object
+#' @title Create a `Knowledge` object
 #'
 #' @param vars Character vector of variable names.  Defaults to empty.
 #' @param frozen Logical. If `TRUE`, no new variables can be added. Defaults to `FALSE`.
 #'
-#' @returns An S3 object of class `"knowledge"`.
+#' @returns An S3 object of class `"Knowledge"`.
 #'
 #' @example inst/roxygen-examples/dot-new_knowledge-example.R
 #' @noRd
@@ -36,7 +36,7 @@
       ),
       frozen = frozen
     ),
-    class = "knowledge"
+    class = "Knowledge"
   )
 }
 
@@ -138,16 +138,16 @@
 }
 
 # ───────────────────────────── Edge helpers  ──────────────────────────────────
-#' @title Add one or many edges to a knowledge object
+#' @title Add Edges to a Knowledge Object
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param status A string, either "forbidden" or "required".
 #' @param from A tidyselect specification or character vector of variable names.
 #' @param to A tidyselect specification or character vector of variable names.
 #' @param remove_self_loops Logical. If `TRUE`, self-loops are removed.
 #' Defaults to `FALSE`.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/dot-add_edges-example.R
 #' @noRd
@@ -202,7 +202,7 @@
 #' `forbid_edge()` or `require_edge()` into concrete variable names, then passes
 #' the cross-product to `.add_edges()`.
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param status Either `"forbidden"` or `"required"`.
 #' @param fml A quosure that must wrap a two-sided formula.
 #'
@@ -250,13 +250,13 @@
 # ───────────────────────────── Misc helpers  ──────────────────────────────────
 #' @title Resolve a tidy-select or character spec to character names
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param spec A tidyselect specification (e.g. `everything()`,
 #' `starts_with("V")`) or a character vector.
 #' @keywords internal
 #' @title Resolve a tidy-select or character spec to character names
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param spec An unevaluated variable specification. May be:
 #'   - a tidyselect helper (e.g. `everything()`, `starts_with("V")`)
 #'   - a bare symbol naming a variable
@@ -362,7 +362,7 @@
 
 #' @title Extract variable names from the RHS of a `tier()` formula
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param rhs A formula (e.g. `1 ~ V1 + V2`).
 #'
 #' @example inst/roxygen-examples/dot-formula_vars-example.R

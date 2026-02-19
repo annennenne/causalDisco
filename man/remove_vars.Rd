@@ -2,17 +2,17 @@
 % Please edit documentation in R/knowledge-verbs.R
 \name{remove_vars}
 \alias{remove_vars}
-\title{Remove Variables Along with Their Edges from Knowledge}
+\title{Remove Variables from Knowledge}
 \usage{
 remove_vars(kn, ...)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{...}{Unquoted variable names or tidy‐select helpers.}
 }
 \value{
-An updated \code{knowledge} object.
+An updated \code{Knowledge} object.
 }
 \description{
 Drops the given variables from \code{kn$vars}, and automatically removes
@@ -44,7 +44,7 @@ print(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

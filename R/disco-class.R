@@ -1,18 +1,18 @@
-#' @title disco Object
+#' @title Disco Object
 #'
 #' @description
-#' This S3 class wraps `caugi` graph object and a `knowledge` object. It is the
+#' This S3 class wraps [caugi::caugi] graph object and a `Knowledge` object. It is the
 #' output object of causal discovery methods used in \pkg{causalDisco}.
 #'
 #' @details
-#' The conversion from any graph type to a `caugi` is handled by the \pkg{caugi}
+#' The conversion from any graph type to a [caugi::caugi] is handled by the \pkg{caugi}
 #' package.
 #'
 #' @param graph A causal graph object
-#' @param kn A `knowledge` object. Default is empty knowledge object.
+#' @param kn A `Knowledge` object. Default is an empty `Knowledge` object.
 #' @param class A string describing the graph class.
 #'
-#' @returns A `disco` object containing a `caugi` and a `knowledge` object in a list.
+#' @returns A `Disco` object containing a [caugi::caugi] and a `Knowledge` object in a list.
 #'
 #' @seealso [caugi::caugi()]
 #' @keywords internal
@@ -21,19 +21,19 @@ as_disco <- function(graph, kn = knowledge(), class = "PDAG") {
   UseMethod("as_disco")
 }
 
-# delegate field names used by `knowledge` methods
+# delegate field names used by `Knowledge` methods
 .knowledge_fields <- c("vars", "tiers", "edges", "frozen")
 
-#' @title Create a disco Object
+#' @title Create a Disco Object
 #'
-#' @param cg A `caugi` object
-#' @param kn A `knowledge` object
-#' @returns A `disco` object containing the `caugi` and `knowledge` objects.
+#' @param cg A [caugi::caugi] object
+#' @param kn A `Knowledge` object
+#' @returns A `Disco` object containing the [caugi::caugi] and `Knowledge` objects.
 #' @keywords internal
 #' @noRd
 new_disco <- function(cg, kn) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   caugi::is_caugi(cg, throw_error = TRUE)
   structure(
@@ -41,7 +41,7 @@ new_disco <- function(cg, kn) {
       caugi = cg,
       knowledge = kn
     ),
-    class = "disco"
+    class = "Disco"
   )
 }
 
@@ -53,7 +53,7 @@ as_disco.default <- function(
   class = "PDAG"
 ) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   if (caugi::is_caugi(graph)) {
     cg <- graph
@@ -71,7 +71,7 @@ as_disco.pcAlgo <- function(
   class = "PDAG"
 ) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   cg <- caugi::as_caugi(graph@graph, collapse = TRUE, class = class)
   new_disco(cg, kn)
@@ -85,7 +85,7 @@ as_disco.fciAlgo <- function(
   class = "PAG"
 ) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   amat <- methods::as(graph, "matrix")
   cg <- caugi::as_caugi(amat, class = class)
@@ -100,7 +100,7 @@ as_disco.tetrad_graph <- function(
   class = "PDAG"
 ) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   cg <- caugi::as_caugi(graph$amat, collapse = TRUE, class)
   new_disco(cg, kn)
@@ -115,7 +115,7 @@ as_disco.EssGraph <- function(
   class = "PDAG"
 ) {
   if (!is_knowledge(kn)) {
-    stop("`kn` must be a knowledge object.", call. = FALSE)
+    stop("`kn` must be a Knowledge object.", call. = FALSE)
   }
   nodes <- graph$.nodes
 
@@ -182,10 +182,10 @@ as_disco.EssGraph <- function(
   new_disco(cg, kn)
 }
 
-#' @title Print a disco Object
-#' @param x A `disco` object.
-#' @inheritParams print.knowledge
-#' @returns Invisibly returns the `disco` object.
+#' @title Print a Disco Object
+#' @param x A `Disco` object.
+#' @inheritParams print.Knowledge
+#' @returns Invisibly returns the `Disco` object.
 #' @examples
 #' data(tpc_example)
 #' kn <- knowledge(
@@ -202,8 +202,8 @@ as_disco.EssGraph <- function(
 #' print(disco_cd_tges, wide_vars = TRUE)
 #' print(disco_cd_tges, compact = TRUE)
 #'
-#' @exportS3Method print disco
-print.disco <- function(
+#' @exportS3Method print Disco
+print.Disco <- function(
   x,
   compact = FALSE,
   wide_vars = FALSE,
@@ -211,7 +211,7 @@ print.disco <- function(
 ) {
   .check_if_pkgs_are_installed(
     pkgs = c("cli", "tibble"),
-    function_name = "print.disco"
+    function_name = "print.Disco"
   )
 
   cli::cli_h1("caugi graph")
@@ -230,15 +230,15 @@ print.disco <- function(
   }
 
   # Knowledge info
-  print.knowledge(x$knowledge, compact = compact, wide_vars = wide_vars, ...)
+  print.Knowledge(x$knowledge, compact = compact, wide_vars = wide_vars, ...)
 
   invisible(x)
 }
 
-#' @title Summarize a disco Object
-#' @param object A `disco` object.
+#' @title Summarize a Disco Object
+#' @param object A `Disco` object.
 #' @param ... Additional arguments (not used).
-#' @returns Invisibly returns the `disco` object.
+#' @returns Invisibly returns the `Disco` object.
 #' @examples
 #' data(tpc_example)
 #' kn <- knowledge(
@@ -253,8 +253,8 @@ print.disco <- function(
 #' disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 #' summary(disco_cd_tges)
 #'
-#' @exportS3Method summary disco
-summary.disco <- function(object, ...) {
+#' @exportS3Method summary Disco
+summary.Disco <- function(object, ...) {
   cg <- object$caugi
   # Graph info
   cli::cli_h1("caugi graph summary")
@@ -263,51 +263,51 @@ summary.disco <- function(object, ...) {
   cli::cli_text("Edges: {.strong {nrow(edges(cg))}}")
 
   # Knowledge info
-  summary.knowledge(object$knowledge, ...)
+  summary.Knowledge(object$knowledge, ...)
 
   invisible(object)
 }
 
 #' @export
-set_knowledge.disco <- function(method, knowledge) {
+set_knowledge.Disco <- function(method, knowledge) {
   if (!is_knowledge(knowledge)) {
-    stop("The knowledge must be a knowledge object.", call. = FALSE)
+    stop("The knowledge must be a Knowledge object.", call. = FALSE)
   }
   method$knowledge <- knowledge
   method
 }
 
-#' @title Extract Knowledge from a disco Object
+#' @title Extract Knowledge from a Disco Object
 #'
 #' @description
-#' S3 method to extract the `knowledge` object from a `disco`.
+#' S3 method to extract the `Knowledge` object from a `Disco`.
 #'
-#' @param x A `disco` object.
+#' @param x A `Disco` object.
 #'
-#' @return The nested `knowledge` object.
+#' @return The nested `Knowledge` object.
 #'
 #' @keywords internal
 #' @noRd
-knowledge.disco <- function(x) {
+knowledge.Disco <- function(x) {
   x$knowledge
 }
 
-#' @title Is it a `disco`?
+#' @title Is it a `Disco`?
 #'
 #' @param x An object
 #'
-#' @returns `TRUE` if the object is of class `disco`, `FALSE` otherwise.
+#' @returns `TRUE` if the object is of class `Disco`, `FALSE` otherwise.
 #' @keywords internal
 #' @noRd
 is_disco <- function(x) {
-  inherits(x, "disco")
+  inherits(x, "Disco")
 }
 
 
-# delegate accessors so `knowledge` verbs operate on the nested object
+# delegate accessors so `Knowledge` verbs operate on the nested object
 
 #' @export
-`$.disco` <- function(x, name) {
+`$.Disco` <- function(x, name) {
   ux <- unclass(x)
   if (name %in% names(ux)) {
     return(ux[[name]])
@@ -319,7 +319,7 @@ is_disco <- function(x) {
 }
 
 #' @export
-`$<-.disco` <- function(x, name, value) {
+`$<-.Disco` <- function(x, name, value) {
   ux <- unclass(x)
   if (name %in% names(ux) && !(name %in% .knowledge_fields)) {
     ux[[name]] <- value
@@ -331,12 +331,12 @@ is_disco <- function(x) {
     ux[[name]] <- value
     x <- ux
   }
-  class(x) <- "disco"
+  class(x) <- "Disco"
   x
 }
 
 #' @export
-`[[.disco` <- function(x, name, ...) {
+`[[.Disco` <- function(x, name, ...) {
   ux <- unclass(x)
   if (is.character(name)) {
     if (name %in% names(ux)) {
@@ -350,7 +350,7 @@ is_disco <- function(x) {
 }
 
 #' @export
-`[[<-.disco` <- function(x, name, value) {
+`[[<-.Disco` <- function(x, name, value) {
   ux <- unclass(x)
   if (is.character(name) && (name %in% .knowledge_fields)) {
     ux$knowledge[[name]] <- value
@@ -359,6 +359,6 @@ is_disco <- function(x) {
     ux[[name]] <- value
     x <- ux
   }
-  class(x) <- "disco"
+  class(x) <- "Disco"
   x
 }

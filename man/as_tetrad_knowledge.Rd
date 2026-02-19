@@ -7,16 +7,16 @@
 as_tetrad_knowledge(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 }
 \value{
 A Java \code{edu.cmu.tetrad.data.Knowledge} object.
 }
 \description{
-Converts a \code{knowledge} object to a Tetrad \code{edu.cmu.tetrad.data.Knowledge}.
+Converts a \code{Knowledge} object to a Tetrad \code{edu.cmu.tetrad.data.Knowledge}.
 This requires \code{rJava}. This is used internally, when setting knowledge with
-\code{set_knowledge} for methods using the Tetrad engine. \code{set_knowledge} is used
-internally, when using the \code{disco} function with knowledge given.
+\code{\link[=set_knowledge]{set_knowledge()}} for methods using the Tetrad engine. \code{\link[=set_knowledge]{set_knowledge()}} is used
+internally, when using the \code{\link[=disco]{disco()}} function with knowledge given.
 }
 \examples{
 # convert to Tetrad Knowledge via rJava
@@ -37,7 +37,7 @@ try(print(jk)) # prints a Java reference if successful
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

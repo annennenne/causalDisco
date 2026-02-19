@@ -78,7 +78,7 @@ try(CausalDiscoSearch$new()$set_score("not_a_score"))
 try(CausalDiscoSearch$new()$set_alg("not_an_alg"))
 
 # set_knowledge() requires a `knowledge` object
-try(CausalDiscoSearch$new()$set_knowledge(list(not = "knowledge")))
+try(CausalDiscoSearch$new()$set_knowledge(list(not = "Knowledge")))
 }
 \seealso{
 \code{\link[=knowledge]{knowledge()}}.
@@ -127,7 +127,7 @@ Use with caution.}
 \item{\code{suff_stat}}{Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.}
 
-\item{\code{knowledge}}{A \code{knowledge} object holding background knowledge.}
+\item{\code{knowledge}}{A \code{Knowledge} object holding background knowledge.}
 }
 \if{html}{\out{</div>}}
 }
@@ -261,7 +261,7 @@ Sets the algorithm for the search.
 \if{html}{\out{<a id="method-CausalDiscoSearch-set_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-CausalDiscoSearch-set_knowledge}{}}}
 \subsection{Method \code{set_knowledge()}}{
-Sets the background knowledge for the search with a \code{knowledge} object.
+Sets the background knowledge for the search with a \code{Knowledge} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_knowledge(kn, directed_as_undirected = FALSE)}\if{html}{\out{</div>}}
 }
@@ -269,7 +269,7 @@ Sets the background knowledge for the search with a \code{knowledge} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{kn}}{A \code{knowledge} object.}
+\item{\code{kn}}{A \code{Knowledge} object.}
 
 \item{\code{directed_as_undirected}}{Logical; whether to treat directed edges in
 the knowledge as undirected. Default is \code{FALSE}. This is due to the

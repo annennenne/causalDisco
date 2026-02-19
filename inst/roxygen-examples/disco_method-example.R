@@ -2,7 +2,7 @@
 # for causalDisco.
 
 # Overview:
-# First, we initialize the data and the knowledge object.
+# First, we initialize the data and the Knowledge object.
 # Second, we implement a simple graph builder as a runner builder function.
 #   Here we use a super-simple heuristic:
 #     - compute pairwise correlations

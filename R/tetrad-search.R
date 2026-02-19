@@ -1281,7 +1281,7 @@ TetradSearch <- R6Class(
       )
       invisible(self)
     },
-    #' @description Sets the background knowledge object.
+    #' @description Sets the background `Knowledge` object.
     #' @param knowledge_obj An object containing \pkg{Tetrad} knowledge.
     set_knowledge = function(knowledge_obj) {
       is_knowledge(knowledge_obj)
@@ -1411,7 +1411,7 @@ TetradSearch <- R6Class(
     #' @param int_cols_as_cont (logical) If `TRUE`, integer columns are treated
     #' as continuous, since \pkg{Tetrad} does not support ordinal data, but only
     #' either continuous or nominal data. Default is `TRUE.`
-    #' @return A `caugi` and a `knowledge` (`disco`) object.
+    #' @return A `Disco` object (a list with a `caugi` and a `Knowledge` object).
     #' Also populates \code{self$java}.
     run_search = function(
       data = NULL,
@@ -1532,7 +1532,7 @@ TetradSearch <- R6Class(
     get_data = function() {
       self$data
     },
-    #' @description Returns the background knowledge object.
+    #' @description Returns the background `Knowledge` object.
     #' @return (Java object) Tetrad Knowledge.
     get_knowledge = function() {
       self$knowledge
@@ -2438,7 +2438,7 @@ TetradSearch <- R6Class(
         self$score
       )
 
-      # Set the knowledge object
+      # Set the `Knowledge` object
       self$alg$setKnowledge(self$knowledge)
     },
     set_fges_mb_alg = function(

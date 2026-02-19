@@ -24,9 +24,8 @@
 #'
 #' @example inst/roxygen-examples/hc-example.R
 #'
-#' @return
-#' A function of class \code{"hc"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "DAG") and a `knowledge` object.
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_dag Returns
 #'
 # #' @family causal discovery algorithms
 # #' @concept cd_algorithms

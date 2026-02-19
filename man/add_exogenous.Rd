@@ -10,12 +10,12 @@ add_exogenous(kn, vars)
 add_exo(kn, vars)
 }
 \arguments{
-\item{kn}{A knowledge object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{vars}{Tidyselect specification or character vector of variables.}
 }
 \value{
-Updated knowledge object.
+Updated \code{Knowledge} object.
 }
 \description{
 Adds variables that cannot have incoming edges (exogenous nodes).
@@ -25,7 +25,7 @@ This is equivalent to writing \code{forbidden(everything() ~ vars)}.
 \examples{
 data(tpc_example)
 
-# create knowledge object using verbs
+# create Knowledge object using verbs
 kn1 <- knowledge() |>
   add_vars(names(tpc_example)) |>
   add_tier(child) |>
@@ -39,11 +39,11 @@ kn1 <- knowledge() |>
   add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
-# (meaning you cannot add variables to the knowledge object anymore)
+# (meaning you cannot add variables to the Knowledge object anymore)
 # this is to get a true on the identical check
 kn1$frozen <- TRUE
 
-# create identical knowledge object using DSL
+# create identical Knowledge object using DSL
 kn2 <- knowledge(
   tpc_example,
   tier(
@@ -70,7 +70,7 @@ try(
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},
 \code{\link{add_vars}()},

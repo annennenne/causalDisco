@@ -1,4 +1,4 @@
-# Create two knowledge objects
+# Create two Knowledge objects
 kn1 <- knowledge(
   tier(
     1 ~ V1,

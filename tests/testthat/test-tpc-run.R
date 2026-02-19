@@ -111,7 +111,7 @@ test_that(".build_knowledge_from_order builds tiers in the given order and attac
     vnames = vars
   )
 
-  expect_s3_class(kn, "knowledge")
+  expect_s3_class(kn, "Knowledge")
   expect_identical(kn$tiers$label, c("child", "youth", "oldage"))
   expect_setequal(kn$vars$var[kn$vars$tier == "child"], c("childA", "childB"))
   expect_setequal(kn$vars$var[kn$vars$tier == "youth"], "youthC")
@@ -126,7 +126,7 @@ test_that(".build_knowledge_from_order returns merged knowledge when data is pre
     vnames = NULL
   )
 
-  expect_s3_class(kn, "knowledge")
+  expect_s3_class(kn, "Knowledge")
   expect_identical(kn$tiers$label, c("child", "youth", "oldage"))
   expect_true(all(names(df) %in% kn$vars$var))
 })
@@ -152,7 +152,7 @@ test_that(".build_knowledge_from_order builds tiers in declared order (vnames pa
     vnames = vnames
   )
 
-  expect_s3_class(kn, "knowledge")
+  expect_s3_class(kn, "Knowledge")
   expect_identical(kn$tiers$label, c("T1", "T2"))
   expect_setequal(kn$vars$var, vnames)
 

@@ -2,13 +2,13 @@
 # ─────────────────────────── Public API  ──────────────────────────────────────
 # ──────────────────────────────────────────────────────────────────────────────
 
-#' Knowledge Mini-DSL Constructor
+#' Define Background Knowledge
 #'
-#' Create a `knowledge` object using a concise mini-DSL with `tier()`, `exogenous()` and infix edge operators
+#' Create a `Knowledge` object using a concise mini-DSL with `tier()`, `exogenous()` and infix edge operators
 #' `%-->%` and `%!-->%`.
 #'
 #' @description
-#' Constructs a `knowledge` object optionally initialized with a data frame and
+#' Constructs a `Knowledge` object optionally initialized with a data frame and
 #' extended with variable relationships expressed via formulas, selectors, or infix operators:
 #'
 #' ```r
@@ -20,9 +20,9 @@
 #'
 #' @details
 #' The first argument can be a data frame, which will be used to populate the
-#' `knowledge` object with variable names. If you later add variables with
-#' add_* verbs, this will throw a warning, since the knowledge object will
-#' be *frozen*. You can unfreeze a knowledge object by using the function
+#' `Knowledge` object with variable names. If you later add variables with
+#' `add_*` verbs, this will throw a warning, since the `Knowledge` object will
+#' be *frozen*. You can unfreeze a `Knowledge` object by using the function
 #' `unfreeze(knowledge)`.
 #'
 #' If no data frame is provided, the object is initially empty. Variables can
@@ -41,7 +41,7 @@
 #' - Numeric vector shortcut for `tier()`:
 #'   `tier(c(1, 2, 1))` assigns tiers by index to all existing variables.
 #'
-#' Multiple calls or operators are additive: each call adds new edges to the knowledge object.
+#' Multiple calls or operators are additive: each call adds new edges to the `Knowledge` object.
 #' For example:
 #'
 #' ```r
@@ -51,16 +51,16 @@
 #'
 #' results in both edges being required - i.e., the union of all specified required edges.
 #'
-#' @param ... Arguments to define the knowledge object:
+#' @param ... Arguments to define the `Knowledge` object:
 #'   * Optionally, a single data frame (first argument) whose column names
 #'     initialize and freeze the variable set.
 #'   * Zero or more mini-DSL calls:
-#'     `tier()`, `exogenous()`, `exo()`, or infix operators `%-->%`, `%!-->%`.
+#'     `tier()`, `exogenous()`, (shorthand `exo()`), or infix operators `%-->%`, `%!-->%`.
 #'     - `tier()`: One or more two-sided formulas (`tier(1 ~ x + y)`), or a numeric vector.
 #'     - `exogenous()` / `exo()`: Variable names or tidyselect selectors.
 #'     Arguments are evaluated in order; only these calls are allowed.
 #'
-#' @returns A populated `knowledge` object.
+#' @returns A populated `Knowledge` object.
 #'
 #' @importFrom tidyselect eval_select everything starts_with ends_with
 #' @importFrom tidyselect starts_with ends_with contains matches num_range
@@ -82,7 +82,7 @@ knowledge <- function(...) {
       "tidyselect",
       "utils"
     ),
-    function_name = "knowledge"
+    function_name = knowledge
   )
 
   dots <- as.list(substitute(list(...)))[-1]
@@ -454,11 +454,11 @@ knowledge <- function(...) {
 # ────────────────────────────────── Print ─────────────────────────────────────
 #' @title Print a Knowledge Object
 #'
-#' @param x A `knowledge` object.
+#' @param x A `Knowledge` object.
 #' @param compact Logical. If `TRUE`, prints a more compact summary.
 #' @param wide_vars Logical. If `TRUE`, prints the variables in a wide format.
 #' @param ... Additional arguments (not used).
-#' @returns Invisibly returns the `knowledge` object.
+#' @returns Invisibly returns the `Knowledge` object.
 #' @examples
 #' kn <- knowledge(
 #'   tpc_example,
@@ -472,11 +472,11 @@ knowledge <- function(...) {
 #' print(kn, wide_vars = TRUE)
 #' print(kn, compact = TRUE)
 #'
-#' @exportS3Method print knowledge
-print.knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
+#' @exportS3Method print Knowledge
+print.Knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c("cli", "tibble"),
-    function_name = "print.knowledge"
+    function_name = "print.Knowledge"
   )
 
   cli::cli_h1("Knowledge object")
@@ -594,9 +594,9 @@ print.knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
 }
 
 #' @title Summarize a Knowledge Object
-#' @param object A `knowledge` object.
+#' @param object A `Knowledge` object.
 #' @param ... Additional arguments (not used).
-#' @returns Invisibly returns the `knowledge` object.
+#' @returns Invisibly returns the `Knowledge` object.
 #' @examples
 #' kn <- knowledge(
 #'   tpc_example,
@@ -608,8 +608,8 @@ print.knowledge <- function(x, compact = FALSE, wide_vars = FALSE, ...) {
 #' )
 #' summary(kn)
 #'
-#' @exportS3Method summary knowledge
-summary.knowledge <- function(object, ...) {
+#' @exportS3Method summary Knowledge
+summary.Knowledge <- function(object, ...) {
   cli::cli_h2("Knowledge summary")
 
   n_tiers <- if (!is.null(object$tiers)) nrow(object$tiers) else 0
@@ -639,7 +639,7 @@ summary.knowledge <- function(object, ...) {
 # ────────────────────────────────── Check ─────────────────────────────────────
 #' @title Verify that an object is a knowledge
 #'
-#' @description Check that the object is a `knowledge` object. Mostly
+#' @description Check that the object is a `Knowledge` object. Mostly
 #' for internal use in causalDisco.
 #'
 #' @param x Object to check.
@@ -651,7 +651,7 @@ summary.knowledge <- function(object, ...) {
 #' @noRd
 #' @keywords internal
 is_knowledge <- function(x) {
-  if (!inherits(x, "knowledge")) {
+  if (!inherits(x, "Knowledge")) {
     stop("Input must be a knowledge instance.", call. = FALSE)
   }
   TRUE
@@ -662,11 +662,11 @@ is_knowledge <- function(x) {
 #' @title Deparse a Knowledge Object into Knowledge DSL Code
 #'
 #' @description
-#' Given a `knowledge` object, return a single string containing
+#' Given a `Knowledge` object, return a single string containing
 #' the R code (using `knowledge()`, `tier()`, `%-->%`, and `%!-->%`.
 #' that would rebuild that same object.
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param df_name Optional name of the data frame you used
 #' (used as the first argument to `knowledge()`).  If `NULL`,
 #' `knowledge()` is called with no data frame.
