@@ -15,6 +15,7 @@ tfci_run(
   orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
+  num_cores = 1,
   ...
 )
 }

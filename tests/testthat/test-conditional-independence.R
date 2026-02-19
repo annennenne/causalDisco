@@ -2,9 +2,12 @@
 # reg_test / reg_test_each_dir
 # ──────────────────────────────────────────────────────────────────────────────
 
+# cpu_ratio is like 5 (user + sys)/(elapsed) so using several cores somewhere in reg_test.
+# CRAN doesn't like this, so using a very small dataset so it should run fast enough and not be a problem on CRAN.
+
 test_that("reg_test handles Gaussian (linear) case and finds association", {
   set.seed(1405)
-  n <- 400
+  n <- 40
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n, sd = 0.5)
   Y <- 0.8 * X + 0.2 * Z + stats::rnorm(n, sd = 0.5)
@@ -23,7 +26,7 @@ test_that("reg_test handles Gaussian (linear) case and finds association", {
 
 test_that("reg_test handles Gaussian independence", {
   set.seed(1405)
-  n <- 500
+  n <- 40
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
   Y <- 2 * Z + stats::rnorm(n)
@@ -41,7 +44,7 @@ test_that("reg_test handles Gaussian independence", {
 
 test_that("reg_test handles binomial (logistic) response", {
   set.seed(1405)
-  n <- 600
+  n <- 40
   Z <- stats::rnorm(n)
   X <- 0.7 * Z + stats::rnorm(n)
   eta <- 1.2 * X - 0.4 * Z
@@ -61,7 +64,7 @@ test_that("reg_test handles binomial (logistic) response", {
 
 test_that("reg_test is symmetric", {
   set.seed(1405)
-  n <- 300
+  n <- 40
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
   Y <- 0.5 * X + 0.2 * Z + stats::rnorm(n)
@@ -81,7 +84,7 @@ test_that("reg_test is symmetric", {
 
 test_that("reg_test_each_dir removes NAs", {
   set.seed(1405)
-  n <- 300
+  n <- 50
   Z <- stats::rnorm(n)
   X <- Z + stats::rnorm(n)
   Y <- 0.8 * X + stats::rnorm(n)

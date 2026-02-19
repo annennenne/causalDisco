@@ -1,12 +1,20 @@
 # Ensure Tetrad is installed for local testing.
-# - Skip Tetrad tests on CRAN (avoid installing Java and Tetrad on CRAN).
+# - Skip Tetrad tests on CRAN (avoid installing Tetrad on CRAN).
 # This also avoids rare memory issues on Tetrad (only observed on 7.6.8 and not on current version though).
-# rare memory issues (don't think the current version can though?)
+# So maybe fine for the current version (7.6.10 as time of writing), but being safe for now.
 # - GitHub Actions workflow uses .github/workflows/install-tetrad.R.
 
-on_cran <- identical(Sys.getenv("NOT_CRAN"), "false")
+# Copy pasted from testthat internal function:
+on_cran <- function() {
+  env <- Sys.getenv("NOT_CRAN")
+  if (identical(env, "")) {
+    !interactive()
+  } else {
+    !isTRUE(as.logical(env))
+  }
+}
 
-if (!on_cran) {
+if (!on_cran()) {
   status <- verify_tetrad()
   java_ok <- status$java_ok
   tetrad_installed <- status$installed
@@ -23,6 +31,4 @@ if (!on_cran) {
   }
 } else {
   message("Skipping Tetrad installation on CRAN")
-  # To avoid CRAN CPU time NOTE
-  Sys.setenv(OMP_THREAD_LIMIT = Sys.getenv("OMP_THREAD_LIMIT", "2"))
 }

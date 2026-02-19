@@ -47,6 +47,7 @@ tfci_run <- function(
   orientation_method = "conservative",
   directed_as_undirected = FALSE,
   varnames = NULL,
+  num_cores = 1,
   ...
 ) {
   prep <- constraint_based_prepare_inputs(
@@ -95,6 +96,7 @@ tfci_run <- function(
     method = method,
     fixedGaps = constraints$fixed_gaps,
     fixedEdges = constraints$fixed_edges,
+    numCores = num_cores,
     ...
   )
   ntests <- sum(skel@n.edgetests)
