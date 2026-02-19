@@ -15,7 +15,7 @@ make_tikz(
 )
 }
 \arguments{
-\item{x}{A \code{knowledgeable_caugi}, \code{knowledge}, or \code{caugi::caugi} object.}
+\item{x}{A \code{disco}, \code{knowledge}, or \code{caugi::caugi} object.}
 
 \item{...}{Additional arguments passed to \code{\link[=plot]{plot()}} and \code{\link[caugi:plot]{caugi::plot()}}.}
 
@@ -45,7 +45,7 @@ A character string containing LaTeX TikZ code. Depending on
 }
 }
 \description{
-Generates LaTeX TikZ code from a \code{knowledgeable_caugi}, \code{knowledge}, or
+Generates LaTeX TikZ code from a \code{disco}, \code{knowledge}, or
 \code{caugi::caugi} object, preserving node positions, labels, and visual styles.
 Edges are rendered with arrows, line widths, and colors.
 The output is readable LaTeX code that can be
@@ -126,7 +126,7 @@ tikz_tiered_kn <- make_tikz(
 cat(tikz_tiered_kn)
 
 
-################# Convert Knowledgeable Caugi to Tikz ################
+################# Convert disco to Tikz ################
 
 data(num_data)
 kn <- knowledge(

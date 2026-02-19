@@ -254,7 +254,7 @@ test_that("run_search errors are thrown in the right order", {
   )
 })
 
-test_that("run_search returns knowledgeable_caugi for tpc success path", {
+test_that("run_search returns disco for tpc success path", {
   set.seed(1405)
   my_df <- data.frame(
     p1_x = rnorm(100),
@@ -274,10 +274,10 @@ test_that("run_search returns knowledgeable_caugi for tpc success path", {
   s$set_alg("tpc")
   s$set_data(my_df, set_suff_stat = TRUE)
   res <- s$run_search()
-  expect_s3_class(res, "knowledgeable_caugi")
+  expect_s3_class(res, "disco")
 })
 
-test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
+test_that("tpc and tfci run end-to-end and return disco", {
   set.seed(1405)
   my_df <- data.frame(
     child_x = rnorm(100),
@@ -301,7 +301,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tpc$set_alg("tpc")
   s_tpc$set_data(my_df, set_suff_stat = TRUE)
   res_tpc <- s_tpc$run_search()
-  expect_s3_class(res_tpc, "knowledgeable_caugi")
+  expect_s3_class(res_tpc, "disco")
 
   s_tfci <- CausalDiscoSearch$new()
   s_tfci$set_params(list(method = "stable.fast", na_method = "none"))
@@ -310,7 +310,7 @@ test_that("tpc and tfci run end-to-end and return knowledgeable_caugi", {
   s_tfci$set_alg("tfci")
   s_tfci$set_data(my_df, set_suff_stat = TRUE)
   res_tfci <- s_tfci$run_search()
-  expect_s3_class(res_tfci, "knowledgeable_caugi")
+  expect_s3_class(res_tfci, "disco")
 })
 
 test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)", {
@@ -332,7 +332,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
   s_g$set_score("tbic")
   s_g$set_alg("tges")
   out_g <- s_g$run_search()
-  expect_s3_class(out_g, "knowledgeable_caugi")
+  expect_s3_class(out_g, "disco")
 
   set.seed(1405)
   dfc <- data.frame(
@@ -356,7 +356,7 @@ test_that("tges runs with TemporalBIC (Gaussian) and TemporalBDeu (categorical)"
   s_c$set_score("tbdeu")
   s_c$set_alg("tges")
   out_c <- s_c$run_search()
-  expect_s3_class(out_c, "knowledgeable_caugi")
+  expect_s3_class(out_c, "disco")
 })
 
 test_that("verbose is accepted via set_params and passed to tges", {
@@ -376,7 +376,7 @@ test_that("verbose is accepted via set_params and passed to tges", {
   s$set_knowledge(kn)
   s$set_score("tbic")
   s$set_alg("tges")
-  expect_s3_class(s$run_search(), "knowledgeable_caugi")
+  expect_s3_class(s$run_search(), "disco")
 })
 
 test_that("run_search errors when suff_stat missing for constraint-based algs", {
@@ -410,7 +410,7 @@ test_that("run_search tges errors without score and covers knowledge-NULL branch
   s_ok$set_score("tbic")
   s_ok$set_alg("tges")
   out <- s_ok$run_search()
-  expect_s3_class(out, "knowledgeable_caugi")
+  expect_s3_class(out, "disco")
 })
 
 test_that("run_search(data=...) takes constraint-based path and computes suff_stat", {
@@ -436,7 +436,7 @@ test_that("run_search(data=...) takes constraint-based path and computes suff_st
 
   expect_false(is.null(s$suff_stat))
   expect_named(s$suff_stat, c("C", "n"))
-  expect_s3_class(out, "knowledgeable_caugi")
+  expect_s3_class(out, "disco")
 })
 
 test_that("run_search(data=...) takes score-based path and skips suff_stat", {
@@ -450,5 +450,5 @@ test_that("run_search(data=...) takes score-based path and skips suff_stat", {
   out <- s$run_search(data = my_df, set_suff_stat = TRUE)
 
   expect_null(s$suff_stat)
-  expect_s3_class(out, "knowledgeable_caugi")
+  expect_s3_class(out, "disco")
 })

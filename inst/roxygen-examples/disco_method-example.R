@@ -107,7 +107,7 @@ toy_graph_builder <- function(knowledge = NULL) {
           to = character(),
           edge = character()
         )
-        return(knowledgeable_caugi(cg))
+        return(as_disco(cg))
       }
       do.call(rbind, lapply(out, as.data.frame))
       cg <- caugi::caugi(
@@ -116,7 +116,7 @@ toy_graph_builder <- function(knowledge = NULL) {
         edge = out$edge
       )
 
-      knowledgeable_caugi(cg)
+      as_disco(cg)
     }
   )
   runner

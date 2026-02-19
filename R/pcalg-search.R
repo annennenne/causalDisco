@@ -356,7 +356,7 @@ PcalgSearch <- R6::R6Class(
       } else {
         result
       }
-      out |> knowledgeable_caugi()
+      as_disco(out)
     }
   ),
   private = list(

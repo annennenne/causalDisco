@@ -521,7 +521,7 @@ BnlearnSearch <- R6::R6Class(
       }
 
       result <- do.call(self$alg, arg_list)
-      result |> knowledgeable_caugi()
+      as_disco(result)
     }
   )
 )

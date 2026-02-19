@@ -24,7 +24,7 @@ algorithm parameters).}
 \value{
 A function of class \code{"grasp"} that takes a single argument \code{data}
 (a data frame) and returns a \code{caugi} (of class "PDAG") and a \code{knowledge}
-(\code{knowledgeable_caugi}) object.
+(\code{disco}) object.
 }
 \description{
 Run the GRaSP algorithm for causal discovery using one of several engines.

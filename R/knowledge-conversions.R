@@ -338,7 +338,7 @@ knowledge_to_caugi <- function(kn) {
 
 #' Combine knowledge and caugi object
 #' @param cg A `caugi` object.
-#' @param kcg A `knowledgeable_caugi` object.
+#' @param kcg A `disco` object.
 #' @returns A list with the updated `caugi` object alongside information.
 #' @keywords internal
 #' @noRd

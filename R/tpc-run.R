@@ -56,7 +56,7 @@
 #' }
 #'
 #' @return
-#' A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+#' A `caugi` and a `knowledge` (`disco`) object.
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'
@@ -129,7 +129,7 @@ tpc_run <- function(
   res <- tpdag(skel, knowledge = knowledge, from_to = from_to)
 
   cg <- caugi::as_caugi(res, collapse = TRUE, class = "PDAG")
-  knowledgeable_caugi(cg, knowledge)
+  as_disco(cg, knowledge)
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

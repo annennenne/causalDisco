@@ -22,7 +22,7 @@ tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 \value{
 A function of class \code{"tpc"} that takes a single argument \code{data}
 (a data frame) and returns a \code{caugi} (of class "PDAG") and a \code{knowledge}
-(\code{knowledgeable_caugi}) object.
+(\code{disco}) object.
 }
 \description{
 Run the temporal PC algorithm for causal discovery using causalDisco.

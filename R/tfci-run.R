@@ -29,7 +29,7 @@
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See [pcalg::pc()] for further details.
 #'
-#' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+#' @return A `caugi` and a `knowledge` (`disco`) object.
 #'
 #' @example inst/roxygen-examples/tfci-example.R
 #'
@@ -151,7 +151,7 @@ tfci_run <- function(
   )
   cg <- caugi::as_caugi(res, collapse = TRUE, class = "PAG")
 
-  knowledgeable_caugi(cg, knowledge)
+  as_disco(cg, knowledge)
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

@@ -81,12 +81,9 @@ reference:
       - as_bnlearn_knowledge
       - as_pcalg_constraints
       - knowledge_to_caugi
-      - knowledgeable_caugi
-      - new_knowledgeable_caugi
       - deparse_knowledge
       - unfreeze
       - +.knowledge
-      - knowledge.knowledgeable_caugi
 
   - title: "Extend causalDisco"
     desc: "Functions for extending causalDisco with new algorithms from the available engines."

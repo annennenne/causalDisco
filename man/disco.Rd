@@ -32,7 +32,7 @@ algorithm. Available methods are
 applied without additional knowledge.}
 }
 \value{
-A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
+A \code{caugi} and a \code{knowledge} (\code{disco}) object.
 }
 \description{
 Apply a causal discovery method to a data frame to infer causal relationships on observational data.

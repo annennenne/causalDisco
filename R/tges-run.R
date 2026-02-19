@@ -16,7 +16,7 @@
 #'
 #' @example inst/roxygen-examples/tges-example.R
 #'
-#' @return A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+#' @return A `caugi` and a `knowledge` (`disco`) object.
 #'
 #' @export
 tges_run <- function(score, verbose = FALSE) {
@@ -105,7 +105,7 @@ tges_run <- function(score, verbose = FALSE) {
 
   essgraph$.nodes <- score$.nodes
 
-  essgraph |> knowledgeable_caugi()
+  as_disco(essgraph)
 }
 
 

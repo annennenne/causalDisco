@@ -884,7 +884,7 @@ either continuous or nominal data. Default is \code{TRUE.}}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{caugi} and a \code{knowledge} (\code{knowledgeable_caugi}) object.
+A \code{caugi} and a \code{knowledge} (\code{disco}) object.
 Also populates \code{self$java}.
 }
 }

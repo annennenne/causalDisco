@@ -1,13 +1,13 @@
 #' @title Generate TikZ Code from a Object
 #'
 #' @description
-#' Generates LaTeX TikZ code from a `knowledgeable_caugi`, `knowledge`, or
+#' Generates LaTeX TikZ code from a `disco`, `knowledge`, or
 #' `caugi::caugi` object, preserving node positions, labels, and visual styles.
 #' Edges are rendered with arrows, line widths, and colors.
 #' The output is readable LaTeX code that can be
 #' directly compiled or modified.
 #'
-#' @param x A `knowledgeable_caugi`, `knowledge`, or `caugi::caugi` object.
+#' @param x A `disco`, `knowledge`, or `caugi::caugi` object.
 #' @param ... Additional arguments passed to [plot()] and [caugi::plot()].
 #' @param scale Numeric scalar. Scaling factor for node coordinates. Default is `10`.
 #' @param full_doc Logical. If `TRUE` (default), generates a full standalone
@@ -62,7 +62,7 @@ make_tikz <- function(
   dots <- list(...)
   caugi_plot_obj <- plot(x, ...)
 
-  if (inherits(x, "knowledgeable_caugi")) {
+  if (inherits(x, "disco")) {
     x <- x$knowledge
   }
 

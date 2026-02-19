@@ -19,7 +19,7 @@ tges(engine = c("causalDisco"), score, ...)
 }
 \value{
 A function of class \code{"tges"} that takes a single argument \code{data}
-(a data frame) and returns a \code{caugi} (of class "PDAG") and \code{knowledge} (\code{knowledgeable_caugi})
+(a data frame) and returns a \code{caugi} (of class "PDAG") and \code{knowledge} (\code{disco})
 object.
 }
 \description{

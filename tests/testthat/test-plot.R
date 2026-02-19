@@ -10,7 +10,7 @@ test_that("Plotting caugi objects work", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi with empty knowledge works", {
+test_that("Plotting disco with empty knowledge works", {
   kn <- knowledge()
   cg <- caugi::caugi(class = "PDAG")
 
@@ -18,7 +18,7 @@ test_that("Plotting knowledgeable_caugi with empty knowledge works", {
     caugi::add_nodes(c("A1", "A2", "B1", "B2", "C1")) |>
     caugi::add_edges(A1 %-->% B1 %-->% C1) |>
     caugi::set_edges(B2 %---% C1)
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
@@ -71,7 +71,7 @@ test_that("Plotting knowledge objects with caugi plot settings works", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects work", {
+test_that("Plotting disco and knowledge objects work", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -88,12 +88,12 @@ test_that("Plotting knowledgeable_caugi and knowledge objects work", {
   )
   plot(kn)
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with only some of variables in tiers works", {
+test_that("Plotting disco and knowledge objects with only some of variables in tiers works", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -114,7 +114,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with only some of 
     "Not all nodes are assigned to tiers."
   )
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   expect_warning(
     plot(kcg),
     "Not all nodes are assigned to tiers."
@@ -122,7 +122,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with only some of 
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with tier+required", {
+test_that("Plotting disco and knowledge objects with tier+required", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -140,12 +140,12 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with tier+required
   )
   plot(kn)
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with tier+forbidden", {
+test_that("Plotting disco and knowledge objects with tier+forbidden", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -164,12 +164,12 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with tier+forbidde
   )
   plot(kn)
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
+test_that("Plotting disco and knowledge objects with required", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -182,12 +182,12 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with required", {
   )
   plot(kn)
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
+test_that("Plotting disco and knowledge objects with forbidden", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -201,7 +201,7 @@ test_that("Plotting knowledgeable_caugi and knowledge objects with forbidden", {
   )
   plot(kn)
 
-  kcg <- knowledgeable_caugi(cg, kn)
+  kcg <- as_disco(cg, kn)
   plot(kcg)
   expect_true(TRUE)
 })
