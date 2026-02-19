@@ -31,13 +31,15 @@ test_that("iamb-family bnlearn algorithms run without error and return correct c
   )
 
   for (alg in algorithms) {
-    run_all_tests(
-      alg_fun = alg$name,
-      engine = alg$engine,
-      test = alg$test[1],
-      alg_args = list(max.sx = 3, debug = FALSE, undirected = FALSE)
-    )
     # bnlearn can give warnings about vstructure not applicable (due to background knowledge); we supress these
+    suppressWarnings(
+      run_all_tests(
+        alg_fun = alg$name,
+        engine = alg$engine,
+        test = alg$test[1],
+        alg_args = list(max.sx = 3, debug = FALSE, undirected = FALSE)
+      )
+    )
     suppressWarnings(
       test_additional_test_or_score_args(
         alg_fun = alg$name,
