@@ -22,7 +22,7 @@ the R code (using \code{knowledge()}, \code{tier()}, \verb{\%-->\%}, and \verb{\
 that would rebuild that same object.
 }
 \examples{
-# turn a `Knowledge` object back into DSL code
+# turn a Knowledge object back into DSL code
 data(tpc_example)
 
 kn <- knowledge(

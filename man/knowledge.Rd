@@ -69,7 +69,7 @@ results in both edges being required - i.e., the union of all specified required
 \examples{
 data(tpc_example)
 
-# `Knowledge` object can contain tier information, forbidden and required edges
+# Knowledge objects can contain tier information, forbidden and required edges
 kn <- knowledge(
   tier(
     1 ~ V1 + V2,

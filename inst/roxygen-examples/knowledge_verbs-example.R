@@ -1,6 +1,6 @@
 data(tpc_example)
 
-# create `Knowledge` object using verbs
+# create Knowledge object using verbs
 kn1 <- knowledge() |>
   add_vars(names(tpc_example)) |>
   add_tier(child) |>
@@ -14,11 +14,11 @@ kn1 <- knowledge() |>
   add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
-# (meaning you cannot add variables to the `Knowledge` object anymore)
+# (meaning you cannot add variables to the Knowledge object anymore)
 # this is to get a true on the identical check
 kn1$frozen <- TRUE
 
-# create identical `Knowledge` object using DSL
+# create identical Knowledge object using DSL
 kn2 <- knowledge(
   tpc_example,
   tier(
