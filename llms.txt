@@ -299,20 +299,20 @@ Small simulated datasets to illustrate causalDisco workflows.
 
 ## Printing, Summarizing, and Plotting Objects
 
+- [`print(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.disco.md)
+  : Print a disco Object
 - [`print(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.knowledge.md)
   : Print a Knowledge Object
-- [`print(`*`<knowledgeable_caugi>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.knowledgeable_caugi.md)
-  : Print a Knowledgeable Caugi Object
+- [`summary(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.disco.md)
+  : Summarize a disco Object
 - [`summary(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.knowledge.md)
   : Summarize a Knowledge Object
-- [`summary(`*`<knowledgeable_caugi>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.knowledgeable_caugi.md)
-  : Summarize a Knowledgeable Caugi Object
 - [`plot`](https://disco-coders.github.io/causalDisco/reference/plot.md)
   : Plot Method for causalDisco Objects
+- [`plot(`*`<disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md)
+  : Plot a disco Object
 - [`plot(`*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
   : Plot a Knowledge Object
-- [`plot(`*`<knowledgeable_caugi>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.knowledgeable_caugi.md)
-  : Plot a Knowledgeable Caugi Object
 - [`make_tikz()`](https://disco-coders.github.io/causalDisco/reference/make_tikz.md)
   : Generate TikZ Code from a Object
 
@@ -385,18 +385,12 @@ Small simulated datasets to illustrate causalDisco workflows.
   : Convert Knowledge to pcalg Knowledge
 - [`knowledge_to_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.md)
   : Convert Knowledge to Caugi
-- [`knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledgeable_caugi.md)
-  : Knowledgeable Caugi Object
-- [`new_knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/new_knowledgeable_caugi.md)
-  : Create a Knowledgeable Caugi Object
 - [`deparse_knowledge()`](https://disco-coders.github.io/causalDisco/reference/deparse_knowledge.md)
   : Deparse a Knowledge Object into Knowledge DSL Code
 - [`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
   : Unfreeze a Knowledge Object.
 - [`` `+`( ``*`<knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md)
   : Merge Knowledge Objects
-- [`knowledge.knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge.knowledgeable_caugi.md)
-  : Extract Knowledge from a Knowledgeable Caugi
 
 ## Extend causalDisco
 

@@ -1,17 +1,22 @@
 # Plot Method for causalDisco Objects
 
-This is the generic `plot()` function for objects of class `knowledge`
-or `knowledgeable_caugi`. It dispatches to the class-specific plotting
-methods
+This is the generic `plot()` function for objects of class
+[knowledge](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+or
+[disco](https://disco-coders.github.io/causalDisco/reference/disco.md).
+It dispatches to the class-specific plotting methods
 [`plot.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
 and
-[`plot.knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledgeable_caugi.md).
+[`plot.disco()`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md).
 
 ## Arguments
 
 - x:
 
-  An object to plot (class `knowledge` or `knowledgeable_caugi`).
+  An object to plot (class
+  [knowledge](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+  or
+  [disco](https://disco-coders.github.io/causalDisco/reference/disco.md)).
 
 - ...:
 
@@ -26,7 +31,7 @@ plot.
 ## See also
 
 [`plot.knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md),
-[`plot.knowledgeable_caugi()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledgeable_caugi.md),
+[`plot.disco()`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md),
 [`caugi::plot()`](https://caugi.org/reference/plot.html)
 
 ## Examples

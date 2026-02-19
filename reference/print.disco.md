@@ -1,42 +1,40 @@
-# Run the TGES Algorithm for Causal Discovery
+# Print a disco Object
 
-Perform causal discovery using the temporal greedy equivalence search
-algorithm.
+Print a disco Object
 
 ## Usage
 
 ``` r
-tges_run(score, verbose = FALSE)
+# S3 method for class 'disco'
+print(x, compact = FALSE, wide_vars = FALSE, ...)
 ```
 
 ## Arguments
 
-- score:
+- x:
 
-  tiered scoring object to be used. At the moment only scores supported
-  are
+  A `disco` object.
 
-  - [TemporalBIC](https://disco-coders.github.io/causalDisco/reference/TemporalBIC-class.md)
-    and
+- compact:
 
-  - [TemporalBDeu](https://disco-coders.github.io/causalDisco/reference/TemporalBDeu-class.md).
+  Logical. If `TRUE`, prints a more compact summary.
 
-- verbose:
+- wide_vars:
 
-  indicates whether debug output should be printed.
+  Logical. If `TRUE`, prints the variables in a wide format.
+
+- ...:
+
+  Additional arguments (not used).
 
 ## Value
 
-A `caugi` and a `knowledge` (`disco`) object.
-
-## Author
-
-Tobias Ellegaard Larsen
+Invisibly returns the `disco` object.
 
 ## Examples
 
 ``` r
-# Recommended route using disco:
+data(tpc_example)
 kn <- knowledge(
   tpc_example,
   tier(
@@ -45,10 +43,9 @@ kn <- knowledge(
     old ~ starts_with("old")
   )
 )
-
-my_tges <- tges(engine = "causalDisco", score = "tbic")
-
-disco(tpc_example, my_tges, knowledge = kn)
+cd_tges <- tpc(engine = "causalDisco", test = "fisher_z")
+disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
+print(disco_cd_tges)
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: PDAG
@@ -57,10 +54,10 @@ disco(tpc_example, my_tges, knowledge = kn)
 #> 
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
-#> 1 child_x1  ---   child_x2 
+#> 1 child_x1  -->   child_x2 
 #> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 -->   oldage_x6
+#> 4 oldage_x5 ---   oldage_x6
 #> 5 youth_x3  -->   oldage_x5
 #> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
@@ -92,12 +89,7 @@ disco(tpc_example, my_tges, knowledge = kn)
 #> 4 youth_x4  youth
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
-
-# another way to run it
-
-my_tges <- my_tges |>
-  set_knowledge(kn)
-my_tges(tpc_example)
+print(disco_cd_tges, wide_vars = TRUE)
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: PDAG
 #> 
@@ -105,10 +97,10 @@ my_tges(tpc_example)
 #> 
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
-#> 1 child_x1  ---   child_x2 
+#> 1 child_x1  -->   child_x2 
 #> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 -->   oldage_x6
+#> 4 oldage_x5 ---   oldage_x6
 #> 5 youth_x3  -->   oldage_x5
 #> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
@@ -122,44 +114,41 @@ my_tges(tpc_example)
 #> 5 oldage_x6
 #> 6 oldage_x5
 #> ── Knowledge object ────────────────────────────────────────────────────────────
-
-
-# or you can run directly with tges_run()
-
-data(tpc_example)
-
-score_bic <- new(
-  "TemporalBIC",
-  data = tpc_example,
-  nodes = colnames(tpc_example),
-  knowledge = kn
-)
-
-res_bic <- tges_run(score_bic)
-res_bic
 #> 
+#> ── Tiers ──
+#> 
+#>   tier 
+#>   <chr>
+#> 1 child
+#> 2 youth
+#> 3 old  
+#> ── Variables ──
+#> 
+#>   tier  var1      var2     
+#>   <chr> <chr>     <chr>    
+#> 1 child child_x1  child_x2 
+#> 2 old   oldage_x5 oldage_x6
+#> 3 youth youth_x3  youth_x4 
+print(disco_cd_tges, compact = TRUE)
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: PDAG
+#> 6 edges, 6 nodes
 #> 
-#> ── Edges ──
-#> 
-#>   from      edge  to       
-#>   <chr>     <chr> <chr>    
-#> 1 child_x1  ---   child_x2 
-#> 2 child_x2  -->   oldage_x5
-#> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 -->   oldage_x6
-#> 5 youth_x3  -->   oldage_x5
-#> 6 youth_x4  -->   oldage_x6
-#> ── Nodes ──
-#> 
-#>   name     
-#>   <chr>    
-#> 1 child_x2 
-#> 2 child_x1 
-#> 3 youth_x4 
-#> 4 youth_x3 
-#> 5 oldage_x6
-#> 6 oldage_x5
 #> ── Knowledge object ────────────────────────────────────────────────────────────
+#> 
+#> ── Tiers ──
+#> 
+#>   tier 
+#>   <chr>
+#> 1 child
+#> 2 youth
+#> 3 old  
+#> ── Variables ──
+#> 
+#>   var       tier 
+#>   <chr>     <chr>
+#> 1 child_x1  child
+#> 2 child_x2  child
+#> 3 youth_x3  youth
+#> ... and 3 more rows
 ```

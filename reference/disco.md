@@ -73,7 +73,7 @@ disco(data, method, knowledge = NULL)
 
 ## Value
 
-A `caugi` and a `knowledge` (`knowledgeable_caugi`) object.
+A `caugi` and a `knowledge` (`disco`) object.
 
 ## Details
 

@@ -35,7 +35,7 @@ tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 
 A function of class `"tpc"` that takes a single argument `data` (a data
 frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
-(`knowledgeable_caugi`) object.
+(`disco`) object.
 
 ## Details
 

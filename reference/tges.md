@@ -31,8 +31,8 @@ tges(engine = c("causalDisco"), score, ...)
 ## Value
 
 A function of class `"tges"` that takes a single argument `data` (a data
-frame) and returns a `caugi` (of class "PDAG") and `knowledge`
-(`knowledgeable_caugi`) object.
+frame) and returns a `caugi` (of class "PDAG") and `knowledge` (`disco`)
+object.
 
 ## Details
 

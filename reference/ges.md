@@ -35,7 +35,7 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 
 A function of class `"ges"` that takes a single argument `data` (a data
 frame) and returns a `caugi` (of class "PDAG") and a `knowledge`
-(`knowledgeable_caugi`) object.
+(`disco`) object.
 
 ## Details
 

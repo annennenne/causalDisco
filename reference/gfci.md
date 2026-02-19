@@ -41,7 +41,7 @@ gfci(engine = "tetrad", score, test, alpha = 0.05, ...)
 
 A function of class `"gfci"` that takes a single argument `data` (a data
 frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
-(`knowledgeable_caugi`) object.
+(`disco`) object.
 
 ## Details
 

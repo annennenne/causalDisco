@@ -1,6 +1,6 @@
 # Generate TikZ Code from a Object
 
-Generates LaTeX TikZ code from a `knowledgeable_caugi`, `knowledge`, or
+Generates LaTeX TikZ code from a `disco`, `knowledge`, or
 [`caugi::caugi`](https://caugi.org/reference/caugi.html) object,
 preserving node positions, labels, and visual styles. Edges are rendered
 with arrows, line widths, and colors. The output is readable LaTeX code
@@ -24,7 +24,7 @@ make_tikz(
 
 - x:
 
-  A `knowledgeable_caugi`, `knowledge`, or
+  A `disco`, `knowledge`, or
   [`caugi::caugi`](https://caugi.org/reference/caugi.html) object.
 
 - ...:
@@ -235,7 +235,7 @@ cat(tikz_tiered_kn)
 #> \end{tikzpicture}
 
 
-################# Convert Knowledgeable Caugi to Tikz ################
+################# Convert disco to Tikz ################
 
 data(num_data)
 kn <- knowledge(

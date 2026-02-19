@@ -1036,8 +1036,8 @@ Runs the chosen Tetrad algorithm on the data.
 
 #### Returns
 
-A `caugi` and a `knowledge` (`knowledgeable_caugi`) object. Also
-populates `self$java`.
+A `caugi` and a `knowledge` (`disco`) object. Also populates
+`self$java`.
 
 ------------------------------------------------------------------------
 
