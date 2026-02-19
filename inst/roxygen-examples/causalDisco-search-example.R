@@ -67,4 +67,4 @@ try(CausalDiscoSearch$new()$set_score("not_a_score"))
 try(CausalDiscoSearch$new()$set_alg("not_an_alg"))
 
 # set_knowledge() requires a `knowledge` object
-try(CausalDiscoSearch$new()$set_knowledge(list(not = "knowledge")))
+try(CausalDiscoSearch$new()$set_knowledge(list(not = "Knowledge")))

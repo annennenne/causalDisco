@@ -7,9 +7,9 @@
 confusion(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the truth graph.}
+\item{truth}{A \link[caugi:caugi]{caugi::caugi} object representing the truth graph.}
 
-\item{est}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \link[caugi:caugi]{caugi::caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -22,7 +22,7 @@ A list with entries \code{tp} (truth positives), \code{tn} (truth negatives),
 \code{fp} (false positives), and \code{fn} (false negatives).
 }
 \description{
-Compute confusion matrix for two PDAG \code{caugi} graphs.
+Compute confusion matrix for two PDAG \link[caugi:caugi]{caugi::caugi} graphs.
 }
 \details{
 Adjacency comparison: The confusion matrix is a cross-tabulation
@@ -40,7 +40,7 @@ a false positive marks placement of arrowhead (1) where there should have been a
 a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 and a truth negative marks correct placement of a tail (0).
 
-Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

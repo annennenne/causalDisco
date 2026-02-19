@@ -7,9 +7,9 @@
 npv(truth, est, type = c("adj", "dir"))
 }
 \arguments{
-\item{truth}{A \code{caugi} object representing the truth graph.}
+\item{truth}{A \link[caugi:caugi]{caugi::caugi} object representing the truth graph.}
 
-\item{est}{A \code{caugi} object representing the estimated graph.}
+\item{est}{A \link[caugi:caugi]{caugi::caugi} object representing the estimated graph.}
 
 \item{type}{Character string specifying the comparison type:
 \itemize{
@@ -21,11 +21,11 @@ npv(truth, est, type = c("adj", "dir"))
 A numeric in [0,1].
 }
 \description{
-Computes negative predictive value from two PDAG \code{caugi} objects.
-It converts the \code{caugi} objects to adjacency matrices and computes
+Computes negative predictive value from two PDAG \link[caugi:caugi]{caugi::caugi} objects.
+It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
 negative predictive value as \code{TN/(TN + FN)}, where \code{TN} are truth negatives and
 \code{FN} are false negatives. If \code{TN + FN = 0}, \code{1} is returned.
-Only supports \code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

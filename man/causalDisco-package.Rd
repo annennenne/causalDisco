@@ -12,7 +12,7 @@ Tools for causal structure learning from observational data, with emphasis on te
 }
 \section{System requirements}{
 
-Java (>= 21) for Tetrad functionality (optional; includes installer; see inst/java/LICENSE and inst/java/COPYRIGHT);
+Java (>= 21) for Tetrad functionality (optional; includes installer);
 Source code: \url{https://github.com/cmu-phil/tetrad}.
 }
 

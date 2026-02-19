@@ -10,10 +10,10 @@ knowledge_to_caugi(kn)
 \item{kn}{A \code{knowledge} object.}
 }
 \value{
-A list with the \code{caugi} object alongside information.
+A list with the \link[caugi:caugi]{caugi::caugi} object alongside information.
 }
 \description{
-Converts a \code{knowledge} object to a \code{caugi} object used for plotting.
+Converts a \code{Knowledge} object to a \link[caugi:caugi]{caugi::caugi} object used for plotting.
 }
 \examples{
 data(tpc_example)
@@ -31,7 +31,7 @@ cg <- knowledge_to_caugi(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

@@ -18,10 +18,8 @@
 #'
 #' @example inst/roxygen-examples/tges-example.R
 #'
-#' @return
-#' A function of class \code{"tges"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "PDAG") and `knowledge` (`disco`)
-#' object.
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pdag Value
 #'
 #' @family causal discovery algorithms
 #' @concept cd_algorithms

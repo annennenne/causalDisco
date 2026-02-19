@@ -256,7 +256,7 @@ done when data is provided.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{knowledge_obj}}{A knowledge object that contains the fixed constraints.}
+\item{\code{knowledge_obj}}{A \code{Knowledge} object that contains the fixed constraints.}
 
 \item{\code{directed_as_undirected}}{Logical; whether to treat directed edges as undirected.}
 }

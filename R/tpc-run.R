@@ -55,8 +55,7 @@
 #'   forward in time.
 #' }
 #'
-#' @return
-#' A `caugi` and a `knowledge` (`disco`) object.
+#' @return A `Disco` object (a list with a `caugi` and a `knowledge` object).
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'
@@ -179,7 +178,7 @@ tpc_run <- function(
     return(rlang::inject(knowledge(data, tier(!!!fmls))))
   }
 
-  # otherwise, build a bare knowledge object from variable names
+  # otherwise, build a bare `Knowledge` object from variable names
   if (is.null(vnames) && is.null(data)) {
     stop("`data` is NULL, so `vnames` should be provided.")
   }

@@ -19,10 +19,8 @@
 #'
 #' @example inst/roxygen-examples/boss-fci-example.R
 #'
-#' @return
-#' A function of class \code{"sp_fci"} that takes a single argument \code{data}
-#' (a data frame) and returns a `caugi` (of class "UNKNOWN") and a `knowledge`
-#' (`disco`) object.
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pag Value
 #'
 #' @family causal discovery algorithms
 #' @concept cd_algorithms

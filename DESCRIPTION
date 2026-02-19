@@ -82,6 +82,7 @@ Collate:
     'disco-class.R'
     'disco-method.R'
     'disco.R'
+    'disco_doc_helpers.R'
     'edges.R'
     'engine-registry.R'
     'extend-causaldisco-algs.R'

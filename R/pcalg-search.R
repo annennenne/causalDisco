@@ -259,7 +259,7 @@ PcalgSearch <- R6::R6Class(
     #' that will be used to build the fixed constraints, but it can first be
     #' done when data is provided.
     #'
-    #' @param knowledge_obj A knowledge object that contains the fixed constraints.
+    #' @param knowledge_obj A `Knowledge` object that contains the fixed constraints.
     #' @param directed_as_undirected Logical; whether to treat directed edges as undirected.
     set_knowledge = function(knowledge_obj, directed_as_undirected = FALSE) {
       is_knowledge(knowledge_obj)

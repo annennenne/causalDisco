@@ -1,21 +1,21 @@
 # ────────────────────────────── Manipulation ──────────────────────────────────
 #' @title Merge Knowledge Objects
-#' @param kn1 A `knowledge` object.
-#' @param kn2 Another `knowledge` object.
+#' @param kn1 A `Knowledge` object.
+#' @param kn2 Another `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/plus-knowledge-example.R
 #'
 #' @family knowledge functions
 #' @concept knowledge
 #' @importFrom rlang .data
-#' @exportS3Method "+" knowledge
-`+.knowledge` <- function(kn1, kn2) {
+#' @exportS3Method "+" Knowledge
+`+.Knowledge` <- function(kn1, kn2) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
       "tibble"
     ),
-    function_name = "+.knowledge"
+    function_name = "+.Knowledge"
   )
 
   is_knowledge(kn1)
@@ -96,14 +96,14 @@
 
 #' @title Reorder Tiers in Knowledge
 #'
-#' @param kn A `knowledge` object.
+#' @param kn A `Knowledge` object.
 #' @param order A vector that lists *every* tier exactly once, either by
 #'  label (default) or by numeric index (`by_index = TRUE`).
 #'  Be careful if you have numeric tier labels.
 #' @param by_index If `TRUE`, treat `order` as the positions instead of
 #'  labels. Defaults to `FALSE`.
 #'
-#' @returns The same `knowledge` object with tiers rearranged.
+#' @returns The same `Knowledge` object with tiers rearranged.
 #'
 #' @example inst/roxygen-examples/reorder_tiers-example.R
 #'
@@ -203,7 +203,7 @@ reorder_tiers <- function(kn, order, by_index = FALSE) {
 #' @param after Exactly one of these must be supplied and must identify
 #'  another existing tier.
 #'
-#' @returns The updated `knowledge` object.
+#' @returns The updated `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/reorder_tiers-example.R
 #'

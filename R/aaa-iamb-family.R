@@ -27,8 +27,8 @@
 #'
 #' @example inst/roxygen-examples/iamb-family-example.R
 #'
-#' @return
-#' Each function returns a `caugi` object (of class "PDAG") and a `knowledge` object.
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pag Value
 #'
 #' @family causal discovery algorithms
 #' @concept cd_algorithms

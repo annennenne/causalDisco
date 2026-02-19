@@ -7,25 +7,25 @@
 add_tier(kn, tier, before = NULL, after = NULL)
 }
 \arguments{
-\item{kn}{A knowledge object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{tier}{Bare symbol / character (label) \strong{or} numeric literal.}
 
 \item{before, after}{Optional anchor relative to an existing tier label,
-tier index, or variable.  Once the knowledge object already
+tier index, or variable.  Once the \code{Knowledge} object already
 has >= 1 tier, you must supply \strong{exactly one} of these.}
 }
 \value{
-The updated \code{knowledge} object.
+The updated \code{Knowledge} object.
 }
 \description{
-Adds a new tier to the \code{knowledge} object, either at the start, end,
+Adds a new tier to the \code{Knowledge} object, either at the start, end,
 or before/after an existing tier.
 }
 \examples{
 data(tpc_example)
 
-# create knowledge object using verbs
+# create `Knowledge` object using verbs
 kn1 <- knowledge() |>
   add_vars(names(tpc_example)) |>
   add_tier(child) |>
@@ -39,11 +39,11 @@ kn1 <- knowledge() |>
   add_exogenous(child_x1) # synonym: add_exo()
 
 # set kn1 to frozen
-# (meaning you cannot add variables to the knowledge object anymore)
+# (meaning you cannot add variables to the `Knowledge` object anymore)
 # this is to get a true on the identical check
 kn1$frozen <- TRUE
 
-# create identical knowledge object using DSL
+# create identical `Knowledge` object using DSL
 kn2 <- knowledge(
   tpc_example,
   tier(
@@ -70,7 +70,7 @@ try(
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_to_tier}()},
 \code{\link{add_vars}()},

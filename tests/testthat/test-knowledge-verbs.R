@@ -14,7 +14,7 @@ test_that("add_vars adds new vars and ignores existing ones (unfrozen)", {
   expect_equal(nrow(kn2$vars), 2L)
 })
 
-test_that("add_vars respects frozen knowledge objects", {
+test_that("add_vars respects frozen Knowledge objects", {
   kn_frozen <- knowledge(data.frame(A = 1, B = 2, check.names = FALSE))
 
   expect_silent(add_vars(kn_frozen, c("A"))) # existing var is OK
@@ -161,7 +161,7 @@ test_that("knowledge() rejects unknown top-level calls", {
 })
 
 test_that("require_edge() errors when called with no formulas", {
-  kn <- knowledge() # empty knowledge object
+  kn <- knowledge() # empty Knowledge object
 
   expect_error(
     require_edge(kn), # no ... arguments
@@ -505,7 +505,7 @@ test_that("single-tier or untiered variables add no edges", {
   expect_equal(nrow(kn_mixed$edges), 0) # NA tiers ignored
 })
 
-test_that("function errors on non-knowledge objects", {
+test_that("function errors on non-Knowledge objects", {
   expect_error(forbid_tier_violations(list()), "knowledge")
 })
 

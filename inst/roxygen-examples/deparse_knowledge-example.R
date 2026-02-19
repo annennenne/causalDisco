@@ -1,4 +1,4 @@
-# turn a knowledge object back into DSL code
+# turn a `Knowledge` object back into DSL code
 data(tpc_example)
 
 kn <- knowledge(

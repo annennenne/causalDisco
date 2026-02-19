@@ -4,7 +4,7 @@
 # Knowledge generation using mini-dsl
 # ──────────────────────────────────────────────────────────────────────────────
 
-test_that("knowledge object is created correctly using mini-DSL", {
+test_that("Knowledge object is created correctly using mini-DSL", {
   kn <- knowledge(
     tier(
       1 ~ V1 + V2,
@@ -41,8 +41,8 @@ test_that("knowledge object is created correctly using mini-DSL", {
   )
 })
 
-# seeding with dataframe
-test_that("seeding knowledge object with a my_df, matrix, or tibble works", {
+# seeding with data frame
+test_that("seeding Knowledge object with a my_df, matrix, or tibble works", {
   my_df <- data.frame(X1 = 1, X2 = 2, X3 = 3, X4 = 4, check.names = FALSE)
   tbl <- tibble::as_tibble(my_df)
   mat <- as.matrix(my_df)
@@ -763,7 +763,7 @@ test_that("tier() throws error when mispecifying tier", {
       tier(2 ~ X)
     ),
     "Unknown variable(s): [X]
-They are not present in the data frame provided to this knowledge object.",
+They are not present in the data frame provided to this Knowledge object.",
     fixed = TRUE
   )
 
@@ -920,7 +920,7 @@ test_that("add_tier() errors when no before or after is provided", {
     knowledge() |>
       add_tier(1) |>
       add_tier(Two),
-    "Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
+    "Once the Knowledge object already has tiers, supply exactly one of `before` or `after`.",
     fixed = TRUE
   )
   expect_error(
@@ -928,7 +928,7 @@ test_that("add_tier() errors when no before or after is provided", {
       add_tier(1) |>
       add_tier(Two, after = 1) |>
       add_tier("Three"),
-    "Once the knowledge object already has tiers, supply exactly one of `before` or `after`.",
+    "Once the Knowledge object already has tiers, supply exactly one of `before` or `after`.",
     fixed = TRUE
   )
 })
@@ -1040,7 +1040,7 @@ test_that("knowledge() throws error when using another a not defined function", 
   )
 })
 
-test_that("print.knowledge() snapshot", {
+test_that("print.Knowledge() snapshot", {
   local_edition(3) # enable v3 snapshotting
 
   withr::with_options(

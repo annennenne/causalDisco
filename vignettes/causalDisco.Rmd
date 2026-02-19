@@ -179,7 +179,7 @@ kn <- knowledge(
 
 For more details on how to define knowledge, see the [knowledge vignette](knowledge.html).
 
-You can view the knowledge object using `print()`, `summary()` or `plot()`:
+You can view the `Knowledge` object using `print()`, `summary()` or `plot()`:
 
 ```{r view knowledge}
 print(kn)

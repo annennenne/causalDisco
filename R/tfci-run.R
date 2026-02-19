@@ -29,7 +29,7 @@
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See [pcalg::pc()] for further details.
 #'
-#' @return A `caugi` and a `knowledge` (`disco`) object.
+#' @return A `Disco` object (a list with a `caugi` and a `knowledge`object).
 #'
 #' @example inst/roxygen-examples/tfci-example.R
 #'

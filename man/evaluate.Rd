@@ -7,9 +7,9 @@
 evaluate(truth, est, metrics = "all")
 }
 \arguments{
-\item{truth}{truth \code{caugi} object.}
+\item{truth}{truth \link[caugi:caugi]{caugi::caugi} object.}
 
-\item{est}{Estimated \code{caugi} object.}
+\item{est}{Estimated \link[caugi:caugi]{caugi::caugi} object.}
 
 \item{metrics}{List of metrics, see details. If \code{metrics = "all"}, all available metrics are computed.}
 }
@@ -30,7 +30,7 @@ Metrics are supplied as a list with three slots: \code{$adj}, \code{$dir}, and \
 }
 
 Adjacency confusion matrix and conditional orientation confusion matrix only works for
-\code{caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+\link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

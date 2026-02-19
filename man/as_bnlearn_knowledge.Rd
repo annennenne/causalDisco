@@ -14,14 +14,14 @@ A list with two elements, \code{whitelist} and \code{blacklist}, each a data
 frame containing the edges in a \code{from}, \code{to} format.
 }
 \description{
-Converts a \code{knowledge} object to a list of two data frames, namely
+Converts a \code{Knowledge} object to a list of two data frames, namely
 \code{whitelist} and \code{blacklist}, which can be used as arguments for
 \pkg{bnlearn} algorithms. The \code{whitelist} contains all required edges, and the
 \code{blacklist} contains all forbidden edges. Tiers will be made into forbidden
 edges before running the conversion.
 }
 \examples{
-# produce whitelist/blacklist dataframe for bnlearn
+# produce whitelist/blacklist data frame for bnlearn
 data(tpc_example)
 
 kn <- knowledge(
@@ -39,7 +39,7 @@ print(bnlearn_kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

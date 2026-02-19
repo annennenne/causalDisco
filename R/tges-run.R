@@ -16,7 +16,7 @@
 #'
 #' @example inst/roxygen-examples/tges-example.R
 #'
-#' @return A `caugi` and a `knowledge` (`disco`) object.
+#' @return A `Disco` object (a list with a `caugi` and a `knowledge` object).
 #'
 #' @export
 tges_run <- function(score, verbose = FALSE) {

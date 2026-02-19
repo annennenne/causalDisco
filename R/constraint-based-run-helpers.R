@@ -6,7 +6,7 @@
 #' @param function_name Name of the calling function (for error messages).
 #' @return A list containing the prepared inputs:
 #'  \item{data}{The (possibly modified) data frame.}
-#'  \item{knowledge}{The knowledge object.}
+#'  \item{knowledge}{The `Knowledge` object.}
 #'  \item{vnames}{The variable names.}
 #'  \item{suff_stat}{The sufficient statistics.}
 #'  \item{na_method}{The method for handling NAs.}

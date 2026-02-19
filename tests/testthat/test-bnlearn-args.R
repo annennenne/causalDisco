@@ -3,7 +3,7 @@ test_that("bnlearn test argument works (discrete)", {
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "bnlearn", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), "disco")
+    expect_equal(class(pc_result), "Disco")
     pc_result
   }
 
@@ -35,7 +35,7 @@ test_that("bnlearn test argument works (continuous)", {
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "bnlearn", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), "disco")
+    expect_equal(class(pc_result), "Disco")
     pc_result
   }
 
@@ -60,7 +60,7 @@ test_that("bnlearn test argument works (mixed)", {
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "bnlearn", test = test, alpha = 0.05)
     pc_result <- disco(data, method = pc_method)
-    expect_equal(class(pc_result), "disco")
+    expect_equal(class(pc_result), "Disco")
     pc_result
   }
 

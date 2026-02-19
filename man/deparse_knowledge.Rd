@@ -7,7 +7,7 @@
 deparse_knowledge(kn, df_name = NULL)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 
 \item{df_name}{Optional name of the data frame you used
 (used as the first argument to \code{knowledge()}).  If \code{NULL},
@@ -17,12 +17,12 @@ deparse_knowledge(kn, df_name = NULL)
 A single string (with newlines) of R code.
 }
 \description{
-Given a \code{knowledge} object, return a single string containing
+Given a \code{Knowledge} object, return a single string containing
 the R code (using \code{knowledge()}, \code{tier()}, \verb{\%-->\%}, and \verb{\%!-->\%}.
 that would rebuild that same object.
 }
 \examples{
-# turn a knowledge object back into DSL code
+# turn a `Knowledge` object back into DSL code
 data(tpc_example)
 
 kn <- knowledge(
@@ -46,7 +46,7 @@ cat(code)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

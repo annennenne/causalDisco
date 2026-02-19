@@ -66,7 +66,7 @@ CausalDiscoSearch <- R6::R6Class(
     #' sufficient statistic depends on which test is being used.
     suff_stat = NULL,
 
-    #' @field knowledge A `knowledge` object holding background knowledge.
+    #' @field knowledge A `Knowledge` object holding background knowledge.
     knowledge = NULL,
 
     #' @description
@@ -104,7 +104,7 @@ CausalDiscoSearch <- R6::R6Class(
       reserved <- c(
         "data",
         "suff_stat",
-        "knowledge",
+        "Knowledge",
         "score",
         "test",
         "labels"
@@ -282,9 +282,9 @@ CausalDiscoSearch <- R6::R6Class(
 
     #' @description
     #'
-    #' Sets the background knowledge for the search with a `knowledge` object.
+    #' Sets the background knowledge for the search with a `Knowledge` object.
     #'
-    #' @param kn A `knowledge` object.
+    #' @param kn A `Knowledge` object.
     #' @param directed_as_undirected Logical; whether to treat directed edges in
     #' the knowledge as undirected. Default is `FALSE`. This is due to the
     #' nature of how \pkg{pcalg} handles background knowledge when using

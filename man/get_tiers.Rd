@@ -7,13 +7,13 @@
 get_tiers(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 }
 \value{
 A tibble with the tiers.
 }
 \description{
-Get tiers from a \code{knowledge} object.
+Get tiers from a \code{Knowledge} object.
 }
 \examples{
 kn <- knowledge(
@@ -27,7 +27,7 @@ get_tiers(kn)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

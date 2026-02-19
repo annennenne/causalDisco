@@ -38,7 +38,7 @@ variable order you supply.
 \section{Errors}{
 
 \itemize{
-\item If the knowledge object contains tiered knowledge.
+\item If the \code{Knowledge} object contains tiered knowledge.
 \item If \code{directed_as_undirected = FALSE} and any edge lacks its
 symmetrical counterpart. This can only hold for forbidden edges.
 }
@@ -81,7 +81,7 @@ try(as_pcalg_constraints(kn), silent = TRUE) # fails due to directed knowledge
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

@@ -795,7 +795,7 @@ Invisibly returns \code{self}.
 \if{html}{\out{<a id="method-TetradSearch-set_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_knowledge}{}}}
 \subsection{Method \code{set_knowledge()}}{
-Sets the background knowledge object.
+Sets the background \code{Knowledge} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_knowledge(knowledge_obj)}\if{html}{\out{</div>}}
 }
@@ -884,7 +884,7 @@ either continuous or nominal data. Default is \code{TRUE.}}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{caugi} and a \code{knowledge} (\code{disco}) object.
+A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
 Also populates \code{self$java}.
 }
 }
@@ -994,7 +994,7 @@ Retrieves the current Java data object.
 \if{html}{\out{<a id="method-TetradSearch-get_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_knowledge}{}}}
 \subsection{Method \code{get_knowledge()}}{
-Returns the background knowledge object.
+Returns the background \code{Knowledge} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_knowledge()}\if{html}{\out{</div>}}
 }

@@ -14,7 +14,7 @@ Invisibly returns the input object. The primary effect is the generated plot.
 \description{
 This is the generic \code{plot()} function for objects of class \link{knowledge}
 or \link{disco}. It dispatches to the class-specific plotting methods
-\code{\link[=plot.knowledge]{plot.knowledge()}} and \code{\link[=plot.disco]{plot.disco()}}.
+\code{\link[=plot.Knowledge]{plot.Knowledge()}} and \code{\link[=plot.Disco]{plot.Disco()}}.
 }
 \examples{
 data(tpc_example)
@@ -34,5 +34,5 @@ plot(disco_cd_tges)
 
 }
 \seealso{
-\code{\link[=plot.knowledge]{plot.knowledge()}}, \code{\link[=plot.disco]{plot.disco()}}, \code{\link[caugi:plot]{caugi::plot()}}
+\code{\link[=plot.Knowledge]{plot.Knowledge()}}, \code{\link[=plot.Disco]{plot.Disco()}}, \code{\link[caugi:plot]{caugi::plot()}}
 }

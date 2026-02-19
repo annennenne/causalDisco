@@ -2,14 +2,14 @@
 #'
 #' This function allows you to create a new causal discovery method that can be used with the [disco()] function.
 #' You provide a builder function that constructs a runner object, along with metadata about the algorithm, and it
-#' returns a closure that can be called with a data frame to perform causal discovery and return a `caugi` object.
+#' returns a closure that can be called with a data frame to perform causal discovery and return a [caugi::caugi] object.
 #'
 #' @param builder A function returning a runner
 #' @param name Algorithm name
 #' @param engine Engine identifier
 #' @param graph_class Output graph class
 #' @return A function of class \code{"disco_method"} that takes a single argument
-#' \code{data} (a data frame) and returns a `caugi` object.
+#' \code{data} (a data frame) and returns a [caugi::caugi] object.
 #'
 #' @family Extending causalDisco
 #' @concept extending_causalDisco

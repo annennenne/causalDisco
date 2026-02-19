@@ -84,7 +84,7 @@ test_that("as_disco stops if not knowledge", {
 
 test_that("knowledge helpers works", {
   expect_error(
-    set_knowledge.disco(1, 1),
+    set_knowledge.Disco(1, 1),
     "Input must be a knowledge instance."
   )
 
@@ -130,38 +130,38 @@ test_that("knowledge helpers works", {
   )
   expect_equal(edges_kcg, expected_edges)
 
-  kcg_knowledge <- knowledge.disco(kcg)
+  kcg_knowledge <- knowledge.Disco(kcg)
   expect_equal(kcg_knowledge, kn)
 
-  expect_null(`$.disco`(kcg, "hi"))
-  output <- `$.disco`(kcg, "vars")
+  expect_null(`$.Disco`(kcg, "hi"))
+  output <- `$.Disco`(kcg, "vars")
   expect_equal(nrow(output), 0)
   expect_equal(class(output)[1], "tbl_df")
 
-  output <- `$<-.disco`(kcg, "hi", 1)
+  output <- `$<-.Disco`(kcg, "hi", 1)
   expect_equal(output$hi, 1)
 
-  output <- `$<-.disco`(kcg, "vars", 1)
+  output <- `$<-.Disco`(kcg, "vars", 1)
   expect_equal(output$knowledge$vars, 1)
 
-  output <- `[[.disco`(kcg, "hi")
+  output <- `[[.Disco`(kcg, "hi")
   expect_null(output)
 
-  output <- `[[.disco`(kcg, "vars")
+  output <- `[[.Disco`(kcg, "vars")
   expect_equal(nrow(output), 0)
   expect_equal(class(output)[1], "tbl_df")
 
-  output <- `[[.disco`(kcg, "knowledge")
+  output <- `[[.Disco`(kcg, "knowledge")
   expect_true(is_knowledge(output))
   expect_false(is_disco(output))
 
-  output <- `[[<-.disco`(kcg, "hi", 1)
+  output <- `[[<-.Disco`(kcg, "hi", 1)
   expect_equal(output$hi, 1)
-  expect_equal(class(output), "disco")
+  expect_equal(class(output), "Disco")
 
-  output <- `[[<-.disco`(kcg, "vars", 1)
+  output <- `[[<-.Disco`(kcg, "vars", 1)
   expect_equal(output$knowledge$vars, 1)
-  expect_equal(class(output), "disco")
+  expect_equal(class(output), "Disco")
 })
 
 

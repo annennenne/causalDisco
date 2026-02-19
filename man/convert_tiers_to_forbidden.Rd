@@ -7,10 +7,10 @@
 convert_tiers_to_forbidden(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 }
 \value{
-A \code{knowledge} object with forbidden edges added, tiers removed.
+A \code{Knowledge} object with forbidden edges added, tiers removed.
 }
 \description{
 Converts tier assignments into forbidden edges, and drops tiers in the output.
@@ -31,7 +31,7 @@ plot(kn_converted)
 }
 \seealso{
 Other knowledge functions: 
-\code{\link{+.knowledge}()},
+\code{\link{+.Knowledge}()},
 \code{\link{add_exogenous}()},
 \code{\link{add_tier}()},
 \code{\link{add_to_tier}()},

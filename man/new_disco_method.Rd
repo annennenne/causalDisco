@@ -17,12 +17,12 @@ new_disco_method(builder, name, engine, graph_class)
 }
 \value{
 A function of class \code{"disco_method"} that takes a single argument
-\code{data} (a data frame) and returns a \code{caugi} object.
+\code{data} (a data frame) and returns a \link[caugi:caugi]{caugi::caugi} object.
 }
 \description{
 This function allows you to create a new causal discovery method that can be used with the \code{\link[=disco]{disco()}} function.
 You provide a builder function that constructs a runner object, along with metadata about the algorithm, and it
-returns a closure that can be called with a data frame to perform causal discovery and return a \code{caugi} object.
+returns a closure that can be called with a data frame to perform causal discovery and return a \link[caugi:caugi]{caugi::caugi} object.
 }
 \seealso{
 Other Extending causalDisco: 

@@ -23,7 +23,7 @@ test_that("Plotting disco with empty knowledge works", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledge objects with required+forbidden works", {
+test_that("Plotting Knowledge objects with required+forbidden works", {
   data(tpc_example)
   kn <- knowledge(
     tpc_example,
@@ -34,7 +34,7 @@ test_that("Plotting knowledge objects with required+forbidden works", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledge objects with forbidden both directions works", {
+test_that("Plotting Knowledge objects with forbidden both directions works", {
   data(tpc_example)
   kn <- knowledge(
     tpc_example,
@@ -44,7 +44,7 @@ test_that("Plotting knowledge objects with forbidden both directions works", {
   expect_true(TRUE)
 })
 
-test_that("Plotting knowledge objects with caugi plot settings works", {
+test_that("Plotting Knowledge objects with caugi plot settings works", {
   data(tpc_example)
   kn_tiered <- knowledge(
     tpc_example,
@@ -71,7 +71,7 @@ test_that("Plotting knowledge objects with caugi plot settings works", {
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects work", {
+test_that("Plotting disco and Knowledge objects work", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -93,7 +93,7 @@ test_that("Plotting disco and knowledge objects work", {
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects with only some of variables in tiers works", {
+test_that("Plotting disco and Knowledge objects with only some of variables in tiers works", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -122,7 +122,7 @@ test_that("Plotting disco and knowledge objects with only some of variables in t
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects with tier+required", {
+test_that("Plotting disco and Knowledge objects with tier+required", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -145,7 +145,7 @@ test_that("Plotting disco and knowledge objects with tier+required", {
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects with tier+forbidden", {
+test_that("Plotting disco and Knowledge objects with tier+forbidden", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -169,7 +169,7 @@ test_that("Plotting disco and knowledge objects with tier+forbidden", {
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects with required", {
+test_that("Plotting disco and Knowledge objects with required", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -187,7 +187,7 @@ test_that("Plotting disco and knowledge objects with required", {
   expect_true(TRUE)
 })
 
-test_that("Plotting disco and knowledge objects with forbidden", {
+test_that("Plotting disco and Knowledge objects with forbidden", {
   cg <- caugi::caugi(class = "PDAG")
 
   cg <- cg |>
@@ -209,7 +209,7 @@ test_that("Plotting disco and knowledge objects with forbidden", {
 test_that("disco plotting works", {
   data(tpc_example)
 
-  # define background knowledge object
+  # define background Knowledge object
   kn <- knowledge(
     tpc_example,
     tier(
@@ -230,7 +230,7 @@ test_that("disco plotting works", {
 test_that("disco plotting with required works", {
   data(tpc_example)
 
-  # define background knowledge object
+  # define background Knowledge object
   kn <- knowledge(
     tpc_example,
     tier(
@@ -251,7 +251,7 @@ test_that("disco plotting with required works", {
 test_that("disco plotting with forbidden works", {
   data(tpc_example)
 
-  # define background knowledge object
+  # define background Knowledge object
   kn <- knowledge(
     tpc_example,
     tier(
