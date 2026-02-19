@@ -124,20 +124,20 @@ Small simulated datasets to illustrate causalDisco workflows.
 
 ## Printing, Summarizing, and Plotting Objects
 
-- [`print(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.disco.md)
+- [`print(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.Disco.md)
   : Print a Disco Object
-- [`print(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.knowledge.md)
+- [`print(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/print.Knowledge.md)
   : Print a Knowledge Object
-- [`summary(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.disco.md)
+- [`summary(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.Disco.md)
   : Summarize a Disco Object
-- [`summary(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.knowledge.md)
+- [`summary(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/summary.Knowledge.md)
   : Summarize a Knowledge Object
+- [`plot(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.Disco.md)
+  : Plot a Disco Object
+- [`plot(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.Knowledge.md)
+  : Plot a Knowledge Object
 - [`plot`](https://disco-coders.github.io/causalDisco/reference/plot.md)
   : Plot Method for causalDisco Objects
-- [`plot(`*`<Disco>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md)
-  : Plot a Disco Object
-- [`plot(`*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
-  : Plot a Knowledge Object
 - [`make_tikz()`](https://disco-coders.github.io/causalDisco/reference/make_tikz.md)
   : Generate TikZ Code from a Causal Graph
 
@@ -214,7 +214,7 @@ Small simulated datasets to illustrate causalDisco workflows.
   : Deparse a Knowledge Object into Knowledge DSL Code
 - [`unfreeze()`](https://disco-coders.github.io/causalDisco/reference/unfreeze.md)
   : Unfreeze a Knowledge Object.
-- [`` `+`( ``*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md)
+- [`` `+`( ``*`<Knowledge>`*`)`](https://disco-coders.github.io/causalDisco/reference/plus-.Knowledge.md)
   : Merge Knowledge Objects
 
 ## Extend causalDisco

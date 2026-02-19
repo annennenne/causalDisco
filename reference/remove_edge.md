@@ -30,7 +30,7 @@ The updated `Knowledge` object.
 ## See also
 
 Other knowledge functions:
-[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.knowledge.md),
+[`+.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plus-.Knowledge.md),
 [`add_exogenous()`](https://disco-coders.github.io/causalDisco/reference/add_exogenous.md),
 [`add_tier()`](https://disco-coders.github.io/causalDisco/reference/add_tier.md),
 [`add_to_tier()`](https://disco-coders.github.io/causalDisco/reference/add_to_tier.md),

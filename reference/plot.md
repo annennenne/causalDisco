@@ -5,9 +5,9 @@ This is the generic `plot()` function for objects of class
 or
 [disco](https://disco-coders.github.io/causalDisco/reference/disco.md).
 It dispatches to the class-specific plotting methods
-[`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md)
+[`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.Knowledge.md)
 and
-[`plot.Disco()`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md).
+[`plot.Disco()`](https://disco-coders.github.io/causalDisco/reference/plot.Disco.md).
 
 ## Arguments
 
@@ -30,8 +30,8 @@ plot.
 
 ## See also
 
-[`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.knowledge.md),
-[`plot.Disco()`](https://disco-coders.github.io/causalDisco/reference/plot.disco.md),
+[`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.Knowledge.md),
+[`plot.Disco()`](https://disco-coders.github.io/causalDisco/reference/plot.Disco.md),
 [`caugi::plot()`](https://caugi.org/reference/plot.html)
 
 ## Examples
