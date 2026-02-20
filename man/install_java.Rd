@@ -2,40 +2,53 @@
 % Please edit documentation in R/install-java.R
 \name{install_java}
 \alias{install_java}
-\title{Install Eclipse Temurin JDK 25}
+\title{Install Eclipse Temurin JDK}
 \usage{
-install_java(install_dir = "~/temurin25", force = FALSE)
+install_java(force = FALSE, install_dir = "~/temurin", verbose = FALSE)
 }
 \arguments{
-\item{install_dir}{Character; the directory where the JDK should be installed.
-Default is \code{"~/temurin25"}. The function will create this directory if
-it does not exist. If a JDK is already present in this directory, it will be
-used unless \code{force = TRUE} is specified, in which case it will be reinstalled.}
+\item{force}{Logical; if \code{TRUE}, forces reinstallation even if a JDK already
+exists in the specified directory. Default is \code{FALSE}.}
 
-\item{force}{Logical; if \code{TRUE}, forces reinstallation even if the JDK is
-already present. Default is \code{FALSE}.}
+\item{install_dir}{Character; the directory where the JDK should be installed.
+Default is \code{"~/temurin"}. The function will create this directory if it does
+not exist. If a JDK is already present, it will be used unless \code{force = TRUE},
+in which case it will be reinstalled.}
+
+\item{verbose}{Logical; if \code{TRUE}, shows download progress and messages.
+Default is \code{FALSE}.}
+}
+\value{
+Invisibly returns the path to \code{JAVA_HOME} for the installed or detected JDK.
 }
 \description{
-Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
-the environment so the JDK is immediately available to the current R session.
+Installs the Eclipse Temurin JDK in the user's home directory (or a specified
+location) and configures the environment so the JDK is immediately available
+to the current R session.
 
-This function also sets the \code{JAVA_HOME} environment variable to ensure that
-packages such as \strong{rJava} work without additional configuration.
+This function sets the \code{JAVA_HOME} environment variable, ensuring that packages
+such as \strong{rJava} can find and use the JDK without additional configuration.
 
-This helper function is intended for users who prefer an automated installation
-or who find it inconvenient to manually download and install Java from the
-Adoptium website (\url{https://adoptium.net/temurin/releases}).
-
-Linux is not supported by this helper, as Java is typically installed via the
-system package manager.
+The function automatically handles downloads and extraction for \strong{Windows} and
+\strong{macOS}, using the appropriate archive format. Linux is not supported, as
+Java is typically installed via the system package manager.
+}
+\details{
+The function requires an \strong{interactive R session}. It will prompt the user to
+confirm the installation directory using \code{\link[utils:askYesNo]{utils::askYesNo()}}. If the session
+is non-interactive, the function will
+stop with an error.
 }
 \examples{
 \dontrun{
 # Install with default directory
 install_java()
 
-#' Install in a custom directory and force reinstall
-install_java(install_dir = "C:/Java/temurin25", force = TRUE)
+# Install in a custom directory and force reinstall
+install_java(install_dir = "C:/Java/temurin", force = TRUE)
+
+# Install with verbose messages
+install_java(verbose = TRUE)
 }
 
 }

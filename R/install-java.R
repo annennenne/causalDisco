@@ -41,218 +41,214 @@ detect_jdk_folder <- function(dir) {
   dirs[order(nchar(dirs), decreasing = TRUE)][1]
 }
 
+get_java_home <- function() {
+  # 1. Package option
+  opt <- getOption("temurin.java_home", NULL)
 
-# ============================
-#  Windows Installer
-# ============================
-
-install_java_windows <- function(force = FALSE, install_dir = "~/temurin25") {
-  arch <- detect_arch()
-  install_dir <- path.expand(install_dir)
-
-  # Read user PATH (registry)
-  get_user_path <- function() {
-    tryCatch(
-      paste(
-        system2(
-          "powershell",
-          args = c(
-            "-NoProfile",
-            "-Command",
-            "[Environment]::GetEnvironmentVariable('Path','User')"
-          ),
-          stdout = TRUE
-        ),
-        collapse = ";"
-      ),
-      error = function(e) Sys.getenv("PATH")
-    )
+  if (!is.null(opt) && dir.exists(opt)) {
+    return(normalizePath(opt, winslash = "/", mustWork = TRUE))
   }
 
-  # Read user JAVA_HOME (registry)
-  get_user_java_home <- function() {
-    tryCatch(
-      system2(
-        "powershell",
-        args = c(
-          "-NoProfile",
-          "-Command",
-          "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')"
-        ),
-        stdout = TRUE
-      ),
-      error = function(e) Sys.getenv("JAVA_HOME")
-    )
+  # 2. System JAVA_HOME
+  env <- Sys.getenv("JAVA_HOME", "")
+
+  if (nzchar(env) && dir.exists(env)) {
+    return(normalizePath(env, winslash = "/", mustWork = TRUE))
   }
 
-  jdk_existing <- detect_jdk_folder(install_dir)
+  # 3. Default install location
+  default <- path.expand("~/temurin25")
 
-  # -------- Already installed --------
-  if (!is.null(jdk_existing) && !force) {
-    jdk_bin <- file.path(jdk_existing, "bin")
+  if (dir.exists(default)) {
+    jdk <- detect_jdk_folder(default)
 
-    # Set for this session
-    Sys.setenv(JAVA_HOME = jdk_existing)
-    Sys.setenv(PATH = paste0(jdk_bin, ";", Sys.getenv("PATH")))
+    if (!is.null(jdk)) {
+      if (get_os() == "darwin") {
+        jdk <- file.path(jdk, "Contents/Home")
+      }
 
-    message("JDK already installed at: ", jdk_existing)
-    message("JAVA_HOME set for this session: ", jdk_existing)
-    return(invisible(jdk_existing))
+      return(normalizePath(jdk, winslash = "/", mustWork = TRUE))
+    }
   }
 
-  # -------- Reinstall if forced --------
-  if (force && dir.exists(install_dir)) {
-    unlink(install_dir, recursive = TRUE, force = TRUE)
-  }
-  dir.create(install_dir, recursive = TRUE, showWarnings = FALSE)
-
-  # -------- Download JDK --------
-  url <- jdk_download_url(arch, "windows")
-  message("Downloading JDK from:\n  ", url)
-
-  zipfile <- tempfile(fileext = ".zip")
-  utils::download.file(url, zipfile, mode = "wb")
-  utils::unzip(zipfile, exdir = install_dir)
-
-  jdk_installed <- detect_jdk_folder(install_dir)
-  if (is.null(jdk_installed)) {
-    stop("Extraction failed: no JDK folder found")
-  }
-
-  jdk_bin <- file.path(jdk_installed, "bin")
-
-  # --- CURRENT SESSION ---
-  Sys.setenv(JAVA_HOME = jdk_installed)
-  Sys.setenv(PATH = paste0(jdk_bin, ";", Sys.getenv("PATH")))
-
-  # --- Persistent PATH ---
-  user_path <- get_user_path()
-  if (!grepl(jdk_bin, user_path, fixed = TRUE)) {
-    system2("setx", c("PATH", shQuote(paste(user_path, jdk_bin, sep = ";"))))
-    message("Added JDK bin directory to the user PATH.")
-  }
-
-  # --- Persistent JAVA_HOME ---
-  user_java_home <- get_user_java_home()
-  if (
-    !identical(
-      normalizePath(user_java_home, winslash = "/"),
-      normalizePath(jdk_installed, winslash = "/")
-    )
-  ) {
-    system2("setx", c("JAVA_HOME", shQuote(jdk_installed)))
-    message("Set persistent JAVA_HOME.")
-  }
-
-  message("\nJava version check (current session):")
-  message(system2("java", "-version", stdout = TRUE, stderr = TRUE))
-
-  invisible(jdk_installed)
+  stop(
+    "Java not found.\n\n",
+    "Run temurin::install_java() or set manually:\n",
+    "options(temurin.java_home = '/path/to/java')",
+    call. = FALSE
+  )
 }
 
-
-# ============================
-#  macOS Installer
-# ============================
-
-install_java_mac <- function(force = FALSE, install_dir = "~/temurin25") {
-  arch <- detect_arch()
-  install_dir <- path.expand(install_dir)
-
-  jdk_existing <- detect_jdk_folder(install_dir)
-
-  # --- Already installed ---
-  if (!is.null(jdk_existing) && !force) {
-    java_home <- file.path(jdk_existing, "Contents/Home")
-    jdk_bin <- file.path(java_home, "bin")
-
-    Sys.setenv(JAVA_HOME = java_home) # <- add this
-    Sys.setenv(PATH = paste0(jdk_bin, ":", Sys.getenv("PATH")))
-
-    message("JDK already installed at: ", jdk_existing)
-    message("Java is ready to use in this R session.")
-    return(invisible(jdk_existing))
+confirm_installation <- function(install_dir) {
+  if (!interactive()) {
+    stop(
+      "Java installation requires an interactive session.\n",
+      "Either download Java manually (e.g. Temurin from https://adoptium.net),\n",
+      "or run this function in an interactive R session.",
+      call. = FALSE
+    )
   }
 
-  # --- Force reinstall ---
-  if (force && dir.exists(install_dir)) {
-    unlink(install_dir, recursive = TRUE, force = TRUE)
-  }
-  dir.create(install_dir, recursive = TRUE, showWarnings = FALSE)
+  install_dir <- normalizePath(
+    path.expand(install_dir),
+    winslash = "/",
+    mustWork = FALSE
+  )
 
-  # --- Download + extract ---
-  url <- jdk_download_url(arch, "mac")
-  message("Downloading JDK from:\n  ", url)
+  message("\nJava will be installed to:\n  ", install_dir, "\n")
 
-  tarfile <- tempfile(fileext = ".tar.gz")
-  utils::download.file(url, tarfile, mode = "wb")
+  ok <- utils::askYesNo("Do you want to continue?")
 
-  utils::untar(tarfile, exdir = install_dir)
-
-  jdk_installed <- detect_jdk_folder(install_dir)
-  if (is.null(jdk_installed)) {
-    stop("Extraction failed: no JDK folder found")
+  if (!isTRUE(ok)) {
+    stop("Installation cancelled.", call. = FALSE)
   }
 
-  java_home <- file.path(jdk_installed, "Contents/Home")
-  jdk_bin <- file.path(java_home, "bin")
-
-  Sys.setenv(JAVA_HOME = java_home)
-  Sys.setenv(PATH = paste0(jdk_bin, ":", Sys.getenv("PATH")))
-
-  message("\nJava in this session:")
-  message(system2("java", "-version", stdout = TRUE, stderr = TRUE))
-
-  invisible(jdk_installed)
+  invisible(install_dir)
 }
 
-
-# ============================
-#  Unified Entry Point
-# ============================
-
-#' Install Eclipse Temurin JDK 25
+#' Install Eclipse Temurin JDK
 #'
 #' @description
-#' Installs the Eclipse Temurin JDK 25 in the user's home directory and configures
-#' the environment so the JDK is immediately available to the current R session.
+#' Installs the Eclipse Temurin JDK in the user's home directory (or a specified
+#' location) and configures the environment so the JDK is immediately available
+#' to the current R session.
 #'
-#' This function also sets the `JAVA_HOME` environment variable to ensure that
-#' packages such as **rJava** work without additional configuration.
+#' This function sets the `JAVA_HOME` environment variable, ensuring that packages
+#' such as **rJava** can find and use the JDK without additional configuration.
 #'
-#' This helper function is intended for users who prefer an automated installation
-#' or who find it inconvenient to manually download and install Java from the
-#' Adoptium website (<https://adoptium.net/temurin/releases>).
+#' The function automatically handles downloads and extraction for **Windows** and
+#' **macOS**, using the appropriate archive format. Linux is not supported, as
+#' Java is typically installed via the system package manager.
 #'
-#' Linux is not supported by this helper, as Java is typically installed via the
-#' system package manager.
+#' @details
+#' The function requires an **interactive R session**. It will prompt the user to
+#' confirm the installation directory using [utils::askYesNo()]. If the session
+#' is non-interactive, the function will
+#' stop with an error.
 #'
 #' @param install_dir Character; the directory where the JDK should be installed.
-#'    Default is `"~/temurin25"`. The function will create this directory if
-#'    it does not exist. If a JDK is already present in this directory, it will be
-#'    used unless `force = TRUE` is specified, in which case it will be reinstalled.
+#'   Default is `"~/temurin"`. The function will create this directory if it does
+#'   not exist. If a JDK is already present, it will be used unless `force = TRUE`,
+#'   in which case it will be reinstalled.
 #'
-#' @param force Logical; if `TRUE`, forces reinstallation even if the JDK is
-#'    already present. Default is `FALSE`.
+#' @param force Logical; if `TRUE`, forces reinstallation even if a JDK already
+#'   exists in the specified directory. Default is `FALSE`.
+#'
+#' @param verbose Logical; if `TRUE`, shows download progress and messages.
+#'   Default is `FALSE`.
+#'
+#' @return Invisibly returns the path to `JAVA_HOME` for the installed or detected JDK.
 #'
 #' @examples
 #' \dontrun{
 #' # Install with default directory
 #' install_java()
 #'
-#' #' Install in a custom directory and force reinstall
-#' install_java(install_dir = "C:/Java/temurin25", force = TRUE)
+#' # Install in a custom directory and force reinstall
+#' install_java(install_dir = "C:/Java/temurin", force = TRUE)
+#'
+#' # Install with verbose messages
+#' install_java(verbose = TRUE)
 #' }
 #'
 #' @export
-install_java <- function(install_dir = "~/temurin25", force = FALSE) {
-  os <- get_os()
+install_java <- function(
+  force = FALSE,
+  install_dir = "~/temurin",
+  verbose = FALSE
+) {
+  quiet <- !verbose
+  platform <- get_os()
 
-  if (os == "windows") {
-    install_java_windows(force = force)
-  } else if (os == "darwin") {
-    install_java_mac(force = force)
-  } else {
-    stop("Unsupported OS: ", os, call. = FALSE)
+  # Expand ~ to full user path
+  install_dir <- normalizePath(
+    path.expand(install_dir),
+    winslash = "/",
+    mustWork = FALSE
+  )
+
+  install_dir <- confirm_installation(install_dir)
+  arch <- detect_arch()
+  jdk_existing <- detect_jdk_folder(install_dir)
+
+  # Determine JAVA_HOME for mac vs windows
+  compute_java_home <- function(jdk_path) {
+    if (platform == "mac") {
+      normalizePath(file.path(jdk_path, "Contents/Home"), winslash = "/")
+    } else {
+      normalizePath(jdk_path, winslash = "/")
+    }
   }
+
+  if (!is.null(jdk_existing) && !force) {
+    java_home <- compute_java_home(jdk_existing)
+
+    message(
+      "Found existing Java installation:\n  ",
+      java_home,
+      "\n  Use force = TRUE to reinstall.\n"
+    )
+
+    options(temurin.java_home = java_home)
+    Sys.setenv(JAVA_HOME = java_home)
+
+    java_home_line <- paste0("JAVA_HOME='", java_home, "'")
+
+    cli::cli_bullets(c(
+      "i" = "Setting {cli::col_green('JAVA_HOME')} for current session to:",
+      " " = "{cli::col_blue(java_home)}",
+      "i" = "To make this change permanent, set {cli::col_green('JAVA_HOME')} in your .Renviron file.",
+      " " = "Run  {.code usethis::edit_r_environ()} to open your .Renviron file, and then add the following line:",
+      " " = "{cli::col_blue(java_home_line)}"
+    ))
+
+    return(invisible(java_home))
+  }
+
+  # Remove old installation if force = TRUE
+  if (force && dir.exists(install_dir)) {
+    unlink(install_dir, recursive = TRUE, force = TRUE)
+  }
+
+  dir.create(install_dir, recursive = TRUE, showWarnings = FALSE)
+
+  url <- jdk_download_url(arch, platform)
+  message("Downloading Java...")
+
+  # Download and extract based on platform
+  if (platform == "windows") {
+    archive <- tempfile(fileext = ".zip")
+    on.exit(unlink(archive), add = TRUE)
+    utils::download.file(url, archive, mode = "wb", quiet = quiet)
+    utils::unzip(archive, exdir = install_dir)
+  } else {
+    archive <- tempfile(fileext = ".tar.gz")
+    on.exit(unlink(archive), add = TRUE)
+    utils::download.file(url, archive, mode = "wb", quiet = quiet)
+    utils::untar(archive, exdir = install_dir)
+  }
+
+  jdk_installed <- detect_jdk_folder(install_dir)
+  if (is.null(jdk_installed)) {
+    stop("Extraction failed.", call. = FALSE)
+  }
+
+  java_home <- compute_java_home(jdk_installed)
+
+  options(temurin.java_home = java_home)
+  Sys.setenv(JAVA_HOME = java_home)
+
+  cli::cli_alert_success("Java installed successfully!")
+
+  java_home_line <- paste0("JAVA_HOME='", java_home, "'")
+
+  cli::cli_bullets(c(
+    "i" = "Setting {cli::col_green('JAVA_HOME')} for current session to:",
+    " " = "{cli::col_blue(java_home)}",
+    "i" = "To make this change permanent, set {cli::col_green('JAVA_HOME')} in your .Renviron file.",
+    " " = "Run  {.code usethis::edit_r_environ()} to open your .Renviron file, and then add the following line:",
+    " " = "{cli::col_blue(java_home_line)}"
+  ))
+
+  invisible(java_home)
 }

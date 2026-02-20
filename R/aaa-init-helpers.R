@@ -64,14 +64,14 @@ ask_heap_size <- function() {
 #' @description
 #' `find_tetrad_jar()` searches for the Tetrad GUI launcher JAR file for a
 #' specific version in a given directory. By default, it looks in the directory
-#' set by the `tetrad.dir` option or the `TETRAD_DIR` environment variable.
+#' set by the `TETRAD_DIR` option or the `TETRAD_DIR` environment variable.
 #'
 #' @param version Character string specifying the Tetrad version to search for.
 #' Defaults to the package option `causalDisco.tetrad.version`.
 #'   You can override this by setting, for example:
 #'   `options(causalDisco.tetrad.version = "7.6.8")` **before loading the package**.
 #' @param dir Character string specifying the directory to search. Defaults to the value of
-#'   `getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))`.
+#'   `getOption("TETRAD_DIR", Sys.getenv("TETRAD_DIR", ""))`.
 #'
 #' @return A character vector of length 1 containing the path to the Tetrad GUI launcher JAR.
 #'   If the file is not found, a warning is issued and an empty vector is returned.
@@ -84,13 +84,13 @@ ask_heap_size <- function() {
 #' @keywords internal
 find_tetrad_jar <- function(
   version = getOption("causalDisco.tetrad.version"),
-  dir = getOption("tetrad.dir", Sys.getenv("TETRAD_DIR", ""))
+  dir = getOption("TETRAD_DIR", Sys.getenv("TETRAD_DIR", ""))
 ) {
   # Check that directory exists
   if (!nzchar(dir) || !dir.exists(dir)) {
     stop(paste0(
       "Tetrad directory not found. Please install Tetrad or set the ",
-      "TETRAD_DIR environment variable or tetrad.dir option."
+      "TETRAD_DIR environment variable or TETRAD_DIR option."
     ))
   }
 

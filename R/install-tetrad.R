@@ -1,9 +1,9 @@
 # -------------------------------
 # Get Tetrad directory
 # -------------------------------
-get_tetrad_dir <- function() {
+get_TETRAD_DIR <- function() {
   # Check R option
-  path <- getOption("tetrad.dir")
+  path <- getOption("TETRAD_DIR")
   if (!is.null(path)) {
     return(path)
   }
@@ -11,7 +11,7 @@ get_tetrad_dir <- function() {
   # Check environment variable
   path <- Sys.getenv("TETRAD_DIR")
   if (nzchar(path) && dir.exists(path)) {
-    options(tetrad.dir = path)
+    options(TETRAD_DIR = path)
     return(path)
   }
 
@@ -25,7 +25,17 @@ get_tetrad_dir <- function() {
 #' @noRd
 get_java_version <- function() {
   java <- Sys.which("java")
+
+  # If java not found, try JAVA_HOME/bin
   if (!nzchar(java)) {
+    java_home <- Sys.getenv("JAVA_HOME", "")
+    java_bin <- file.path(java_home, "bin", "java.exe")
+    if (file.exists(java_bin)) {
+      java <- normalizePath(java_bin, winslash = "/")
+    }
+  }
+
+  if (!nzchar(java) || !file.exists(java)) {
     return(NA_character_)
   }
 
@@ -63,7 +73,7 @@ get_java_version <- function() {
 verify_tetrad <- function(
   version = getOption("causalDisco.tetrad.version")
 ) {
-  tetrad_dir <- get_tetrad_dir()
+  TETRAD_DIR <- get_TETRAD_DIR()
 
   # Default output helper
   create_output <- function(
@@ -113,18 +123,18 @@ verify_tetrad <- function(
   }
 
   # ---- Step 2: Check Tetrad directory / JAR ----
-  if (is.null(tetrad_dir)) {
+  if (is.null(TETRAD_DIR)) {
     return(create_output(
       installed = FALSE,
       version = NULL,
       java_ok = TRUE,
       java_version = java_version,
-      message = "Tetrad directory not configured. Call install_tetrad() to configure it."
+      message = "Tetrad not found. Call `install_tetrad()` to install."
     ))
   }
 
   gui_jar <- file.path(
-    tetrad_dir,
+    TETRAD_DIR,
     paste0("tetrad-gui-", version, "-launch.jar")
   )
 
@@ -137,7 +147,7 @@ verify_tetrad <- function(
       message = paste0(
         "Tetrad version ",
         version,
-        " not found. Please install it using install_tetrad()."
+        " not found. Please install it using `install_tetrad()`."
       )
     ))
   }
@@ -163,65 +173,108 @@ verify_tetrad <- function(
 
 #' Install Tetrad GUI
 #'
-#' This function downloads and installs the Tetrad GUI JAR file to a specified directory.
-#' It also sets the TETRAD_DIR environment variable for future R sessions.
+#' @description
+#' Downloads and installs the Tetrad GUI JAR file for a specified version
+#' into a user-specified directory. Configures the R session to know the
+#' installation location via the `TETRAD_DIR` option.
 #'
-#' @template tetrad-version
-#' @param dir Character. The directory to install Tetrad into. Default is "~/tetrad".
-#' @param set_renviron Logical. Whether to set the TETRAD_DIR in .Renviron. Default is TRUE.
-#' @param force Logical. Whether to force re-download if the file already exists. Default is FALSE.
+#' This function asks the user to confirm the installation directory
+#' interactively, ensures the directory exists, and downloads the JAR
+#' only if it’s missing or `force = TRUE`.
 #'
-#' @return Invisible character string of the path to the downloaded JAR file.
+#' @param version Character; the Tetrad version to install. Default is
+#'   `getOption("causalDisco.tetrad.version")`.
+#' @param dir Character; the directory where the JAR should be installed.
+#'   Default is `"~/tetrad"`. The function will create this directory if it
+#'   does not exist. The user will be prompted to confirm the location.
+#' @param force Logical; if `TRUE`, forces re-download even if the JAR already
+#'   exists. Default is `FALSE`.
+#' @param verbose Logical; if `TRUE`, shows download progress. Default is `FALSE`.
+#'
+#' @return Invisibly returns the full path to the installed Tetrad JAR.
+#'
 #' @examples
 #' \dontrun{
+#' # Install default version in default directory
 #' install_tetrad()
+#'
+#' # Install a specific version and force re-download
+#' install_tetrad(version = "7.2.0", force = TRUE)
+#'
+#' # Install with verbose messages
+#' install_tetrad(verbose = TRUE)
 #' }
+#'
 #' @export
 install_tetrad <- function(
   version = getOption("causalDisco.tetrad.version"),
   dir = NULL,
-  set_renviron = TRUE,
-  force = FALSE
+  force = FALSE,
+  verbose = FALSE
 ) {
-  safe_download <- function(url, dest_file) {
-    old_timeout <- getOption("timeout")
-    options(timeout = max(300, old_timeout))
-    on.exit(options(timeout = old_timeout), add = TRUE)
-
-    utils::download.file(url, destfile = dest_file, mode = "wb")
-  }
+  quiet <- !verbose
 
   # ------------------------
-  # Determine target dir
+  # Determine installation directory
   # ------------------------
   if (is.null(dir)) {
-    dir <- file.path(path.expand("~"), "tetrad")
+    dir <- "~/tetrad"
   }
+
+  # Confirm installation interactively
+  if (!interactive()) {
+    stop(
+      "Tetrad installation requires an interactive session.\n",
+      "Either download Tetrad manually, or run this function in an interactive R session.",
+      call. = FALSE
+    )
+  }
+
+  dir <- normalizePath(path.expand(dir), winslash = "/", mustWork = FALSE)
+  message("\nTetrad will be installed to:\n  ", dir, "\n")
+  ok <- utils::askYesNo("Do you want to continue?")
+  if (!isTRUE(ok)) {
+    stop("Installation cancelled.", call. = FALSE)
+  }
+
+  # Create directory if missing
   if (!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE)
   }
 
-  # Normalize path (works on macOS/Linux/Windows)
-  dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
-
   # ------------------------
-  # URL + destination
+  # Construct URL + destination
   # ------------------------
   base_url <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
   jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
   url <- paste0(base_url, "/", version, "/", jar_name)
-
   dest_file <- file.path(dir, jar_name)
 
   need_download <- force || !file.exists(dest_file)
 
+  # ------------------------
+  # Download JAR if needed
+  # ------------------------
   if (need_download) {
     msg_prefix <- if (force) "Re-downloading" else "Downloading"
     message(msg_prefix, " Tetrad ", version, "...")
 
+    archive <- tempfile(fileext = ".jar")
+    on.exit(unlink(archive), add = TRUE)
+
     tryCatch(
-      safe_download(url, dest_file),
-      error = function(e) stop("Failed to download Tetrad: ", e$message)
+      {
+        utils::download.file(
+          url,
+          destfile = archive,
+          mode = "wb",
+          quiet = quiet
+        )
+        file.copy(archive, dest_file, overwrite = TRUE)
+      },
+      error = function(e) {
+        stop("Failed to download Tetrad: ", e$message)
+      }
     )
 
     message("Downloaded to: ", dest_file)
@@ -229,34 +282,17 @@ install_tetrad <- function(
     message("Tetrad already exists at: ", dest_file)
   }
 
-  # ------------------------
-  # Set session option
-  # ------------------------
-  options(tetrad.dir = dir)
-  message("Tetrad directory set for this session: ", getOption("tetrad.dir"))
+  options(TETRAD_DIR = dir)
 
-  # ------------------------
-  # Persist in .Renviron
-  # ------------------------
-  if (set_renviron) {
-    renviron <- file.path(path.expand("~"), ".Renviron")
-    line <- paste0('TETRAD_DIR="', dir, '"')
+  tetrad_line <- paste0("TETRAD_DIR='", dir, "'")
 
-    if (file.exists(renviron)) {
-      content <- readLines(renviron, warn = FALSE)
-      if (!any(grepl("^TETRAD_DIR=", content))) {
-        write(line, file = renviron, append = TRUE)
-        message("Added TETRAD_DIR to .Renviron")
-      } else {
-        message(
-          "TETRAD_DIR already exists in .Renviron, update manually if needed"
-        )
-      }
-    } else {
-      write(line, file = renviron)
-      message("Created .Renviron and added TETRAD_DIR")
-    }
-  }
+  cli::cli_bullets(c(
+    "i" = "Setting {cli::col_green('TETRAD_DIR')} for current session to:",
+    " " = "{cli::col_blue(dir)}",
+    "i" = "To make this change permanent, set {cli::col_green('TETRAD_DIR')} in your .Renviron file.",
+    " " = "Run  {.code usethis::edit_r_environ()} to open your .Renviron file, and then add the following line:",
+    " " = "{cli::col_blue(tetrad_line)}"
+  ))
 
   invisible(dest_file)
 }

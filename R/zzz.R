@@ -101,7 +101,7 @@
   } else {
     msg <- paste0(
       msg,
-      "  Tetrad is not installed. Run install_tetrad() to install it.\n"
+      "  Tetrad is not installed. Run `install_tetrad()` to install it.\n"
     )
   }
 

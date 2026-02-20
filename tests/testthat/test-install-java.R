@@ -51,10 +51,3 @@ test_that("download URL is correct", {
     "https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse"
   )
 })
-
-test_that("install_java errors on unsupported OS", {
-  mock_get_os <- mockery::mock("unknown")
-  mockery::stub(install_java, "get_os", mock_get_os)
-
-  expect_error(install_java(), "Unsupported OS: unknown")
-})

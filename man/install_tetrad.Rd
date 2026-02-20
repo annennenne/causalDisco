@@ -7,30 +7,45 @@
 install_tetrad(
   version = getOption("causalDisco.tetrad.version"),
   dir = NULL,
-  set_renviron = TRUE,
-  force = FALSE
+  force = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
-\item{version}{Character. The version of Tetrad to install.
-Default is "7.6.10".
-Use \code{options(causalDisco.tetrad.version = "...")} to change the default version.}
+\item{version}{Character; the Tetrad version to install. Default is
+\code{getOption("causalDisco.tetrad.version")}.}
 
-\item{dir}{Character. The directory to install Tetrad into. Default is "~/tetrad".}
+\item{dir}{Character; the directory where the JAR should be installed.
+Default is \code{"~/tetrad"}. The function will create this directory if it
+does not exist. The user will be prompted to confirm the location.}
 
-\item{set_renviron}{Logical. Whether to set the TETRAD_DIR in .Renviron. Default is TRUE.}
+\item{force}{Logical; if \code{TRUE}, forces re-download even if the JAR already
+exists. Default is \code{FALSE}.}
 
-\item{force}{Logical. Whether to force re-download if the file already exists. Default is FALSE.}
+\item{verbose}{Logical; if \code{TRUE}, shows download progress. Default is \code{FALSE}.}
 }
 \value{
-Invisible character string of the path to the downloaded JAR file.
+Invisibly returns the full path to the installed Tetrad JAR.
 }
 \description{
-This function downloads and installs the Tetrad GUI JAR file to a specified directory.
-It also sets the TETRAD_DIR environment variable for future R sessions.
+Downloads and installs the Tetrad GUI JAR file for a specified version
+into a user-specified directory. Configures the R session to know the
+installation location via the \code{TETRAD_DIR} option.
+
+This function asks the user to confirm the installation directory
+interactively, ensures the directory exists, and downloads the JAR
+only if it’s missing or \code{force = TRUE}.
 }
 \examples{
 \dontrun{
+# Install default version in default directory
 install_tetrad()
+
+# Install a specific version and force re-download
+install_tetrad(version = "7.2.0", force = TRUE)
+
+# Install with verbose messages
+install_tetrad(verbose = TRUE)
 }
+
 }
