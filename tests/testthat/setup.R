@@ -2,6 +2,7 @@
 # - Skip Tetrad tests on CRAN (avoid installing Tetrad on CRAN).
 # This also avoids rare memory issues on Tetrad (only observed on 7.6.8 and not on current version though).
 # So maybe fine for the current version (7.6.10 as time of writing), but being safe for now.
+# Update 20/02/2026 observed a test failing due to memory.
 # - GitHub Actions workflow uses .github/workflows/install-tetrad.R.
 
 # Copy pasted from testthat internal function:
