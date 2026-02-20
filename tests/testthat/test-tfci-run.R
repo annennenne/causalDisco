@@ -19,7 +19,7 @@ test_that("tfci_run returns disco on example data", {
   expect_s3_class(res, "Disco")
 })
 
-system.time(test_that("tfci_run works with reg_test as well", {
+test_that("tfci_run works with reg_test as well", {
   # cpu_ratio is like 5 (user + sys)/(elapsed) so using several cores somewhere (IDK where but seems
   # like somewhere in reg_test. It's the pcalg::pdsep() call. Their source code doesn't seem to be the issue
   # (and test-conditional-independence.R has the same issue, but tests are so fast).
@@ -29,19 +29,16 @@ system.time(test_that("tfci_run works with reg_test as well", {
   data(tpc_example, package = "causalDisco")
 
   kn <- build_kn_from_order()
-
-  system.time(
-    res <- tfci_run(
-      data = tpc_example[1:10, ],
-      knowledge = kn,
-      alpha = 0.02,
-      test = reg_test,
-      orientation_method = "standard"
-    )
+  res <- tfci_run(
+    data = tpc_example,
+    knowledge = kn,
+    alpha = 0.02,
+    test = reg_test,
+    orientation_method = "standard"
   )
 
   expect_s3_class(res, "Disco")
-}))
+})
 
 test_that("tfci_run respects forbidden knowledge (edge is removed)", {
   set.seed(1405)
