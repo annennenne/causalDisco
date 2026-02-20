@@ -54,7 +54,10 @@ causalDisco provides an interface to the Java library
 [Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
 algorithms. To use algorithms from Tetrad you need to install a Java
 Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
-available at <https://adoptium.net> for all major operating systems.
+available at <https://adoptium.net/en-GB/temurin/releases>. When using
+the installer from the Temurin website, make sure to select the option
+to set the `JAVA_HOME` environment variable during installation, so
+rJava correctly detects the Java installation.
 
 Alternatively, we provide a helper function to install Temurin JDK 25 on
 macOS and Windows:

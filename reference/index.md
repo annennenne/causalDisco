@@ -69,7 +69,7 @@ Core search algorithms implemented or wrapped by causalDisco.
 Functions for installing and verifying the Tetrad Java backend.
 
 - [`install_java()`](https://disco-coders.github.io/causalDisco/reference/install_java.md)
-  : Install Eclipse Temurin JDK 25
+  : Install Eclipse Temurin JDK
 - [`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md)
   : Install Tetrad GUI
 - [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md)
