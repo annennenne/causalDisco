@@ -20,14 +20,8 @@ test_that("tfci_run returns disco on example data", {
 })
 
 test_that("tfci_run works with reg_test as well", {
-  # cpu_ratio is like 5 (user + sys)/(elapsed) so using several cores somewhere (IDK where but seems
-  # like somewhere in reg_test. It's the pcalg::pdsep() call. Their source code doesn't seem to be the issue
-  # (and test-conditional-independence.R has the same issue, but tests are so fast).
-  # CRAN doesn't like this, so using a very small dataset so it should run fast enough and not be a problem on CRAN.
-  # Googling seems to say you should just do Sys.setenv("OMP_THREAD_LIMIT" = 2), but that doesn't work.
   set.seed(1405)
   data(tpc_example, package = "causalDisco")
-
   kn <- build_kn_from_order()
   res <- tfci_run(
     data = tpc_example,
@@ -174,7 +168,7 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
     data = tpc_example,
     knowledge = kn0, # <- triggers the missing_vars path
     alpha = 0.2,
-    test = cor_test
+    test = reg_test
   )
   expect_s3_class(res, "Disco")
   kn_bad <- knowledge() |> add_vars(c("child_a"))
@@ -183,7 +177,7 @@ test_that("tfci_run() adds missing vars to knowledge via add_vars() and fails fo
       data = tpc_example,
       knowledge = kn_bad,
       alpha = 0.2,
-      test = cor_test
+      test = reg_test
     ),
     "Knowledge contains variables not present in `data`: child_a",
     fixed = TRUE

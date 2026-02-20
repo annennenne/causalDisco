@@ -32,3 +32,8 @@ if (!on_cran()) {
 } else {
   message("Skipping Tetrad installation on CRAN")
 }
+
+# Needed for CRAN CPU note. Note, not sufficient to set environment variable, as seen here:
+# https://stackoverflow.com/questions/27319619/how-can-i-set-the-number-of-openmp-threads-from-within-the-program
+RhpcBLASctl::omp_set_num_threads(2)
+RhpcBLASctl::blas_set_num_threads(2)

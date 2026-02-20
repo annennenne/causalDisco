@@ -2,9 +2,6 @@
 # reg_test / reg_test_each_dir
 # ──────────────────────────────────────────────────────────────────────────────
 
-# cpu_ratio is like 5 (user + sys)/(elapsed) so using several cores somewhere in reg_test.
-# CRAN doesn't like this, so using a very small dataset so it should run fast enough and not be a problem on CRAN.
-# Googling seems to say you should just do Sys.setenv("OMP_THREAD_LIMIT" = 2), but that doesn't work.
 test_that("reg_test handles Gaussian (linear) case and finds association", {
   set.seed(1405)
   n <- 40
