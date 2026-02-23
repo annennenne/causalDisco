@@ -70,10 +70,12 @@ We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/
 the installer from the Temurin website, make sure to select the option to set the `JAVA_HOME` environment variable
 during installation, so rJava correctly detects the Java installation.
 
-Alternatively, we provide a helper function to install Temurin JDK 25 on macOS and Windows:
+Alternatively, we suggest you use the rJavaEnv package, which provides a convenient function to install Java and set up the environment correctly for rJava. You can install Java using the `java_quick_install()` function:
 
 ```{r install java, eval=FALSE}
-causalDisco::install_java()
+# If not installed, install with
+# install.packages("rJavaEnv")
+rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
 ```
 
 The current supported version of Tetrad can then be installed by calling

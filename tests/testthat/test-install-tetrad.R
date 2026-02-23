@@ -1,54 +1,50 @@
-test_that("get_TETRAD_DIR returns option TETRAD_DIR when set", {
-  old_opt <- getOption("TETRAD_DIR")
-  on.exit(options(TETRAD_DIR = old_opt), add = TRUE)
-
-  options(TETRAD_DIR = "/opt/tetrad")
-
-  expect_equal(get_TETRAD_DIR(), "/opt/tetrad")
-})
-
-test_that("get_TETRAD_DIR returns TETRAD_DIR env var when option is NULL and dir exists", {
-  # Ensure option is NULL
-  old_opt <- getOption("TETRAD_DIR")
-  on.exit(options(TETRAD_DIR = old_opt), add = TRUE)
-  options(TETRAD_DIR = NULL)
-
-  # Set fake env var
+test_that("get_tetrad_dir returns TETRAD_DIR env var when set and exists", {
   old_env <- Sys.getenv("TETRAD_DIR", unset = NA)
   on.exit(Sys.setenv(TETRAD_DIR = old_env), add = TRUE)
 
   temp_dir <- tempdir()
   Sys.setenv(TETRAD_DIR = temp_dir)
 
-  expect_equal(get_TETRAD_DIR(), temp_dir)
-
-  # Should also set the R option as a side effect
-  expect_equal(getOption("TETRAD_DIR"), temp_dir)
+  expect_equal(get_tetrad_dir(), temp_dir)
 })
 
-test_that("get_TETRAD_DIR returns NULL when env var is set but directory does not exist", {
-  old_opt <- getOption("TETRAD_DIR")
-  on.exit(options(TETRAD_DIR = old_opt), add = TRUE)
-  options(TETRAD_DIR = NULL)
-
+test_that("get_tetrad_dir returns package cache when env var is not set", {
   old_env <- Sys.getenv("TETRAD_DIR", unset = NA)
   on.exit(Sys.setenv(TETRAD_DIR = old_env), add = TRUE)
-
-  Sys.setenv(TETRAD_DIR = "/path/that/does/not/exist")
-
-  expect_null(get_TETRAD_DIR())
-})
-
-test_that("get_TETRAD_DIR returns NULL when neither option nor env var is set", {
-  old_opt <- getOption("TETRAD_DIR")
-  on.exit(options(TETRAD_DIR = old_opt), add = TRUE)
-  options(TETRAD_DIR = NULL)
-
-  old_env <- Sys.getenv("TETRAD_DIR", unset = NA)
-  on.exit(Sys.unsetenv("TETRAD_DIR"), add = TRUE)
   Sys.unsetenv("TETRAD_DIR")
 
-  expect_null(get_TETRAD_DIR())
+  # simulate cache option
+  temp_cache <- file.path(tempdir(), "cache_test")
+  dir.create(temp_cache, recursive = TRUE, showWarnings = FALSE)
+  old_opt <- getOption("causalDisco.tetrad_cache")
+  on.exit(options(causalDisco.tetrad_cache = old_opt), add = TRUE)
+  options(causalDisco.tetrad_cache = temp_cache)
+
+  expect_equal(get_tetrad_dir(), temp_cache)
+})
+
+test_that("get_tetrad_dir returns NULL when env var set but directory does not exist", {
+  old_env <- Sys.getenv("TETRAD_DIR", unset = NA)
+  on.exit(Sys.setenv(TETRAD_DIR = old_env), add = TRUE)
+  Sys.setenv(TETRAD_DIR = "/path/does/not/exist")
+
+  old_opt <- getOption("causalDisco.tetrad_cache")
+  on.exit(options(causalDisco.tetrad_cache = old_opt), add = TRUE)
+  options(causalDisco.tetrad_cache = NULL)
+
+  expect_null(get_tetrad_dir())
+})
+
+test_that("get_tetrad_dir returns NULL when neither env var nor cache option is set", {
+  old_env <- Sys.getenv("TETRAD_DIR", unset = NA)
+  on.exit(Sys.setenv(TETRAD_DIR = old_env), add = TRUE)
+  Sys.unsetenv("TETRAD_DIR")
+
+  old_opt <- getOption("causalDisco.tetrad_cache")
+  on.exit(options(causalDisco.tetrad_cache = old_opt), add = TRUE)
+  options(causalDisco.tetrad_cache = NULL)
+
+  expect_null(get_tetrad_dir())
 })
 
 test_that("get_java_version returns NA when java executable not found", {
@@ -123,7 +119,7 @@ test_that("Returns message when Java is missing", {
   expect_false(out$installed)
   expect_false(out$java_ok)
   expect_null(out$java_version)
-  expect_match(out$message, "Java was not found")
+  expect_match(out$message, "Java not found. Install Java >= 21.")
 })
 
 
@@ -137,14 +133,14 @@ test_that("Returns message when Java version is too old", {
   expect_false(out$installed)
   expect_false(out$java_ok)
   expect_equal(out$java_version, "17.0.9")
-  expect_match(out$message, "Java >= 21 is required")
+  expect_match(out$message, "Java >= 21 required")
 })
 
 
 # ---- Branch 3: Java OK but TETRAD_DIR is NULL ----
 test_that("Returns message when tetrad directory is missing", {
   mockery::stub(verify_tetrad, "get_java_version", function() "21.0.1")
-  mockery::stub(verify_tetrad, "get_TETRAD_DIR", function() NULL)
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() NULL)
 
   out <- verify_tetrad("1.0")
   expect_output_list(out)
@@ -152,14 +148,14 @@ test_that("Returns message when tetrad directory is missing", {
   expect_false(out$installed)
   expect_true(out$java_ok)
   expect_equal(out$java_version, "21.0.1")
-  expect_match(out$message, "Tetrad not found.")
+  expect_match(out$message, "Tetrad not installed.")
 })
 
 
 # ---- Branch 4: Java OK, tetrad dir exists, JAR missing ----
 test_that("Returns message when Tetrad JAR does not exist", {
   mockery::stub(verify_tetrad, "get_java_version", function() "21.0.1")
-  mockery::stub(verify_tetrad, "get_TETRAD_DIR", function() "/fake/path")
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() "/fake/path")
 
   # JAR missing
   mockery::stub(verify_tetrad, "file.exists", function(...) FALSE)
@@ -170,14 +166,14 @@ test_that("Returns message when Tetrad JAR does not exist", {
   expect_false(out$installed)
   expect_true(out$java_ok)
   expect_equal(out$java_version, "21.0.1")
-  expect_match(out$message, "Tetrad version 1.0 not found")
+  expect_match(out$message, "Tetrad not installed.")
 })
 
 
-# ---- Branch 5: Java OK, tetrad dir exists, JAR exists → SUCCESS ----
+# ---- Branch 5: Java OK, tetrad dir exists, JAR exists -> SUCCESS ----
 test_that("Successful detection when Java and Tetrad are OK", {
   mockery::stub(verify_tetrad, "get_java_version", function() "22.1.0")
-  mockery::stub(verify_tetrad, "get_TETRAD_DIR", function() "/fake/path")
+  mockery::stub(verify_tetrad, "get_tetrad_dir", function() "/fake/path")
 
   # JAR exists
   mockery::stub(verify_tetrad, "file.exists", function(...) TRUE)
@@ -189,6 +185,8 @@ test_that("Successful detection when Java and Tetrad are OK", {
   expect_true(out$java_ok)
   expect_equal(out$version, "2.0")
   expect_equal(out$java_version, "22.1.0")
-  expect_match(out$message, "Tetrad found")
-  expect_match(out$message, "Java version 22.1.0")
+  expect_match(
+    out$message,
+    "Tetrad version 2.0 is installed and ready to use."
+  )
 })

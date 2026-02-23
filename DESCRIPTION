@@ -29,6 +29,7 @@ Imports:
     caugi (>= 1.0.0),
     checkmate,
     cli,
+    digest,
     dplyr,
     glue,
     gtools,
@@ -95,7 +96,6 @@ Collate:
     'gs.R'
     'hc.R'
     'iamb-family.R'
-    'install-java.R'
     'install-tetrad.R'
     'knowledge-conversions.R'
     'knowledge-helpers.R'

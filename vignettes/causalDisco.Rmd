@@ -88,9 +88,34 @@ You can also use a different algorithm altogether, such as the GES algorithm. It
 however GES is a score-based algorithm, so instead of a test and an alpha level, we need to specify a score. Below
 we will use the Extended Bayesian Information Criterion (EBIC) score from Tetrad.
 
-Tetrad is written in Java, so to use it we first need to ensure that Java is installed and that the Tetrad jar files are
-available. This can be done using the `verify_tetrad()` function. If they aren't installed, we provide the
-helper functions `install_java()` and `install_tetrad()` to set them up.
+<details>
+<summary>Tetrad Setup Instructions</summary>
+Tetrad is a Java library, so to use it we first need to ensure that Java is installed and that the Tetrad jar files are available. A Java JDK >= 21 is required to run Tetrad. To install Java JDK >= 21, you can install
+them directly from the vendor Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/temurin/releases
+or use the package rJavaEnv, where you can install and setup Java using the `java_quick_install()` function:
+
+```{r install java, eval = FALSE}
+# If not installed, install with
+# install.packages("rJavaEnv")
+rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
+```
+
+To install Tetrad, you can use the `install_tetrad()` function from causalDisco, which will download the supported
+version of Tetrad and place it in a cache directory on your system:
+
+```{r install tetrad, eval = FALSE}
+install_tetrad()
+```
+
+After installing Java and Tetrad, you can verify that everything is set up correctly by running `verify_tetrad()`:
+
+```{r check tetrad install}
+verify_tetrad()
+```
+
+Now you should be able to use Tetrad as an engine for the GES algorithm as shown in the code chunk below.
+
+</details>
 
 ```{r ges algorithm ebic tetrad, eval = FALSE}
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {

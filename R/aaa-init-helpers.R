@@ -59,65 +59,12 @@ ask_heap_size <- function() {
   }
 }
 
-#' @title Find Tetrad GUI Launcher JAR
-#'
-#' @description
-#' `find_tetrad_jar()` searches for the Tetrad GUI launcher JAR file for a
-#' specific version in a given directory. By default, it looks in the directory
-#' set by the `TETRAD_DIR` option or the `TETRAD_DIR` environment variable.
-#'
-#' @param version Character string specifying the Tetrad version to search for.
-#' Defaults to the package option `causalDisco.tetrad.version`.
-#'   You can override this by setting, for example:
-#'   `options(causalDisco.tetrad.version = "7.6.8")` **before loading the package**.
-#' @param dir Character string specifying the directory to search. Defaults to the value of
-#'   `getOption("TETRAD_DIR", Sys.getenv("TETRAD_DIR", ""))`.
-#'
-#' @return A character vector of length 1 containing the path to the Tetrad GUI launcher JAR.
-#'   If the file is not found, a warning is issued and an empty vector is returned.
-#'
-#' @examples
-#' gui_jar <- find_tetrad_jar()
-#' print(gui_jar)
-#'
-#' @noRd
-#' @keywords internal
-find_tetrad_jar <- function(
-  version = getOption("causalDisco.tetrad.version"),
-  dir = getOption("TETRAD_DIR", Sys.getenv("TETRAD_DIR", ""))
-) {
-  # Check that directory exists
-  if (!nzchar(dir) || !dir.exists(dir)) {
-    stop(paste0(
-      "Tetrad directory not found. Please install Tetrad or set the ",
-      "TETRAD_DIR environment variable or TETRAD_DIR option."
-    ))
-  }
-
-  # Build expected filename
-  jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
-  jar_path <- file.path(dir, jar_name)
-
-  # Check if the file exists
-  if (!file.exists(jar_path)) {
-    warning("Tetrad GUI launcher JAR not found: ", jar_path)
-    return(character(0))
-  }
-
-  jar_path
-}
-
-
 #' @title Initialize Java Virtual Machine for causalDisco
-#'
 #' @description
-#' This function initializes the Java Virtual Machine (JVM) for the causalDisco
-#' package. It sets the heap size and classpath based on the Tetrad JAR files
-#' found. If the JVM is already initialized, it adds the JARs to the classpath.
-#' @param heap A string specifying the heap size for the JVM. "2g" for 2
-#'  gigabytes.
-#'
-#' @example inst/roxygen-examples/init_java-example.R
+#' Initializes the JVM and sets heap size and classpath based on the
+#' Tetrad JAR installed via `install_tetrad()`. If the JVM is already initialized,
+#' adds the JAR to the classpath if needed.
+#' @param heap A string specifying the JVM heap size (e.g., "2g" for 2 GB).
 #' @noRd
 #' @keywords internal
 init_java <- function(heap = default_heap()) {
@@ -126,13 +73,17 @@ init_java <- function(heap = default_heap()) {
     function_name = "init_java"
   )
 
-  jar <- find_tetrad_jar()
+  dir <- get_tetrad_dir()
+  files_in_dir <- list.files(dir, full.names = TRUE)
+  jar <- files_in_dir[grepl(
+    "tetrad.*\\.jar$",
+    files_in_dir,
+    ignore.case = TRUE
+  )]
   if (!length(jar)) {
     stop(
       "No Tetrad JAR found for version ",
-      getOption("causalDisco.tetrad.version"),
-      " in ",
-      system.file("java", package = "causalDisco")
+      getOption("causalDisco.tetrad.version")
     )
   }
 
@@ -201,20 +152,6 @@ current_heap_gb <- function() {
   )
   rt <- rJava::.jcall("java/lang/Runtime", "Ljava/lang/Runtime;", "getRuntime")
   (rJava::.jcall(rt, "J", "maxMemory") / 1e9) |> round()
-}
-
-#' @title Check if the session is interactive
-#'
-#' @description
-#' This function checks if the current R session is interactive. Only written
-#' for mocking.
-#'
-#' @returns A logical value indicating whether the session is interactive.
-#' @example inst/roxygen-examples/is_interactive-example.R
-#' @noRd
-#' @keywords internal
-is_interactive <- function() {
-  interactive()
 }
 
 #' @title Check if required packages are installed

@@ -3,18 +3,57 @@
 #' @noRd
 .default_tetrad_version <- "7.6.10"
 
+# package global variables
+causalDisco <- new.env(parent = emptyenv())
+
+# So we can mock interactive in tests
+interactive <- NULL
+
+
 .onLoad <- function(...) {
-  # Only set heap options if rJava is installed
+  # ---------------------------------
+  # Java heap setup
+  # ---------------------------------
   if (requireNamespace("rJava", quietly = TRUE)) {
     if (is.null(getOption("java.heap.size"))) {
       options(java.heap.size = default_heap())
     }
   }
 
+  # ---------------------------------
+  # Default Tetrad version
+  # ---------------------------------
   if (is.null(getOption("causalDisco.tetrad.version"))) {
     options(causalDisco.tetrad.version = .default_tetrad_version)
   }
 
+  version <- getOption("causalDisco.tetrad.version")
+
+  # ---------------------------------
+  # Versioned cache directory
+  # ---------------------------------
+  cache_subdir <- paste0("causalDisco/tetrad_v", version)
+
+  causalDisco$cache_dir <- tools::R_user_dir(cache_subdir, which = 'cache')
+  if (!dir.exists(causalDisco$cache_dir)) {
+    dir.create(causalDisco$cache_dir, recursive = TRUE)
+  }
+
+  options(causalDisco.tetrad_cache = causalDisco$cache_dir)
+
+  # ---------------------------------
+  # Remove old cached versions
+  # ---------------------------------
+  root <- dirname(causalDisco$cache_dir)
+  all <- list.files(root, pattern = "tetrad_v", full.names = TRUE)
+
+  old <- all[!grepl(version, all, fixed = TRUE)]
+
+  if (length(old)) {
+    unlink(old, recursive = TRUE)
+  }
+
+  # S7 setup
   S7::methods_register()
 }
 
@@ -31,7 +70,7 @@
   }
 
   if (
-    is_interactive() &&
+    interactive() &&
       is.null(getOption("java.heap.size")) &&
       !nzchar(Sys.getenv("JAVA_HEAP_SIZE", unset = ""))
   ) {

@@ -28,7 +28,6 @@ reference:
   - title: "Setup for Tetrad Engine"
     desc: "Functions for installing and verifying the Tetrad Java backend."
     contents:
-      - install_java
       - install_tetrad
       - verify_tetrad
 
