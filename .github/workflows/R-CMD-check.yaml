@@ -46,9 +46,6 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Install Tetrad
-        run: Rscript .github/workflows/install-tetrad.R
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
