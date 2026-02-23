@@ -29,8 +29,13 @@ if (!tetrad_installed) {
 #   }
 # }
 
-## We only install Tetrad if not on CRAN. It can in very very rare cases run out of memory, and thus test fail, and
-## Tetrad uses more than 2 cores, which isn't fixed yet (not allowed on CRAN).
+## Skipping Tetrad install on CRAN - am I even allowed to do it on CRAN?.
+## GA workflows uses .github/workflows/install-tetrad.R
+## Tetrad sometimes seems to sometimes have CPU wall time > 2.5
+## (not allowed on CRAN). Only when initializing Java this seems to happen?
+## E.g. I had a CRAN note appear on debian because user+system in TetradSearch examples was 2.8s,
+## and it elapsed 1.1sec, and 2.8/1.1 > 2.5.
+
 # if (java_ok && !tetrad_installed) {
 #   if (!on_cran()) {
 #     install_tetrad()
