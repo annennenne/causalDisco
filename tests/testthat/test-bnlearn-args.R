@@ -33,7 +33,7 @@ test_that("bnlearn test argument works (discrete)", {
 test_that("bnlearn test argument works (continuous)", {
   data(num_data)
   run_pc_test <- function(data, test) {
-    pc_method <- pc(engine = "bnlearn", test = test, alpha = 0.05)
+    pc_method <- pc(engine = "bnlearn", test = test, alpha = 0.05, B = 100)
     pc_result <- disco(data, method = pc_method)
     expect_equal(class(pc_result), "Disco")
     pc_result
