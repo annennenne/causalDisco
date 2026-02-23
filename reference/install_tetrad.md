@@ -1,12 +1,9 @@
 # Install Tetrad GUI
 
 Downloads and installs the Tetrad GUI JAR file for a specified version
-into a user-specified directory. Configures the R session to know the
-installation location via the `TETRAD_DIR` option.
-
-This function asks the user to confirm the installation directory
-interactively, ensures the directory exists, and downloads the JAR only
-if it’s missing or `force = TRUE`.
+into a user-specified or default cache directory. The function ensures
+the directory exists, downloads the JAR only if it is missing or if
+`force = TRUE`, and verifies its checksum to ensure integrity.
 
 ## Usage
 
@@ -15,7 +12,8 @@ install_tetrad(
   version = getOption("causalDisco.tetrad.version"),
   dir = NULL,
   force = FALSE,
-  verbose = FALSE
+  quiet = FALSE,
+  temp_dir = FALSE
 )
 ```
 
@@ -28,18 +26,25 @@ install_tetrad(
 
 - dir:
 
-  Character; the directory where the JAR should be installed. Default is
-  `"~/tetrad"`. The function will create this directory if it does not
-  exist. The user will be prompted to confirm the location.
+  Character; the directory where the JAR should be installed. If `NULL`
+  (default), the function uses the cache directory defined by
+  `getOption("causalDisco.tetrad_cache")`. The directory will be created
+  if it does not exist.
 
 - force:
 
   Logical; if `TRUE`, forces re-download even if the JAR already exists.
   Default is `FALSE`.
 
-- verbose:
+- quiet:
 
-  Logical; if `TRUE`, shows download progress. Default is `FALSE`.
+  Logical; if `FALSE`, shows progress and messages about downloading and
+  checksum verification. Default is `FALSE`.
+
+- temp_dir:
+
+  Logical; if `TRUE`, installs the JAR in a temporary directory instead
+  of the cache. Default is `FALSE`.
 
 ## Value
 
@@ -49,13 +54,16 @@ Invisibly returns the full path to the installed Tetrad JAR.
 
 ``` r
 if (FALSE) { # \dontrun{
-# Install default version in default directory
+# Install default version in cache directory
 install_tetrad()
 
 # Install a specific version and force re-download
-install_tetrad(version = "7.2.0", force = TRUE)
+install_tetrad(version = "7.6.10", force = TRUE)
 
-# Install with verbose messages
-install_tetrad(verbose = TRUE)
+# Install in a temporary directory
+install_tetrad(temp_dir = TRUE)
+
+# Install quietly (suppress messages)
+install_tetrad(quiet = TRUE)
 } # }
 ```

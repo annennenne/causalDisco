@@ -157,12 +157,45 @@ algorithm. It follows the same pattern, however GES is a score-based
 algorithm, so instead of a test and an alpha level, we need to specify a
 score. Below we will use the Extended Bayesian Information Criterion
 (EBIC) score from Tetrad.</p>
-<p>Tetrad is written in Java, so to use it we first need to ensure that
-Java is installed and that the Tetrad jar files are available. This can
-be done using the <code><a href="../reference/verify_tetrad.html">verify_tetrad()</a></code> function. If they aren’t
-installed, we provide the helper functions <code><a href="../reference/install_java.html">install_java()</a></code>
-and <code><a href="../reference/install_tetrad.html">install_tetrad()</a></code> to set them up.</p>
+<details><summary>
+Tetrad Setup Instructions
+</summary><p>Tetrad is a Java library, so to use it we first need to ensure that
+Java is installed and that the Tetrad jar files are available. A Java
+JDK &gt;= 21 is required to run Tetrad. To install Java JDK &gt;= 21,
+you can install them directly from the vendor Eclipse Temurin (OpenJDK),
+available at <a href="https://adoptium.net/en-GB/temurin/releases" class="external-link uri">https://adoptium.net/en-GB/temurin/releases</a> or use the
+package rJavaEnv, where you can install and setup Java using the
+<code>java_quick_install()</code> function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># If not installed, install with</span></span>
+<span><span class="co"># install.packages("rJavaEnv")</span></span>
+<span><span class="fu">rJavaEnv</span><span class="fu">::</span><span class="fu">java_quick_install</span><span class="op">(</span>version <span class="op">=</span> <span class="fl">25</span>, distribution <span class="op">=</span> <span class="st">"Temurin"</span><span class="op">)</span></span></code></pre></div>
+<p>To install Tetrad, you can use the <code><a href="../reference/install_tetrad.html">install_tetrad()</a></code>
+function from causalDisco, which will download the supported version of
+Tetrad and place it in a cache directory on your system:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/install_tetrad.html">install_tetrad</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>After installing Java and Tetrad, you can verify that everything is
+set up correctly by running <code><a href="../reference/verify_tetrad.html">verify_tetrad()</a></code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $installed</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $version</span></span>
+<span><span class="co">#&gt; [1] "7.6.10"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $java_ok</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $java_version</span></span>
+<span><span class="co">#&gt; [1] "25.0.2"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $message</span></span>
+<span><span class="co">#&gt; [1] "Tetrad version 7.6.10 is installed and ready to use."</span></span></code></pre></div>
+<p>Now you should be able to use Tetrad as an engine for the GES
+algorithm as shown in the code chunk below.</p>
+</details><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ges_tetrad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ges.html">ges</a></span><span class="op">(</span></span>
 <span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>, <span class="co"># Use the Tetrad implementation</span></span>
@@ -176,7 +209,7 @@ and <code><a href="../reference/install_tetrad.html">install_tetrad()</a></code>
 additional arguments to <code><a href="../reference/plot.html">plot()</a></code>. For example, to change the
 appearance of the nodes, you can use the <code>node_style</code>
 argument:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">pc_result_bnlearn</span>,</span>
 <span>  layout <span class="op">=</span> <span class="va">plot_layout</span>,</span>
@@ -196,7 +229,7 @@ vignette</a>.</p>
 <p>Instead of using <code><a href="../reference/plot.html">plot()</a></code>, another way to view and analyze
 the results is to use the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> or <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>
 functions:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pc_result_bnlearn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
@@ -243,7 +276,7 @@ functions:</p>
 <p>We will for this section use the dataset <code>tpc_example</code>,
 which contains variables, which are measured at three different life
 stages: childhood, youth, and old age.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5</span></span>
@@ -265,7 +298,7 @@ recommended for name matching) specifies the dataset. Tiered knowledge
 can then be defined using the <code>tier()</code> function. Here, we
 illustrate this by creating a tiered knowledge structure based on life
 stages:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
@@ -277,7 +310,7 @@ stages:</p>
 <p>For more details on how to define knowledge, see the <a href="knowledge.html">knowledge vignette</a>.</p>
 <p>You can view the <code>Knowledge</code> object using
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span></span>
@@ -318,7 +351,7 @@ To do so, you need to pass the <code>knowledge</code> object as an
 argument to the <code><a href="../reference/disco.html">disco()</a></code> function. Here we use the Temporal
 Peter-Clark (tpc) algorithm from causalDisco with the regression-based
 information loss test:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tpc_method</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tpc.html">tpc</a></span><span class="op">(</span></span>
 <span>  engine <span class="op">=</span> <span class="st">"causalDisco"</span>, <span class="co"># Use the causalDisco implementation</span></span>
 <span>  test <span class="op">=</span> <span class="st">"reg"</span> <span class="co"># Use the regression-based information loss test</span></span>
@@ -326,7 +359,7 @@ information loss test:</p>
 <span><span class="va">tpc_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">tpc_method</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></code></pre></div>
 <p>Similarly, we can view the results using <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>,
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tpc_result</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>

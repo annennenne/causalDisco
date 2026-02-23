@@ -104,15 +104,55 @@ algorithm, so instead of a test and an alpha level, we need to specify a
 score. Below we will use the Extended Bayesian Information Criterion
 (EBIC) score from Tetrad.
 
-Tetrad is written in Java, so to use it we first need to ensure that
-Java is installed and that the Tetrad jar files are available. This can
-be done using the
-[`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md)
-function. If they aren’t installed, we provide the helper functions
-[`install_java()`](https://disco-coders.github.io/causalDisco/reference/install_java.md)
-and
+Tetrad Setup Instructions
+
+Tetrad is a Java library, so to use it we first need to ensure that Java
+is installed and that the Tetrad jar files are available. A Java JDK \>=
+21 is required to run Tetrad. To install Java JDK \>= 21, you can
+install them directly from the vendor Eclipse Temurin (OpenJDK),
+available at <https://adoptium.net/en-GB/temurin/releases> or use the
+package rJavaEnv, where you can install and setup Java using the
+`java_quick_install()` function:
+
+``` r
+# If not installed, install with
+# install.packages("rJavaEnv")
+rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
+```
+
+To install Tetrad, you can use the
 [`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md)
-to set them up.
+function from causalDisco, which will download the supported version of
+Tetrad and place it in a cache directory on your system:
+
+``` r
+install_tetrad()
+```
+
+After installing Java and Tetrad, you can verify that everything is set
+up correctly by running
+[`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md):
+
+``` r
+verify_tetrad()
+#> $installed
+#> [1] TRUE
+#> 
+#> $version
+#> [1] "7.6.10"
+#> 
+#> $java_ok
+#> [1] TRUE
+#> 
+#> $java_version
+#> [1] "25.0.2"
+#> 
+#> $message
+#> [1] "Tetrad version 7.6.10 is installed and ready to use."
+```
+
+Now you should be able to use Tetrad as an engine for the GES algorithm
+as shown in the code chunk below.
 
 ``` r
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {

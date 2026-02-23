@@ -59,11 +59,15 @@ the installer from the Temurin website, make sure to select the option
 to set the `JAVA_HOME` environment variable during installation, so
 rJava correctly detects the Java installation.
 
-Alternatively, we provide a helper function to install Temurin JDK 25 on
-macOS and Windows:
+Alternatively, we suggest you use the rJavaEnv package, which provides a
+convenient function to install Java and set up the environment correctly
+for rJava. You can install Java using the `java_quick_install()`
+function:
 
 ``` r
-causalDisco::install_java()
+# If not installed, install with
+# install.packages("rJavaEnv")
+rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
 ```
 
 The current supported version of Tetrad can then be installed by calling
@@ -90,7 +94,7 @@ causalDisco::verify_tetrad()
 #> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
+#> [1] "Tetrad version 7.6.10 is installed and ready to use."
 ```
 
 ## Example
@@ -246,8 +250,6 @@ Core search algorithms implemented or wrapped by causalDisco.
 
 Functions for installing and verifying the Tetrad Java backend.
 
-- [`install_java()`](https://disco-coders.github.io/causalDisco/reference/install_java.md)
-  : Install Eclipse Temurin JDK
 - [`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md)
   : Install Tetrad GUI
 - [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md)

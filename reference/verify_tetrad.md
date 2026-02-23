@@ -46,6 +46,6 @@ verify_tetrad()
 #> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad found (version 7.6.10). Java version 25.0.2 is OK."
+#> [1] "Tetrad version 7.6.10 is installed and ready to use."
 #> 
 ```
