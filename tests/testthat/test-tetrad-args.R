@@ -43,6 +43,8 @@ test_that("tetrad test argument works (continuous)", {
 test_that("tetrad test argument works (mixed)", {
   skip_if_no_tetrad()
   data(mix_data)
+  # Use a small dataset to speed up
+  mix_data <- mix_data[1:30, ]
 
   run_pc_test <- function(data, test) {
     pc_method <- pc(engine = "tetrad", test = test, alpha = 0.05)
