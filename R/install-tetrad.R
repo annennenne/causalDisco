@@ -298,6 +298,10 @@ install_tetrad <- function(
 
   if (!quiet) {
     message("Checksum confirmed. Cached at: ", jar_path)
+    message(
+      "Please note: Tetrad is distributed under its own license. ",
+      "See license and copyright details at https://github.com/cmu-phil/tetrad"
+    )
   }
 
   invisible(jar_path)

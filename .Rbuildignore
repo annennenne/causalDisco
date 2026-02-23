@@ -30,3 +30,4 @@ man-roxygen
 ^Meta$
 ^[.]?air[.]toml$
 ^\.vscode$
+^LICENSE\.md$
