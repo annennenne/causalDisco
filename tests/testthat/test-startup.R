@@ -24,7 +24,7 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
   seen_heap <- NULL
 
   with_mocked_bindings(
-    is_interactive = function() TRUE,
+    interactive = function() TRUE,
     ask_heap_size = function() "4g",
     parse_heap_gb = function(x) as.numeric(sub("g$", "", x)),
     init_java = function(heap) {
@@ -53,7 +53,7 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
   withr::local_options(java.heap.size = "4096m")
 
   with_mocked_bindings(
-    is_interactive = function() FALSE,
+    interactive = function() FALSE,
     parse_heap_gb = function(x) 4,
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 4,
@@ -75,7 +75,7 @@ test_that(".onAttach warns when runtime heap != requested", {
   withr::local_options(java.heap.size = "2g")
 
   with_mocked_bindings(
-    is_interactive = function() FALSE,
+    interactive = function() FALSE,
     parse_heap_gb = function(x) 2,
     init_java = function(heap) invisible(NULL),
     current_heap_gb = function() 6,
@@ -97,7 +97,7 @@ test_that(".onAttach does not prompt in non-interactive mode", {
   prompted <- FALSE
 
   with_mocked_bindings(
-    is_interactive = function() FALSE,
+    interactive = function() FALSE,
     ask_heap_size = function() {
       prompted <<- TRUE
       "8g"
@@ -121,7 +121,7 @@ test_that(".onAttach does not prompt when env var set", {
   prompted <- FALSE
 
   with_mocked_bindings(
-    is_interactive = function() TRUE,
+    interactive = function() TRUE,
     ask_heap_size = function() {
       prompted <<- TRUE
       "9g"

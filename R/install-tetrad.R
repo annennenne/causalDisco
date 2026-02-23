@@ -1,18 +1,14 @@
-# -------------------------------
-# Get Tetrad directory
-# -------------------------------
-get_TETRAD_DIR <- function() {
-  # Check R option
-  path <- getOption("TETRAD_DIR")
-  if (!is.null(path)) {
-    return(path)
+get_tetrad_dir <- function() {
+  # user override
+  env <- Sys.getenv("TETRAD_DIR", "")
+  if (nzchar(env) && dir.exists(env)) {
+    return(env)
   }
 
-  # Check environment variable
-  path <- Sys.getenv("TETRAD_DIR")
-  if (nzchar(path) && dir.exists(path)) {
-    options(TETRAD_DIR = path)
-    return(path)
+  # package cache (default)
+  cache <- getOption("causalDisco.tetrad_cache")
+  if (!is.null(cache) && dir.exists(cache)) {
+    return(cache)
   }
 
   NULL
@@ -73,101 +69,66 @@ get_java_version <- function() {
 verify_tetrad <- function(
   version = getOption("causalDisco.tetrad.version")
 ) {
-  TETRAD_DIR <- get_TETRAD_DIR()
+  tetrad_dir <- get_tetrad_dir()
 
-  # Default output helper
-  create_output <- function(
-    installed,
-    version = NULL,
-    java_ok = NA,
-    java_version = NULL,
-    message
-  ) {
+  out <- function(installed, java_ok, java_version, message) {
     list(
       installed = installed,
-      version = version,
+      version = if (installed) version else NULL,
       java_ok = java_ok,
       java_version = java_version,
       message = message
     )
   }
 
-  # ---- Step 1: Check Java first ----
+  # ---- Java check ----
   java_version <- get_java_version()
 
-  if (is.null(java_version) || is.na(java_version)) {
-    return(create_output(
-      installed = FALSE,
-      version = NULL,
-      java_ok = FALSE,
-      java_version = NULL,
-      message = "Java was not found. Please install Java >= 21 using install_java()."
-    ))
+  if (is.na(java_version)) {
+    return(out(FALSE, FALSE, NULL, "Java not found. Install Java >= 21."))
   }
 
   java_major <- as.integer(sub("\\..*", "", java_version))
   java_ok <- !is.na(java_major) && java_major >= 21
 
   if (!java_ok) {
-    return(create_output(
-      installed = FALSE,
-      version = NULL,
-      java_ok = FALSE,
-      java_version = java_version,
-      message = paste0(
-        "Java >= 21 is required but found version ",
-        java_version,
-        ". Please update Java or run install_java()."
-      )
+    return(out(
+      FALSE,
+      FALSE,
+      java_version,
+      paste0("Java >= 21 required (found ", java_version, ").")
     ))
   }
 
-  # ---- Step 2: Check Tetrad directory / JAR ----
-  if (is.null(TETRAD_DIR)) {
-    return(create_output(
-      installed = FALSE,
-      version = NULL,
-      java_ok = TRUE,
-      java_version = java_version,
-      message = "Tetrad not found. Call `install_tetrad()` to install."
+  # ---- Tetrad check ----
+  if (is.null(tetrad_dir)) {
+    return(out(
+      FALSE,
+      TRUE,
+      java_version,
+      "Tetrad not installed. Run install_tetrad()."
     ))
   }
 
-  gui_jar <- file.path(
-    TETRAD_DIR,
+  jar <- file.path(
+    tetrad_dir,
     paste0("tetrad-gui-", version, "-launch.jar")
   )
 
-  if (!file.exists(gui_jar)) {
-    return(create_output(
-      installed = FALSE,
-      version = NULL,
-      java_ok = TRUE,
-      java_version = java_version,
-      message = paste0(
-        "Tetrad version ",
-        version,
-        " not found. Please install it using `install_tetrad()`."
-      )
+  if (!file.exists(jar)) {
+    return(out(
+      FALSE,
+      TRUE,
+      java_version,
+      "Tetrad not installed. Run install_tetrad()."
     ))
   }
 
-  # ---- All OK ----
-  msg <- paste0(
-    "Tetrad found (version ",
-    version,
-    "). ",
-    "Java version ",
+  out(
+    TRUE,
+    TRUE,
     java_version,
-    " is OK."
-  )
-
-  create_output(
-    installed = TRUE,
-    version = version,
-    java_ok = TRUE,
-    java_version = java_version,
-    message = msg
+    paste0("Tetrad version ", version, " is installed and ready to use.")
   )
 }
 
@@ -175,34 +136,38 @@ verify_tetrad <- function(
 #'
 #' @description
 #' Downloads and installs the Tetrad GUI JAR file for a specified version
-#' into a user-specified directory. Configures the R session to know the
-#' installation location via the `TETRAD_DIR` option.
-#'
-#' This function asks the user to confirm the installation directory
-#' interactively, ensures the directory exists, and downloads the JAR
-#' only if it’s missing or `force = TRUE`.
+#' into a user-specified or default cache directory. The function ensures the
+#' directory exists, downloads the JAR only if it is missing or if `force = TRUE`,
+#' and verifies its checksum to ensure integrity.
 #'
 #' @param version Character; the Tetrad version to install. Default is
 #'   `getOption("causalDisco.tetrad.version")`.
-#' @param dir Character; the directory where the JAR should be installed.
-#'   Default is `"~/tetrad"`. The function will create this directory if it
-#'   does not exist. The user will be prompted to confirm the location.
+#' @param dir Character; the directory where the JAR should be installed. If
+#'   `NULL` (default), the function uses the cache directory defined by
+#'   `getOption("causalDisco.tetrad_cache")`. The directory will be created
+#'   if it does not exist.
 #' @param force Logical; if `TRUE`, forces re-download even if the JAR already
 #'   exists. Default is `FALSE`.
-#' @param verbose Logical; if `TRUE`, shows download progress. Default is `FALSE`.
+#' @param quiet Logical; if `FALSE`, shows progress and messages about
+#'   downloading and checksum verification. Default is `FALSE`.
+#' @param temp_dir Logical; if `TRUE`, installs the JAR in a temporary directory
+#'   instead of the cache. Default is `FALSE`.
 #'
 #' @return Invisibly returns the full path to the installed Tetrad JAR.
 #'
 #' @examples
 #' \dontrun{
-#' # Install default version in default directory
+#' # Install default version in cache directory
 #' install_tetrad()
 #'
 #' # Install a specific version and force re-download
-#' install_tetrad(version = "7.2.0", force = TRUE)
+#' install_tetrad(version = "7.6.10", force = TRUE)
 #'
-#' # Install with verbose messages
-#' install_tetrad(verbose = TRUE)
+#' # Install in a temporary directory
+#' install_tetrad(temp_dir = TRUE)
+#'
+#' # Install quietly (suppress messages)
+#' install_tetrad(quiet = TRUE)
 #' }
 #'
 #' @export
@@ -210,89 +175,134 @@ install_tetrad <- function(
   version = getOption("causalDisco.tetrad.version"),
   dir = NULL,
   force = FALSE,
-  verbose = FALSE
+  quiet = FALSE,
+  temp_dir = FALSE
 ) {
-  quiet <- !verbose
+  checkmate::assert_logical(force)
+  checkmate::assert_logical(quiet)
+  checkmate::assert_logical(temp_dir)
+
+  old_options <- options()
+  on.exit(options(old_options), add = TRUE)
+  options(timeout = max(300, getOption("timeout")))
 
   # ------------------------
-  # Determine installation directory
+  # Determine install dir
   # ------------------------
+  if (temp_dir) {
+    dir <- tempdir()
+  } else if (is.null(dir)) {
+    dir <- getOption("causalDisco.tetrad_cache")
+  }
+
   if (is.null(dir)) {
-    dir <- "~/tetrad"
+    if (!quiet) {
+      message("Cache directory not initialized. Skipping Tetrad installation.")
+    }
+    return(NULL)
   }
 
-  # Confirm installation interactively
-  if (!interactive()) {
-    stop(
-      "Tetrad installation requires an interactive session.\n",
-      "Either download Tetrad manually, or run this function in an interactive R session.",
-      call. = FALSE
-    )
-  }
-
-  dir <- normalizePath(path.expand(dir), winslash = "/", mustWork = FALSE)
-  message("\nTetrad will be installed to:\n  ", dir, "\n")
-  ok <- utils::askYesNo("Do you want to continue?")
-  if (!isTRUE(ok)) {
-    stop("Installation cancelled.", call. = FALSE)
-  }
-
-  # Create directory if missing
-  if (!dir.exists(dir)) {
-    dir.create(dir, recursive = TRUE)
-  }
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
 
   # ------------------------
-  # Construct URL + destination
+  # Build URLs
   # ------------------------
-  base_url <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
+  base <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
   jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
-  url <- paste0(base_url, "/", version, "/", jar_name)
-  dest_file <- file.path(dir, jar_name)
+  jar_url <- paste0(base, "/", version, "/", jar_name)
+  jar_path <- file.path(dir, jar_name)
 
-  need_download <- force || !file.exists(dest_file)
+  checksum_name <- paste0(jar_name, ".sha256")
+  checksum_url <- paste0(base, "/", version, "/", checksum_name)
+  checksum_path <- file.path(dir, checksum_name)
 
   # ------------------------
-  # Download JAR if needed
+  # Download JAR if missing or forced
   # ------------------------
-  if (need_download) {
-    msg_prefix <- if (force) "Re-downloading" else "Downloading"
-    message(msg_prefix, " Tetrad ", version, "...")
+  download_ok <- TRUE
+  if (!file.exists(jar_path) || force) {
+    if (!quiet) {
+      message("Downloading Tetrad ", version, " ...")
+    }
 
-    archive <- tempfile(fileext = ".jar")
-    on.exit(unlink(archive), add = TRUE)
-
-    tryCatch(
+    download_ok <- tryCatch(
       {
+        utils::download.file(jar_url, jar_path, mode = "wb", quiet = quiet)
         utils::download.file(
-          url,
-          destfile = archive,
+          checksum_url,
+          checksum_path,
           mode = "wb",
           quiet = quiet
         )
-        file.copy(archive, dest_file, overwrite = TRUE)
+        TRUE
       },
       error = function(e) {
-        stop("Failed to download Tetrad: ", e$message)
+        if (!quiet) {
+          message(
+            "Unable to download Tetrad from ",
+            jar_url,
+            ". Check your internet connection or try later."
+          )
+        }
+        FALSE
+      },
+      warning = function(w) {
+        if (!quiet) {
+          message(
+            "Download warning: ",
+            conditionMessage(w),
+            ". Proceeding gracefully."
+          )
+        }
+        TRUE
       }
     )
 
-    message("Downloaded to: ", dest_file)
-  } else {
-    message("Tetrad already exists at: ", dest_file)
+    if (!download_ok) return(NULL)
+  } else if (!quiet) {
+    message("Using cached Tetrad.")
   }
 
-  options(TETRAD_DIR = dir)
+  # ------------------------
+  # Verify checksum
+  # ------------------------
+  if (!file.exists(checksum_path) || !file.exists(jar_path)) {
+    if (!quiet) {
+      message("Tetrad files missing, skipping checksum verification.")
+    }
+    return(NULL)
+  }
 
-  tetrad_line <- paste0("TETRAD_DIR='", dir, "'")
+  if (!quiet) {
+    message("Verifying checksum...")
+  }
 
-  cli::cli_bullets(c(
-    "i" = "Setting {cli::col_green('TETRAD_DIR')} for current session to:",
-    " " = "{cli::col_blue(dir)}",
-    "i" = "To make this change permanent, set {cli::col_green('TETRAD_DIR')} in your .Renviron file.",
-    " " = "Run  {.code usethis::edit_r_environ()} to open your .Renviron file, and then add the following line:",
-    " " = "{cli::col_blue(tetrad_line)}"
-  ))
+  expected <- tryCatch(
+    trimws(readLines(checksum_path, warn = FALSE)[1]),
+    error = function(e) NA_character_
+  )
+  actual <- tryCatch(
+    digest::digest(file = jar_path, algo = "sha256"),
+    error = function(e) NA_character_
+  )
 
-  invisible(dest_file)
+  if (
+    is.na(expected) || is.na(actual) || tolower(actual) != tolower(expected)
+  ) {
+    if (!quiet) {
+      message("Checksum verification failed. The file may be corrupted.")
+    }
+    return(NULL)
+  }
+
+  if (!quiet) {
+    message("Checksum confirmed. Cached at: ", jar_path)
+    message(
+      "Please note: Tetrad is distributed under its own license. ",
+      "See license and copyright details at https://github.com/cmu-phil/tetrad"
+    )
+  }
+
+  invisible(jar_path)
 }

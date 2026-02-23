@@ -25,7 +25,7 @@ test_that("knowledge helper builds tiered/required/forbidden objects and casts t
 })
 
 test_that("Java and Tetrad JARs are ready", {
-  jars <- find_tetrad_jar()
+  jars <- get_tetrad_dir()
   expect_true(length(jars) > 0)
   expect_true(all(file.exists(jars)))
 })
