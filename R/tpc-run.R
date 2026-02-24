@@ -56,7 +56,7 @@
 #'   forward in time.
 #' }
 #'
-#' @return A `Disco` object (a list with a `caugi` and a `knowledge` object).
+#' @return A `Disco` object (a list with a `caugi` and a `Knowledge` object).
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'

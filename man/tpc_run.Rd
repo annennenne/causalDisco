@@ -64,7 +64,7 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
 \value{
-A \code{Disco} object (a list with a \code{caugi} and a \code{knowledge} object).
+A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
 }
 \description{
 Run a tier-aware variant of the PC algorithm that respects background

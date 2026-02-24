@@ -7,7 +7,7 @@
 \method{plot}{Knowledge}(x, required_col = "blue", forbidden_col = "red", ...)
 }
 \arguments{
-\item{x}{A \code{knowledge} object, created using \code{\link[=knowledge]{knowledge()}}.}
+\item{x}{A \code{Knowledge} object, created using \code{\link[=knowledge]{knowledge()}}.}
 
 \item{required_col}{Character(1). Color for edges marked as "required". Default \code{"blue"}.}
 
@@ -19,7 +19,7 @@
 Invisibly returns the \link[caugi:caugi]{caugi::caugi} object used for plotting. The main effect is the plot.
 }
 \description{
-Visualize a \code{knowledge} object as a directed graph using \code{\link[caugi:plot]{caugi::plot()}}.
+Visualize a \code{Knowledge} object as a directed graph using \code{\link[caugi:plot]{caugi::plot()}}.
 }
 \details{
 \itemize{

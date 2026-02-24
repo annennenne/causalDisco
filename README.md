@@ -47,7 +47,7 @@ pak::pak("disco-coders/causalDisco")
 ```
 
 If you want to use algorithms from Tetrad, you also need to install the
-suggested dependency (rJava and a Java JDK \>= 21). See below for
+suggested dependency rJava (and a Java JDK \>= 21). See below for
 instructions on how to set up Java and Tetrad.
 
 ### Installing Rust
@@ -110,8 +110,8 @@ causalDisco::verify_tetrad()
 ## Example
 
 With causalDisco you can currently run causal discovery algorithms from
-the package causalDisco itself, the the R packages bnlearn and pcalg,
-and the Java library Tetrad with a consistent syntax. Here we provide a
+the package causalDisco itself, the R packages bnlearn and pcalg, and
+the Java library Tetrad with a consistent syntax. Here we provide a
 simple example of how to use these different backends with the same code
 structure. We also show how to incorporate tiered background knowledge.
 

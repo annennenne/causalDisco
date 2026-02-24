@@ -201,7 +201,7 @@ Thus, you can supply any arguments to `make_tikz()` that are supported by `causa
 
 ## Exporting Knowledge to TikZ
 
-We first demonstrate TikZ export for a `knowledge` object.
+We first demonstrate TikZ export for a `Knowledge` object.
 
 ```{r tikz export knowledge}
 data(num_data)

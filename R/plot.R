@@ -150,7 +150,7 @@ plot.Disco <- function(
 
 #' Plot a Knowledge Object
 #'
-#' Visualize a `knowledge` object as a directed graph using [caugi::plot()].
+#' Visualize a `Knowledge` object as a directed graph using [caugi::plot()].
 #'
 #' - **Required edges** are drawn in **blue** by default (can be changed via `required_col`).
 #' - **Forbidden edges** are drawn in **red** by default (can be changed via `forbidden_col`). If A to B and B to
@@ -160,7 +160,7 @@ plot.Disco <- function(
 #'   `edge_style` argument. To override the color of a specific edge, use
 #'   `edge_style$by_edge[[from]][[to]]$col`.
 #'
-#' @param x A `knowledge` object, created using [knowledge()].
+#' @param x A `Knowledge` object, created using [knowledge()].
 #' @param required_col Character(1). Color for edges marked as "required". Default `"blue"`.
 #' @param forbidden_col Character(1). Color for edges marked as "forbidden". Default `"red"`.
 #' @param ... Additional arguments passed to [caugi::plot()], e.g., `node_style`, `edge_style`.
