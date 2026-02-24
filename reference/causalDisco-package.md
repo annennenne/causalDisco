@@ -19,10 +19,11 @@ well as the Java library 'Tetrad' (Scheines et al., 1998;
 and evaluation of graph structures, facilitating performance evaluation
 and methodological studies.
 
-## System requirements
+## System requirements (optional)
 
-Java (\>= 21) for Tetrad functionality (optional; includes installer);
-Source code: <https://github.com/cmu-phil/tetrad>.
+If you want to use algorithms from the Java library Tetrad, a Java JDK
+(\>= 21) is required. The Tetrad `.jar` file can be downloaded using
+[`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md).
 
 ## See also
 
