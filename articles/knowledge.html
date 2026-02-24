@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -344,7 +344,7 @@ are checked for existence and selected correctly:</p>
 <span>  <span class="fu">exogenous</span><span class="op">(</span><span class="st">"child_x1"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Instead of <code>exogenous</code>, you can also use the shorthand
-function <code>exo()</code>. This <code>knowledge</code> object can be
+function <code>exo()</code>. This <code>Knowledge</code> object can be
 visualized:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_exo_1</span><span class="op">)</span></span></code></pre></div>
@@ -364,7 +364,7 @@ exogenous variables using tidyselect helpers:</p>
 <h2 id="combining-different-knowledge-types">Combining different knowledge types<a class="anchor" aria-label="anchor" href="#combining-different-knowledge-types"></a>
 </h2>
 <p>Different knowledge types can be freely combined in a single
-<code>knowledge</code> object. For example, we can combine tiered
+<code>Knowledge</code> object. For example, we can combine tiered
 knowledge with required and forbidden edges:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>

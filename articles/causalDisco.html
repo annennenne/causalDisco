@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -295,7 +295,7 @@ algorithm. Specifically, we know that variables measured in childhood
 cannot be caused by variables measured in youth or old age, and
 variables measured in youth cannot be caused by variables measured in
 old age.</p>
-<p>Knowledge is encoded by creating a <code>knowledge</code> object via
+<p>Knowledge is encoded by creating a <code>Knowledge</code> object via
 the <code><a href="../reference/knowledge.html">knowledge()</a></code> function. The first argument (optional, but
 recommended for name matching) specifies the dataset. Tiered knowledge
 can then be defined using the <code>tier()</code> function. Here, we
@@ -350,7 +350,7 @@ stages:</p>
 <p>The plot displays vertical tiers, each enclosed in a shaded rectangle
 and labeled with the corresponding tier name at the top.</p>
 <p>We can then incorporate this knowledge into any algorithm like above.
-To do so, you need to pass the <code>knowledge</code> object as an
+To do so, you need to pass the <code>Knowledge</code> object as an
 argument to the <code><a href="../reference/disco.html">disco()</a></code> function. Here we use the Temporal
 Peter-Clark (tpc) algorithm from causalDisco with the regression-based
 information loss test:</p>

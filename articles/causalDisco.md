@@ -269,7 +269,7 @@ Specifically, we know that variables measured in childhood cannot be
 caused by variables measured in youth or old age, and variables measured
 in youth cannot be caused by variables measured in old age.
 
-Knowledge is encoded by creating a `knowledge` object via the
+Knowledge is encoded by creating a `Knowledge` object via the
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
 function. The first argument (optional, but recommended for name
 matching) specifies the dataset. Tiered knowledge can then be defined
@@ -336,7 +336,7 @@ The plot displays vertical tiers, each enclosed in a shaded rectangle
 and labeled with the corresponding tier name at the top.
 
 We can then incorporate this knowledge into any algorithm like above. To
-do so, you need to pass the `knowledge` object as an argument to the
+do so, you need to pass the `Knowledge` object as an argument to the
 [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
 function. Here we use the Temporal Peter-Clark (tpc) algorithm from
 causalDisco with the regression-based information loss test:

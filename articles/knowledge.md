@@ -317,7 +317,7 @@ kn_exo_1 <- knowledge(
 ```
 
 Instead of `exogenous`, you can also use the shorthand function `exo()`.
-This `knowledge` object can be visualized:
+This `Knowledge` object can be visualized:
 
 ``` r
 plot(kn_exo_1)
@@ -340,7 +340,7 @@ plot(kn_exo_2, layout = "bipartite", orientation = "columns")
 
 ## Combining different knowledge types
 
-Different knowledge types can be freely combined in a single `knowledge`
+Different knowledge types can be freely combined in a single `Knowledge`
 object. For example, we can combine tiered knowledge with required and
 forbidden edges:
 

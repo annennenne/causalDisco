@@ -454,7 +454,7 @@ try(CausalDiscoSearch$new()$set_score("not_a_score"))
 try(CausalDiscoSearch$new()$set_alg("not_an_alg"))
 #> Error : Unknown method type using causalDisco engine: not_an_alg
 
-# set_knowledge() requires a `knowledge` object
+# set_knowledge() requires a `Knowledge` object
 try(CausalDiscoSearch$new()$set_knowledge(list(not = "Knowledge")))
 #> Error : Input must be a knowledge instance.
 ```

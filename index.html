@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@
 <p>or the development version of causalDisco from GitHub using pak:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"disco-coders/causalDisco"</span><span class="op">)</span></span></code></pre></div>
-<p>If you want to use algorithms from Tetrad, you also need to install the suggested dependency (rJava and a Java JDK &gt;= 21). See below for instructions on how to set up Java and Tetrad.</p>
+<p>If you want to use algorithms from Tetrad, you also need to install the suggested dependency rJava (and a Java JDK &gt;= 21). See below for instructions on how to set up Java and Tetrad.</p>
 </div>
 <div class="section level3">
 <h3 id="installing-rust">Installing Rust<a class="anchor" aria-label="anchor" href="#installing-rust"></a>
@@ -133,7 +133,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>With causalDisco you can currently run causal discovery algorithms from the package causalDisco itself, the the R packages bnlearn and pcalg, and the Java library Tetrad with a consistent syntax. Here we provide a simple example of how to use these different backends with the same code structure. We also show how to incorporate tiered background knowledge.</p>
+<p>With causalDisco you can currently run causal discovery algorithms from the package causalDisco itself, the R packages bnlearn and pcalg, and the Java library Tetrad with a consistent syntax. Here we provide a simple example of how to use these different backends with the same code structure. We also show how to incorporate tiered background knowledge.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>

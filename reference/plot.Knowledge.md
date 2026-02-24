@@ -1,6 +1,6 @@
 # Plot a Knowledge Object
 
-Visualize a `knowledge` object as a directed graph using
+Visualize a `Knowledge` object as a directed graph using
 [`caugi::plot()`](https://caugi.org/reference/plot.html).
 
 ## Usage
@@ -14,7 +14,7 @@ plot(x, required_col = "blue", forbidden_col = "red", ...)
 
 - x:
 
-  A `knowledge` object, created using
+  A `Knowledge` object, created using
   [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
 
 - required_col:

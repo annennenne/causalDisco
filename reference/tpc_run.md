@@ -97,7 +97,7 @@ tpc_run(
 
 ## Value
 
-A `Disco` object (a list with a `caugi` and a `knowledge` object).
+A `Disco` object (a list with a `caugi` and a `Knowledge` object).
 
 ## Details
 

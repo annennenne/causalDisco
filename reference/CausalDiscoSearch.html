@@ -11,7 +11,7 @@ It allows to set the data, sufficient statistics, test, score, and algorithm."><
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -486,7 +486,7 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"not_an_alg"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Unknown method type using causalDisco engine: not_an_alg</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># set_knowledge() requires a `knowledge` object</span></span></span>
+<span class="r-in"><span><span class="co"># set_knowledge() requires a `Knowledge` object</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>not <span class="op">=</span> <span class="st">"Knowledge"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : Input must be a knowledge instance.</span>
 </code></pre></div>
