@@ -90,24 +90,30 @@ we will use the Extended Bayesian Information Criterion (EBIC) score from Tetrad
 
 <details>
 <summary>Tetrad Setup Instructions</summary>
-Tetrad is a Java library, so to use it we first need to ensure that Java is installed and that the Tetrad jar files are available. A Java JDK >= 21 is required to run Tetrad. To install Java JDK >= 21, you can install
-them directly from the vendor Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/temurin/releases
-or use the package rJavaEnv, where you can install and setup Java using the `java_quick_install()` function:
 
-```{r install java, eval = FALSE}
-# If not installed, install with
-# install.packages("rJavaEnv")
+causalDisco provides an interface to the Java library [Tetrad](https://github.com/cmu-phil/tetrad) for
+causal discovery algorithms. To use algorithms from Tetrad you need to install a Java Development Kit (JDK) >= 21.
+We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/temurin/releases. When using
+the installer from the Temurin website, make sure to select the option to set the `JAVA_HOME` environment variable
+during installation, so rJava correctly detects the Java installation.
+
+For a simpler setup, we recommend using the rJavaEnv package, which provides a convenient function to install Java and
+configure the environment automatically for rJava. You can install Java using the `rJavaEnv::java_quick_install()`
+function:
+
+```{r install java, eval=FALSE}
+# Use the development version of rJavaEnv from GitHub
+# pak::pak("e-kotov/rJavaEnv")
 rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
 ```
 
-To install Tetrad, you can use the `install_tetrad()` function from causalDisco, which will download the supported
-version of Tetrad and place it in a cache directory on your system:
+Once you have Java JDK set up correctly, the current supported version of Tetrad can then be installed by calling
 
-```{r install tetrad, eval = FALSE}
+```{r install tetrad, eval=FALSE}
 install_tetrad()
 ```
 
-After installing Java and Tetrad, you can verify that everything is set up correctly by running `verify_tetrad()`:
+To verify everything is set up correctly you can run `verify_tetrad()`:
 
 ```{r check tetrad install}
 verify_tetrad()
@@ -128,21 +134,42 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 ```{r ges algorithm ebic tetrad plot code, echo=FALSE, eval = FALSE}
-# Code to generate the plot image
-# Settings from pkgdown::fig_settings()
+# Code to generate the plot image on pkgdown and CRAN.
+
+# For pkgdown (comment out to avoid CRAN NOTE about unstated dependency used) use the function fig_settings
+# ragg::agg_png(
+  # filename = "ges-ebic-tetrad-pkgdown.png",
+#   width  = fig_settings$fig.width,
+#   height = fig_settings$fig.height,
+#   units  = "in",
+#   res    = fig_settings$dpi * fig_settings$fig.retina
+# )
+# ges_result <- disco(data = num_data, method = ges(engine = "tetrad", score = "ebic"))
+# plot(ges_result, layout = plot_layout, main = "GES EBIC (Tetrad)")
+# dev.off()
+
+# For CRAN
+# Hardcoded since knitr::opts_current$get() is different when running in console.
 ragg::agg_png(
-  filename = "vignettes/ges-ebic-tetrad.png",
-  width  = 7.291667,
-  height = 4.506593,
+  filename = "ges-ebic-tetrad-cran.png",
+  width  = 3,
+  height = 3,
   units  = "in",
-  res    = 96 * 2   # dpi * fig.retina
+  res    = 92 * 1
 )
-ges_tetrad <- ges(engine = "tetrad", score = "ebic")
-ges_result_tetrad <- disco(data = num_data, method = ges_tetrad)
-plot(ges_result_tetrad, layout = plot_layout, main = "GES EBIC (Tetrad)")
+ges_result <- disco(data = num_data, method = ges(engine = "tetrad", score = "ebic"))
+plot(ges_result, layout = plot_layout, main = "GES EBIC (Tetrad)")
 dev.off()
 ```
-![](ges-ebic-tetrad.png)
+```{r ges-ebic-tetrad-include, echo=FALSE}
+img_file <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+  "ges-ebic-tetrad-pkgdown.png"
+} else {
+  "ges-ebic-tetrad-cran.png"
+}
+
+knitr::include_graphics(img_file)
+```
 
 If you want to customize the plot appearance further, you can pass additional arguments to `plot()`. For example, to
 change the appearance of the nodes, you can use the `node_style` argument:

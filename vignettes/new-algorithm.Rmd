@@ -263,24 +263,53 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 ```{r my_boss_variant_tetrad algorithm plot code, echo=FALSE, eval = FALSE}
-# Code to generate the plot image
-# Settings from pkgdown::fig_settings()
+# Code to generate the plot image on pkgdown and CRAN.
+
+# For pkgdown (comment out to avoid CRAN NOTE about unstated dependency used) use the function fig_settings
+# ragg::agg_png(
+#   filename = "custom-boss-variant-pkgdown.png",
+#   width  = fig_settings$fig.width,
+#   height = fig_settings$fig.height,
+#   units  = "in",
+#   res    = fig_settings$dpi * fig_settings$fig.retina
+# )
+my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
+my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
+plot(my_boss_variant_tetrad_result)
+dev.off()
+
+# For CRAN
+# Hardcoded since knitr::opts_current$get() is different when running in console.
 ragg::agg_png(
-  filename = "vignettes/custom-boss-variant.png",
-  width  = 7.291667,
-  height = 4.506593,
+  filename = "custom-boss-variant-cran.png",
+  width  = 3,
+  height = 3,
   units  = "in",
-  res    = 96 * 2   # dpi * fig.retina
+  res    = 92 * 1
 )
 my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
 my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
 plot(my_boss_variant_tetrad_result)
 dev.off()
 ```
-![](custom-boss-variant.png)
+```{r ges-ebic-tetrad-include, echo=FALSE}
+img_file <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+  "ges-ebic-tetrad-pkgdown.png"
+} else {
+  "ges-ebic-tetrad-cran.png"
+}
+
+knitr::include_graphics(img_file)
+```
 
 Once again, if using a hybrid or constraint-based algorithm rather than a score-based one, the structure would remain
 the same but the method would accept different arguments (e.g., `test` and `alpha` for a constraint-based algorithm).
+
+Finally, we clean up the custom registered Tetrad algorithm
+
+```{r cleanup}
+reset_tetrad_alg_registry()
+```
 
 # Conclusion
 
