@@ -1,9 +1,11 @@
 # Install Tetrad GUI
 
-Downloads and installs the Tetrad GUI JAR file for a specified version
-into a user-specified or default cache directory. The function ensures
-the directory exists, downloads the JAR only if it is missing or if
-`force = TRUE`, and verifies its checksum to ensure integrity.
+Downloads and installs the Tetrad GUI JAR file from
+[Maven](https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/).
+It downloads the specified version of the Tetrad GUI JAR and its
+corresponding SHA256 checksum file, and saves them in the specified
+directory (or cache). If the JAR already exists and `force = FALSE`, it
+will skip downloading.
 
 ## Usage
 
@@ -49,6 +51,14 @@ install_tetrad(
 ## Value
 
 Invisibly returns the full path to the installed Tetrad JAR.
+
+## Details
+
+In line with [CRAN
+policies](https://cran.r-project.org/web/packages/policies.html) this
+function will only return messages and not throw warnings/errors if the
+installation fails (e.g. due to no internet connection), and return
+`NULL`.
 
 ## Examples
 
