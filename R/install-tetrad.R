@@ -191,9 +191,6 @@ install_tetrad <- function(
   on.exit(options(old_options), add = TRUE)
   options(timeout = max(300, getOption("timeout")))
 
-  # ------------------------
-  # Determine install dir
-  # ------------------------
   if (temp_dir) {
     dir <- tempdir()
   } else if (is.null(dir)) {
@@ -210,9 +207,6 @@ install_tetrad <- function(
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
 
-  # ------------------------
-  # Build paths and URLs
-  # ------------------------
   base <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
   jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
   checksum_name <- paste0(jar_name, ".sha256")
@@ -233,9 +227,6 @@ install_tetrad <- function(
     unlink(checksum_tmp, force = TRUE)
   }
 
-  # ------------------------
-  # Optional: clean old versions
-  # ------------------------
   maybe_clean_old_versions <- function(current_version, dir, quiet = FALSE) {
     all_jars <- list.files(
       dir,
@@ -268,9 +259,6 @@ install_tetrad <- function(
     }
   }
 
-  # ------------------------
-  # Download if needed
-  # ------------------------
   need_download <- force ||
     !file.exists(jar_path) ||
     !file.exists(checksum_path)
@@ -284,9 +272,7 @@ install_tetrad <- function(
     download_ok <- {
       success <- FALSE
 
-      # suppress warnings entirely
       suppressWarnings({
-        # download Tetrad jar
         tryCatch(
           {
             utils::download.file(jar_url, jar_tmp, mode = "wb", quiet = quiet)
@@ -297,14 +283,12 @@ install_tetrad <- function(
               quiet = quiet
             )
 
-            # verify files exist
             if (!file.exists(jar_tmp) || !file.exists(checksum_tmp)) {
               if (!quiet) {
                 message("Download incomplete. Removing corrupted files.")
               }
               cleanup_install()
             } else {
-              # move to final location
               file.rename(jar_tmp, jar_path)
               file.rename(checksum_tmp, checksum_path)
               success <- TRUE
@@ -331,15 +315,11 @@ install_tetrad <- function(
       return(NULL)
     }
 
-    # Ask about old versions only when a new version was installed
     maybe_clean_old_versions(version, dir, quiet)
   } else {
     if (!quiet) message("Using cached Tetrad.")
   }
 
-  # ------------------------
-  # Verify install completeness
-  # ------------------------
   if (!file.exists(jar_path) || !file.exists(checksum_path)) {
     if (!quiet) {
       message(
@@ -350,9 +330,6 @@ install_tetrad <- function(
     return(NULL)
   }
 
-  # ------------------------
-  # Verify checksum
-  # ------------------------
   if (!quiet) {
     message("Verifying sha256 checksum...")
   }
@@ -375,9 +352,6 @@ install_tetrad <- function(
     return(NULL)
   }
 
-  # ------------------------
-  # Success
-  # ------------------------
   if (!quiet) {
     message("Checksum confirmed. Cached at: ", jar_path)
     message(

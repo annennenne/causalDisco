@@ -1,4 +1,6 @@
-# causalDisco (development version)
+# causalDisco 1.0.1
+
+# causalDisco 1.0.0
 
 * This release should be considered essentially a **new package** with many new features, and some breaking changes
 (mainly renaming functions, arguments, and object classes) to be consistent.

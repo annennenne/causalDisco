@@ -256,7 +256,9 @@ cat(tikz_bent_tiered)
 
 The TikZ plot can be seen here:
 
-![](tikz-tier-plot.png)
+```{r tikz tier plot, echo=FALSE}
+knitr::include_graphics("tikz-tier-plot.png")
+```
 
 ## Exporting Knowledgeable Caugi to TikZ
 
