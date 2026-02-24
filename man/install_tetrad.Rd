@@ -35,7 +35,7 @@ Invisibly returns the full path to the installed Tetrad JAR.
 }
 \description{
 Downloads and installs the Tetrad GUI JAR file from
-\href{https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/}{Maven}.
+\href{https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/}{Maven Central}.
 It downloads the specified version of the Tetrad GUI JAR and its corresponding SHA256 checksum file, and saves them
 in the specified directory (or cache). If the JAR already exists and \code{force = FALSE}, it will skip downloading.
 }

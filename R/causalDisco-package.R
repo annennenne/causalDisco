@@ -1,6 +1,6 @@
 #' @title causalDisco: Causal Discovery in R
 #' @name causalDisco-package
-#' @section System requirements:
-#' Java (>= 21) for Tetrad functionality (optional; includes installer);
-#' Source code: \url{https://github.com/cmu-phil/tetrad}.
+#' @section System requirements (optional):
+#' If you want to use algorithms from the Java library Tetrad, a Java JDK (>= 21) is required.
+#' The Tetrad `.jar` file can be downloaded using [install_tetrad()].
 "_PACKAGE"

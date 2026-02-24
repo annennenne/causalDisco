@@ -136,7 +136,7 @@ verify_tetrad <- function(
 #'
 #' @description
 #' Downloads and installs the Tetrad GUI JAR file from
-#' [Maven](https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/).
+#' [Maven Central](https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/).
 #' It downloads the specified version of the Tetrad GUI JAR and its corresponding SHA256 checksum file, and saves them
 #' in the specified directory (or cache). If the JAR already exists and `force = FALSE`, it will skip downloading.
 #'

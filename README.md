@@ -40,17 +40,15 @@ Then you can install the stable version of causalDisco from CRAN with
 install.packages("causalDisco")
 ```
 
-or with suggested dependencies (for Tetrad integration) using
-
-``` r
-install.packages("causalDisco", dependencies = TRUE)
-```
-
 or the development version of causalDisco from GitHub using pak:
 
 ``` r
-pak::pkg_install("disco-coders/causalDisco", dependencies = TRUE)
+pak::pak("disco-coders/causalDisco")
 ```
+
+If you want to use algorithms from Tetrad, you also need to install the
+suggested dependency (rJava and a Java JDK \>= 21). See below for
+instructions on how to set up Java and Tetrad.
 
 ### Installing Rust
 
@@ -71,18 +69,19 @@ the installer from the Temurin website, make sure to select the option
 to set the `JAVA_HOME` environment variable during installation, so
 rJava correctly detects the Java installation.
 
-Alternatively, we suggest you use the rJavaEnv package, which provides a
-convenient function to install Java and set up the environment correctly
-for rJava. You can install Java using the `java_quick_install()`
-function:
+For a simpler setup, we recommend using the rJavaEnv package, which
+provides a convenient function to install Java and configure the
+environment automatically for rJava. You can install Java using the
+`rJavaEnv::java_quick_install()` function:
 
 ``` r
-# If not installed, install with
-# install.packages("rJavaEnv")
+# Use the development version of rJavaEnv from GitHub
+# pak::pak("e-kotov/rJavaEnv")
 rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
 ```
 
-The current supported version of Tetrad can then be installed by calling
+Once you have Java JDK set up correctly, the current supported version
+of Tetrad can then be installed by calling
 
 ``` r
 causalDisco::install_tetrad()

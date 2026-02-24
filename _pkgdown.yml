@@ -10,6 +10,7 @@ reference:
       Package overview
     contents:
       - causalDisco-package
+
   - title: "Causal Discovery Interface"
     desc: "High-level interface for running causal discovery."
     contents:
