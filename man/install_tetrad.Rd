@@ -34,10 +34,15 @@ instead of the cache. Default is \code{FALSE}.}
 Invisibly returns the full path to the installed Tetrad JAR.
 }
 \description{
-Downloads and installs the Tetrad GUI JAR file for a specified version
-into a user-specified or default cache directory. The function ensures the
-directory exists, downloads the JAR only if it is missing or if \code{force = TRUE},
-and verifies its checksum to ensure integrity.
+Downloads and installs the Tetrad GUI JAR file from
+\href{https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/}{Maven}.
+It downloads the specified version of the Tetrad GUI JAR and its corresponding SHA256 checksum file, and saves them
+in the specified directory (or cache). If the JAR already exists and \code{force = FALSE}, it will skip downloading.
+}
+\details{
+In line with \href{https://cran.r-project.org/web/packages/policies.html}{CRAN policies} this function will only
+return messages and not throw warnings/errors if the installation fails (e.g. due to no internet connection),
+and return \code{NULL}.
 }
 \examples{
 \dontrun{

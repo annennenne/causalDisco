@@ -46,6 +46,7 @@ RCIT
 RCoT
 Raskutti
 Recognised
+SHA
 Satterthwaite
 Scheines
 Scutari
@@ -107,7 +108,7 @@ pcalg
 penalised
 preprint
 rJava
-reinstallation
+rJavaEnv
 sem
 simDAG
 simGausFromDAG

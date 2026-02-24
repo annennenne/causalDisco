@@ -41,18 +41,6 @@ interactive <- NULL
 
   options(causalDisco.tetrad_cache = causalDisco$cache_dir)
 
-  # ---------------------------------
-  # Remove old cached versions
-  # ---------------------------------
-  root <- dirname(causalDisco$cache_dir)
-  all <- list.files(root, pattern = "tetrad_v", full.names = TRUE)
-
-  old <- all[!grepl(version, all, fixed = TRUE)]
-
-  if (length(old)) {
-    unlink(old, recursive = TRUE)
-  }
-
   # S7 setup
   S7::methods_register()
 }

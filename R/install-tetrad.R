@@ -135,10 +135,10 @@ verify_tetrad <- function(
 #' Install Tetrad GUI
 #'
 #' @description
-#' Downloads and installs the Tetrad GUI JAR file for a specified version
-#' into a user-specified or default cache directory. The function ensures the
-#' directory exists, downloads the JAR only if it is missing or if `force = TRUE`,
-#' and verifies its checksum to ensure integrity.
+#' Downloads and installs the Tetrad GUI JAR file from
+#' [Maven](https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui/).
+#' It downloads the specified version of the Tetrad GUI JAR and its corresponding SHA256 checksum file, and saves them
+#' in the specified directory (or cache). If the JAR already exists and `force = FALSE`, it will skip downloading.
 #'
 #' @param version Character; the Tetrad version to install. Default is
 #'   `getOption("causalDisco.tetrad.version")`.
@@ -154,6 +154,11 @@ verify_tetrad <- function(
 #'   instead of the cache. Default is `FALSE`.
 #'
 #' @return Invisibly returns the full path to the installed Tetrad JAR.
+#'
+#' @details
+#' In line with [CRAN policies](https://cran.r-project.org/web/packages/policies.html) this function will only
+#' return messages and not throw warnings/errors if the installation fails (e.g. due to no internet connection),
+#' and return `NULL`.
 #'
 #' @examples
 #' \dontrun{
@@ -206,78 +211,151 @@ install_tetrad <- function(
   dir <- normalizePath(dir, winslash = "/", mustWork = TRUE)
 
   # ------------------------
-  # Build URLs
+  # Build paths and URLs
   # ------------------------
   base <- "https://repo1.maven.org/maven2/io/github/cmu-phil/tetrad-gui"
   jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
-  jar_url <- paste0(base, "/", version, "/", jar_name)
-  jar_path <- file.path(dir, jar_name)
-
   checksum_name <- paste0(jar_name, ".sha256")
+
+  jar_url <- paste0(base, "/", version, "/", jar_name)
   checksum_url <- paste0(base, "/", version, "/", checksum_name)
+
+  jar_path <- file.path(dir, jar_name)
   checksum_path <- file.path(dir, checksum_name)
 
+  jar_tmp <- paste0(jar_path, ".tmp")
+  checksum_tmp <- paste0(checksum_path, ".tmp")
+
+  cleanup_install <- function() {
+    unlink(jar_path, force = TRUE)
+    unlink(checksum_path, force = TRUE)
+    unlink(jar_tmp, force = TRUE)
+    unlink(checksum_tmp, force = TRUE)
+  }
+
   # ------------------------
-  # Download JAR if missing or forced
+  # Optional: clean old versions
   # ------------------------
-  download_ok <- TRUE
-  if (!file.exists(jar_path) || force) {
+  maybe_clean_old_versions <- function(current_version, dir, quiet = FALSE) {
+    all_jars <- list.files(
+      dir,
+      pattern = "tetrad-gui-.*-launch\\.jar$",
+      full.names = TRUE
+    )
+    old <- all_jars[!grepl(current_version, all_jars, fixed = TRUE)]
+    if (!length(old)) {
+      return()
+    }
+
+    if (interactive()) {
+      ans <- readline(
+        paste0(
+          "Found ",
+          length(old),
+          " old Tetrad version(s). Remove them? [y/N] "
+        )
+      )
+      if (tolower(ans) == "y") {
+        unlink(old, recursive = TRUE, force = TRUE)
+        if (!quiet) message("Old versions removed.")
+      }
+    } else if (!quiet) {
+      message(
+        "Found ",
+        length(old),
+        " old Tetrad version(s) in cache. Run `unlink()` manually to remove."
+      )
+    }
+  }
+
+  # ------------------------
+  # Download if needed
+  # ------------------------
+  need_download <- force ||
+    !file.exists(jar_path) ||
+    !file.exists(checksum_path)
+
+  if (need_download) {
+    cleanup_install()
     if (!quiet) {
       message("Downloading Tetrad ", version, " ...")
     }
 
-    download_ok <- tryCatch(
-      {
-        utils::download.file(jar_url, jar_path, mode = "wb", quiet = quiet)
-        utils::download.file(
-          checksum_url,
-          checksum_path,
-          mode = "wb",
-          quiet = quiet
-        )
-        TRUE
-      },
-      error = function(e) {
-        if (!quiet) {
-          message(
-            "Unable to download Tetrad from ",
-            jar_url,
-            ". Check your internet connection or try later."
-          )
-        }
-        FALSE
-      },
-      warning = function(w) {
-        if (!quiet) {
-          message(
-            "Download warning: ",
-            conditionMessage(w),
-            ". Proceeding gracefully."
-          )
-        }
-        TRUE
-      }
-    )
+    download_ok <- {
+      success <- FALSE
 
-    if (!download_ok) return(NULL)
-  } else if (!quiet) {
-    message("Using cached Tetrad.")
+      # suppress warnings entirely
+      suppressWarnings({
+        # download Tetrad jar
+        tryCatch(
+          {
+            utils::download.file(jar_url, jar_tmp, mode = "wb", quiet = quiet)
+            utils::download.file(
+              checksum_url,
+              checksum_tmp,
+              mode = "wb",
+              quiet = quiet
+            )
+
+            # verify files exist
+            if (!file.exists(jar_tmp) || !file.exists(checksum_tmp)) {
+              if (!quiet) {
+                message("Download incomplete. Removing corrupted files.")
+              }
+              cleanup_install()
+            } else {
+              # move to final location
+              file.rename(jar_tmp, jar_path)
+              file.rename(checksum_tmp, checksum_path)
+              success <- TRUE
+            }
+          },
+          error = function(e) {
+            if (!quiet) {
+              message(
+                "Unable to download Tetrad from ",
+                jar_url,
+                ". Removing corrupted files."
+              )
+            }
+            cleanup_install()
+            success <- FALSE
+          }
+        )
+      })
+
+      success
+    }
+
+    if (!download_ok) {
+      return(NULL)
+    }
+
+    # Ask about old versions only when a new version was installed
+    maybe_clean_old_versions(version, dir, quiet)
+  } else {
+    if (!quiet) message("Using cached Tetrad.")
+  }
+
+  # ------------------------
+  # Verify install completeness
+  # ------------------------
+  if (!file.exists(jar_path) || !file.exists(checksum_path)) {
+    if (!quiet) {
+      message(
+        "Incomplete Tetrad installation detected. Removing corrupted files."
+      )
+    }
+    cleanup_install()
+    return(NULL)
   }
 
   # ------------------------
   # Verify checksum
   # ------------------------
-  if (!file.exists(checksum_path) || !file.exists(jar_path)) {
-    if (!quiet) {
-      message("Tetrad files missing, skipping checksum verification.")
-    }
-    return(NULL)
-  }
-
   if (!quiet) {
-    message("Verifying checksum...")
+    message("Verifying sha256 checksum...")
   }
-
   expected <- tryCatch(
     trimws(readLines(checksum_path, warn = FALSE)[1]),
     error = function(e) NA_character_
@@ -288,14 +366,18 @@ install_tetrad <- function(
   )
 
   if (
-    is.na(expected) || is.na(actual) || tolower(actual) != tolower(expected)
+    is.na(expected) || is.na(actual) || tolower(expected) != tolower(actual)
   ) {
     if (!quiet) {
-      message("Checksum verification failed. The file may be corrupted.")
+      message("Checksum verification failed. Removing corrupted installation.")
     }
+    cleanup_install()
     return(NULL)
   }
 
+  # ------------------------
+  # Success
+  # ------------------------
   if (!quiet) {
     message("Checksum confirmed. Cached at: ", jar_path)
     message(
