@@ -1,6 +1,10 @@
 # Changelog
 
-## causalDisco (development version)
+## causalDisco 1.0.1
+
+CRAN release: 2026-02-24
+
+## causalDisco 1.0.0
 
 - This release should be considered essentially a **new package** with
   many new features, and some breaking changes (mainly renaming

@@ -288,12 +288,18 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](custom-boss-variant.png)
+![](ges-ebic-tetrad-pkgdown.png)
 
 Once again, if using a hybrid or constraint-based algorithm rather than
 a score-based one, the structure would remain the same but the method
 would accept different arguments (e.g., `test` and `alpha` for a
 constraint-based algorithm).
+
+Finally, we clean up the custom registered Tetrad algorithm
+
+``` r
+reset_tetrad_alg_registry()
+```
 
 ## Conclusion
 

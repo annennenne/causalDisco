@@ -106,31 +106,34 @@ score. Below we will use the Extended Bayesian Information Criterion
 
 Tetrad Setup Instructions
 
-Tetrad is a Java library, so to use it we first need to ensure that Java
-is installed and that the Tetrad jar files are available. A Java JDK \>=
-21 is required to run Tetrad. To install Java JDK \>= 21, you can
-install them directly from the vendor Eclipse Temurin (OpenJDK),
-available at <https://adoptium.net/en-GB/temurin/releases> or use the
-package rJavaEnv, where you can install and setup Java using the
-`java_quick_install()` function:
+causalDisco provides an interface to the Java library
+[Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
+algorithms. To use algorithms from Tetrad you need to install a Java
+Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
+available at <https://adoptium.net/en-GB/temurin/releases>. When using
+the installer from the Temurin website, make sure to select the option
+to set the `JAVA_HOME` environment variable during installation, so
+rJava correctly detects the Java installation.
+
+For a simpler setup, we recommend using the rJavaEnv package, which
+provides a convenient function to install Java and configure the
+environment automatically for rJava. You can install Java using the
+`rJavaEnv::java_quick_install()` function:
 
 ``` r
-# If not installed, install with
-# install.packages("rJavaEnv")
+# Use the development version of rJavaEnv from GitHub
+# pak::pak("e-kotov/rJavaEnv")
 rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
 ```
 
-To install Tetrad, you can use the
-[`install_tetrad()`](https://disco-coders.github.io/causalDisco/reference/install_tetrad.md)
-function from causalDisco, which will download the supported version of
-Tetrad and place it in a cache directory on your system:
+Once you have Java JDK set up correctly, the current supported version
+of Tetrad can then be installed by calling
 
 ``` r
 install_tetrad()
 ```
 
-After installing Java and Tetrad, you can verify that everything is set
-up correctly by running
+To verify everything is set up correctly you can run
 [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md):
 
 ``` r
@@ -165,7 +168,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](ges-ebic-tetrad.png)
+![](ges-ebic-tetrad-pkgdown.png)
 
 If you want to customize the plot appearance further, you can pass
 additional arguments to

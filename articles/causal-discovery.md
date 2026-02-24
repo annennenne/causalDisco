@@ -205,7 +205,7 @@ plot(
       U = list(col = "red", fill = "red")
     )
   ),
-  main = "True DAG with unobserved confounder"
+  main = "True DAG"
 )
 ```
 
@@ -242,7 +242,7 @@ We can then apply the PC algorithm as before:
 ``` r
 pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 pc_result_unobserved <- disco(data = data_unobserved, method = pc_pcalg_unobserved)
-plot(pc_result_unobserved, layout = layout, main = "PC (pcalg) unobserved confounder")
+plot(pc_result_unobserved, layout = layout, main = "PC (pcalg)")
 ```
 
 ![](causal-discovery_files/figure-html/pc%20algorithm%20unobserved%20confounder-1.png)

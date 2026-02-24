@@ -11,7 +11,7 @@ probability range p_range."><meta property="og:image" content="https://disco-cod
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9054</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,14 +86,14 @@ of <code>m</code> or <code>p</code> must be supplied.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Simulate a DAG with 5 nodes and 3 edges</span></span></span>
 <span class="r-in"><span><span class="fu">sim_dag</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, m <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 3 edges; simple: TRUE; built: TRUE; ptr=0x55d60a1fb770&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 3 edges; simple: TRUE; built: TRUE; ptr=0x559e425f3840&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   graph_class: DAG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nodes: V1, V2, V3, V4, V5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edges: V3--&gt;V1, V4--&gt;V1, V4--&gt;V3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Simulate a DAG with 5 nodes and edge creation probability of 0.2</span></span></span>
 <span class="r-in"><span><span class="fu">sim_dag</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 2 edges; simple: TRUE; built: TRUE; ptr=0x55d60dbb20d0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;caugi object; 5 nodes, 2 edges; simple: TRUE; built: TRUE; ptr=0x559e39b9f5d0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   graph_class: DAG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nodes: V1, V2, V3, V4, V5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edges: V2--&gt;V1, V2--&gt;V5</span>

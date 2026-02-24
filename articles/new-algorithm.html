@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5.9054</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -332,11 +332,14 @@ other method in causalDisco.</p>
 <span>  <span class="va">my_boss_variant_tetrad_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">my_boss_variant_tetrad</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">my_boss_variant_tetrad_result</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="custom-boss-variant.png"></p>
+<p><img src="ges-ebic-tetrad-pkgdown.png"><!-- --></p>
 <p>Once again, if using a hybrid or constraint-based algorithm rather
 than a score-based one, the structure would remain the same but the
 method would accept different arguments (e.g., <code>test</code> and
 <code>alpha</code> for a constraint-based algorithm).</p>
+<p>Finally, we clean up the custom registered Tetrad algorithm</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
