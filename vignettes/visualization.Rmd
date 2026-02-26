@@ -18,14 +18,14 @@ knitr::opts_chunk$set(
 library(causalDisco)
 ```
 
-This vignette demonstrates how to visualize causal graphs. We cover plotting `knowledge` objects and
-`knowledgeable_caugi` objects, customizing layouts and styles, and exporting graphs to readable TikZ for inclusion and
+This vignette demonstrates how to visualize causal graphs. We cover plotting `Knowledge` objects and
+`Disco` objects, customizing layouts and styles, and exporting graphs to readable TikZ for inclusion and
 further customization in LaTeX documents.
 
 # Plotting
 
-You can visualize causal graphs using the `plot()` function, which works for both `knowledge` and
-`knowledgeable_caugi` objects. The function leverages the underlying `caugi::plot()` method, providing
+You can visualize causal graphs using the `plot()` function, which works for both `Knowledge` and
+`Disco` objects. The function leverages the underlying `caugi::plot()` method, providing
 flexible options for customizing the appearance of nodes and edges.
 
 ## Plotting Knowledge Objects
@@ -194,7 +194,7 @@ The `make_tikz()` function exports plots as clean, fully editable TikZ code for 
 Unlike some graph export tools, edges are attached to nodes rather than positioned using hard-coded coordinates,
 making the output easier to modify.
 
-This functionality works for `knowledge`, `knowledgeable_caugi`, and `caugi::caugi` objects, allowing you to customize
+This functionality works for `Knowledge`, `Disco`, and `caugi::caugi` objects, allowing you to customize
 layouts, styles, and edges further in your LaTeX document. It calls the underlying `causalDisco::plot()` method
 (which calls `caugi::plot()`) to generate the initial plot object before converting it to TikZ code.
 Thus, you can supply any arguments to `make_tikz()` that are supported by `causalDisco::plot()` and `caugi::plot()`.
@@ -226,7 +226,7 @@ Using `full_doc = FALSE` instead returns only the tikzpicture environment, which
 inside an existing LaTeX document.
 
 The TikZ export also supports edge bending, which can substantially improve readability when edges passes thorugh other
-nodes, as can easily happen in tiered knowledge structures. 
+nodes, as can easily happen in tiered knowledge structures.
 This feature is not available in the standard `caugi::plot()` function. Here is an example, where the edge using the
 standard straight style edge overlaps the node `youth_x3`, while the bent edge avoids this overlap:
 
@@ -262,7 +262,7 @@ knitr::include_graphics("tikz-tier-plot.png")
 
 ## Exporting Knowledgeable Caugi to TikZ
 
-The output of `disco()` gives a `knowledgeable_caugi` object, which can also be exported to TikZ:
+The output of `disco()` gives a `Disco` object, which can also be exported to TikZ:
 
 ```{r tikz export knowledgeable caugi}
 data(tpc_example)
