@@ -414,6 +414,8 @@ available engines.
 
 - [`distribute_engine_args()`](https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.md)
   : Distribute and Validate Engine Arguments
+- [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
+  : List Registered Tetrad Algorithms
 - [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md)
   : Add a New causalDisco Method
 - [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md)

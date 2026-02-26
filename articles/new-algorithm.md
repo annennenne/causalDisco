@@ -143,7 +143,7 @@ follow the same structure but use the R6 class `PcalgSearch` instead of
 
 We will illustrate how to make a custom version (which actually does the
 same as our implementation, just with some defensive programming
-omitted) of the Boss algorithm from Tetrad. Tetrad algorithms follow a
+omitted) of the BOSS algorithm from Tetrad. Tetrad algorithms follow a
 slightly different integration pattern because Tetrad is a Java library
 rather than an R package.
 
@@ -200,7 +200,8 @@ register_tetrad_algorithm(
 ```
 
 You can view all the custom registered Tetrad algorithms using
-`tetrad_alg_registry()`, and reset it using
+[`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md),
+and reset it using
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md).
 
 Like for bnlearn and pcalg, we then create a method function
@@ -288,7 +289,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](ges-ebic-tetrad-pkgdown.png)
+![](custom-boss-variant-pkgdown.png)
 
 Once again, if using a hybrid or constraint-based algorithm rather than
 a score-based one, the structure would remain the same but the method

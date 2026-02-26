@@ -35,6 +35,7 @@ distribute_engine_args(search, args, engine, alg)
 ## See also
 
 Other Extending causalDisco:
+[`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md),
 [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md),
 [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md),
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md)
