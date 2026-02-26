@@ -132,13 +132,19 @@ pcalg_ges <- ges(
   score = "sem_bic" # Use BIC score for the GES algorithm
 )
 disco_pcalg_ges <- disco(data = tpc_example, method = pcalg_ges)
+```
 
-# We can also pass background knowledge to the engines that support it. Here we use tiered knowledge,
-# which is a common way to encode temporal ordering of variables.
+We can also pass background knowledge to the engines that support it.
+Here we use tiered knowledge, which is a common way to encode temporal
+ordering of variables. We use tidyselect syntax to select variables for
+each tier, but you can also use explicit variable names or regular
+expressions.
+
+``` r
 kn <- knowledge(
   tpc_example,
   tier(
-    child ~ starts_with("child"), # Using the tidyselect syntax to select variables for each tier
+    child ~ starts_with("child"),
     youth ~ starts_with("youth"),
     old ~ starts_with("old")
   )
@@ -157,8 +163,13 @@ bnlearn_pc <- pc(
   alpha = 0.05
 )
 disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+```
 
-# Requires Tetrad to be installed
+To use algorithms from Tetrad, you need to have Java and Tetrad set up
+correctly as described in the installation instructions above. Then you
+can specify the Tetrad engine in the same way as for the other backends:
+
+``` r
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   tetrad_pc <- pc(
     engine = "tetrad", # Use the Tetrad implementation
