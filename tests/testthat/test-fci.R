@@ -1,8 +1,6 @@
 test_that("fci Tetrad disco respects tier knowledge", {
   skip_if_no_tetrad()
 
-  skip("fci Tetrad does not yet support tier knowledge correctly.")
-
   data(tpc_example)
 
   kn <- knowledge(
