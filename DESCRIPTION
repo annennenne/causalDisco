@@ -67,6 +67,7 @@ Collate:
     'aaa-globals.R'
     'aaa-iamb-family.R'
     'aaa-init-helpers.R'
+    'alg-bugs.R'
     'bnlearn-search.R'
     'boss-fci.R'
     'boss.R'

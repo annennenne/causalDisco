@@ -62,6 +62,7 @@ disco <- function(data, method, knowledge = NULL) {
   if (!inherits(method, "disco_method")) {
     stop("The method must be a disco method object.", call. = FALSE)
   }
+  check_method_knowledge_bug(method, knowledge)
 
   if (engine == "causalDisco" && any(knowledge$edges$status == "required")) {
     warning(
