@@ -150,14 +150,13 @@
 <span>  engine <span class="op">=</span> <span class="st">"pcalg"</span>, <span class="co"># Use the pcalg implementation</span></span>
 <span>  score <span class="op">=</span> <span class="st">"sem_bic"</span> <span class="co"># Use BIC score for the GES algorithm</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">disco_pcalg_ges</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">pcalg_ges</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># We can also pass background knowledge to the engines that support it. Here we use tiered knowledge,</span></span>
-<span><span class="co"># which is a common way to encode temporal ordering of variables.</span></span>
-<span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
+<span><span class="va">disco_pcalg_ges</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">pcalg_ges</span><span class="op">)</span></span></code></pre></div>
+<p>We can also pass background knowledge to the engines that support it. Here we use tiered knowledge, which is a common way to encode temporal ordering of variables. We use tidyselect syntax to select variables for each tier, but you can also use explicit variable names or regular expressions.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
-<span>    <span class="va">child</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>, <span class="co"># Using the tidyselect syntax to select variables for each tier</span></span>
+<span>    <span class="va">child</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span>,</span>
 <span>    <span class="va">youth</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>,</span>
 <span>    <span class="va">old</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"old"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -175,10 +174,10 @@
 <span>  test <span class="op">=</span> <span class="st">"cor"</span>, <span class="co"># Use Pearson correlation test for conditional independence</span></span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">disco_bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">bnlearn_pc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Requires Tetrad to be installed</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">disco_bnlearn_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">bnlearn_pc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></code></pre></div>
+<p>To use algorithms from Tetrad, you need to have Java and Tetrad set up correctly as described in the installation instructions above. Then you can specify the Tetrad engine in the same way as for the other backends:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">tetrad_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pc.html">pc</a></span><span class="op">(</span></span>
 <span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>, <span class="co"># Use the Tetrad implementation</span></span>
 <span>    test <span class="op">=</span> <span class="st">"conditional_gaussian"</span>, <span class="co"># Use conditional Gaussian test</span></span>
@@ -187,7 +186,7 @@
 <span>  <span class="va">disco_tetrad_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">tetrad_pc</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>You can visualize the resulting causal graph using the <code><a href="reference/plot.html">plot()</a></code> function:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tpc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%"></p>
 <p>Please see the package vignettes for more detailed introductions to the package and its features, such as how to incorporate knowledge, run causal discovery, and visualize results.</p>
