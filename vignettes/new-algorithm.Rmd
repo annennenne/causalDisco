@@ -128,7 +128,7 @@ class `PcalgSearch` instead of `BnlearnSearch` in the runner (i.e., `PcalgSearch
 # Tetrad
 
 We will illustrate how to make a custom version (which actually does the same as our implementation,
-just with some defensive programming omitted) of the Boss algorithm from Tetrad.
+just with some defensive programming omitted) of the BOSS algorithm from Tetrad.
 Tetrad algorithms follow a slightly different integration pattern because Tetrad is a Java library rather than
 an R package.
 
@@ -178,8 +178,7 @@ register_tetrad_algorithm(
 )
 ```
 
-You can view all the custom registered Tetrad algorithms using `tetrad_alg_registry()`, and reset it using
-`reset_tetrad_alg_registry()`.
+You can view all the custom registered Tetrad algorithms using `list_registered_tetrad_algorithms()`, and reset it using `reset_tetrad_alg_registry()`.
 
 Like for bnlearn and pcalg, we then create a method function `my_boss_variant()` that constructs a builder function
 which in turn constructs a runner using the registered Tetrad algorithm.
@@ -294,9 +293,9 @@ dev.off()
 ```
 ```{r ges-ebic-tetrad-include, echo=FALSE}
 img_file <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
-  "ges-ebic-tetrad-pkgdown.png"
+  "custom-boss-variant-pkgdown.png"
 } else {
-  "ges-ebic-tetrad-cran.png"
+  "custom-boss-variant-cran.png"
 }
 
 knitr::include_graphics(img_file)

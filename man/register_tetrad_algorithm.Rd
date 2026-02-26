@@ -20,6 +20,7 @@ This allows you to extend the set of Tetrad algorithms that can be used with cau
 \seealso{
 Other Extending causalDisco: 
 \code{\link{distribute_engine_args}()},
+\code{\link{list_registered_tetrad_algorithms}()},
 \code{\link{new_disco_method}()},
 \code{\link{reset_tetrad_alg_registry}()}
 }

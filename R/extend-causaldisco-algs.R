@@ -62,9 +62,21 @@ register_tetrad_algorithm <- function(name, setup_fun) {
   tetrad_alg_registry[[name]] <- setup_fun
 }
 
+#' List Registered Tetrad Algorithms
+#'
+#' Returns the names of all custom registered Tetrad algorithms.
+#'
+#' @return Character vector of algorithm names.
+#' @family Extending causalDisco
+#' @concept extending_causalDisco
+#' @export
+list_registered_tetrad_algorithms <- function() {
+  sort(ls(envir = tetrad_alg_registry))
+}
+
 #' Reset the Tetrad Algorithm Registry
 #'
-#' Clears all registered algorithms.
+#' Clears all custom registered algorithms.
 #'
 #' @family Extending causalDisco
 #' @concept extending_causalDisco
@@ -75,4 +87,5 @@ reset_tetrad_alg_registry <- function() {
     list = ls(tetrad_alg_registry, all.names = TRUE),
     envir = tetrad_alg_registry
   )
+  invisible(NULL)
 }

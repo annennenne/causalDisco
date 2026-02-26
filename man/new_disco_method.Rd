@@ -27,6 +27,7 @@ returns a closure that can be called with a data frame to perform causal discove
 \seealso{
 Other Extending causalDisco: 
 \code{\link{distribute_engine_args}()},
+\code{\link{list_registered_tetrad_algorithms}()},
 \code{\link{register_tetrad_algorithm}()},
 \code{\link{reset_tetrad_alg_registry}()}
 }
