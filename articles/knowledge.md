@@ -97,8 +97,10 @@ head(tpc_example)
 #> 6        1  1.9549723 -0.65054654        0 -6.9758928 -3.2107342
 ```
 
-We can pass the dataset to `knowledge` as the first argument, which also
-checks that the specified variables exist in the dataset:
+We can pass the dataset to
+[`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+as the first argument, which also checks that the specified variables
+exist in the dataset:
 
 ``` r
 kn_2 <- knowledge(
@@ -364,9 +366,9 @@ plot(kn_combined)
 ## Using knowledge with causal discovery
 
 Once prior knowledge has been specified, it can be supplied to causal
-discovery algorithms by passing the `knowledge` object to the
+discovery algorithms by passing the `Knowledge` object to the
 [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
-function via the `knowledge` parameter. For example, we can use the
+function via the `knowledge` argument. For example, we can use the
 Temporal GES algorithm
 [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md)
 with engine “causalDisco” and temporal BIC (“tbic”):

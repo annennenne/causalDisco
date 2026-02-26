@@ -11,16 +11,16 @@ library(causalDisco)
 ```
 
 This vignette demonstrates how to visualize causal graphs. We cover
-plotting `knowledge` objects and `knowledgeable_caugi` objects,
-customizing layouts and styles, and exporting graphs to readable TikZ
-for inclusion and further customization in LaTeX documents.
+plotting `Knowledge` objects and `Disco` objects, customizing layouts
+and styles, and exporting graphs to readable TikZ for inclusion and
+further customization in LaTeX documents.
 
 ## Plotting
 
 You can visualize causal graphs using the
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
-function, which works for both `knowledge` and `knowledgeable_caugi`
-objects. The function leverages the underlying
+function, which works for both `Knowledge` and `Disco` objects. The
+function leverages the underlying
 [`caugi::plot()`](https://caugi.org/reference/plot.html) method,
 providing flexible options for customizing the appearance of nodes and
 edges.
@@ -224,7 +224,7 @@ Unlike some graph export tools, edges are attached to nodes rather than
 positioned using hard-coded coordinates, making the output easier to
 modify.
 
-This functionality works for `knowledge`, `knowledgeable_caugi`, and
+This functionality works for `Knowledge`, `Disco`, and
 [`caugi::caugi`](https://caugi.org/reference/caugi.html) objects,
 allowing you to customize layouts, styles, and edges further in your
 LaTeX document. It calls the underlying
@@ -363,8 +363,7 @@ The TikZ plot can be seen here:
 
 The output of
 [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
-gives a `knowledgeable_caugi` object, which can also be exported to
-TikZ:
+gives a `Disco` object, which can also be exported to TikZ:
 
 ``` r
 data(tpc_example)

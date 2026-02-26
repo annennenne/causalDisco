@@ -154,7 +154,7 @@ package for the following examples:</p>
 <span><span class="co">#&gt; 4        1  1.6524574  0.97115845        0 -7.9064009 -4.5160676</span></span>
 <span><span class="co">#&gt; 5        0 -0.9516186  0.67069597        0  1.7089134  0.7903853</span></span>
 <span><span class="co">#&gt; 6        1  1.9549723 -0.65054654        0 -6.9758928 -3.2107342</span></span></code></pre></div>
-<p>We can pass the dataset to <code>knowledge</code> as the first
+<p>We can pass the dataset to <code><a href="../reference/knowledge.html">knowledge()</a></code> as the first
 argument, which also checks that the specified variables exist in the
 dataset:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -385,8 +385,8 @@ knowledge with required and forbidden edges:</p>
 <h2 id="using-knowledge-with-causal-discovery">Using knowledge with causal discovery<a class="anchor" aria-label="anchor" href="#using-knowledge-with-causal-discovery"></a>
 </h2>
 <p>Once prior knowledge has been specified, it can be supplied to causal
-discovery algorithms by passing the <code>knowledge</code> object to the
-<code><a href="../reference/disco.html">disco()</a></code> function via the <code>knowledge</code> parameter.
+discovery algorithms by passing the <code>Knowledge</code> object to the
+<code><a href="../reference/disco.html">disco()</a></code> function via the <code>knowledge</code> argument.
 For example, we can use the Temporal GES algorithm <code><a href="../reference/tges.html">tges()</a></code>
 with engine “causalDisco” and temporal BIC (“tbic”):</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">

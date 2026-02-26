@@ -83,18 +83,17 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 <p>This vignette demonstrates how to visualize causal graphs. We cover
-plotting <code>knowledge</code> objects and
-<code>knowledgeable_caugi</code> objects, customizing layouts and
-styles, and exporting graphs to readable TikZ for inclusion and further
-customization in LaTeX documents.</p>
+plotting <code>Knowledge</code> objects and <code>Disco</code> objects,
+customizing layouts and styles, and exporting graphs to readable TikZ
+for inclusion and further customization in LaTeX documents.</p>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
 <p>You can visualize causal graphs using the <code><a href="../reference/plot.html">plot()</a></code>
-function, which works for both <code>knowledge</code> and
-<code>knowledgeable_caugi</code> objects. The function leverages the
-underlying <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> method, providing flexible options
-for customizing the appearance of nodes and edges.</p>
+function, which works for both <code>Knowledge</code> and
+<code>Disco</code> objects. The function leverages the underlying
+<code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> method, providing flexible options for
+customizing the appearance of nodes and edges.</p>
 <div class="section level3">
 <h3 id="plotting-knowledge-objects">Plotting Knowledge Objects<a class="anchor" aria-label="anchor" href="#plotting-knowledge-objects"></a>
 </h3>
@@ -261,13 +260,13 @@ editable TikZ code for inclusion in LaTeX documents.</p>
 <p>Unlike some graph export tools, edges are attached to nodes rather
 than positioned using hard-coded coordinates, making the output easier
 to modify.</p>
-<p>This functionality works for <code>knowledge</code>,
-<code>knowledgeable_caugi</code>, and <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> objects,
-allowing you to customize layouts, styles, and edges further in your
-LaTeX document. It calls the underlying <code><a href="../reference/plot.html">causalDisco::plot()</a></code>
-method (which calls <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>) to generate the initial
-plot object before converting it to TikZ code. Thus, you can supply any
-arguments to <code><a href="../reference/make_tikz.html">make_tikz()</a></code> that are supported by
+<p>This functionality works for <code>Knowledge</code>,
+<code>Disco</code>, and <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> objects, allowing you
+to customize layouts, styles, and edges further in your LaTeX document.
+It calls the underlying <code><a href="../reference/plot.html">causalDisco::plot()</a></code> method (which
+calls <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>) to generate the initial plot object
+before converting it to TikZ code. Thus, you can supply any arguments to
+<code><a href="../reference/make_tikz.html">make_tikz()</a></code> that are supported by
 <code><a href="../reference/plot.html">causalDisco::plot()</a></code> and <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>.</p>
 <div class="section level3">
 <h3 id="exporting-knowledge-to-tikz">Exporting Knowledge to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledge-to-tikz"></a>
@@ -384,9 +383,8 @@ where the edge using the standard straight style edge overlaps the node
 <div class="section level3">
 <h3 id="exporting-knowledgeable-caugi-to-tikz">Exporting Knowledgeable Caugi to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledgeable-caugi-to-tikz"></a>
 </h3>
-<p>The output of <code><a href="../reference/disco.html">disco()</a></code> gives a
-<code>knowledgeable_caugi</code> object, which can also be exported to
-TikZ:</p>
+<p>The output of <code><a href="../reference/disco.html">disco()</a></code> gives a <code>Disco</code> object,
+which can also be exported to TikZ:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>

@@ -10,10 +10,10 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette illustrates how to add a new algorithm to `causalDisco`
-from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages
-and therefore share the same interface, while Tetrad is a Java library
-and requires a slightly different integration pattern.
+This vignette illustrates how to add a new algorithm to causalDisco from
+bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and
+therefore share the same interface, while Tetrad is a Java library and
+requires a slightly different integration pattern.
 
 ## bnlearn and pcalg
 
