@@ -19,8 +19,8 @@ Time to hit the disco 🪩
 
 ### Install causalDisco
 
-To install causalDisco ensure you first have installed Rust as described
-below.
+To install causalDisco ensure you have Rust installed if building from
+source as described below.
 
 Then you can install the stable version of causalDisco from CRAN with
 
@@ -42,7 +42,7 @@ instructions on how to set up Java and Tetrad.
 
 causalDisco depends on the package
 [caugi](https://github.com/frederikfabriciusbjerre/caugi), which
-requires Rust to be installed on your system. See
+requires Rust to be installed on your system to build from source. See
 <https://rust-lang.org/tools/install/> for instructions on how to
 install Rust.
 
