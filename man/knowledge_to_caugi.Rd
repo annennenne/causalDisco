@@ -10,7 +10,8 @@ knowledge_to_caugi(kn)
 \item{kn}{A \code{knowledge} object.}
 }
 \value{
-A list with the \link[caugi:caugi]{caugi::caugi} object alongside information.
+A list with the \link[caugi:caugi]{caugi::caugi} object alongside information about the knowledge (tiers, required and
+forbidden edges) that can be used for plotting.
 }
 \description{
 Converts a \code{Knowledge} object to a \link[caugi:caugi]{caugi::caugi} object used for plotting.
@@ -24,7 +25,8 @@ kn <- knowledge(
     youth ~ starts_with("youth"),
     old ~ starts_with("old")
   ),
-  child_x1 \%-->\% youth_x3
+  child_x1 \%-->\% youth_x3,
+  child_x2 \%!-->\% youth_x3
 )
 cg <- knowledge_to_caugi(kn)
 

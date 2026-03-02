@@ -285,29 +285,42 @@ plot.Knowledge <- function(
   tiers <- info_object$tiers
 
   # TODO: When caugi supports curved edges, modify this to use curved edges (sometimes)...
-  # --- Build automatic edge styles for required/forbidden edges ---
   auto_edge_styles <- list(by_edge = list())
-  if (!is.null(x$edges) && nrow(x$edges) > 0) {
-    for (i in seq_len(nrow(x$edges))) {
-      from <- x$edges$from[i]
-      to <- x$edges$to[i]
-      status <- x$edges$status[i]
 
-      col <- switch(
-        status,
-        required = required_col,
-        forbidden = forbidden_col,
-        NULL
-      )
-      if (!is.null(col)) {
-        if (is.null(auto_edge_styles$by_edge[[from]])) {
-          auto_edge_styles$by_edge[[from]] <- list()
-        }
-        auto_edge_styles$by_edge[[from]][[to]] <- list(
-          col = col,
-          fill = col
-        )
+  # --- add required edges ---
+  if (
+    !is.null(info_object$required_edges) && nrow(info_object$required_edges) > 0
+  ) {
+    for (i in seq_len(nrow(info_object$required_edges))) {
+      from <- info_object$required_edges$from[i]
+      to <- info_object$required_edges$to[i]
+
+      if (is.null(auto_edge_styles$by_edge[[from]])) {
+        auto_edge_styles$by_edge[[from]] <- list()
       }
+      auto_edge_styles$by_edge[[from]][[to]] <- list(
+        col = required_col,
+        fill = required_col
+      )
+    }
+  }
+
+  # --- add forbidden edges ---
+  if (
+    !is.null(info_object$forbidden_edges) &&
+      nrow(info_object$forbidden_edges) > 0
+  ) {
+    for (i in seq_len(nrow(info_object$forbidden_edges))) {
+      from <- info_object$forbidden_edges$from[i]
+      to <- info_object$forbidden_edges$to[i]
+
+      if (is.null(auto_edge_styles$by_edge[[from]])) {
+        auto_edge_styles$by_edge[[from]] <- list()
+      }
+      auto_edge_styles$by_edge[[from]][[to]] <- list(
+        col = forbidden_col,
+        fill = forbidden_col
+      )
     }
   }
 

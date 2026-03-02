@@ -261,7 +261,8 @@ as_bnlearn_knowledge <- function(kn) {
 #'
 #' @param kn A \code{knowledge} object.
 #'
-#' @returns A list with the [caugi::caugi] object alongside information.
+#' @returns A list with the [caugi::caugi] object alongside information about the knowledge (tiers, required and
+#' forbidden edges) that can be used for plotting.
 #'
 #' @examples
 #' data(tpc_example)
@@ -272,7 +273,8 @@ as_bnlearn_knowledge <- function(kn) {
 #'     youth ~ starts_with("youth"),
 #'     old ~ starts_with("old")
 #'   ),
-#'   child_x1 %-->% youth_x3
+#'   child_x1 %-->% youth_x3,
+#'   child_x2 %!-->% youth_x3
 #' )
 #' cg <- knowledge_to_caugi(kn)
 #'
@@ -329,16 +331,27 @@ knowledge_to_caugi <- function(kn) {
     names(tiers) <- tier_levels
   }
 
+  ## ---- extract required and forbidden edges ----
+  required_edges <- forbidden_edges <- NULL
+  if (nrow(edges) > 0) {
+    edges_split <- split(edges[, c("from", "to")], edges$status)
+
+    required_edges <- edges_split[["required"]]
+    forbidden_edges <- edges_split[["forbidden"]]
+  }
+
   ## ---- return list ----
   list(
     caugi = cg,
-    tiers = tiers
+    tiers = tiers,
+    required_edges = required_edges,
+    forbidden_edges = forbidden_edges
   )
 }
 
-#' Combine knowledge and caugi object
+#' Combine Knowledge and caugi object
 #' @param cg A [caugi::caugi] object.
-#' @param kcg A `Disco` object.
+#' @param kn A `Knowledge` object.
 #' @returns A list with the updated [caugi::caugi] object alongside information.
 #' @keywords internal
 #' @noRd
