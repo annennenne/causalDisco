@@ -57,9 +57,10 @@ the installer from the Temurin website, make sure to select the option
 to set the `JAVA_HOME` environment variable during installation, so
 rJava correctly detects the Java installation.
 
-For a simpler setup, we recommend using the rJavaEnv package, which
-provides a convenient function to install Java and configure the
-environment automatically for rJava. You can install Java using the
+For a simpler setup, we recommend using the
+[rJavaEnv](https://github.com/e-kotov/rJavaEnv) package, which provides
+a convenient function to install Java and configure the environment
+automatically for rJava. You can install Java using the
 `rJavaEnv::java_quick_install()` function:
 
 ``` r
