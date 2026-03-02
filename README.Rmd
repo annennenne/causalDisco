@@ -57,7 +57,8 @@ If you want to use algorithms from Tetrad, you also need to install the suggeste
 ### Installing Rust
 
 causalDisco depends on the package [caugi](https://github.com/frederikfabriciusbjerre/caugi), which requires Rust to
-be installed on your system to build from source. See https://rust-lang.org/tools/install/ for instructions on how to install Rust.
+be installed on your system to build from source. See https://rust-lang.org/tools/install/ for
+instructions on how to install Rust.
 
 ### Installing Java / JDK
 
@@ -67,9 +68,9 @@ We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/
 the installer from the Temurin website, make sure to select the option to set the `JAVA_HOME` environment variable
 during installation, so rJava correctly detects the Java installation.
 
-For a simpler setup, we recommend using the rJavaEnv package, which provides a convenient function to install Java and
-configure the environment automatically for rJava. You can install Java using the `rJavaEnv::java_quick_install()`
-function:
+For a simpler setup, we recommend using the [rJavaEnv](https://github.com/e-kotov/rJavaEnv) package, which provides a
+convenient function to install Java and configure the environment automatically for rJava. You can install Java
+using the `rJavaEnv::java_quick_install()` function:
 
 ```{r install java, eval=FALSE}
 # Use the development version of rJavaEnv from GitHub
