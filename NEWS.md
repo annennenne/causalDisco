@@ -1,8 +1,10 @@
 # causalDisco (development version)
 
-# causalDisco 1.0.1
+- Exports `list_registered_tetrad_algorithms()` to view the custom registered Tetrad algorithms.
 
-# causalDisco 1.0.0
+- Updated `knowledge_to_caugi()` to include information about required and forbidden edges in the output.
+
+# causalDisco 1.0.1
 
 * This release should be considered essentially a **new package** with many new features, and some breaking changes
 (mainly renaming functions, arguments, and object classes) to be consistent.
