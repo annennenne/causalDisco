@@ -90,6 +90,14 @@ test_that("disco() injects knowledge and validates method type (pc + fci)", {
             "Cannot mutate graph to class 'PDAG'.",
             fixed = TRUE
           )
+        } else if (engine == "tetrad" && method_name == "fci") {
+          expect_warning(
+            {
+              res <- disco(num_data, method = m, knowledge = kn)
+            },
+            "The Tetrad FCI-family",
+            fixed = TRUE
+          )
         } else {
           res <- disco(num_data, method = m, knowledge = kn)
         }
