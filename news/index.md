@@ -2,11 +2,18 @@
 
 ## causalDisco (development version)
 
+- Exports
+  [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
+  to view the custom registered Tetrad algorithms.
+
+- Updated
+  [`knowledge_to_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.md)
+  to include information about required and forbidden edges in the
+  output.
+
 ## causalDisco 1.0.1
 
 CRAN release: 2026-02-24
-
-## causalDisco 1.0.0
 
 - This release should be considered essentially a **new package** with
   many new features, and some breaking changes (mainly renaming

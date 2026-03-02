@@ -19,7 +19,8 @@ knowledge_to_caugi(kn)
 ## Value
 
 A list with the [caugi::caugi](https://caugi.org/reference/caugi.html)
-object alongside information.
+object alongside information about the knowledge (tiers, required and
+forbidden edges) that can be used for plotting.
 
 ## See also
 
@@ -57,7 +58,8 @@ kn <- knowledge(
     youth ~ starts_with("youth"),
     old ~ starts_with("old")
   ),
-  child_x1 %-->% youth_x3
+  child_x1 %-->% youth_x3,
+  child_x2 %!-->% youth_x3
 )
 cg <- knowledge_to_caugi(kn)
 ```
