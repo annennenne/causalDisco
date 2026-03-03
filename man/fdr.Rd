@@ -24,8 +24,10 @@ A numeric in [0,1].
 Computes false discovery rate from two PDAG \link[caugi:caugi]{caugi::caugi} objects.
 It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
 false discovery rate as \code{FP/(FP + TP)}, where \code{FP} are false positives and
-\code{TP} are truth positives. If \code{FP + TP = 0}, \code{1} is returned.
-Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+\code{TP} are true positives. If \code{FP + TP = 0}, \code{1} is returned.
+
+Only supports \link[caugi:caugi]{caugi::caugi} objects whose edges are restricted to
+\verb{-->}, \verb{<->}, \verb{---}, or absence of an edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

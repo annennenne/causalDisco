@@ -23,9 +23,11 @@ A numeric in \verb{[0,1]}.
 \description{
 Computes precision from two PDAG \link[caugi:caugi]{caugi::caugi} objects.
 It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
-precision as \code{TP/(TP + FP)}, where TP are truth positives and
+precision as \code{TP/(TP + FP)}, where TP are true positives and
 \code{FP} are false positives. If \code{TP + FP = 0}, \code{1} is returned.
-Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+
+Only supports \link[caugi:caugi]{caugi::caugi} objects whose edges are restricted to
+\verb{-->}, \verb{<->}, \verb{---}, or absence of an edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

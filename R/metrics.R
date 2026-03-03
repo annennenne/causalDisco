@@ -11,9 +11,10 @@
 #'     \item \code{"dir"}: orientation comparison conditional on shared adjacencies.
 #'   }
 #'
-#' @details Adjacency comparison: The confusion matrix is a cross-tabulation
-#' of adjacencies. Hence, a truth positive means that the two inputs agree on
-#' the presence of an adjacency. A truth negative means that the two inputs agree
+#' @details
+#' Adjacency comparison: The confusion matrix is a cross-tabulation
+#' of adjacencies. Hence, a true positive means that the two inputs agree on
+#' the presence of an adjacency. A true negative means that the two inputs agree
 #' on no adjacency. A false positive means that the estimated graph places an adjacency
 #' where there should be none. A false negative means that the estimated graph does
 #' not place an adjacency where there should have been one.
@@ -21,14 +22,15 @@
 #' Orientation comparison: The orientation confusion matrix is conditional on agreement on
 #' adjacency. This means that only adjacencies that are shared in both input matrices are
 #' considered, and agreement wrt. orientation is then computed only among these edges
-#' that occur in both matrices. A truth positive is a correctly placed arrowhead (1),
+#' that occur in both matrices. A true positive is a correctly placed arrowhead (1),
 #' a false positive marks placement of arrowhead (1) where there should have been a tail (0),
 #' a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 #' and a truth negative marks correct placement of a tail (0).
 #'
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
-#' @return A list with entries \code{tp} (truth positives), \code{tn} (truth negatives),
+#' @return A list with entries \code{tp} (true positives), \code{tn} (true negatives),
 #' \code{fp} (false positives), and \code{fn} (false negatives).
 #'
 #' @examples
@@ -99,8 +101,8 @@ confusion <- function(truth, est, type = c("adj", "dir")) {
 #'   \item{\code{$other}}{Metrics applied directly to the adjacency matrices without computing confusion matrices.}
 #' }
 #'
-#' Adjacency confusion matrix and conditional orientation confusion matrix only works for
-#' [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' Adjacency confusion matrix and conditional orientation confusion matrix only supports
+#' [caugi::caugi] objects whose edges are restricted to `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @param truth truth [caugi::caugi] object.
 #' @param est Estimated [caugi::caugi] object.
@@ -224,11 +226,14 @@ evaluate <- function(truth, est, metrics = "all") {
 
 #' Precision
 #'
-#' @description Computes precision from two PDAG [caugi::caugi] objects.
+#' @description
+#' Computes precision from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' precision as `TP/(TP + FP)`, where TP are truth positives and
+#' precision as `TP/(TP + FP)`, where TP are true positives and
 #' `FP` are false positives. If `TP + FP = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -258,11 +263,14 @@ precision <- function(truth, est, type = c("adj", "dir")) {
 
 #' Recall
 #'
-#' @description Computes recall from two PDAG [caugi::caugi] objects.
+#' @description
+#' Computes recall from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' recall as `TP/(TP + FN)`, where `TP` are truth positives and
+#' recall as `TP/(TP + FN)`, where `TP` are true positives and
 #' `FN` are false negatives. If `TP + FN = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -293,9 +301,11 @@ recall <- function(truth, est, type = c("adj", "dir")) {
 #'
 #' @description Computes specificity from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' specificity as `TN/(TN + FP)`, where `TN` are truth negatives and
+#' specificity as `TN/(TN + FP)`, where `TN` are true negatives and
 #' `FP` are false positives. If `TN + FP = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -325,11 +335,14 @@ specificity <- function(truth, est, type = c("adj", "dir")) {
 
 #' False Omission Rate
 #'
-#' @description Computes false omission rate from two PDAG [caugi::caugi] objects.
+#' @description
+#' Computes false omission rate from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' false omission rate as `FN/(FN + TN)`, where `FN` are false negatives and
-#' `TN` are truth negatives. If `FN + TN = 0, 1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' `TN` are true negatives. If `FN + TN = 0, 1` is returned.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -359,11 +372,14 @@ false_omission_rate <- function(truth, est, type = c("adj", "dir")) {
 
 #' False Discovery Rate
 #'
-#' @description Computes false discovery rate from two PDAG [caugi::caugi] objects.
+#' @description
+#' Computes false discovery rate from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
 #' false discovery rate as `FP/(FP + TP)`, where `FP` are false positives and
-#' `TP` are truth positives. If `FP + TP = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#' `TP` are true positives. If `FP + TP = 0`, `1` is returned.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -393,11 +409,14 @@ fdr <- function(truth, est, type = c("adj", "dir")) {
 
 #' Negative Predictive Value
 #'
-#' @description Computes negative predictive value from two PDAG [caugi::caugi] objects.
+#' @description
+#' Computes negative predictive value from two PDAG [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' negative predictive value as `TN/(TN + FN)`, where `TN` are truth negatives and
+#' negative predictive value as `TN/(TN + FN)`, where `TN` are true negatives and
 #' `FN` are false negatives. If `TN + FN = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -427,11 +446,14 @@ npv <- function(truth, est, type = c("adj", "dir")) {
 
 #' F1 score
 #'
-#' @description Computes F1 score from two [caugi::caugi] objects.
+#' @description
+#' Computes F1 score from two [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where `TP` are truth positives,
+#' F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where `TP` are true positives,
 #' `FP` are false positives, and `FN` are false negatives. If `TP + FP + FN = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @inheritParams confusion
 #'
@@ -462,11 +484,14 @@ f1_score <- function(truth, est, type = c("adj", "dir")) {
 
 #' G1 score
 #'
-#' @description Computes G1 score from two [caugi::caugi] objects.
+#' @description
+#' Computes G1 score from two [caugi::caugi] objects.
 #' It converts the [caugi::caugi] objects to adjacency matrices and computes
-#' G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where `TN` are truth negatives,
+#' G1 score defined as \eqn{2 \cdot TN/(2 \cdot TN + FN + FP)}, where `TN` are true negatives,
 #' `FP` are false positives, and FN are false negatives. If `TN + FN + FP = 0`, `1` is returned.
-#' Only supports [caugi::caugi] objects with these edge types present `-->`, `<-->`, `---` and no edge.
+#'
+#' Only supports [caugi::caugi] objects whose edges are restricted to
+#' `-->`, `<->`, `---`, or absence of an edge.
 #'
 #' @references Petersen, Anne Helby, et al. "Causal discovery for observational sciences using
 #' supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).

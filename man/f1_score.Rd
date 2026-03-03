@@ -23,9 +23,11 @@ A numeric in [0,1].
 \description{
 Computes F1 score from two \link[caugi:caugi]{caugi::caugi} objects.
 It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
-F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where \code{TP} are truth positives,
+F1 score as \eqn{2 \cdot TP/(2 \cdot TP + FP + FN)}, where \code{TP} are true positives,
 \code{FP} are false positives, and \code{FN} are false negatives. If \code{TP + FP + FN = 0}, \code{1} is returned.
-Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+
+Only supports \link[caugi:caugi]{caugi::caugi} objects whose edges are restricted to
+\verb{-->}, \verb{<->}, \verb{---}, or absence of an edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

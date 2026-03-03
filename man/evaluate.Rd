@@ -29,8 +29,8 @@ Metrics are supplied as a list with three slots: \code{$adj}, \code{$dir}, and \
 \item{\code{$other}}{Metrics applied directly to the adjacency matrices without computing confusion matrices.}
 }
 
-Adjacency confusion matrix and conditional orientation confusion matrix only works for
-\link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+Adjacency confusion matrix and conditional orientation confusion matrix only supports
+\link[caugi:caugi]{caugi::caugi} objects whose edges are restricted to \verb{-->}, \verb{<->}, \verb{---}, or absence of an edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)

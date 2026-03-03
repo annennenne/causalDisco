@@ -24,8 +24,10 @@ A numeric in [0,1].
 Computes false omission rate from two PDAG \link[caugi:caugi]{caugi::caugi} objects.
 It converts the \link[caugi:caugi]{caugi::caugi} objects to adjacency matrices and computes
 false omission rate as \code{FN/(FN + TN)}, where \code{FN} are false negatives and
-\code{TN} are truth negatives. If \verb{FN + TN = 0, 1} is returned.
-Only supports \link[caugi:caugi]{caugi::caugi} objects with these edge types present \verb{-->}, \verb{<-->}, \verb{---} and no edge.
+\code{TN} are true negatives. If \verb{FN + TN = 0, 1} is returned.
+
+Only supports \link[caugi:caugi]{caugi::caugi} objects whose edges are restricted to
+\verb{-->}, \verb{<->}, \verb{---}, or absence of an edge.
 }
 \examples{
 cg1 <- caugi::caugi(A \%-->\% B + C)
