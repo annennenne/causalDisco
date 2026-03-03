@@ -4,11 +4,13 @@ Computes G1 score from two
 [caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
 converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes G1 score defined as \\2 \cdot
-TN/(2 \cdot TN + FN + FP)\\, where `TN` are truth negatives, `FP` are
+TN/(2 \cdot TN + FN + FP)\\, where `TN` are true negatives, `FP` are
 false positives, and FN are false negatives. If `TN + FN + FP = 0`, `1`
-is returned. Only supports
-[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
-these edge types present `-->`, `<-->`, `---` and no edge.
+is returned.
+
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 

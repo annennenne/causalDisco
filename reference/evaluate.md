@@ -23,8 +23,9 @@ Metrics are supplied as a list with three slots: `$adj`, `$dir`, and
   confusion matrices.
 
 Adjacency confusion matrix and conditional orientation confusion matrix
-only works for [caugi::caugi](https://caugi.org/reference/caugi.html)
-objects with these edge types present `-->`, `<-->`, `---` and no edge.
+only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 

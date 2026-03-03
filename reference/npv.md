@@ -4,10 +4,12 @@ Computes negative predictive value from two PDAG
 [caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
 converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes negative predictive value as
-`TN/(TN + FN)`, where `TN` are truth negatives and `FN` are false
-negatives. If `TN + FN = 0`, `1` is returned. Only supports
-[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
-these edge types present `-->`, `<-->`, `---` and no edge.
+`TN/(TN + FN)`, where `TN` are true negatives and `FN` are false
+negatives. If `TN + FN = 0`, `1` is returned.
+
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 

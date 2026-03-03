@@ -4,10 +4,12 @@ Computes false omission rate from two PDAG
 [caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
 converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes false omission rate as
-`FN/(FN + TN)`, where `FN` are false negatives and `TN` are truth
-negatives. If `FN + TN = 0, 1` is returned. Only supports
-[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
-these edge types present `-->`, `<-->`, `---` and no edge.
+`FN/(FN + TN)`, where `FN` are false negatives and `TN` are true
+negatives. If `FN + TN = 0, 1` is returned.
+
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 

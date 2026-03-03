@@ -4,10 +4,12 @@ Computes precision from two PDAG
 [caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
 converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes precision as `TP/(TP + FP)`,
-where TP are truth positives and `FP` are false positives. If
-`TP + FP = 0`, `1` is returned. Only supports
-[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
-these edge types present `-->`, `<-->`, `---` and no edge.
+where TP are true positives and `FP` are false positives. If
+`TP + FP = 0`, `1` is returned.
+
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 

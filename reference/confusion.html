@@ -69,25 +69,26 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with entries <code>tp</code> (truth positives), <code>tn</code> (truth negatives),
+    <p>A list with entries <code>tp</code> (true positives), <code>tn</code> (true negatives),
 <code>fp</code> (false positives), and <code>fn</code> (false negatives).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Adjacency comparison: The confusion matrix is a cross-tabulation
-of adjacencies. Hence, a truth positive means that the two inputs agree on
-the presence of an adjacency. A truth negative means that the two inputs agree
+of adjacencies. Hence, a true positive means that the two inputs agree on
+the presence of an adjacency. A true negative means that the two inputs agree
 on no adjacency. A false positive means that the estimated graph places an adjacency
 where there should be none. A false negative means that the estimated graph does
 not place an adjacency where there should have been one.</p>
 <p>Orientation comparison: The orientation confusion matrix is conditional on agreement on
 adjacency. This means that only adjacencies that are shared in both input matrices are
 considered, and agreement wrt. orientation is then computed only among these edges
-that occur in both matrices. A truth positive is a correctly placed arrowhead (1),
+that occur in both matrices. A true positive is a correctly placed arrowhead (1),
 a false positive marks placement of arrowhead (1) where there should have been a tail (0),
 a false negative marks placement of tail (0) where there should have been an arrowhead (1),
 and a truth negative marks correct placement of a tail (0).</p>
-<p>Only supports <a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a> objects with these edge types present <code>--&gt;</code>, <code>&lt;--&gt;</code>, <code>---</code> and no edge.</p>
+<p>Only supports <a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a> objects whose edges are restricted to
+<code>--&gt;</code>, <code>&lt;-&gt;</code>, <code>---</code>, or absence of an edge.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

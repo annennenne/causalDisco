@@ -4,10 +4,12 @@ Computes recall from two PDAG
 [caugi::caugi](https://caugi.org/reference/caugi.html) objects. It
 converts the [caugi::caugi](https://caugi.org/reference/caugi.html)
 objects to adjacency matrices and computes recall as `TP/(TP + FN)`,
-where `TP` are truth positives and `FN` are false negatives. If
-`TP + FN = 0`, `1` is returned. Only supports
-[caugi::caugi](https://caugi.org/reference/caugi.html) objects with
-these edge types present `-->`, `<-->`, `---` and no edge.
+where `TP` are true positives and `FN` are false negatives. If
+`TP + FN = 0`, `1` is returned.
+
+Only supports [caugi::caugi](https://caugi.org/reference/caugi.html)
+objects whose edges are restricted to `-->`, `<->`, `---`, or absence of
+an edge.
 
 ## Usage
 
