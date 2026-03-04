@@ -320,7 +320,7 @@ prepare_knowledge <- function(kn) {
   is_knowledge(kn)
 
   # Direct variable -> tier rank mapping
-  kn$.__var_rank <- setNames(
+  kn$.__var_rank <- stats::setNames(
     match(kn$vars$tier, kn$tiers$label),
     kn$vars$var
   )
