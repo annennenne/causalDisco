@@ -311,7 +311,8 @@ TemporalBIC <- setRefClass(
   "TemporalBIC",
   contains = "GaussL0penIntScore",
   fields = list(
-    .order = "vector"
+    .order = "vector",
+    debug = "logical"
   ),
   methods = list(
     initialize = function(
@@ -321,8 +322,11 @@ TemporalBIC <- setRefClass(
       intercept = TRUE,
       format = c("raw", "scatter"),
       knowledge = NULL,
+      debug = FALSE,
       ...
     ) {
+      debug <<- debug
+
       if (is.null(knowledge)) {
         knowledge <- knowledge() |> add_vars(nodes)
       }
@@ -343,8 +347,12 @@ TemporalBIC <- setRefClass(
       )
     },
     local.score = function(vertex, parents, ...) {
-      validate.vertex(vertex)
-      validate.parents(parents)
+      # When profiling it was expensive to validate the vertex and parents in every local score calculation,
+      # so only do it when debug = TRUE
+      if (debug) {
+        validate.vertex(vertex)
+        validate.parents(parents)
+      }
 
       ord <- .order
       child_t <- ord[vertex]
@@ -377,7 +385,9 @@ TemporalBIC <- setRefClass(
         } else if (.format == "scatter") {
           # calculate the score based on pre-calculated scatter matrices
           # if an intercept is allowed, add a fake parent node
-          parents <- sort(parents)
+          if (length(parents) > 1) {
+            parents <- sort(parents) # TODO: Figure out how to avoid sorting in every local score calculation
+          }
           if (pp.dat$intercept) {
             parents <- c(pp.dat$vertex.count + 1, parents)
           }
