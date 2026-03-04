@@ -208,15 +208,6 @@ test_that(".build_knowledge_from_order respects order even with empty-hit tiers"
 })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Helpers: is_after()
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("is_after returns FALSE when any tier is missing", {
-  kn <- knowledge() |> add_vars(c("A", "B"))
-  expect_false(is_after("A", "B", kn))
-})
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Helpers: order_restrict_amat_cpdag()
 # ──────────────────────────────────────────────────────────────────────────────
 

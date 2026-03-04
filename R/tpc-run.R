@@ -328,26 +328,6 @@ prepare_knowledge <- function(kn) {
   kn
 }
 
-#' Check whether one variable is strictly after another in tier order
-#'
-#' @param x,y Variable names.
-#' @param knowledge A \code{knowledge} object.
-#'
-#' @example inst/roxygen-examples/is_after-example.R
-#'
-#' @return Logical. \code{TRUE} if \code{x} is in a strictly later tier than
-#' \code{y}. Returns \code{FALSE} if either variable lacks a tier.
-#'
-#' @keywords internal
-#' @noRd
-is_after <- function(x, y, knowledge) {
-  ti <- .tier_index(knowledge, c(x, y))
-  if (any(is.na(ti))) {
-    return(FALSE)
-  }
-  ti[[1]] > ti[[2]]
-}
-
 #' Directed indepTest wrapper that forbids conditioning on the future
 #'
 #' @description
