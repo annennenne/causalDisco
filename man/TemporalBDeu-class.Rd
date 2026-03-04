@@ -9,15 +9,17 @@
 \item{data}{A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
 corresponds to one observational realization.}
 
-\item{order}{A vector specifying the order each variable. Can be either a vector of integers
-or an vector of prefixes. If integers, such that the ith entry
-will detail the order of the ith variable in the dataset. Must start at 1 an increase
-with increments of 1. If prefixes, must be in order.}
+\item{nodes}{A character vector of variable names corresponding to the columns of the data.}
 
 \item{iss}{Imaginary Sample Size (ISS), also referred to as
 Equivalent Sample Size (ESS), determines how much weight is assigned to the prior
 in terms of the size of an imaginary sample supporting it. Increasing the ISS will
 increase the density of the estimated graph.}
+
+\item{knowledge}{A \code{Knowledge} object.}
+
+\item{debug}{Logical; indicates whether to perform validation of the vertex and parents in every local score
+calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.}
 }
 \description{
 A reference class for categorical observational data Scoring with Tiered

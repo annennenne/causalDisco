@@ -95,6 +95,8 @@ tpc_run <- function(
   directed_as_undirected <- prep$directed_as_undirected
   test <- prep$internal_test # Ensure we use the internal test with camelCase so it works downstream with pcalg
 
+  knowledge <- prepare_knowledge(knowledge) # Precompute variable ranks for efficient access
+
   # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
     stop(
@@ -307,13 +309,6 @@ find_adjacencies <- function(amatrix, index) {
 #' @keywords internal
 #' @noRd
 .tier_index <- function(kn, vnames) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "stats"
-    ),
-    function_name = ".tier_index"
-  )
-
   is_knowledge(kn)
   idx <- match(vnames, kn$vars$var)
   tiers <- kn$vars$tier[idx]
@@ -321,24 +316,16 @@ find_adjacencies <- function(amatrix, index) {
   stats::setNames(rank, vnames)
 }
 
-#' Check whether one variable is strictly after another in tier order
-#'
-#' @param x,y Variable names.
-#' @param knowledge A \code{knowledge} object.
-#'
-#' @example inst/roxygen-examples/is_after-example.R
-#'
-#' @return Logical. \code{TRUE} if \code{x} is in a strictly later tier than
-#' \code{y}. Returns \code{FALSE} if either variable lacks a tier.
-#'
-#' @keywords internal
-#' @noRd
-is_after <- function(x, y, knowledge) {
-  ti <- .tier_index(knowledge, c(x, y))
-  if (any(is.na(ti))) {
-    return(FALSE)
-  }
-  ti[[1]] > ti[[2]]
+prepare_knowledge <- function(kn) {
+  is_knowledge(kn)
+
+  # Direct variable -> tier rank mapping
+  kn$.__var_rank <- stats::setNames(
+    match(kn$vars$tier, kn$tiers$label),
+    kn$vars$var
+  )
+
+  kn
 }
 
 #' Directed indepTest wrapper that forbids conditioning on the future
@@ -359,16 +346,20 @@ is_after <- function(x, y, knowledge) {
 #' @keywords internal
 #' @noRd
 dir_test <- function(test, vnames, knowledge) {
+  vr <- knowledge$.__var_rank
+
   function(x, y, S, suffStat) {
     snames <- vnames[S]
-    xname <- vnames[x]
-    yname <- vnames[y]
+    x_rank <- vr[[vnames[x]]]
+    y_rank <- vr[[vnames[y]]]
 
-    if (length(snames)) {
+    if (length(snames) && !is.na(x_rank) && !is.na(y_rank)) {
       for (s in snames) {
+        s_rank <- vr[[s]]
         if (
-          isTRUE(is_after(s, xname, knowledge)) &&
-            isTRUE(is_after(s, yname, knowledge))
+          !is.na(s_rank) &&
+            s_rank > x_rank &&
+            s_rank > y_rank
         ) {
           return(0)
         }

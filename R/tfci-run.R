@@ -70,6 +70,8 @@ tfci_run <- function(
   directed_as_undirected <- prep$directed_as_undirected
   test <- prep$internal_test # Ensure we use the internal test with camelCase so it works downstream with pcalg
 
+  knowledge <- prepare_knowledge(knowledge) # Precompute variable ranks for efficient access
+
   # check orientation method
   if (!(orientation_method %in% c("standard", "conservative", "maj.rule"))) {
     stop(
@@ -178,15 +180,21 @@ tfci_run <- function(
 #' @keywords internal
 #' @noRd
 order_restrict_pag_skel <- function(amat, knowledge) {
+  vr <- knowledge$.__var_rank
   p <- nrow(amat)
   vnames <- rownames(amat)
 
   for (i in seq_len(p)) {
     for (j in seq_len(p)) {
-      if (amat[j, i] != 0 && is_after(vnames[i], vnames[j], knowledge)) {
-        # place an arrowhead at the later node
-        amat[j, i] <- 2
-        # note: [i,j] stays as-is (typically 1: circle) in the skeleton
+      if (amat[j, i] != 0) {
+        x_rank <- vr[[vnames[i]]]
+        y_rank <- vr[[vnames[j]]]
+
+        if (!is.na(x_rank) && !is.na(y_rank) && x_rank > y_rank) {
+          # Place an arrowhead at the later node
+          amat[j, i] <- 2
+          # Note: [i,j] stays as-is (typically 1: circle) in the skeleton
+        }
       }
     }
   }
@@ -213,20 +221,26 @@ order_restrict_pag_skel <- function(amat, knowledge) {
 #' @keywords internal
 #' @noRd
 order_restrict_sepset <- function(sepset, knowledge, vnames) {
+  vr <- knowledge$.__var_rank
   p <- length(vnames)
 
   for (i in seq_len(p)) {
     for (j in seq_len(p)) {
       sep_set <- sepset[[i]][[j]]
       if (length(sep_set) > 0) {
-        for (k in seq_along(sep_set)) {
-          if (
-            is_after(vnames[sep_set[k]], vnames[i], knowledge) &&
-              is_after(vnames[sep_set[k]], vnames[j], knowledge)
-          ) {
-            sepset[[i]][[j]] <- NULL
-            warning("Found sepset that was not allowed due to temporal order!")
-            break
+        x_rank <- vr[[vnames[i]]]
+        y_rank <- vr[[vnames[j]]]
+
+        if (!is.na(x_rank) && !is.na(y_rank)) {
+          for (k in seq_along(sep_set)) {
+            s_rank <- vr[[vnames[sep_set[k]]]]
+            if (!is.na(s_rank) && s_rank > x_rank && s_rank > y_rank) {
+              sepset[[i]][[j]] <- NULL
+              warning(
+                "Found sepset that was not allowed due to temporal order!"
+              )
+              break
+            }
           }
         }
       }

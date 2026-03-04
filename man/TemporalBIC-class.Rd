@@ -9,15 +9,20 @@
 \item{data}{A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
 corresponds to one observational realization.}
 
-\item{order}{A vector specifying the order each variable. Can be either a vector of integers
-or an vector of prefixes. If integers, such that the ith entry
-will detail the order of the ith variable in the dataset. Must start at 1 an increase
-with increments of 1. If prefixes, must be in order.}
+\item{nodes}{A character vector of variable names corresponding to the columns of the data.}
 
 \item{lambda}{Penalization constant (see details).}
 
 \item{intercept}{Logical; indicates whether an intercept is allowed in the
 linear structural equations (i.e., whether a nonzero mean is allowed).}
+
+\item{format}{Character; either "raw" or "scatter". If "raw", the score is calculated
+from the raw data matrix. If "scatter", the score is calculated from pre-calculated scatter matrices.}
+
+\item{knowledge}{A \code{Knowledge} object.}
+
+\item{debug}{Logical; indicates whether to perform validation of the vertex and parents in every local score
+calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.}
 }
 \description{
 A Reference Class for Gaussian Observational Data Scoring with Tiered

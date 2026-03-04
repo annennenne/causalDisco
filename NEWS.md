@@ -1,6 +1,12 @@
 # causalDisco (development version)
 
+## New Features
+
 - Exports `list_registered_tetrad_algorithms()` to view the custom registered Tetrad algorithms.
+
+## Improvements
+
+- Improved speed of `tfci()`, `tges()`, and `tpc()` algorithms by at least 3x, and often much more.
 
 - Updated `knowledge_to_caugi()` to include information about required and forbidden edges in the output.
 
