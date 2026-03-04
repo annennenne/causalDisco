@@ -19,7 +19,7 @@ linear structural equations (i.e., whether a nonzero mean is allowed).}
 \item{format}{Character; either "raw" or "scatter". If "raw", the score is calculated
 from the raw data matrix. If "scatter", the score is calculated from pre-calculated scatter matrices.}
 
-\item{knowledge}{A \link{Knowledge} object.}
+\item{knowledge}{A \code{Knowledge} object.}
 
 \item{debug}{Logical; indicates whether to perform validation of the vertex and parents in every local score
 calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.}

@@ -296,7 +296,7 @@ TEssGraph <- setRefClass(
 #' linear structural equations (i.e., whether a nonzero mean is allowed).
 #' @param format Character; either "raw" or "scatter". If "raw", the score is calculated
 #' from the raw data matrix. If "scatter", the score is calculated from pre-calculated scatter matrices.
-#' @param knowledge A [Knowledge] object.
+#' @param knowledge A `Knowledge` object.
 #' @param debug Logical; indicates whether to perform validation of the vertex and parents in every local score
 #' calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.
 #'
@@ -452,7 +452,7 @@ TemporalBIC <- setRefClass(
 #' Equivalent Sample Size (ESS), determines how much weight is assigned to the prior
 #' in terms of the size of an imaginary sample supporting it. Increasing the ISS will
 #' increase the density of the estimated graph.
-#' @param knowledge A [Knowledge] object.
+#' @param knowledge A `Knowledge` object.
 #' @param debug Logical; indicates whether to perform validation of the vertex and parents in every local score
 #' calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.
 #'

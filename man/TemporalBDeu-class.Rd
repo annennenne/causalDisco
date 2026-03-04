@@ -16,7 +16,7 @@ Equivalent Sample Size (ESS), determines how much weight is assigned to the prio
 in terms of the size of an imaginary sample supporting it. Increasing the ISS will
 increase the density of the estimated graph.}
 
-\item{knowledge}{A \link{Knowledge} object.}
+\item{knowledge}{A \code{Knowledge} object.}
 
 \item{debug}{Logical; indicates whether to perform validation of the vertex and parents in every local score
 calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.}
