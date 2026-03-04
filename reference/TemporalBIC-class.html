@@ -63,11 +63,8 @@ data; it is used in the causal discovery function <code><a href="tges.html">tges
 corresponds to one observational realization.</p></dd>
 
 
-<dt id="arg-order">order<a class="anchor" aria-label="anchor" href="#arg-order"></a></dt>
-<dd><p>A vector specifying the order each variable. Can be either a vector of integers
-or an vector of prefixes. If integers, such that the ith entry
-will detail the order of the ith variable in the dataset. Must start at 1 an increase
-with increments of 1. If prefixes, must be in order.</p></dd>
+<dt id="arg-nodes">nodes<a class="anchor" aria-label="anchor" href="#arg-nodes"></a></dt>
+<dd><p>A character vector of variable names corresponding to the columns of the data.</p></dd>
 
 
 <dt id="arg-lambda">lambda<a class="anchor" aria-label="anchor" href="#arg-lambda"></a></dt>
@@ -77,6 +74,20 @@ with increments of 1. If prefixes, must be in order.</p></dd>
 <dt id="arg-intercept">intercept<a class="anchor" aria-label="anchor" href="#arg-intercept"></a></dt>
 <dd><p>Logical; indicates whether an intercept is allowed in the
 linear structural equations (i.e., whether a nonzero mean is allowed).</p></dd>
+
+
+<dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
+<dd><p>Character; either "raw" or "scatter". If "raw", the score is calculated
+from the raw data matrix. If "scatter", the score is calculated from pre-calculated scatter matrices.</p></dd>
+
+
+<dt id="arg-knowledge">knowledge<a class="anchor" aria-label="anchor" href="#arg-knowledge"></a></dt>
+<dd><p>A <code>Knowledge</code> object.</p></dd>
+
+
+<dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
+<dd><p>Logical; indicates whether to perform validation of the vertex and parents in every local score
+calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.</p></dd>
 
 </dl></div>
     <div class="section level2">

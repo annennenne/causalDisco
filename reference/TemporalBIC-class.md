@@ -13,13 +13,10 @@ is used in the causal discovery function
   A numeric matrix with \\n\\ rows and \\p\\ columns. Each row
   corresponds to one observational realization.
 
-- order:
+- nodes:
 
-  A vector specifying the order each variable. Can be either a vector of
-  integers or an vector of prefixes. If integers, such that the ith
-  entry will detail the order of the ith variable in the dataset. Must
-  start at 1 an increase with increments of 1. If prefixes, must be in
-  order.
+  A character vector of variable names corresponding to the columns of
+  the data.
 
 - lambda:
 
@@ -29,6 +26,22 @@ is used in the causal discovery function
 
   Logical; indicates whether an intercept is allowed in the linear
   structural equations (i.e., whether a nonzero mean is allowed).
+
+- format:
+
+  Character; either "raw" or "scatter". If "raw", the score is
+  calculated from the raw data matrix. If "scatter", the score is
+  calculated from pre-calculated scatter matrices.
+
+- knowledge:
+
+  A `Knowledge` object.
+
+- debug:
+
+  Logical; indicates whether to perform validation of the vertex and
+  parents in every local score calculation. Setting this to TRUE will
+  slow down the algorithm, but may be useful for debugging.
 
 ## Details
 

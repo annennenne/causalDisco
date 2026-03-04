@@ -2,9 +2,20 @@
 
 ## causalDisco (development version)
 
+### New Features
+
 - Exports
   [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
   to view the custom registered Tetrad algorithms.
+
+### Improvements
+
+- Improved speed of
+  [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
+  [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),
+  and
+  [`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
+  algorithms by at least 3x, and often much more.
 
 - Updated
   [`knowledge_to_caugi()`](https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.md)
