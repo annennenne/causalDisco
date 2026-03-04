@@ -65,7 +65,6 @@ test_that("TemporalBIC initializes from knowledge and enforces tiers (-Inf on vi
     lambda = 0.5 * log(nrow(X)),
     format = "raw",
     intercept = TRUE,
-    use.cpp = FALSE,
     knowledge = kn
   )
   val <- sc$local.score(vertex = 2L, parents = 1L) # y <- x forbidden
@@ -92,7 +91,6 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
     lambda = 0.5 * log(nrow(X)),
     format = "raw",
     intercept = TRUE,
-    use.cpp = FALSE,
     knowledge = kn
   )
   s1 <- sc_raw$local.score(vertex = 2L, parents = 1L)
@@ -107,7 +105,6 @@ test_that("TemporalBIC local.score raw and scatter branches both finite when all
     lambda = 0.5 * log(nrow(X)),
     format = "scatter",
     intercept = TRUE,
-    use.cpp = FALSE,
     knowledge = kn
   )
   sc_sc$pp.dat$vertex.count <- ncol(X)
@@ -131,8 +128,27 @@ test_that("TemporalBIC with partially tiered knowledge skips enforcement for unt
     "TemporalBIC",
     data = X,
     nodes = colnames(X),
+    knowledge = kn
+  )
+  # y has NA tier → no enforcement → finite score even if x considered "later"
+  val <- sc$local.score(vertex = 2L, parents = 1L)
+  expect_true(is.finite(val))
+})
+
+test_that("TemporalBIC works with debug = TRUE", {
+  set.seed(1405)
+  X <- cbind(x = rnorm(30), y = rnorm(30))
+  kn <- knowledge() |> add_vars(c("x", "y"))
+  kn <- add_tier(kn, "T1") # only define T1
+  # assign tier only to x; y stays NA
+  kn$vars$tier[kn$vars$var == "x"] <- "T1"
+
+  sc <- new(
+    "TemporalBIC",
+    data = X,
+    nodes = colnames(X),
     knowledge = kn,
-    use.cpp = FALSE
+    debug = TRUE
   )
   # y has NA tier → no enforcement → finite score even if x considered "later"
   val <- sc$local.score(vertex = 2L, parents = 1L)
@@ -182,6 +198,31 @@ test_that("TemporalBDeu returns -Inf when a later-tier parent is proposed", {
     nodes = colnames(D),
     iss = 1,
     knowledge = kn
+  )
+  expect_identical(sc$local.score(vertex = 2L, parents = 1L), -Inf)
+})
+
+test_that("TemporalBDeu works with debug = TRUE", {
+  set.seed(1405)
+  n <- 150
+  A <- factor(sample(1:2, n, TRUE))
+  B <- factor(sample(1:2, n, TRUE))
+  D <- data.frame(A = A, B = B)
+
+  kn <- knowledge() |> add_vars(c("A", "B"))
+  kn <- add_tier(kn, "T1")
+  kn <- add_tier(kn, "T2", after = "T1")
+  # A in T2, B in T1 → B <- A forbidden
+  kn$vars$tier[kn$vars$var == "A"] <- "T2"
+  kn$vars$tier[kn$vars$var == "B"] <- "T1"
+
+  sc <- new(
+    "TemporalBDeu",
+    data = D,
+    nodes = colnames(D),
+    iss = 1,
+    knowledge = kn,
+    debug = TRUE
   )
   expect_identical(sc$local.score(vertex = 2L, parents = 1L), -Inf)
 })
@@ -240,8 +281,7 @@ test_that("tges_run() builds Forbidden.edges from score$.order", {
     "TemporalBIC",
     data = X,
     nodes = colnames(X),
-    knowledge = kn,
-    use.cpp = FALSE
+    knowledge = kn
   )
   expect_no_error(try(
     suppressWarnings(tges_run(sc, verbose = FALSE)),
