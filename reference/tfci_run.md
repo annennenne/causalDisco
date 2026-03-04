@@ -32,9 +32,8 @@ tfci_run(
 
 - knowledge:
 
-  A *knowledge* object describing tiers/periods and optional
-  forbidden/required edges. This replaces the legacy `order` interface
-  and is the preferred way to supply temporal background knowledge.
+  A `Knowledge` object describing tiers/periods and optional
+  forbidden/required edges.
 
 - alpha:
 
@@ -43,11 +42,13 @@ tfci_run(
 
 - test:
 
-  A conditional independence test. The default `reg_test` uses a
-  regression-based information-loss test. Another available option is
-  `cor_test` which tests for vanishing partial correlations.
-  User-supplied functions may also be used; see details for the required
-  interface.
+  A conditional independence test. The default
+  [`reg_test()`](https://disco-coders.github.io/causalDisco/reference/reg_test.md)
+  uses a regression-based information-loss test. Another available
+  option is
+  [`cor_test()`](https://disco-coders.github.io/causalDisco/reference/cor_test.md)
+  which tests for vanishing partial correlations. User-supplied
+  functions may also be used; see details for the required interface.
 
 - suff_stat:
 

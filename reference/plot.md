@@ -1,10 +1,7 @@
 # Plot Method for causalDisco Objects
 
-This is the generic `plot()` function for objects of class
-[knowledge](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
-or
-[disco](https://disco-coders.github.io/causalDisco/reference/disco.md).
-It dispatches to the class-specific plotting methods
+This is the generic `plot()` function for objects of class `Knowledge`
+or `Disco`. It dispatches to the class-specific plotting methods
 [`plot.Knowledge()`](https://disco-coders.github.io/causalDisco/reference/plot.Knowledge.md)
 and
 [`plot.Disco()`](https://disco-coders.github.io/causalDisco/reference/plot.Disco.md).
@@ -13,10 +10,7 @@ and
 
 - x:
 
-  An object to plot (class
-  [knowledge](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
-  or
-  [disco](https://disco-coders.github.io/causalDisco/reference/disco.md)).
+  An object to plot (class `Knowledge` or `Disco`).
 
 - ...:
 

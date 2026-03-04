@@ -2,7 +2,7 @@
 
 Run a tier-aware variant of the PC algorithm that respects background
 knowledge about a partial temporal order. Supply the temporal order via
-a `knowledge` object.
+a `Knowledge` object.
 
 ## Usage
 
@@ -31,7 +31,7 @@ tpc_run(
 
 - knowledge:
 
-  A `knowledge` object created with
+  A `Knowledge` object created with
   [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md),
   encoding tier assignments and optional forbidden/required edges. This
   is the preferred way to provide temporal background knowledge.
@@ -43,11 +43,13 @@ tpc_run(
 
 - test:
 
-  A conditional independence test. The default `reg_test` uses a
-  regression-based information-loss test. Another available option is
-  `cor_test` which tests for vanishing partial correlations.
-  User-supplied functions may also be used; see details for the required
-  interface.
+  A conditional independence test. The default
+  [`reg_test()`](https://disco-coders.github.io/causalDisco/reference/reg_test.md)
+  uses a regression-based information-loss test. Another available
+  option is
+  [`cor_test()`](https://disco-coders.github.io/causalDisco/reference/cor_test.md)
+  which tests for vanishing partial correlations. User-supplied
+  functions may also be used; see details for the required interface.
 
 - suff_stat:
 
@@ -103,10 +105,12 @@ A `Disco` object (a list with a `caugi` and a `Knowledge` object).
 
 Any independence test implemented in pcalg may be used; see
 [`pcalg::pc()`](https://rdrr.io/pkg/pcalg/man/pc.html). When
-`na_method = "twd"`, test-wise deletion is performed: for `cor_test`,
-each pairwise correlation uses complete cases; for `reg_test`, each
-conditional test performs its own deletion. If you supply a user-defined
-`test`, you must also provide `suff_stat`.
+`na_method = "twd"`, test-wise deletion is performed: for
+[`cor_test()`](https://disco-coders.github.io/causalDisco/reference/cor_test.md),
+each pairwise correlation uses complete cases; for
+[`reg_test()`](https://disco-coders.github.io/causalDisco/reference/reg_test.md),
+each conditional test performs its own deletion. If you supply a
+user-defined `test`, you must also provide `suff_stat`.
 
 Temporal or tiered knowledge enters in two places:
 

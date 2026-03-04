@@ -22,6 +22,8 @@
   to include information about required and forbidden edges in the
   output.
 
+- Improve documentation for many functions.
+
 ## causalDisco 1.0.1
 
 CRAN release: 2026-02-24

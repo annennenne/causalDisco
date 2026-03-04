@@ -16,7 +16,7 @@ as_pcalg_constraints(kn, labels = kn$vars$var, directed_as_undirected = FALSE)
 
 - kn:
 
-  A `knowledge` object. Must have no tier information.
+  A `Knowledge` object. Must have no tier information.
 
 - labels:
 
@@ -38,7 +38,7 @@ to pcalg `fixed_gaps` and `fixed_edges` arguments.
 
 ## Details
 
-This function takes a `knowledge` object (with only forbidden/required
+This function takes a `Knowledge` object (with only forbidden/required
 edges, no tiers) and returns the two logical matrices in the exact
 variable order you supply.
 

@@ -16,7 +16,7 @@ as_bnlearn_knowledge(kn)
 
 - kn:
 
-  A `knowledge` object. Must have no tier information.
+  A `Knowledge` object. Must have no tier information.
 
 ## Value
 

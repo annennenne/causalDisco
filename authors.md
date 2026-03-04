@@ -19,13 +19,13 @@ Source:
 
 Hautop Kristensen B, Fabricius-Bjerre F, Helby Petersen A (2026).
 *causalDisco: Tools for Causal Discovery on Observational Data*. R
-package version 1.0.1.9000,
+package version 1.0.1.9001,
 <https://github.com/disco-coders/causalDisco>.
 
     @Manual{,
       title = {causalDisco: Tools for Causal Discovery on Observational Data},
       author = {Bjarke {Hautop Kristensen} and Frederik Fabricius-Bjerre and Anne {Helby Petersen}},
       year = {2026},
-      note = {R package version 1.0.1.9000},
+      note = {R package version 1.0.1.9001},
       url = {https://github.com/disco-coders/causalDisco},
     }

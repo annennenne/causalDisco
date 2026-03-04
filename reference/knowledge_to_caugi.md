@@ -14,7 +14,7 @@ knowledge_to_caugi(kn)
 
 - kn:
 
-  A `knowledge` object.
+  A `Knowledge` object.
 
 ## Value
 
