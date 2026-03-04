@@ -10,6 +10,8 @@
 
 - Updated `knowledge_to_caugi()` to include information about required and forbidden edges in the output.
 
+- Improve documentation for many functions.
+
 # causalDisco 1.0.1
 
 * This release should be considered essentially a **new package** with many new features, and some breaking changes
