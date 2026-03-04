@@ -290,13 +290,15 @@ TEssGraph <- setRefClass(
 #'
 #' @param data A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
 #' corresponds to one observational realization.
-#' @param order A vector specifying the order each variable. Can be either a vector of integers
-#' or an vector of prefixes. If integers, such that the ith entry
-#' will detail the order of the ith variable in the dataset. Must start at 1 an increase
-#' with increments of 1. If prefixes, must be in order.
+#' @param nodes A character vector of variable names corresponding to the columns of the data.
 #' @param lambda Penalization constant (see details).
 #' @param intercept Logical; indicates whether an intercept is allowed in the
 #' linear structural equations (i.e., whether a nonzero mean is allowed).
+#' @param format Character; either "raw" or "scatter". If "raw", the score is calculated
+#' from the raw data matrix. If "scatter", the score is calculated from pre-calculated scatter matrices.
+#' @param knowledge A [Knowledge] object.
+#' @param debug Logical; indicates whether to perform validation of the vertex and parents in every local score
+#' calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.
 #'
 #' @author Tobias Ellegaard Larsen
 #'
@@ -443,18 +445,16 @@ TemporalBIC <- setRefClass(
 #' )
 #' }
 #'
-#'
-#'
 #' @param data A numeric matrix with \eqn{n} rows and \eqn{p} columns. Each row
 #' corresponds to one observational realization.
-#' @param order A vector specifying the order each variable. Can be either a vector of integers
-#' or an vector of prefixes. If integers, such that the ith entry
-#' will detail the order of the ith variable in the dataset. Must start at 1 an increase
-#' with increments of 1. If prefixes, must be in order.
+#' @param nodes A character vector of variable names corresponding to the columns of the data.
 #' @param iss Imaginary Sample Size (ISS), also referred to as
 #' Equivalent Sample Size (ESS), determines how much weight is assigned to the prior
 #' in terms of the size of an imaginary sample supporting it. Increasing the ISS will
 #' increase the density of the estimated graph.
+#' @param knowledge A [Knowledge] object.
+#' @param debug Logical; indicates whether to perform validation of the vertex and parents in every local score
+#' calculation. Setting this to TRUE will slow down the algorithm, but may be useful for debugging.
 #'
 #' @author Tobias Ellegaard Larsen
 #'
@@ -470,7 +470,8 @@ TemporalBDeu <- setRefClass(
   contains = "DataScore",
   fields = list(
     .order = "vector",
-    .iss = "numeric"
+    .iss = "numeric",
+    debug = "logical"
   ),
   methods = list(
     initialize = function(
@@ -478,6 +479,7 @@ TemporalBDeu <- setRefClass(
       nodes = colnames(data),
       iss = 1,
       knowledge = NULL,
+      debug = FALSE,
       ...
     ) {
       if (is.null(knowledge)) {
@@ -488,6 +490,7 @@ TemporalBDeu <- setRefClass(
 
       .order <<- causalDisco:::.tier_index(knowledge, nodes)
       .iss <<- iss
+      debug <<- debug
 
       callSuper(
         data = data,
@@ -497,9 +500,12 @@ TemporalBDeu <- setRefClass(
       )
     },
     local.score = function(vertex, parents, ...) {
-      # check validity of arguments
-      validate.vertex(vertex)
-      validate.parents(parents)
+      # When profiling it was expensive to validate the vertex and parents in every local score calculation,
+      # so only do it when debug = TRUE
+      if (debug) {
+        validate.vertex(vertex)
+        validate.parents(parents)
+      }
       ord <- .order
       iss <- .iss
       child_t <- ord[vertex]
