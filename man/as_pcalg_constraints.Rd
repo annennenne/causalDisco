@@ -7,7 +7,7 @@
 as_pcalg_constraints(kn, labels = kn$vars$var, directed_as_undirected = FALSE)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.  Must have no tier information.}
+\item{kn}{A \code{Knowledge} object.  Must have no tier information.}
 
 \item{labels}{Character vector of all variable names, in the exact order
 of your data columns.  Every variable referenced by an edge in \code{kn}
@@ -31,7 +31,7 @@ corresponding to \pkg{pcalg} \code{fixed_gaps} and \code{fixed_edges} arguments.
 }
 }
 \details{
-This function takes a \code{knowledge} object (with only forbidden/required
+This function takes a \code{Knowledge} object (with only forbidden/required
 edges, no tiers) and returns the two logical matrices in the exact
 variable order you supply.
 }

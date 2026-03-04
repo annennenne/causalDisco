@@ -22,16 +22,15 @@ tfci_run(
 \arguments{
 \item{data}{A data frame with the observed variables.}
 
-\item{knowledge}{A \emph{knowledge} object describing tiers/periods and optional
-forbidden/required edges. This replaces the legacy \code{order} interface and
-is the preferred way to supply temporal background knowledge.}
+\item{knowledge}{A \code{Knowledge} object describing tiers/periods and optional
+forbidden/required edges.}
 
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
-\item{test}{A conditional independence test. The default \code{reg_test}
+\item{test}{A conditional independence test. The default \code{\link[=reg_test]{reg_test()}}
 uses a regression-based information-loss test. Another available option is
-\code{cor_test} which tests for vanishing partial correlations. User-supplied
+\code{\link[=cor_test]{cor_test()}} which tests for vanishing partial correlations. User-supplied
 functions may also be used; see details for the required interface.}
 
 \item{suff_stat}{A sufficient statistic. If supplied, it is passed directly

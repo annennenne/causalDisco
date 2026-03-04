@@ -22,16 +22,16 @@ tpc_run(
 \arguments{
 \item{data}{A data frame with the observed variables.}
 
-\item{knowledge}{A \code{knowledge} object created with \code{knowledge()},
+\item{knowledge}{A \code{Knowledge} object created with \code{\link[=knowledge]{knowledge()}},
 encoding tier assignments and optional forbidden/required edges. This is
 the preferred way to provide temporal background knowledge.}
 
 \item{alpha}{The alpha level used as the per-test significance
 threshold for conditional independence testing.}
 
-\item{test}{A conditional independence test. The default \code{reg_test}
+\item{test}{A conditional independence test. The default \code{\link[=reg_test]{reg_test()}}
 uses a regression-based information-loss test. Another available option is
-\code{cor_test} which tests for vanishing partial correlations. User-supplied
+\code{\link[=cor_test]{cor_test()}} which tests for vanishing partial correlations. User-supplied
 functions may also be used; see details for the required interface.}
 
 \item{suff_stat}{A sufficient statistic. If supplied, it is passed directly
@@ -69,13 +69,13 @@ A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object)
 \description{
 Run a tier-aware variant of the PC algorithm that respects background
 knowledge about a partial temporal order. Supply the temporal order via a
-\code{knowledge} object.
+\code{Knowledge} object.
 }
 \details{
 Any independence test implemented in \pkg{pcalg} may be used; see
 \code{\link[pcalg:pc]{pcalg::pc()}}. When \code{na_method = "twd"}, test-wise deletion is
-performed: for \code{cor_test}, each pairwise correlation uses complete cases;
-for \code{reg_test}, each conditional test performs its own deletion. If you
+performed: for \code{\link[=cor_test]{cor_test()}}, each pairwise correlation uses complete cases;
+for \code{\link[=reg_test]{reg_test()}}, each conditional test performs its own deletion. If you
 supply a user-defined \code{test}, you must also provide \code{suff_stat}.
 
 Temporal or tiered knowledge enters in two places:

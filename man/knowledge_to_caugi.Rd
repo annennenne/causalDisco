@@ -7,7 +7,7 @@
 knowledge_to_caugi(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.}
+\item{kn}{A \code{Knowledge} object.}
 }
 \value{
 A list with the \link[caugi:caugi]{caugi::caugi} object alongside information about the knowledge (tiers, required and

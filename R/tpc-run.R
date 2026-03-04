@@ -7,17 +7,17 @@
 #' @description
 #' Run a tier-aware variant of the PC algorithm that respects background
 #' knowledge about a partial temporal order. Supply the temporal order via a
-#' \code{knowledge} object.
+#' `Knowledge` object.
 #'
 #' @param data A data frame with the observed variables.
-#' @param knowledge A \code{knowledge} object created with \code{knowledge()},
+#' @param knowledge A `Knowledge` object created with [knowledge()],
 #'   encoding tier assignments and optional forbidden/required edges. This is
 #'   the preferred way to provide temporal background knowledge.
 #' @param alpha The alpha level used as the per-test significance
 #'   threshold for conditional independence testing.
-#' @param test A conditional independence test. The default \code{reg_test}
+#' @param test A conditional independence test. The default [reg_test()]
 #'   uses a regression-based information-loss test. Another available option is
-#'   \code{cor_test} which tests for vanishing partial correlations. User-supplied
+#'   [cor_test()] which tests for vanishing partial correlations. User-supplied
 #'   functions may also be used; see details for the required interface.
 #' @param suff_stat A sufficient statistic. If supplied, it is passed directly
 #'   to the test and no statistics are computed from \code{data}. Its structure
@@ -44,8 +44,8 @@
 #' @details
 #' Any independence test implemented in \pkg{pcalg} may be used; see
 #' [pcalg::pc()]. When \code{na_method = "twd"}, test-wise deletion is
-#' performed: for \code{cor_test}, each pairwise correlation uses complete cases;
-#' for \code{reg_test}, each conditional test performs its own deletion. If you
+#' performed: for [cor_test()], each pairwise correlation uses complete cases;
+#' for [reg_test()], each conditional test performs its own deletion. If you
 #' supply a user-defined \code{test}, you must also provide \code{suff_stat}.
 #'
 #' Temporal or tiered knowledge enters in two places:
@@ -144,7 +144,7 @@ tpc_run <- function(
 #'
 #' @description
 #' Helper that converts a character \code{order} of prefixes into a
-#' \code{knowledge} object by creating one tier per prefix and assigning
+#' `Knowledge` object by creating one tier per prefix and assigning
 #' variables with \code{tidyselect::starts_with("<prefix>")}.
 #'
 #' @param order Character vector of prefixes in temporal order.
@@ -154,7 +154,7 @@ tpc_run <- function(
 #'
 #' @example inst/roxygen-examples/dot-build_knowledge_from_order-example.R
 #'
-#' @return A \code{knowledge} object with tiers matching \code{order}.
+#' @return A `Knowledge` object with tiers matching \code{order}.
 #' @keywords internal
 #' @noRd
 .build_knowledge_from_order <- function(order, data = NULL, vnames = NULL) {
@@ -300,7 +300,7 @@ find_adjacencies <- function(amatrix, index) {
 #' Map variable names to their tier ranks according to a \code{knowledge}
 #' object. Variables without a tier receive \code{NA}.
 #'
-#' @param kn A \code{knowledge} object.
+#' @param kn A `Knowledge` object.
 #' @param vnames Character vector of variable names.
 #'
 #' @example inst/roxygen-examples/dot-tier_index-example.R
@@ -338,7 +338,7 @@ prepare_knowledge <- function(kn) {
 #' @param test A function \code{f(x, y, S, suff_stat)} returning a p-value or
 #'   test statistic compatible with \pkg{pcalg}.
 #' @param vnames Character vector of variable names (labels).
-#' @param knowledge A \code{knowledge} object.
+#' @param knowledge A `Knowledge` object.
 #'
 #' @example inst/roxygen-examples/dir_test-example.R
 #'
@@ -377,7 +377,7 @@ dir_test <- function(test, vnames, knowledge) {
 #' annotations are ignored here; use \code{order_restrict_amat_cpdag()} for
 #' tier-based pruning.
 #'
-#' @param kn A \code{knowledge} object.
+#' @param kn A `Knowledge` object.
 #' @param labels Character vector of variable names in the desired order.
 #'
 #' @example inst/roxygen-examples/dot-pcalg_constraints_from_knowledge-example.R
@@ -406,7 +406,7 @@ dir_test <- function(test, vnames, knowledge) {
 #' points from a later tier into an earlier tier.
 #'
 #' @param amat Square adjacency matrix (from-to convention).
-#' @param knowledge A \code{knowledge} object with tier labels.
+#' @param knowledge A `Knowledge` object with tier labels.
 #' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
 #' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
@@ -446,7 +446,7 @@ order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
 #' orientation under background knowledge.
 #'
 #' @param skel A [pcalg::pcAlgo-class] skeleton result.
-#' @param knowledge A \code{knowledge} object with tiers (and optionally edges).
+#' @param knowledge A `Knowledge` object with tiers (and optionally edges).
 #' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
 #' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'

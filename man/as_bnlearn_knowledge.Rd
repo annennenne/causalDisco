@@ -7,7 +7,7 @@
 as_bnlearn_knowledge(kn)
 }
 \arguments{
-\item{kn}{A \code{knowledge} object.  Must have no tier information.}
+\item{kn}{A \code{Knowledge} object.  Must have no tier information.}
 }
 \value{
 A list with two elements, \code{whitelist} and \code{blacklist}, each a data

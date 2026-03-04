@@ -4,7 +4,7 @@
 \alias{plot}
 \title{Plot Method for causalDisco Objects}
 \arguments{
-\item{x}{An object to plot (class \link{knowledge} or \link{disco}).}
+\item{x}{An object to plot (class \code{Knowledge} or \code{Disco}).}
 
 \item{...}{Additional arguments passed to class-specific plot methods and to \code{\link[caugi:plot]{caugi::plot()}}.}
 }
@@ -12,8 +12,8 @@
 Invisibly returns the input object. The primary effect is the generated plot.
 }
 \description{
-This is the generic \code{plot()} function for objects of class \link{knowledge}
-or \link{disco}. It dispatches to the class-specific plotting methods
+This is the generic \code{plot()} function for objects of class \code{Knowledge}
+or \code{Disco}. It dispatches to the class-specific plotting methods
 \code{\link[=plot.Knowledge]{plot.Knowledge()}} and \code{\link[=plot.Disco]{plot.Disco()}}.
 }
 \examples{

@@ -394,11 +394,11 @@ plot_caugi_common <- function(
 
 #' Plot Method for causalDisco Objects
 #'
-#' This is the generic `plot()` function for objects of class [knowledge]
-#' or [disco]. It dispatches to the class-specific plotting methods
+#' This is the generic `plot()` function for objects of class `Knowledge`
+#' or `Disco`. It dispatches to the class-specific plotting methods
 #' [plot.Knowledge()] and [plot.Disco()].
 #'
-#' @param x An object to plot (class [knowledge] or [disco]).
+#' @param x An object to plot (class `Knowledge` or `Disco`).
 #' @param ... Additional arguments passed to class-specific plot methods and to [caugi::plot()].
 #'
 #' @return Invisibly returns the input object. The primary effect is the generated plot.

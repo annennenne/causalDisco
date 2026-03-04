@@ -22,9 +22,8 @@
 #' for details.
 #'
 #' @inheritParams tpc_run
-#' @param knowledge A \emph{knowledge} object describing tiers/periods and optional
-#'   forbidden/required edges. This replaces the legacy \code{order} interface and
-#'   is the preferred way to supply temporal background knowledge.
+#' @param knowledge A `Knowledge` object describing tiers/periods and optional
+#'   forbidden/required edges.
 #' @param orientation_method Method for handling conflicting separating sets when orienting
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See [pcalg::pc()] for further details.
@@ -171,7 +170,7 @@ tfci_run <- function(
 #'
 #' @param amat A square numeric adjacency matrix in pcalg PAG format
 #'   (rows/columns named by variable names).
-#' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
+#' @param knowledge A `Knowledge` object that provides tier labels for variables.
 #'
 #' @example inst/roxygen-examples/order_restrict_pag_skel-example.R
 #'
@@ -210,7 +209,7 @@ order_restrict_pag_skel <- function(amat, knowledge) {
 #' @param sepset A nested list of separating sets, typically \code{skel@sepset}
 #'   from \pkg{pcalg}, where \code{sepset[[i]][[j]]} is a vector of node indices
 #'   that separate node \code{i} and node \code{j}, or \code{NULL}.
-#' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
+#' @param knowledge A `Knowledge` object that provides tier labels for variables.
 #' @param vnames Character vector of variable names, used to translate indices in
 #'   \code{sepset} into names for tier comparison.
 #'
@@ -259,7 +258,7 @@ order_restrict_sepset <- function(sepset, knowledge, vnames) {
 #' @param skel A skeleton-like object as returned by [pcalg::pdsep()],
 #'   containing \code{$G} (adjacency), \code{$sepset}, \code{$pMax}, and
 #'   \code{$max.ord}.
-#' @param knowledge A \emph{knowledge} object that provides tier labels for variables.
+#' @param knowledge A `Knowledge` object that provides tier labels for variables.
 #' @param unfaithful_triples Optional vector of unfaithful triples from conservative/majority-rule
 #'   orientation (see \pkg{pcalg} under \code{unfVect}); may be \code{NULL}.
 #' @param cautious Logical; if \code{TRUE}, remove any separating set that violates
