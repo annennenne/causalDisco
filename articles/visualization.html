@@ -110,13 +110,13 @@ following relationships between variables in our dataset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledge%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>By default, required edges are shown in blue and forbidden edges in
 red. You can customize these colors using the <code>required_col</code>
 and <code>forbidden_col</code> arguments:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, required_col <span class="op">=</span> <span class="st">"skyblue"</span>, forbidden_col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Different node layouts, node styles, and edge styles can be specified
 using the <code>layout</code>, <code>node_style</code>, and
 <code>edge_style</code> parameters. We provide a quick example and refer
@@ -142,7 +142,7 @@ node and edge styles:</p>
 <span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
 <span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Note that to override the colors for required and forbidden edges
 only for a specific edge, the edge needs to be targeted explicitly in
 the <code>by_edge</code> list of the <code>edge_style</code> argument.
@@ -177,7 +177,7 @@ colors, we can do:</p>
 <span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
 <span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>You can also pass a custom layout to <code><a href="../reference/plot.html">plot()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -186,7 +186,7 @@ colors, we can do:</p>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, layout <span class="op">=</span> <span class="va">my_layout</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <div class="section level4">
 <h4 id="plotting-tiered-knowledge">Plotting Tiered Knowledge<a class="anchor" aria-label="anchor" href="#plotting-tiered-knowledge"></a>
 </h4>
@@ -205,7 +205,7 @@ using a dataset with variables measured at different life stages:</p>
 <span>  <span class="va">child_x2</span> <span class="op">%!--&gt;%</span> <span class="va">youth_x3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tiered</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tiered%20knowledge%20plot-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/tiered%20knowledge%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Variables are grouped by life stage, reflecting the tiered structure.
 This helps visually convey temporal or hierarchical relationships in the
 data.</p>
@@ -230,7 +230,7 @@ see both the prior knowledge and the learned relationships</p>
 <span><span class="va">pc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span><span class="op">)</span></span>
 <span><span class="va">pc_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">num_data</span>, method <span class="op">=</span> <span class="va">pc_bnlearn</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20plot-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Blue edges indicate required relationships from prior knowledge,
 black edges show those learned from the data, and forbidden edges are
 not plotted (to avoid confusion and clutter).</p>
@@ -248,7 +248,7 @@ not plotted (to avoid confusion and clutter).</p>
 <span><span class="va">cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tges.html">tges</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"causalDisco"</span>, score <span class="op">=</span> <span class="st">"tbic"</span><span class="op">)</span></span>
 <span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">cd_tges</span>, knowledge <span class="op">=</span> <span class="va">kn_tiered</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20tiered%20plot-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20tiered%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Where we can see the tiers reflected in the layout of the graph.</p>
 </div>
 </div>
@@ -346,7 +346,7 @@ where the edge using the standard straight style edge overlaps the node
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tiered</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20bend%20edges-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/tikz%20bend%20edges-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tikz_bent_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span></span>
@@ -378,7 +378,7 @@ where the edge using the standard straight style edge overlaps the node
 <span><span class="co">#&gt; \path (child_x1) edge[bend left=20, -Latex] (oldage_x5);</span></span>
 <span><span class="co">#&gt; \end{tikzpicture}</span></span></code></pre></div>
 <p>The TikZ plot can be seen here:</p>
-<p><img src="tikz-tier-plot.png"><!-- --></p>
+<p><img src="tikz-tier-plot.png" class="r-plt" alt="" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="exporting-knowledgeable-caugi-to-tikz">Exporting Knowledgeable Caugi to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledgeable-caugi-to-tikz"></a>
@@ -407,7 +407,7 @@ which can also be exported to TikZ:</p>
 <span></span>
 <span><span class="va">disco_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span>
 <span><span class="va">tikz_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">disco_plot</span>, tier_node_map <span class="op">=</span> <span class="va">tiers</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 1.0.1.9001)</span></span>
@@ -439,7 +439,7 @@ objects:</p>
 <span><span class="op">)</span></span>
 <span><span class="va">plot_obj</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cg</span>, node_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tikz_caugi_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">plot_obj</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20export%20caugi-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="visualization_files/figure-html/tikz%20export%20caugi-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_caugi_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 1.0.1.9001)</span></span>

@@ -126,7 +126,7 @@ Fisher’s Z test:</p>
 <p>We can visualize the results using <code><a href="../reference/plot.html">plot()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_bnlearn</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"PC Fisher Z (bnlearn)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causalDisco_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="causalDisco_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The first notable feature of this plot is that some edges are
 directed, while others are undirected. For example, the edge from
 <code>X1</code> to <code>Y</code> is directed, indicating a causal
@@ -149,7 +149,7 @@ test:</p>
 <span><span class="op">)</span></span>
 <span><span class="va">pc_result_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_pcalg</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"PC Fisher Z (pcalg)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20pcalg-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20pcalg-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>We see that the results using the PC algorithm implemented in bnlearn
 and pcalg gives the same output on this dataset.</p>
 <p>You can also use a different algorithm altogether, such as the GES
@@ -207,7 +207,7 @@ algorithm as shown in the code chunk below.</p>
 <span>  <span class="va">ges_result_tetrad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">ges_tetrad</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">ges_result_tetrad</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"GES EBIC (Tetrad)"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="ges-ebic-tetrad-pkgdown.png"><!-- --></p>
+<p><img src="ges-ebic-tetrad-pkgdown.png" class="r-plt" alt="" style="display: block; margin: auto;"></p>
 <p>If you want to customize the plot appearance further, you can pass
 additional arguments to <code><a href="../reference/plot.html">plot()</a></code>. For example, to change the
 appearance of the nodes, you can use the <code>node_style</code>
@@ -225,7 +225,7 @@ argument:</p>
 <span>    size <span class="op">=</span> <span class="fl">1.2</span> <span class="co"># Size multiplier</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="causalDisco_files/figure-html/custom%20plot-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="causalDisco_files/figure-html/custom%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>For more details on customizing plots and generating TikZ code for
 LaTeX documents, see the <a href="visualization.html">visualization
 vignette</a>.</p>
@@ -346,7 +346,7 @@ stages:</p>
 <span><span class="co">#&gt; oldage: <span style="font-weight: bold;">2</span> variables</span></span>
 <span><span class="co">#&gt; youth: <span style="font-weight: bold;">2</span> variables</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, main <span class="op">=</span> <span class="st">"Temporal Knowledge"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causalDisco_files/figure-html/view%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="causalDisco_files/figure-html/view%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The plot displays vertical tiers, each enclosed in a shaded rectangle
 and labeled with the corresponding tier name at the top.</p>
 <p>We can then incorporate this knowledge into any algorithm like above.
@@ -422,7 +422,7 @@ information loss test:</p>
 <span><span class="co">#&gt; oldage: <span style="font-weight: bold;">2</span> variables</span></span>
 <span><span class="co">#&gt; youth: <span style="font-weight: bold;">2</span> variables</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">tpc_result</span>, main <span class="op">=</span> <span class="st">"TPC reg_test with Temporal Knowledge (causalDisco)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="causalDisco_files/figure-html/view%20tpc%20results-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="causalDisco_files/figure-html/view%20tpc%20results-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Like before, the tiered knowledge is reflected in the plot layout,
 with variables grouped by life stage. Additionally, you can customize
 the plot appearance further by passing additional arguments to

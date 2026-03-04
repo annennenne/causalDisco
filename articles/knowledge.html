@@ -127,7 +127,7 @@ forbid an edge from B to C:</p>
 <p>This <code>Knowledge</code> object can be visualized:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The blue edge represents the required edge from A to B, while the red
 edge represents the forbidden edge from B to C.</p>
 <p>If one wishes to remove some edges (either required or forbidden)
@@ -137,7 +137,7 @@ the required edge from A to B:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_1_removed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_edge.html">remove_edge</a></span><span class="op">(</span><span class="va">kn_1</span>, from <span class="op">=</span> <span class="va">A</span>, to <span class="op">=</span> <span class="va">B</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_1_removed</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/remove%20required%20edge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/remove%20required%20edge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="specifying-required-and-forbidden-edges-in-a-dataset">Specifying required and forbidden edges in a dataset<a class="anchor" aria-label="anchor" href="#specifying-required-and-forbidden-edges-in-a-dataset"></a>
@@ -171,7 +171,7 @@ manually adjust the layout for better appearance):</p>
 <span><span class="va">layout</span><span class="op">[</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">layout</span><span class="op">[</span><span class="fl">4</span>, <span class="fl">2</span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_2</span>, layout <span class="op">=</span> <span class="va">layout</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The plot then plots all variables in the dataset, with the required
 edges as blue edges and forbidden edges as red edges.</p>
 <div class="section level4">
@@ -191,7 +191,7 @@ starting with “oldage” can have edges to any variables starting with
 “youth”. We can visualize this:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>For a list of all available tidyselect helpers we refer to the <a href="https://tidyselect.r-lib.org/reference/index.html" class="external-link">tidyselect
 reference documentation</a>.</p>
 </div>
@@ -271,7 +271,7 @@ by their appearance.</p>
 <p>We can visualize the tiers:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20tier%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20tier%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The plot then shows the tiers as layers, with the earliest tiers to
 the left and latest to the right.</p>
 <p>We can convert the meaning of the tiered knowledge into explicit
@@ -306,7 +306,7 @@ forbidden edges using <code><a href="../reference/convert_tiers_to_forbidden.htm
 <span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → B1</span></span>
 <span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → B2</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_converted</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Tidyselect helpers such as <code>starts_with</code> can also be used
 to define tiers in a concise way, just as with required and forbidden
 edges. Different tidyselect helpers can be freely combined within a tier
@@ -322,7 +322,7 @@ combining tidyselect helpers:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tier_tidyselect</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -348,7 +348,7 @@ function <code>exo()</code>. This <code>Knowledge</code> object can be
 visualized:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_exo_1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>Below we add both <code>child_x1</code> and <code>child_x2</code> as
 exogenous variables using tidyselect helpers:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -357,7 +357,7 @@ exogenous variables using tidyselect helpers:</p>
 <span>  <span class="fu">exo</span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_exo_2</span>, layout <span class="op">=</span> <span class="st">"bipartite"</span>, orientation <span class="op">=</span> <span class="st">"columns"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -379,7 +379,7 @@ knowledge with required and forbidden edges:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_combined</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/combined%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/combined%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="using-knowledge-with-causal-discovery">Using knowledge with causal discovery<a class="anchor" aria-label="anchor" href="#using-knowledge-with-causal-discovery"></a>
@@ -405,7 +405,7 @@ with engine “causalDisco” and temporal BIC (“tbic”):</p>
 can plot the resulting causal graph:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 <p>The black edges are those inferred from the data.</p>
 </div>
 <div class="section level2">
@@ -440,7 +440,7 @@ edges already oriented due to background knowledge.</p>
 knowledge.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20bnlearn-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="knowledge_files/figure-html/plot%20bnlearn-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="causaldisco">causalDisco<a class="anchor" aria-label="anchor" href="#causaldisco"></a>
