@@ -428,12 +428,10 @@ test_that("pc disco learns colliders with all engines", {
   pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
   output_pcalg <- disco(data = data_simple, method = pc_pcalg)
   edges_pcalg <- output_pcalg$caugi@edges
-  edges_pcalg
 
   pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
   output_bnlearn <- disco(data = data_simple, method = pc_bnlearn)
   edges_bnlearn <- output_bnlearn$caugi@edges
-  edges_bnlearn
 
   expect_true(
     any(
