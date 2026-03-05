@@ -128,11 +128,9 @@ tpc_run <- function(
   )
   ntests <- sum(skel@n.edgetests)
 
-  # caugi assumes rows are the "from" nodes and columns the "to" nodes.
-  from_to <- TRUE
-  res <- tpdag(skel, knowledge = knowledge, from_to = from_to)
-
-  cg <- caugi::as_caugi(res, collapse = TRUE, class = "PDAG")
+  res <- tpdag(skel, knowledge = knowledge)
+  # caugi assumes rows are the "from" nodes and columns the "to" nodes, so transpose.
+  cg <- caugi::as_caugi(t(res), collapse = TRUE, class = "UNKNOWN")
   as_disco(cg, knowledge)
 }
 
@@ -407,15 +405,13 @@ dir_test <- function(test, vnames, knowledge) {
 #'
 #' @param amat Square adjacency matrix (from-to convention).
 #' @param knowledge A `Knowledge` object with tier labels.
-#' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
-#' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
 #' @example inst/roxygen-examples/order_restrict_amat_cpdag-example.R
 #'
 #' @return The pruned adjacency matrix.
 #' @keywords internal
 #' @noRd
-order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
+order_restrict_amat_cpdag <- function(amat, knowledge) {
   p <- nrow(amat)
   vnames <- rownames(amat)
   tr <- .tier_index(knowledge, vnames)
@@ -427,11 +423,7 @@ order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
   for (i in seq_len(p)) {
     for (j in seq_len(p)) {
       if (!is.na(tr[i]) && !is.na(tr[j]) && tr[i] > tr[j]) {
-        if (from_to) {
-          amat[i, j] <- 0
-        } else {
-          amat[j, i] <- 0
-        }
+        amat[j, i] <- 0
       }
     }
   }
@@ -447,27 +439,24 @@ order_restrict_amat_cpdag <- function(amat, knowledge, from_to) {
 #'
 #' @param skel A [pcalg::pcAlgo-class] skeleton result.
 #' @param knowledge A `Knowledge` object with tiers (and optionally edges).
-#' @param from_to Logical; if \code{TRUE} assume a from-to adjacency matrix (i.e. rows are the
-#' "from" nodes and the columns are the "to" nodes). If \code{FALSE}, assume the opposite.
 #'
 #' @example inst/roxygen-examples/tpdag-example.R
 #'
 #' @return A [pcalg::pcAlgo-class] object with an oriented graph.
 #' @keywords internal
 #' @noRd
-tpdag <- function(skel, knowledge, from_to) {
+tpdag <- function(skel, knowledge) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "pcalg"
     ),
     function_name = "tpdag"
   )
-  cg <- caugi::as_caugi(skel@graph, collapse = TRUE, class = "PDAG")
+  cg <- caugi::as_caugi(skel@graph, collapse = TRUE, class = "UNKNOWN")
   amat <- caugi::as_adjacency(cg)
   skel_amat <- order_restrict_amat_cpdag(
     amat,
-    knowledge = knowledge,
-    from_to = from_to
+    knowledge = knowledge
   )
   pcalg::addBgKnowledge(
     v_orient_temporal(skel_amat, skel@sepset),
