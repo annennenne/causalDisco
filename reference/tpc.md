@@ -104,10 +104,10 @@ disco(tpc_example, my_tpc, knowledge = kn)
 #> 
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
-#> 1 child_x1  -->   child_x2 
+#> 1 child_x1  ---   child_x2 
 #> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 ---   oldage_x6
+#> 4 oldage_x5 -->   oldage_x6
 #> 5 youth_x3  -->   oldage_x5
 #> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
@@ -145,16 +145,16 @@ disco(tpc_example, my_tpc, knowledge = kn)
 my_tpc <- my_tpc |> set_knowledge(kn)
 my_tpc(tpc_example)
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
-#> Graph class: PDAG
+#> Graph class: UNKNOWN
 #> 
 #> ── Edges ──
 #> 
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
-#> 1 child_x1  -->   child_x2 
+#> 1 child_x1  ---   child_x2 
 #> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 ---   oldage_x6
+#> 4 oldage_x5 -->   oldage_x6
 #> 5 youth_x3  -->   oldage_x5
 #> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
@@ -191,16 +191,16 @@ my_tpc(tpc_example)
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
-#> Graph class: PDAG
+#> Graph class: UNKNOWN
 #> 
 #> ── Edges ──
 #> 
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
-#> 1 child_x1  -->   child_x2 
+#> 1 child_x1  ---   child_x2 
 #> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  -->   youth_x4 
-#> 4 oldage_x5 ---   oldage_x6
+#> 4 oldage_x5 -->   oldage_x6
 #> 5 youth_x3  -->   oldage_x5
 #> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──

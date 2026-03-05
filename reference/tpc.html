@@ -142,10 +142,10 @@ from the causal discovery algorithm.</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  --&gt;   child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  ---   child_x2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 ---   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
@@ -183,16 +183,16 @@ from the causal discovery algorithm.</p></li>
 <span class="r-in"><span><span class="va">my_tpc</span> <span class="op">&lt;-</span> <span class="va">my_tpc</span> <span class="op">|&gt;</span> <span class="fu"><a href="set_knowledge.html">set_knowledge</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">my_tpc</span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">PDAG</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">UNKNOWN</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  --&gt;   child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  ---   child_x2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 ---   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
@@ -229,16 +229,16 @@ from the causal discovery algorithm.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="tpc_run.html">tpc_run</a></span><span class="op">(</span><span class="va">tpc_example</span>, knowledge <span class="op">=</span> <span class="va">kn</span>, alpha <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">PDAG</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">UNKNOWN</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Edges</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from      edge  to       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  --&gt;   child_x2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x1  ---   child_x2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 ---   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
