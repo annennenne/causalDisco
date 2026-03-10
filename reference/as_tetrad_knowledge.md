@@ -68,6 +68,11 @@ kn <- knowledge(
 )
 
 jk <- try(as_tetrad_knowledge(kn)) # will run only if rJava/JVM available
+#> Error in init_java() : No Tetrad JAR found for version 7.6.10
 try(print(jk)) # prints a Java reference if successful
-#> [1] "Java-Object{/knowledge\naddtemporal\n\n1  child_x1 child_x2\n2  youth_x3 youth_x4\n3  oldage_x5 oldage_x6\n\nforbiddirect\n\nrequiredirect\nchild_x1 youth_x3}"
+#> [1] "Error in init_java() : No Tetrad JAR found for version 7.6.10\n"
+#> attr(,"class")
+#> [1] "try-error"
+#> attr(,"condition")
+#> <simpleError in init_java(): No Tetrad JAR found for version 7.6.10>
 ```

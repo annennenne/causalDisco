@@ -4,8 +4,8 @@
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: 7.6.10
-#>   Java successfully initialized with 2 GB.
+#>   Tetrad version: not installed
+#>   Tetrad is not installed. Run `install_tetrad()` to install it.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 ```
@@ -139,10 +139,10 @@ To verify everything is set up correctly you can run
 ``` r
 verify_tetrad()
 #> $installed
-#> [1] TRUE
+#> [1] FALSE
 #> 
 #> $version
-#> [1] "7.6.10"
+#> NULL
 #> 
 #> $java_ok
 #> [1] TRUE
@@ -151,7 +151,7 @@ verify_tetrad()
 #> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad version 7.6.10 is installed and ready to use."
+#> [1] "Tetrad not installed. Run install_tetrad()."
 ```
 
 Now you should be able to use Tetrad as an engine for the GES algorithm

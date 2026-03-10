@@ -78,8 +78,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
 <span><span class="co">#&gt;   Java heap size requested: 2 GB</span></span>
-<span><span class="co">#&gt;   Tetrad version: 7.6.10</span></span>
-<span><span class="co">#&gt;   Java successfully initialized with 2 GB.</span></span>
+<span><span class="co">#&gt;   Tetrad version: not installed</span></span>
+<span><span class="co">#&gt;   Tetrad is not installed. Run `install_tetrad()` to install it.</span></span>
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 <p>This vignette provides an overview of the causalDisco package, which
@@ -183,10 +183,10 @@ version of Tetrad can then be installed by calling</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $installed</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $version</span></span>
-<span><span class="co">#&gt; [1] "7.6.10"</span></span>
+<span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $java_ok</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
@@ -195,7 +195,7 @@ version of Tetrad can then be installed by calling</p>
 <span><span class="co">#&gt; [1] "25.0.2"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $message</span></span>
-<span><span class="co">#&gt; [1] "Tetrad version 7.6.10 is installed and ready to use."</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "Tetrad not installed. Run install_tetrad()."</span></span></code></pre></div>
 <p>Now you should be able to use Tetrad as an engine for the GES
 algorithm as shown in the code chunk below.</p>
 </details><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
