@@ -1,4 +1,5 @@
 test_that("disco warns when using known Tetrad bug about required for fci alg family", {
+  skip_if_no_tetrad()
   data(tpc_example)
 
   kn <- knowledge(
@@ -18,6 +19,7 @@ test_that("disco warns when using known Tetrad bug about required for fci alg fa
 })
 
 test_that("disco errors when using known Tetrad bug about required for boss alg family", {
+  skip_if_no_tetrad()
   data(tpc_example)
 
   kn <- knowledge(
