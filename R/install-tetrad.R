@@ -175,6 +175,9 @@ verify_tetrad <- function(
 #' install_tetrad(quiet = TRUE)
 #' }
 #'
+#' @importFrom utils download.file
+#' @importFrom digest digest
+#'
 #' @export
 install_tetrad <- function(
   version = getOption("causalDisco.tetrad.version"),
@@ -275,8 +278,8 @@ install_tetrad <- function(
       suppressWarnings({
         tryCatch(
           {
-            utils::download.file(jar_url, jar_tmp, mode = "wb", quiet = quiet)
-            utils::download.file(
+            download.file(jar_url, jar_tmp, mode = "wb", quiet = quiet)
+            download.file(
               checksum_url,
               checksum_tmp,
               mode = "wb",
@@ -338,7 +341,7 @@ install_tetrad <- function(
     error = function(e) NA_character_
   )
   actual <- tryCatch(
-    digest::digest(file = jar_path, algo = "sha256"),
+    digest(file = jar_path, algo = "sha256"),
     error = function(e) NA_character_
   )
 

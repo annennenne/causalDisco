@@ -6,9 +6,10 @@
 # package global variables
 causalDisco <- new.env(parent = emptyenv())
 
-# So we can mock interactive in tests
+# So we can mock stuff in tests
 interactive <- NULL
-
+readline <- NULL
+file.exists <- NULL
 
 .onLoad <- function(...) {
   # ---------------------------------

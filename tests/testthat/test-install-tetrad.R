@@ -190,3 +190,113 @@ test_that("Successful detection when Java and Tetrad are OK", {
     "Tetrad version 2.0 is installed and ready to use."
   )
 })
+
+
+test_that("install_tetrad runs works", {
+  td <- tempdir()
+  version <- "1.0.0"
+
+  jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
+  checksum_name <- paste0(jar_name, ".sha256")
+
+  fake_download <- function(url, destfile, mode = "wb", quiet = FALSE) {
+    if (grepl("\\.sha256$", destfile)) {
+      writeLines("jarcontent", destfile)
+    } else {
+      writeBin(charToRaw("jarcontent"), destfile)
+    }
+    0
+  }
+
+  fake_digest <- function(file, algo = "sha256") {
+    "jarcontent"
+  }
+
+  local_mocked_bindings(
+    download.file = fake_download,
+    digest = fake_digest
+  )
+
+  res <- install_tetrad(
+    version = version,
+    dir = td,
+    quiet = TRUE
+  )
+
+  expect_true(file.exists(res))
+  expect_match(basename(res), "tetrad-gui-1.0.0-launch.jar")
+})
+
+test_that("install_tetrad handles all branches", {
+  td <- tempdir()
+  version <- "1.0.0"
+
+  jar_name <- paste0("tetrad-gui-", version, "-launch.jar")
+  checksum_name <- paste0(jar_name, ".sha256")
+
+  # Fake download always succeeds
+  fake_download <- function(url, destfile, mode = "wb", quiet = FALSE) {
+    if (grepl("\\.sha256$", destfile)) {
+      writeLines("jarcontent", destfile)
+    } else {
+      writeBin(charToRaw("jarcontent"), destfile)
+    }
+    0
+  }
+
+  # Fake digest
+  fake_digest <- function(file, algo = "sha256") {
+    "jarcontent"
+  }
+
+  # Simulate interactive yes for removing old versions
+  fake_interactive <- function() TRUE
+  fake_readline <- function(prompt = "") "y"
+
+  # Simulate file.exists to test force download and checksum failure
+  file_state <- new.env()
+  file_state$exists <- TRUE
+  fake_file_exists <- function(path) {
+    TRUE
+  }
+
+  local_mocked_bindings(
+    download.file = fake_download,
+    digest = fake_digest,
+    interactive = fake_interactive,
+    readline = fake_readline,
+    file.exists = fake_file_exists
+  )
+
+  # Test with force = TRUE
+  res <- install_tetrad(version = version, dir = td, force = TRUE, quiet = TRUE)
+  expect_match(basename(res), jar_name)
+
+  # Test with missing files triggers download
+  file_state$exists <- FALSE
+  res2 <- install_tetrad(
+    version = version,
+    dir = td,
+    force = FALSE,
+    quiet = TRUE
+  )
+  expect_true(file.exists(res2))
+
+  # Test checksum failure
+  fake_digest_fail <- function(file, algo = "sha256") "wrong"
+  local_mocked_bindings(digest = fake_digest_fail)
+  res3 <- install_tetrad(
+    version = version,
+    dir = td,
+    force = TRUE,
+    quiet = TRUE
+  )
+  expect_null(res3)
+
+  # Test dir = NULL
+  res4 <- suppressWarnings(install_tetrad(
+    version = version,
+    quiet = TRUE
+  ))
+  expect_null(res4)
+})
