@@ -23,11 +23,6 @@ if (!dir.exists(causalDisco$cache_dir)) {
 
 options(causalDisco.tetrad_cache = causalDisco$cache_dir)
 
-# debug:
-if (!requireNamespace("digest", quietly = TRUE)) {
-  install.packages("digest")
-}
-
 library(digest)
 
 install_tetrad(force = TRUE)
