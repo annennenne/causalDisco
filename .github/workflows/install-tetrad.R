@@ -25,5 +25,5 @@ options(causalDisco.tetrad_cache = causalDisco$cache_dir)
 
 library(digest)
 
-install_tetrad(force = TRUE)
+install_tetrad()
 verify_tetrad()
