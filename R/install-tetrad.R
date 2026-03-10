@@ -350,6 +350,8 @@ install_tetrad <- function(
   ) {
     if (!quiet) {
       message("Checksum verification failed. Removing corrupted installation.")
+      message("Expected: ", expected)
+      message("Actual:   ", actual)
     }
     cleanup_install()
     return(NULL)
