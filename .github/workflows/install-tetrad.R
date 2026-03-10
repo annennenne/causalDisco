@@ -23,5 +23,5 @@ if (!dir.exists(causalDisco$cache_dir)) {
 
 options(causalDisco.tetrad_cache = causalDisco$cache_dir)
 
-install_tetrad()
+install_tetrad(force = TRUE)
 verify_tetrad()
