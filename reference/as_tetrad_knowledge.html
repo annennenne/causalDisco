@@ -112,13 +112,8 @@ internally, when using the <code><a href="disco.html">disco()</a></code> functio
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">jk</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">as_tetrad_knowledge</span><span class="op">(</span><span class="va">kn</span><span class="op">)</span><span class="op">)</span> <span class="co"># will run only if rJava/JVM available</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in init_java() : No Tetrad JAR found for version 7.6.10</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">jk</span><span class="op">)</span><span class="op">)</span> <span class="co"># prints a Java reference if successful</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Error in init_java() : No Tetrad JAR found for version 7.6.10\n"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "try-error"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"condition")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;simpleError in init_java(): No Tetrad JAR found for version 7.6.10&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Java-Object{/knowledge\naddtemporal\n\n1  child_x1 child_x2\n2  youth_x3 youth_x4\n3  oldage_x5 oldage_x6\n\nforbiddirect\n\nrequiredirect\nchild_x1 youth_x3}"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

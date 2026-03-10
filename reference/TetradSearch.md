@@ -1295,4 +1295,28 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 
   print(g)
 }
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from  edge  to   
+#>   <chr> <chr> <chr>
+#> 1 X1    -->   Y    
+#> 2 X1    ---   Z    
+#> 3 X2    ---   X3   
+#> 4 X2    -->   Y    
+#> 5 X3    -->   Y    
+#> 6 Z     -->   Y    
+#> ── Nodes ──
+#> 
+#>   name 
+#>   <chr>
+#> 1 X1   
+#> 2 X2   
+#> 3 X3   
+#> 4 Z    
+#> 5 Y    
+#> ── Knowledge object ────────────────────────────────────────────────────────────
 ```

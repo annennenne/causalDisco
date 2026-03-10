@@ -4,8 +4,8 @@
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
-#>   Tetrad version: not installed
-#>   Tetrad is not installed. Run `install_tetrad()` to install it.
+#>   Tetrad version: 7.6.10
+#>   Java successfully initialized with 2 GB.
 #>   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.
 #>   Restart R to apply changes.
 ```

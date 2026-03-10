@@ -34,10 +34,10 @@ A list with elements:
 ``` r
 verify_tetrad()
 #> $installed
-#> [1] FALSE
+#> [1] TRUE
 #> 
 #> $version
-#> NULL
+#> [1] "7.6.10"
 #> 
 #> $java_ok
 #> [1] TRUE
@@ -46,6 +46,6 @@ verify_tetrad()
 #> [1] "25.0.2"
 #> 
 #> $message
-#> [1] "Tetrad not installed. Run install_tetrad()."
+#> [1] "Tetrad version 7.6.10 is installed and ready to use."
 #> 
 ```
