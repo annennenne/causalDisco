@@ -10,7 +10,7 @@ test_that(".onLoad sets default heap when option is absent", {
     default_heap = function() "2g",
     .package = "causalDisco",
     {
-      causalDisco:::.onLoad(libname = "", pkgname = "causalDisco")
+      .onLoad(libname = "", pkgname = "causalDisco")
       expect_equal(getOption("java.heap.size"), "2g")
     }
   )
@@ -36,7 +36,7 @@ test_that(".onAttach prompts and sets heap when interactive and option/env missi
     .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
+        .onAttach(libname = "", pkgname = "causalDisco"),
         "Java successfully initialized with 4 GB",
         class = "packageStartupMessage"
       )
@@ -60,7 +60,7 @@ test_that(".onAttach canonicalises heap option to 'Ng'", {
     .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
+        .onAttach(libname = "", pkgname = "causalDisco"),
         "Java heap size requested: 4 GB",
         class = "packageStartupMessage"
       )
@@ -82,7 +82,7 @@ test_that(".onAttach warns when runtime heap != requested", {
     .package = "causalDisco",
     {
       expect_message(
-        causalDisco:::.onAttach(libname = "", pkgname = "causalDisco"),
+        .onAttach(libname = "", pkgname = "causalDisco"),
         "WARNING: Java heap is 6 GB but you requested 2 GB. Restart R to change the heap.",
         fixed = TRUE
       )
@@ -107,7 +107,7 @@ test_that(".onAttach does not prompt in non-interactive mode", {
     current_heap_gb = function() 3,
     .package = "causalDisco",
     {
-      causalDisco:::.onAttach(libname = "", pkgname = "causalDisco")
+      .onAttach(libname = "", pkgname = "causalDisco")
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "3g")
     }
@@ -131,7 +131,7 @@ test_that(".onAttach does not prompt when env var set", {
     current_heap_gb = function() 5,
     .package = "causalDisco",
     {
-      causalDisco:::.onAttach(libname = "", pkgname = "causalDisco")
+      .onAttach(libname = "", pkgname = "causalDisco")
       expect_false(prompted)
       expect_equal(getOption("java.heap.size"), "5g")
     }

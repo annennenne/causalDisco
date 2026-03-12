@@ -112,7 +112,7 @@ as_pcalg_constraints <- function(
 
   is_knowledge(kn)
 
-  if (any(!is.na(kn$vars$tier))) {
+  if (!all(is.na(kn$vars$tier))) {
     stop(
       "Tiered background knowledge cannot be utilised by the pcalg engine.\n",
       "pcalg does not support directed tier constraints."

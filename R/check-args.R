@@ -155,11 +155,11 @@ check_args_and_distribute_args_pcalg <- function(
 
   # Note that the pcalg package does not have args that are sent
   # directly to the test itself, but it is rather sent to the algorithm.
-  switch(
+  engine_args_alg <- switch(
     alg,
-    pc = engine_args_alg <- names(formals(pcalg::pc)),
-    fci = engine_args_alg <- names(formals(pcalg::fci)),
-    ges = engine_args_alg <- names(formals(pcalg::ges)),
+    pc = names(formals(pcalg::pc)),
+    fci = names(formals(pcalg::fci)),
+    ges = names(formals(pcalg::ges)),
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
@@ -260,11 +260,14 @@ check_args_and_distribute_args_causalDisco <- function(
   engine_args_score <- list()
   if (!is.null(score)) {
     score <- tolower(score)
-    switch(
+
+    score <- switch(
       score,
-      "tbic" = score <- "TemporalBIC",
-      "tbdeu" = score <- "TemporalBDeu"
+      tbic = "TemporalBIC",
+      tbdeu = "TemporalBDeu",
+      stop("Unsupported score: ", score, call. = FALSE)
     )
+
     engine_args_score <- methods::getRefClass(score)$methods("initialize") |>
       methods::formalArgs()
     args_to_pass_to_engine_score <- args[names(args) %in% engine_args_score]

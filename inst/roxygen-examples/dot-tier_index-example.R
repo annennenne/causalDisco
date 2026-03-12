@@ -9,5 +9,5 @@ kn <- knowledge(
   )
 )
 
-ti <- causalDisco:::.tier_index(kn, names(tpc_example)[1:6])
+ti <- .tier_index(kn, names(tpc_example)[1:6])
 ti

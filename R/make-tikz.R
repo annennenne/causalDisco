@@ -73,7 +73,7 @@ make_tikz <- function(
   } else if (inherits(x, "Knowledge")) {
     tier_vector <- x$vars$tier
 
-    if (any(is.na(tier_vector))) {
+    if (anyNA(tier_vector)) {
       tier_node_map <- NULL
     } else {
       tier_node_map <- split(x$vars$var, x$vars$tier)

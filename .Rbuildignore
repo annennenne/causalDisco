@@ -32,3 +32,4 @@ man-roxygen
 ^\.vscode$
 ^LICENSE\.md$
 ^rjavaenv$
+^[.]?jarl[.]toml$

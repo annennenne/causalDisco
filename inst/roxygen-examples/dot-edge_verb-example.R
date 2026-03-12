@@ -6,20 +6,20 @@ kn <- knowledge(tpc_example)
 q <- rlang::quo(child_x1 ~ youth_x3)
 
 # create edge using the internal function
-kn <- causalDisco:::.edge_verb(kn, "required", q)
+kn <- .edge_verb(kn, "required", q)
 
 print(kn)
 
 # error path
 try(
-  causalDisco:::.edge_verb(
+  .edge_verb(
     kn,
     "forbidden",
     rlang::quo(child_x1 ~ non_existent_var)
   )
 )
 try(
-  causalDisco:::.edge_verb(
+  .edge_verb(
     kn,
     "invalid_type",
     rlang::quo(child_x1 ~ youth_x3)

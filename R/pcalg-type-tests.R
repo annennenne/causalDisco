@@ -73,7 +73,7 @@
     stop(paste0("Unknown method: ", method), call. = FALSE)
   )
 
-  if (suff_stat == FALSE) {
+  if (!suff_stat) {
     return(list(method = fun, suff_stat = NULL))
   }
   if (is.null(X)) {

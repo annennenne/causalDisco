@@ -6,7 +6,7 @@ edges_ok <- tibble::tibble(
   tier_from = c("child", "oldage"),
   tier_to = c("youth", "child")
 )
-causalDisco:::.validate_forbidden_required(edges_ok)
+.validate_forbidden_required(edges_ok)
 
 # error case: both forbidden and required for the same ordered pair
 edges_bad <- tibble::tibble(
@@ -16,4 +16,4 @@ edges_bad <- tibble::tibble(
   tier_from = c("child", "child"),
   tier_to = c("youth", "youth")
 )
-try(causalDisco:::.validate_forbidden_required(edges_bad))
+try(.validate_forbidden_required(edges_bad))

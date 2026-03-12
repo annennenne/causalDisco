@@ -5,18 +5,18 @@
 if (requireNamespace("rJava", quietly = TRUE)) {
   # Initialize JVM if needed (no-op if already initialized)
   if (!isTRUE(rJava::.jniInitialized)) {
-    try(causalDisco:::init_java())
+    try(init_java())
   }
 
   # Example 1 - cast a Tetrad Graph
   g <- try(rJava::.jnew("edu/cmu/tetrad/graph/EdgeListGraph"))
   if (!inherits(g, "try-error")) {
-    invisible(try(causalDisco:::cast_obj(g)))
+    invisible(try(cast_obj(g)))
   }
 
   # Example 2 - negative control: cannot be cast
   s <- try(rJava::.jnew("java/lang/String", "hello"))
   if (!inherits(s, "try-error")) {
-    invisible(try(causalDisco:::cast_obj(s)))
+    invisible(try(cast_obj(s)))
   }
 }

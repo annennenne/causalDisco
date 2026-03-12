@@ -9,7 +9,7 @@ kn <- knowledge(
   )
 )
 
-pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+pc_cons <- .pcalg_constraints_from_knowledge(
   kn,
   labels = names(tpc_example),
   directed_as_undirected = TRUE

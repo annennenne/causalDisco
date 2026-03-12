@@ -10,9 +10,9 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suffStat(tpc_example, type = "cor_test")
-wrapped_test <- causalDisco:::dir_test(causalDisco::cor_test, vnames, kn)
-pc_cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+ss_cor <- make_suffStat(tpc_example, type = "cor_test")
+wrapped_test <- dir_test(cor_test, vnames, kn)
+pc_cons <- .pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,
   directed_as_undirected = TRUE
@@ -29,5 +29,5 @@ skel <- pcalg::skeleton(
   fixedEdges = pc_cons$fixed_edges
 )
 
-tp <- causalDisco:::tpdag(skel, knowledge = kn)
+tp <- tpdag(skel, knowledge = kn)
 tp

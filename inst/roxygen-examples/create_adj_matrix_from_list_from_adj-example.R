@@ -6,8 +6,8 @@ in_edges <- list(
 )
 
 # Adjacency matrix
-adj <- causalDisco:::create_adj_matrix_from_list(in_edges)
+adj <- create_adj_matrix_from_list(in_edges)
 
 # Convert back
-in_edges_back <- causalDisco:::create_list_from_adj_matrix(adj)
+in_edges_back <- create_list_from_adj_matrix(adj)
 identical(in_edges_back, in_edges) # TRUE

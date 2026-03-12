@@ -98,7 +98,7 @@ test_tier_knowledge <- function(
         )
       }
       edges <- output$caugi@edges
-      violations <- causalDisco:::check_tier_violations(edges, kn)
+      violations <- check_tier_violations(edges, kn)
       expect_true(
         nrow(violations) == 0,
         info = "Tier violations were found in the output graph."
@@ -136,7 +136,7 @@ test_tier_knowledge <- function(
         )
       }
       edges <- output$caugi@edges
-      violations <- causalDisco:::check_tier_violations(edges, kn_numeric)
+      violations <- check_tier_violations(edges, kn_numeric)
       expect_true(
         nrow(violations) == 0,
         info = "Tier violations were found in the output graph."
@@ -187,7 +187,7 @@ test_required_knowledge <- function(
         )
       }
       edges <- output$caugi@edges
-      violations <- causalDisco:::check_edge_constraints(edges, kn)
+      violations <- check_edge_constraints(edges, kn)
       expect_true(
         nrow(violations) == 0,
         info = "Required edge not found in the output graph."
@@ -220,11 +220,11 @@ test_required_knowledge <- function(
       }
       edges <- output$caugi@edges
       expect_true(
-        nrow(causalDisco:::check_tier_violations(edges, kn)) == 0,
+        nrow(check_tier_violations(edges, kn)) == 0,
         info = "Tier violations found."
       )
       expect_true(
-        nrow(causalDisco:::check_edge_constraints(edges, kn)) == 0,
+        nrow(check_edge_constraints(edges, kn)) == 0,
         info = "Required edge not found."
       )
     }
@@ -276,7 +276,7 @@ test_forbidden_knowledge <- function(
         )
       }
       edges <- output$caugi@edges
-      violations <- causalDisco:::check_edge_constraints(edges, kn)
+      violations <- check_edge_constraints(edges, kn)
       expect_true(
         nrow(violations) == 0,
         info = "Forbidden edge found in the output graph."

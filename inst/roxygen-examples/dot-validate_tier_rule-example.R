@@ -7,7 +7,7 @@ edges <- tibble::tibble(
   tier_from = "child",
   tier_to = "youth"
 )
-causalDisco:::.validate_tier_rule(edges, tiers)
+.validate_tier_rule(edges, tiers)
 
 # violation case: required edge from youth to child (should error)
 edges_bad <- tibble::tibble(
@@ -17,4 +17,4 @@ edges_bad <- tibble::tibble(
   tier_from = "youth",
   tier_to = "child"
 )
-try(causalDisco:::.validate_tier_rule(edges_bad, tiers))
+try(.validate_tier_rule(edges_bad, tiers))

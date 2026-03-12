@@ -17,7 +17,7 @@ test_that("init_java errors when no Tetrad JARs are found", {
     assignInNamespace("get_tetrad_dir", function() character(), pkg)
 
     expect_error(
-      causalDisco:::init_java(heap = "2g"),
+      init_java(heap = "2g"),
       "No Tetrad JAR found",
       fixed = TRUE
     )

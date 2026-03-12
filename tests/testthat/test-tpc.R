@@ -23,7 +23,7 @@ test_that("tpc causalDisco respects tier knowledge", {
   output <- disco(tpc_example, my_tpc, knowledge = kn)
   edges <- output$caugi@edges
 
-  violations <- causalDisco:::check_tier_violations(edges, kn)
+  violations <- check_tier_violations(edges, kn)
   expect_true(
     nrow(violations) == 0,
     info = "Tier violations were found in the output graph."
@@ -42,7 +42,7 @@ test_that("tpc causalDisco respects tier knowledge", {
   output <- disco(tpc_example, my_tpc, knowledge = kn)
   edges <- output$caugi@edges
 
-  violations <- causalDisco:::check_tier_violations(edges, kn)
+  violations <- check_tier_violations(edges, kn)
   expect_true(
     nrow(violations) == 0,
     info = "Tier violations were found in the output graph."
@@ -67,7 +67,7 @@ test_that("tpc causalDisco respects required background knowledge", {
   )
   edges <- out$caugi@edges
 
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  violations <- check_edge_constraints(edges, kn)
 
   expect_true(
     nrow(violations) == 0,
@@ -85,7 +85,7 @@ test_that("tpc causalDisco respects required background knowledge", {
 
   edges <- out$caugi@edges
 
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  violations <- check_edge_constraints(edges, kn)
 
   expect_true(
     nrow(violations) == 0,
@@ -106,7 +106,7 @@ test_that("tpc causalDisco respects forbidden background knowledge", {
 
   edges <- out$caugi@edges
 
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  violations <- check_edge_constraints(edges, kn)
 
   expect_true(
     nrow(violations) == 0,
@@ -124,7 +124,7 @@ test_that("tpc causalDisco respects forbidden background knowledge", {
   out <- disco(data = tpc_example, method = my_tpc, knowledge = kn)
   edges <- out$caugi@edges
 
-  violations <- causalDisco:::check_edge_constraints(edges, kn)
+  violations <- check_edge_constraints(edges, kn)
   expect_true(
     nrow(violations) == 0,
     info = "Forbidden edges were found in the output graph."

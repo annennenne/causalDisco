@@ -22,9 +22,9 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suffStat(d, type = "cor_test")
-wrapped <- causalDisco:::dir_test(causalDisco::cor_test, vnames, kn)
-cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+ss_cor <- make_suffStat(d, type = "cor_test")
+wrapped <- dir_test(cor_test, vnames, kn)
+cons <- .pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,
   directed_as_undirected = TRUE
@@ -52,7 +52,7 @@ fci_skel <- pcalg::pdsep(
 )
 
 # Enforce temporal arrowheads across tiers in PAG skeleton
-pag_skel <- causalDisco:::order_restrict_pag_skel(
+pag_skel <- order_restrict_pag_skel(
   fci_skel$G + 0,
   knowledge = kn
 )

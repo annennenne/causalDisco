@@ -209,7 +209,8 @@ TEssGraph <- setRefClass(
       verbose = FALSE,
       ...
     ) {
-      stopifnot(!is.null(score <- getScore()))
+      score <- getScore()
+      stopifnot(!is.null(score))
 
       # Cast direction
       direction <- match.arg(direction)
@@ -363,7 +364,7 @@ TemporalBIC <- setRefClass(
       # do not enforce if child or any parent lacks a tier (NA)
       if (
         is.na(child_t) ||
-          any(is.na(parent_ts)) ||
+          anyNA(parent_ts) ||
           child_t >= max(c(parent_ts, -Inf))
       ) {
         # calculate score in R
@@ -514,7 +515,7 @@ TemporalBDeu <- setRefClass(
       # do not enforce if child or any parent lacks a tier (NA)
       if (
         is.na(child_t) ||
-          any(is.na(parent_ts)) ||
+          anyNA(parent_ts) ||
           child_t >= max(c(parent_ts, -Inf))
       ) {
         D <- pp.dat$data[, c(vertex, parents), drop = FALSE]

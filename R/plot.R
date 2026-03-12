@@ -376,7 +376,7 @@ plot_caugi_common <- function(
   # Check tiers
   has_tiers <- length(tiers) > 0 &&
     !all(sapply(tiers, function(x) all(is.na(x))))
-  any_na_tiers <- any(sapply(tiers, function(x) any(is.na(x))))
+  any_na_tiers <- any(sapply(tiers, function(x) anyNA(x)))
 
   # Prepare plot arguments
   plot_args <- list(cg, edge_style = merged_edge_styles)

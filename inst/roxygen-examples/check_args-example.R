@@ -8,7 +8,7 @@
 # Valid arguments for pcalg::pc (distributed to the algorithm)
 pc_args_ok <- list(skel.method = "stable", numCores = 1, verbose = FALSE)
 
-dist_pcalg <- causalDisco:::check_args_and_distribute_args(
+dist_pcalg <- check_args_and_distribute_args(
   search = NULL,
   args = pc_args_ok,
   engine = "pcalg",
@@ -23,7 +23,7 @@ dist_pcalg$score_args # pcalg PC doesn't forward score args by default
 # Intentional error: unknown argument for pcalg::pc
 pc_args_bad <- list(foo = "bar")
 try(
-  causalDisco:::check_args_and_distribute_args(
+  check_args_and_distribute_args(
     search = NULL,
     args = pc_args_bad,
     engine = "pcalg",
@@ -37,7 +37,7 @@ try(
 # Valid arguments for bnlearn::pc.stable
 bn_args_ok <- list(alpha = 0.05, debug = FALSE)
 
-dist_bn <- causalDisco:::check_args_and_distribute_args(
+dist_bn <- check_args_and_distribute_args(
   search = NULL,
   args = bn_args_ok,
   engine = "bnlearn",
@@ -50,7 +50,7 @@ dist_bn
 # Intentional error: unknown argument for bnlearn::pc.stable
 bn_args_bad <- list(does_not_exist = TRUE)
 try(
-  causalDisco:::check_args_and_distribute_args(
+  check_args_and_distribute_args(
     search = NULL,
     args = bn_args_bad,
     engine = "bnlearn",
@@ -72,7 +72,7 @@ if ((verify_tetrad()$installed) && verify_tetrad()$java_ok) {
 
   # Example with a common Tetrad CI test;
   # adjust if you use a different test name.
-  dist_tetrad <- causalDisco:::check_args_and_distribute_args(
+  dist_tetrad <- check_args_and_distribute_args(
     search = search_tetrad,
     args = list(verbose = TRUE), # forwarded to search$set_verbose()
     engine = "tetrad",
@@ -87,7 +87,7 @@ if ((verify_tetrad()$installed) && verify_tetrad()$java_ok) {
 
   # Intentional error: pass an argument that Tetrad doesn't accept
   try(
-    causalDisco:::check_args_and_distribute_args(
+    check_args_and_distribute_args(
       search = search_tetrad,
       args = list(not_a_param = 123),
       engine = "tetrad",

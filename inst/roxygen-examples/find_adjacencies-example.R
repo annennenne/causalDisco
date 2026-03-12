@@ -5,4 +5,4 @@ amat["A", "B"] <- 1
 amat["C", "B"] <- 1
 
 # Adjacent to B (both incoming and outgoing considered)
-causalDisco:::find_adjacencies(amat, 2L) # indices of A and C (1, 3)
+find_adjacencies(amat, 2L) # indices of A and C (1, 3)

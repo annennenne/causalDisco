@@ -42,7 +42,7 @@ constraint_based_prepare_inputs <- function(
   is_knowledge(knowledge)
 
   # NA handling
-  if (!is.null(data) && any(is.na(data))) {
+  if (!is.null(data) && anyNA(data)) {
     if (na_method == "none") {
       stop(
         "Inputted data contain NA values, but no method for handling missing NAs was supplied."

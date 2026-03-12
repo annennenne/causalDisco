@@ -117,7 +117,7 @@ test_that("rdata_to_tetrad() preserves factor labels and values", {
   back <- tetrad_data_to_rdata(ds)
 
   expect_equal(class(back$fac), "factor")
-  expect_equal(length(levels(back$fac)), length(levels(my_df$fac)))
+  expect_equal(nlevels(back$fac), nlevels(my_df$fac))
   expect_equal(as.integer(back$fac), as.integer(my_df$fac))
   expect_true(is.na(back$fac[3]))
 })

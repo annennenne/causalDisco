@@ -21,9 +21,9 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- causalDisco:::make_suffStat(d, type = "cor_test")
-wrapped <- causalDisco:::dir_test(causalDisco::cor_test, vnames, kn)
-cons <- causalDisco:::.pcalg_constraints_from_knowledge(
+ss_cor <- make_suffStat(d, type = "cor_test")
+wrapped <- dir_test(cor_test, vnames, kn)
+cons <- .pcalg_constraints_from_knowledge(
   kn,
   labels = vnames,
   directed_as_undirected = TRUE
@@ -51,7 +51,7 @@ fci_skel <- pcalg::pdsep(
 )
 
 # Remove separating sets that condition on variables strictly in the future
-sepset_clean <- causalDisco:::order_restrict_sepset(
+sepset_clean <- order_restrict_sepset(
   fci_skel$sepset,
   knowledge = kn,
   vnames = vnames

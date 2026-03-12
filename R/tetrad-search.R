@@ -1378,7 +1378,7 @@ TetradSearch <- R6Class(
       private_names <- ls(envir = as.environment(private))
       matched_function <- base::Filter(is_private_method, private_names)
       if (length(matched_function) != 1) {
-        if (length(matched_function > 1)) {
+        if (length(matched_function) > 1) {
           # this is an extra precaution, which cannot be triggered currently,
           # but is nice to have for extra security.
           # nocov start
@@ -1667,7 +1667,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1707,7 +1707,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(gamma, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1730,7 +1730,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_character(sem_gic_rule)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1768,7 +1768,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(penalty_discount, lower = 0, finite = TRUE)
       checkmate::assert_number(structure_prior, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1819,7 +1819,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1846,7 +1846,7 @@ TetradSearch <- R6Class(
       checkmate::assert_int(structure_prior, lower = 0)
       checkmate::assert_choice(sem_bic_rule, choices = c(1, 2))
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -1871,7 +1871,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(risk_bound, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -2011,7 +2011,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(poisson_lambda, lower = 0, finite = TRUE)
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }
@@ -2345,7 +2345,7 @@ TetradSearch <- R6Class(
       checkmate::assert_number(singularity_lambda, lower = 0, finite = TRUE)
       checkmate::assert_logical(precompute_covariances, len = 1)
       checkmate::assert_logical(use_for_mc, len = 1)
-      if (precompute_covariances != TRUE) {
+      if (!precompute_covariances) {
         warning("`precompute_covariances = FALSE` doesn't work properly yet.")
         precompute_covariances <- TRUE
       }

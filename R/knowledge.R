@@ -402,7 +402,7 @@ knowledge <- function(...) {
     tier_num_tiers <- as.numeric(kn$tiers$label)
   })
 
-  if (!any(is.na(tier_num_tiers))) {
+  if (!anyNA(tier_num_tiers)) {
     # Sort kn$tiers
     kn$tiers <- kn$tiers |>
       dplyr::mutate(.tier_num = tier_num_tiers) |>

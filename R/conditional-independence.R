@@ -101,10 +101,10 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   }
 
   # add spline to num S, factor to binary s
-  if (length(S_num > 0)) {
+  if (length(S_num) > 0) {
     S_num <- paste("splines::ns(", S_num, df_string, sep = "")
   }
-  if (length(S_bin > 0)) {
+  if (length(S_bin) > 0) {
     S_bin <- paste("factor(", S_bin, ")", sep = "")
   }
   S <- c(S_bin, S_num, "1")
