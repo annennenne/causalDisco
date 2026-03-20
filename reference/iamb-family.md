@@ -74,7 +74,14 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.
+
+## References
+
+I. Tsamardinos, C. F. Aliferis, and A. Statnikov. Algorithms for large
+scale Markov blanket discovery. In Proceedings of the Sixteenth
+International Florida Artificial Intelligence Research Society
+Conference, pages 376-381. AAAI Press, 2003.
 
 ## See also
 

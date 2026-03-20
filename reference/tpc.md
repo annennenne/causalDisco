@@ -1,6 +1,7 @@
 # TPC Algorithm for Causal Discovery
 
-Run the temporal PC algorithm for causal discovery using causalDisco.
+Run the Temporal Peter-Clark algorithm for causal discovery using one of
+several engines.
 
 ## Usage
 
@@ -58,6 +59,12 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Petersen AH, Osler M, and Ekstrøm CT. Data-Driven Model Building for
+Life-Course Epidemiology. American Journal of Epidemiology 2021 Mar;
+190:1898–907, <doi:10.1093/aje/kwab087>.
 
 ## See also
 

@@ -1,6 +1,7 @@
 # FCI Algorithm for Causal Discovery
 
-Run the FCI algorithm for causal discovery using one of several engines.
+Run the Fast Causal Inference algorithm for causal discovery using one
+of several engines.
 
 ## Usage
 
@@ -66,7 +67,14 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.
+
+## References
+
+Spirtes, P., Meek, C., & Richardson, T. (1995, August). Causal inference
+in the presence of latent variables and selection bias. In Proceedings
+of the Eleventh conference on Uncertainty in artificial intelligence
+(pp. 499-506).
 
 ## See also
 

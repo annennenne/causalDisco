@@ -1,6 +1,7 @@
 # GES Algorithm for Causal Discovery
 
-Run the GES algorithm for causal discovery using one of several engines.
+Run the Greedy Equivalent Search algorithm for causal discovery using
+one of several engines.
 
 ## Usage
 
@@ -62,6 +63,11 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Chickering, D. M. (2002). Optimal structure identification with greedy
+search. Journal of Machine Learning Research 3, 507-554.
 
 ## See also
 

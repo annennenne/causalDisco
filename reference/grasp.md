@@ -1,7 +1,7 @@
 # GRaSP Algorithm for Causal Discovery
 
-Run the GRaSP algorithm for causal discovery using one of several
-engines.
+Run the Greedy Relaxations of the Sparsest Permutation algorithm for
+causal discovery using one of several engines.
 
 ## Usage
 
@@ -64,6 +64,12 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Lam, W.-Y., Andrews, B., & Ramsey, J. (2022). Greedy Relaxations of the
+Sparsest Permutation Algorithm. In The 38th Conference on Uncertainty in
+Artificial Intelligence.
 
 ## See also
 

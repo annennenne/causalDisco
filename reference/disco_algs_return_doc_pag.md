@@ -15,4 +15,4 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.

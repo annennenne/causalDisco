@@ -1,7 +1,7 @@
 # GS Algorithm for Causal Discovery
 
-Run the GS (Grow-Shrink) algorithm for causal discovery using one of
-several engines.
+Run the Grow-Shrink algorithm for causal discovery using one of several
+engines.
 
 ## Usage
 
@@ -60,6 +60,11 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Margaritis, D., Thrun, S.: Bayesian network induction via local
+neighborhoods. Tech. rep., DTIC Document (2000).
 
 ## See also
 

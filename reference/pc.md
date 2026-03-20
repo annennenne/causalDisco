@@ -1,7 +1,7 @@
 # PC Algorithm for Causal Discovery
 
-Run the PC (Peter-Clark) algorithm for causal discovery using one of
-several engines.
+Run the Peter-Clark algorithm for causal discovery using one of several
+engines.
 
 ## Usage
 
@@ -74,6 +74,11 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Spirtes P, Glymour C, and Scheines R. Causation, Prediction, and Search.
+MIT Press, 2000.
 
 ## See also
 

@@ -1,8 +1,7 @@
 # BOSS-FCI Algorithm for Causal Discovery
 
-Run the BOSS-FCI (Best Order Score Search FCI) algorithm for causal
-discovery using one of several engines. This uses BOSS in place of FGES
-for the initial step in the GFCI algorithm.
+Run the Best Order Score Search Fast Causal Inference algorithm for
+causal discovery using one of several engines.
 
 ## Usage
 
@@ -65,7 +64,13 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.
+
+## References
+
+Ramsej, J., Andrews, B., Sprites, P. (2025). Efficient Latent Variable
+Causal Discovery: Combining Score Search and Targeted Testing.
+<doi:10.48550/arXiv.2510.04263>.
 
 ## See also
 
@@ -198,9 +203,10 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 #> 
 #> ── Edges ──
 #> 
-#>   from     edge  to      
-#>   <chr>    <chr> <chr>   
-#> 1 child_x2 o-o   child_x1
+#>   from     edge  to       
+#>   <chr>    <chr> <chr>    
+#> 1 child_x2 o-o   youth_x4 
+#> 2 youth_x3 o-o   oldage_x5
 #> ── Nodes ──
 #> 
 #>   name     

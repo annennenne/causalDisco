@@ -1,7 +1,7 @@
 # TGES Algorithm for Causal Discovery
 
-Run the Temporal GES algorithm for causal discovery using the
-causalDisco engine.
+Run the Temporal Greedy Equivalent Search algorithm for causal discovery
+using one of several engines.
 
 ## Usage
 
@@ -55,6 +55,12 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object (of class `PDAG`) representing the learned causal graph from
   the causal discovery algorithm.
+
+## References
+
+Larsen TE, Ekstrøm CT, and Petersen AH. Score-Based Causal Discovery
+with Temporal Background Information, 2025.
+<doi:10.48550/arXiv.2502.06232>.
 
 ## See also
 

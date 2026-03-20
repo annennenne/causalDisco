@@ -1,8 +1,7 @@
 # GFCI Algorithm for Causal Discovery
 
-Run the GFCI (Greedy Fast Causal Inference) algorithm for causal
-discovery using one of several engines. This combines the FGES and FCI
-algorithms.
+Run the Greedy Fast Causal Inference algorithm for causal discovery
+using one of several engines.
 
 ## Usage
 
@@ -65,7 +64,13 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.
+
+## References
+
+Ogarrio, J. M., Spirtes, P., and Ramsey, J. (2016). A hybrid causal
+search algorithm for latent variable models. In Conference on
+probabilistic graphical models, pages 368–379. PMLR.
 
 ## See also
 

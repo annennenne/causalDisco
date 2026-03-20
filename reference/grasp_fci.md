@@ -1,7 +1,7 @@
 # GRaSP-FCI Algorithm for Causal Discovery
 
-Run the GRaSP-FCI algorithm for causal discovery using one of several
-engines.
+Run the Greedy Relaxations of the Sparsest Permutation Fast Causal
+Inference algorithm for causal discovery using one of several engines.
 
 ## Usage
 
@@ -64,7 +64,13 @@ called, this function returns a list containing:
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
   object representing the learned causal graph. This graph is a PAG
   (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in `caugi`, it is currently stored with class `UNKNOWN`.
+  supported in caugi, it is currently stored with class `UNKNOWN`.
+
+## References
+
+Ramsej, J., Andrews, B., Sprites, P. (2025). Efficient Latent Variable
+Causal Discovery: Combining Score Search and Targeted Testing.
+<doi:10.48550/arXiv.2510.04263>.
 
 ## See also
 
