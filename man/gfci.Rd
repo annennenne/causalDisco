@@ -22,8 +22,8 @@ gfci(engine = "tetrad", score, test, alpha = 0.05, ...)
 algorithm parameters).}
 }
 \description{
-Run the GFCI (Greedy Fast Causal Inference) algorithm for causal discovery using one of several engines. This
-combines the FGES and FCI algorithms.
+Run the Greedy Fast Causal Inference algorithm for causal discovery using
+one of several engines.
 }
 \details{
 For specific details on the supported scores, and parameters for each engine, see:
@@ -47,7 +47,7 @@ this function returns a list containing:
 used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
 \item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
 This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
-natively supported in \code{caugi}, it is currently stored with class \code{UNKNOWN}.
+natively supported in \pkg{caugi}, it is currently stored with class \code{UNKNOWN}.
 }
 }
 
@@ -110,6 +110,11 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
   disco(num_data, gfci_tetrad)
 }
+}
+\references{
+Ogarrio, J. M., Spirtes, P., and Ramsey, J. (2016). A hybrid causal search algorithm
+for latent variable models. In Conference on probabilistic graphical models, pages 368–379.
+PMLR.
 }
 \seealso{
 Other causal discovery algorithms: 

@@ -1,7 +1,7 @@
 #' @title PC Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
+#' Run the Peter-Clark algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -22,6 +22,8 @@
 #' }
 #'
 #' @example inst/roxygen-examples/pc-example.R
+#' @references
+#' Spirtes P, Glymour C, and Scheines R. Causation, Prediction, and Search. MIT Press, 2000.
 #'
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value

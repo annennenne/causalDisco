@@ -21,7 +21,7 @@ pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 \item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
 \description{
-Run the PC (Peter-Clark) algorithm for causal discovery using one of several engines.
+Run the Peter-Clark algorithm for causal discovery using one of several engines.
 }
 \details{
 For specific details on the supported tests and parameters for each engine, see:
@@ -141,6 +141,9 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
   disco(tpc_example, pc_tetrad)
 }
+}
+\references{
+Spirtes P, Glymour C, and Scheines R. Causation, Prediction, and Search. MIT Press, 2000.
 }
 \seealso{
 Other causal discovery algorithms: 

@@ -22,7 +22,8 @@ grasp(engine = "tetrad", score, test, alpha = 0.05, ...)
 algorithm parameters).}
 }
 \description{
-Run the GRaSP algorithm for causal discovery using one of several engines.
+Run the Greedy Relaxations of the Sparsest Permutation algorithm for
+causal discovery using one of several engines.
 }
 \details{
 For specific details on the supported scores, and parameters for each engine, see:
@@ -112,6 +113,10 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
   disco(tpc_example, grasp_tetrad)
 }
+}
+\references{
+Lam, W.-Y., Andrews, B., & Ramsey, J. (2022). Greedy Relaxations of the Sparsest Permutation Algorithm.
+In The 38th Conference on Uncertainty in Artificial Intelligence.
 }
 \seealso{
 Other causal discovery algorithms: 

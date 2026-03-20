@@ -60,7 +60,7 @@ this function returns a list containing:
 used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
 \item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
 This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
-natively supported in \code{caugi}, it is currently stored with class \code{UNKNOWN}.
+natively supported in \pkg{caugi}, it is currently stored with class \code{UNKNOWN}.
 }
 }
 
@@ -121,6 +121,11 @@ inter_iamb_bnlearn <- inter_iamb(
   alpha = 0.05
 )
 disco(tpc_example, inter_iamb_bnlearn, knowledge = kn)
+}
+\references{
+I. Tsamardinos, C. F. Aliferis, and A. Statnikov. Algorithms for large scale Markov blanket
+discovery. In Proceedings of the Sixteenth International Florida Artificial Intelligence
+Research Society Conference, pages 376-381. AAAI Press, 2003.
 }
 \seealso{
 Other causal discovery algorithms: 

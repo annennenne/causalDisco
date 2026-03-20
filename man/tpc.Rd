@@ -20,11 +20,11 @@ tpc(engine = c("causalDisco"), test, alpha = 0.05, ...)
 (e.g. test or algorithm parameters).}
 }
 \description{
-Run the temporal PC algorithm for causal discovery using causalDisco.
+Run the Temporal Peter-Clark algorithm for causal discovery using one of several engines.
 }
 \details{
-For specific details on the supported tests, see \link{CausalDiscoSearch}. For additional parameters passed
-via \code{...}, see \code{\link[=tpc_run]{tpc_run()}}.
+For specific details on the supported tests, see \link{CausalDiscoSearch}. For additional parameters
+passed via \code{...}, see \code{\link[=tpc_run]{tpc_run()}}.
 }
 \section{Recommendation}{
 
@@ -72,6 +72,10 @@ my_tpc(tpc_example)
 # Using tpc_run() directly
 
 tpc_run(tpc_example, knowledge = kn, alpha = 0.01)
+}
+\references{
+Petersen AH, Osler M, and Ekstrøm CT. Data-Driven Model Building for Life-Course Epidemiology.
+American Journal of Epidemiology 2021 Mar; 190:1898–907, \url{doi:10.1093/aje/kwab087}.
 }
 \seealso{
 Other causal discovery algorithms: 

@@ -1,9 +1,9 @@
 #' @title SP-FCI Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the SP-FCI (Sparsest Permutation–based Fast Causal Inference) algorithm for causal discovery using one of
-#' several engines. This algorithm wraps the SP (Sparsest Permutation) score-based search in an
-#' FCI-style. Can be computationally intensive.
+#' Run the Sparsest Permutation–based Fast Causal Inference algorithm for causal discovery using
+#' one of several engines.
+#' Can be computationally intensive.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{

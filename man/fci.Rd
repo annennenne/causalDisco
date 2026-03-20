@@ -21,7 +21,8 @@ fci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 (e.g. test or algorithm parameters).}
 }
 \description{
-Run the FCI algorithm for causal discovery using one of several engines.
+Run the Fast Causal Inference algorithm for causal discovery using one of
+several engines.
 }
 \details{
 For specific details on the supported tests and parameters for each engine, see:
@@ -46,7 +47,7 @@ this function returns a list containing:
 used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
 \item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
 This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
-natively supported in \code{caugi}, it is currently stored with class \code{UNKNOWN}.
+natively supported in \pkg{caugi}, it is currently stored with class \code{UNKNOWN}.
 }
 }
 
@@ -119,6 +120,12 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
   disco(tpc_example, fci_tetrad)
 }
+}
+\references{
+Spirtes, P., Meek, C., & Richardson, T. (1995, August). Causal inference in
+the presence of latent variables and selection bias. In Proceedings of
+the Eleventh conference on Uncertainty in artificial intelligence
+(pp. 499-506).
 }
 \seealso{
 Other causal discovery algorithms: 

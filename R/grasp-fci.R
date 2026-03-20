@@ -1,7 +1,8 @@
 #' @title GRaSP-FCI Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the GRaSP-FCI algorithm for causal discovery using one of several engines.
+#' Run the Greedy Relaxations of the Sparsest Permutation Fast Causal
+#' Inference algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -23,7 +24,10 @@
 #'
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pag Value
-#'
+#' @references
+#' Ramsej, J., Andrews, B., Sprites, P. (2025). Efficient Latent Variable
+#' Causal Discovery: Combining Score Search and Targeted Testing.
+#' <doi:10.48550/arXiv.2510.04263>.
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export

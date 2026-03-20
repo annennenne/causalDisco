@@ -1,7 +1,8 @@
 #' @title GES Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the GES algorithm for causal discovery using one of several engines.
+#' Run the Greedy Equivalent Search algorithm for causal discovery using
+#' one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -20,7 +21,9 @@
 #' }
 #'
 #' @example inst/roxygen-examples/ges-example.R
-#'
+#' @references
+#' Chickering, D. M. (2002). Optimal structure identification with greedy search.
+#' Journal of Machine Learning Research 3, 507-554.
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value
 #'

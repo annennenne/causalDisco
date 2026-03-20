@@ -19,7 +19,7 @@ gs(engine = c("bnlearn"), test, alpha = 0.05, ...)
 \item{...}{Additional arguments passed to the chosen engine (e.g. test or algorithm parameters).}
 }
 \description{
-Run the GS (Grow-Shrink) algorithm for causal discovery using one of several engines.
+Run the Grow-Shrink algorithm for causal discovery using one of several engines.
 }
 \details{
 For specific details on the supported tests and parameters for each engine, see:
@@ -79,6 +79,10 @@ gs_bnlearn <- gs(
 )
 
 disco(tpc_example, gs_bnlearn)
+}
+\references{
+Margaritis, D., Thrun, S.: Bayesian network induction via local neighborhoods.
+Tech. rep., DTIC Document (2000).
 }
 \seealso{
 Other causal discovery algorithms: 

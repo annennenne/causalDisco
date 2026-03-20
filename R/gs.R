@@ -1,7 +1,7 @@
 #' @title GS Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the GS (Grow-Shrink) algorithm for causal discovery using one of several engines.
+#' Run the Grow-Shrink algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -18,7 +18,9 @@
 #' }
 #'
 #' @example inst/roxygen-examples/gs-example.R
-#'
+#' @references
+#' Margaritis, D., Thrun, S.: Bayesian network induction via local neighborhoods.
+#' Tech. rep., DTIC Document (2000).
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value
 #'

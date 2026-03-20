@@ -1,8 +1,8 @@
 #' @title GFCI Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the GFCI (Greedy Fast Causal Inference) algorithm for causal discovery using one of several engines. This
-#' combines the FGES and FCI algorithms.
+#' Run the Greedy Fast Causal Inference algorithm for causal discovery using
+#' one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -17,7 +17,10 @@
 #' }
 #'
 #' @example inst/roxygen-examples/gfci-example.R
-#'
+#' @references
+#' Ogarrio, J. M., Spirtes, P., and Ramsey, J. (2016). A hybrid causal search algorithm
+#' for latent variable models. In Conference on probabilistic graphical models, pages 368–379.
+#' PMLR.
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pag Value
 #'

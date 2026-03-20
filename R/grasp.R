@@ -1,7 +1,8 @@
 #' @title GRaSP Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the GRaSP algorithm for causal discovery using one of several engines.
+#' Run the Greedy Relaxations of the Sparsest Permutation algorithm for
+#' causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -23,7 +24,9 @@
 #'
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value
-#'
+#' @references
+#' Lam, W.-Y., Andrews, B., & Ramsey, J. (2022). Greedy Relaxations of the Sparsest Permutation Algorithm.
+#' In The 38th Conference on Uncertainty in Artificial Intelligence.
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export

@@ -1,7 +1,7 @@
 #' @title TPC Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the temporal PC algorithm for causal discovery using causalDisco.
+#' Run the Temporal Peter-Clark algorithm for causal discovery using one of several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -13,14 +13,16 @@
 #' (e.g. test or algorithm parameters).
 #'
 #' @details
-#' For specific details on the supported tests, see [CausalDiscoSearch]. For additional parameters passed
-#' via \code{...}, see [tpc_run()].
+#' For specific details on the supported tests, see [CausalDiscoSearch]. For additional parameters
+#' passed via \code{...}, see [tpc_run()].
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value
-#'
+#' @references
+#' Petersen AH, Osler M, and Ekstrøm CT. Data-Driven Model Building for Life-Course Epidemiology.
+#' American Journal of Epidemiology 2021 Mar; 190:1898–907, <doi:10.1093/aje/kwab087>.
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export

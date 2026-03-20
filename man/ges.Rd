@@ -19,7 +19,8 @@ ges(engine = c("tetrad", "pcalg"), score, ...)
 algorithm parameters).}
 }
 \description{
-Run the GES algorithm for causal discovery using one of several engines.
+Run the Greedy Equivalent Search algorithm for causal discovery using
+one of several engines.
 }
 \details{
 For specific details on the supported scores, and parameters for each engine, see:
@@ -104,6 +105,10 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
   disco(tpc_example, ges_tetrad)
 }
+}
+\references{
+Chickering, D. M. (2002). Optimal structure identification with greedy search.
+Journal of Machine Learning Research 3, 507-554.
 }
 \seealso{
 Other causal discovery algorithms: 

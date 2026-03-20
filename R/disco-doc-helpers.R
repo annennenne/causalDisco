@@ -47,7 +47,7 @@ NULL
 #'     used in the causal discovery algorithm. See [knowledge()] for how to construct it.
 #'   \item `caugi` A [`caugi::caugi`] object representing the learned causal graph.
 #'     This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
-#'     natively supported in `caugi`, it is currently stored with class `UNKNOWN`.
+#'     natively supported in \pkg{caugi}, it is currently stored with class `UNKNOWN`.
 #' }
 #' @keywords internal
 NULL

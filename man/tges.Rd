@@ -18,12 +18,12 @@ tges(engine = c("causalDisco"), score, ...)
 (e.g. test or algorithm parameters).}
 }
 \description{
-Run the Temporal GES algorithm for causal discovery using the causalDisco
-engine.
+Run the Temporal Greedy Equivalent Search algorithm for causal discovery using one of
+several engines.
 }
 \details{
-For specific details on the supported scores, see \link{CausalDiscoSearch}. For additional parameters passed
-via \code{...}, see \code{\link[=tges_run]{tges_run()}}.
+For specific details on the supported scores, see \link{CausalDiscoSearch}. For additional parameters
+passed via \code{...}, see \code{\link[=tges_run]{tges_run()}}.
 }
 \section{Recommendation}{
 
@@ -79,6 +79,10 @@ score_bic <- new(
 
 res_bic <- tges_run(score_bic)
 res_bic
+}
+\references{
+Larsen TE, Ekstrøm CT, and Petersen AH. Score-Based Causal Discovery with Temporal
+Background Information, 2025. \url{doi:10.48550/arXiv.2502.06232}.
 }
 \seealso{
 Other causal discovery algorithms: 

@@ -1,7 +1,8 @@
 #' @title FCI Algorithm for Causal Discovery
 #'
 #' @description
-#' Run the FCI algorithm for causal discovery using one of several engines.
+#' Run the Fast Causal Inference algorithm for causal discovery using one of
+#' several engines.
 #'
 #' @param engine Character; which engine to use. Must be one of:
 #'   \describe{
@@ -21,7 +22,11 @@
 #' }
 #'
 #' @example inst/roxygen-examples/fci-example.R
-#'
+#' @references
+#' Spirtes, P., Meek, C., & Richardson, T. (1995, August). Causal inference in
+#' the presence of latent variables and selection bias. In Proceedings of
+#' the Eleventh conference on Uncertainty in artificial intelligence
+#' (pp. 499-506).
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pag Value
 #'

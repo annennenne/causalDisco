@@ -27,6 +27,10 @@
 #'
 #' @example inst/roxygen-examples/iamb-family-example.R
 #'
+#' @references
+#' I. Tsamardinos, C. F. Aliferis, and A. Statnikov. Algorithms for large scale Markov blanket
+#' discovery. In Proceedings of the Sixteenth International Florida Artificial Intelligence
+#' Research Society Conference, pages 376-381. AAAI Press, 2003.
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pag Value
 #'
