@@ -16,341 +16,334 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette illustrates how to add a new algorithm to causalDisco from
-bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore
-share the same interface, while Tetrad is a Java library and requires a slightly
-different integration pattern.
+This vignette demonstrates how to visualize causal graphs. We cover plotting
+`Knowledge` objects and `Disco` objects, customizing layouts and styles, and
+exporting graphs to readable TikZ for inclusion and further customization in
+LaTeX documents.
 
-# bnlearn and pcalg
+# Plotting
 
-Suppose we want to add the Hybrid Parents and Children (HPC) algorithm from
-bnlearn. We can integrate it into causalDisco by creating a new function
-`hpc()`.
+You can visualize causal graphs using the `plot()` function, which works for
+both `Knowledge` and `Disco` objects. The function leverages the underlying
+`caugi::plot()` method, providing flexible options for customizing the
+appearance of nodes and edges.
 
-HPC is a constraint-based algorithm, so it requires a conditional independence
-test and a significance level alpha. It returns a PDAG, so we set the
-`graph_class` attribute to `"PDAG"`.
+## Plotting Knowledge Objects
 
-The function takes an `engine` argument, which specifies which implementation of
-the algorithm to use. Even though we only add HPC from bnlearn in this example,
-we set up the structure to allow for multiple engines in the future. The `...`
-argument allows us to pass additional arguments to the underlying algorithm and
-test.
-
-The code for the `hpc()` function is as follows:
+We will use the dataset `num_data` for the following examples, which contains 5
+numeric variables (`X1`, `X2`, `X3`, `Y`, and `Z`). We start by creating a
+simple `Knowledge` object and visualizing it with `plot()`.
 
 ```{r}
-#| label: hpc function
-hpc <- function(
-  engine = c("bnlearn"),
-  test,
-  alpha = 0.05,
-  ...
-) {
-  engine <- match.arg(engine)
-  args <- rlang::list2(...)
+#| label: knowledge plot
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% c(X2, X3), # Require edge from X1 to X2, and X1 to X3
+  X2 %!-->% c(X3, Y), # Forbid edge from X2 to X3, and X2 to Y
+  Y %!-->% Z # Forbid edge from Y to Z
+)
 
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      bnlearn = rlang::exec(
-        hpc_bnlearn_runner,
-        test = test,
-        alpha = alpha,
-        !!!args
+plot(kn)
+```
+
+By default, required edges are shown in blue and forbidden edges in red. You can
+customize these colors using the `required_col` and `forbidden_col` arguments:
+
+```{r}
+#| label: knowledge plot different colors
+plot(kn, required_col = "skyblue", forbidden_col = "orange")
+```
+
+Different node layouts, node styles, and edge styles can be controlled via the
+`layout`, `node_style`, and `edge_style` parameters. We illustrate this with a
+simple example below. For a full description of available options, see the
+documentation for `causalDisco::plot()`, as well as the underlying
+`caugi::plot()` function and its visualization vignette
+(`vignette("visualization", "caugi")`).
+
+In this example, we use the `"fruchterman-reingold"` layout and customize both
+node and edge styles:
+
+Here we use the `"fruchterman-reingold"` layout and customize node and edge
+styles:
+
+```{r}
+#| label: knowledge plot custom styles
+plot(
+  kn,
+  layout = "fruchterman-reingold",
+  node_style = list(
+    fill = "lightblue", # Fill color
+    col = "darkblue", # Border color
+    lwd = 2, # Border width
+    padding = 4, # Text padding (mm)
+    size = 1.2 # Size multiplier
+  ),
+  edge_style = list(
+    lwd = 1.5, # Edge width
+    arrow_size = 4 # Arrow size (mm)
+  ),
+  required_col = "blue", # Color for required edges
+  forbidden_col = "red" # Color for forbidden edges
+)
+```
+
+Note that to override the colors for required and forbidden edges only for a
+specific edge, the edge needs to be targeted explicitly in the `by_edge` list of
+the `edge_style` argument. For example, to make the required edge from `X1` to
+`X2` orange and the forbidden edge from `X2` to `Y` yellow, while letting all
+other edges use the default colors, we can do:
+
+```{r}
+#| label: knowledge plot edge by edge
+plot(
+  kn,
+  layout = "fruchterman-reingold",
+  node_style = list(
+    fill = "lightblue", # Fill color
+    col = "darkblue", # Border color
+    lwd = 2, # Border width
+    padding = 4, # Text padding (mm)
+    size = 1.2 # Size multiplier
+  ),
+  edge_style = list(
+    lwd = 1.5, # Edge width
+    arrow_size = 4, # Arrow size (mm)
+    # Per-edge overrides
+    by_edge = list(
+      X1 = list(
+        X2 = list(col = "orange", fill = "orange", lwd = 3)
+      ),
+      X2 = list(
+        Y = list(col = "yellow", fill = "yellow", lwd = 3)
       )
     )
-    runner
-  }
-  method <- new_disco_method(
-    builder = builder,
-    name = "hpc",
-    engine = engine,
-    graph_class = "PDAG"
-  )
-  method
-}
+  ),
+  required_col = "blue", # Color for required edges
+  forbidden_col = "red" # Color for forbidden edges
+)
 ```
 
-We see that the `hpc()` function needs two components:
-
-1. **Builder function:** Constructs a *runner* for the algorithm. It configures
-   the algorithm with the provided parameters and optional background knowledge.
-
-2. **Method object:** Created via `new_disco_method()`. It encapsulates the
-   builder and metadata about the method. This allows us to be able to call
-   `disco()` to execute the algorithm on a dataset.
-
-Next, we define the runner. The runner handles configuring the search object
-with the chosen test, alpha level, and any additional arguments, and it actually
-runs the search on the data when called. For bnlearn algorithms, we use the
-`BnlearnSearch` R6 class to manage search configuration and execution. We also
-use `distribute_engine_args()` to determine which extra arguments should be
-passed to the test, the algorithm, or both.
+You can also pass a custom layout to `plot()`:
 
 ```{r}
-#| label: hpc runner
-hpc_bnlearn_runner <- function(test, alpha, ...) {
-  args <- list(...)
-  search <- BnlearnSearch$new()
-  args_to_pass <- distribute_engine_args(
-    search = search,
-    args = args,
-    engine = "bnlearn",
-    alg = "hpc"
-  )
-
-  search$set_test(test, alpha)
-  search$set_alg("hpc", args_to_pass)
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
-}
+#| label: knowledge plot custom layout
+my_layout <- data.frame(
+  name = c("X1", "X2", "X3", "Y", "Z"),
+  x = c(1, 2, 3, 4, 5),
+  y = c(1, 2, 1, 2, 1)
+)
+plot(kn, layout = my_layout)
 ```
 
-Once defined, the HPC algorithm can be used like any other method in
-causalDisco. We first construct the method using `hpc()`, and then pass it to
-`disco()`. Here we demonstrate using the included `tpc_example` dataset:
+### Plotting Tiered Knowledge
+
+We can also visualize tiered knowledge structures. Here is an example using a
+dataset with variables measured at different life stages:
 
 ```{r}
-#| label: hpc example
+#| label: tiered knowledge plot
 data(tpc_example)
-hpc_bnlearn <- hpc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
-hpc_bnlearn_result <- disco(tpc_example, hpc_bnlearn)
-plot(hpc_bnlearn_result)
-```
-
-To implement a **score-based** algorithm instead, the structure would remain the
-same. The main difference is that the method would accept a `score` argument
-rather than `test` and `alpha`, and the runner would call `search$set_score()`
-instead of `search$set_test()`. A **hybrid** algorithm algorithm would accept
-`test`, `alpha`, and `score` arguments, and the runner would call both
-`set_test()` and `set_score()`.
-
-To implement an algorithm from pcalg rather than bnlearn, we would follow the same structure but use the R6
-class `PcalgSearch` instead of `BnlearnSearch` in the runner (i.e., `PcalgSearch$new()`).
-
-# Tetrad
-
-We will illustrate how to make a custom version (which actually does the same as
-our implementation, just with some defensive programming omitted) of the BOSS
-algorithm from Tetrad. Tetrad algorithms follow a slightly different integration
-pattern because Tetrad is a Java library rather than an R package.
-
-To add a new Tetrad algorithm, first register it with
-`register_tetrad_algorithm()`. This function requires:
-
-- The algorithm name.
-- A setup function that configures a `TetradSearch` object to execute the
-  algorithm.
-
-The setup function receives the TetradSearch object as its first argument, along
-with any additional parameters passed via `...` when the method is constructed.
-Its responsibilities are to:
-
-1. Configure the TetradSearch object with the appropriate parameters and score.
-2. Instantiate the correct Tetrad algorithm class.
-
-The fully qualified class name can be identified by inspecting the Tetrad source
-code at:
-
-https://github.com/cmu-phil/tetrad
-
-Be sure to browse the version corresponding to the installed Tetrad release. The
-relevant Java classes are located under:
-
-https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java
-
-```{r}
-#| label: register-tetrad-alg
-register_tetrad_algorithm(
-  "my_boss_variant",
-  function(
-    self,
-    num_starts = 1,
-    use_bes = TRUE,
-    use_data_order = TRUE,
-    output_cpdag = TRUE
-  ) {
-    self$set_params(
-      USE_BES = use_bes,
-      NUM_STARTS = num_starts,
-      USE_DATA_ORDER = use_data_order,
-      OUTPUT_CPDAG = output_cpdag
-    )
-
-    self$alg <- rJava::.jnew(
-      "edu/cmu/tetrad/algcomparison/algorithm/oracle/cpdag/Boss",
-      self$score
-    )
-    self$alg$setKnowledge(self$knowledge)
-  }
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"), # tidyselect helper; equivalent to c("child_x1", "child_x2")
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 %-->% child_x2,
+  child_x2 %!-->% youth_x3
 )
+plot(kn_tiered)
 ```
 
-You can view all the custom registered Tetrad algorithms using
-`list_registered_tetrad_algorithms()`, and reset it using
-`reset_tetrad_alg_registry()`.
+Variables are grouped by life stage, reflecting the tiered structure. This helps
+visually convey temporal or hierarchical relationships in the data.
 
-Like for bnlearn and pcalg, we then create a method function `my_boss_variant()`
-that constructs a builder function which in turn constructs a runner using the
-registered Tetrad algorithm.
+## Plotting Knowledgeable Caugi Objects
 
-BOSS is a **score-based** algorithm, so the method accepts a `score` argument
-and passes it to the runner, which configures the `TetradSearch` object
-accordingly. It returns a PDAG, so we set the `graph_class` attribute to
-`"PDAG"`.
+Here we run a causal discovery algorithm to get a `Disco` object, which is the
+knowledge object alongside the learned causal graph as a `caugi::caugi` object.
+We can then plot this combined object to see both the prior knowledge and the
+learned relationships
 
 ```{r}
-#| label: my-boss-variant
-my_boss_variant <- function(
-  engine = "tetrad",
-  score,
-  ...
-) {
-  engine <- match.arg(engine)
-  args <- rlang::list2(...)
-
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      tetrad = rlang::exec(my_boss_variant_tetrad_runner, score, !!!args)
-    )
-    runner
-  }
-
-  method <- new_disco_method(
-    builder = builder,
-    name = "my_boss_variant",
-    engine = engine,
-    graph_class = "PDAG"
-  )
-  method
-}
-```
-
-Next we define the runner function `my_boss_variant_tetrad_runner()`
-
-```{r}
-#| label: my_boss_variant runner
-my_boss_variant_tetrad_runner <- function(score, ...) {
-  search <- TetradSearch$new()
-  args <- list(...)
-  args_to_pass <- distribute_engine_args(
-    search = search,
-    args = args,
-    engine = "tetrad",
-    alg = "my_boss_variant"
-  )
-
-  if (length(args_to_pass$score_args) > 0) {
-    rlang::exec(search$set_score, score, !!!args_to_pass$score_args)
-  } else {
-    search$set_score(score)
-  }
-
-  if (length(args_to_pass$alg_args) > 0) {
-    rlang::exec(search$set_alg, "my_boss_variant", !!!args_to_pass$alg_args)
-  } else {
-    search$set_alg("my_boss_variant")
-  }
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
-}
-```
-
-Once defined we can now run `my_boss_variant()` like any other method in
-causalDisco.
-
-```{r}
-#| label: my_boss_variant example
-#| eval: false
-# Ensure Tetrad is installed and Java is working before running the algorithm
-if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
-  my_boss_variant_tetrad <- my_boss_variant(
-    engine = "tetrad",
-    score = "sem_bic"
-  )
-  my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
-  plot(my_boss_variant_tetrad_result)
-}
-```
-```{r}
-#| label: my_boss_variant_tetrad algorithm plot code
-#| echo: false
-#| eval: false
-# Code to generate the plot image on pkgdown and CRAN.
-
-# For pkgdown (comment out to avoid CRAN NOTE about unstated dependency used) use the function fig_settings
-# ragg::agg_png(
-#   filename = "custom-boss-variant-pkgdown.png",
-#   width  = fig_settings$fig.width,
-#   height = fig_settings$fig.height,
-#   units  = "in",
-#   res    = fig_settings$dpi * fig_settings$fig.retina
-# )
-my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
-my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
-plot(my_boss_variant_tetrad_result)
-dev.off()
-
-# For CRAN
-# Hardcoded since knitr::opts_current$get() is different when running in console.
-ragg::agg_png(
-  filename = "custom-boss-variant-cran.png",
-  width = 3,
-  height = 3,
-  units = "in",
-  res = 92 * 1
+#| label: knowledgeable caugi plot
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
 )
-my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
-my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
-plot(my_boss_variant_tetrad_result)
-dev.off()
+
+pc_bnlearn <- pc(engine = "bnlearn", test = "fisher_z")
+pc_result <- disco(num_data, method = pc_bnlearn, knowledge = kn)
+plot(pc_result)
 ```
+
+Blue edges indicate required relationships from prior knowledge, black edges
+show those learned from the data, and forbidden edges are not plotted (to avoid
+confusion and clutter).
+
+With tiered knowledge, the plotting works similarly:
+
 ```{r}
-#| label: ges-ebic-tetrad-include
+#| label: knowledgeable caugi tiered plot
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(
+  data = tpc_example,
+  method = cd_tges,
+  knowledge = kn_tiered
+)
+plot(disco_cd_tges)
+```
+
+Where we can see the tiers reflected in the layout of the graph.
+
+# Exporting to TikZ
+
+The `make_tikz()` function exports plots as clean, fully editable TikZ code for
+inclusion in LaTeX documents.
+
+Unlike some graph export tools, edges are attached to nodes rather than
+positioned using hard-coded coordinates, making the output easier to modify.
+
+This functionality works for `Knowledge`, `Disco`, and `caugi::caugi` objects,
+allowing you to customize layouts, styles, and edges further in your LaTeX
+document. It calls the underlying `causalDisco::plot()` method (which calls
+`caugi::plot()`) to generate the initial plot object before converting it to
+TikZ code. Thus, you can supply any arguments to `make_tikz()` that are
+supported by `causalDisco::plot()` and `caugi::plot()`.
+
+## Exporting Knowledge to TikZ
+
+We first demonstrate TikZ export for a `Knowledge` object.
+
+```{r}
+#| label: tikz export knowledge
+data(num_data)
+kn <- knowledge(
+  num_data,
+  X1 %-->% X2,
+  X2 %!-->% c(X3, Y),
+  Y %!-->% Z
+)
+
+# Full standalone document
+tikz_knowledge_code <- make_tikz(kn, scale = 10, full_doc = TRUE)
+cat(tikz_knowledge_code)
+
+# Only the tikzpicture environment
+tikz_knowledge_snippet <- make_tikz(kn, scale = 10, full_doc = FALSE)
+cat(tikz_knowledge_snippet)
+```
+
+Setting `full_doc = TRUE` generates a complete standalone LaTeX document that
+can be compiled directly. Using `full_doc = FALSE` instead returns only the
+tikzpicture environment, which is convenient for inclusion inside an existing
+LaTeX document.
+
+The TikZ export also supports edge bending, which can substantially improve
+readability when edges passes thorugh other nodes, as can easily happen in
+tiered knowledge structures. This feature is not available in the standard
+`caugi::plot()` function. Here is an example, where the edge using the standard
+straight style edge overlaps the node `youth_x3`, while the bent edge avoids
+this overlap:
+
+```{r}
+#| label: tikz bend edges
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  ),
+  child_x1 %-->% oldage_x5
+)
+
+plot(kn_tiered)
+
+tikz_bent_tiered <- make_tikz(
+  kn_tiered,
+  scale = 10,
+  full_doc = FALSE,
+  bend_edges = TRUE,
+  bend_angle = 20
+)
+cat(tikz_bent_tiered)
+```
+
+The TikZ plot can be seen here:
+
+```{r}
+#| label: tikz tier plot
 #| echo: false
-img_file <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
-  "custom-boss-variant-pkgdown.png"
-} else {
-  "custom-boss-variant-cran.png"
-}
-
-knitr::include_graphics(img_file)
+knitr::include_graphics("tikz-tier-plot.png")
 ```
 
-Once again, if using a hybrid or constraint-based algorithm rather than a
-score-based one, the structure would remain the same but the method would accept
-different arguments (e.g., `test` and `alpha` for a constraint-based algorithm).
+## Exporting Knowledgeable Caugi to TikZ
 
-Finally, we clean up the custom registered Tetrad algorithm
+The output of `disco()` gives a `Disco` object, which can also be exported to
+TikZ:
 
 ```{r}
-#| label: cleanup
-reset_tetrad_alg_registry()
+#| label: tikz export knowledgeable caugi
+data(tpc_example)
+kn_tiered <- knowledge(
+  tpc_example,
+  tier(
+    child ~ starts_with("child"),
+    youth ~ starts_with("youth"),
+    old ~ starts_with("old")
+  )
+)
+
+tiers <- list(
+  child = c("child_x1", "child_x2"),
+  youth = c("youth_x3", "youth_x4"),
+  old = c("oldage_x5", "oldage_x6")
+)
+
+cd_tges <- tges(engine = "causalDisco", score = "tbic")
+disco_cd_tges <- disco(
+  data = tpc_example,
+  method = cd_tges,
+  knowledge = kn_tiered
+)
+
+disco_plot <- plot(disco_cd_tges)
+tikz_snippet <- make_tikz(
+  disco_plot,
+  tier_node_map = tiers,
+  scale = 10,
+  full_doc = FALSE
+)
+cat(tikz_snippet)
 ```
 
-# Conclusion
+## Exporting Caugi Objects to TikZ
 
-In this vignette, we have illustrated how to add new algorithms to causalDisco,
-both from the R packages pcalg and bnlearn and from Tetrad.
+The same export mechanism also applies to standard `caugi::caugi` objects:
 
-If you have any feedback or suggestions for improvement on the API and
-functionality for extending causalDisco, please let us know by opening an issue
-on GitHub.
+```{r}
+#| label: tikz export caugi
+cg <- caugi::caugi(
+  A %-->% B + C
+)
+plot_obj <- caugi::plot(cg, node_style = list(fill = "red"))
+tikz_caugi_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
+cat(tikz_caugi_snippet)
+```

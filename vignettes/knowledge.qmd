@@ -80,8 +80,8 @@ plot(kn_1_removed)
 
 ## Specifying required and forbidden edges in a dataset
 
-We will use the `tpc_example` dataset available in the package for the
-following examples. The dataset contains 6 variables, as shown below:
+We will use the `tpc_example` dataset available in the package for the following
+examples. The dataset contains 6 variables, as shown below:
 
 ```{r}
 #| label: dataset required and forbidden knowledge
@@ -89,8 +89,8 @@ data(tpc_example)
 head(tpc_example)
 ```
 
-When specifying knowledge, it is often more convenient to specify the dataset so that
-the variables are checked for existence and selected correctly. To do this,
+When specifying knowledge, it is often more convenient to specify the dataset so
+that the variables are checked for existence and selected correctly. To do this,
 pass the dataset as the first argument to `knowledge()`.
 
 ```{r}
@@ -322,7 +322,8 @@ plot(kn_combined)
 Once prior knowledge has been specified, it can be supplied to causal discovery
 algorithms by passing the `Knowledge` object to the `disco()` function via the
 `knowledge` argument. For example, we can use the Temporal GES algorithm
-`tges()` with engine "causalDisco" and temporal BIC ("tbic") score, while providing tiered knowledge:
+`tges()` with engine "causalDisco" and temporal BIC ("tbic") score, while
+providing tiered knowledge:
 
 ```{r}
 #| label: causal discovery with tier knowledge
@@ -357,11 +358,11 @@ algorithm, i.e. the engine you specify to an algorithm such as
 
 ## bnlearn
 
-All knowledge types are supported with the bnlearn engine. When required knowledge
-is provided, bnlearn may emit a warning during structure learning. This occurs
-when the algorithm identifies a candidate v-structure (collider) from the data
-whose orientation conflicts with edges already oriented due to background
-knowledge.
+All knowledge types are supported with the bnlearn engine. When required
+knowledge is provided, bnlearn may emit a warning during structure learning.
+This occurs when the algorithm identifies a candidate v-structure (collider)
+from the data whose orientation conflicts with edges already oriented due to
+background knowledge.
 
 ```{r}
 #| label: bnlearn
@@ -390,9 +391,10 @@ knowledge is provided, it will give a warning and ignore the required knowledge.
 
 ## pcalg
 
-Only symmetric forbidden-edge constraints are supported by the pcalg engine.
-In practice, this means an edge must be forbidden in both directions. Such constraints
-can be specified using `%!-->%` in both directions, as illustrated below:
+Only symmetric forbidden-edge constraints are supported by the pcalg engine. In
+practice, this means an edge must be forbidden in both directions. Such
+constraints can be specified using `%!-->%` in both directions, as illustrated
+below:
 
 ```{r}
 #| label: pcalg
