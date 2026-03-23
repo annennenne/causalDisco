@@ -27,10 +27,10 @@ edges.
 
 ### Plotting Knowledge Objects
 
-We start by creating a simple `Knowledge` object and visualizing it with
+We will use the dataset `num_data` for the following examples, which
+contains 5 numeric variables (`X1`, `X2`, `X3`, `Y`, and `Z`). We start
+by creating a simple `Knowledge` object and visualizing it with
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md).
-This knowledge encodes the following relationships between variables in
-our dataset:
 
 ``` r
 data(num_data)
@@ -38,7 +38,7 @@ kn <- knowledge(
   num_data,
   X1 %-->% c(X2, X3), # Require edge from X1 to X2, and X1 to X3
   X2 %!-->% c(X3, Y), # Forbid edge from X2 to X3, and X2 to Y
-  Y %!-->% Z  # Forbid edge from Y to Z
+  Y %!-->% Z # Forbid edge from Y to Z
 )
 
 plot(kn)
@@ -56,14 +56,21 @@ plot(kn, required_col = "skyblue", forbidden_col = "orange")
 
 ![](visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png)
 
-Different node layouts, node styles, and edge styles can be specified
-using the `layout`, `node_style`, and `edge_style` parameters. We
-provide a quick example and refer to the
-[`causalDisco::plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md)
-function (and the underlying
-[`caugi::plot()`](https://caugi.org/reference/plot.html) function)
-documentation for more details. Here we use the `"fruchterman-reingold"`
-layout and customize node and edge styles:
+Different node layouts, node styles, and edge styles can be controlled
+via the `layout`, `node_style`, and `edge_style` parameters. We
+illustrate this with a simple example below. For a full description of
+available options, see the documentation for
+[`causalDisco::plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md),
+as well as the underlying
+[`caugi::plot()`](https://caugi.org/reference/plot.html) function and
+its visualization vignette
+([`vignette("visualization", "caugi")`](https://caugi.org/articles/visualization.html)).
+
+In this example, we use the `"fruchterman-reingold"` layout and
+customize both node and edge styles:
+
+Here we use the `"fruchterman-reingold"` layout and customize node and
+edge styles:
 
 ``` r
 plot(
@@ -137,7 +144,7 @@ my_layout <- data.frame(
 plot(kn, layout = my_layout)
 ```
 
-![](visualization_files/figure-html/unnamed-chunk-2-1.png)
+![](visualization_files/figure-html/knowledge%20plot%20custom%20layout-1.png)
 
 #### Plotting Tiered Knowledge
 
@@ -168,9 +175,10 @@ data.
 ### Plotting Knowledgeable Caugi Objects
 
 Here we run a causal discovery algorithm to get a `Disco` object, which
-is the knowledge object alongside the learned causal graph as a `caugi`
-object. We can then plot this combined object to see both the prior
-knowledge and the learned relationships
+is the knowledge object alongside the learned causal graph as a
+[`caugi::caugi`](https://caugi.org/reference/caugi.html) object. We can
+then plot this combined object to see both the prior knowledge and the
+learned relationships
 
 ``` r
 data(num_data)
@@ -205,7 +213,11 @@ kn_tiered <- knowledge(
   )
 )
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
-disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn_tiered)
+disco_cd_tges <- disco(
+  data = tpc_example,
+  method = cd_tges,
+  knowledge = kn_tiered
+)
 plot(disco_cd_tges)
 ```
 
@@ -383,10 +395,19 @@ tiers <- list(
 )
 
 cd_tges <- tges(engine = "causalDisco", score = "tbic")
-disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn_tiered)
+disco_cd_tges <- disco(
+  data = tpc_example,
+  method = cd_tges,
+  knowledge = kn_tiered
+)
 
 disco_plot <- plot(disco_cd_tges)
-tikz_snippet <- make_tikz(disco_plot, tier_node_map = tiers, scale = 10, full_doc = FALSE)
+tikz_snippet <- make_tikz(
+  disco_plot,
+  tier_node_map = tiers,
+  scale = 10,
+  full_doc = FALSE
+)
 ```
 
 ![](visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png)
@@ -414,7 +435,8 @@ cat(tikz_snippet)
 
 ### Exporting Caugi Objects to TikZ
 
-The same export mechanism also applies to standard `caugi` objects:
+The same export mechanism also applies to standard
+[`caugi::caugi`](https://caugi.org/reference/caugi.html) objects:
 
 ``` r
 cg <- caugi::caugi(

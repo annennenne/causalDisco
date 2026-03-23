@@ -66,7 +66,7 @@ We can visualize the results using
 plot(pc_result_bnlearn, layout = plot_layout, main = "PC Fisher Z (bnlearn)")
 ```
 
-![](causalDisco_files/figure-html/unnamed-chunk-3-1.png)
+![](causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20bnlearn%20plot-1.png)
 
 The first notable feature of this plot is that some edges are directed,
 while others are undirected. For example, the edge from `X1` to `Y` is
@@ -110,10 +110,10 @@ causalDisco provides an interface to the Java library
 [Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
 algorithms. To use algorithms from Tetrad you need to install a Java
 Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
-available at <https://adoptium.net/en-GB/temurin/releases>. When using
-the installer from the Temurin website, make sure to select the option
-to set the `JAVA_HOME` environment variable during installation, so
-rJava correctly detects the Java installation.
+available at https://adoptium.net/en-GB/temurin/releases. When using the
+installer from the Temurin website, make sure to select the option to
+set the `JAVA_HOME` environment variable during installation, so rJava
+correctly detects the Java installation.
 
 For a simpler setup, we recommend using the rJavaEnv package, which
 provides a convenient function to install Java and configure the
@@ -302,13 +302,13 @@ print(kn)
 #> 
 #> ── Tiers ──
 #> 
-#>   tier  
+#>   [1mtier[22m  
 #>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
 #> ── Variables ──
-#>   var       tier  
+#>   [1mvar[22m       [1mtier[22m  
 #>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 
@@ -382,13 +382,13 @@ print(tpc_result)
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 #> ── Tiers ──
 #> 
-#>   tier  
+#>   [1mtier[22m  
 #>   <chr> 
 #> 1 child 
 #> 2 youth 
 #> 3 oldage
 #> ── Variables ──
-#>   var       tier  
+#>   [1mvar[22m       [1mtier[22m  
 #>   <chr>     <chr> 
 #> 1 child_x1  child 
 #> 2 child_x2  child 

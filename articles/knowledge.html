@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Knowledge • causalDisco</title>
+<title>Incorporating Knowledge • causalDisco</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,10 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Knowledge">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="knowledge_files/libs/quarto-html/popper.min.js"></script><script src="knowledge_files/libs/quarto-html/tippy.umd.min.js"></script><link href="knowledge_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="knowledge_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Incorporating Knowledge">
+<meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -41,7 +44,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
-    <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul>
@@ -58,23 +61,25 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Knowledge</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/knowledge.Rmd" class="external-link"><code>vignettes/knowledge.Rmd</code></a></small>
-      <div class="d-none name"><code>knowledge.Rmd</code></div>
+      <img src="../logo.png" class="logo" alt=""><h1>Incorporating Knowledge</h1>
+
+
+
+
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/knowledge.qmd" class="external-link"><code>vignettes/knowledge.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+
+
+
+
+
+    <div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
 <span><span class="co">#&gt;   Java heap size requested: 2 GB</span></span>
@@ -82,69 +87,56 @@
 <span><span class="co">#&gt;   Java successfully initialized with 2 GB.</span></span>
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
-<p>This vignette demonstrates how to use the <code><a href="../reference/knowledge.html">knowledge()</a></code>
-function to incorporate prior knowledge into causal discovery
-algorithms. The different supported knowledge types are explained below,
-along with examples of how to create <code>Knowledge</code> objects and
-use them with causal discovery methods. All knowledge types can be
-freely combined. Multiple calls or operators are additive: each call
-adds new edges to the <code>Knowledge</code> object. For example if we
-require an edge from <code>A</code> to <code>B</code> and then require
-an edge from A to C, the resulting <code>Knowledge</code> object will
-require both edges from <code>A</code> to <code>B</code> and from
-<code>A</code> to <code>C</code>.</p>
-<p>At a conceptual level, all knowledge is represented as constraints on
-edges, specifying which edges are required and forbidden. Some knowledge
-types provide higher-level abstractions for expressing common modeling
-assumptions more conveniently.</p>
-<div class="section level2">
-<h2 id="required-and-forbidden-knowledge">Required and forbidden knowledge<a class="anchor" aria-label="anchor" href="#required-and-forbidden-knowledge"></a>
+</div>
+<p>This vignette demonstrates how to use the <code><a href="../reference/knowledge.html">knowledge()</a></code> function to incorporate prior knowledge into causal discovery algorithms. The different supported knowledge types are explained below, along with examples of how to create <code>Knowledge</code> objects and use them with causal discovery methods. All knowledge types can be freely combined. Multiple calls or operators are additive: each call adds new edges to the <code>Knowledge</code> object. For example if we require an edge from <code>A</code> to <code>B</code> and then require an edge from A to C, the resulting <code>Knowledge</code> object will require both edges from <code>A</code> to <code>B</code> and from <code>A</code> to <code>C</code>.</p>
+<p>At a conceptual level, all knowledge is represented as constraints on edges, specifying which edges are required and forbidden. Some knowledge types provide higher-level abstractions for expressing common modeling assumptions more conveniently.</p>
+<section class="section level2"><h2 id="required-and-forbidden-knowledge">Required and forbidden knowledge<a class="anchor" aria-label="anchor" href="#required-and-forbidden-knowledge"></a>
 </h2>
-<p>At the most basic level, prior knowledge is expressed as required or
-forbidden edges between variables. These constraints apply to directed
-edges in the causal graph.</p>
+<p>At the most basic level, prior knowledge is expressed as required or forbidden edges between variables. These constraints apply to directed edges in the causal graph.</p>
 <ul>
-<li>Required edges specify that a directed edge must exist between two
-variables.</li>
-<li>Forbidden edges specify that a directed edge is not allowed between
-two variables.</li>
+<li>Required edges specify that a directed edge must exist between two variables.</li>
+<li>Forbidden edges specify that a directed edge is not allowed between two variables.</li>
 </ul>
-<p>These constraints are specified using the <code>%--&gt;%</code>
-(required) and <code>%!--&gt;%</code> (forbidden) operators, with the
-exclamation mark (<code>!</code>) indicating negation of the edge,
-i.e. the absence of the edge. Conceptually, this could be written as
-<code>%!(--&gt;)%</code>, but we find this syntax too verbose.</p>
-<div class="section level3">
-<h3 id="specifying-required-and-forbidden-edges">Specifying required and forbidden edges<a class="anchor" aria-label="anchor" href="#specifying-required-and-forbidden-edges"></a>
+<p>These constraints are specified using the <code>%--&gt;%</code> (required) and <code>%!--&gt;%</code> (forbidden) operators, with the exclamation mark (<code>!</code>) indicating negation of the edge, i.e. the absence of the edge. Conceptually, this could be written as <code>%!(--&gt;)%</code>, but we find this syntax too verbose.</p>
+<section class="level2"><h3 id="specifying-required-and-forbidden-edges">Specifying required and forbidden edges<a class="anchor" aria-label="anchor" href="#specifying-required-and-forbidden-edges"></a>
 </h3>
-<p>Suppose we want to require an edge from A to B, from A to C, and
-forbid an edge from B to C:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Suppose we want to require an edge from A to B, from A to C, and forbid an edge from B to C:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">A</span> <span class="op">%--&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">B</span>, <span class="va">C</span><span class="op">)</span>, <span class="co"># Require edges from A to B and A to C</span></span>
 <span>  <span class="va">B</span> <span class="op">%!--&gt;%</span> <span class="va">C</span> <span class="co"># Forbid edge from B to C</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 <p>This <code>Knowledge</code> object can be visualized:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>The blue edge represents the required edge from A to B, while the red
-edge represents the forbidden edge from B to C.</p>
-<p>If one wishes to remove some edges (either required or forbidden)
-knowledge from an existing <code>Knowledge</code> object, the
-<code><a href="../reference/remove_edge.html">remove_edge()</a></code> function can be used. For example, to remove
-the required edge from A to B:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The blue edge represents the required edge from A to B, while the red edge represents the forbidden edge from B to C.</p>
+<p>If one wishes to remove some edges (either required or forbidden) knowledge from an existing <code>Knowledge</code> object, the <code><a href="../reference/remove_edge.html">remove_edge()</a></code> function can be used. For example, to remove the required edge from A to B:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_1_removed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_edge.html">remove_edge</a></span><span class="op">(</span><span class="va">kn_1</span>, from <span class="op">=</span> <span class="va">A</span>, to <span class="op">=</span> <span class="va">B</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_1_removed</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/remove%20required%20edge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/remove%20required%20edge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
-<div class="section level3">
-<h3 id="specifying-required-and-forbidden-edges-in-a-dataset">Specifying required and forbidden edges in a dataset<a class="anchor" aria-label="anchor" href="#specifying-required-and-forbidden-edges-in-a-dataset"></a>
+</div>
+</div>
+</section><section class="level2"><h3 id="specifying-required-and-forbidden-edges-in-a-dataset">Specifying required and forbidden edges in a dataset<a class="anchor" aria-label="anchor" href="#specifying-required-and-forbidden-edges-in-a-dataset"></a>
 </h3>
-<p>We will use the <code>tpc_example</code> dataset from the causalDisco
-package for the following examples:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>We will use the <code>tpc_example</code> dataset available in the package for the following examples. The dataset contains 6 variables, as shown below:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5</span></span>
@@ -154,77 +146,66 @@ package for the following examples:</p>
 <span><span class="co">#&gt; 4        1  1.6524574  0.97115845        0 -7.9064009 -4.5160676</span></span>
 <span><span class="co">#&gt; 5        0 -0.9516186  0.67069597        0  1.7089134  0.7903853</span></span>
 <span><span class="co">#&gt; 6        1  1.9549723 -0.65054654        0 -6.9758928 -3.2107342</span></span></code></pre></div>
-<p>We can pass the dataset to <code><a href="../reference/knowledge.html">knowledge()</a></code> as the first
-argument, which also checks that the specified variables exist in the
-dataset:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+</div>
+<p>When specifying knowledge, it is often more convenient to specify the dataset so that the variables are checked for existence and selected correctly. To do this, pass the dataset as the first argument to <code><a href="../reference/knowledge.html">knowledge()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="va">child_x1</span> <span class="op">%--&gt;%</span> <span class="va">youth_x3</span>, <span class="co"># Require edge from child_x1 to youth_x3</span></span>
 <span>  <span class="va">child_x2</span> <span class="op">%!--&gt;%</span> <span class="va">oldage_x5</span> <span class="co"># Forbid edge from child_x2 to oldage_x5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This <code>Knowledge</code> object can also be visualized (we
-manually adjust the layout for better appearance):</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+</div>
+<p>This <code>Knowledge</code> object can also be visualized (we manually adjust the layout for better appearance):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge_to_caugi.html">knowledge_to_caugi</a></span><span class="op">(</span><span class="va">kn_2</span><span class="op">)</span><span class="op">$</span><span class="va">caugi</span></span>
 <span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi_layout_sugiyama.html" class="external-link">caugi_layout_sugiyama</a></span><span class="op">(</span><span class="va">cg</span><span class="op">)</span></span>
 <span><span class="va">layout</span><span class="op">[</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">layout</span><span class="op">[</span><span class="fl">4</span>, <span class="fl">2</span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_2</span>, layout <span class="op">=</span> <span class="va">layout</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>The plot then plots all variables in the dataset, with the required
-edges as blue edges and forbidden edges as red edges.</p>
-<div class="section level4">
-<h4 id="using-tidyselect-helpers">Using tidyselect helpers<a class="anchor" aria-label="anchor" href="#using-tidyselect-helpers"></a>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot then plots all variables in the dataset, with the required edges as blue edges and forbidden edges as red edges.</p>
+<section class="level3"><h4 id="using-tidyselect-helpers">Using tidyselect helpers<a class="anchor" aria-label="anchor" href="#using-tidyselect-helpers"></a>
 </h4>
-<p>To make specifying variables easier, you can use tidyselect helpers
-such as <code>starts_with</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>To make specifying variables easier, you can use tidyselect helpers such as <code>starts_with</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span> <span class="op">%--&gt;%</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span>,</span>
 <span>  <span class="fu">starts_with</span><span class="op">(</span><span class="st">"oldage"</span><span class="op">)</span> <span class="op">%!--&gt;%</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"youth"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This means, that all variables starting with “child” are required to
-have edges to all variables starting with “youth”, and no variables
-starting with “oldage” can have edges to any variables starting with
-“youth”. We can visualize this:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+</div>
+<p>This means, that all variables starting with “child” are required to have edges to all variables starting with “youth”, and no variables starting with “oldage” can have edges to any variables starting with “youth”. We can visualize this:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>For a list of all available tidyselect helpers we refer to the <a href="https://tidyselect.r-lib.org/reference/index.html" class="external-link">tidyselect
-reference documentation</a>.</p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20tidyselect-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="tiered-knowledge">Tiered knowledge<a class="anchor" aria-label="anchor" href="#tiered-knowledge"></a>
+<p>For a list of all available tidyselect helpers we refer to the <a href="https://tidyselect.r-lib.org/reference/index.html" class="external-link">tidyselect reference documentation</a>.</p>
+</section></section></section><section class="section level2"><h2 id="tiered-knowledge">Tiered knowledge<a class="anchor" aria-label="anchor" href="#tiered-knowledge"></a>
 </h2>
-<p>Tiered knowledge provides a higher-level abstraction for expressing
-systematic ordering assumptions, such as temporal or logical precedence.
-Internally, tiered knowledge is translated into a collection of
-forbidden edges, but it is exposed separately because it provides a
-concise and structured way to express common ordering assumptions.</p>
-<p>For example, consider a dataset with three groups of variables:
-child, youth, and old. We may wish to enforce that child variables
-precede youth variables, which in turn precede old variables. This can
-be expressed using tiered knowledge.</p>
-<p>Tiered knowledge enforces that edges may only point from earlier
-tiers to later tiers. Edges within the same tier are unrestricted unless
-additional knowledge is supplied.</p>
-<div class="section level3">
-<h3 id="creating-a-tiered-knowledge-object">Creating a tiered <code>Knowledge</code> object<a class="anchor" aria-label="anchor" href="#creating-a-tiered-knowledge-object"></a>
+<p>Tiered knowledge provides a higher-level abstraction for expressing systematic ordering assumptions, such as temporal or logical precedence. Internally, tiered knowledge is translated into a collection of forbidden edges, but it is exposed separately because it provides a concise and structured way to express common ordering assumptions.</p>
+<p>For example, consider a dataset with three groups of variables: child, youth, and old. We may wish to enforce that child variables precede youth variables, which in turn precede old variables. This can be expressed using tiered knowledge.</p>
+<p>Tiered knowledge enforces that edges may only point from earlier tiers to later tiers. Edges within the same tier are unrestricted unless additional knowledge is supplied.</p>
+<section class="level2"><h3 id="creating-a-tiered-knowledge-object">Creating a tiered <code>Knowledge</code> object<a class="anchor" aria-label="anchor" href="#creating-a-tiered-knowledge-object"></a>
 </h3>
-<p>Suppose we observe variables over time: first the <code>A</code>’s,
-then the <code>B</code>’s, and finally the <code>C</code>’s. This
-ordering implies that causal direction cannot go backward in time (e.g.,
-<code>B</code>’s cannot cause <code>A</code>’s). A tiered
-<code>Knowledge</code> object captures this temporal structure by
-specifying tiers and their associated variables. If numeric tiers are
-used, lower numbers indicate earlier tiers; otherwise, tiers are ordered
-by their appearance.</p>
+<p>Suppose we observe variables over time: first the <code>A</code>’s, then the <code>B</code>’s, and finally the <code>C</code>’s. This ordering implies that causal direction cannot go backward in time (e.g., <code>B</code>’s cannot cause <code>A</code>’s). A tiered <code>Knowledge</code> object captures this temporal structure by specifying tiers and their associated variables. If numeric tiers are used, lower numbers indicate earlier tiers; otherwise, tiers are ordered by their appearance.</p>
 <p>The following specifications encode the same tier structure:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
 <span>    <span class="fl">1</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">A1</span>, <span class="va">A2</span><span class="op">)</span>,</span>
@@ -263,110 +244,125 @@ by their appearance.</p>
 <span><span class="co"># Has a letter, so tiers are ordered by appearance, thus functionally equivalent</span></span>
 <span><span class="va">kn_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
-<span>    <span class="fl">3</span>   <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">A1</span>, <span class="va">A2</span><span class="op">)</span>,</span>
-<span>    <span class="va">B</span>   <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">B1</span>, <span class="va">B2</span><span class="op">)</span>,</span>
-<span>    <span class="fl">1</span>   <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span><span class="op">)</span></span>
+<span>    <span class="fl">3</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">A1</span>, <span class="va">A2</span><span class="op">)</span>,</span>
+<span>    <span class="va">B</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">B1</span>, <span class="va">B2</span><span class="op">)</span>,</span>
+<span>    <span class="fl">1</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 <p>We can visualize the tiers:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20tier%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>The plot then shows the tiers as layers, with the earliest tiers to
-the left and latest to the right.</p>
-<p>We can convert the meaning of the tiered knowledge into explicit
-forbidden edges using <code><a href="../reference/convert_tiers_to_forbidden.html">convert_tiers_to_forbidden()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20tier%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot then shows the tiers as layers, with the earliest tiers to the left and latest to the right.</p>
+<p>We can convert the meaning of the tiered knowledge into explicit forbidden edges using <code><a href="../reference/convert_tiers_to_forbidden.html">convert_tiers_to_forbidden()</a></code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_converted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convert_tiers_to_forbidden.html">convert_tiers_to_forbidden</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kn_converted</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Knowledge object</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; ── Knowledge object ────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Variables</span> ──</span></span>
+<span><span class="co">#&gt; ── Variables ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   <span style="font-weight: bold;">var</span>   <span style="font-weight: bold;">tier</span> </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> A1    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> A2    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> B1    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> B2    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> C1    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> C2    <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Edges</span> ──</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  B1 → A1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  B1 → A2</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  B2 → A1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  B2 → A2</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C1 → A1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C1 → A2</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C1 → B1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C1 → B2</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → A1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → A2</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → B1</span></span>
-<span><span class="co">#&gt;  <span style="color: #BB0000;">✖</span>  C2 → B2</span></span>
+<span><span class="co">#&gt;   [1mvar[22m   [1mtier[22m </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1 A1    &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; 2 A2    &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; 3 B1    &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; 4 B2    &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; 5 C1    &lt;NA&gt; </span></span>
+<span><span class="co">#&gt; 6 C2    &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; ── Edges ──</span></span>
+<span><span class="co">#&gt;  ✖  B1 → A1</span></span>
+<span><span class="co">#&gt;  ✖  B1 → A2</span></span>
+<span><span class="co">#&gt;  ✖  B2 → A1</span></span>
+<span><span class="co">#&gt;  ✖  B2 → A2</span></span>
+<span><span class="co">#&gt;  ✖  C1 → A1</span></span>
+<span><span class="co">#&gt;  ✖  C1 → A2</span></span>
+<span><span class="co">#&gt;  ✖  C1 → B1</span></span>
+<span><span class="co">#&gt;  ✖  C1 → B2</span></span>
+<span><span class="co">#&gt;  ✖  C2 → A1</span></span>
+<span><span class="co">#&gt;  ✖  C2 → A2</span></span>
+<span><span class="co">#&gt;  ✖  C2 → B1</span></span>
+<span><span class="co">#&gt;  ✖  C2 → B2</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_converted</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Tidyselect helpers such as <code>starts_with</code> can also be used
-to define tiers in a concise way, just as with required and forbidden
-edges. Different tidyselect helpers can be freely combined within a tier
-definition using <code>+</code>. For example, the following tiered
-<code>Knowledge</code> object defines two tiers, “young” and “old”, by
-combining tidyselect helpers:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tidyselect helpers such as <code>starts_with</code> can also be used to define tiers in a concise way, just as with required and forbidden edges. Different tidyselect helpers can be freely combined within a tier definition using <code>+</code>. For example, the following tiered <code>Knowledge</code> object defines two tiers, “young” and “old”, by combining tidyselect helpers on the variables in the <code>tpc_example</code> dataset:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_tier_tidyselect</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
 <span>    <span class="va">young</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ends_with</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3"</span>, <span class="st">"4"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="va">old</span>   <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"old"</span><span class="op">)</span></span>
+<span>    <span class="va">old</span> <span class="op">~</span> <span class="fu">starts_with</span><span class="op">(</span><span class="st">"old"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tier_tidyselect</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="section level2">
-<h2 id="exogenous-variables-knowledge">Exogenous variables knowledge<a class="anchor" aria-label="anchor" href="#exogenous-variables-knowledge"></a>
+</div>
+</section></section><section class="section level2"><h2 id="exogenous-variables-knowledge">Exogenous variables knowledge<a class="anchor" aria-label="anchor" href="#exogenous-variables-knowledge"></a>
 </h2>
-<p>Exogenous variables are those that have no incoming edges in the
-causal graph. That is, variables which are known causes but are not
-affected by other variables. Exogenous variables can be specified using
-the <code>exogenous()</code> function within
-<code><a href="../reference/knowledge.html">knowledge()</a></code>.</p>
-<div class="section level3">
-<h3 id="specifying-exogenous-variables">Specifying exogenous variables<a class="anchor" aria-label="anchor" href="#specifying-exogenous-variables"></a>
+<p>Exogenous variables are those that have no incoming edges in the causal graph. That is, variables which are known causes but are not affected by other variables. Exogenous variables can be specified using the <code>exogenous()</code> function within <code><a href="../reference/knowledge.html">knowledge()</a></code>.</p>
+<section class="level2"><h3 id="specifying-exogenous-variables">Specifying exogenous variables<a class="anchor" aria-label="anchor" href="#specifying-exogenous-variables"></a>
 </h3>
-<p>The most natural usage is to supply the dataset so that the variables
-are checked for existence and selected correctly:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>The most natural usage is to supply the dataset so that the variables are checked for existence and selected correctly:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_exo_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">exogenous</span><span class="op">(</span><span class="st">"child_x1"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Instead of <code>exogenous</code>, you can also use the shorthand
-function <code>exo()</code>. This <code>Knowledge</code> object can be
-visualized:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+</div>
+<p>Instead of <code>exogenous()</code>, you can also use the shorthand function <code>exo()</code>. This <code>Knowledge</code> object can be visualized:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_exo_1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Below we add both <code>child_x1</code> and <code>child_x2</code> as
-exogenous variables using tidyselect helpers:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Below we add both <code>child_x1</code> and <code>child_x2</code> as exogenous variables using tidyselect helpers:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_exo_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">exo</span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"child"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_exo_2</span>, layout <span class="op">=</span> <span class="st">"bipartite"</span>, orientation <span class="op">=</span> <span class="st">"columns"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="section level2">
-<h2 id="combining-different-knowledge-types">Combining different knowledge types<a class="anchor" aria-label="anchor" href="#combining-different-knowledge-types"></a>
+</div>
+</section></section><section class="section level2"><h2 id="combining-different-knowledge-types">Combining different knowledge types<a class="anchor" aria-label="anchor" href="#combining-different-knowledge-types"></a>
 </h2>
-<p>Different knowledge types can be freely combined in a single
-<code>Knowledge</code> object. For example, we can combine tiered
-knowledge with required and forbidden edges:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>Different knowledge types can be freely combined in a single <code>Knowledge</code> object. For example, we can combine tiered knowledge with required and forbidden edges:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
@@ -379,17 +375,18 @@ knowledge with required and forbidden edges:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_combined</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/combined%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/combined%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
-<div class="section level2">
-<h2 id="using-knowledge-with-causal-discovery">Using knowledge with causal discovery<a class="anchor" aria-label="anchor" href="#using-knowledge-with-causal-discovery"></a>
+</div>
+</div>
+</section><section class="section level2"><h2 id="using-knowledge-with-causal-discovery">Using knowledge with causal discovery<a class="anchor" aria-label="anchor" href="#using-knowledge-with-causal-discovery"></a>
 </h2>
-<p>Once prior knowledge has been specified, it can be supplied to causal
-discovery algorithms by passing the <code>Knowledge</code> object to the
-<code><a href="../reference/disco.html">disco()</a></code> function via the <code>knowledge</code> argument.
-For example, we can use the Temporal GES algorithm <code><a href="../reference/tges.html">tges()</a></code>
-with engine “causalDisco” and temporal BIC (“tbic”):</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p>Once prior knowledge has been specified, it can be supplied to causal discovery algorithms by passing the <code>Knowledge</code> object to the <code><a href="../reference/disco.html">disco()</a></code> function via the <code>knowledge</code> argument. For example, we can use the Temporal GES algorithm <code><a href="../reference/tges.html">tges()</a></code> with engine “causalDisco” and temporal BIC (“tbic”) score, while providing tiered knowledge:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
 <span>  <span class="fu">tier</span><span class="op">(</span></span>
@@ -401,29 +398,27 @@ with engine “causalDisco” and temporal BIC (“tbic”):</p>
 <span></span>
 <span><span class="va">cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tges.html">tges</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"causalDisco"</span>, score <span class="op">=</span> <span class="st">"tbic"</span><span class="op">)</span></span>
 <span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">cd_tges</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p>The causal discovery algorithms respects the provided knowledge. We
-can plot the resulting causal graph:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>The black edges are those inferred from the data.</p>
 </div>
-<div class="section level2">
-<h2 id="engine-specific-information-about-knowledge">Engine specific information about knowledge<a class="anchor" aria-label="anchor" href="#engine-specific-information-about-knowledge"></a>
+<p>The causal discovery algorithms will then learn the causal graph from the data given the constraints specified in the <code>Knowledge</code> object.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The black edges are those inferred from the data.</p>
+</section><section class="section level2"><h2 id="engine-specific-information-about-knowledge">Engine specific information about knowledge<a class="anchor" aria-label="anchor" href="#engine-specific-information-about-knowledge"></a>
 </h2>
-<p>By engine we mean the underlying implementation of the causal
-discovery algorithm, i.e. the engine you specify to an algorithm such as
-<code>pc(engine = "bnlearn")</code> or
-<code>tges(engine = "causalDisco")</code>.</p>
-<div class="section level3">
-<h3 id="bnlearn">bnlearn<a class="anchor" aria-label="anchor" href="#bnlearn"></a>
+<p>By engine we mean the underlying implementation of the causal discovery algorithm, i.e. the engine you specify to an algorithm such as <code>pc(engine = "bnlearn")</code> or <code>tges(engine = "causalDisco")</code>.</p>
+<section class="level2"><h3 id="bnlearn">bnlearn<a class="anchor" aria-label="anchor" href="#bnlearn"></a>
 </h3>
-<p>All knowledge types are supported with bnlearn engine. When required
-knowledge is provided, bnlearn may emit a warning during structure
-learning. This occurs when the algorithm identifies a candidate
-v-structure (collider) from the data whose orientation conflicts with
-edges already oriented due to background knowledge.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p>All knowledge types are supported with the bnlearn engine. When required knowledge is provided, bnlearn may emit a warning during structure learning. This occurs when the algorithm identifies a candidate v-structure (collider) from the data whose orientation conflicts with edges already oriented due to background knowledge.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
@@ -436,28 +431,26 @@ edges already oriented due to background knowledge.</p>
 <span><span class="co">#&gt; Warning in vstruct.apply(arcs = arcs, vs = vs, nodes = nodes, debug = debug):</span></span>
 <span><span class="co">#&gt; vstructure child_x2 -&gt; oldage_x5 &lt;- youth_x3 is not applicable, because one or</span></span>
 <span><span class="co">#&gt; both arcs are oriented in the opposite direction.</span></span></code></pre></div>
-<p>The resulting causal graph will still respect the provided
-knowledge.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+</div>
+<p>The resulting causal graph will still respect the provided knowledge.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
-<p><img src="knowledge_files/figure-html/plot%20bnlearn-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="knowledge_files/figure-html/plot%20bnlearn-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
-<div class="section level3">
-<h3 id="causaldisco">causalDisco<a class="anchor" aria-label="anchor" href="#causaldisco"></a>
-</h3>
-<p>causalDisco engine only supports tiered and forbidden knowledge. If
-required knowledge is provided, it will give a warning and ignore the
-required knowledge.</p>
 </div>
-<div class="section level3">
-<h3 id="pcalg">pcalg<a class="anchor" aria-label="anchor" href="#pcalg"></a>
+</div>
+</section><section class="level2"><h3 id="causaldisco">causalDisco<a class="anchor" aria-label="anchor" href="#causaldisco"></a>
 </h3>
-<p>Only forbidden symmetric knowledge is supported for pcalg engine.
-That is, edges that are forbidden in both directions. Thus, the only
-type of knowledge that can be used with pcalg is knowledge created using
-forbidden edges (<code>%!--&gt;%</code>) without any required or tier
-knowledge. An example is shown below:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p>The causalDisco engine only supports tiered and forbidden knowledge. If required knowledge is provided, it will give a warning and ignore the required knowledge.</p>
+</section><section class="level2"><h3 id="pcalg">pcalg<a class="anchor" aria-label="anchor" href="#pcalg"></a>
+</h3>
+<p>Only symmetric forbidden-edge constraints are supported by the pcalg engine. In practice, this means an edge must be forbidden in both directions. Such constraints can be specified using <code>%!--&gt;%</code> in both directions, as illustrated below:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -467,16 +460,95 @@ knowledge. An example is shown below:</p>
 <span><span class="va">pc_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"pcalg"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="tetrad">Tetrad<a class="anchor" aria-label="anchor" href="#tetrad"></a>
+</section><section class="level2"><h3 id="tetrad">Tetrad<a class="anchor" aria-label="anchor" href="#tetrad"></a>
 </h3>
-<p>All knowledge types are supported with Tetrad engine.</p>
-</div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+<p>All knowledge types are supported with the Tetrad engine.</p>
+</section></section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
-
 
 
     <footer><div class="pkgdown-footer-left">

@@ -166,12 +166,12 @@ method is constructed. Its responsibilities are to:
 The fully qualified class name can be identified by inspecting the
 Tetrad source code at:
 
-<https://github.com/cmu-phil/tetrad>
+https://github.com/cmu-phil/tetrad
 
 Be sure to browse the version corresponding to the installed Tetrad
 release. The relevant Java classes are located under:
 
-<https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java>
+https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java
 
 ``` r
 register_tetrad_algorithm(
@@ -283,7 +283,10 @@ causalDisco.
 ``` r
 # Ensure Tetrad is installed and Java is working before running the algorithm
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
-  my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
+  my_boss_variant_tetrad <- my_boss_variant(
+    engine = "tetrad",
+    score = "sem_bic"
+  )
   my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
   plot(my_boss_variant_tetrad_result)
 }

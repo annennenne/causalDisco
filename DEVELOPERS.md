@@ -59,11 +59,11 @@ the engine-specific R6 class:
 1.  **Public field `score`**  
     Add the score name so it is visible to users.
 
-2.  **`set_score()` method**  
+2.  **`set_score()`method**  
     Add a new case that maps the score name to the corresponding private
     method.
 
-3.  **`...` argument of `set_score()`**  
+3.  **`...`argument of `set_score()`**  
     Document and validate any additional parameters accepted by the
     score.
 

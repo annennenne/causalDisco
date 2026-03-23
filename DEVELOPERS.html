@@ -20,7 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/causal-discovery.html">Causal Discovery</a></li>
-    <li><a class="dropdown-item" href="articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="articles/visualization.html">Visualization</a></li>
   </ul></li>
@@ -71,9 +71,9 @@
 <p>When adding a new score, it must be registered in <strong>three places</strong> in the engine-specific R6 class:</p>
 <ol style="list-style-type: decimal"><li><p><strong>Public field <code>score</code></strong><br>
 Add the score name so it is visible to users.</p></li>
-<li><p><strong><code>set_score()</code> method</strong><br>
+<li><p><strong><code>set_score()</code>method</strong><br>
 Add a new case that maps the score name to the corresponding private method.</p></li>
-<li><p><strong><code>...</code> argument of <code>set_score()</code></strong><br>
+<li><p><strong><code>...</code>argument of <code>set_score()</code></strong><br>
 Document and validate any additional parameters accepted by the score.</p></li>
 </ol><p>In the <code>set_score()</code> method, add an entry of the form:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">

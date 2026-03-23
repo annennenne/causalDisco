@@ -16,7 +16,10 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Visualization">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="visualization_files/libs/quarto-html/popper.min.js"></script><script src="visualization_files/libs/quarto-html/tippy.umd.min.js"></script><link href="visualization_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="visualization_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Visualization">
+<meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -41,7 +44,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
-    <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul>
@@ -58,23 +61,25 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Visualization</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/visualization.Rmd" class="external-link"><code>vignettes/visualization.Rmd</code></a></small>
-      <div class="d-none name"><code>visualization.Rmd</code></div>
+
+
+
+
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/visualization.qmd" class="external-link"><code>vignettes/visualization.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+
+
+
+
+
+    <div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
 <span><span class="co">#&gt;   Java heap size requested: 2 GB</span></span>
@@ -82,49 +87,48 @@
 <span><span class="co">#&gt;   Java successfully initialized with 2 GB.</span></span>
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
-<p>This vignette demonstrates how to visualize causal graphs. We cover
-plotting <code>Knowledge</code> objects and <code>Disco</code> objects,
-customizing layouts and styles, and exporting graphs to readable TikZ
-for inclusion and further customization in LaTeX documents.</p>
-<div class="section level2">
-<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</div>
+<p>This vignette demonstrates how to visualize causal graphs. We cover plotting <code>Knowledge</code> objects and <code>Disco</code> objects, customizing layouts and styles, and exporting graphs to readable TikZ for inclusion and further customization in LaTeX documents.</p>
+<section class="section level2"><h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
-<p>You can visualize causal graphs using the <code><a href="../reference/plot.html">plot()</a></code>
-function, which works for both <code>Knowledge</code> and
-<code>Disco</code> objects. The function leverages the underlying
-<code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> method, providing flexible options for
-customizing the appearance of nodes and edges.</p>
-<div class="section level3">
-<h3 id="plotting-knowledge-objects">Plotting Knowledge Objects<a class="anchor" aria-label="anchor" href="#plotting-knowledge-objects"></a>
+<p>You can visualize causal graphs using the <code><a href="../reference/plot.html">plot()</a></code> function, which works for both <code>Knowledge</code> and <code>Disco</code> objects. The function leverages the underlying <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> method, providing flexible options for customizing the appearance of nodes and edges.</p>
+<section class="level2"><h3 id="plotting-knowledge-objects">Plotting Knowledge Objects<a class="anchor" aria-label="anchor" href="#plotting-knowledge-objects"></a>
 </h3>
-<p>We start by creating a simple <code>Knowledge</code> object and
-visualizing it with <code><a href="../reference/plot.html">plot()</a></code>. This knowledge encodes the
-following relationships between variables in our dataset:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>We will use the dataset <code>num_data</code> for the following examples, which contains 5 numeric variables (<code>X1</code>, <code>X2</code>, <code>X3</code>, <code>Y</code>, and <code>Z</code>). We start by creating a simple <code>Knowledge</code> object and visualizing it with <code><a href="../reference/plot.html">plot()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">num_data</span>,</span>
 <span>  <span class="va">X1</span> <span class="op">%--&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">X2</span>, <span class="va">X3</span><span class="op">)</span>, <span class="co"># Require edge from X1 to X2, and X1 to X3</span></span>
 <span>  <span class="va">X2</span> <span class="op">%!--&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">X3</span>, <span class="va">Y</span><span class="op">)</span>, <span class="co"># Forbid edge from X2 to X3, and X2 to Y</span></span>
-<span>  <span class="va">Y</span> <span class="op">%!--&gt;%</span> <span class="va">Z</span>  <span class="co"># Forbid edge from Y to Z</span></span>
+<span>  <span class="va">Y</span> <span class="op">%!--&gt;%</span> <span class="va">Z</span> <span class="co"># Forbid edge from Y to Z</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>By default, required edges are shown in blue and forbidden edges in
-red. You can customize these colors using the <code>required_col</code>
-and <code>forbidden_col</code> arguments:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledge%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>By default, required edges are shown in blue and forbidden edges in red. You can customize these colors using the <code>required_col</code> and <code>forbidden_col</code> arguments:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, required_col <span class="op">=</span> <span class="st">"skyblue"</span>, forbidden_col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Different node layouts, node styles, and edge styles can be specified
-using the <code>layout</code>, <code>node_style</code>, and
-<code>edge_style</code> parameters. We provide a quick example and refer
-to the <code><a href="../reference/plot.html">causalDisco::plot()</a></code> function (and the underlying
-<code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function) documentation for more details.
-Here we use the <code>"fruchterman-reingold"</code> layout and customize
-node and edge styles:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Different node layouts, node styles, and edge styles can be controlled via the <code>layout</code>, <code>node_style</code>, and <code>edge_style</code> parameters. We illustrate this with a simple example below. For a full description of available options, see the documentation for <code><a href="../reference/plot.html">causalDisco::plot()</a></code>, as well as the underlying <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function and its visualization vignette (<code><a href="https://caugi.org/articles/visualization.html" class="external-link">vignette("visualization", "caugi")</a></code>).</p>
+<p>In this example, we use the <code>"fruchterman-reingold"</code> layout and customize both node and edge styles:</p>
+<p>Here we use the <code>"fruchterman-reingold"</code> layout and customize node and edge styles:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">kn</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"fruchterman-reingold"</span>,</span>
@@ -142,15 +146,16 @@ node and edge styles:</p>
 <span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
 <span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Note that to override the colors for required and forbidden edges
-only for a specific edge, the edge needs to be targeted explicitly in
-the <code>by_edge</code> list of the <code>edge_style</code> argument.
-For example, to make the required edge from <code>X1</code> to
-<code>X2</code> orange and the forbidden edge from <code>X2</code> to
-<code>Y</code> yellow, while letting all other edges use the default
-colors, we can do:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that to override the colors for required and forbidden edges only for a specific edge, the edge needs to be targeted explicitly in the <code>by_edge</code> list of the <code>edge_style</code> argument. For example, to make the required edge from <code>X1</code> to <code>X2</code> orange and the forbidden edge from <code>X2</code> to <code>Y</code> yellow, while letting all other edges use the default colors, we can do:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">kn</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"fruchterman-reingold"</span>,</span>
@@ -177,22 +182,34 @@ colors, we can do:</p>
 <span>  required_col <span class="op">=</span> <span class="st">"blue"</span>, <span class="co"># Color for required edges</span></span>
 <span>  forbidden_col <span class="op">=</span> <span class="st">"red"</span> <span class="co"># Color for forbidden edges</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>You can also pass a custom layout to <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"Y"</span>, <span class="st">"Z"</span><span class="op">)</span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, layout <span class="op">=</span> <span class="va">my_layout</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<div class="section level4">
-<h4 id="plotting-tiered-knowledge">Plotting Tiered Knowledge<a class="anchor" aria-label="anchor" href="#plotting-tiered-knowledge"></a>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledge%20plot%20custom%20layout-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section class="level3"><h4 id="plotting-tiered-knowledge">Plotting Tiered Knowledge<a class="anchor" aria-label="anchor" href="#plotting-tiered-knowledge"></a>
 </h4>
-<p>We can also visualize tiered knowledge structures. Here is an example
-using a dataset with variables measured at different life stages:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>We can also visualize tiered knowledge structures. Here is an example using a dataset with variables measured at different life stages:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -205,20 +222,19 @@ using a dataset with variables measured at different life stages:</p>
 <span>  <span class="va">child_x2</span> <span class="op">%!--&gt;%</span> <span class="va">youth_x3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tiered</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tiered%20knowledge%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Variables are grouped by life stage, reflecting the tiered structure.
-This helps visually convey temporal or hierarchical relationships in the
-data.</p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/tiered%20knowledge%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="section level3">
-<h3 id="plotting-knowledgeable-caugi-objects">Plotting Knowledgeable Caugi Objects<a class="anchor" aria-label="anchor" href="#plotting-knowledgeable-caugi-objects"></a>
+</div>
+<p>Variables are grouped by life stage, reflecting the tiered structure. This helps visually convey temporal or hierarchical relationships in the data.</p>
+</section></section><section class="level2"><h3 id="plotting-knowledgeable-caugi-objects">Plotting Knowledgeable Caugi Objects<a class="anchor" aria-label="anchor" href="#plotting-knowledgeable-caugi-objects"></a>
 </h3>
-<p>Here we run a causal discovery algorithm to get a <code>Disco</code>
-object, which is the knowledge object alongside the learned causal graph
-as a <code>caugi</code> object. We can then plot this combined object to
-see both the prior knowledge and the learned relationships</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Here we run a causal discovery algorithm to get a <code>Disco</code> object, which is the knowledge object alongside the learned causal graph as a <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> object. We can then plot this combined object to see both the prior knowledge and the learned relationships</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">num_data</span>,</span>
@@ -230,12 +246,17 @@ see both the prior knowledge and the learned relationships</p>
 <span><span class="va">pc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span><span class="op">)</span></span>
 <span><span class="va">pc_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">num_data</span>, method <span class="op">=</span> <span class="va">pc_bnlearn</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>Blue edges indicate required relationships from prior knowledge,
-black edges show those learned from the data, and forbidden edges are
-not plotted (to avoid confusion and clutter).</p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledgeable%20caugi%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Blue edges indicate required relationships from prior knowledge, black edges show those learned from the data, and forbidden edges are not plotted (to avoid confusion and clutter).</p>
 <p>With tiered knowledge, the plotting works similarly:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -246,34 +267,30 @@ not plotted (to avoid confusion and clutter).</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tges.html">tges</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"causalDisco"</span>, score <span class="op">=</span> <span class="st">"tbic"</span><span class="op">)</span></span>
-<span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">cd_tges</span>, knowledge <span class="op">=</span> <span class="va">kn_tiered</span><span class="op">)</span></span>
+<span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">tpc_example</span>,</span>
+<span>  method <span class="op">=</span> <span class="va">cd_tges</span>,</span>
+<span>  knowledge <span class="op">=</span> <span class="va">kn_tiered</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/knowledgeable%20caugi%20tiered%20plot-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/knowledgeable%20caugi%20tiered%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Where we can see the tiers reflected in the layout of the graph.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="exporting-to-tikz">Exporting to TikZ<a class="anchor" aria-label="anchor" href="#exporting-to-tikz"></a>
+</section></section><section class="section level2"><h2 id="exporting-to-tikz">Exporting to TikZ<a class="anchor" aria-label="anchor" href="#exporting-to-tikz"></a>
 </h2>
-<p>The <code><a href="../reference/make_tikz.html">make_tikz()</a></code> function exports plots as clean, fully
-editable TikZ code for inclusion in LaTeX documents.</p>
-<p>Unlike some graph export tools, edges are attached to nodes rather
-than positioned using hard-coded coordinates, making the output easier
-to modify.</p>
-<p>This functionality works for <code>Knowledge</code>,
-<code>Disco</code>, and <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> objects, allowing you
-to customize layouts, styles, and edges further in your LaTeX document.
-It calls the underlying <code><a href="../reference/plot.html">causalDisco::plot()</a></code> method (which
-calls <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>) to generate the initial plot object
-before converting it to TikZ code. Thus, you can supply any arguments to
-<code><a href="../reference/make_tikz.html">make_tikz()</a></code> that are supported by
-<code><a href="../reference/plot.html">causalDisco::plot()</a></code> and <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>.</p>
-<div class="section level3">
-<h3 id="exporting-knowledge-to-tikz">Exporting Knowledge to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledge-to-tikz"></a>
+<p>The <code><a href="../reference/make_tikz.html">make_tikz()</a></code> function exports plots as clean, fully editable TikZ code for inclusion in LaTeX documents.</p>
+<p>Unlike some graph export tools, edges are attached to nodes rather than positioned using hard-coded coordinates, making the output easier to modify.</p>
+<p>This functionality works for <code>Knowledge</code>, <code>Disco</code>, and <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> objects, allowing you to customize layouts, styles, and edges further in your LaTeX document. It calls the underlying <code><a href="../reference/plot.html">causalDisco::plot()</a></code> method (which calls <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>) to generate the initial plot object before converting it to TikZ code. Thus, you can supply any arguments to <code><a href="../reference/make_tikz.html">make_tikz()</a></code> that are supported by <code><a href="../reference/plot.html">causalDisco::plot()</a></code> and <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code>.</p>
+<section class="level2"><h3 id="exporting-knowledge-to-tikz">Exporting Knowledge to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledge-to-tikz"></a>
 </h3>
-<p>We first demonstrate TikZ export for a <code>Knowledge</code>
-object.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>We first demonstrate TikZ export for a <code>Knowledge</code> object.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">num_data</span>,</span>
@@ -322,18 +339,11 @@ object.</p>
 <span><span class="co">#&gt;       (X2) edge[, -Latex] (Y)</span></span>
 <span><span class="co">#&gt;       (Y) edge[, -Latex] (Z);</span></span>
 <span><span class="co">#&gt; \end{tikzpicture}</span></span></code></pre></div>
-<p>Setting <code>full_doc = TRUE</code> generates a complete standalone
-LaTeX document that can be compiled directly. Using
-<code>full_doc = FALSE</code> instead returns only the tikzpicture
-environment, which is convenient for inclusion inside an existing LaTeX
-document.</p>
-<p>The TikZ export also supports edge bending, which can substantially
-improve readability when edges passes thorugh other nodes, as can easily
-happen in tiered knowledge structures. This feature is not available in
-the standard <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function. Here is an example,
-where the edge using the standard straight style edge overlaps the node
-<code>youth_x3</code>, while the bent edge avoids this overlap:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+</div>
+<p>Setting <code>full_doc = TRUE</code> generates a complete standalone LaTeX document that can be compiled directly. Using <code>full_doc = FALSE</code> instead returns only the tikzpicture environment, which is convenient for inclusion inside an existing LaTeX document.</p>
+<p>The TikZ export also supports edge bending, which can substantially improve readability when edges passes thorugh other nodes, as can easily happen in tiered knowledge structures. This feature is not available in the standard <code><a href="https://caugi.org/reference/plot.html" class="external-link">caugi::plot()</a></code> function. Here is an example, where the edge using the standard straight style edge overlaps the node <code>youth_x3</code>, while the bent edge avoids this overlap:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -346,8 +356,13 @@ where the edge using the standard straight style edge overlaps the node
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn_tiered</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20bend%20edges-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/tikz%20bend%20edges-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">tikz_bent_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span></span>
 <span>  <span class="va">kn_tiered</span>,</span>
@@ -377,15 +392,21 @@ where the edge using the standard straight style edge overlaps the node
 <span><span class="co">#&gt; \node[anchor=south, draw=none, fill=none] at ($(youth.north)+(0cm,0.2cm)$) {youth};</span></span>
 <span><span class="co">#&gt; \path (child_x1) edge[bend left=20, -Latex] (oldage_x5);</span></span>
 <span><span class="co">#&gt; \end{tikzpicture}</span></span></code></pre></div>
-<p>The TikZ plot can be seen here:</p>
-<p><img src="tikz-tier-plot.png" class="r-plt" alt="" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="exporting-knowledgeable-caugi-to-tikz">Exporting Knowledgeable Caugi to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledgeable-caugi-to-tikz"></a>
+<p>The TikZ plot can be seen here:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="tikz-tier-plot.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="exporting-knowledgeable-caugi-to-tikz">Exporting Knowledgeable Caugi to TikZ<a class="anchor" aria-label="anchor" href="#exporting-knowledgeable-caugi-to-tikz"></a>
 </h3>
-<p>The output of <code><a href="../reference/disco.html">disco()</a></code> gives a <code>Disco</code> object,
-which can also be exported to TikZ:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>The output of <code><a href="../reference/disco.html">disco()</a></code> gives a <code>Disco</code> object, which can also be exported to TikZ:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">kn_tiered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -403,12 +424,26 @@ which can also be exported to TikZ:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tges.html">tges</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"causalDisco"</span>, score <span class="op">=</span> <span class="st">"tbic"</span><span class="op">)</span></span>
-<span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">cd_tges</span>, knowledge <span class="op">=</span> <span class="va">kn_tiered</span><span class="op">)</span></span>
+<span><span class="va">disco_cd_tges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">tpc_example</span>,</span>
+<span>  method <span class="op">=</span> <span class="va">cd_tges</span>,</span>
+<span>  knowledge <span class="op">=</span> <span class="va">kn_tiered</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">disco_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">disco_cd_tges</span><span class="op">)</span></span>
-<span><span class="va">tikz_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">disco_plot</span>, tier_node_map <span class="op">=</span> <span class="va">tiers</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<span><span class="va">tikz_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span></span>
+<span>  <span class="va">disco_plot</span>,</span>
+<span>  tier_node_map <span class="op">=</span> <span class="va">tiers</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  full_doc <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/tikz%20export%20knowledgeable%20caugi-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 1.0.1.9001)</span></span>
 <span><span class="co">#&gt; \tikzset{every node/.style={fill=lightgray}}</span></span>
@@ -428,19 +463,23 @@ which can also be exported to TikZ:</p>
 <span><span class="co">#&gt;       (youth_x4) edge[, -Latex] (oldage_x6);</span></span>
 <span><span class="co">#&gt; \end{tikzpicture}</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="exporting-caugi-objects-to-tikz">Exporting Caugi Objects to TikZ<a class="anchor" aria-label="anchor" href="#exporting-caugi-objects-to-tikz"></a>
+</section><section class="level2"><h3 id="exporting-caugi-objects-to-tikz">Exporting Caugi Objects to TikZ<a class="anchor" aria-label="anchor" href="#exporting-caugi-objects-to-tikz"></a>
 </h3>
-<p>The same export mechanism also applies to standard <code>caugi</code>
-objects:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>The same export mechanism also applies to standard <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> objects:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cg</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi</a></span><span class="op">(</span></span>
 <span>  <span class="va">A</span> <span class="op">%--&gt;%</span> <span class="va">B</span> <span class="op">+</span> <span class="va">C</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">plot_obj</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cg</span>, node_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tikz_caugi_snippet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_tikz.html">make_tikz</a></span><span class="op">(</span><span class="va">plot_obj</span>, scale <span class="op">=</span> <span class="fl">10</span>, full_doc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="visualization_files/figure-html/tikz%20export%20caugi-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="visualization_files/figure-html/tikz%20export%20caugi-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">tikz_caugi_snippet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; %%% Generated by causalDisco (version 1.0.1.9001)</span></span>
 <span><span class="co">#&gt; \tikzset{every node/.style={fill=red}}</span></span>
@@ -453,11 +492,92 @@ objects:</p>
 <span><span class="co">#&gt;       (A) edge[, -Latex] (C);</span></span>
 <span><span class="co">#&gt; \end{tikzpicture}</span></span></code></pre></div>
 </div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+</section></section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
-
 
 
     <footer><div class="pkgdown-footer-left">

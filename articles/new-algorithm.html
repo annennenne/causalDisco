@@ -16,7 +16,10 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extending causalDisco with new algorithms">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="new-algorithm_files/libs/quarto-html/popper.min.js"></script><script src="new-algorithm_files/libs/quarto-html/tippy.umd.min.js"></script><link href="new-algorithm_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="new-algorithm_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extending causalDisco with new algorithms">
+<meta property="og:image" content="https://disco-coders.github.io/causalDisco/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -41,7 +44,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
-    <li><a class="dropdown-item" href="../articles/knowledge.html">Knowledge</a></li>
+    <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
   </ul>
@@ -58,23 +61,25 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Extending causalDisco with new algorithms</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/new-algorithm.Rmd" class="external-link"><code>vignettes/new-algorithm.Rmd</code></a></small>
-      <div class="d-none name"><code>new-algorithm.Rmd</code></div>
+
+
+
+
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/new-algorithm.qmd" class="external-link"><code>vignettes/new-algorithm.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+
+
+
+
+
+    <div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
 <span><span class="co">#&gt;   Java heap size requested: 2 GB</span></span>
@@ -82,27 +87,16 @@
 <span><span class="co">#&gt;   Java successfully initialized with 2 GB.</span></span>
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
-<p>This vignette illustrates how to add a new algorithm to causalDisco
-from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages
-and therefore share the same interface, while Tetrad is a Java library
-and requires a slightly different integration pattern.</p>
-<div class="section level2">
-<h2 id="bnlearn-and-pcalg">bnlearn and pcalg<a class="anchor" aria-label="anchor" href="#bnlearn-and-pcalg"></a>
+</div>
+<p>This vignette illustrates how to add a new algorithm to causalDisco from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore share the same interface, while Tetrad is a Java library and requires a slightly different integration pattern.</p>
+<section class="section level2"><h2 id="bnlearn-and-pcalg">bnlearn and pcalg<a class="anchor" aria-label="anchor" href="#bnlearn-and-pcalg"></a>
 </h2>
-<p>Suppose we want to add the Hybrid Parents and Children (HPC)
-algorithm from bnlearn. We can integrate it into causalDisco by creating
-a new function <code>hpc()</code>.</p>
-<p>HPC is a constraint-based algorithm, so it requires a conditional
-independence test and a significance level alpha. It returns a PDAG, so
-we set the <code>graph_class</code> attribute to
-<code>"PDAG"</code>.</p>
-<p>The function takes an <code>engine</code> argument, which specifies
-which implementation of the algorithm to use. Even though we only add
-HPC from bnlearn in this example, we set up the structure to allow for
-multiple engines in the future. The <code>...</code> argument allows us
-to pass additional arguments to the underlying algorithm and test.</p>
+<p>Suppose we want to add the Hybrid Parents and Children (HPC) algorithm from bnlearn. We can integrate it into causalDisco by creating a new function <code>hpc()</code>.</p>
+<p>HPC is a constraint-based algorithm, so it requires a conditional independence test and a significance level alpha. It returns a PDAG, so we set the <code>graph_class</code> attribute to <code>"PDAG"</code>.</p>
+<p>The function takes an <code>engine</code> argument, which specifies which implementation of the algorithm to use. Even though we only add HPC from bnlearn in this example, we set up the structure to allow for multiple engines in the future. The <code>...</code> argument allows us to pass additional arguments to the underlying algorithm and test.</p>
 <p>The code for the <code>hpc()</code> function is as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hpc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">engine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bnlearn"</span><span class="op">)</span>,</span>
 <span>  <span class="va">test</span>,</span>
@@ -132,24 +126,15 @@ to pass additional arguments to the underlying algorithm and test.</p>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">method</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+</div>
 <p>We see that the <code>hpc()</code> function needs two components:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Builder function:</strong> Constructs a <em>runner</em>
-for the algorithm. It configures the algorithm with the provided
-parameters and optional background knowledge.</p></li>
-<li><p><strong>Method object:</strong> Created via
-<code><a href="../reference/new_disco_method.html">new_disco_method()</a></code>. It encapsulates the builder and
-metadata about the method. This allows us to be able to call
-<code><a href="../reference/disco.html">disco()</a></code> to execute the algorithm on a dataset.</p></li>
+<ol type="1">
+<li><p><strong>Builder function:</strong> Constructs a <em>runner</em> for the algorithm. It configures the algorithm with the provided parameters and optional background knowledge.</p></li>
+<li><p><strong>Method object:</strong> Created via <code><a href="../reference/new_disco_method.html">new_disco_method()</a></code>. It encapsulates the builder and metadata about the method. This allows us to be able to call <code><a href="../reference/disco.html">disco()</a></code> to execute the algorithm on a dataset.</p></li>
 </ol>
-<p>Next, we define the runner. The runner handles configuring the search
-object with the chosen test, alpha level, and any additional arguments,
-and it actually runs the search on the data when called. For bnlearn
-algorithms, we use the <code>BnlearnSearch</code> R6 class to manage
-search configuration and execution. We also use
-<code><a href="../reference/distribute_engine_args.html">distribute_engine_args()</a></code> to determine which extra arguments
-should be passed to the test, the algorithm, or both.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Next, we define the runner. The runner handles configuring the search object with the chosen test, alpha level, and any additional arguments, and it actually runs the search on the data when called. For bnlearn algorithms, we use the <code>BnlearnSearch</code> R6 class to manage search configuration and execution. We also use <code><a href="../reference/distribute_engine_args.html">distribute_engine_args()</a></code> to determine which extra arguments should be passed to the test, the algorithm, or both.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hpc_bnlearn_runner</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">test</span>, <span class="va">alpha</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span>  <span class="va">search</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/BnlearnSearch.html">BnlearnSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
@@ -173,61 +158,42 @@ should be passed to the test, the algorithm, or both.</p>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">runner</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Once defined, the HPC algorithm can be used like any other method in
-causalDisco. We first construct the method using <code>hpc()</code>, and
-then pass it to <code><a href="../reference/disco.html">disco()</a></code>. Here we demonstrate using the
-included <code>tpc_example</code> dataset:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</div>
+<p>Once defined, the HPC algorithm can be used like any other method in causalDisco. We first construct the method using <code>hpc()</code>, and then pass it to <code><a href="../reference/disco.html">disco()</a></code>. Here we demonstrate using the included <code>tpc_example</code> dataset:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">hpc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu">hpc</span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">hpc_bnlearn_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">hpc_bnlearn</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">hpc_bnlearn_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="new-algorithm_files/figure-html/hpc%20example-1.png" class="r-plt" alt="" width="700" style="display: block; margin: auto;"></p>
-<p>To implement a <strong>score-based</strong> algorithm instead, the
-structure would remain the same. The main difference is that the method
-would accept a <code>score</code> argument rather than <code>test</code>
-and <code>alpha</code>, and the runner would call
-<code>search$set_score()</code> instead of
-<code>search$set_test()</code>. A <strong>hybrid</strong> algorithm
-algorithm would accept <code>test</code>, <code>alpha</code>, and
-<code>score</code> arguments, and the runner would call both
-<code>set_test()</code> and <code>set_score()</code>.</p>
-<p>To implement an algorithm from pcalg rather than bnlearn, we would
-follow the same structure but use the R6 class <code>PcalgSearch</code>
-instead of <code>BnlearnSearch</code> in the runner (i.e.,
-<code>PcalgSearch$new()</code>).</p>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="new-algorithm_files/figure-html/hpc%20example-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+</figure>
 </div>
-<div class="section level2">
-<h2 id="tetrad">Tetrad<a class="anchor" aria-label="anchor" href="#tetrad"></a>
+</div>
+</div>
+<p>To implement a <strong>score-based</strong> algorithm instead, the structure would remain the same. The main difference is that the method would accept a <code>score</code> argument rather than <code>test</code> and <code>alpha</code>, and the runner would call <code>search$set_score()</code> instead of <code>search$set_test()</code>. A <strong>hybrid</strong> algorithm algorithm would accept <code>test</code>, <code>alpha</code>, and <code>score</code> arguments, and the runner would call both <code>set_test()</code> and <code>set_score()</code>.</p>
+<p>To implement an algorithm from pcalg rather than bnlearn, we would follow the same structure but use the R6 class <code>PcalgSearch</code> instead of <code>BnlearnSearch</code> in the runner (i.e., <code>PcalgSearch$new()</code>).</p>
+</section><section class="section level2"><h2 id="tetrad">Tetrad<a class="anchor" aria-label="anchor" href="#tetrad"></a>
 </h2>
-<p>We will illustrate how to make a custom version (which actually does
-the same as our implementation, just with some defensive programming
-omitted) of the BOSS algorithm from Tetrad. Tetrad algorithms follow a
-slightly different integration pattern because Tetrad is a Java library
-rather than an R package.</p>
-<p>To add a new Tetrad algorithm, first register it with
-<code><a href="../reference/register_tetrad_algorithm.html">register_tetrad_algorithm()</a></code>. This function requires:</p>
+<p>We will illustrate how to make a custom version (which actually does the same as our implementation, just with some defensive programming omitted) of the BOSS algorithm from Tetrad. Tetrad algorithms follow a slightly different integration pattern because Tetrad is a Java library rather than an R package.</p>
+<p>To add a new Tetrad algorithm, first register it with <code><a href="../reference/register_tetrad_algorithm.html">register_tetrad_algorithm()</a></code>. This function requires:</p>
 <ul>
 <li>The algorithm name.</li>
-<li>A setup function that configures a <code>TetradSearch</code> object
-to execute the algorithm.</li>
+<li>A setup function that configures a <code>TetradSearch</code> object to execute the algorithm.</li>
 </ul>
-<p>The setup function receives the TetradSearch object as its first
-argument, along with any additional parameters passed via
-<code>...</code> when the method is constructed. Its responsibilities
-are to:</p>
-<ol style="list-style-type: decimal">
-<li>Configure the TetradSearch object with the appropriate parameters
-and score.</li>
+<p>The setup function receives the TetradSearch object as its first argument, along with any additional parameters passed via <code>...</code> when the method is constructed. Its responsibilities are to:</p>
+<ol type="1">
+<li>Configure the TetradSearch object with the appropriate parameters and score.</li>
 <li>Instantiate the correct Tetrad algorithm class.</li>
 </ol>
-<p>The fully qualified class name can be identified by inspecting the
-Tetrad source code at:</p>
-<p><a href="https://github.com/cmu-phil/tetrad" class="external-link uri">https://github.com/cmu-phil/tetrad</a></p>
-<p>Be sure to browse the version corresponding to the installed Tetrad
-release. The relevant Java classes are located under:</p>
-<p><a href="https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java" class="external-link uri">https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java</a></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>The fully qualified class name can be identified by inspecting the Tetrad source code at:</p>
+<p>https://github.com/cmu-phil/tetrad</p>
+<p>Be sure to browse the version corresponding to the installed Tetrad release. The relevant Java classes are located under:</p>
+<p>https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/register_tetrad_algorithm.html">register_tetrad_algorithm</a></span><span class="op">(</span></span>
 <span>  <span class="st">"my_boss_variant"</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span></span>
@@ -251,18 +217,12 @@ release. The relevant Java classes are located under:</p>
 <span>    <span class="va">self</span><span class="op">$</span><span class="va">alg</span><span class="op">$</span><span class="fu">setKnowledge</span><span class="op">(</span><span class="va">self</span><span class="op">$</span><span class="va">knowledge</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>You can view all the custom registered Tetrad algorithms using
-<code><a href="../reference/list_registered_tetrad_algorithms.html">list_registered_tetrad_algorithms()</a></code>, and reset it using
-<code><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry()</a></code>.</p>
-<p>Like for bnlearn and pcalg, we then create a method function
-<code>my_boss_variant()</code> that constructs a builder function which
-in turn constructs a runner using the registered Tetrad algorithm.</p>
-<p>BOSS is a <strong>score-based</strong> algorithm, so the method
-accepts a <code>score</code> argument and passes it to the runner, which
-configures the <code>TetradSearch</code> object accordingly. It returns
-a PDAG, so we set the <code>graph_class</code> attribute to
-<code>"PDAG"</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+</div>
+<p>You can view all the custom registered Tetrad algorithms using <code><a href="../reference/list_registered_tetrad_algorithms.html">list_registered_tetrad_algorithms()</a></code>, and reset it using <code><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry()</a></code>.</p>
+<p>Like for bnlearn and pcalg, we then create a method function <code>my_boss_variant()</code> that constructs a builder function which in turn constructs a runner using the registered Tetrad algorithm.</p>
+<p>BOSS is a <strong>score-based</strong> algorithm, so the method accepts a <code>score</code> argument and passes it to the runner, which configures the <code>TetradSearch</code> object accordingly. It returns a PDAG, so we set the <code>graph_class</code> attribute to <code>"PDAG"</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_boss_variant</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">engine</span> <span class="op">=</span> <span class="st">"tetrad"</span>,</span>
 <span>  <span class="va">score</span>,</span>
@@ -287,9 +247,10 @@ a PDAG, so we set the <code>graph_class</code> attribute to
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">method</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Next we define the runner function
-<code>my_boss_variant_tetrad_runner()</code></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+</div>
+<p>Next we define the runner function <code>my_boss_variant_tetrad_runner()</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_boss_variant_tetrad_runner</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">search</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/TetradSearch.html">TetradSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -322,38 +283,123 @@ a PDAG, so we set the <code>graph_class</code> attribute to
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">runner</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Once defined we can now run <code>my_boss_variant()</code> like any
-other method in causalDisco.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+</div>
+<p>Once defined we can now run <code>my_boss_variant()</code> like any other method in causalDisco.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Ensure Tetrad is installed and Java is working before running the algorithm</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">my_boss_variant_tetrad</span> <span class="op">&lt;-</span> <span class="fu">my_boss_variant</span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, score <span class="op">=</span> <span class="st">"sem_bic"</span><span class="op">)</span></span>
+<span>  <span class="va">my_boss_variant_tetrad</span> <span class="op">&lt;-</span> <span class="fu">my_boss_variant</span><span class="op">(</span></span>
+<span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>,</span>
+<span>    score <span class="op">=</span> <span class="st">"sem_bic"</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="va">my_boss_variant_tetrad_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">my_boss_variant_tetrad</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">my_boss_variant_tetrad_result</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="custom-boss-variant-pkgdown.png" class="r-plt" alt="" style="display: block; margin: auto;"></p>
-<p>Once again, if using a hybrid or constraint-based algorithm rather
-than a score-based one, the structure would remain the same but the
-method would accept different arguments (e.g., <code>test</code> and
-<code>alpha</code> for a constraint-based algorithm).</p>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="custom-boss-variant-pkgdown.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Once again, if using a hybrid or constraint-based algorithm rather than a score-based one, the structure would remain the same but the method would accept different arguments (e.g., <code>test</code> and <code>alpha</code> for a constraint-based algorithm).</p>
 <p>Finally, we clean up the custom registered Tetrad algorithm</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</section><section class="section level2"><h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>In this vignette, we have illustrated how to add new algorithms to
-causalDisco, both from the R packages pcalg and bnlearn and from
-Tetrad.</p>
-<p>If you have any feedback or suggestions for improvement on the API
-and functionality for extending causalDisco, please let us know by
-opening an issue on GitHub.</p>
+<p>In this vignette, we have illustrated how to add new algorithms to causalDisco, both from the R packages pcalg and bnlearn and from Tetrad.</p>
+<p>If you have any feedback or suggestions for improvement on the API and functionality for extending causalDisco, please let us know by opening an issue on GitHub.</p>
+</section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
-</div>
-
 
 
     <footer><div class="pkgdown-footer-left">

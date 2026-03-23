@@ -27,10 +27,10 @@ Suppose we have this DAG:
 
 ``` r
 cg <- caugi::caugi(
-    Z %-->% X1,
-    X3 %-->% X2,
-    X1 %-->% Y,
-    X2 %-->% Y
+  Z %-->% X1,
+  X3 %-->% X2,
+  X1 %-->% Y,
+  X2 %-->% Y
 )
 ```
 
@@ -241,7 +241,10 @@ We can then apply the PC algorithm as before:
 
 ``` r
 pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-pc_result_unobserved <- disco(data = data_unobserved, method = pc_pcalg_unobserved)
+pc_result_unobserved <- disco(
+  data = data_unobserved,
+  method = pc_pcalg_unobserved
+)
 plot(pc_result_unobserved, layout = layout, main = "PC (pcalg)")
 ```
 
