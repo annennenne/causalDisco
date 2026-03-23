@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/jolars/panache
+    rev: v2.24.0
+
+    hooks:
+      - id: panache-format
+      - id: panache-lint

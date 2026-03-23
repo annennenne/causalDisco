@@ -3,7 +3,6 @@
 ^causalDisco\.Rproj$
 ^\.github$
 ^\.Rproj\.user$
-^\.lintr$
 .gitignore
 .Rd2pdf*
 app
@@ -20,7 +19,6 @@ README.*
 ^cran-comments\.md$
 ^README\.Rmd$
 CRAN-SUBMISSION
-^codecov\.yml$
 ^README\.Rmd$
 man-roxygen
 ^_pkgdown\.yml$
@@ -37,3 +35,5 @@ man-roxygen
 ^\.claude$
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^\.pre-commit-config\.yaml$
+^[.]?panache[.]toml$
