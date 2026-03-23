@@ -80,8 +80,8 @@ plot(kn_1_removed)
 
 ## Specifying required and forbidden edges in a dataset
 
-We will use the `tpc_example` dataset from the causalDisco package for the
-following examples:
+We will use the `tpc_example` dataset available in the package for the
+following examples. The dataset contains 6 variables, as shown below:
 
 ```{r}
 #| label: dataset required and forbidden knowledge
@@ -89,8 +89,9 @@ data(tpc_example)
 head(tpc_example)
 ```
 
-We can pass the dataset to `knowledge()` as the first argument, which also
-checks that the specified variables exist in the dataset:
+When specifying knowledge, it is often more convenient to specify the dataset so that
+the variables are checked for existence and selected correctly. To do this,
+pass the dataset as the first argument to `knowledge()`.
 
 ```{r}
 #| label: required and forbidden knowledge with data
@@ -241,7 +242,7 @@ Tidyselect helpers such as `starts_with` can also be used to define tiers in a
 concise way, just as with required and forbidden edges. Different tidyselect
 helpers can be freely combined within a tier definition using `+`. For example,
 the following tiered `Knowledge` object defines two tiers, "young" and "old", by
-combining tidyselect helpers:
+combining tidyselect helpers on the variables in the `tpc_example` dataset:
 
 ```{r}
 #| label: tier knowledge with tidyselect
@@ -275,7 +276,7 @@ kn_exo_1 <- knowledge(
 )
 ```
 
-Instead of `exogenous`, you can also use the shorthand function `exo()`. This
+Instead of `exogenous()`, you can also use the shorthand function `exo()`. This
 `Knowledge` object can be visualized:
 
 ```{r}
@@ -321,7 +322,7 @@ plot(kn_combined)
 Once prior knowledge has been specified, it can be supplied to causal discovery
 algorithms by passing the `Knowledge` object to the `disco()` function via the
 `knowledge` argument. For example, we can use the Temporal GES algorithm
-`tges()` with engine "causalDisco" and temporal BIC ("tbic"):
+`tges()` with engine "causalDisco" and temporal BIC ("tbic") score, while providing tiered knowledge:
 
 ```{r}
 #| label: causal discovery with tier knowledge
@@ -338,8 +339,8 @@ cd_tges <- tges(engine = "causalDisco", score = "tbic")
 disco_cd_tges <- disco(data = tpc_example, method = cd_tges, knowledge = kn)
 ```
 
-The causal discovery algorithms respects the provided knowledge. We can plot the
-resulting causal graph:
+The causal discovery algorithms will then learn the causal graph from the data
+given the constraints specified in the `Knowledge` object.
 
 ```{r}
 #| label: plot causal discovery with tier knowledge
@@ -356,7 +357,7 @@ algorithm, i.e. the engine you specify to an algorithm such as
 
 ## bnlearn
 
-All knowledge types are supported with bnlearn engine. When required knowledge
+All knowledge types are supported with the bnlearn engine. When required knowledge
 is provided, bnlearn may emit a warning during structure learning. This occurs
 when the algorithm identifies a candidate v-structure (collider) from the data
 whose orientation conflicts with edges already oriented due to background
@@ -384,15 +385,14 @@ plot(output)
 
 ## causalDisco
 
-causalDisco engine only supports tiered and forbidden knowledge. If required
+The causalDisco engine only supports tiered and forbidden knowledge. If required
 knowledge is provided, it will give a warning and ignore the required knowledge.
 
 ## pcalg
 
-Only forbidden symmetric knowledge is supported for pcalg engine. That is, edges
-that are forbidden in both directions. Thus, the only type of knowledge that can
-be used with pcalg is knowledge created using forbidden edges (`%!-->%`) without
-any required or tier knowledge. An example is shown below:
+Only symmetric forbidden-edge constraints are supported by the pcalg engine.
+In practice, this means an edge must be forbidden in both directions. Such constraints
+can be specified using `%!-->%` in both directions, as illustrated below:
 
 ```{r}
 #| label: pcalg
@@ -408,4 +408,4 @@ output <- disco(data = tpc_example, method = pc_pcalg, knowledge = kn)
 
 ## Tetrad
 
-All knowledge types are supported with Tetrad engine.
+All knowledge types are supported with the Tetrad engine.
