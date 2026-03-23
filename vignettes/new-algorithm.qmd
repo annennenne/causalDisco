@@ -1,20 +1,15 @@
 ---
 title: "Extending causalDisco with new algorithms"
-output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Extending causalDisco with new algorithms}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+    fig.align: "center"
 ---
-
-```{r}
-#| include: false
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center"
-)
-```
 
 ```{r}
 #| label: setup
@@ -174,6 +169,7 @@ relevant Java classes are located under:
 https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java
 
 ```{r}
+#| label: register algorithm
 register_tetrad_algorithm(
   "my_boss_variant",
   function(
@@ -213,6 +209,7 @@ accordingly. It returns a PDAG, so we set the `graph_class` attribute to
 `"PDAG"`.
 
 ```{r}
+#| label: my_boss_variant function
 my_boss_variant <- function(
   engine = "tetrad",
   score,

@@ -1,20 +1,15 @@
 ---
-title: "Knowledge"
-output: rmarkdown::html_vignette
+title: "Incorporating Knowledge"
 vignette: >
-  %\VignetteIndexEntry{Knowledge}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Incorporating Knowledge}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+    fig.align: "center"
 ---
-
-```{r}
-#| include: false
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center"
-)
-```
 
 ```{r}
 #| label: setup

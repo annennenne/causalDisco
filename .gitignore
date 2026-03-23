@@ -22,3 +22,5 @@ inst/doc
 .quarto
 /doc/
 /Meta/
+.positai
+**/.quarto/

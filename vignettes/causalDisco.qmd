@@ -1,20 +1,15 @@
 ---
 title: "causalDisco"
-output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{causalDisco}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+    fig.align: "center"
 ---
-
-```{r}
-#| include: false
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center"
-)
-```
 
 ```{r}
 #| label: setup
@@ -42,6 +37,7 @@ To make the different causal graphs easier to interpret, we define a custom
 fixed layout for plotting the results:
 
 ```{r}
+#| label: plot layout
 plot_layout <- data.frame(
   name = c("Z", "X3", "X1", "X2", "Y"),
   x = c(0.00, 0.50, 0.00, 0.50, 0.25),
@@ -67,6 +63,7 @@ pc_result_bnlearn <- disco(data = num_data, method = pc_bnlearn)
 We can visualize the results using `plot()`:
 
 ```{r}
+#| label: pc algorithm fisher z bnlearn plot
 plot(pc_result_bnlearn, layout = plot_layout, main = "PC Fisher Z (bnlearn)")
 ```
 
@@ -128,7 +125,8 @@ install_tetrad()
 
 To verify everything is set up correctly you can run `verify_tetrad()`:
 
-```{r check tetrad install}
+```{r}
+#| label: check tetrad install
 verify_tetrad()
 ```
 
@@ -233,6 +231,7 @@ variables, which are measured at three different life stages: childhood, youth,
 and old age.
 
 ```{r}
+#| label: load tpc example data
 data(tpc_example)
 head(tpc_example)
 ```

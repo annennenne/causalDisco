@@ -33,3 +33,7 @@ man-roxygen
 ^LICENSE\.md$
 ^rjavaenv$
 ^[.]?jarl[.]toml$
+^\.positai$
+^\.claude$
+^vignettes/\.quarto$
+^vignettes/*_files$
