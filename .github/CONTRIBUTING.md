@@ -1,7 +1,7 @@
 # Contributing
 
-Contributions are welcome and appreciated! 
-Thank you for taking the time to help improve this project.
+Contributions are welcome and appreciated! Thank you for taking the time to help
+improve this project.
 
 ## How to Contribute
 
@@ -14,11 +14,12 @@ You can contribute in many ways, including:
 
 ## Issues
 
-If you’ve found a bug, please open an issue and provide a minimal working example
-(MWE; see also [reprex](https://reprex.tidyverse.org/)) when possible.
+If you’ve found a bug, please open an issue and provide a minimal working
+example (MWE; see also [reprex](https://reprex.tidyverse.org/)) when possible.
 
-If you’re planning to add a new feature or make a significant change, it’s a good idea to open an issue first to
-discuss it before starting work. This helps ensure alignment and avoids duplicate effort.
+If you’re planning to add a new feature or make a significant change, it’s a
+good idea to open an issue first to discuss it before starting work. This helps
+ensure alignment and avoids duplicate effort.
 
 ## Pull Requests
 
@@ -28,5 +29,6 @@ discuss it before starting work. This helps ensure alignment and avoids duplicat
 
 ## More Information
 
-For additional information about the code structure and developer guidelines please see
+For additional information about the code structure and developer guidelines
+please see
 [DEVELOPERS.md](https://github.com/disco-coders/causalDisco/blob/master/.github/DEVELOPERS.md).

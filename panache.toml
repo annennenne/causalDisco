@@ -1,0 +1,9 @@
+flavor = "quarto"
+
+extend-exclude = ["tests/testthat/_snaps/", "README.md"]
+
+[linters]
+r = "jarl"
+
+[formatters]
+r = "air"
