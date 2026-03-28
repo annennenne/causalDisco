@@ -89,7 +89,7 @@ try(kn1 + kn2)
 #> Error : Tier conflict detected for 1 variable:
 #> - V2: kn1: 2, kn2: 1
 
-# Requried / forbidden violations
+# Required / forbidden violations
 
 kn1 <- knowledge(
   V1 %!-->% V2
