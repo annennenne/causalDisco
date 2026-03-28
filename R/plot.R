@@ -5,7 +5,7 @@
 #' background knowledge.
 #'
 #' - **Required edges** are drawn in **blue** by default (`required_col`), can be changed.
-#' - **Forbidden edges** are not drawn by.
+#' - **Forbidden edges** are not drawn.
 #' - If tiered knowledge is provided, nodes are arranged according to their tiers.
 #' - Other edge styling (line width, arrow size, etc.) can be supplied via `edge_style`.
 #'   To override the color of a specific edge, specify it in
