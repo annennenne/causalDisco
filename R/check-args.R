@@ -240,11 +240,16 @@ check_args_and_distribute_args_causalDisco <- function(
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
+  wrapper_args <- c("suff_stat_fun")
+  wrapper_args_out <- args[names(args) %in% wrapper_args]
+
   # Get arguments of the top-level function
   engine_args_alg <- names(formals(engine_fun))
 
   # Initialize list of args to pass
-  args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
+  args_to_pass_to_engine_alg <- args[
+    names(args) %in% engine_args_alg & !(names(args) %in% wrapper_args)
+  ]
 
   # If ... is in top-level args, we need to also check _run function args
   if ("..." %in% engine_args_alg) {
@@ -278,7 +283,11 @@ check_args_and_distribute_args_causalDisco <- function(
   # Check for unused arguments
   args_not_in_engine_args <- setdiff(
     names(args),
-    c(names(args_to_pass_to_engine_alg), engine_args_score)
+    c(
+      names(args_to_pass_to_engine_alg),
+      engine_args_score,
+      wrapper_args
+    )
   )
 
   # If '...' in given algorithm/test is an argument, it will throw a warning
@@ -311,7 +320,8 @@ check_args_and_distribute_args_causalDisco <- function(
   }
   list(
     alg_args = args_to_pass_to_engine_alg,
-    score_args = args_to_pass_to_engine_score
+    score_args = args_to_pass_to_engine_score,
+    wrapper_args = wrapper_args_out
   )
 }
 
