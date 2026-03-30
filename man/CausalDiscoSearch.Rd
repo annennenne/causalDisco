@@ -14,7 +14,7 @@ It allows to set the data, sufficient statistics, test, score, and algorithm.
 
 data(tpc_example)
 
-# background knowledge (tiers + one exogenous var)
+# background knowledge (tiered knowledge)
 kn <- knowledge(
   tpc_example,
   tier(
@@ -214,9 +214,15 @@ Sets the test for the search algorithm.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{A string specifying the type of test to use. Can also be a user-defined function that takes
-the data and sufficient statistic as input and returns a test function that takes two variable names and a
-conditioning set as input and returns a p-value.}
+\item{\code{method}}{A string specifying the type of test to use.
+Can also be a user-defined function with
+signature \verb{function(x, y, S, suffStat)}, where \code{x} and \code{y} are the variables being tested for independence,
+\code{S} is the conditioning set, and \code{suffStat} is the sufficient statistic for the test. If a user-defined
+function is provided, then \code{suff_stat_fun} must also be provided, which is a function that takes the data as
+input and returns a sufficient statistic for the test.
+
+EXPERIMENTAL: user-defined tests are subject to change and may
+not be fully supported.}
 
 \item{\code{alpha}}{Significance level for the test.}
 

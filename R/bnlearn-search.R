@@ -207,7 +207,13 @@ BnlearnSearch <- R6::R6Class(
     #' Set the conditional-independence test to use in the search algorithm.
     #'
     #' @param method Character naming the test to use. Can also be a user-defined function with signature
-    #' `function(x, y, z, data, args)`, see [bnlearn::ci.test()] for more details.
+    #' `function(x, y, z, data, args)`, where `x` and `y` are the variables being
+    #' tested for independence, `z` is the conditioning set, `data` is the dataset, and `args` is a list of additional
+    #' arguments. The function should return the test statistic and the p-value.
+    #' See [bnlearn::ci.test()] for more details.
+    #'
+    #' EXPERIMENTAL: user-defined tests are subject to change and may
+    #' not be fully supported.
     #' @param alpha Significance level for the test.
     set_test = function(method, alpha = 0.05) {
       checkmate::assert_number(

@@ -3,7 +3,7 @@
 
 data(tpc_example)
 
-# background knowledge (tiers + one exogenous var)
+# background knowledge (tiered knowledge)
 kn <- knowledge(
   tpc_example,
   tier(
