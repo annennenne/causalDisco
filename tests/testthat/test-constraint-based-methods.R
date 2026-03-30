@@ -13,7 +13,11 @@ test_that("methods construct disco_method closures and run across engines", {
       m <- do.call(reg$fn, c(list(engine = engine), args))
 
       expect_s3_class(m, c(method_name, "disco_method", "function"))
-      expect_error(m(1:3), "`data` must be a data frame or a `mids` object.", fixed = TRUE)
+      expect_error(
+        m(1:3),
+        "`data` must be a data frame or a `mids` object.",
+        fixed = TRUE
+      )
 
       res <- m(num_data)
       expect_s3_class(res, "Disco")

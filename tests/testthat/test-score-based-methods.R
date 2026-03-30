@@ -13,7 +13,11 @@ test_that("ges(): constructor returns a disco_method and runs across engines", {
     )
 
     expect_s3_class(m, c("ges", "disco_method", "function"))
-    expect_error(m(1:3), "`data` must be a data frame or a `mids` object.", fixed = TRUE)
+    expect_error(
+      m(1:3),
+      "`data` must be a data frame or a `mids` object.",
+      fixed = TRUE
+    )
 
     res <- m(num_data)
     expect_s3_class(res, "Disco")
