@@ -163,7 +163,12 @@ check_args_and_distribute_args_pcalg <- function(
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
-  args_to_pass_to_engine_alg <- args[names(args) %in% engine_args_alg]
+  wrapper_args <- c("suff_stat_fun")
+  wrapper_args_out <- args[names(args) %in% wrapper_args]
+
+  args_to_pass_to_engine_alg <- args[
+    names(args) %in% engine_args_alg & !(names(args) %in% wrapper_args)
+  ]
   engine_args_score <- list()
   if (!is.null(score)) {
     engine_args_score <- methods::getRefClass("GaussL0penIntScore")$methods(
@@ -177,7 +182,11 @@ check_args_and_distribute_args_pcalg <- function(
   # Check if any arguments are not in pcalg::
   args_not_in_engine_args <- setdiff(
     names(args),
-    c(engine_args_alg, engine_args_score)
+    c(
+      names(args_to_pass_to_engine_alg),
+      engine_args_score,
+      wrapper_args
+    )
   )
   # If '...' in given algorithm/test is an argument, it will throw a warning
   # rather than an error.
@@ -198,7 +207,8 @@ check_args_and_distribute_args_pcalg <- function(
   }
   list(
     alg_args = args_to_pass_to_engine_alg,
-    score_args = args_to_pass_to_engine_score
+    score_args = args_to_pass_to_engine_score,
+    wrapper_args = wrapper_args_out
   )
 }
 

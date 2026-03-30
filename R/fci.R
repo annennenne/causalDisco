@@ -136,7 +136,7 @@ fci_pcalg_runner <- function(
     test = test
   )
   search$set_params(args_to_pass$alg_args)
-  search$set_test(test, alpha)
+  search$set_test(test, alpha, suff_stat_fun = args_to_pass$wrapper_args$suff_stat_fun)
   search$set_alg("fci")
 
   runner <- list(

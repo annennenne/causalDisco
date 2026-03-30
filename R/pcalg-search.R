@@ -130,6 +130,16 @@ PcalgSearch <- R6::R6Class(
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
+      if (identical(private$test_key, "custom-test")) {
+        if (is.null(private$user_suff_stat_fun)) {
+          stop(
+            "For user-defined tests, provide suff_stat_fun in set_test().",
+            call. = FALSE
+          )
+        }
+        self$suff_stat <- private$user_suff_stat_fun(self$data)
+        return(invisible(self))
+      }
       if (is.null(private$test_key)) {
         stop("Test must be set before sufficient statistic.", call. = FALSE)
       }
@@ -152,14 +162,22 @@ PcalgSearch <- R6::R6Class(
     #'
     #' @param method A string specifying the type of test to use.
     #' @param alpha Significance level for the test.
-    set_test = function(method, alpha = 0.05) {
+    set_test = function(method, alpha = 0.05, suff_stat_fun = NULL) {
       if (!is.null(alpha)) {
         self$params$alpha <- alpha
       } else {
         stop("alpha must be set before using tests", call. = FALSE)
       }
-      if (!is.character(method)) {
-        stop("Currently, only method as string is supported.", call. = FALSE)
+      if (is.function(method)) {
+        self$test <- method
+        private$test_key <- "custom-test"
+
+        if (!is.null(self$data) && !is.null(suff_stat_fun)) {
+          self$suff_stat <- suff_stat_fun(self$data)
+        }
+
+        private$user_suff_stat_fun <- suff_stat_fun
+        return(invisible(self))
       }
       private$test_key <- tolower(method)
 
@@ -362,6 +380,7 @@ PcalgSearch <- R6::R6Class(
   private = list(
     knowledge_function = NULL,
     score_function = NULL,
-    test_key = NULL
+    test_key = NULL,
+    user_suff_stat_fun = NULL
   )
 )
