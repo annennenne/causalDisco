@@ -169,8 +169,12 @@ CausalDiscoSearch <- R6::R6Class(
     #' @description
     #' Sets the test for the search algorithm.
     #'
-    #' @param method A string specifying the type of test to use.
+    #' @param method A string specifying the type of test to use. Can also be a user-defined function that takes
+    #' the data and sufficient statistic as input and returns a test function that takes two variable names and a
+    #' conditioning set as input and returns a p-value.
     #' @param alpha Significance level for the test.
+    #' @param suff_stat_fun A function that takes the data as input and returns a sufficient statistic for the test.
+    #' Only needed if `method` is a user-defined function.
     set_test = function(method, alpha = 0.05, suff_stat_fun = NULL) {
       if (!is.null(alpha)) {
         self$params$alpha <- alpha

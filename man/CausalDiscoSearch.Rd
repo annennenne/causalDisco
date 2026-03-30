@@ -208,15 +208,20 @@ Sets the sufficient statistic for the data.
 \subsection{Method \code{set_test()}}{
 Sets the test for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_test(method, alpha = 0.05)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CausalDiscoSearch$set_test(method, alpha = 0.05, suff_stat_fun = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{A string specifying the type of test to use.}
+\item{\code{method}}{A string specifying the type of test to use. Can also be a user-defined function that takes
+the data and sufficient statistic as input and returns a test function that takes two variable names and a
+conditioning set as input and returns a p-value.}
 
 \item{\code{alpha}}{Significance level for the test.}
+
+\item{\code{suff_stat_fun}}{A function that takes the data as input and returns a sufficient statistic for the test.
+Only needed if \code{method} is a user-defined function.}
 }
 \if{html}{\out{</div>}}
 }

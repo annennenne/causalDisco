@@ -257,7 +257,8 @@ Set the conditional-independence test to use in the search algorithm.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{Character naming the test to use.}
+\item{\code{method}}{Character naming the test to use. Can also be a user-defined function with signature
+\verb{function(x, y, z, data, args)}, see \code{\link[bnlearn:ci.test]{bnlearn::ci.test()}} for more details.}
 
 \item{\code{alpha}}{Significance level for the test.}
 }
