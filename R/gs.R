@@ -81,6 +81,11 @@ gs_bnlearn_runner <- function(test, alpha, ...) {
     "gs"
   )
 
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
+
   search$set_test(test, alpha)
   search$set_alg("gs", args_to_pass)
 
