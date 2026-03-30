@@ -216,6 +216,11 @@ BnlearnSearch <- R6::R6Class(
         finite = TRUE,
         null.ok = FALSE
       )
+      if (is.function(method)) {
+        self$test <- method
+        private$test_key <- "user_defined"
+        return(invisible(self))
+      }
 
       method <- tolower(method)
       # Convert snake_case to kebab-case for bnlearn compatibility
@@ -523,5 +528,8 @@ BnlearnSearch <- R6::R6Class(
       result <- do.call(self$alg, arg_list)
       as_disco(result)
     }
+  ),
+  private = list(
+    test_key = NULL
   )
 )

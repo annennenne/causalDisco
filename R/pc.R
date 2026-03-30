@@ -180,6 +180,11 @@ pc_bnlearn_runner <- function(test, alpha, ...) {
     "pc.stable"
   )
 
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
+
   search$set_test(test, alpha)
   search$set_alg("pc", args_to_pass)
 

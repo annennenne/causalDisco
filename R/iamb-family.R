@@ -168,6 +168,11 @@ iamb_bnlearn_runner <- function(test, alpha, ...) {
     "iamb"
   )
 
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
+
   search$set_test(test, alpha)
   search$set_alg("iamb", args_to_pass)
 
@@ -199,6 +204,11 @@ iamb_fdr_bnlearn_runner <- function(test, alpha, ...) {
     "bnlearn",
     "iamb_fdr"
   )
+
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
 
   search$set_test(test, alpha)
   search$set_alg("iamb_fdr", args_to_pass)
@@ -232,6 +242,11 @@ fast_iamb_bnlearn_runner <- function(test, alpha, ...) {
     "fast_iamb"
   )
 
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
+
   search$set_test(test, alpha)
   search$set_alg("fast_iamb", args_to_pass)
 
@@ -263,6 +278,11 @@ inter_iamb_bnlearn_runner <- function(test, alpha, ...) {
     "bnlearn",
     "inter_iamb"
   )
+
+  if (is.function(test)) {
+    args_to_pass$test <- "custom-test"
+    args_to_pass$fun <- test
+  }
 
   search$set_test(test, alpha)
   search$set_alg("inter_iamb", args_to_pass)
