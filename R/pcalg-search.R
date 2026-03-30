@@ -320,16 +320,26 @@ PcalgSearch <- R6::R6Class(
           # If knowledge is set, we now need to call the function
           # to get the fixed constraints.
           self$knowledge <- private$knowledge_function()
+          if (inherits(self$data, "mids")) {
+            labels = colnames(mice::complete(self$data, action = 1))
+          } else {
+            labels = colnames(self$data)
+          }
           result <- self$alg(
             suffStat = self$suff_stat,
-            labels = colnames(self$data),
+            labels = labels,
             fixedGaps = self$knowledge$fixed_gaps,
             fixedEdges = self$knowledge$fixed_edges
           )
         } else {
+          if (inherits(self$data, "mids")) {
+            labels = colnames(mice::complete(self$data, action = 1))
+          } else {
+            labels = colnames(self$data)
+          }
           result <- self$alg(
             suffStat = self$suff_stat,
-            labels = colnames(self$data)
+            labels = labels
           )
         }
         # score_function is not null, so we are using a score-based algorithm
