@@ -218,7 +218,7 @@ BnlearnSearch <- R6::R6Class(
       )
       if (is.function(method)) {
         self$test <- method
-        private$test_key <- "user_defined"
+        private$test_key <- "custom-test"
         return(invisible(self))
       }
 

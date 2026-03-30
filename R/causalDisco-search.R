@@ -142,7 +142,7 @@ CausalDiscoSearch <- R6::R6Class(
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
-      if (identical(private$test_key, "user_defined")) {
+      if (identical(private$test_key, "custom-test")) {
         if (is.null(private$user_suff_stat_fun)) {
           stop(
             "For user-defined tests, provide suff_stat_fun in set_test().",
@@ -178,7 +178,7 @@ CausalDiscoSearch <- R6::R6Class(
 
       if (is.function(method)) {
         self$test <- method
-        private$test_key <- "user_defined"
+        private$test_key <- "custom-test"
 
         if (!is.null(self$data) && !is.null(suff_stat_fun)) {
           self$suff_stat <- suff_stat_fun(self$data)
