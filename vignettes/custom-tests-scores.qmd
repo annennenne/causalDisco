@@ -1,0 +1,143 @@
+---
+title: "Integrating custom CI tests and scores into causal discovery algorithm"
+vignette: >
+  %\VignetteIndexEntry{Integrating custom CI tests and score}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+library(causalDisco)
+```
+
+This vignette illustrates how to use custom conditional independence (CI) tests
+and custom scores with the `disco()` function in causalDisco. We show how to
+define user-specified tests and scores, and how to run causal discovery using
+these custom functions.
+
+Note that Tetrad-based algorithms do not currently support custom CI tests, so
+this vignette focuses on R-based algorithms. By the end, you will be able to
+seamlessly integrate your own evaluation functions into causalDisco workflows.
+
+# Custom CI Tests
+
+The interface for custom CI tests depends on the engine being used. Below, we
+provide examples for both the causalDisco and pcalg engines, as well as bnlearn.
+
+## causalDisco and pcalg engines
+
+causalDisco and pcalg engines allow users to specify custom CI tests by
+providing a function with the signature `function(x, y, S, suffStat)`, where `x`
+and `y` are the variables being tested for independence, `S` is the conditioning
+set, and `suffStat` is a list of sufficient statistics needed for the test (e.g.
+correlation matrix and sample size). The function should return a p-value
+indicating whether `x` and `y` are conditionally independent given `S`.
+
+An example of a custom CI test is a partial correlation test based on the Fisher
+Z-transform, which can be implemented as follows:
+
+```{r}
+my_test <- function(x, y, S, suffStat) {
+  C <- suffStat$C
+  n <- suffStat$n
+
+  vars <- c(x, y, S)
+  C_sub <- C[vars, vars, drop = FALSE]
+  K <- solve(C_sub)
+  r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
+  z <- 0.5 * log((1 + r) / (1 - r))
+
+  stat <- sqrt(n - length(S) - 3) * abs(z)
+
+  pval <- 2 * (1 - pnorm(stat))
+
+  return(pval)
+}
+
+my_suff_stat <- function(data) {
+  list(
+    C = cor(data),
+    n = nrow(data)
+  )
+}
+```
+
+This can then be used with the causalDisco engine as follows:
+
+```{r}
+data(tpc_example)
+
+my_tpc <- tpc(
+  engine = "causalDisco",
+  test = my_test,
+  alpha = 0.05,
+  suff_stat_fun = my_suff_stat
+)
+result <- disco(data = tpc_example, method = my_tpc)
+plot(result)
+```
+
+or the pcalg engine as follows:
+
+```{r}
+my_pc <- pc(
+  engine = "pcalg",
+  test = my_test,
+  alpha = 0.05,
+  suff_stat_fun = my_suff_stat
+)
+result <- disco(data = tpc_example, method = my_pc)
+plot(result)
+```
+
+## bnlearn
+
+bnlearn supports custom CI tests, but the interface is different from using the
+engines causalDisco and pcalg. The custom test must have the signature
+`function(x, y, z, data, args)`, where `x` and `y` are the variables being
+tested for independence, `z` is the conditioning set, `data` is the dataset, and
+`args` is a list of additional arguments. The function should return the test
+statistic and the p-value. For more details on how to implement custom tests for
+bnlearn, see `?bnlearn::ci.test`.
+
+```{r}
+my_bnlearn_test <- function(x, y, z, data, args) {
+  suffStat <- list(C = cor(data), n = nrow(data))
+
+  C <- suffStat$C
+  n <- suffStat$n
+
+  vars <- c(x, y, z)
+  C_sub <- C[vars, vars, drop = FALSE]
+  K <- solve(C_sub)
+
+  # partial correlation
+  r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
+
+  # Fisher Z transform
+  z_stat <- 0.5 * log((1 + r) / (1 - r))
+
+  # test statistic
+  stat <- sqrt(n - length(z) - 3) * z_stat
+
+  # two-sided p-value
+  pval <- 2 * (1 - pnorm(abs(stat)))
+
+  # return BOTH: statistic and p-value
+  c(statistic = stat, p.value = pval)
+}
+
+my_pc <- pc(engine = "bnlearn", test = my_bnlearn_test, alpha = 0.05)
+result <- disco(data = tpc_example, method = my_pc)
+plot(result)
+```
+
+# Custom Scores
+
+Not yet implemented, but will be added in a future release. Stay tuned for
+updates on this feature!
