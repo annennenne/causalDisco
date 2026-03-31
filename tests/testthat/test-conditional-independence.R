@@ -122,8 +122,8 @@ test_that("reg_test_each_dir wraps binary S in factor()", {
   pval <- reg_test_each_dir(
     x = 1L,
     y = 2L,
-    S = c(3L, 4L),
-    suffStat = suff_stat
+    conditioning_set = c(3L, 4L),
+    suff_stat = suff_stat
   )
 
   # a real p-value should come back and not error

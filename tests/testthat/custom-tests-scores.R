@@ -1,15 +1,15 @@
 test_that("causalDisco tpc and tfci work with custom test", {
-  my_test <- function(x, y, S, suffStat) {
-    C <- suffStat$C
-    n <- suffStat$n
+  my_test <- function(x, y, conditioning_set, suff_stat) {
+    C <- suff_stat$C
+    n <- suff_stat$n
 
-    vars <- c(x, y, S)
+    vars <- c(x, y, conditioning_set)
     C_sub <- C[vars, vars, drop = FALSE]
     K <- solve(C_sub)
     r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
     z <- 0.5 * log((1 + r) / (1 - r))
 
-    stat <- sqrt(n - length(S) - 3) * abs(z)
+    stat <- sqrt(n - length(conditioning_set) - 3) * abs(z)
 
     pval <- 2 * (1 - pnorm(stat))
 
@@ -46,17 +46,17 @@ test_that("causalDisco tpc and tfci work with custom test", {
 })
 
 test_that("pcalg pc and fci work with custom test", {
-  my_test <- function(x, y, S, suffStat) {
-    C <- suffStat$C
-    n <- suffStat$n
+  my_test <- function(x, y, conditioning_set, suff_stat) {
+    C <- suff_stat$C
+    n <- suff_stat$n
 
-    vars <- c(x, y, S)
+    vars <- c(x, y, conditioning_set)
     C_sub <- C[vars, vars, drop = FALSE]
     K <- solve(C_sub)
     r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
     z <- 0.5 * log((1 + r) / (1 - r))
 
-    stat <- sqrt(n - length(S) - 3) * abs(z)
+    stat <- sqrt(n - length(conditioning_set) - 3) * abs(z)
 
     pval <- 2 * (1 - pnorm(stat))
 
@@ -94,10 +94,10 @@ test_that("pcalg pc and fci work with custom test", {
 
 test_that("bnlearn pc, gs, and iamb family work with custom test", {
   my_bnlearn_test <- function(x, y, z, data, args) {
-    suffStat <- list(C = cor(data), n = nrow(data))
+    suff_stat <- list(C = cor(data), n = nrow(data))
 
-    C <- suffStat$C
-    n <- suffStat$n
+    C <- suff_stat$C
+    n <- suff_stat$n
 
     vars <- c(x, y, z)
     C_sub <- C[vars, vars, drop = FALSE]

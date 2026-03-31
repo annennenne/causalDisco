@@ -257,14 +257,15 @@ Set the conditional-independence test to use in the search algorithm.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{method}}{Character naming the test to use. Can also be a user-defined function with signature
+\item{\code{method}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+A string specifying the type of test to use. Can also be a user-defined function with signature
 \verb{function(x, y, z, data, args)}, where \code{x} and \code{y} are the variables being
 tested for independence, \code{z} is the conditioning set, \code{data} is the dataset, and \code{args} is a list of additional
 arguments. The function should return the test statistic and the p-value.
 See \code{\link[bnlearn:ci.test]{bnlearn::ci.test()}} for more details.
 
-EXPERIMENTAL: user-defined tests are subject to change and may
-not be fully supported.}
+EXPERIMENTAL: user-defined tests syntax are subject to change.}
 
 \item{\code{alpha}}{Significance level for the test.}
 }

@@ -33,6 +33,7 @@ Imports:
     dplyr,
     glue,
     gtools,
+    lifecycle,
     methods,
     micd,
     mice,

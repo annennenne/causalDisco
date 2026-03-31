@@ -5,9 +5,8 @@
 #' @param x Index of x variable.
 #' @param y Index of y variable.
 #' @param conditioning_set Index vector of conditioning variable(s), possibly `NULL`.
-#' @param suff_stat Sufficient statistic; list with data,
-#' binary variables and order.
-#'
+#' @param suff_stat Sufficient statistic; A list with two elements, "C" and "n",
+#' corresponding to the correlation matrix and number of observations.
 #' @return A numeric, which is the p-value of the test.
 #'
 #' @export
@@ -22,7 +21,7 @@ cor_test <- function(x, y, conditioning_set, suff_stat) {
 
 #' Regression-based Information Loss Test
 #'
-#' We test whether \code{x} and \code{y} are associated, given
+#' Test whether \code{x} and \code{y} are associated, given
 #' \code{conditioning_set} using a generalized linear model.
 #'
 #' @details All included variables should be either numeric or binary. If
@@ -35,13 +34,13 @@ cor_test <- function(x, y, conditioning_set, suff_stat) {
 #' The model is fitted in both directions (interchanging the roles
 #' of \code{x} and \code{y}). The final p-value is the maximum of the two
 #' obtained p-values.
-#'
+#' @param suff_stat List with data, binary variables and order.
+# #' @param suff_stat `r lifecycle::badge('deprecated')`. Use `data_info` instead.
 #' @inheritParams cor_test
 #'
 #' @return A numeric, which is the p-value of the test.
-#'
 #' @export
-reg_test <- function(x, y, conditioning_set, suff_stat) {
+reg_test <- function(x, y, conditioning_set, suff_stat = NULL) {
   p1 <- reg_test_each_dir(x, y, conditioning_set, suff_stat)
   p2 <- reg_test_each_dir(y, x, conditioning_set, suff_stat)
 
@@ -52,7 +51,7 @@ reg_test <- function(x, y, conditioning_set, suff_stat) {
 ## Not exported below ######################################################
 ############################################################################
 
-reg_test_each_dir <- function(x, y, S, suffStat) {
+reg_test_each_dir <- function(x, y, conditioning_set, suff_stat) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "splines",
@@ -64,13 +63,12 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   dfs <- 3
   df_string <- paste(", df = ", dfs, ")", sep = "")
 
-  # Unpack suffStat
-  data <- suffStat$data
-  binary <- suffStat$binary
+  data <- suff_stat$data
+  binary <- suff_stat$binary
   vnames <- names(data)
 
-  # Restrict data to only complete cases of x, y, s (test-wise deletion)
-  data <- stats::na.omit(data[, c(x, y, S)])
+  # Restrict data to only complete cases of x, y, conditioning_set (test-wise deletion)
+  data <- stats::na.omit(data[, c(x, y, conditioning_set)])
 
   # Choose exponential family according to ys type
   if (binary[y]) {
@@ -82,16 +80,16 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   # Store info: is x binary?
   binx <- binary[x]
 
-  # Store info: which S are binary?
-  binS <- intersect(S, which(binary))
-  numS <- setdiff(S, binS)
+  # Store info: which conditioning_set are binary?
+  bin_conditioning_set <- intersect(conditioning_set, which(binary))
+  num_conditioning_set <- setdiff(conditioning_set, bin_conditioning_set)
 
   # extract variable names
   x <- vnames[x]
   y <- vnames[y]
-  S_bin <- vnames[binS]
-  S_num <- vnames[numS]
-  allS <- c(S_bin, S_num) # TODO: Not used
+  conditioning_set_bin <- vnames[bin_conditioning_set]
+  conditioning_set_num <- vnames[num_conditioning_set]
+  # allS <- c(conditioning_set_bin, conditioning_set_num) # TODO: Not used
 
   # add spline to num x, factor to binary x
   if (!binx) {
@@ -100,14 +98,14 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
     x <- paste("factor(", x, ")", sep = "")
   }
 
-  # add spline to num S, factor to binary s
-  if (length(S_num) > 0) {
-    S_num <- paste("splines::ns(", S_num, df_string, sep = "")
+  # add spline to num_conditioning_set, factor to binary conditioning_set_bin
+  if (length(conditioning_set_num) > 0) {
+    conditioning_set_num <- paste("splines::ns(", conditioning_set_num, df_string, sep = "")
   }
-  if (length(S_bin) > 0) {
-    S_bin <- paste("factor(", S_bin, ")", sep = "")
+  if (length(conditioning_set_bin) > 0) {
+    conditioning_set_bin <- paste("factor(", conditioning_set_bin, ")", sep = "")
   }
-  S <- c(S_bin, S_num, "1")
+  conditioning_set <- c(conditioning_set_bin, conditioning_set_num, "1")
 
   # wrap factor around binary f
   if (fam == "binomial") {
@@ -115,7 +113,7 @@ reg_test_each_dir <- function(x, y, S, suffStat) {
   }
 
   # make formulas
-  f1 <- stats::as.formula(paste(y, "~", paste(S, collapse = " + ")))
+  f1 <- stats::as.formula(paste(y, "~", paste(conditioning_set, collapse = " + ")))
   f2 <- stats::update(f1, stats::as.formula(paste(". ~ . + ", x, sep = "")))
 
   # fit models
