@@ -100,10 +100,20 @@ reg_test_each_dir <- function(x, y, conditioning_set, suff_stat) {
 
   # add spline to num_conditioning_set, factor to binary conditioning_set_bin
   if (length(conditioning_set_num) > 0) {
-    conditioning_set_num <- paste("splines::ns(", conditioning_set_num, df_string, sep = "")
+    conditioning_set_num <- paste(
+      "splines::ns(",
+      conditioning_set_num,
+      df_string,
+      sep = ""
+    )
   }
   if (length(conditioning_set_bin) > 0) {
-    conditioning_set_bin <- paste("factor(", conditioning_set_bin, ")", sep = "")
+    conditioning_set_bin <- paste(
+      "factor(",
+      conditioning_set_bin,
+      ")",
+      sep = ""
+    )
   }
   conditioning_set <- c(conditioning_set_bin, conditioning_set_num, "1")
 
@@ -113,7 +123,11 @@ reg_test_each_dir <- function(x, y, conditioning_set, suff_stat) {
   }
 
   # make formulas
-  f1 <- stats::as.formula(paste(y, "~", paste(conditioning_set, collapse = " + ")))
+  f1 <- stats::as.formula(paste(
+    y,
+    "~",
+    paste(conditioning_set, collapse = " + ")
+  ))
   f2 <- stats::update(f1, stats::as.formula(paste(". ~ . + ", x, sep = "")))
 
   # fit models

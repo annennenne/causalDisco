@@ -1,13 +1,14 @@
 ---
-title: "Integrating custom CI tests and scores into causal discovery algorithm"
+title: "Integrating custom tests and scores into causal discovery algorithms"
 vignette: >
-  %\VignetteIndexEntry{Integrating custom CI tests and score}
+  %\VignetteIndexEntry{Integrating custom tests and scores into causal discovery algorithms}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true
     comment: "#>"
+    fig.align: "center"
 ---
 
 ```{r}
@@ -96,6 +97,12 @@ my_pc <- pc(
 result <- disco(data = tpc_example, method = my_pc)
 plot(result)
 ```
+
+If the custom test requires additional arguments, then the function signature
+should include an `args` parameter, i.e. be
+`function(x, y, conditioning_set, suff_stat, args)`, and the additional
+arguments can be passed as a list to the `args` parameter when defining the
+method.
 
 ## bnlearn
 

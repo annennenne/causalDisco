@@ -156,4 +156,3 @@ test_that("bnlearn pc, gs, and iamb family work with custom test", {
   result <- disco(data = tpc_example, method = inter_iamb_bnlearn)
   expect_equal(class(result), "Disco")
 })
-

@@ -163,7 +163,7 @@ check_args_and_distribute_args_pcalg <- function(
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
-  wrapper_args <- c("suff_stat_fun")
+  wrapper_args <- c("suff_stat_fun", "args")
   wrapper_args_out <- args[names(args) %in% wrapper_args]
 
   args_to_pass_to_engine_alg <- args[
@@ -250,7 +250,7 @@ check_args_and_distribute_args_causalDisco <- function(
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 
-  wrapper_args <- c("suff_stat_fun")
+  wrapper_args <- c("suff_stat_fun", "args")
   wrapper_args_out <- args[names(args) %in% wrapper_args]
 
   # Get arguments of the top-level function

@@ -192,7 +192,7 @@ Sets the sufficient statistic for the data.
 \subsection{Method \code{set_test()}}{
 Sets the test for the search algorithm.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_test(method, alpha = 0.05, suff_stat_fun = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_test(method, alpha = 0.05, suff_stat_fun = NULL, args = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -201,11 +201,16 @@ Sets the test for the search algorithm.
 \item{\code{method}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 A string specifying the type of test to use.
+
 Can also be a user-defined function with
 signature \verb{function(x, y, conditioning_set, suff_stat)}, where \code{x} and \code{y} are the variables being tested for
 independence, \code{conditioning_set} is the conditioning set, and \code{suff_stat} is the sufficient statistic for the
 test. If a user-defined function is provided, then \code{suff_stat_fun} must also be provided, which is a
-function that should take the data as input and returns a sufficient statistic for the test.
+function that should take the data as input and returns a sufficient statistic for the test. Optionally,
+the signature of the user-defined test function can also include an \code{args} parameter, which is a list of
+additional arguments to pass to the test function. If \code{args} is provided, then the test function should have the
+signature \verb{function(x, y, conditioning_set, suff_stat, args)}, and the \code{args} parameter will be passed to the
+test function.
 
 EXPERIMENTAL: user-defined tests syntax are subject to change.}
 
@@ -213,6 +218,9 @@ EXPERIMENTAL: user-defined tests syntax are subject to change.}
 
 \item{\code{suff_stat_fun}}{A function that takes the data as input and returns a sufficient statistic for the test.
 Only needed if \code{method} is a user-defined function.}
+
+\item{\code{args}}{A list of additional arguments to pass to the test.
+Only needed if \code{method} is a user-defined function with an \code{args} parameter in its signature.}
 }
 \if{html}{\out{</div>}}
 }

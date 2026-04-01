@@ -75,7 +75,6 @@ tpc_causalDisco_runner <- function(
     ),
     function_name = "pc_causalDisco_runner"
   )
-
   search <- CausalDiscoSearch$new()
   args <- list(...)
   args_to_pass <- check_args_and_distribute_args(
@@ -86,7 +85,12 @@ tpc_causalDisco_runner <- function(
     test = test
   )
   search$set_params(args_to_pass$alg_args)
-  search$set_test(test, alpha, suff_stat_fun = args_to_pass$wrapper_args$suff_stat_fun)
+  search$set_test(
+    test,
+    alpha,
+    suff_stat_fun = args_to_pass$wrapper_args$suff_stat_fun,
+    args = args_to_pass$wrapper_args$args
+  )
   search$set_alg("tpc")
 
   runner <- list(

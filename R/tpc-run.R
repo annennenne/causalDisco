@@ -363,7 +363,10 @@ dir_test <- function(test, vnames, knowledge) {
         }
       }
     }
-    do.call(test, list(x = x, y = y, S = conditioning_set, suffStat = suff_stat))
+    do.call(
+      test,
+      list(x = x, y = y, S = conditioning_set, suffStat = suff_stat)
+    )
   }
 }
 
