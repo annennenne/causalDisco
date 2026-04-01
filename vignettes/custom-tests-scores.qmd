@@ -16,35 +16,38 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette illustrates how to use custom conditional independence (CI) tests
-and custom scores with the `disco()` function in causalDisco. We show how to
-define user-specified tests and scores, and how to run causal discovery using
-these custom functions.
+This vignette illustrates how to use custom conditional independence tests and
+custom scores with the `disco()` function in causalDisco. We show how to define
+user-specified tests and scores, and how to run causal discovery using these
+custom functions.
 
 Note that Tetrad-based algorithms do not currently support custom CI tests, so
 this vignette focuses on R-based algorithms. By the end, you will be able to
 seamlessly integrate your own evaluation functions into causalDisco workflows.
 
-# Custom CI Tests
+# Custom Tests
 
-The interface for custom CI tests depends on the engine being used. Below, we
+The interface for custom tests depends on the engine being used. Below, we
 provide examples for both the causalDisco and pcalg engines, as well as bnlearn.
 
 ## causalDisco and pcalg engines
 
-causalDisco and pcalg engines allow users to specify custom CI tests by
-providing a function with the signature
-`function(x, y, conditioning_set, suff_stat)`, where `x` and `y` are the
-variables being tested for independence, `conditioning_set` is the conditioning
-set, and `suff_stat` is a list of sufficient statistics needed for the test
-(e.g. correlation matrix and sample size). The function should return a p-value
-indicating whether `x` and `y` are conditionally independent given
-`conditioning_set`.
+causalDisco and pcalg engines allow users to specify custom tests by providing a
+function with the signature `function(x, y, conditioning_set, suff_stat)`, where
+`x` and `y` are the variables being tested for independence, `conditioning_set`
+is the conditioning set, and `suff_stat` is a list of sufficient statistics
+needed for the test (e.g. correlation matrix and sample size). The function
+should return a p-value indicating whether `x` and `y` are conditionally
+independent given `conditioning_set`.
+
+Of course the `suff_stat` argument could just be the raw data, but for
+efficiency reasons, it is often better to precompute some sufficient statistics.
 
 An example of a custom CI test is a partial correlation test based on the Fisher
 Z-transform, which can be implemented as follows:
 
 ```{r}
+#| label: my_custom_test
 my_test <- function(x, y, conditioning_set, suff_stat) {
   C <- suff_stat$C
   n <- suff_stat$n
@@ -73,6 +76,7 @@ my_suff_stat <- function(data) {
 This can then be used with the causalDisco engine as follows:
 
 ```{r}
+#| label: using_my_custom_test_causalDisco
 data(tpc_example)
 
 my_tpc <- tpc(
@@ -88,6 +92,7 @@ plot(result)
 or the pcalg engine as follows:
 
 ```{r}
+#| label: using_my_custom_test_pcalg
 my_pc <- pc(
   engine = "pcalg",
   test = my_test,
@@ -115,7 +120,9 @@ statistic and the p-value. For more details on how to implement custom tests for
 bnlearn, see `?bnlearn::ci.test`.
 
 ```{r}
+#| label: my_custom_test_bnlearn
 my_bnlearn_test <- function(x, y, z, data, args) {
+  not_used <- args # Just for demonstration
   suff_stat <- list(C = cor(data), n = nrow(data))
 
   C <- suff_stat$C
@@ -136,7 +143,12 @@ my_bnlearn_test <- function(x, y, z, data, args) {
   c(statistic = stat, p.value = pval)
 }
 
-my_pc <- pc(engine = "bnlearn", test = my_bnlearn_test, alpha = 0.05)
+my_pc <- pc(
+  engine = "bnlearn",
+  test = my_bnlearn_test,
+  alpha = 0.05,
+  args = list(not_used = "Example of passing additional arguments")
+)
 result <- disco(data = tpc_example, method = my_pc)
 plot(result)
 ```

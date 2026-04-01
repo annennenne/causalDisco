@@ -28,69 +28,17 @@ boss <- function(
   score,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "boss"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
-
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      tetrad = rlang::exec(boss_tetrad_runner, score, !!!args)
-    )
-    runner
-  }
-
-  method <- disco_method(builder, "boss")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
-  method
-}
-
-#' @keywords internal
-boss_tetrad_runner <- function(score, ...) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rJava",
-      "rlang"
+  make_method(
+    method_name = "boss",
+    engine = engine,
+    engine_fns = list(
+      tetrad = function(...) {
+        make_runner(engine = "tetrad", alg = "boss", ...)
+      }
     ),
-    function_name = "boss_tetrad_runner"
+    score = score,
+    graph_class = "PDAG",
+    ...
   )
-
-  search <- TetradSearch$new()
-  args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "tetrad",
-    "boss",
-    score = score
-  )
-
-  if (length(args_to_pass$score_args) > 0) {
-    rlang::exec(search$set_score, score, !!!args_to_pass$score_args)
-  } else {
-    search$set_score(score)
-  }
-
-  if (length(args_to_pass$alg_args) > 0) {
-    rlang::exec(search$set_alg, "boss", !!!args_to_pass$alg_args)
-  } else {
-    search$set_alg("boss")
-  }
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }

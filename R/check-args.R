@@ -393,7 +393,13 @@ check_args_and_distribute_args_bnlearn <- function(
       "fun",
       "args"
     )
-    allowed_dot_args <- c(allowed_dot_args_tests, allowed_dot_args_scores)
+    # TODO: Fix this to it actually checks the namespace for the specific alg instead
+    allowed_dot_args_algs <- c("max.sx", "debug", "undirected")
+    allowed_dot_args <- c(
+      allowed_dot_args_tests,
+      allowed_dot_args_scores,
+      allowed_dot_args_algs
+    )
     truly_unrecognised <- setdiff(unclaimed, allowed_dot_args)
 
     if (!allow_dots && length(truly_unrecognised) > 0) {

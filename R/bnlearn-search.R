@@ -342,7 +342,6 @@ BnlearnSearch <- R6::R6Class(
     #' @param args A list of additional arguments to pass to the algorithm.
     set_alg = function(method, args = NULL) {
       method <- tolower(method)
-
       # Convert snake_case to period.case
       method <- gsub("_", ".", method)
 

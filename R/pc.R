@@ -32,174 +32,27 @@
 #' @concept cd_algorithms
 #' @export
 pc <- function(
-  engine = c("tetrad", "pcalg", "bnlearn"),
+  engine = c("tetrad", "pcalg", "bnlearn", "causalDisco"),
   test,
   alpha = 0.05,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "pc"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  # build a `runner builder` that knows how to make a runner given knowledge
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      tetrad = rlang::exec(
-        pc_tetrad_runner,
-        test = test,
-        alpha = alpha,
-        !!!args
-      ),
-      pcalg = rlang::exec(pc_pcalg_runner, test = test, alpha = alpha, !!!args),
-      bnlearn = rlang::exec(
-        pc_bnlearn_runner,
-        test = test,
-        alpha = alpha,
-        !!!args
-      )
-    )
-    runner
-  }
-
-  method <- disco_method(builder, "pc")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
-  method
-}
-
-#' @keywords internal
-pc_tetrad_runner <- function(test, alpha, ...) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rJava",
-      "rlang"
+  make_method(
+    method_name = "pc",
+    engine = engine,
+    engine_fns = list(
+      pcalg = function(...) make_runner(engine = "pcalg", alg = "pc", ...),
+      tetrad = function(...) make_runner(engine = "tetrad", alg = "pc", ...),
+      bnlearn = function(...) make_runner(engine = "bnlearn", alg = "pc", ...),
+      causalDisco = function(...) {
+        make_runner(engine = "causalDisco", alg = "pc", ...)
+      }
     ),
-    function_name = "pc_tetrad_runner"
+    test = test,
+    alpha = alpha,
+    graph_class = "PDAG",
+    ...
   )
-
-  search <- TetradSearch$new()
-  args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "tetrad",
-    "pc",
-    test = test
-  )
-
-  if (length(args_to_pass$test_args) > 0) {
-    rlang::exec(
-      search$set_test,
-      method = test,
-      alpha = alpha,
-      !!!args_to_pass$test_args
-    )
-  } else {
-    search$set_test(method = test, alpha = alpha)
-  }
-
-  if (length(args_to_pass$alg_args) > 0) {
-    # splice
-    rlang::exec(search$set_alg, "pc", !!!args_to_pass$alg_args)
-  } else {
-    search$set_alg("pc")
-  }
-
-  runner <- list(
-    set_knowledge = function(knowledge) search$set_knowledge(knowledge),
-    run = function(data) search$run_search(data)
-  )
-  runner
-}
-
-
-#' @keywords internal
-pc_pcalg_runner <- function(
-  test,
-  alpha,
-  ...,
-  directed_as_undirected_knowledge = FALSE
-) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "pcalg"
-    ),
-    function_name = "pc_pcalg_runner"
-  )
-
-  search <- PcalgSearch$new()
-  args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "pcalg",
-    "pc",
-    test = test
-  )
-
-  search$set_params(args_to_pass$alg_args)
-  search$set_test(
-    test,
-    alpha,
-    suff_stat_fun = args_to_pass$wrapper_args$suff_stat_fun,
-    args = args_to_pass$wrapper_args$args
-  )
-  search$set_alg("pc")
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(
-        knowledge,
-        directed_as_undirected = directed_as_undirected_knowledge
-      )
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
-}
-
-#' @keywords internal
-pc_bnlearn_runner <- function(test, alpha, ...) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "bnlearn"
-    ),
-    function_name = "pc_bnlearn_runner"
-  )
-
-  args <- list(...)
-  search <- BnlearnSearch$new()
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "bnlearn",
-    "pc.stable"
-  )
-
-  if (is.function(test)) {
-    args_to_pass$test <- "custom-test"
-    args_to_pass$fun <- test
-  }
-
-  search$set_test(test, alpha)
-  search$set_alg("pc", args_to_pass)
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }

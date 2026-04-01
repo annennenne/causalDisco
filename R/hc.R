@@ -36,61 +36,18 @@ hc <- function(
   score,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "hc"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      bnlearn = rlang::exec(
-        hc_bnlearn_runner,
-        score,
-        !!!args
-      )
-    )
-    runner
-  }
-  method <- disco_method(builder, "hc")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
-  method
-}
-
-#' @keywords internal
-hc_bnlearn_runner <- function(score, ...) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "bnlearn"
+  make_method(
+    method_name = "hc",
+    engine = engine,
+    engine_fns = list(
+      bnlearn = function(...) {
+        make_runner(engine = "bnlearn", alg = "hc", ...)
+      }
     ),
-    function_name = "hc_bnlearn_runner"
+    score = score,
+    graph_class = "PDAG",
+    ...
   )
-
-  args <- list(...)
-  search <- BnlearnSearch$new()
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "bnlearn",
-    "hc"
-  )
-
-  search$set_score(score)
-  search$set_alg("hc", args_to_pass)
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }

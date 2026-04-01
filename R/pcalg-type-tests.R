@@ -116,6 +116,9 @@
     },
     "fisher_z_mi" = {
       if (inherits(X, "mids")) {
+        if (!requireNamespace("mice", quietly = TRUE)) {
+          stop("Package 'mice' is required but not installed.", call. = FALSE)
+        }
         X <- mice::complete(X, action = "all")
       }
       if (!is.list(X)) {
@@ -137,6 +140,9 @@
     },
     "g_square_mi" = {
       if (inherits(X, "mids")) {
+        if (!requireNamespace("mice", quietly = TRUE)) {
+          stop("Package 'mice' is required but not installed.", call. = FALSE)
+        }
         X <- mice::complete(X, action = "all")
       }
       if (!is.list(X)) {
@@ -154,6 +160,9 @@
     },
     "conditional_gaussian_mi" = {
       if (inherits(X, "mids")) {
+        if (!requireNamespace("mice", quietly = TRUE)) {
+          stop("Package 'mice' is required but not installed.", call. = FALSE)
+        }
         X <- mice::complete(X, action = "all")
       }
       if (!is.list(X)) {

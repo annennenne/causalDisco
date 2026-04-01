@@ -30,79 +30,19 @@ tfci <- function(
   alpha = 0.05,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "tfci"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  # build a `runner builder` that knows how to make a runner given knowledge
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      causalDisco = rlang::exec(
-        tfci_causalDisco_runner,
-        test,
-        alpha,
-        !!!args
-      )
-    )
-    runner
-  }
-
-  method <- disco_method(builder, "tfci")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PAG"
-  method
-}
-
-#' @keywords internal
-tfci_causalDisco_runner <- function(
-  test,
-  alpha,
-  ...,
-  directed_as_undirected_knowledge = FALSE
-) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "pcalg"
+  make_method(
+    method_name = "tfci",
+    engine = engine,
+    engine_fns = list(
+      causalDisco = function(...) {
+        make_runner(engine = "causalDisco", alg = "tfci", ...)
+      }
     ),
-    function_name = "pc_causalDisco_runner"
+    test = test,
+    alpha = alpha,
+    graph_class = "PAG",
+    ...
   )
-
-  search <- CausalDiscoSearch$new()
-  args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(
-    search = search,
-    args = args,
-    engine = "causalDisco",
-    alg = "tfci",
-    test = test
-  )
-
-  search$set_params(args_to_pass$alg_args)
-  search$set_test(
-    test,
-    alpha,
-    suff_stat_fun = args_to_pass$wrapper_args$suff_stat_fun,
-    args = args_to_pass$wrapper_args$args
-  )
-  search$set_alg("tfci")
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(
-        knowledge,
-        directed_as_undirected = directed_as_undirected_knowledge
-      )
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }
