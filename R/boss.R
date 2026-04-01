@@ -16,7 +16,11 @@
 #' }
 #'
 #' @example inst/roxygen-examples/boss-example.R
-#'
+#' @references
+#' Andrews, B., Ramsey, J., Sánchez-Romero, R., Camchong, J., & Kummerfeld, E. (2023, December).
+#' Fast scalable and accurate discovery of DAGs using the Best Order Score Search and Grow-Shrink Trees.
+#' Advances in Neural Information Processing Systems, 36, 63945-63956.
+#' Epub 2024 May 30. PMID: 39280091; PMCID: PMC11393735.
 #' @inheritSection disco_note Recommendation
 #' @inheritSection disco_algs_return_doc_pdag Value
 #'
