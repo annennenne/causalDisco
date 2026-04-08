@@ -40,7 +40,7 @@ plot.
 - **Required edges** are drawn in **blue** by default (`required_col`),
   can be changed.
 
-- **Forbidden edges** are not drawn by.
+- **Forbidden edges** are not drawn.
 
 - If tiered knowledge is provided, nodes are arranged according to their
   tiers.

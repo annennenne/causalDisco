@@ -26,7 +26,8 @@ cor_test(x, y, conditioning_set, suff_stat)
 
 - suff_stat:
 
-  Sufficient statistic; list with data, binary variables and order.
+  Sufficient statistic; A list with two elements, "C" and "n",
+  corresponding to the correlation matrix and number of observations.
 
 ## Value
 

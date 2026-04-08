@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-tests-scores.html">Integrating custom tests and scores into causal discovery algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
@@ -104,64 +105,24 @@
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">engine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">engine</span><span class="op">)</span></span>
-<span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/list2.html" class="external-link">list2</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">builder</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">knowledge</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">runner</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span></span>
-<span>      <span class="va">engine</span>,</span>
-<span>      bnlearn <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/exec.html" class="external-link">exec</a></span><span class="op">(</span></span>
-<span>        <span class="va">hpc_bnlearn_runner</span>,</span>
-<span>        test <span class="op">=</span> <span class="va">test</span>,</span>
-<span>        alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
-<span>        <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">args</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="va">runner</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_disco_method.html">new_disco_method</a></span><span class="op">(</span></span>
-<span>    builder <span class="op">=</span> <span class="va">builder</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"hpc"</span>,</span>
+<span>  <span class="fu"><a href="../reference/make_method.html">make_method</a></span><span class="op">(</span></span>
+<span>    method_name <span class="op">=</span> <span class="st">"hpc"</span>,</span>
 <span>    engine <span class="op">=</span> <span class="va">engine</span>,</span>
-<span>    graph_class <span class="op">=</span> <span class="st">"PDAG"</span></span>
+<span>    engine_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      bnlearn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="../reference/make_runner.html">make_runner</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, alg <span class="op">=</span> <span class="st">"hpc"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    test <span class="op">=</span> <span class="va">test</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
+<span>    graph_class <span class="op">=</span> <span class="st">"PDAG"</span>,</span>
+<span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="va">method</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
-<p>We see that the <code>hpc()</code> function needs two components:</p>
-<ol type="1">
-<li><p><strong>Builder function:</strong> Constructs a <em>runner</em> for the algorithm. It configures the algorithm with the provided parameters and optional background knowledge.</p></li>
-<li><p><strong>Method object:</strong> Created via <code><a href="../reference/new_disco_method.html">new_disco_method()</a></code>. It encapsulates the builder and metadata about the method. This allows us to be able to call <code><a href="../reference/disco.html">disco()</a></code> to execute the algorithm on a dataset.</p></li>
-</ol>
-<p>Next, we define the runner. The runner handles configuring the search object with the chosen test, alpha level, and any additional arguments, and it actually runs the search on the data when called. For bnlearn algorithms, we use the <code>BnlearnSearch</code> R6 class to manage search configuration and execution. We also use <code><a href="../reference/distribute_engine_args.html">distribute_engine_args()</a></code> to determine which extra arguments should be passed to the test, the algorithm, or both.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hpc_bnlearn_runner</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">test</span>, <span class="va">alpha</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
-<span>  <span class="va">search</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/BnlearnSearch.html">BnlearnSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">args_to_pass</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distribute_engine_args.html">distribute_engine_args</a></span><span class="op">(</span></span>
-<span>    search <span class="op">=</span> <span class="va">search</span>,</span>
-<span>    args <span class="op">=</span> <span class="va">args</span>,</span>
-<span>    engine <span class="op">=</span> <span class="st">"bnlearn"</span>,</span>
-<span>    alg <span class="op">=</span> <span class="st">"hpc"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">search</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="va">test</span>, <span class="va">alpha</span><span class="op">)</span></span>
-<span>  <span class="va">search</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"hpc"</span>, <span class="va">args_to_pass</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">runner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    set_knowledge <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">knowledge</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">search</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">knowledge</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>,</span>
-<span>    run <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">search</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">runner</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
+<p>We see that the <code>hpc()</code> function is very simple, and all the logic is handled by the <code><a href="../reference/make_method.html">make_method()</a></code> and <code><a href="../reference/make_runner.html">make_runner()</a></code> functions.</p>
 <p>Once defined, the HPC algorithm can be used like any other method in causalDisco. We first construct the method using <code>hpc()</code>, and then pass it to <code><a href="../reference/disco.html">disco()</a></code>. Here we demonstrate using the included <code>tpc_example</code> dataset:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="va">hpc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu">hpc</span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"bnlearn"</span>, test <span class="op">=</span> <span class="st">"fisher_z"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">hpc_bnlearn_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">hpc_bnlearn</span><span class="op">)</span></span>
@@ -173,8 +134,8 @@
 </div>
 </div>
 </div>
-<p>To implement a <strong>score-based</strong> algorithm instead, the structure would remain the same. The main difference is that the method would accept a <code>score</code> argument rather than <code>test</code> and <code>alpha</code>, and the runner would call <code>search$set_score()</code> instead of <code>search$set_test()</code>. A <strong>hybrid</strong> algorithm algorithm would accept <code>test</code>, <code>alpha</code>, and <code>score</code> arguments, and the runner would call both <code>set_test()</code> and <code>set_score()</code>.</p>
-<p>To implement an algorithm from pcalg rather than bnlearn, we would follow the same structure but use the R6 class <code>PcalgSearch</code> instead of <code>BnlearnSearch</code> in the runner (i.e., <code>PcalgSearch$new()</code>).</p>
+<p>To implement a <strong>score-based</strong> algorithm instead, the structure would remain the same. The main difference is that the method would accept a <code>score</code> argument rather than <code>test</code> and <code>alpha</code>. A <strong>hybrid</strong> algorithm algorithm would accept <code>test</code>, <code>alpha</code>, and <code>score</code> arguments.</p>
+<p>To implement an algorithm from pcalg rather than bnlearn, we would follow the same structure but change all instances of <code>"bnlearn"</code> to <code>"pcalg"</code>.</p>
 </section><section class="section level2"><h2 id="tetrad">Tetrad<a class="anchor" aria-label="anchor" href="#tetrad"></a>
 </h2>
 <p>We will illustrate how to make a custom version (which actually does the same as our implementation, just with some defensive programming omitted) of the BOSS algorithm from Tetrad. Tetrad algorithms follow a slightly different integration pattern because Tetrad is a Java library rather than an R package.</p>
@@ -193,7 +154,7 @@
 <p>Be sure to browse the version corresponding to the installed Tetrad release. The relevant Java classes are located under:</p>
 <p>https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/register_tetrad_algorithm.html">register_tetrad_algorithm</a></span><span class="op">(</span></span>
 <span>  <span class="st">"my_boss_variant"</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span></span>
@@ -219,74 +180,33 @@
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>You can view all the custom registered Tetrad algorithms using <code><a href="../reference/list_registered_tetrad_algorithms.html">list_registered_tetrad_algorithms()</a></code>, and reset it using <code><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry()</a></code>.</p>
-<p>Like for bnlearn and pcalg, we then create a method function <code>my_boss_variant()</code> that constructs a builder function which in turn constructs a runner using the registered Tetrad algorithm.</p>
-<p>BOSS is a <strong>score-based</strong> algorithm, so the method accepts a <code>score</code> argument and passes it to the runner, which configures the <code>TetradSearch</code> object accordingly. It returns a PDAG, so we set the <code>graph_class</code> attribute to <code>"PDAG"</code>.</p>
+<p>The structure of the method function for a Tetrad algorithm is then the exact same as for bnlearn and pcalg, as seen below. BOSS is a <strong>score-based</strong> algorithm, so it accepts a <code>score</code> argument. The algorithm returns a PDAG, so we set the <code>graph_class</code> attribute to <code>"PDAG"</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_boss_variant</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">engine</span> <span class="op">=</span> <span class="st">"tetrad"</span>,</span>
 <span>  <span class="va">score</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">engine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">engine</span><span class="op">)</span></span>
-<span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/list2.html" class="external-link">list2</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">builder</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">knowledge</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">runner</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span></span>
-<span>      <span class="va">engine</span>,</span>
-<span>      tetrad <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/exec.html" class="external-link">exec</a></span><span class="op">(</span><span class="va">my_boss_variant_tetrad_runner</span>, <span class="va">score</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">args</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="va">runner</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_disco_method.html">new_disco_method</a></span><span class="op">(</span></span>
-<span>    builder <span class="op">=</span> <span class="va">builder</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"my_boss_variant"</span>,</span>
+<span>  <span class="fu"><a href="../reference/make_method.html">make_method</a></span><span class="op">(</span></span>
+<span>    method_name <span class="op">=</span> <span class="st">"my_boss_variant"</span>,</span>
 <span>    engine <span class="op">=</span> <span class="va">engine</span>,</span>
-<span>    graph_class <span class="op">=</span> <span class="st">"PDAG"</span></span>
+<span>    engine_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      tetrad <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="../reference/make_runner.html">make_runner</a></span><span class="op">(</span>engine <span class="op">=</span> <span class="st">"tetrad"</span>, alg <span class="op">=</span> <span class="st">"my_boss_variant"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    score <span class="op">=</span> <span class="va">score</span>,</span>
+<span>    graph_class <span class="op">=</span> <span class="st">"PDAG"</span>,</span>
+<span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="va">method</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
-<p>Next we define the runner function <code>my_boss_variant_tetrad_runner()</code></p>
+<p>We can now run <code>my_boss_variant()</code> like any other method in causalDisco.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_boss_variant_tetrad_runner</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">search</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/TetradSearch.html">TetradSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
-<span>  <span class="va">args_to_pass</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distribute_engine_args.html">distribute_engine_args</a></span><span class="op">(</span></span>
-<span>    search <span class="op">=</span> <span class="va">search</span>,</span>
-<span>    args <span class="op">=</span> <span class="va">args</span>,</span>
-<span>    engine <span class="op">=</span> <span class="st">"tetrad"</span>,</span>
-<span>    alg <span class="op">=</span> <span class="st">"my_boss_variant"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">args_to_pass</span><span class="op">$</span><span class="va">score_args</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/exec.html" class="external-link">exec</a></span><span class="op">(</span><span class="va">search</span><span class="op">$</span><span class="va">set_score</span>, <span class="va">score</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">args_to_pass</span><span class="op">$</span><span class="va">score_args</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="va">search</span><span class="op">$</span><span class="fu">set_score</span><span class="op">(</span><span class="va">score</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">args_to_pass</span><span class="op">$</span><span class="va">alg_args</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/exec.html" class="external-link">exec</a></span><span class="op">(</span><span class="va">search</span><span class="op">$</span><span class="va">set_alg</span>, <span class="st">"my_boss_variant"</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">args_to_pass</span><span class="op">$</span><span class="va">alg_args</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="va">search</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="st">"my_boss_variant"</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="va">runner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    set_knowledge <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">knowledge</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">search</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">knowledge</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>,</span>
-<span>    run <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">search</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">runner</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
-<p>Once defined we can now run <code>my_boss_variant()</code> like any other method in causalDisco.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Ensure Tetrad is installed and Java is working before running the algorithm</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">my_boss_variant_tetrad</span> <span class="op">&lt;-</span> <span class="fu">my_boss_variant</span><span class="op">(</span></span>
@@ -308,7 +228,7 @@
 <p>Once again, if using a hybrid or constraint-based algorithm rather than a score-based one, the structure would remain the same but the method would accept different arguments (e.g., <code>test</code> and <code>alpha</code> for a constraint-based algorithm).</p>
 <p>Finally, we clean up the custom registered Tetrad algorithm</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reset_tetrad_alg_registry.html">reset_tetrad_alg_registry</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

@@ -155,17 +155,52 @@ Sets the test for the search algorithm.
 
 #### Usage
 
-    CausalDiscoSearch$set_test(method, alpha = 0.05)
+    CausalDiscoSearch$set_test(
+      method,
+      alpha = 0.05,
+      suff_stat_fun = NULL,
+      args = NULL
+    )
 
 #### Arguments
 
 - `method`:
 
+  **\[experimental\]**
+
   A string specifying the type of test to use.
+
+  Can also be a user-defined function with signature
+  `function(x, y, conditioning_set, suff_stat)`, where `x` and `y` are
+  the variables being tested for independence, `conditioning_set` is the
+  conditioning set, and `suff_stat` is the sufficient statistic for the
+  test. If a user-defined function is provided, then `suff_stat_fun`
+  must also be provided, which is a function that should take the data
+  as input and returns a sufficient statistic for the test. Optionally,
+  the signature of the user-defined test function can also include an
+  `args` parameter, which is a list of additional arguments to pass to
+  the test function. If `args` is provided, then the test function
+  should have the signature
+  `function(x, y, conditioning_set, suff_stat, args)`, and the `args`
+  parameter will be passed to the test function.
+
+  EXPERIMENTAL: user-defined tests syntax are subject to change.
 
 - `alpha`:
 
   Significance level for the test.
+
+- `suff_stat_fun`:
+
+  A function that takes the data as input and returns a sufficient
+  statistic for the test. Only needed if `method` is a user-defined
+  function.
+
+- `args`:
+
+  A list of additional arguments to pass to the test. Only needed if
+  `method` is a user-defined function with an `args` parameter in its
+  signature.
 
 ------------------------------------------------------------------------
 
@@ -274,7 +309,7 @@ The objects of this class are cloneable with this method.
 
 data(tpc_example)
 
-# background knowledge (tiers + one exogenous var)
+# background knowledge (tiered knowledge)
 kn <- knowledge(
   tpc_example,
   tier(
@@ -352,7 +387,7 @@ print(res_tpc)
 #> 5 oldage_x5 old  
 #> 6 oldage_x6 old  
 
-# Switch to TFCI on the same object (reuses suffStat/test)
+# Switch to TFCI on the same object (reuses suff_stat/test)
 s_tpc$set_alg("tfci")
 res_tfci <- s_tpc$run_search()
 print(res_tfci)

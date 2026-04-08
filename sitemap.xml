@@ -5,6 +5,7 @@
 <url><loc>https://disco-coders.github.io/causalDisco/LICENSE.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/articles/causal-discovery.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/articles/causalDisco.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/articles/custom-tests-scores.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/articles/index.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/articles/knowledge.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/articles/new-algorithm.html</loc></url>
@@ -63,6 +64,8 @@
 <url><loc>https://disco-coders.github.io/causalDisco/reference/knowledge.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/knowledge_to_caugi.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/reference/make_method.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/reference/make_runner.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/make_tikz.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/mix_data.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/new_disco_method.html</loc></url>

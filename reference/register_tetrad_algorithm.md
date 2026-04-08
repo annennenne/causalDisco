@@ -29,5 +29,7 @@ register_tetrad_algorithm(name, setup_fun)
 Other Extending causalDisco:
 [`distribute_engine_args()`](https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.md),
 [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md),
+[`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md),
+[`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md),
 [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md),
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md)

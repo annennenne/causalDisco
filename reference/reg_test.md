@@ -1,7 +1,7 @@
 # Regression-based Information Loss Test
 
-We test whether `x` and `y` are associated, given `conditioning_set`
-using a generalized linear model.
+Test whether `x` and `y` are associated, given `conditioning_set` using
+a generalized linear model.
 
 ## Usage
 
@@ -25,7 +25,7 @@ reg_test(x, y, conditioning_set, suff_stat)
 
 - suff_stat:
 
-  Sufficient statistic; list with data, binary variables and order.
+  List with data, binary variables and order.
 
 ## Value
 

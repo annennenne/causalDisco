@@ -16,6 +16,8 @@ Character vector of algorithm names.
 
 Other Extending causalDisco:
 [`distribute_engine_args()`](https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.md),
+[`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md),
+[`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md),
 [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md),
 [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md),
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md)

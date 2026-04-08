@@ -265,7 +265,18 @@ Set the conditional-independence test to use in the search algorithm.
 
 - `method`:
 
-  Character naming the test to use.
+  **\[experimental\]**
+
+  A string specifying the type of test to use. Can also be a
+  user-defined function with signature `function(x, y, z, data, args)`,
+  where `x` and `y` are the variables being tested for independence, `z`
+  is the conditioning set, `data` is the dataset, and `args` is a list
+  of additional arguments. The function should return the test statistic
+  and the p-value. See
+  [`bnlearn::ci.test()`](https://rdrr.io/pkg/bnlearn/man/ci.test.html)
+  for more details.
+
+  EXPERIMENTAL: user-defined tests syntax are subject to change.
 
 - `alpha`:
 
@@ -385,6 +396,8 @@ my_pc2 <- pc(
   alpha = 0.01
 )
 disco(data = num_data, method = my_pc2)
+#> Warning: vstructure X1 -> Y <- X3 is not applicable, because one or both arcs are oriented in the opposite direction.
+#> Warning: vstructure X1 -> Y <- X2 is not applicable, because one or both arcs are oriented in the opposite direction.
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: PDAG
@@ -393,12 +406,11 @@ disco(data = num_data, method = my_pc2)
 #> 
 #>   from  edge  to   
 #>   <chr> <chr> <chr>
-#> 1 X1    -->   Y    
-#> 2 X1    ---   Z    
-#> 3 X2    ---   X3   
-#> 4 X2    -->   Y    
-#> 5 X3    -->   Y    
-#> 6 Z     -->   Y    
+#> 1 X2    ---   X3   
+#> 2 X2    ---   Y    
+#> 3 X3    ---   Y    
+#> 4 Y     -->   X1   
+#> 5 Z     -->   X1   
 #> ── Nodes ──
 #> 
 #>   name 
@@ -431,7 +443,6 @@ disco(data = num_data, method = my_pc2, knowledge = kn)
 #> 3 X2    ---   X3   
 #> 4 X2    -->   Y    
 #> 5 X3    -->   Y    
-#> 6 Z     -->   Y    
 #> ── Nodes ──
 #> 
 #>   name 

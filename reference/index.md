@@ -224,6 +224,11 @@ available engines.
   : Distribute and Validate Engine Arguments
 - [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
   : List Registered Tetrad Algorithms
+- [`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md)
+  **\[experimental\]** : Create a Custom Causal Discovery Method
+- [`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md)
+  **\[experimental\]** : Create a Custom Runner for a Causal Discovery
+  Algorithm
 - [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md)
   : Add a New causalDisco Method
 - [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md)

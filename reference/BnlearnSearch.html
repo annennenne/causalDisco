@@ -9,7 +9,7 @@ For arguments to the test, score, and algorithm, see the bnlearn documentation."
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@ For arguments to the test, score, and algorithm, see the bnlearn documentation."
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-tests-scores.html">Integrating custom tests and scores into causal discovery algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
@@ -217,7 +218,13 @@ containing prior-knowledge constraints added via <code><a href="set_knowledge.ht
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
-<dd><p>Character naming the test to use.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
+<p>A string specifying the type of test to use. Can also be a user-defined function with signature
+<code>function(x, y, z, data, args)</code>, where <code>x</code> and <code>y</code> are the variables being
+tested for independence, <code>z</code> is the conditioning set, <code>data</code> is the dataset, and <code>args</code> is a list of additional
+arguments. The function should return the test statistic and the p-value.
+See <code><a href="https://rdrr.io/pkg/bnlearn/man/ci.test.html" class="external-link">bnlearn::ci.test()</a></code> for more details.</p>
+<p>EXPERIMENTAL: user-defined tests syntax are subject to change.</p></dd>
 
 
 <dt><code>alpha</code></dt>
@@ -343,6 +350,8 @@ If NULL, the currently set data will be used, i.e. <code>self$data</code>.</p></
 <span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">0.01</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">my_pc2</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>vstructure X1 -&gt; Y &lt;- X3 is not applicable, because one or both arcs are oriented in the opposite direction.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>vstructure X1 -&gt; Y &lt;- X2 is not applicable, because one or both arcs are oriented in the opposite direction.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">caugi graph</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Graph class: <span style="font-weight: bold;">PDAG</span></span>
@@ -351,12 +360,11 @@ If NULL, the currently set data will be used, i.e. <code>self$data</code>.</p></
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from  edge  to   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> X1    --&gt;   Y    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> X1    ---   Z    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> X2    ---   X3   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> X2    --&gt;   Y    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> X3    --&gt;   Y    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Z     --&gt;   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> X2    ---   X3   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> X2    ---   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> X3    ---   Y    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Y     --&gt;   X1   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Z     --&gt;   X1   </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   name </span>
@@ -389,7 +397,6 @@ If NULL, the currently set data will be used, i.e. <code>self$data</code>.</p></
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> X2    ---   X3   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> X2    --&gt;   Y    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> X3    --&gt;   Y    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Z     --&gt;   Y    </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   name </span>

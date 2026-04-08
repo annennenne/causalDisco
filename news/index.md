@@ -8,6 +8,14 @@
   [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
   to view the custom registered Tetrad algorithms.
 
+- Allows the user to specify custom conditional independence tests for
+  use with for the engines bnlearn, causalDisco, and pcalg. The custom
+  test should have the signature
+  `function(x, y, conditioning_set, suff_stat)` (optionally with an
+  additional `args` argument for additional parameters), and return a
+  p-value. See the documentation and the associated vignette for
+  details.
+
 ### Improvements
 
 - Improved speed of
@@ -23,6 +31,14 @@
   output.
 
 - Improve documentation for many functions.
+
+- Simplified the interface for extending causalDisco with new
+  algorithms. Exports
+  [`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md)
+  and
+  [`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md)
+  to do this. Please see the documentation and the associated vignette
+  for details.
 
 ## causalDisco 1.0.1
 

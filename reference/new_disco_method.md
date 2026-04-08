@@ -44,5 +44,7 @@ A function of class `"disco_method"` that takes a single argument `data`
 Other Extending causalDisco:
 [`distribute_engine_args()`](https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.md),
 [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md),
+[`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md),
+[`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md),
 [`register_tetrad_algorithm()`](https://disco-coders.github.io/causalDisco/reference/register_tetrad_algorithm.md),
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md)

@@ -199,10 +199,11 @@ disco(tpc_example, gs_bnlearn)
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
 #> 1 child_x1  ---   child_x2 
-#> 2 child_x2  ---   oldage_x6
+#> 2 child_x2  -->   oldage_x5
 #> 3 child_x2  ---   youth_x4 
-#> 4 oldage_x6 ---   youth_x3 
-#> 5 oldage_x6 ---   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  -->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
 #> 
 #>   name     

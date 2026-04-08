@@ -41,77 +41,27 @@ hpc <- function(
   ...
 ) {
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      bnlearn = rlang::exec(
-        hpc_bnlearn_runner,
-        test = test,
-        alpha = alpha,
-        !!!args
-      )
-    )
-    runner
-  }
-  method <- new_disco_method(
-    builder = builder,
-    name = "hpc",
+  make_method(
+    method_name = "hpc",
     engine = engine,
-    graph_class = "PDAG"
+    engine_fns = list(
+      bnlearn = function(...) make_runner(engine = "bnlearn", alg = "hpc", ...)
+    ),
+    test = test,
+    alpha = alpha,
+    graph_class = "PDAG",
+    ...
   )
-  method
 }
 ```
 
-We see that the `hpc()` function needs two components:
-
-1.  **Builder function:** Constructs a *runner* for the algorithm. It
-    configures the algorithm with the provided parameters and optional
-    background knowledge.
-
-2.  **Method object:** Created via
-    [`new_disco_method()`](https://disco-coders.github.io/causalDisco/reference/new_disco_method.md).
-    It encapsulates the builder and metadata about the method. This
-    allows us to be able to call
-    [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
-    to execute the algorithm on a dataset.
-
-Next, we define the runner. The runner handles configuring the search
-object with the chosen test, alpha level, and any additional arguments,
-and it actually runs the search on the data when called. For bnlearn
-algorithms, we use the `BnlearnSearch` R6 class to manage search
-configuration and execution. We also use
-[`distribute_engine_args()`](https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.md)
-to determine which extra arguments should be passed to the test, the
-algorithm, or both.
-
-``` r
-hpc_bnlearn_runner <- function(test, alpha, ...) {
-  args <- list(...)
-  search <- BnlearnSearch$new()
-  args_to_pass <- distribute_engine_args(
-    search = search,
-    args = args,
-    engine = "bnlearn",
-    alg = "hpc"
-  )
-
-  search$set_test(test, alpha)
-  search$set_alg("hpc", args_to_pass)
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
-}
-```
+We see that the `hpc()` function is very simple, and all the logic is
+handled by the
+[`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md)
+and
+[`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md)
+functions.
 
 Once defined, the HPC algorithm can be used like any other method in
 causalDisco. We first construct the method using `hpc()`, and then pass
@@ -130,14 +80,12 @@ plot(hpc_bnlearn_result)
 
 To implement a **score-based** algorithm instead, the structure would
 remain the same. The main difference is that the method would accept a
-`score` argument rather than `test` and `alpha`, and the runner would
-call `search$set_score()` instead of `search$set_test()`. A **hybrid**
-algorithm algorithm would accept `test`, `alpha`, and `score` arguments,
-and the runner would call both `set_test()` and `set_score()`.
+`score` argument rather than `test` and `alpha`. A **hybrid** algorithm
+algorithm would accept `test`, `alpha`, and `score` arguments.
 
 To implement an algorithm from pcalg rather than bnlearn, we would
-follow the same structure but use the R6 class `PcalgSearch` instead of
-`BnlearnSearch` in the runner (i.e., `PcalgSearch$new()`).
+follow the same structure but change all instances of `"bnlearn"` to
+`"pcalg"`.
 
 ## Tetrad
 
@@ -204,14 +152,11 @@ You can view all the custom registered Tetrad algorithms using
 and reset it using
 [`reset_tetrad_alg_registry()`](https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.md).
 
-Like for bnlearn and pcalg, we then create a method function
-`my_boss_variant()` that constructs a builder function which in turn
-constructs a runner using the registered Tetrad algorithm.
-
-BOSS is a **score-based** algorithm, so the method accepts a `score`
-argument and passes it to the runner, which configures the
-`TetradSearch` object accordingly. It returns a PDAG, so we set the
-`graph_class` attribute to `"PDAG"`.
+The structure of the method function for a Tetrad algorithm is then the
+exact same as for bnlearn and pcalg, as seen below. BOSS is a
+**score-based** algorithm, so it accepts a `score` argument. The
+algorithm returns a PDAG, so we set the `graph_class` attribute to
+`"PDAG"`.
 
 ``` r
 my_boss_variant <- function(
@@ -220,65 +165,23 @@ my_boss_variant <- function(
   ...
 ) {
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      tetrad = rlang::exec(my_boss_variant_tetrad_runner, score, !!!args)
-    )
-    runner
-  }
-
-  method <- new_disco_method(
-    builder = builder,
-    name = "my_boss_variant",
+  make_method(
+    method_name = "my_boss_variant",
     engine = engine,
-    graph_class = "PDAG"
+    engine_fns = list(
+      tetrad = function(...) {
+        make_runner(engine = "tetrad", alg = "my_boss_variant", ...)
+      }
+    ),
+    score = score,
+    graph_class = "PDAG",
+    ...
   )
-  method
 }
 ```
 
-Next we define the runner function `my_boss_variant_tetrad_runner()`
-
-``` r
-my_boss_variant_tetrad_runner <- function(score, ...) {
-  search <- TetradSearch$new()
-  args <- list(...)
-  args_to_pass <- distribute_engine_args(
-    search = search,
-    args = args,
-    engine = "tetrad",
-    alg = "my_boss_variant"
-  )
-
-  if (length(args_to_pass$score_args) > 0) {
-    rlang::exec(search$set_score, score, !!!args_to_pass$score_args)
-  } else {
-    search$set_score(score)
-  }
-
-  if (length(args_to_pass$alg_args) > 0) {
-    rlang::exec(search$set_alg, "my_boss_variant", !!!args_to_pass$alg_args)
-  } else {
-    search$set_alg("my_boss_variant")
-  }
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
-}
-```
-
-Once defined we can now run `my_boss_variant()` like any other method in
-causalDisco.
+We can now run `my_boss_variant()` like any other method in causalDisco.
 
 ``` r
 # Ensure Tetrad is installed and Java is working before running the algorithm

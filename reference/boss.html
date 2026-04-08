@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-tests-scores.html">Integrating custom tests and scores into causal discovery algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
@@ -92,6 +93,13 @@ used in the causal discovery algorithm. See <code><a href="knowledge.html">knowl
 <li><p><code>caugi</code> A <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> object (of class <code>PDAG</code>) representing the learned causal graph
 from the causal discovery algorithm.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Andrews, B., Ramsey, J., Sánchez-Romero, R., Camchong, J., &amp; Kummerfeld, E. (2023, December).
+Fast scalable and accurate discovery of DAGs using the Best Order Score Search and Grow-Shrink Trees.
+Advances in Neural Information Processing Systems, 36, 63945-63956.
+Epub 2024 May 30. PMID: 39280091; PMCID: PMC11393735.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other causal discovery algorithms:
@@ -216,9 +224,9 @@ from the causal discovery algorithm.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> child_x2  --&gt;   child_x1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> child_x2  --&gt;   oldage_x5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> child_x2  --&gt;   youth_x4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> oldage_x5 --&gt;   oldage_x6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x3  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> oldage_x5 --&gt;   oldage_x6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> youth_x3  --&gt;   oldage_x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> youth_x4  --&gt;   child_x2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> youth_x4  --&gt;   oldage_x6</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Nodes</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
