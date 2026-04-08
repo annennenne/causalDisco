@@ -5,6 +5,12 @@
 - Exports `list_registered_tetrad_algorithms()` to view the custom registered
   Tetrad algorithms.
 
+- Allows the user to specify custom conditional independence tests for use with
+  for the engines bnlearn, causalDisco, and pcalg. The custom test should have
+  the signature `function(x, y, conditioning_set, suff_stat)` (optionally with
+  an additional `args` argument for additional parameters), and return a
+  p-value. See the documentation and the associated vignette for details.
+
 ## Improvements
 
 - Improved speed of `tfci()`, `tges()`, and `tpc()` algorithms by at least 3x,
@@ -14,6 +20,10 @@
   forbidden edges in the output.
 
 - Improve documentation for many functions.
+
+- Simplified the interface for extending causalDisco with new algorithms.
+  Exports `make_method()` and `make_runner()` to do this. Please see the
+  documentation and the associated vignette for details.
 
 # causalDisco 1.0.1
 
