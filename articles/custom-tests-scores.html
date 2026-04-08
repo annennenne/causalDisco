@@ -89,9 +89,9 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 </div>
-<p>Please note, custom tests are experimental and subject to change to improve <!-- usability and consistency across engines. We welcome feedback on the current --> interface and suggestions for improvement.</p>
+<p>Please note, custom tests are experimental and subject to change to improve usability and consistency across engines. We welcome feedback on the current interface and suggestions for improvement.</p>
 <p>This vignette illustrates how to use custom conditional independence tests and custom scores with the <code><a href="../reference/disco.html">disco()</a></code> function in causalDisco. We show how to define user-specified tests and scores, and how to run causal discovery using these custom functions.</p>
-<p>Note that Tetrad-based algorithms do not currently support custom CI tests, so this vignette focuses on R-based algorithms. By the end, you will be able to seamlessly integrate your own evaluation functions into causalDisco workflows.</p>
+<p>Note that Tetrad-based algorithms do not currently support custom CI tests, so this vignette will only cover the engines bnlearn, causalDisco, and pcalg.</p>
 <section class="section level2"><h2 id="custom-tests">Custom Tests<a class="anchor" aria-label="anchor" href="#custom-tests"></a>
 </h2>
 <p>The interface for custom tests depends slightly on the engine being used. causalDisco and pcalg use the exact same interface, while bnlearn is slightly different for now. We plan to unify the interface across engines in a future release, but for now, it’s slightly different, as described below.</p>

@@ -66,9 +66,23 @@ At the moment only scores supported are</p><ul><li><p><a href="TemporalBIC-class
 
 </dl></div>
     <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>Disco</code> object (a list with a <code>caugi</code> and a <code>Knowledge</code> object).</p>
+    <h2 id="recommendation">Recommendation<a class="anchor" aria-label="anchor" href="#recommendation"></a></h2>
+
+
+<p>While it is possible to call the function returned directly with a data frame,
+we recommend using <code><a href="disco.html">disco()</a></code>. This provides a consistent interface and handles knowledge
+integration.</p>
     </div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+
+
+<p>A function that takes a single argument <code>data</code> (a data frame). When called,
+this function returns a list containing:</p><ul><li><p><code>knowledge</code> A <code>Knowledge</code> object with the background knowledge
+used in the causal discovery algorithm. See <code><a href="knowledge.html">knowledge()</a></code> for how to construct it.</p></li>
+<li><p><code>caugi</code> A <code><a href="https://caugi.org/reference/caugi.html" class="external-link">caugi::caugi</a></code> object (of class <code>PDAG</code>) representing the learned causal graph
+from the causal discovery algorithm.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Tobias Ellegaard Larsen</p>

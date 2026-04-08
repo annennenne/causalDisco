@@ -11,7 +11,8 @@ library(causalDisco)
 ```
 
 Please note, custom tests are experimental and subject to change to
-improve interface and suggestions for improvement.
+improve usability and consistency across engines. We welcome feedback on
+the current interface and suggestions for improvement.
 
 This vignette illustrates how to use custom conditional independence
 tests and custom scores with the
@@ -20,9 +21,8 @@ function in causalDisco. We show how to define user-specified tests and
 scores, and how to run causal discovery using these custom functions.
 
 Note that Tetrad-based algorithms do not currently support custom CI
-tests, so this vignette focuses on R-based algorithms. By the end, you
-will be able to seamlessly integrate your own evaluation functions into
-causalDisco workflows.
+tests, so this vignette will only cover the engines bnlearn,
+causalDisco, and pcalg.
 
 ## Custom Tests
 

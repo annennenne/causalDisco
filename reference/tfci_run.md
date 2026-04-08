@@ -99,10 +99,6 @@ tfci_run(
   [`pcalg::skeleton()`](https://rdrr.io/pkg/pcalg/man/skeleton.html)
   during skeleton construction.
 
-## Value
-
-A `Disco` object (a list with a `caugi` and a `knowledge` object).
-
 ## Details
 
 The temporal/tiered background information enters several places in the
@@ -117,6 +113,28 @@ cross-tier edges get an arrowhead placed at their latest node.
 After this, the usual FCI orientation rules are applied; see
 [`pcalg::udag2pag()`](https://rdrr.io/pkg/pcalg/man/udag2pag.html) for
 details.
+
+## Recommendation
+
+While it is possible to call the function returned directly with a data
+frame, we recommend using
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md).
+This provides a consistent interface and handles knowledge integration.
+
+## Value
+
+A function that takes a single argument `data` (a data frame). When
+called, this function returns a list containing:
+
+- `knowledge` A `Knowledge` object with the background knowledge used in
+  the causal discovery algorithm. See
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+  for how to construct it.
+
+- `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
+  object representing the learned causal graph. This graph is a PAG
+  (Partial Ancestral Graph), but since PAGs are not yet natively
+  supported in caugi, it is currently stored with class `UNKNOWN`.
 
 ## Examples
 

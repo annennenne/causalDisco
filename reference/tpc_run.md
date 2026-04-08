@@ -97,10 +97,6 @@ tpc_run(
   [`pcalg::skeleton()`](https://rdrr.io/pkg/pcalg/man/skeleton.html)
   during skeleton construction.
 
-## Value
-
-A `Disco` object (a list with a `caugi` and a `Knowledge` object).
-
 ## Details
 
 Any independence test implemented in pcalg may be used; see
@@ -119,6 +115,27 @@ Temporal or tiered knowledge enters in two places:
 
 - during orientation, any cross-tier edge is restricted to point forward
   in time.
+
+## Recommendation
+
+While it is possible to call the function returned directly with a data
+frame, we recommend using
+[`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md).
+This provides a consistent interface and handles knowledge integration.
+
+## Value
+
+A function that takes a single argument `data` (a data frame). When
+called, this function returns a list containing:
+
+- `knowledge` A `Knowledge` object with the background knowledge used in
+  the causal discovery algorithm. See
+  [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
+  for how to construct it.
+
+- `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
+  object (of class `PDAG`) representing the learned causal graph from
+  the causal discovery algorithm.
 
 ## Examples
 
