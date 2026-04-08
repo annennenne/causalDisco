@@ -225,8 +225,11 @@ BnlearnSearch <- R6::R6Class(
         null.ok = FALSE
       )
       if (is.function(method)) {
-        # Wrap the user function so it is bnlearn-compatible
-        self$test <- translate_custom_test_to_bnlearn(method)
+        # Wrap the user function so it is bnlearn-compatible.
+        # Store translated function and alpha in params so they survive set_alg().
+        self$test <- "custom-test"
+        self$params$fun <- translate_custom_test_to_bnlearn(method)
+        self$params$alpha <- alpha
         private$test_key <- "custom-test"
         return(invisible(self))
       }
@@ -353,7 +356,12 @@ BnlearnSearch <- R6::R6Class(
         if (!is.null(args$fun)) {
           args$fun <- translate_custom_test_to_bnlearn(args$fun)
         }
-        self$set_params(args)
+        merged_params <- self$params
+        if (is.null(merged_params)) {
+          merged_params <- list()
+        }
+        merged_params[names(args)] <- args
+        self$set_params(merged_params)
       }
       need_test <- c(
         "pc",

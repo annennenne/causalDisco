@@ -19,7 +19,6 @@ as.graphNEL <- function(amat) {
   )
 
   this_class <- class(amat)
-  F
   if ("tamat" %in% this_class) {
     class(amat) <- "matrix"
   }

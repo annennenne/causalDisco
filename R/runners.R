@@ -276,7 +276,12 @@ make_runner <- function(
   # test
   if (!is.null(test)) {
     if (length(args_to_pass$test_args) > 0) {
-      rlang::exec(search$set_test, test, !!!args_to_pass$test_args)
+      rlang::exec(
+        search$set_test,
+        test,
+        alpha = alpha,
+        !!!args_to_pass$test_args
+      )
     } else {
       search$set_test(test, alpha = alpha)
     }

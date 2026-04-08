@@ -40,7 +40,7 @@ cor_test <- function(x, y, conditioning_set, suff_stat) {
 #'
 #' @return A numeric, which is the p-value of the test.
 #' @export
-reg_test <- function(x, y, conditioning_set, suff_stat = NULL) {
+reg_test <- function(x, y, conditioning_set, suff_stat) {
   p1 <- reg_test_each_dir(x, y, conditioning_set, suff_stat)
   p2 <- reg_test_each_dir(y, x, conditioning_set, suff_stat)
 

@@ -137,7 +137,7 @@ test_that("bnlearn pc, gs, and iamb family work with custom test", {
     test = my_bnlearn_test,
     alpha = 0.05
   )
-  disco(tpc_example, iamb_fdr_bnlearn)
+  result <- disco(tpc_example, iamb_fdr_bnlearn)
   expect_equal(class(result), "Disco")
 
   fast_iamb_bnlearn <- fast_iamb(
