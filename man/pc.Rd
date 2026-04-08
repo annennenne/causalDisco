@@ -4,12 +4,7 @@
 \alias{pc}
 \title{PC Algorithm for Causal Discovery}
 \usage{
-pc(
-  engine = c("tetrad", "pcalg", "bnlearn", "causalDisco"),
-  test,
-  alpha = 0.05,
-  ...
-)
+pc(engine = c("tetrad", "pcalg", "bnlearn"), test, alpha = 0.05, ...)
 }
 \arguments{
 \item{engine}{Character; which engine to use. Must be one of:

@@ -32,7 +32,7 @@
 #' @concept cd_algorithms
 #' @export
 pc <- function(
-  engine = c("tetrad", "pcalg", "bnlearn", "causalDisco"),
+  engine = c("tetrad", "pcalg", "bnlearn"),
   test,
   alpha = 0.05,
   ...
@@ -45,10 +45,7 @@ pc <- function(
     engine_fns = list(
       pcalg = function(...) make_runner(engine = "pcalg", alg = "pc", ...),
       tetrad = function(...) make_runner(engine = "tetrad", alg = "pc", ...),
-      bnlearn = function(...) make_runner(engine = "bnlearn", alg = "pc", ...),
-      causalDisco = function(...) {
-        make_runner(engine = "causalDisco", alg = "pc", ...)
-      }
+      bnlearn = function(...) make_runner(engine = "bnlearn", alg = "pc", ...)
     ),
     test = test,
     alpha = alpha,

@@ -161,7 +161,8 @@ test_that("custom test works with additional args", {
     engine = "causalDisco",
     test = my_test,
     alpha = 0.05,
-    suff_stat_fun = my_suff_stat
+    suff_stat_fun = my_suff_stat,
+    args = list(not_used = "This is not used")
   )
   result <- disco(data = tpc_example, method = my_tpc)
   expect_equal(class(result), "Disco")
@@ -170,7 +171,36 @@ test_that("custom test works with additional args", {
     engine = "pcalg",
     test = my_test,
     alpha = 0.05,
-    suff_stat_fun = my_suff_stat
+    suff_stat_fun = my_suff_stat,
+    args = list(not_used = "This is not used")
+  )
+  result <- disco(data = tpc_example, method = my_pc)
+  expect_equal(class(result), "Disco")
+
+  # bnlearn
+  my_test_bnlearn <- function(x, y, z, data, args = list()) {
+    not_used <- args$not_used
+    C <- cor(data)
+    n <- nrow(data)
+
+    vars <- c(x, y, z)
+    C_sub <- C[vars, vars, drop = FALSE]
+    K <- solve(C_sub)
+    r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
+    z_val <- 0.5 * log((1 + r) / (1 - r))
+
+    stat <- sqrt(n - length(z) - 3) * abs(z_val)
+
+    pval <- 2 * (1 - pnorm(stat))
+
+    pval
+  }
+
+  my_pc <- pc(
+    engine = "bnlearn",
+    test = my_test_bnlearn,
+    alpha = 0.05,
+    args = list(not_used = "This is not used")
   )
   result <- disco(data = tpc_example, method = my_pc)
   expect_equal(class(result), "Disco")
