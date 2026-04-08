@@ -13,14 +13,13 @@ reg_test(x, y, conditioning_set, suff_stat)
 
 \item{conditioning_set}{Index vector of conditioning variable(s), possibly \code{NULL}.}
 
-\item{suff_stat}{Sufficient statistic; list with data,
-binary variables and order.}
+\item{suff_stat}{List with data, binary variables and order.}
 }
 \value{
 A numeric, which is the p-value of the test.
 }
 \description{
-We test whether \code{x} and \code{y} are associated, given
+Test whether \code{x} and \code{y} are associated, given
 \code{conditioning_set} using a generalized linear model.
 }
 \details{

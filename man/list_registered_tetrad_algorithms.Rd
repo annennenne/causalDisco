@@ -15,6 +15,8 @@ Returns the names of all custom registered Tetrad algorithms.
 \seealso{
 Other Extending causalDisco: 
 \code{\link{distribute_engine_args}()},
+\code{\link{make_method}()},
+\code{\link{make_runner}()},
 \code{\link{new_disco_method}()},
 \code{\link{register_tetrad_algorithm}()},
 \code{\link{reset_tetrad_alg_registry}()}

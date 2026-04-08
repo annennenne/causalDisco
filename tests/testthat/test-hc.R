@@ -10,7 +10,8 @@ test_that("hc bnlearn algorithm run without error and return correct classes", {
       max.iter = Inf,
       maxp = Inf,
       optimized = TRUE
-    )
+    ),
+    suppress_warnings = TRUE
   )
 
   test_additional_test_or_score_args(

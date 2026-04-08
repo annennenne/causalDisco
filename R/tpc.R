@@ -32,74 +32,19 @@ tpc <- function(
   alpha = 0.05,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "tpc"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  # build a `runner builder` that knows how to make a runner given knowledge
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      causalDisco = rlang::exec(
-        tpc_causalDisco_runner,
-        test,
-        alpha,
-        !!!args
-      )
-    )
-    runner
-  }
-
-  method <- disco_method(builder, "tpc")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
-  method
-}
-
-#' @keywords internal
-tpc_causalDisco_runner <- function(
-  test,
-  alpha,
-  ...,
-  directed_as_undirected_knowledge = FALSE
-) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "pcalg"
+  make_method(
+    method_name = "tpc",
+    engine = engine,
+    engine_fns = list(
+      causalDisco = function(...) {
+        make_runner(engine = "causalDisco", alg = "tpc", ...)
+      }
     ),
-    function_name = "pc_causalDisco_runner"
+    test = test,
+    alpha = alpha,
+    graph_class = "PDAG",
+    ...
   )
-
-  search <- CausalDiscoSearch$new()
-  args <- list(...)
-  args_to_pass <- check_args_and_distribute_args(
-    search = search,
-    args = args,
-    engine = "causalDisco",
-    alg = "tpc",
-    test = test
-  )
-
-  search$set_params(args_to_pass$alg_args)
-  search$set_test(test, alpha)
-  search$set_alg("tpc")
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(
-        knowledge,
-        directed_as_undirected = directed_as_undirected_knowledge
-      )
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }

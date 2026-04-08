@@ -24,7 +24,7 @@ background knowledge.
 \details{
 \itemize{
 \item \strong{Required edges} are drawn in \strong{blue} by default (\code{required_col}), can be changed.
-\item \strong{Forbidden edges} are not drawn by.
+\item \strong{Forbidden edges} are not drawn.
 \item If tiered knowledge is provided, nodes are arranged according to their tiers.
 \item Other edge styling (line width, arrow size, etc.) can be supplied via \code{edge_style}.
 To override the color of a specific edge, specify it in

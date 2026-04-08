@@ -8,6 +8,7 @@ Bjerre
 Bui
 CMD
 CPDAG
+Camchong
 Caugi
 Chickering
 Codecov
@@ -18,6 +19,7 @@ EBIC
 Eagleson
 Ekstrøm
 Ellegaard
+Epub
 FCI
 FGES
 FN
@@ -36,6 +38,7 @@ Jonckheere
 KCI
 Kalish
 Kristensen
+Kummerfeld
 Kun
 MCAR
 Margaritis
@@ -46,6 +49,9 @@ Osler
 PAG
 PAGs
 PDAG
+PMC
+PMCID
+PMID
 PMLR
 Pilla
 Pseudoinverse
@@ -62,6 +68,7 @@ Shen
 Silverman
 Spirtes
 Statnikov
+Sánchez
 TFCI
 TGES
 TP
@@ -117,9 +124,11 @@ pc
 pcalg
 penalised
 pre
+precompute
 preprint
 rJava
 rJavaEnv
+scalable
 sem
 simDAG
 simGausFromDAG
