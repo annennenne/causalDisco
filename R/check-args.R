@@ -415,6 +415,5 @@ check_args_and_distribute_args_bnlearn <- function(
       )
     }
   }
-
   args
 }

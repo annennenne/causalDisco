@@ -16,6 +16,10 @@ knitr:
 library(causalDisco)
 ```
 
+Please note, custom tests are experimental and subject to change to improve
+<!-- usability and consistency across engines. We welcome feedback on the current -->
+interface and suggestions for improvement.
+
 This vignette illustrates how to use custom conditional independence tests and
 custom scores with the `disco()` function in causalDisco. We show how to define
 user-specified tests and scores, and how to run causal discovery using these
@@ -27,13 +31,15 @@ seamlessly integrate your own evaluation functions into causalDisco workflows.
 
 # Custom Tests
 
-The interface for custom tests depends on the engine being used. Below, we
-provide examples for both the causalDisco and pcalg engines, as well as bnlearn.
+The interface for custom tests depends slightly on the engine being used.
+causalDisco and pcalg use the exact same interface, while bnlearn is slightly
+different for now. We plan to unify the interface across engines in a future
+release, but for now, it's slightly different, as described below.
 
 ## causalDisco and pcalg engines
 
-causalDisco and pcalg engines allow users to specify custom tests by providing a
-function with the signature `function(x, y, conditioning_set, suff_stat)`, where
+A custom tests takes the signature
+`function(x, y, conditioning_set, suff_stat, args)`, (`args` is an optional).
 `x` and `y` are the variables being tested for independence, `conditioning_set`
 is the conditioning set, and `suff_stat` is a list of sufficient statistics
 needed for the test (e.g. correlation matrix and sample size). The function
@@ -77,7 +83,7 @@ This can then be used with the causalDisco engine as follows:
 
 ```{r}
 #| label: using_my_custom_test_causalDisco
-data(tpc_example)
+data(num_data)
 
 my_tpc <- tpc(
   engine = "causalDisco",
@@ -85,7 +91,7 @@ my_tpc <- tpc(
   alpha = 0.05,
   suff_stat_fun = my_suff_stat
 )
-result <- disco(data = tpc_example, method = my_tpc)
+result <- disco(data = num_data, method = my_tpc)
 plot(result)
 ```
 
@@ -99,7 +105,7 @@ my_pc <- pc(
   alpha = 0.05,
   suff_stat_fun = my_suff_stat
 )
-result <- disco(data = tpc_example, method = my_pc)
+result <- disco(data = num_data, method = my_pc)
 plot(result)
 ```
 
@@ -111,45 +117,49 @@ method.
 
 ## bnlearn
 
-bnlearn supports custom CI tests, but the interface is different from using the
-engines causalDisco and pcalg. The custom test must have the signature
-`function(x, y, z, data, args)`, where `x` and `y` are the variables being
-tested for independence, `z` is the conditioning set, `data` is the dataset, and
-`args` is a list of additional arguments. The function should return the test
-statistic and the p-value. For more details on how to implement custom tests for
-bnlearn, see `?bnlearn::ci.test`.
+For bnlearn the signature should be the same, but you must pass `suff_stat/data`
+directly in the function, since bnlearn does not have a way to precompute
+sufficient statistics and pass them to the test function.
+
+When defining a custom test for `bnlearn`, you can use either `conditioning_set`
+and `suff_stat` **or** `z` and `data`, which are the argument names bnlearn
+expects.
+
+The test function should return either:
+
+- A single numeric value (the p-value), **or**
+- A numeric vector of length 2, where the **second element is the p-value**.
+
+bnlearn requires the first element (the test statistic), but it is not used. If
+you return only the p-value, a dummy statistic will be automatically injected.
 
 ```{r}
 #| label: my_custom_test_bnlearn
-my_bnlearn_test <- function(x, y, z, data, args) {
-  not_used <- args # Just for demonstration
-  suff_stat <- list(C = cor(data), n = nrow(data))
+my_test_bnlearn <- function(x, y, conditioning_set, suff_stat, args = list()) {
+  not_used <- args$not_used
+  C <- cor(suff_stat)
+  n <- nrow(suff_stat)
 
-  C <- suff_stat$C
-  n <- suff_stat$n
-
-  vars <- c(x, y, z)
+  vars <- c(x, y, conditioning_set)
   C_sub <- C[vars, vars, drop = FALSE]
   K <- solve(C_sub)
-
   r <- -K[1, 2] / sqrt(K[1, 1] * K[2, 2])
+  z <- 0.5 * log((1 + r) / (1 - r))
 
-  z_stat <- 0.5 * log((1 + r) / (1 - r))
+  stat <- sqrt(n - length(conditioning_set) - 3) * abs(z)
 
-  stat <- sqrt(n - length(z) - 3) * z_stat
+  pval <- 2 * (1 - pnorm(stat))
 
-  pval <- 2 * (1 - pnorm(abs(stat)))
-
-  c(statistic = stat, p.value = pval)
+  pval
 }
 
 my_pc <- pc(
   engine = "bnlearn",
-  test = my_bnlearn_test,
+  test = my_test_bnlearn,
   alpha = 0.05,
   args = list(not_used = "Example of passing additional arguments")
 )
-result <- disco(data = tpc_example, method = my_pc)
+result <- disco(data = num_data, method = my_pc)
 plot(result)
 ```
 

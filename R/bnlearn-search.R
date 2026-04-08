@@ -225,7 +225,8 @@ BnlearnSearch <- R6::R6Class(
         null.ok = FALSE
       )
       if (is.function(method)) {
-        self$test <- method
+        # Wrap the user function so it is bnlearn-compatible
+        self$test <- translate_custom_test_to_bnlearn(method)
         private$test_key <- "custom-test"
         return(invisible(self))
       }
@@ -349,6 +350,9 @@ BnlearnSearch <- R6::R6Class(
         if (!is.list(args)) {
           stop("Arguments must be provided as a list.", call. = FALSE)
         }
+        if (!is.null(args$fun)) {
+          args$fun <- translate_custom_test_to_bnlearn(args$fun)
+        }
         self$set_params(args)
       }
       need_test <- c(
@@ -393,7 +397,6 @@ BnlearnSearch <- R6::R6Class(
           )
         }
       }
-
       self$alg <- switch(
         method,
 
