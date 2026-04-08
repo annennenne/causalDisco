@@ -63,9 +63,6 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \item{...}{Additional arguments passed to
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
-\value{
-A \code{Disco} object (a list with a \code{caugi} and a \code{knowledge} object).
-}
 \description{
 Use a modification of the FCI algorithm that makes use of background knowledge
 in the format of a partial ordering. This may, for instance, come about when
@@ -84,6 +81,26 @@ latest node.
 After this, the usual FCI orientation rules are applied; see \code{\link[pcalg:udag2pag]{pcalg::udag2pag()}}
 for details.
 }
+\section{Recommendation}{
+
+While it is possible to call the function returned directly with a data frame,
+we recommend using \code{\link[=disco]{disco()}}. This provides a consistent interface and handles knowledge
+integration.
+}
+
+\section{Value}{
+
+A function that takes a single argument \code{data} (a data frame). When called,
+this function returns a list containing:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
+\item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
+This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
+natively supported in \pkg{caugi}, it is currently stored with class \code{UNKNOWN}.
+}
+}
+
 \examples{
 data(tpc_example)
 

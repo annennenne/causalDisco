@@ -16,12 +16,28 @@ At the moment only scores supported are
 
 \item{verbose}{indicates whether debug output should be printed.}
 }
-\value{
-A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
-}
 \description{
 Perform causal discovery using the temporal greedy equivalence search algorithm.
 }
+\section{Recommendation}{
+
+While it is possible to call the function returned directly with a data frame,
+we recommend using \code{\link[=disco]{disco()}}. This provides a consistent interface and handles knowledge
+integration.
+}
+
+\section{Value}{
+
+A function that takes a single argument \code{data} (a data frame). When called,
+this function returns a list containing:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
+\item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object (of class \code{PDAG}) representing the learned causal graph
+from the causal discovery algorithm.
+}
+}
+
 \examples{
 # Recommended route using disco:
 kn <- knowledge(

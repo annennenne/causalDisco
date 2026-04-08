@@ -63,9 +63,6 @@ is due to the fact that \pkg{pcalg} does not allow directed edges in
 \item{...}{Additional arguments passed to
 \code{\link[pcalg:skeleton]{pcalg::skeleton()}} during skeleton construction.}
 }
-\value{
-A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
-}
 \description{
 Run a tier-aware variant of the PC algorithm that respects background
 knowledge about a partial temporal order. Supply the temporal order via a
@@ -86,6 +83,25 @@ they do not contain variables that are strictly after both endpoints;
 forward in time.
 }
 }
+\section{Recommendation}{
+
+While it is possible to call the function returned directly with a data frame,
+we recommend using \code{\link[=disco]{disco()}}. This provides a consistent interface and handles knowledge
+integration.
+}
+
+\section{Value}{
+
+A function that takes a single argument \code{data} (a data frame). When called,
+this function returns a list containing:
+\itemize{
+\item \code{knowledge} A \code{Knowledge} object with the background knowledge
+used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
+\item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object (of class \code{PDAG}) representing the learned causal graph
+from the causal discovery algorithm.
+}
+}
+
 \examples{
 # Load data
 data(tpc_example)

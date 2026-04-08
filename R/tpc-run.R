@@ -56,7 +56,8 @@
 #'   forward in time.
 #' }
 #'
-#' @return A `Disco` object (a list with a `caugi` and a `Knowledge` object).
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pdag Value
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'
