@@ -4,7 +4,7 @@
 \alias{reg_test}
 \title{Regression-based Information Loss Test}
 \usage{
-reg_test(x, y, conditioning_set, suff_stat = NULL)
+reg_test(x, y, conditioning_set, suff_stat)
 }
 \arguments{
 \item{x}{Index of x variable.}
