@@ -32,11 +32,11 @@ Authors:
 \itemize{
   \item Frederik Fabricius-Bjerre \email{frederik@fabriciusbjerre.dk}
   \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
+  \item Claus Thorn Ekstrøm \email{ekstrom@sund.ku.dk}
 }
 
 Other contributors:
 \itemize{
-  \item Claus Thorn Ekstrøm \email{ekstrom@sund.ku.dk} [contributor]
   \item Tobias Ellegaard Larsen \email{tobias.ellegaard@sund.ku.dk} [contributor]
 }
 
