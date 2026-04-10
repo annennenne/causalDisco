@@ -66,7 +66,7 @@
     "fisher_z_mi" = .decorate_test(micd::gaussMItest, missing_mode = "mi"),
     "conditional_gaussian" = .decorate_test(
       micd::mixCItest,
-      missing_mode = "mi"
+      missing_mode = "none"
     ),
     "conditional_gaussian_twd" = .decorate_test(
       micd::mixCItwd,
