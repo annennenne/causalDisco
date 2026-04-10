@@ -11,6 +11,10 @@
   an additional `args` argument for additional parameters), and return a
   p-value. See the documentation and the associated vignette for details.
 
+- Added support for micd tests such as `micd::gaussCItestMI()` for pcalg and
+  causalDisco engine. See all the new available tests in `?PcalgSearch` and
+  `?CausalDiscoSearch` under the test field.
+
 ## Improvements
 
 - Improved speed of `tfci()`, `tges()`, and `tpc()` algorithms by at least 3x,
