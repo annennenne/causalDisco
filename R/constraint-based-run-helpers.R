@@ -58,9 +58,20 @@ constraint_based_prepare_inputs <- function(
   }
 
   # variable names
-  vnames <- if (is.null(data)) varnames else names(data)
+  if (!is.null(suff_stat)) {
+    vnames <- colnames(suff_stat[[1]])
+  } else if (!is.null(data) && inherits(data, "mids")) {
+    vnames <- colnames(data$data)
+  } else if (!is.null(data)) {
+    vnames <- names(data)
+  } else {
+    vnames <- varnames
+  }
+
   if (is.null(vnames) || !length(vnames)) {
-    stop("Could not determine variable names. Supply `data` or `varnames`.")
+    stop(
+      "Could not determine variable names. Supply `data`, `varnames`, or `suff_stat`."
+    )
   }
 
   # ensure all vars appear in knowledge
