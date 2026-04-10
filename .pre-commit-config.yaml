@@ -5,3 +5,8 @@ repos:
     hooks:
       - id: panache-format
       - id: panache-lint
+
+  - repo: https://github.com/posit-dev/air-pre-commit
+    rev: 0.9.0
+    hooks:
+      - id: air-format
