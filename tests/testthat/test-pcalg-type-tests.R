@@ -15,11 +15,17 @@ test_that(".get_suff_stat works", {
 
   expect_error(
     .get_suff_stat("a", method = "fisher_z_mi"),
-    "fisher_z_mi requires a mids object."
+    "fisher_z_mi requires a mids object.",
+    fixed = TRUE
   )
-
-  suff_stat <- .get_suff_stat(list(X), method = "fisher_z_mi")
-  expect_equal(suff_stat[2][[1]], 10)
+  X_missing <- data.frame(
+    V1 = rnorm(10),
+    V2 = rnorm(10)
+  )
+  X_missing$V1[1:2] <- NA
+  X_imp <- mice::mice(X_missing, m = 5, method = "pmm", printFlag = FALSE)
+  suff_stat <- .get_suff_stat(X_imp, method = "fisher_z_mi")
+  expect_equal(suff_stat[6][[1]], 10)
 
   suff_stat <- .get_suff_stat(X, method = "g_square_twd")
   expect_equal(names(suff_stat), c("dm", "adaptDF"))
