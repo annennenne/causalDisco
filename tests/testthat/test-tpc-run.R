@@ -33,7 +33,7 @@ test_that("tpc_run NA handling: error on NAs with na_method = 'none', cc with ze
 
   expect_error(
     tpc_run(data = df2, knowledge = kn2, na_method = "cc"),
-    "contain no complete cases.",
+    "Complete case analysis resulted in empty dataset.",
     fixed = TRUE
   )
 })
