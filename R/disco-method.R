@@ -16,8 +16,8 @@
 #' @keywords internal
 disco_method <- function(builder, method_class) {
   f <- function(data) {
-    if (!is.data.frame(data)) {
-      stop("`data` must be a data frame.", call. = FALSE)
+    if (!(is.data.frame(data) || inherits(data, "mids"))) {
+      stop("`data` must be a data frame or a `mids` object.", call. = FALSE)
     }
     # build a fresh runner with the current knowledge
     runner <- builder(environment(f)$knowledge)

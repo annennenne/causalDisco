@@ -41,26 +41,79 @@ constraint_based_prepare_inputs <- function(
   }
   is_knowledge(knowledge)
 
-  # NA handling
-  if (!is.null(data) && anyNA(data)) {
-    if (na_method == "none") {
-      stop(
-        "Inputted data contain NA values, but no method for handling missing NAs was supplied."
-      )
-    } else if (na_method == "cc") {
-      data <- stats::na.omit(data)
-      if (nrow(data) == 0) {
+  missing_mode <- attr(test, "missing_mode")
+  if (is.null(missing_mode)) {
+    missing_mode <- "none"
+  }
+
+  has_na <- !is.null(data) && anyNA(data)
+  is_mids <- inherits(data, "mids")
+
+  if (missing_mode == "none") {
+    if (has_na) {
+      if (na_method == "cc") {
+        data <- stats::na.omit(data)
+        if (nrow(data) == 0) {
+          stop(
+            "Complete case analysis resulted in empty dataset.",
+            call. = FALSE
+          )
+        }
+      } else {
         stop(
-          "Complete case analysis chosen, but inputted data contain no complete cases."
+          "Inputted data contains NA but selected CI test does not support missing data. ",
+          "Use na_method = 'cc' or choose an appropriate test.",
+          call. = FALSE
         )
       }
     }
+  } else if (missing_mode == "na") {
+    # NA-aware tests: allow raw NA, do nothing
+  } else if (missing_mode == "mi") {
+    if (!is_mids) {
+      stop(
+        "Selected CI test requires a 'mids' object (multiple imputation data).",
+        call. = FALSE
+      )
+    }
   }
 
-  # variable names
-  vnames <- if (is.null(data)) varnames else names(data)
+  if (!is.null(suff_stat)) {
+    if (
+      is.list(suff_stat) &&
+        !is.null(suff_stat[[1]]) &&
+        (is.matrix(suff_stat[[1]]) || is.data.frame(suff_stat[[1]]))
+    ) {
+      # MI-style: list of suff_stats (e.g. one per imputation)
+      vnames <- colnames(suff_stat[[1]])
+    } else if (is.data.frame(suff_stat)) {
+      # single suff_stat stored as data.frame
+      vnames <- colnames(suff_stat)
+    } else if (is.matrix(suff_stat)) {
+      # matrix suff_stat
+      vnames <- colnames(suff_stat)
+    } else if (is.list(suff_stat) && !is.null(names(suff_stat))) {
+      # pcalg-style suff_stat (e.g. $C, $n, etc.)
+      if (!is.null(suff_stat$C)) {
+        vnames <- colnames(suff_stat$C)
+      } else {
+        stop("Cannot infer variable names from suff_stat list.")
+      }
+    } else {
+      stop("Unknown suff_stat format; cannot infer variable names.")
+    }
+  } else if (!is.null(data) && inherits(data, "mids")) {
+    vnames <- colnames(data$data)
+  } else if (!is.null(data)) {
+    vnames <- names(data)
+  } else {
+    vnames <- varnames
+  }
+
   if (is.null(vnames) || !length(vnames)) {
-    stop("Could not determine variable names. Supply `data` or `varnames`.")
+    stop(
+      "Could not determine variable names. Supply `data` or `varnames`."
+    )
   }
 
   # ensure all vars appear in knowledge

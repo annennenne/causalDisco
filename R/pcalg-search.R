@@ -40,8 +40,26 @@ PcalgSearch <- R6::R6Class(
     #'  \itemize{
     #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
     #'    See [pcalg::gaussCItest()].
+    #'    \item \code{"fisher_z_twd"} - Fisher Z test for Gaussian data with test-wise deletion.
+    #'    See [micd::gaussCItwd()].
+    #'    \item \code{"fisher_z_mi"} - Fisher Z test for Gaussian data with multiple imputation.
+    #'    See [micd::gaussCItestMI()].
+    #'
     #'    \item \code{"g_square"} - G square test for discrete data.
     #'    See [pcalg::binCItest()] and [pcalg::disCItest()].
+    #'    \item \code{"g_square_twd"} - G square test for discrete data with test-wise deletion.
+    #'    See [micd::disCItwd()].
+    #'    \item \code{"g_square_mi"} - G square test for discrete data with multiple imputation.
+    #'    See [micd::disMItest()].
+    #'
+    #'    \item \code{"conditional_gaussian"} - Test for conditional independence in mixed data.
+    #'    See [micd::mixCItest()].
+    #'    \item \code{"conditional_gaussian_twd"} - Test for conditional independence in mixed data
+    #'    with test-wise deletion.
+    #'    See [micd::mixCItwd()].
+    #'    \item \code{"conditional_gaussian_mi"} - Test for conditional independence in mixed data
+    #'    with multiple imputation.
+    #'    See [micd::mixMItest()].
     #'  }
     test = NULL,
 
@@ -373,16 +391,26 @@ PcalgSearch <- R6::R6Class(
           # If knowledge is set, we now need to call the function
           # to get the fixed constraints.
           self$knowledge <- private$knowledge_function()
+          if (inherits(self$data, "mids")) {
+            labels = colnames(mice::complete(self$data, action = 1))
+          } else {
+            labels = colnames(self$data)
+          }
           result <- self$alg(
             suffStat = self$suff_stat,
-            labels = colnames(self$data),
+            labels = labels,
             fixedGaps = self$knowledge$fixed_gaps,
             fixedEdges = self$knowledge$fixed_edges
           )
         } else {
+          if (inherits(self$data, "mids")) {
+            labels = colnames(mice::complete(self$data, action = 1))
+          } else {
+            labels = colnames(self$data)
+          }
           result <- self$alg(
             suffStat = self$suff_stat,
-            labels = colnames(self$data)
+            labels = labels
           )
         }
         # score_function is not null, so we are using a score-based algorithm

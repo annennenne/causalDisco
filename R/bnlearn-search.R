@@ -353,9 +353,28 @@ BnlearnSearch <- R6::R6Class(
         if (!is.list(args)) {
           stop("Arguments must be provided as a list.", call. = FALSE)
         }
+        # --- Flatten alg_args into args ---
+        if (!is.null(args$alg_args)) {
+          if (!is.list(args$alg_args)) {
+            stop("args$alg_args must be a list.", call. = FALSE)
+          }
+          args[names(args$alg_args)] <- args$alg_args
+          args$alg_args <- NULL
+        }
+
         if (!is.null(args$fun)) {
           args$fun <- translate_custom_test_to_bnlearn(args$fun)
         }
+
+        # --- Flatten alg_args into args ---
+        if (!is.null(args$alg_args)) {
+          if (!is.list(args$alg_args)) {
+            stop("args$alg_args must be a list.", call. = FALSE)
+          }
+          args[names(args$alg_args)] <- args$alg_args
+          args$alg_args <- NULL
+        }
+
         merged_params <- self$params
         if (is.null(merged_params)) {
           merged_params <- list()

@@ -119,7 +119,7 @@ test_that("tfci_run NA handling: error on NAs with na_method = 'none', cc with z
 
   expect_error(
     tfci_run(data = df1, knowledge = kn1, na_method = "none"),
-    "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
+    "Inputted data contains NA but selected CI test does not support missing data.",
     fixed = TRUE
   )
 
@@ -128,7 +128,7 @@ test_that("tfci_run NA handling: error on NAs with na_method = 'none', cc with z
 
   expect_error(
     tfci_run(data = df2, knowledge = kn2, na_method = "cc"),
-    "contain no complete cases.",
+    "Complete case analysis resulted in empty dataset.",
     fixed = TRUE
   )
 })
@@ -142,7 +142,7 @@ test_that("tfci_run errors when varnames are unknown with suff_stat-only usage",
       knowledge = knowledge(),
       varnames = NULL
     ),
-    "Could not determine variable names. Supply `data` or `varnames`.",
+    "Cannot infer variable names from suff_stat list.",
     fixed = TRUE
   )
 })

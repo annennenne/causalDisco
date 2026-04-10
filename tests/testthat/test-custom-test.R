@@ -130,7 +130,7 @@ test_that("custom test works", {
 })
 
 test_that("custom test works with additional args", {
-  my_test <- function(x, y, conditioning_set, suff_stat, args = list()) {
+  my_test <- function(x, y, conditioning_set, suff_stat, args) {
     not_used <- args$not_used
     C <- suff_stat$C
     n <- suff_stat$n
@@ -178,7 +178,7 @@ test_that("custom test works with additional args", {
   expect_equal(class(result), "Disco")
 
   # bnlearn
-  my_test_bnlearn <- function(x, y, z, data, args = list()) {
+  my_test_bnlearn <- function(x, y, z, data, args) {
     not_used <- args$not_used
     C <- cor(data)
     n <- nrow(data)

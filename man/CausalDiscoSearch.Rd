@@ -102,10 +102,30 @@ See \link{TemporalBDeu}.
 \item{\code{test}}{A function that will be used to test independence.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
-\item \code{"reg"} - Regression test for discrete or binary data.
-See \code{\link[=reg_test]{reg_test()}}.
 \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
 See \code{\link[=cor_test]{cor_test()}}.
+\item \code{"fisher_z_twd"} - Fisher Z test for Gaussian data with test-wise deletion.
+See \code{\link[micd:gaussCItwd]{micd::gaussCItwd()}}.
+\item \code{"fisher_z_mi"} - Fisher Z test for Gaussian data with multiple imputation.
+See \code{\link[micd:gaussMItest]{micd::gaussCItestMI()}}.
+
+\item \code{"reg"} - Regression test for discrete or binary data.
+See \code{\link[=reg_test]{reg_test()}}.
+\item \code{"g_square"} - G square test for discrete data.
+See \code{\link[pcalg:binCItest]{pcalg::binCItest()}} and \code{\link[pcalg:disCItest]{pcalg::disCItest()}}.
+\item \code{"g_square_twd"} - G square test for discrete data with test-wise deletion.
+See \code{\link[micd:disCItwd]{micd::disCItwd()}}.
+\item \code{"g_square_mi"} - G square test for discrete data with multiple imputation.
+See \code{\link[micd:disMItest]{micd::disMItest()}}.
+
+\item \code{"conditional_gaussian"} - Test for conditional independence in mixed data.
+See \code{\link[micd:mixCItest]{micd::mixCItest()}}.
+\item \code{"conditional_gaussian_twd"} - Test for conditional independence in mixed data
+with test-wise deletion.
+See \code{\link[micd:mixCItwd]{micd::mixCItwd()}}.
+\item \code{"conditional_gaussian_mi"} - Test for conditional independence in mixed data
+with multiple imputation.
+See \code{\link[micd:mixMItest]{micd::mixMItest()}}.
 }}
 
 \item{\code{alg}}{A function that will be used to run the search algorithm.

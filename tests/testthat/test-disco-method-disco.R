@@ -31,7 +31,11 @@ test_that("disco_method builds a closure with correct classes and private env", 
   expect_null(env$knowledge)
 
   # data guard
-  expect_error(m(1:3), "`data` must be a data frame.", fixed = TRUE)
+  expect_error(
+    m(1:3),
+    "`data` must be a data frame or a `mids` object.",
+    fixed = TRUE
+  )
 
   # when called, passes env$knowledge (NULL) to builder and returns runner$run()
   my_df <- data.frame(x = 1:3, y = 3:1)
@@ -103,5 +107,9 @@ test_that("set_knowledge wrapped method still validates data.frame input", {
   m <- disco_method(builder, "pc")
   m2 <- set_knowledge(m, list(foo = "bar"))
 
-  expect_error(m2(1:5), "`data` must be a data frame.", fixed = TRUE)
+  expect_error(
+    m2(1:5),
+    "`data` must be a data frame or a `mids` object.",
+    fixed = TRUE
+  )
 })
