@@ -42,17 +42,20 @@ constraint_based_prepare_inputs <- function(
   is_knowledge(knowledge)
 
   # NA handling
-  if (!is.null(data) && anyNA(data)) {
-    if (na_method == "none") {
-      stop(
-        "Inputted data contain NA values, but no method for handling missing NAs was supplied."
-      )
-    } else if (na_method == "cc") {
-      data <- stats::na.omit(data)
-      if (nrow(data) == 0) {
+  if (!is.null(data)) {
+    if (inherits(data, "mids")) {} else if (anyNA(data)) {
+      if (na_method == "none") {
         stop(
-          "Complete case analysis chosen, but inputted data contain no complete cases."
+          "Inputted data contain NA values, but no method for handling missing NAs was supplied."
         )
+      } else if (na_method == "cc") {
+        data <- stats::na.omit(data)
+
+        if (nrow(data) == 0) {
+          stop(
+            "Complete case analysis chosen, but inputted data contain no complete cases."
+          )
+        }
       }
     }
   }
