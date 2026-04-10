@@ -47,7 +47,7 @@ test_that("tpc_run errors when varnames are unknown with suff_stat-only usage", 
       knowledge = knowledge(),
       varnames = NULL
     ),
-    "Could not determine variable names. Supply `data` or `varnames`.",
+    "Cannot infer variable names from suff_stat list.",
     fixed = TRUE
   )
 })
