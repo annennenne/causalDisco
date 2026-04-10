@@ -37,10 +37,30 @@ CausalDiscoSearch <- R6::R6Class(
     #' @field test A function that will be used to test independence.
     #'  Can be set with \code{$set_test()}. Recognized values are:
     #'  \itemize{
-    #'    \item \code{"reg"} - Regression test for discrete or binary data.
-    #'    See [reg_test()].
     #'    \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
     #'    See [cor_test()].
+    #'    \item \code{"fisher_z_twd"} - Fisher Z test for Gaussian data with test-wise deletion.
+    #'    See [micd::gaussCItwd()].
+    #'    \item \code{"fisher_z_mi"} - Fisher Z test for Gaussian data with multiple imputation.
+    #'    See [micd::gaussCItestMI()].
+    #'
+    #'    \item \code{"reg"} - Regression test for discrete or binary data.
+    #'    See [reg_test()].
+    #'    \item \code{"g_square"} - G square test for discrete data.
+    #'    See [pcalg::binCItest()] and [pcalg::disCItest()].
+    #'    \item \code{"g_square_twd"} - G square test for discrete data with test-wise deletion.
+    #'    See [micd::disCItwd()].
+    #'    \item \code{"g_square_mi"} - G square test for discrete data with multiple imputation.
+    #'    See [micd::disMItest()].
+    #'
+    #'    \item \code{"conditional_gaussian"} - Test for conditional independence in mixed data.
+    #'    See [micd::mixCItest()].
+    #'    \item \code{"conditional_gaussian_twd"} - Test for conditional independence in mixed data
+    #'    with test-wise deletion.
+    #'    See [micd::mixCItwd()].
+    #'    \item \code{"conditional_gaussian_mi"} - Test for conditional independence in mixed data
+    #'    with multiple imputation.
+    #'    See [micd::mixMItest()].
     #'  }
     test = NULL,
 
