@@ -36,7 +36,7 @@ kn2 <- knowledge(
 
 try(kn1 + kn2)
 
-# Requried / forbidden violations
+# Required / forbidden violations
 
 kn1 <- knowledge(
   V1 %!-->% V2

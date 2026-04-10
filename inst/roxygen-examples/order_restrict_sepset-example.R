@@ -21,7 +21,7 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- make_suffStat(d, type = "cor_test")
+ss_cor <- make_suff_stat(d, type = "cor_test")
 wrapped <- dir_test(cor_test, vnames, kn)
 cons <- .pcalg_constraints_from_knowledge(
   kn,

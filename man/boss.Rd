@@ -91,6 +91,12 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   disco(tpc_example, boss_tetrad)
 }
 }
+\references{
+Andrews, B., Ramsey, J., Sánchez-Romero, R., Camchong, J., & Kummerfeld, E. (2023, December).
+Fast scalable and accurate discovery of DAGs using the Best Order Score Search and Grow-Shrink Trees.
+Advances in Neural Information Processing Systems, 36, 63945-63956.
+Epub 2024 May 30. PMID: 39280091; PMCID: PMC11393735.
+}
 \seealso{
 Other causal discovery algorithms: 
 \code{\link{boss_fci}()},

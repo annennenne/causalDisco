@@ -10,7 +10,7 @@ kn <- knowledge(
   )
 )
 
-ss_cor <- make_suffStat(tpc_example, type = "cor_test")
+ss_cor <- make_suff_stat(tpc_example, type = "cor_test")
 wrapped_test <- dir_test(cor_test, vnames, kn)
 pc_cons <- .pcalg_constraints_from_knowledge(
   kn,

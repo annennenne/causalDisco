@@ -56,7 +56,8 @@
 #'   forward in time.
 #' }
 #'
-#' @return A `Disco` object (a list with a `caugi` and a `Knowledge` object).
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pdag Value
 #'
 #' @example inst/roxygen-examples/tpc-example.R
 #'
@@ -346,8 +347,8 @@ prepare_knowledge <- function(kn) {
 dir_test <- function(test, vnames, knowledge) {
   vr <- knowledge$.__var_rank
 
-  function(x, y, S, suffStat) {
-    snames <- vnames[S]
+  function(x, y, conditioning_set, suff_stat) {
+    snames <- vnames[conditioning_set]
     x_rank <- vr[[vnames[x]]]
     y_rank <- vr[[vnames[y]]]
 
@@ -363,7 +364,10 @@ dir_test <- function(test, vnames, knowledge) {
         }
       }
     }
-    do.call(test, list(x = x, y = y, S = S, suffStat = suffStat))
+    do.call(
+      test,
+      list(x = x, y = y, S = conditioning_set, suffStat = suff_stat)
+    )
   }
 }
 

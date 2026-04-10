@@ -104,7 +104,7 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
     test = "fisher_z",
     score = NULL
   )
-  expect_named(out_pc, c("alg_args", "score_args"))
+  expect_named(out_pc, c("alg_args", "score_args", "wrapper_args"))
   expect_true(known_pc_arg %in% names(out_pc$alg_args))
 
   # fci branch covered explicitly
@@ -123,7 +123,7 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
     test = "fisher_z",
     score = NULL
   )
-  expect_named(out_fci, c("alg_args", "score_args"))
+  expect_named(out_fci, c("alg_args", "score_args", "wrapper_args"))
 
   # ges + score path covered; no score args provided, but branch executes
   out_ges <- check_args_and_distribute_args_pcalg(
@@ -132,7 +132,7 @@ test_that("pcalg: pc, fci, ges dispatch and unused-arg diagnostics incl. dots wa
     test = NULL,
     score = "sem_bic_int"
   )
-  expect_named(out_ges, c("alg_args", "score_args"))
+  expect_named(out_ges, c("alg_args", "score_args", "wrapper_args"))
 
   args_unused <- list(bogus_arg = 123)
 
@@ -286,7 +286,7 @@ test_that("causalDisco: ", {
     test = "fisher_z",
     score = NULL
   )
-  expect_named(out_tpc, c("alg_args", "score_args"))
+  expect_named(out_tpc, c("alg_args", "score_args", "wrapper_args"))
   expect_true(all(tpc_formals %in% names(out_tpc$alg_args)))
 
   # tfci branch covered explicitly
@@ -298,7 +298,7 @@ test_that("causalDisco: ", {
     test = "fisher_z",
     score = NULL
   )
-  expect_named(out_tfci, c("alg_args", "score_args"))
+  expect_named(out_tfci, c("alg_args", "score_args", "wrapper_args"))
   expect_true(all(tfci_formals %in% names(out_tfci$alg_args)))
 
   # ges + score path covered; no score args provided, but branch executes
@@ -308,7 +308,7 @@ test_that("causalDisco: ", {
     test = NULL,
     score = "tbic"
   )
-  expect_named(out_tges, c("alg_args", "score_args"))
+  expect_named(out_tges, c("alg_args", "score_args", "wrapper_args"))
 
   # ges + score path with args
   # tbic
@@ -325,7 +325,7 @@ test_that("causalDisco: ", {
     score = "tbic"
   )
 
-  expect_named(out_tges2, c("alg_args", "score_args"))
+  expect_named(out_tges2, c("alg_args", "score_args", "wrapper_args"))
   expect_true(all(ges_formals %in% names(out_tges2$alg_args)))
   expect_true(all(score_formals %in% names(out_tges2$score_args)))
 
@@ -341,7 +341,7 @@ test_that("causalDisco: ", {
     test = NULL,
     score = "tbdeu"
   )
-  expect_named(out_tges3, c("alg_args", "score_args"))
+  expect_named(out_tges3, c("alg_args", "score_args", "wrapper_args"))
   expect_true(all(ges_formals %in% names(out_tges3$alg_args)))
   expect_true(all(score_formals2 %in% names(out_tges3$score_args)))
 
@@ -417,7 +417,7 @@ test_that("top-level dispatcher routes to each engine helper", {
     test = "fisher_z",
     score = NULL
   )
-  expect_named(out_p, c("alg_args", "score_args"))
+  expect_named(out_p, c("alg_args", "score_args", "wrapper_args"))
 
   out_b <- check_args_and_distribute_args(
     search = NULL,
@@ -433,5 +433,5 @@ test_that("top-level dispatcher routes to each engine helper", {
     engine = "causalDisco",
     alg = "tpc"
   )
-  expect_named(out_c, c("alg_args", "score_args"))
+  expect_named(out_c, c("alg_args", "score_args", "wrapper_args"))
 })

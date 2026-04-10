@@ -1,11 +1,11 @@
 Package: causalDisco
 Title: Tools for Causal Discovery on Observational Data
-Version: 1.0.1.9001
+Version: 1.0.1.9002
 Authors@R: c(
     person(given = "Bjarke", family = "Hautop Kristensen", email = "bjarke.kristensen@sund.ku.dk", role = c("aut", "cre")),
     person(given = "Frederik", family = "Fabricius-Bjerre", email = "frederik@fabriciusbjerre.dk", role = "aut"),
     person(given = "Anne", family = "Helby Petersen", email = "ahpe@sund.ku.dk", role = "aut"),
-    person(given = "Claus", family = "Thorn Ekstrøm", email = "ekstrom@sund.ku.dk", role = "ctb"),
+    person(given = "Claus", family = "Thorn Ekstrøm", email = "ekstrom@sund.ku.dk", role = "aut"),
     person(given = "Tobias", family = "Ellegaard Larsen", email = "tobias.ellegaard@sund.ku.dk", role = "ctb")
   )
 Description: Tools for causal structure learning from observational data, with emphasis on temporally ordered variables.
@@ -33,9 +33,9 @@ Imports:
     dplyr,
     glue,
     gtools,
+    lifecycle,
     methods,
     micd,
-    mice,
     pcalg,
     purrr,
     R6,
@@ -55,7 +55,8 @@ Suggests:
     rmarkdown,
     spelling,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    mice
 VignetteBuilder: knitr, quarto
 Config/testthat/edition: 3
 Encoding: UTF-8
@@ -111,6 +112,7 @@ Collate:
     'pcalg-type-tests.R'
     'plot.R'
     'print-helpers.R'
+    'runners.R'
     'simulation.R'
     'sp-fci.R'
     'tabu.R'

@@ -206,7 +206,15 @@ BnlearnSearch <- R6::R6Class(
     #' @description
     #' Set the conditional-independence test to use in the search algorithm.
     #'
-    #' @param method Character naming the test to use.
+    #' @param method `r lifecycle::badge("experimental")`
+    #'
+    #' A string specifying the type of test to use. Can also be a user-defined function with signature
+    #' `function(x, y, z, data, args)`, where `x` and `y` are the variables being
+    #' tested for independence, `z` is the conditioning set, `data` is the dataset, and `args` is a list of additional
+    #' arguments. The function should return the test statistic and the p-value.
+    #' See [bnlearn::ci.test()] for more details.
+    #'
+    #' EXPERIMENTAL: user-defined tests syntax are subject to change.
     #' @param alpha Significance level for the test.
     set_test = function(method, alpha = 0.05) {
       checkmate::assert_number(
@@ -216,6 +224,15 @@ BnlearnSearch <- R6::R6Class(
         finite = TRUE,
         null.ok = FALSE
       )
+      if (is.function(method)) {
+        # Wrap the user function so it is bnlearn-compatible.
+        # Store translated function and alpha in params so they survive set_alg().
+        self$test <- "custom-test"
+        self$params$fun <- translate_custom_test_to_bnlearn(method)
+        self$params$alpha <- alpha
+        private$test_key <- "custom-test"
+        return(invisible(self))
+      }
 
       method <- tolower(method)
       # Convert snake_case to kebab-case for bnlearn compatibility
@@ -329,7 +346,6 @@ BnlearnSearch <- R6::R6Class(
     #' @param args A list of additional arguments to pass to the algorithm.
     set_alg = function(method, args = NULL) {
       method <- tolower(method)
-
       # Convert snake_case to period.case
       method <- gsub("_", ".", method)
 
@@ -337,7 +353,15 @@ BnlearnSearch <- R6::R6Class(
         if (!is.list(args)) {
           stop("Arguments must be provided as a list.", call. = FALSE)
         }
-        self$set_params(args)
+        if (!is.null(args$fun)) {
+          args$fun <- translate_custom_test_to_bnlearn(args$fun)
+        }
+        merged_params <- self$params
+        if (is.null(merged_params)) {
+          merged_params <- list()
+        }
+        merged_params[names(args)] <- args
+        self$set_params(merged_params)
       }
       need_test <- c(
         "pc",
@@ -381,7 +405,6 @@ BnlearnSearch <- R6::R6Class(
           )
         }
       }
-
       self$alg <- switch(
         method,
 
@@ -523,5 +546,8 @@ BnlearnSearch <- R6::R6Class(
       result <- do.call(self$alg, arg_list)
       as_disco(result)
     }
+  ),
+  private = list(
+    test_key = NULL
   )
 )

@@ -3,7 +3,8 @@ test_that("gs bnlearn algorithm run without error and return correct classes", {
     alg_fun = gs,
     engine = "bnlearn",
     test = "fisher_z",
-    alg_args = list(max.sx = 3, debug = FALSE, undirected = FALSE)
+    alg_args = list(max.sx = 3, debug = FALSE, undirected = FALSE),
+    suppress_warnings = TRUE
   )
 
   test_additional_test_or_score_args(

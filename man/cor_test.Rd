@@ -13,8 +13,8 @@ cor_test(x, y, conditioning_set, suff_stat)
 
 \item{conditioning_set}{Index vector of conditioning variable(s), possibly \code{NULL}.}
 
-\item{suff_stat}{Sufficient statistic; list with data,
-binary variables and order.}
+\item{suff_stat}{Sufficient statistic; A list with two elements, "C" and "n",
+corresponding to the correlation matrix and number of observations.}
 }
 \value{
 A numeric, which is the p-value of the test.

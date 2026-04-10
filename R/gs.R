@@ -33,64 +33,19 @@ gs <- function(
   alpha = 0.05,
   ...
 ) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "rlang"
-    ),
-    function_name = "gs"
-  )
-
   engine <- match.arg(engine)
-  args <- rlang::list2(...)
 
-  # build a `runner builder` that knows how to make a runner given knowledge
-  builder <- function(knowledge = NULL) {
-    runner <- switch(
-      engine,
-      bnlearn = rlang::exec(
-        gs_bnlearn_runner,
-        test = test,
-        alpha = alpha,
-        !!!args
-      )
-    )
-    runner
-  }
-
-  method <- disco_method(builder, "gs")
-  attr(method, "engine") <- engine
-  attr(method, "graph_class") <- "PDAG"
-  method
-}
-
-#' @keywords internal
-gs_bnlearn_runner <- function(test, alpha, ...) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "bnlearn"
+  make_method(
+    method_name = "gs",
+    engine = engine,
+    engine_fns = list(
+      bnlearn = function(...) {
+        make_runner(engine = "bnlearn", alg = "gs", ...)
+      }
     ),
-    function_name = "gs_bnlearn_runner"
+    test = test,
+    alpha = alpha,
+    graph_class = "PDAG",
+    ...
   )
-
-  args <- list(...)
-  search <- BnlearnSearch$new()
-  args_to_pass <- check_args_and_distribute_args(
-    search,
-    args,
-    "bnlearn",
-    "gs"
-  )
-
-  search$set_test(test, alpha)
-  search$set_alg("gs", args_to_pass)
-
-  runner <- list(
-    set_knowledge = function(knowledge) {
-      search$set_knowledge(knowledge)
-    },
-    run = function(data) {
-      search$run_search(data)
-    }
-  )
-  runner
 }

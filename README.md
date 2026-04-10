@@ -31,10 +31,13 @@ Time to hit the disco 🪩
 
 ### Install causalDisco
 
-To install causalDisco ensure you have Rust installed if building from
-source as described below.
+causalDisco depends on
+[caugi](https://github.com/frederikfabriciusbjerre/caugi), which
+requires Rust to build from source. If you don’t have Rust installed,
+you can either install it (instructions below) or use a binary version
+of caugi.
 
-Then you can install the stable version of causalDisco from CRAN with
+You can install the stable version of causalDisco from CRAN with:
 
 ``` r
 install.packages("causalDisco")
@@ -46,28 +49,27 @@ or the development version of causalDisco from GitHub using pak:
 pak::pak("disco-coders/causalDisco")
 ```
 
-If you want to use algorithms from Tetrad, you also need to install the
-suggested dependency rJava (and a Java JDK \>= 21). See below for
-instructions on how to set up Java and Tetrad.
+If you want to use algorithms from
+[Tetrad](https://github.com/cmu-phil/tetrad), you also need to install
+the suggested dependency rJava (and a Java JDK \>= 21). See the
+instructions below for setting up Java and Tetrad.
 
 ### Installing Rust
 
-causalDisco depends on the package
-[caugi](https://github.com/frederikfabriciusbjerre/caugi), which
-requires Rust to be installed on your system to build from source. See
+causalDisco depends on the package caugi, which requires Rust to be
+installed on your system to build from source. See
 <https://rust-lang.org/tools/install/> for instructions on how to
 install Rust.
 
 ### Installing Java / JDK
 
-causalDisco provides an interface to the Java library
-[Tetrad](https://github.com/cmu-phil/tetrad) for causal discovery
-algorithms. To use algorithms from Tetrad you need to install a Java
-Development Kit (JDK) \>= 21. We recommend Eclipse Temurin (OpenJDK),
-available at <https://adoptium.net/en-GB/temurin/releases>. When using
-the installer from the Temurin website, make sure to select the option
-to set the `JAVA_HOME` environment variable during installation, so
-rJava correctly detects the Java installation.
+causalDisco provides an interface to the Java library Tetrad for causal
+discovery algorithms. To use algorithms from Tetrad you need to install
+a Java Development Kit (JDK) \>= 21. We recommend Eclipse Temurin
+(OpenJDK), available at <https://adoptium.net/en-GB/temurin/releases>.
+When using the installer from the Temurin website, make sure to select
+the option to set the `JAVA_HOME` environment variable during
+installation, so rJava correctly detects the Java installation.
 
 For a simpler setup, we recommend using the
 [rJavaEnv](https://github.com/e-kotov/rJavaEnv) package, which provides
@@ -163,7 +165,11 @@ bnlearn_pc <- pc(
   test = "cor", # Use Pearson correlation test for conditional independence
   alpha = 0.05
 )
-disco_bnlearn_pc <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
+disco_bnlearn_pc <- disco(
+  data = tpc_example,
+  method = bnlearn_pc,
+  knowledge = kn
+)
 ```
 
 To use algorithms from Tetrad, you need to have Java and Tetrad set up
@@ -177,7 +183,11 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
     test = "conditional_gaussian", # Use conditional Gaussian test
     alpha = 0.05
   )
-  disco_tetrad_pc <- disco(data = tpc_example, method = tetrad_pc, knowledge = kn)
+  disco_tetrad_pc <- disco(
+    data = tpc_example,
+    method = tetrad_pc,
+    knowledge = kn
+  )
 }
 ```
 

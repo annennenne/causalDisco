@@ -130,6 +130,16 @@ PcalgSearch <- R6::R6Class(
       if (is.null(self$data)) {
         stop("Data must be set before sufficient statistic.", call. = FALSE)
       }
+      if (identical(private$test_key, "custom-test")) {
+        if (is.null(private$user_suff_stat_fun)) {
+          stop(
+            "For user-defined tests, provide suff_stat_fun in set_test().",
+            call. = FALSE
+          )
+        }
+        self$suff_stat <- private$user_suff_stat_fun(self$data)
+        return(invisible(self))
+      }
       if (is.null(private$test_key)) {
         stop("Test must be set before sufficient statistic.", call. = FALSE)
       }
@@ -150,16 +160,59 @@ PcalgSearch <- R6::R6Class(
     #' @description
     #' Sets the test for the search algorithm.
     #'
-    #' @param method A string specifying the type of test to use.
+    #' @param method `r lifecycle::badge("experimental")`
+    #'
+    #' A string specifying the type of test to use.
+    #'
+    #' Can also be a user-defined function with
+    #' signature `function(x, y, conditioning_set, suff_stat)`, where `x` and `y` are the variables being tested for
+    #' independence, `conditioning_set` is the conditioning set, and `suff_stat` is the sufficient statistic for the
+    #' test. If a user-defined function is provided, then `suff_stat_fun` must also be provided, which is a
+    #' function that should take the data as input and returns a sufficient statistic for the test. Optionally,
+    #' the signature of the user-defined test function can also include an `args` parameter, which is a list of
+    #' additional arguments to pass to the test function. If `args` is provided, then the test function should have the
+    #' signature `function(x, y, conditioning_set, suff_stat, args)`, and the `args` parameter will be passed to the
+    #' test function.
+    #'
+    #' EXPERIMENTAL: user-defined tests syntax are subject to change.
     #' @param alpha Significance level for the test.
-    set_test = function(method, alpha = 0.05) {
+    #' @param suff_stat_fun A function that takes the data as input and returns a sufficient statistic for the test.
+    #' Only needed if `method` is a user-defined function.
+    #' @param args A list of additional arguments to pass to the test.
+    #' Only needed if `method` is a user-defined function with an `args` parameter in its signature.
+    set_test = function(
+      method,
+      alpha = 0.05,
+      suff_stat_fun = NULL,
+      args = NULL
+    ) {
       if (!is.null(alpha)) {
         self$params$alpha <- alpha
       } else {
         stop("alpha must be set before using tests", call. = FALSE)
       }
-      if (!is.character(method)) {
-        stop("Currently, only method as string is supported.", call. = FALSE)
+      if (is.function(method)) {
+        if (!is.null(args)) {
+          self$test <- function(x, y, conditioning_set, suff_stat) {
+            method(
+              x,
+              y,
+              conditioning_set,
+              suff_stat,
+              args = args
+            )
+          }
+        } else {
+          self$test <- method
+        }
+        private$test_key <- "custom-test"
+
+        if (!is.null(self$data) && !is.null(suff_stat_fun)) {
+          self$suff_stat <- suff_stat_fun(self$data)
+        }
+
+        private$user_suff_stat_fun <- suff_stat_fun
+        return(invisible(self))
       }
       private$test_key <- tolower(method)
 
@@ -372,6 +425,7 @@ PcalgSearch <- R6::R6Class(
   private = list(
     knowledge_function = NULL,
     score_function = NULL,
-    test_key = NULL
+    test_key = NULL,
+    user_suff_stat_fun = NULL
   )
 )

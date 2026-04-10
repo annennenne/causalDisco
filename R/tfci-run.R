@@ -28,11 +28,11 @@
 #'   edges; must be one of \code{"standard"}, \code{"conservative"} (the default) or
 #'   \code{"maj.rule"}. See [pcalg::pc()] for further details.
 #'
-#' @return A `Disco` object (a list with a `caugi` and a `knowledge`object).
+#' @inheritSection disco_note Recommendation
+#' @inheritSection disco_algs_return_doc_pag Value
 #'
 #' @example inst/roxygen-examples/tfci-example.R
 #'
-#' @include tpc-run.R
 #' @importClassesFrom pcalg pcAlgo
 #' @export
 tfci_run <- function(

@@ -102,39 +102,3 @@ test_that("ges(): disco() forwards knowledge errors from set_knowledge()", {
     )
   }
 })
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Direct testing of the runners
-# ──────────────────────────────────────────────────────────────────────────────
-
-test_that("ges runners wire arguments correctly for each engine", {
-  skip_if_no_tetrad()
-  data(num_data)
-
-  # tetrad
-  runner_t <- ges_tetrad_runner(
-    score = "sem_bic"
-  )
-  expect_type(runner_t, "list")
-  expect_true(is.function(runner_t$run))
-  expect_s3_class(runner_t$run(num_data), "Disco")
-
-  # also with more arguments
-  runner_t2 <- ges_tetrad_runner(
-    score = "sem_bic",
-    symmetric_first_step = TRUE,
-    singularity_lambda = 0.1
-  )
-  expect_type(runner_t2, "list")
-  expect_true(is.function(runner_t2$run))
-  expect_s3_class(runner_t2$run(num_data), "Disco")
-
-  # pcalg
-  runner_p <- ges_pcalg_runner(
-    score = "sem_bic",
-    directed_as_undirected_knowledge = TRUE
-  )
-  expect_type(runner_p, "list")
-  expect_true(is.function(runner_p$run))
-  expect_s3_class(runner_p$run(num_data), "Disco")
-})
