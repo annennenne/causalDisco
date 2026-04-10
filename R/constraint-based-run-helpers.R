@@ -54,7 +54,10 @@ constraint_based_prepare_inputs <- function(
       if (na_method == "cc") {
         data <- stats::na.omit(data)
         if (nrow(data) == 0) {
-          stop("Complete case analysis resulted in empty dataset.", call. = FALSE)
+          stop(
+            "Complete case analysis resulted in empty dataset.",
+            call. = FALSE
+          )
         }
       } else {
         stop(
