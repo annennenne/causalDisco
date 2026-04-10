@@ -74,8 +74,24 @@ See <a href="https://rdrr.io/pkg/pcalg/man/GaussL0penIntScore-class.html" class=
 <dd><p>A function that will be used to test independence.
 Can be set with <code>$set_test()</code>. Recognized values are:</p><ul><li><p><code>"fisher_z"</code> - Fisher Z test for Gaussian data.
 See <code><a href="https://rdrr.io/pkg/pcalg/man/condIndFisherZ.html" class="external-link">pcalg::gaussCItest()</a></code>.</p></li>
+<li><p><code>"fisher_z_twd"</code> - Fisher Z test for Gaussian data with test-wise deletion.
+See <code><a href="https://rdrr.io/pkg/micd/man/gaussCItwd.html" class="external-link">micd::gaussCItwd()</a></code>.</p></li>
+<li><p><code>"fisher_z_mi"</code> - Fisher Z test for Gaussian data with multiple imputation.
+See <code><a href="https://rdrr.io/pkg/micd/man/gaussMItest.html" class="external-link">micd::gaussCItestMI()</a></code>.</p></li>
 <li><p><code>"g_square"</code> - G square test for discrete data.
 See <code><a href="https://rdrr.io/pkg/pcalg/man/binCItest.html" class="external-link">pcalg::binCItest()</a></code> and <code><a href="https://rdrr.io/pkg/pcalg/man/disCItest.html" class="external-link">pcalg::disCItest()</a></code>.</p></li>
+<li><p><code>"g_square_twd"</code> - G square test for discrete data with test-wise deletion.
+See <code><a href="https://rdrr.io/pkg/micd/man/disCItwd.html" class="external-link">micd::disCItwd()</a></code>.</p></li>
+<li><p><code>"g_square_mi"</code> - G square test for discrete data with multiple imputation.
+See <code><a href="https://rdrr.io/pkg/micd/man/disMItest.html" class="external-link">micd::disMItest()</a></code>.</p></li>
+<li><p><code>"conditional_gaussian"</code> - Test for conditional independence in mixed data.
+See <code><a href="https://rdrr.io/pkg/micd/man/mixCItest.html" class="external-link">micd::mixCItest()</a></code>.</p></li>
+<li><p><code>"conditional_gaussian_twd"</code> - Test for conditional independence in mixed data
+with test-wise deletion.
+See <code><a href="https://rdrr.io/pkg/micd/man/mixCItwd.html" class="external-link">micd::mixCItwd()</a></code>.</p></li>
+<li><p><code>"conditional_gaussian_mi"</code> - Test for conditional independence in mixed data
+with multiple imputation.
+See <code><a href="https://rdrr.io/pkg/micd/man/mixMItest.html" class="external-link">micd::mixMItest()</a></code>.</p></li>
 </ul></dd>
 
 

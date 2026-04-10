@@ -31,10 +31,38 @@ pcalg documentation, which we link to in the respective sections below.
   - `"fisher_z"` - Fisher Z test for Gaussian data. See
     [`pcalg::gaussCItest()`](https://rdrr.io/pkg/pcalg/man/condIndFisherZ.html).
 
+  - `"fisher_z_twd"` - Fisher Z test for Gaussian data with test-wise
+    deletion. See
+    [`micd::gaussCItwd()`](https://rdrr.io/pkg/micd/man/gaussCItwd.html).
+
+  - `"fisher_z_mi"` - Fisher Z test for Gaussian data with multiple
+    imputation. See
+    [`micd::gaussCItestMI()`](https://rdrr.io/pkg/micd/man/gaussMItest.html).
+
   - `"g_square"` - G square test for discrete data. See
     [`pcalg::binCItest()`](https://rdrr.io/pkg/pcalg/man/binCItest.html)
     and
     [`pcalg::disCItest()`](https://rdrr.io/pkg/pcalg/man/disCItest.html).
+
+  - `"g_square_twd"` - G square test for discrete data with test-wise
+    deletion. See
+    [`micd::disCItwd()`](https://rdrr.io/pkg/micd/man/disCItwd.html).
+
+  - `"g_square_mi"` - G square test for discrete data with multiple
+    imputation. See
+    [`micd::disMItest()`](https://rdrr.io/pkg/micd/man/disMItest.html).
+
+  - `"conditional_gaussian"` - Test for conditional independence in
+    mixed data. See
+    [`micd::mixCItest()`](https://rdrr.io/pkg/micd/man/mixCItest.html).
+
+  - `"conditional_gaussian_twd"` - Test for conditional independence in
+    mixed data with test-wise deletion. See
+    [`micd::mixCItwd()`](https://rdrr.io/pkg/micd/man/mixCItwd.html).
+
+  - `"conditional_gaussian_mi"` - Test for conditional independence in
+    mixed data with multiple imputation. See
+    [`micd::mixMItest()`](https://rdrr.io/pkg/micd/man/mixMItest.html).
 
 - `alg`:
 

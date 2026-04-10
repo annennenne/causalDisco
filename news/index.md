@@ -16,6 +16,14 @@
   p-value. See the documentation and the associated vignette for
   details.
 
+- Added support for micd tests such as
+  [`micd::gaussCItestMI()`](https://rdrr.io/pkg/micd/man/gaussMItest.html)
+  for pcalg and causalDisco engine. See all the new available tests in
+  [`?PcalgSearch`](https://disco-coders.github.io/causalDisco/reference/PcalgSearch.md)
+  and
+  [`?CausalDiscoSearch`](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md)
+  under the test field.
+
 ### Improvements
 
 - Improved speed of
