@@ -19,7 +19,7 @@ test_that("pcalg and causalDisco work with micd tests num data", {
   expect_equal(class(tfci_mi), "Disco")
 
   # Imputation micd object
-  num_data_imp <- mice::mice(small_num_data, m = 5, method = "pmm")
+  num_data_imp <- mice::mice(small_num_data, m = 5, method = "pmm", printFlag = FALSE)
 
   pc_pcalg <- pc(engine = "pcalg", test = "fisher_z_mi")
   tpc_disco <- tpc(test = "fisher_z_mi")
@@ -56,7 +56,7 @@ test_that("pcalg and causalDisco work with micd tests discrete data", {
   expect_equal(class(tfci_mi), "Disco")
 
   # Imputation micd object
-  cat_data_imp <- mice::mice(small_cat_data, m = 5, method = "pmm")
+  cat_data_imp <- mice::mice(small_cat_data, m = 5, method = "pmm", printFlag = FALSE)
 
   pc_pcalg <- pc(engine = "pcalg", test = "g_square_mi")
   tpc_disco <- tpc(test = "g_square_mi")
@@ -92,7 +92,7 @@ test_that("pcalg and causalDisco work with micd tests mix data", {
   expect_equal(class(tfci_mi), "Disco")
 
   # Imputation micd object
-  mix_data_imp <- mice::mice(small_mix_data, m = 5, method = "pmm")
+  mix_data_imp <- mice::mice(small_mix_data, m = 5, method = "pmm", printFlag = FALSE)
 
   pc_pcalg <- pc(engine = "pcalg", test = "conditional_gaussian_mi")
   tpc_disco <- tpc(test = "conditional_gaussian_mi")

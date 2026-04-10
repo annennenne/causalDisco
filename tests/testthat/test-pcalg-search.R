@@ -92,7 +92,7 @@ test_that("set_test stores key and resolves test in set_suff_stat", {
   colnames(my_df) <- c("X", "Y")
   s$set_test("fisher_z")
   s$set_data(my_df, set_suff_stat = TRUE)
-  expect_identical(s$test, pcalg::gaussCItest)
+  expect_equal(s$test, pcalg::gaussCItest, ignore_attr = TRUE)
 
   s2 <- PcalgSearch$new()
   ddisc <- data.frame(

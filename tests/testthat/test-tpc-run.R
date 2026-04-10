@@ -24,7 +24,7 @@ test_that("tpc_run NA handling: error on NAs with na_method = 'none', cc with ze
 
   expect_error(
     tpc_run(data = df1, knowledge = kn1, na_method = "none"),
-    "Inputted data contain NA values, but no method for handling missing NAs was supplied.",
+    "Inputted data contains NA but selected CI test does not support missing data.",
     fixed = TRUE
   )
 

@@ -1,24 +1,3 @@
-# Wrapper to create the algorithm object with optional extra args
-make_alg <- function(
-  alg_fun,
-  engine,
-  test = NULL,
-  score = NULL,
-  alg_args = list(),
-  test_args = list()
-) {
-  main_args <- list(engine = engine)
-  if (!is.null(test)) {
-    main_args$test <- test
-  }
-  if (!is.null(score)) {
-    main_args$score <- score
-  }
-
-  all_args <- c(main_args, alg_args, test_args)
-  do.call(alg_fun, all_args)
-}
-
 # Generalized wrapper to create the algorithm object
 make_alg <- function(
   alg_fun,
@@ -36,7 +15,6 @@ make_alg <- function(
   if (!is.null(score)) {
     main_args$score <- score
   }
-
   # Combine with additional arguments
   all_args <- c(main_args, alg_args, test_args)
   do.call(alg_fun, all_args)

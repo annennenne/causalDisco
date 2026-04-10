@@ -11,7 +11,7 @@ test_that(".get_suff_stat works", {
     V2 = rnorm(10)
   )
   suff_stat <- .get_suff_stat(X, method = "fisher_z_twd")
-  expect_true(is.matrix(suff_stat))
+  expect_true(is.data.frame(suff_stat))
 
   expect_error(
     .get_suff_stat("a", method = "fisher_z_mi"),

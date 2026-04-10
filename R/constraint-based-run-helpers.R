@@ -42,6 +42,9 @@ constraint_based_prepare_inputs <- function(
   is_knowledge(knowledge)
 
   missing_mode <- attr(test, "missing_mode")
+  if (is.null(missing_mode)) {
+    missing_mode <- "none"
+  }
 
   has_na <- !is.null(data) && anyNA(data)
   is_mids <- inherits(data, "mids")
@@ -51,12 +54,13 @@ constraint_based_prepare_inputs <- function(
       if (na_method == "cc") {
         data <- stats::na.omit(data)
         if (nrow(data) == 0) {
-          stop("Complete case analysis resulted in empty dataset.")
+          stop("Complete case analysis resulted in empty dataset.", call. = FALSE)
         }
       } else {
         stop(
-          "Input contains NA but selected CI test does not support missing data. ",
-          "Use na_method = 'cc' or choose an appropriate test."
+          "Inputted data contains NA but selected CI test does not support missing data. ",
+          "Use na_method = 'cc' or choose an appropriate test.",
+          call. = FALSE
         )
       }
     }
@@ -65,7 +69,8 @@ constraint_based_prepare_inputs <- function(
   } else if (missing_mode == "mi") {
     if (!is_mids) {
       stop(
-        "Selected CI test requires a 'mids' object (multiple imputation data)."
+        "Selected CI test requires a 'mids' object (multiple imputation data).",
+        call. = FALSE
       )
     }
   }
