@@ -209,6 +209,7 @@ make_runner <- function(
   score = NULL,
   ...
 ) {
+  # TODO: Clean up passing args and check_args_and_distribute_args for bnlearn.
   args <- list(...)
   search <- BnlearnSearch$new()
 
@@ -238,7 +239,7 @@ make_runner <- function(
     search$set_score(score)
   }
 
-  search$set_alg(alg, args_to_pass$alg_args)
+  search$set_alg(alg, args_to_pass)
 
   list(
     set_knowledge = function(knowledge) search$set_knowledge(knowledge),
