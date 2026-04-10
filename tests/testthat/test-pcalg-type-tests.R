@@ -15,7 +15,7 @@ test_that(".get_suff_stat works", {
 
   expect_error(
     .get_suff_stat("a", method = "fisher_z_mi"),
-    "gaussMItest requires a list or a mids object."
+    "fisher_z_mi requires a mids object."
   )
 
   suff_stat <- .get_suff_stat(list(X), method = "fisher_z_mi")

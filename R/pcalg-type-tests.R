@@ -128,9 +128,8 @@
           stop("Package 'mice' is required but not installed.", call. = FALSE)
         }
         X <- mice::complete(X, action = "all")
-      }
-      if (!is.list(X)) {
-        stop("gaussMItest requires a list or a mids object.", call. = FALSE)
+      } else {
+        stop("fisher_z_mi requires a mids object.", call. = FALSE)
       }
       C <- lapply(X, stats::cor)
       n <- nrow(X[[1]])
