@@ -18,8 +18,6 @@ docker
 README.*
 ^cran-comments\.md$
 ^README\.Rmd$
-CRAN-SUBMISSION
-^README\.Rmd$
 man-roxygen
 ^_pkgdown\.yml$
 ^docs$
@@ -37,3 +35,4 @@ man-roxygen
 ^vignettes/*_files$
 ^\.pre-commit-config\.yaml$
 ^[.]?panache[.]toml$
+^CRAN-SUBMISSION$
