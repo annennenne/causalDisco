@@ -15,6 +15,10 @@
   causalDisco engine. See all the new available tests in `?PcalgSearch` and
   `?CausalDiscoSearch` under the test field.
 
+- Simplified the interface for extending causalDisco with new algorithms.
+  Exports `make_method()` and `make_runner()` to do this. Please see the
+  documentation and the associated vignette for details.
+
 ## Improvements
 
 - Improved speed of `tfci()`, `tges()`, and `tpc()` algorithms by at least 3x,
@@ -23,13 +27,7 @@
 - Updated `knowledge_to_caugi()` to include information about required and
   forbidden edges in the output.
 
-- Improve documentation for many functions.
-
-- Simplified the interface for extending causalDisco with new algorithms.
-  Exports `make_method()` and `make_runner()` to do this. Please see the
-  documentation and the associated vignette for details.
-
-# causalDisco 1.0.1
+- Improve documentation for many functions. # causalDisco 1.0.1
 
 - This release should be considered essentially a **new package** with many new
   features, and some breaking changes (mainly renaming functions, arguments, and

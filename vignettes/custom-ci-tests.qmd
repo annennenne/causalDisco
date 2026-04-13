@@ -1,7 +1,7 @@
 ---
-title: "Integrating custom tests and scores into causal discovery algorithms"
+title: "Custom CI tests for causal discovery algorithms"
 vignette: >
-  %\VignetteIndexEntry{Integrating custom tests and scores into causal discovery algorithms}
+  %\VignetteIndexEntry{Custom CI tests into causal discovery algorithms}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -33,7 +33,7 @@ this vignette will only cover the engines bnlearn, causalDisco, and pcalg.
 The interface for custom tests depends slightly on the engine being used.
 causalDisco and pcalg use the exact same interface, while bnlearn is slightly
 different for now. We plan to unify the interface across engines in a future
-release, but for now, it's slightly different, as described below.
+release.
 
 ## causalDisco and pcalg engines
 
