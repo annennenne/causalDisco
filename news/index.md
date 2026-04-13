@@ -24,6 +24,14 @@
   [`?CausalDiscoSearch`](https://disco-coders.github.io/causalDisco/reference/CausalDiscoSearch.md)
   under the test field.
 
+- Simplified the interface for extending causalDisco with new
+  algorithms. Exports
+  [`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md)
+  and
+  [`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md)
+  to do this. Please see the documentation and the associated vignette
+  for details.
+
 ### Improvements
 
 - Improved speed of
@@ -38,19 +46,7 @@
   to include information about required and forbidden edges in the
   output.
 
-- Improve documentation for many functions.
-
-- Simplified the interface for extending causalDisco with new
-  algorithms. Exports
-  [`make_method()`](https://disco-coders.github.io/causalDisco/reference/make_method.md)
-  and
-  [`make_runner()`](https://disco-coders.github.io/causalDisco/reference/make_runner.md)
-  to do this. Please see the documentation and the associated vignette
-  for details.
-
-## causalDisco 1.0.1
-
-CRAN release: 2026-02-24
+- Improve documentation for many functions. \# causalDisco 1.0.1
 
 - This release should be considered essentially a **new package** with
   many new features, and some breaking changes (mainly renaming

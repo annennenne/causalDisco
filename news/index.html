@@ -20,7 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/causal-discovery.html">Causal Discovery</a></li>
-    <li><a class="dropdown-item" href="../articles/custom-tests-scores.html">Integrating custom tests and scores into causal discovery algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-ci-tests.html">Custom CI tests for causal discovery algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/knowledge.html">Incorporating Knowledge</a></li>
     <li><a class="dropdown-item" href="../articles/new-algorithm.html">Extending causalDisco with new algorithms</a></li>
     <li><a class="dropdown-item" href="../articles/visualization.html">Visualization</a></li>
@@ -47,20 +47,17 @@
 <ul><li><p>Exports <code><a href="../reference/list_registered_tetrad_algorithms.html">list_registered_tetrad_algorithms()</a></code> to view the custom registered Tetrad algorithms.</p></li>
 <li><p>Allows the user to specify custom conditional independence tests for use with for the engines bnlearn, causalDisco, and pcalg. The custom test should have the signature <code>function(x, y, conditioning_set, suff_stat)</code> (optionally with an additional <code>args</code> argument for additional parameters), and return a p-value. See the documentation and the associated vignette for details.</p></li>
 <li><p>Added support for micd tests such as <code><a href="https://rdrr.io/pkg/micd/man/gaussMItest.html" class="external-link">micd::gaussCItestMI()</a></code> for pcalg and causalDisco engine. See all the new available tests in <code><a href="../reference/PcalgSearch.html">?PcalgSearch</a></code> and <code><a href="../reference/CausalDiscoSearch.html">?CausalDiscoSearch</a></code> under the test field.</p></li>
+<li><p>Simplified the interface for extending causalDisco with new algorithms. Exports <code><a href="../reference/make_method.html">make_method()</a></code> and <code><a href="../reference/make_runner.html">make_runner()</a></code> to do this. Please see the documentation and the associated vignette for details.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
 <ul><li><p>Improved speed of <code><a href="../reference/tfci.html">tfci()</a></code>, <code><a href="../reference/tges.html">tges()</a></code>, and <code><a href="../reference/tpc.html">tpc()</a></code> algorithms by at least 3x, and often much more.</p></li>
 <li><p>Updated <code><a href="../reference/knowledge_to_caugi.html">knowledge_to_caugi()</a></code> to include information about required and forbidden edges in the output.</p></li>
-<li><p>Improve documentation for many functions.</p></li>
-<li><p>Simplified the interface for extending causalDisco with new algorithms. Exports <code><a href="../reference/make_method.html">make_method()</a></code> and <code><a href="../reference/make_runner.html">make_runner()</a></code> to do this. Please see the documentation and the associated vignette for details.</p></li>
-</ul></div>
-</div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.1" id="causaldisco-101">causalDisco 1.0.1<a class="anchor" aria-label="anchor" href="#causaldisco-101"></a></h2><p class="text-muted">CRAN release: 2026-02-24</p>
-<ul><li><p>This release should be considered essentially a <strong>new package</strong> with many new features, and some breaking changes (mainly renaming functions, arguments, and object classes) to be consistent.</p></li>
+<li><p>Improve documentation for many functions. # causalDisco 1.0.1</p></li>
+<li><p>This release should be considered essentially a <strong>new package</strong> with many new features, and some breaking changes (mainly renaming functions, arguments, and object classes) to be consistent.</p></li>
 <li><p>Please see the vignettes and documentation for details on using the new features.</p></li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.5" id="causaldisco-095">causalDisco 0.9.5<a class="anchor" aria-label="anchor" href="#causaldisco-095"></a></h2><p class="text-muted">CRAN release: 2026-01-20</p>
 <ul><li>Fixed warnings and notes from R CMD check regarding documentation.</li>
