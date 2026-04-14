@@ -1,9 +1,5 @@
 ---
 title: "Extending causalDisco with new algorithms"
-vignette: >
-  %\VignetteIndexEntry{Extending causalDisco with new algorithms}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true
@@ -16,10 +12,10 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette illustrates how to add a new algorithm to causalDisco from
-bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore
-share the same interface, while Tetrad is a Java library and requires a slightly
-different integration pattern.
+This article illustrates how to add a new algorithm to causalDisco from bnlearn,
+pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore share the
+same interface, while Tetrad is a Java library and requires a slightly different
+integration pattern.
 
 # bnlearn and pcalg
 
@@ -181,7 +177,6 @@ We can now run `my_boss_variant()` like any other method in causalDisco.
 
 ```{r}
 #| label: my_boss_variant example
-#| eval: false
 # Ensure Tetrad is installed and Java is working before running the algorithm
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   my_boss_variant_tetrad <- my_boss_variant(
@@ -191,50 +186,6 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
   plot(my_boss_variant_tetrad_result)
 }
-```
-```{r}
-#| label: my_boss_variant_tetrad algorithm plot code
-#| echo: false
-#| eval: false
-# Code to generate the plot image on pkgdown and CRAN.
-
-# For pkgdown (comment out to avoid CRAN NOTE about unstated dependency used) use the function fig_settings
-# ragg::agg_png(
-#   filename = "custom-boss-variant-pkgdown.png",
-#   width  = fig_settings$fig.width,
-#   height = fig_settings$fig.height,
-#   units  = "in",
-#   res    = fig_settings$dpi * fig_settings$fig.retina
-# )
-my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
-my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
-plot(my_boss_variant_tetrad_result)
-dev.off()
-
-# For CRAN
-# Hardcoded since knitr::opts_current$get() is different when running in console.
-ragg::agg_png(
-  filename = "custom-boss-variant-cran.png",
-  width = 3,
-  height = 3,
-  units = "in",
-  res = 92 * 1
-)
-my_boss_variant_tetrad <- my_boss_variant(engine = "tetrad", score = "sem_bic")
-my_boss_variant_tetrad_result <- disco(tpc_example, my_boss_variant_tetrad)
-plot(my_boss_variant_tetrad_result)
-dev.off()
-```
-```{r}
-#| label: ges-ebic-tetrad-include
-#| echo: false
-img_file <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
-  "custom-boss-variant-pkgdown.png"
-} else {
-  "custom-boss-variant-cran.png"
-}
-
-knitr::include_graphics(img_file)
 ```
 
 Once again, if using a hybrid or constraint-based algorithm rather than a
@@ -250,7 +201,7 @@ reset_tetrad_alg_registry()
 
 # Conclusion
 
-In this vignette, we have illustrated how to add new algorithms to causalDisco,
+In this article, we have illustrated how to add new algorithms to causalDisco,
 both from the R packages pcalg and bnlearn and from Tetrad.
 
 If you have any feedback or suggestions for improvement on the API and

@@ -125,3 +125,4 @@ Collate:
     'tges.R'
     'tpc.R'
     'zzz.R'
+Config/Needs/website: quarto

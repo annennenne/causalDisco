@@ -200,9 +200,9 @@ You can visualize the resulting causal graph using the `plot()` function:
 plot(disco_cd_tpc)
 ```
 
-Please see the package vignettes for more detailed introductions to the package
-and its features, such as how to incorporate knowledge, run causal discovery,
-and visualize results.
+Please see our pkgdown site for more detailed introductions to the package and
+its features, such as how to incorporate knowledge, run causal discovery, and
+visualize results, here: https://disco-coders.github.io/causalDisco/
 
 ## Bugs & requests
 
