@@ -1,5 +1,7 @@
 # Changelog
 
+## causalDisco (development version)
+
 ## causalDisco 1.1.0
 
 CRAN release: 2026-04-13
