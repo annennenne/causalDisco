@@ -1,9 +1,5 @@
 ---
 title: "Incorporating Knowledge"
-vignette: >
-  %\VignetteIndexEntry{Incorporating Knowledge}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true
@@ -16,7 +12,7 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette demonstrates how to use the `knowledge()` function to incorporate
+This article demonstrates how to use the `knowledge()` function to incorporate
 prior knowledge into causal discovery algorithms. The different supported
 knowledge types are explained below, along with examples of how to create
 `Knowledge` objects and use them with causal discovery methods. All knowledge

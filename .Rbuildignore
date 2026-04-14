@@ -36,3 +36,6 @@ man-roxygen
 ^\.pre-commit-config\.yaml$
 ^[.]?panache[.]toml$
 ^CRAN-SUBMISSION$
+^vignettes/articles/\.quarto$
+^vignettes/articles/*_files$
+^vignettes/articles$

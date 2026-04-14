@@ -200,9 +200,10 @@ plot(disco_cd_tpc)
 
 <img src="man/figures/README-plot-1.png" alt="A causal graph with the known tiers indicated by vertical positioning of the nodes." width="100%" />
 
-Please see the package vignettes for more detailed introductions to the
+Please see our pkgdown site for more detailed introductions to the
 package and its features, such as how to incorporate knowledge, run
-causal discovery, and visualize results.
+causal discovery, and visualize results, here:
+<https://disco-coders.github.io/causalDisco/>
 
 ## Bugs & requests
 

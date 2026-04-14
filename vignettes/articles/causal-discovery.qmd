@@ -1,9 +1,5 @@
 ---
 title: "Causal Discovery"
-vignette: >
-  %\VignetteIndexEntry{Causal Discovery}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true
@@ -16,7 +12,7 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette provides a very brief introduction to causal discovery using
+This article provides a very brief introduction to causal discovery using
 simulated data. For a thorough introduction to causal discovery concepts, we
 recommend Glymour et al. (2019) [Review of Causal Discovery Methods Based on
 Graphical
@@ -41,7 +37,7 @@ cg <- caugi::caugi(
 )
 ```
 
-We define a layout which we will use for plotting the graphs in this vignette:
+We define a layout which we will use for plotting the graphs in this article:
 
 ```{r}
 #| label: plot dag
@@ -218,7 +214,7 @@ incorrect edge between `X1` and `X2`.
 # Next steps
 
 For more information about how to incorporate knowledge into causal discovery
-methods, see the [knowledge vignette](knowledge.html).
+methods, see the [knowledge article](knowledge.html).
 
 For more information about how to visualize causal discovery results, see the
-[visualization vignette](visualization.html).
+[visualization article](visualization.html).
