@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette provides a very brief introduction to causal discovery
+This article provides a very brief introduction to causal discovery
 using simulated data. For a thorough introduction to causal discovery
 concepts, we recommend Glymour et al. (2019) [Review of Causal Discovery
 Methods Based on Graphical
@@ -35,7 +35,7 @@ cg <- caugi::caugi(
 ```
 
 We define a layout which we will use for plotting the graphs in this
-vignette:
+article:
 
 ``` r
 layout <- caugi::caugi_layout_sugiyama(cg)
@@ -258,8 +258,8 @@ particular, it found an incorrect edge between `X1` and `X2`.
 
 For more information about how to incorporate knowledge into causal
 discovery methods, see the [knowledge
-vignette](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
+article](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
 
 For more information about how to visualize causal discovery results,
 see the [visualization
-vignette](https://disco-coders.github.io/causalDisco/articles/visualization.md).
+article](https://disco-coders.github.io/causalDisco/articles/visualization.md).

@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette demonstrates how to visualize causal graphs. We cover
+This article demonstrates how to visualize causal graphs. We cover
 plotting `Knowledge` objects and `Disco` objects, customizing layouts
 and styles, and exporting graphs to readable TikZ for inclusion and
 further customization in LaTeX documents.

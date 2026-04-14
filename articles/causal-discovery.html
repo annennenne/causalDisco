@@ -70,7 +70,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/causal-discovery.qmd" class="external-link"><code>vignettes/causal-discovery.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/articles/causal-discovery.qmd" class="external-link"><code>vignettes/articles/causal-discovery.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -89,7 +89,7 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 </div>
-<p>This vignette provides a very brief introduction to causal discovery using simulated data. For a thorough introduction to causal discovery concepts, we recommend Glymour et al. (2019) <a href="https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00524/full" class="external-link">Review of Causal Discovery Methods Based on Graphical Models</a> or Zanga et al. (2022) <a href="https://arxiv.org/abs/2305.10032" class="external-link">A Survey on Causal Discovery: Theory and Practice</a>.</p>
+<p>This article provides a very brief introduction to causal discovery using simulated data. For a thorough introduction to causal discovery concepts, we recommend Glymour et al. (2019) <a href="https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00524/full" class="external-link">Review of Causal Discovery Methods Based on Graphical Models</a> or Zanga et al. (2022) <a href="https://arxiv.org/abs/2305.10032" class="external-link">A Survey on Causal Discovery: Theory and Practice</a>.</p>
 <p>The goal of causal discovery is to infer the causal relationships among a set of observed variables using observational data.</p>
 <section class="section level2"><h2 id="example-of-causal-discovery">Example of causal discovery<a class="anchor" aria-label="anchor" href="#example-of-causal-discovery"></a>
 </h2>
@@ -103,7 +103,7 @@
 <span>  <span class="va">X2</span> <span class="op">%--&gt;%</span> <span class="va">Y</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>We define a layout which we will use for plotting the graphs in this vignette:</p>
+<p>We define a layout which we will use for plotting the graphs in this article:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">caugi</span><span class="fu">::</span><span class="fu"><a href="https://caugi.org/reference/caugi_layout_sugiyama.html" class="external-link">caugi_layout_sugiyama</a></span><span class="op">(</span><span class="va">cg</span><span class="op">)</span></span>
@@ -283,8 +283,8 @@
 <p>We see that the PC algorithm does not recover the correct causal structure due to the presence of the unobserved confounder. In particular, it found an incorrect edge between <code>X1</code> and <code>X2</code>.</p>
 </section><section class="section level2"><h2 id="next-steps">Next steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
 </h2>
-<p>For more information about how to incorporate knowledge into causal discovery methods, see the <a href="knowledge.html">knowledge vignette</a>.</p>
-<p>For more information about how to visualize causal discovery results, see the <a href="visualization.html">visualization vignette</a>.</p>
+<p>For more information about how to incorporate knowledge into causal discovery methods, see the <a href="knowledge.html">knowledge article</a>.</p>
+<p>For more information about how to visualize causal discovery results, see the <a href="visualization.html">visualization article</a>.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);

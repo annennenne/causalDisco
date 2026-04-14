@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette provides an overview of the causalDisco package, which
+This article provides an overview of the causalDisco package, which
 offers tools for causal discovery from observational data. It covers the
 main features of the package, including various causal discovery
 algorithms, knowledge incorporation, and result visualization.
@@ -168,7 +168,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](ges-ebic-tetrad-pkgdown.png)
+![](causalDisco_files/figure-html/ges%20algorithm%20ebic%20tetrad-1.png)
 
 If you want to customize the plot appearance further, you can pass
 additional arguments to
@@ -427,10 +427,10 @@ plot appearance further by passing additional arguments to
 
 For more information about how to incorporate knowledge, see the
 [knowledge
-vignette](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
+article](https://disco-coders.github.io/causalDisco/articles/knowledge.md).
 
 For more information about causal discovery, see the [causal discovery
-vignette](https://disco-coders.github.io/causalDisco/articles/causal-discovery.md).
+article](https://disco-coders.github.io/causalDisco/articles/causal-discovery.md).
 
 For more information about visualization options, see the [visualization
-vignette](https://disco-coders.github.io/causalDisco/articles/visualization.md).
+article](https://disco-coders.github.io/causalDisco/articles/visualization.md).

@@ -70,7 +70,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/knowledge.qmd" class="external-link"><code>vignettes/knowledge.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/articles/knowledge.qmd" class="external-link"><code>vignettes/articles/knowledge.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -89,7 +89,7 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 </div>
-<p>This vignette demonstrates how to use the <code><a href="../reference/knowledge.html">knowledge()</a></code> function to incorporate prior knowledge into causal discovery algorithms. The different supported knowledge types are explained below, along with examples of how to create <code>Knowledge</code> objects and use them with causal discovery methods. All knowledge types can be freely combined. Multiple calls or operators are additive: each call adds new edges to the <code>Knowledge</code> object. For example if we require an edge from <code>A</code> to <code>B</code> and then require an edge from A to C, the resulting <code>Knowledge</code> object will require both edges from <code>A</code> to <code>B</code> and from <code>A</code> to <code>C</code>.</p>
+<p>This article demonstrates how to use the <code><a href="../reference/knowledge.html">knowledge()</a></code> function to incorporate prior knowledge into causal discovery algorithms. The different supported knowledge types are explained below, along with examples of how to create <code>Knowledge</code> objects and use them with causal discovery methods. All knowledge types can be freely combined. Multiple calls or operators are additive: each call adds new edges to the <code>Knowledge</code> object. For example if we require an edge from <code>A</code> to <code>B</code> and then require an edge from A to C, the resulting <code>Knowledge</code> object will require both edges from <code>A</code> to <code>B</code> and from <code>A</code> to <code>C</code>.</p>
 <p>At a conceptual level, all knowledge is represented as constraints on edges, specifying which edges are required and forbidden. Some knowledge types provide higher-level abstractions for expressing common modeling assumptions more conveniently.</p>
 <section class="section level2"><h2 id="required-and-forbidden-knowledge">Required and forbidden knowledge<a class="anchor" aria-label="anchor" href="#required-and-forbidden-knowledge"></a>
 </h2>

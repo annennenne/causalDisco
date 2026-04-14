@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette illustrates how to add a new algorithm to causalDisco from
+This article illustrates how to add a new algorithm to causalDisco from
 bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and
 therefore share the same interface, while Tetrad is a Java library and
 requires a slightly different integration pattern.
@@ -195,7 +195,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](custom-boss-variant-pkgdown.png)
+![](new-algorithm_files/figure-html/my_boss_variant%20example-1.png)
 
 Once again, if using a hybrid or constraint-based algorithm rather than
 a score-based one, the structure would remain the same but the method
@@ -210,7 +210,7 @@ reset_tetrad_alg_registry()
 
 ## Conclusion
 
-In this vignette, we have illustrated how to add new algorithms to
+In this article, we have illustrated how to add new algorithms to
 causalDisco, both from the R packages pcalg and bnlearn and from Tetrad.
 
 If you have any feedback or suggestions for improvement on the API and

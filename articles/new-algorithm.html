@@ -70,7 +70,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/new-algorithm.qmd" class="external-link"><code>vignettes/new-algorithm.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/articles/new-algorithm.qmd" class="external-link"><code>vignettes/articles/new-algorithm.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -89,7 +89,7 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 </div>
-<p>This vignette illustrates how to add a new algorithm to causalDisco from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore share the same interface, while Tetrad is a Java library and requires a slightly different integration pattern.</p>
+<p>This article illustrates how to add a new algorithm to causalDisco from bnlearn, pcalg and Tetrad. Both bnlearn and pcalg are R packages and therefore share the same interface, while Tetrad is a Java library and requires a slightly different integration pattern.</p>
 <section class="section level2"><h2 id="bnlearn-and-pcalg">bnlearn and pcalg<a class="anchor" aria-label="anchor" href="#bnlearn-and-pcalg"></a>
 </h2>
 <p>Suppose we want to add the Hybrid Parents and Children (HPC) algorithm from bnlearn. We can integrate it into causalDisco by creating a new function <code>hpc()</code>.</p>
@@ -216,11 +216,9 @@
 <span>  <span class="va">my_boss_variant_tetrad_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span><span class="va">tpc_example</span>, <span class="va">my_boss_variant_tetrad</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">my_boss_variant_tetrad_result</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</div>
-<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="custom-boss-variant-pkgdown.png" class="quarto-figure quarto-figure-center"></p>
+<figure><p><img src="new-algorithm_files/figure-html/my_boss_variant%20example-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
 </figure>
 </div>
 </div>
@@ -233,7 +231,7 @@
 </div>
 </section><section class="section level2"><h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>In this vignette, we have illustrated how to add new algorithms to causalDisco, both from the R packages pcalg and bnlearn and from Tetrad.</p>
+<p>In this article, we have illustrated how to add new algorithms to causalDisco, both from the R packages pcalg and bnlearn and from Tetrad.</p>
 <p>If you have any feedback or suggestions for improvement on the API and functionality for extending causalDisco, please let us know by opening an issue on GitHub.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

@@ -14,15 +14,15 @@ Please note, custom tests are experimental and subject to change to
 improve usability and consistency across engines. We welcome feedback on
 the current interface and suggestions for improvement.
 
-This vignette illustrates how to use custom conditional independence
+This article illustrates how to use custom conditional independence
 tests and custom scores with the
 [`disco()`](https://disco-coders.github.io/causalDisco/reference/disco.md)
 function in causalDisco. We show how to define user-specified tests and
 scores, and how to run causal discovery using these custom functions.
 
 Note that Tetrad-based algorithms do not currently support custom CI
-tests, so this vignette will only cover the engines bnlearn,
-causalDisco, and pcalg.
+tests, so this article will only cover the engines bnlearn, causalDisco,
+and pcalg.
 
 ## Custom Tests
 

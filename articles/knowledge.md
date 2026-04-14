@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This vignette demonstrates how to use the
+This article demonstrates how to use the
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md)
 function to incorporate prior knowledge into causal discovery
 algorithms. The different supported knowledge types are explained below,
