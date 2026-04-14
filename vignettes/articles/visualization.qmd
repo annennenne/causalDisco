@@ -12,7 +12,7 @@ knitr:
 library(causalDisco)
 ```
 
-This vignette demonstrates how to visualize causal graphs. We cover plotting
+This article demonstrates how to visualize causal graphs. We cover plotting
 `Knowledge` objects and `Disco` objects, customizing layouts and styles, and
 exporting graphs to readable TikZ for inclusion and further customization in
 LaTeX documents.
