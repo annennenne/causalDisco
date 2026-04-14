@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">causalDisco</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,16 +41,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="causaldisco-development-version">causalDisco (development version)<a class="anchor" aria-label="anchor" href="#causaldisco-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.0" id="causaldisco-110">causalDisco 1.1.0<a class="anchor" aria-label="anchor" href="#causaldisco-110"></a></h2><p class="text-muted">CRAN release: 2026-04-13</p>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-1-1-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-1-0"></a></h3>
 <ul><li><p>Exports <code><a href="../reference/list_registered_tetrad_algorithms.html">list_registered_tetrad_algorithms()</a></code> to view the custom registered Tetrad algorithms.</p></li>
 <li><p>Allows the user to specify custom conditional independence tests for use with for the engines bnlearn, causalDisco, and pcalg. The custom test should have the signature <code>function(x, y, conditioning_set, suff_stat)</code> (optionally with an additional <code>args</code> argument for additional parameters), and return a p-value. See the documentation and the associated vignette for details.</p></li>
 <li><p>Added support for micd tests such as <code><a href="https://rdrr.io/pkg/micd/man/gaussMItest.html" class="external-link">micd::gaussCItestMI()</a></code> for pcalg and causalDisco engine. See all the new available tests in <code><a href="../reference/PcalgSearch.html">?PcalgSearch</a></code> and <code><a href="../reference/CausalDiscoSearch.html">?CausalDiscoSearch</a></code> under the test field.</p></li>
 <li><p>Simplified the interface for extending causalDisco with new algorithms. Exports <code><a href="../reference/make_method.html">make_method()</a></code> and <code><a href="../reference/make_runner.html">make_runner()</a></code> to do this. Please see the documentation and the associated vignette for details.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
+<h3 id="improvements-1-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-1-0"></a></h3>
 <ul><li><p>Improved speed of <code><a href="../reference/tfci.html">tfci()</a></code>, <code><a href="../reference/tges.html">tges()</a></code>, and <code><a href="../reference/tpc.html">tpc()</a></code> algorithms by at least 3x, and often much more.</p></li>
 <li><p>Updated <code><a href="../reference/knowledge_to_caugi.html">knowledge_to_caugi()</a></code> to include information about required and forbidden edges in the output.</p></li>
 <li><p>Improve documentation for many functions. # causalDisco 1.0.1</p></li>
