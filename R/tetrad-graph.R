@@ -10,30 +10,20 @@
 #' @keywords internal
 #' @noRd
 tetrad_graph <- function(x) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "readr",
-      "stringr"
-    ),
-    function_name = "tetrad_graph"
-  )
-
   if (!is.character(x) || length(x) != 1) {
     stop("`x` must be a single character string")
   }
 
-  parts <- stringr::str_split(x, "\n")[[1]] |>
-    (\(v) v[v != ""])()
+  parts <- strsplit(x, "\n")[[1]]
+  parts <- parts[parts != ""]
 
-  nodes <- stringr::str_split(parts[1], ",", simplify = TRUE) |>
-    as.character()
+  nodes <- strsplit(parts[1], ",")[[1]]
+  nodes <- as.character(nodes)
 
   mat_text <- paste(parts[-1], collapse = "\n")
-
-  amat <- readr::read_csv(
-    I(mat_text),
-    col_names = FALSE,
-    show_col_types = FALSE
+  amat <- utils::read.csv(
+    text = mat_text,
+    header = FALSE
   ) |>
     as.matrix()
 

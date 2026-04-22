@@ -228,13 +228,6 @@ tpc_run <- function(
 #' @keywords internal
 #' @noRd
 v_orient_temporal <- function(amat, sepsets) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "gtools"
-    ),
-    function_name = "v_orient_temporal"
-  )
-
   vnames <- rownames(amat) # TODO: not used
   nvar <- nrow(amat)
 
@@ -243,7 +236,7 @@ v_orient_temporal <- function(amat, sepsets) {
 
     # if there are at least two adjacent nodes
     if (length(theseAdj) >= 2) {
-      adjpairs <- gtools::combinations(length(theseAdj), 2, v = theseAdj)
+      adjpairs <- t(utils::combn(theseAdj, 2))
 
       npairs <- nrow(adjpairs)
 

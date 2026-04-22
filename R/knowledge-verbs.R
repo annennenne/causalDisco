@@ -199,7 +199,6 @@ add_to_tier <- function(kn, ...) {
   .check_if_pkgs_are_installed(
     pkgs = c(
       "dplyr",
-      "glue",
       "rlang"
     ),
     function_name = "add_to_tier"
@@ -235,9 +234,9 @@ add_to_tier <- function(kn, ...) {
     # resolve variables on the RHS
     vars <- .formula_vars(kn, rhs_expr)
     if (!length(vars)) {
-      stop(glue::glue(
-        "Specification `{deparse(rhs_expr)}` matched no variables."
-      ))
+      cli::cli_abort(
+        "Specification `{paste(deparse(rhs_expr), collapse = '')}` matched no variables."
+      )
     }
 
     # detect variables already assigned to a different tier
