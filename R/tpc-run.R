@@ -228,13 +228,6 @@ tpc_run <- function(
 #' @keywords internal
 #' @noRd
 v_orient_temporal <- function(amat, sepsets) {
-  .check_if_pkgs_are_installed(
-    pkgs = c(
-      "gtools"
-    ),
-    function_name = "v_orient_temporal"
-  )
-
   vnames <- rownames(amat) # TODO: not used
   nvar <- nrow(amat)
 
