@@ -30,7 +30,6 @@ Imports:
     cli,
     digest,
     dplyr,
-    glue,
     gtools,
     lifecycle,
     methods,
