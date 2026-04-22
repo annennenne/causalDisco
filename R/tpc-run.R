@@ -243,7 +243,7 @@ v_orient_temporal <- function(amat, sepsets) {
 
     # if there are at least two adjacent nodes
     if (length(theseAdj) >= 2) {
-      adjpairs <- gtools::combinations(length(theseAdj), 2, v = theseAdj)
+      adjpairs <- t(utils::combn(theseAdj, 2))
 
       npairs <- nrow(adjpairs)
 
