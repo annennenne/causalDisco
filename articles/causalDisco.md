@@ -10,7 +10,7 @@ library(causalDisco)
 #>   Restart R to apply changes.
 ```
 
-This article provides an overview of the causalDisco package, which
+This vignette provides an overview of the causalDisco package, which
 offers tools for causal discovery from observational data. It covers the
 main features of the package, including various causal discovery
 algorithms, knowledge incorporation, and result visualization.

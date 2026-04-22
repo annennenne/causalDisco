@@ -70,7 +70,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/articles/causalDisco.qmd" class="external-link"><code>vignettes/articles/causalDisco.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/disco-coders/causalDisco/blob/main/vignettes/causalDisco.qmd" class="external-link"><code>vignettes/causalDisco.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -79,7 +79,7 @@
 
 
 
-    <div class="cell" data-layout-align="center">
+    <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/disco-coders/causalDisco" class="external-link">causalDisco</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; causalDisco startup:</span></span>
@@ -89,11 +89,11 @@
 <span><span class="co">#&gt;   To change heap size, set options(java.heap.size = 'Ng') or Sys.setenv(JAVA_HEAP_SIZE = 'Ng') *before* loading.</span></span>
 <span><span class="co">#&gt;   Restart R to apply changes.</span></span></code></pre></div>
 </div>
-<p>This article provides an overview of the causalDisco package, which offers tools for causal discovery from observational data. It covers the main features of the package, including various causal discovery algorithms, knowledge incorporation, and result visualization.</p>
+<p>This vignette provides an overview of the causalDisco package, which offers tools for causal discovery from observational data. It covers the main features of the package, including various causal discovery algorithms, knowledge incorporation, and result visualization.</p>
 <section class="section level2"><h2 id="running-causal-discovery-algorithms">Running causal discovery algorithms<a class="anchor" aria-label="anchor" href="#running-causal-discovery-algorithms"></a>
 </h2>
 <p>We will for this section use the <code>num_data</code> dataset included in the package for demonstrating how to run causal discovery algorithms. It contains 5 numerical variables, <code>X1, X2, X3, Z</code>, and <code>Y</code>.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">num_data</span><span class="op">)</span></span>
@@ -106,7 +106,7 @@
 <span><span class="co">#&gt; 6 4.885914 10.018856 7.413312  9.375931 28.03132</span></span></code></pre></div>
 </div>
 <p>To make the different causal graphs easier to interpret, we define a custom fixed layout for plotting the results:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Z"</span>, <span class="st">"X3"</span>, <span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"Y"</span><span class="op">)</span>,</span>
@@ -115,7 +115,7 @@
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>To run a causal discovery algorithm, we first define the algorithm using the corresponding function, and then pass it to the <code><a href="../reference/disco.html">disco()</a></code> function along with the data. Below we demonstrate this process using the Peter-Clark (PC) algorithm from bnlearn with Fisher’s Z test:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pc_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span></span>
 <span>  engine <span class="op">=</span> <span class="st">"bnlearn"</span>, <span class="co"># Use the bnlearn implementation</span></span>
@@ -125,19 +125,19 @@
 <span><span class="va">pc_result_bnlearn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">pc_bnlearn</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We can visualize the results using <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_bnlearn</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"PC Fisher Z (bnlearn)"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20bnlearn%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20bnlearn%20plot-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The first notable feature of this plot is that some edges are directed, while others are undirected. For example, the edge from <code>X1</code> to <code>Y</code> is directed, indicating a causal effect of <code>X1</code> on <code>Y</code>. In contrast, the edge between <code>X1</code> and <code>X3</code> is undirected, indicating that the data alone do not provide sufficient information to determine the causal direction. Both orientations <code>X1 %--&gt;% X3</code> and <code>X3 %--&gt;% X1</code> are compatible with the observed conditional independencies.</p>
 <p>To view all engines available for a specific algorithm, you can see the documentation using <code><a href="../reference/pc.html">?pc</a></code>, where all options are listed under the <code>engine</code> argument. Instead of using bnlearn, we can also use the PC implementation from the pcalg package with the same test:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pc_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pc.html">pc</a></span><span class="op">(</span></span>
 <span>  engine <span class="op">=</span> <span class="st">"pcalg"</span>, <span class="co"># Use the pcalg implementation</span></span>
@@ -147,8 +147,8 @@
 <span><span class="va">pc_result_pcalg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">num_data</span>, method <span class="op">=</span> <span class="va">pc_pcalg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pc_result_pcalg</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"PC Fisher Z (pcalg)"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20pcalg-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20pcalg-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -159,19 +159,19 @@
 Tetrad Setup Instructions
 </summary><p>causalDisco provides an interface to the Java library <a href="https://github.com/cmu-phil/tetrad" class="external-link">Tetrad</a> for causal discovery algorithms. To use algorithms from Tetrad you need to install a Java Development Kit (JDK) &gt;= 21. We recommend Eclipse Temurin (OpenJDK), available at https://adoptium.net/en-GB/temurin/releases. When using the installer from the Temurin website, make sure to select the option to set the <code>JAVA_HOME</code> environment variable during installation, so rJava correctly detects the Java installation.</p>
 <p>For a simpler setup, we recommend using the rJavaEnv package, which provides a convenient function to install Java and configure the environment automatically for rJava. You can install Java using the <code>rJavaEnv::java_quick_install()</code> function:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the development version of rJavaEnv from GitHub</span></span>
 <span><span class="co"># pak::pak("e-kotov/rJavaEnv")</span></span>
 <span><span class="fu">rJavaEnv</span><span class="fu">::</span><span class="fu">java_quick_install</span><span class="op">(</span>version <span class="op">=</span> <span class="fl">25</span>, distribution <span class="op">=</span> <span class="st">"Temurin"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>Once you have Java JDK set up correctly, the current supported version of Tetrad can then be installed by calling</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/install_tetrad.html">install_tetrad</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>To verify everything is set up correctly you can run <code><a href="../reference/verify_tetrad.html">verify_tetrad()</a></code>:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $installed</span></span>
@@ -190,7 +190,7 @@ Tetrad Setup Instructions
 <span><span class="co">#&gt; [1] "Tetrad version 7.6.10 is installed and ready to use."</span></span></code></pre></div>
 </div>
 <p>Now you should be able to use Tetrad as an engine for the GES algorithm as shown in the code chunk below.</p>
-</details><div class="cell" data-layout-align="center">
+</details><div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">installed</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="../reference/verify_tetrad.html">verify_tetrad</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">java_ok</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ges_tetrad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ges.html">ges</a></span><span class="op">(</span></span>
@@ -201,14 +201,14 @@ Tetrad Setup Instructions
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">ges_result_tetrad</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, main <span class="op">=</span> <span class="st">"GES EBIC (Tetrad)"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/ges%20algorithm%20ebic%20tetrad-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/ges%20algorithm%20ebic%20tetrad-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>If you want to customize the plot appearance further, you can pass additional arguments to <code><a href="../reference/plot.html">plot()</a></code>. For example, to change the appearance of the nodes, you can use the <code>node_style</code> argument:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">pc_result_bnlearn</span>,</span>
@@ -223,15 +223,15 @@ Tetrad Setup Instructions
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/custom%20plot-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/custom%20plot-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>For more details on customizing plots and generating TikZ code for LaTeX documents, see the <a href="visualization.html">visualization vignette</a>.</p>
 <p>Instead of using <code><a href="../reference/plot.html">plot()</a></code>, another way to view and analyze the results is to use the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> or <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> functions:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pc_result_bnlearn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -276,7 +276,7 @@ Tetrad Setup Instructions
 </section><section class="section level2"><h2 id="incorporating-knowledge">Incorporating knowledge<a class="anchor" aria-label="anchor" href="#incorporating-knowledge"></a>
 </h2>
 <p>We will for this section use the dataset <code>tpc_example</code>, which contains variables, which are measured at three different life stages: childhood, youth, and old age.</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tpc_example</span><span class="op">)</span></span>
@@ -290,7 +290,7 @@ Tetrad Setup Instructions
 </div>
 <p>Since we know the temporal ordering of the variables, we can incorporate this background knowledge into the causal discovery algorithm. Specifically, we know that variables measured in childhood cannot be caused by variables measured in youth or old age, and variables measured in youth cannot be caused by variables measured in old age.</p>
 <p>Knowledge is encoded by creating a <code>Knowledge</code> object via the <code><a href="../reference/knowledge.html">knowledge()</a></code> function. The first argument (optional, but recommended for name matching) specifies the dataset. Tiered knowledge can then be defined using the <code>tier()</code> function. Here, we illustrate this by creating a tiered knowledge structure based on life stages:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knowledge.html">knowledge</a></span><span class="op">(</span></span>
 <span>  <span class="va">tpc_example</span>,</span>
@@ -303,7 +303,7 @@ Tetrad Setup Instructions
 </div>
 <p>For more details on how to define knowledge, see the <a href="knowledge.html">knowledge vignette</a>.</p>
 <p>You can view the <code>Knowledge</code> object using <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">kn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -338,15 +338,15 @@ Tetrad Setup Instructions
 <span><span class="co">#&gt; youth: 2 variables</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">kn</span>, main <span class="op">=</span> <span class="st">"Temporal Knowledge"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/view%20knowledge-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/view%20knowledge-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The plot displays vertical tiers, each enclosed in a shaded rectangle and labeled with the corresponding tier name at the top.</p>
 <p>We can then incorporate this knowledge into any algorithm like above. To do so, you need to pass the <code>Knowledge</code> object as an argument to the <code><a href="../reference/disco.html">disco()</a></code> function. Here we use the Temporal Peter-Clark (tpc) algorithm from causalDisco with the regression-based information loss test:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tpc_method</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tpc.html">tpc</a></span><span class="op">(</span></span>
 <span>  engine <span class="op">=</span> <span class="st">"causalDisco"</span>, <span class="co"># Use the causalDisco implementation</span></span>
@@ -355,7 +355,7 @@ Tetrad Setup Instructions
 <span><span class="va">tpc_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disco.html">disco</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tpc_example</span>, method <span class="op">=</span> <span class="va">tpc_method</span>, knowledge <span class="op">=</span> <span class="va">kn</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>Similarly, we can view the results using <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or <code><a href="../reference/plot.html">plot()</a></code>:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tpc_result</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -417,8 +417,8 @@ Tetrad Setup Instructions
 <span><span class="co">#&gt; youth: 2 variables</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">tpc_result</span>, main <span class="op">=</span> <span class="st">"TPC reg_test with Temporal Knowledge (causalDisco)"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="causalDisco_files/figure-html/view%20tpc%20results-1.png" class="quarto-figure quarto-figure-center" width="672"></p>
+<div>
+<figure><p><img src="causalDisco_files/figure-html/view%20tpc%20results-1.png" width="672"></p>
 </figure>
 </div>
 </div>
