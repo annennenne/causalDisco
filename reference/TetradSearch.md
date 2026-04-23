@@ -323,8 +323,8 @@ Sets the independence test to use in Tetrad.
 
     - `discretize = TRUE` - If TRUE for the conditional Gaussian
       likelihood, when scoring X –\> D where X is continuous and D
-      discrete, one should to simply discretize X for just those cases.
-      If FALSE, the integration will be exact,
+      discrete, one should simply discretize X for just those cases. If
+      FALSE, the integration will be exact,
 
     - `num_categories_to_discretize = 3` - In case the exact algorithm
       is not used for discrete children and continuous parents is not
@@ -589,8 +589,8 @@ Sets the scoring function to use in Tetrad.
 
     - `discretize = TRUE` - If TRUE for the conditional Gaussian
       likelihood, when scoring X –\> D where X is continuous and D
-      discrete, one should to simply discretize X for just those cases.
-      If FALSE, the integration will be exact,
+      discrete, one should simply discretize X for just those cases. If
+      FALSE, the integration will be exact,
 
     - `num_categories_to_discretize = 3` - In case the exact algorithm
       is not used for discrete children and continuous parents is not
