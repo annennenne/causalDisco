@@ -257,7 +257,7 @@ TetradSearch <- R6Class(
     #'         independence test,
     #'         \item \code{discretize = TRUE} - If TRUE for the conditional
     #'         Gaussian likelihood, when scoring X --> D where X is continuous
-    #'         and D discrete, one should to simply discretize X for just
+    #'         and D discrete, one should simply discretize X for just
     #'         those cases.
     #'         If FALSE, the integration will be exact,
     #'         \item \code{num_categories_to_discretize = 3} - In case the exact
@@ -517,7 +517,7 @@ TetradSearch <- R6Class(
     #'        yields sparser graphs,
     #'        \item \code{discretize = TRUE} - If TRUE for the conditional
     #'         Gaussian likelihood, when scoring X --> D where X is continuous and
-    #'         D discrete, one should to simply discretize X for just those cases.
+    #'         D discrete, one should simply discretize X for just those cases.
     #'         If FALSE, the integration will be exact,
     #'        \item \code{num_categories_to_discretize = 3} -  In case the exact
     #'         algorithm is not used for discrete children and continuous parents
