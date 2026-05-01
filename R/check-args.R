@@ -160,6 +160,7 @@ check_args_and_distribute_args_pcalg <- function(
     pc = names(formals(pcalg::pc)),
     fci = names(formals(pcalg::fci)),
     ges = names(formals(pcalg::ges)),
+    rfci = names(formals(pcalg::rfci)),
     stop("Unsupported algorithm: ", alg, call. = FALSE)
   )
 

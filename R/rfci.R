@@ -23,7 +23,7 @@
 #' RETURNS A RFCI-PAG, not a usual PAG. See definition 3.2 here
 #' https://arxiv.org/abs/1104.5617
 #'
-#' @example inst/roxygen-examples/fci-example.R
+#' @example inst/roxygen-examples/rfci-example.R
 #' @references
 #' Colombo, D., Maathuis, M. H., Kalisch, M., & Richardson, T. S. (2012).
 #' Learning high-dimensional directed acyclic graphs with latent and selection variables.
@@ -35,7 +35,7 @@
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export
-fci <- function(
+rfci <- function(
   engine = c("tetrad", "pcalg"),
   test,
   alpha = 0.05,

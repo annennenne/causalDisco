@@ -138,6 +138,7 @@ Other causal discovery algorithms:
 \code{\link{grasp_fci}()},
 \code{\link{gs}()},
 \code{\link{pc}()},
+\code{\link{rfci}()},
 \code{\link{sp_fci}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},

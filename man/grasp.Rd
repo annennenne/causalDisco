@@ -129,6 +129,7 @@ Other causal discovery algorithms:
 \code{\link{gs}()},
 \code{\link{iamb-family}},
 \code{\link{pc}()},
+\code{\link{rfci}()},
 \code{\link{sp_fci}()},
 \code{\link{tfci}()},
 \code{\link{tges}()},

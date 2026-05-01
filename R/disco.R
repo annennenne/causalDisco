@@ -54,8 +54,8 @@ disco <- function(data, method, knowledge = NULL) {
     graph_class <- "UNKNOWN"
   }
 
-  if (graph_class == "PAG") {
-    # Caugi currently does not support PAGs
+  if (graph_class == "PAG" || graph_class == "RFCI-PAG") {
+    # caugi currently does not support PAGs or RFCI-PAGs
     graph_class <- "UNKNOWN"
   }
 

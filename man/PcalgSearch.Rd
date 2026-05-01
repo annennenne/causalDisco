@@ -106,6 +106,7 @@ Can be set with \code{$set_alg()}. Recognized values are:
 \item \code{"fci"} - FCI algorithm. See \code{\link[=fci]{fci()}} and the underlying \code{\link[pcalg:fci]{pcalg::fci()}}.
 \item \code{"ges"} - GES algorithm. See \code{\link[=ges]{ges()}} and the underlying \code{\link[pcalg:ges]{pcalg::ges()}}.
 \item \code{"pc"} - PC algorithm. See \code{\link[=pc]{pc()}} and the underlying \code{\link[pcalg:pc]{pcalg::pc()}}.
+\item \code{"rfci"} - RFCI algorithm. See \code{\link[=rfci]{rfci()}} and the underlying \code{\link[pcalg:rfci]{pcalg::rfci()}}.
 }}
 
 \item{\code{params}}{A list of parameters for the test and algorithm.

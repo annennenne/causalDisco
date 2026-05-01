@@ -69,6 +69,7 @@ PcalgSearch <- R6::R6Class(
     #'   \item \code{"fci"} - FCI algorithm. See [fci()] and the underlying [pcalg::fci()].
     #'   \item \code{"ges"} - GES algorithm. See [ges()] and the underlying [pcalg::ges()].
     #'   \item \code{"pc"} - PC algorithm. See [pc()] and the underlying [pcalg::pc()].
+    #'   \item \code{"rfci"} - RFCI algorithm. See [rfci()] and the underlying [pcalg::rfci()].
     #' }
     alg = NULL,
 
@@ -317,6 +318,16 @@ PcalgSearch <- R6::R6Class(
           # Score will be set when we use run_search()
           self$alg <- purrr::partial(
             pcalg::ges,
+            !!!self$params
+          )
+        },
+        "rfci" = {
+          if (is.null(self$test)) {
+            stop("No test is set. Use set_test() first.", call. = FALSE)
+          }
+          self$alg <- purrr::partial(
+            pcalg::rfci,
+            indepTest = self$test,
             !!!self$params
           )
         },

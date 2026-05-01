@@ -65,7 +65,7 @@ used by \pkg{Tetrad}.}
 \itemize{
 \item \code{"ebic"} - Extended BIC score.
 \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-\item \code{"poisson_prior"} - Poisson prior score.'
+\item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"rank_bic"} - Rank-based BIC score.
 \item \code{"sem_bic"} - SEM BIC score.
 \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
@@ -131,7 +131,7 @@ Recognised values are:
 \itemize{
 \item \code{"fci"} - FCI algorithm. See \code{\link[=fci]{fci()}}.
 \item \code{"pc"} - Peter-Clark (PC) algorithm. See \code{\link[=pc]{pc()}}.
-\item \code{"rfci"} - Restricted FCI algorithm. See \code{\link[pcalg:rfci]{pcalg::rfci()}}.
+\item \code{"rfci"} - Restricted FCI algorithm. See \code{\link[=rfci]{rfci()}}.
 }
 
 \strong{Hybrid}
@@ -767,8 +767,6 @@ discriminating path,
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
-\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-PAG (where feasible).
 }
 \item \code{"sp_fci"} - Sparsest Permutation using FCI
 \itemize{
