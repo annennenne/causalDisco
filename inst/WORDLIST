@@ -36,11 +36,13 @@ Helby
 JDK
 Jonckheere
 KCI
+Kalisch
 Kalish
 Kristensen
 Kummerfeld
 Kun
 MCAR
+Maathuis
 Margaritis
 NML
 Ogarrio
@@ -57,6 +59,7 @@ Pilla
 Pseudoinverse
 RCIT
 RCoT
+RFCI
 Ramsej
 Raskutti
 Recognised
@@ -91,6 +94,7 @@ aje
 al
 alg
 amat
+arxiv
 bdeu
 bic
 bidirected
@@ -107,6 +111,7 @@ factorised
 fci
 fges
 honouring
+https
 independencies
 initializations
 interventional
@@ -124,6 +129,7 @@ pak
 pc
 pcalg
 penalised
+pkgdown
 pre
 precompute
 preprint
