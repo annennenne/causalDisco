@@ -89,10 +89,6 @@ score/test requirements, and nonstandard outputs.
 
 - `PC-MB` (test-based) Requires explicit specification of a Markov blanket.
 
-- `rfci` (test-based) Returns an **RFCI-PAG**, not a standard PAG.  
-  Already
-  implemented in `pcalg`.
-
 - `dPAG-sampling-rfci` (neither score- nor test-based) Returns an **RFCI-PAG**,
   not a standard PAG (I assume)? Discrete datasets only.
 
