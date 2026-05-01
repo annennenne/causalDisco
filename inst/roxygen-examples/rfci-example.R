@@ -1,8 +1,8 @@
 data(tpc_example)
 
 # Recommended path using disco()
-rrfci_pcalg <- rfci(engine = "pcalg", test = "fisher_z", alpha = 0.05)
-disco(tpc_example, rrfci_pcalg)
+rfci_pcalg <- rfci(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, rfci_pcalg)
 
 # or using rfci_pcalg directly
 rfci_pcalg(tpc_example)
@@ -41,7 +41,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   rfci_tetrad <- rfci(engine = "tetrad", test = "fisher_z", alpha = 0.05)
   disco(tpc_example, rfci_tetrad, knowledge = kn)
 
-  # or using fci_tetrad directly
+  # or using rfci_tetrad directly
   rfci_tetrad <- rfci_tetrad |> set_knowledge(kn)
   rfci_tetrad(tpc_example)
 }
