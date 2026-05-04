@@ -37,16 +37,16 @@ recall(cg1, cg2, type = "dir")
 
 }
 \seealso{
-Other metrics: 
-\code{\link{confusion}()},
-\code{\link{evaluate}()},
-\code{\link{f1_score}()},
-\code{\link{false_omission_rate}()},
-\code{\link{fdr}()},
-\code{\link{g1_score}()},
-\code{\link{npv}()},
-\code{\link{precision}()},
+Other metrics:
+\code{\link[=confusion]{confusion()}},
+\code{\link[=evaluate]{evaluate()}},
+\code{\link[=f1_score]{f1_score()}},
+\code{\link[=false_omission_rate]{false_omission_rate()}},
+\code{\link[=fdr]{fdr()}},
+\code{\link[=g1_score]{g1_score()}},
+\code{\link[=npv]{npv()}},
+\code{\link[=precision]{precision()}},
 \code{\link{reexports}},
-\code{\link{specificity}()}
+\code{\link[=specificity]{specificity()}}
 }
 \concept{metrics}

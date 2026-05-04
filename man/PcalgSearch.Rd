@@ -57,12 +57,12 @@ g <- s$run_search()
 print(g)
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{data}}{A \code{data.frame} holding the data set currently attached to the
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{data}}{A \code{data.frame} holding the data set currently attached to the
 search object. Can be set with \code{set_data()}.}
 
-\item{\code{score}}{A function that will be used to build the score,
+    \item{\code{score}}{A function that will be used to build the score,
 when data is set. Can be set with \code{$set_score()}. Recognized values
 are:
 \itemize{
@@ -73,15 +73,15 @@ interventional and observational Gaussian data.
 See \link[pcalg:GaussL0penIntScore-class]{pcalg::GaussL0penIntScore}.
 }}
 
-\item{\code{test}}{A function that will be used to test independence.
+    \item{\code{test}}{A function that will be used to test independence.
 Can be set with \code{$set_test()}. Recognized values are:
 \itemize{
 \item \code{"fisher_z"} - Fisher Z test for Gaussian data.
-See \code{\link[pcalg:condIndFisherZ]{pcalg::gaussCItest()}}.
+See \code{\link[pcalg:gaussCItest]{pcalg::gaussCItest()}}.
 \item \code{"fisher_z_twd"} - Fisher Z test for Gaussian data with test-wise deletion.
 See \code{\link[micd:gaussCItwd]{micd::gaussCItwd()}}.
 \item \code{"fisher_z_mi"} - Fisher Z test for Gaussian data with multiple imputation.
-See \code{\link[micd:gaussMItest]{micd::gaussCItestMI()}}.
+See \code{\link[micd:gaussCItestMI]{micd::gaussCItestMI()}}.
 
 \item \code{"g_square"} - G square test for discrete data.
 See \code{\link[pcalg:binCItest]{pcalg::binCItest()}} and \code{\link[pcalg:disCItest]{pcalg::disCItest()}}.
@@ -100,7 +100,7 @@ with multiple imputation.
 See \code{\link[micd:mixMItest]{micd::mixMItest()}}.
 }}
 
-\item{\code{alg}}{A function that will be used to run the search algorithm.
+    \item{\code{alg}}{A function that will be used to run the search algorithm.
 Can be set with \code{$set_alg()}. Recognized values are:
 \itemize{
 \item \code{"fci"} - FCI algorithm. See \code{\link[=fci]{fci()}} and the underlying \code{\link[pcalg:fci]{pcalg::fci()}}.
@@ -109,115 +109,123 @@ Can be set with \code{$set_alg()}. Recognized values are:
 \item \code{"rfci"} - RFCI algorithm. See \code{\link[=rfci]{rfci()}} and the underlying \code{\link[pcalg:rfci]{pcalg::rfci()}}.
 }}
 
-\item{\code{params}}{A list of parameters for the test and algorithm.
+    \item{\code{params}}{A list of parameters for the test and algorithm.
 Can be set with \code{$set_params()}.
 The parameters are passed to the test and algorithm functions.}
 
-\item{\code{suff_stat}}{Sufficient statistic. The format and contents of the
+    \item{\code{suff_stat}}{Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.}
 
-\item{\code{continuous}}{Logical; whether the sufficient statistic is for a
+    \item{\code{continuous}}{Logical; whether the sufficient statistic is for a
 continuous test. If both continuous and discrete are \code{TRUE}, the
 sufficient statistic is build for a mixed test.}
 
-\item{\code{discrete}}{Logical; whether the sufficient statistic is for a
+    \item{\code{discrete}}{Logical; whether the sufficient statistic is for a
 discrete test. If both continuous and discrete are \code{TRUE}, the sufficient
 statistic is build for a mixed test.}
 
-\item{\code{knowledge}}{A list of fixed constraints for the search algorithm. Note, that
+    \item{\code{knowledge}}{A list of fixed constraints for the search algorithm. Note, that
 pcalg only works with symmetric knowledge. Thus, the only allowed types of knowledge
 is forbidden edges in both directions.}
 
-\item{\code{adapt_df}}{Logical; whether to adapt the degrees of freedom
+    \item{\code{adapt_df}}{Logical; whether to adapt the degrees of freedom
 for discrete tests.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-PcalgSearch-new}{\code{PcalgSearch$new()}}
-\item \href{#method-PcalgSearch-set_params}{\code{PcalgSearch$set_params()}}
-\item \href{#method-PcalgSearch-set_data}{\code{PcalgSearch$set_data()}}
-\item \href{#method-PcalgSearch-set_suff_stat}{\code{PcalgSearch$set_suff_stat()}}
-\item \href{#method-PcalgSearch-set_test}{\code{PcalgSearch$set_test()}}
-\item \href{#method-PcalgSearch-set_score}{\code{PcalgSearch$set_score()}}
-\item \href{#method-PcalgSearch-set_alg}{\code{PcalgSearch$set_alg()}}
-\item \href{#method-PcalgSearch-set_knowledge}{\code{PcalgSearch$set_knowledge()}}
-\item \href{#method-PcalgSearch-run_search}{\code{PcalgSearch$run_search()}}
-\item \href{#method-PcalgSearch-clone}{\code{PcalgSearch$clone()}}
-}
+  \itemize{
+    \item \href{#method-PcalgSearch-initialize}{\code{PcalgSearch$new()}}
+    \item \href{#method-PcalgSearch-set_params}{\code{PcalgSearch$set_params()}}
+    \item \href{#method-PcalgSearch-set_data}{\code{PcalgSearch$set_data()}}
+    \item \href{#method-PcalgSearch-set_suff_stat}{\code{PcalgSearch$set_suff_stat()}}
+    \item \href{#method-PcalgSearch-set_test}{\code{PcalgSearch$set_test()}}
+    \item \href{#method-PcalgSearch-set_score}{\code{PcalgSearch$set_score()}}
+    \item \href{#method-PcalgSearch-set_alg}{\code{PcalgSearch$set_alg()}}
+    \item \href{#method-PcalgSearch-set_knowledge}{\code{PcalgSearch$set_knowledge()}}
+    \item \href{#method-PcalgSearch-run_search}{\code{PcalgSearch$run_search()}}
+    \item \href{#method-PcalgSearch-clone}{\code{PcalgSearch$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PcalgSearch-new"></a>}}
-\if{latex}{\out{\hypertarget{method-PcalgSearch-new}{}}}
-\subsection{Method \code{new()}}{
-Constructor for the \code{PcalgSearch} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-PcalgSearch-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-PcalgSearch-initialize}{}}}
+\subsection{\code{PcalgSearch$new()}}{
+  Constructor for the \code{PcalgSearch} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_params"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_params}{}}}
-\subsection{Method \code{set_params()}}{
-Sets the parameters for the test and algorithm.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_params(params)}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$set_params()}}{
+  Sets the parameters for the test and algorithm.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_params(params)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{params}}{A list of parameters to set.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{params}}{A list of parameters to set.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_data"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_data}{}}}
-\subsection{Method \code{set_data()}}{
-Sets the data for the search algorithm.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_data(data, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
-
-\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic.
+\subsection{\code{PcalgSearch$set_data()}}{
+  Sets the data for the search algorithm.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_data(data, set_suff_stat = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
+      \item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic.
 for the data.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_suff_stat"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_suff_stat}{}}}
-\subsection{Method \code{set_suff_stat()}}{
-Sets the sufficient statistic for the data.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_suff_stat()}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$set_suff_stat()}}{
+  Sets the sufficient statistic for the data.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_suff_stat()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_test"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_test}{}}}
-\subsection{Method \code{set_test()}}{
-Sets the test for the search algorithm.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_test(method, alpha = 0.05, suff_stat_fun = NULL, args = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\subsection{\code{PcalgSearch$set_test()}}{
+  Sets the test for the search algorithm.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_test(method, alpha = 0.05, suff_stat_fun = NULL, args = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 A string specifying the type of test to use.
 
@@ -232,110 +240,115 @@ signature \verb{function(x, y, conditioning_set, suff_stat, args)}, and the \cod
 test function.
 
 EXPERIMENTAL: user-defined tests syntax are subject to change.}
-
-\item{\code{alpha}}{Significance level for the test.}
-
-\item{\code{suff_stat_fun}}{A function that takes the data as input and returns a sufficient statistic for the test.
+      \item{\code{alpha}}{Significance level for the test.}
+      \item{\code{suff_stat_fun}}{A function that takes the data as input and returns a sufficient statistic for the test.
 Only needed if \code{method} is a user-defined function.}
-
-\item{\code{args}}{A list of additional arguments to pass to the test.
+      \item{\code{args}}{A list of additional arguments to pass to the test.
 Only needed if \code{method} is a user-defined function with an \code{args} parameter in its signature.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_score"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_score}{}}}
-\subsection{Method \code{set_score()}}{
-Sets the score for the search algorithm.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_score(method, params = list())}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$set_score()}}{
+  Sets the score for the search algorithm.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_score(method, params = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{A string specifying the type of score to use.}
+      \item{\code{params}}{A list of parameters to pass to the score function.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{A string specifying the type of score to use.}
-
-\item{\code{params}}{A list of parameters to pass to the score function.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_alg"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_alg}{}}}
-\subsection{Method \code{set_alg()}}{
-Sets the algorithm for the search.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_alg(method)}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$set_alg()}}{
+  Sets the algorithm for the search.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_alg(method)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{A string specifying the type of algorithm to use.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{A string specifying the type of algorithm to use.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-set_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-set_knowledge}{}}}
-\subsection{Method \code{set_knowledge()}}{
-Sets the knowledge for the search algorithm. Due to the nature of pcalg,
+\subsection{\code{PcalgSearch$set_knowledge()}}{
+  Sets the knowledge for the search algorithm. Due to the nature of pcalg,
 we cannot set knowledge before we run it on data. So we set the function
 that will be used to build the fixed constraints, but it can first be
 done when data is provided.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$set_knowledge(knowledge_obj, directed_as_undirected = FALSE)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$set_knowledge(knowledge_obj, directed_as_undirected = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{knowledge_obj}}{A \code{Knowledge} object that contains the fixed constraints.}
+      \item{\code{directed_as_undirected}}{Logical; whether to treat directed edges as undirected.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{knowledge_obj}}{A \code{Knowledge} object that contains the fixed constraints.}
-
-\item{\code{directed_as_undirected}}{Logical; whether to treat directed edges as undirected.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-run_search"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-run_search}{}}}
-\subsection{Method \code{run_search()}}{
-Runs the search algorithm on the data.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$run_search(data = NULL, set_suff_stat = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$run_search()}}{
+  Runs the search algorithm on the data.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$run_search(data = NULL, set_suff_stat = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
+      \item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{A \code{data.frame} or a \code{matrix} containing the data.}
-
-\item{\code{set_suff_stat}}{Logical; whether to set the sufficient statistic}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PcalgSearch-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-PcalgSearch-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PcalgSearch$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{PcalgSearch$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{PcalgSearch$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

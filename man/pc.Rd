@@ -146,21 +146,21 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 Spirtes P, Glymour C, and Scheines R. Causation, Prediction, and Search. MIT Press, 2000.
 }
 \seealso{
-Other causal discovery algorithms: 
-\code{\link{boss}()},
-\code{\link{boss_fci}()},
-\code{\link{fci}()},
-\code{\link{ges}()},
-\code{\link{gfci}()},
-\code{\link{grasp}()},
-\code{\link{grasp_fci}()},
-\code{\link{gs}()},
+Other causal discovery algorithms:
+\code{\link[=boss]{boss()}},
+\code{\link[=boss_fci]{boss_fci()}},
+\code{\link[=fci]{fci()}},
+\code{\link[=ges]{ges()}},
+\code{\link[=gfci]{gfci()}},
+\code{\link[=grasp]{grasp()}},
+\code{\link[=grasp_fci]{grasp_fci()}},
+\code{\link[=gs]{gs()}},
 \code{\link{iamb-family}},
-\code{\link{rfci}()},
-\code{\link{sp_fci}()},
-\code{\link{tfci}()},
-\code{\link{tges}()},
-\code{\link{tpc}()}
+\code{\link[=rfci]{rfci()}},
+\code{\link[=sp_fci]{sp_fci()}},
+\code{\link[=tfci]{tfci()}},
+\code{\link[=tges]{tges()}},
+\code{\link[=tpc]{tpc()}}
 }
 \concept{causal discovery algorithms}
 \concept{cd_algorithms}

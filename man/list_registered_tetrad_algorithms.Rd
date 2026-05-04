@@ -13,13 +13,13 @@ Character vector of algorithm names.
 Returns the names of all custom registered Tetrad algorithms.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{distribute_engine_args}()},
-\code{\link{make_method}()},
-\code{\link{make_runner}()},
-\code{\link{new_disco_method}()},
-\code{\link{register_tetrad_algorithm}()},
-\code{\link{reset_tetrad_alg_registry}()}
+Other Extending causalDisco:
+\code{\link[=distribute_engine_args]{distribute_engine_args()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=make_runner]{make_runner()}},
+\code{\link[=new_disco_method]{new_disco_method()}},
+\code{\link[=register_tetrad_algorithm]{register_tetrad_algorithm()}},
+\code{\link[=reset_tetrad_alg_registry]{reset_tetrad_alg_registry()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}

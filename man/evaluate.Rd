@@ -48,16 +48,16 @@ evaluate(
 
 }
 \seealso{
-Other metrics: 
-\code{\link{confusion}()},
-\code{\link{f1_score}()},
-\code{\link{false_omission_rate}()},
-\code{\link{fdr}()},
-\code{\link{g1_score}()},
-\code{\link{npv}()},
-\code{\link{precision}()},
-\code{\link{recall}()},
+Other metrics:
+\code{\link[=confusion]{confusion()}},
+\code{\link[=f1_score]{f1_score()}},
+\code{\link[=false_omission_rate]{false_omission_rate()}},
+\code{\link[=fdr]{fdr()}},
+\code{\link[=g1_score]{g1_score()}},
+\code{\link[=npv]{npv()}},
+\code{\link[=precision]{precision()}},
+\code{\link[=recall]{recall()}},
 \code{\link{reexports}},
-\code{\link{specificity}()}
+\code{\link[=specificity]{specificity()}}
 }
 \concept{metrics}

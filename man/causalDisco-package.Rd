@@ -30,6 +30,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Bjarke Hautop Kristensen \email{bjarke.kristensen@sund.ku.dk}
   \item Frederik Fabricius-Bjerre \email{frederik@fabriciusbjerre.dk}
   \item Anne Helby Petersen \email{ahpe@sund.ku.dk}
   \item Claus Thorn Ekstrøm \email{ekstrom@sund.ku.dk}

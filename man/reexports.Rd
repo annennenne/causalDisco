@@ -8,17 +8,17 @@
 \alias{aid}
 \title{Objects exported from other packages}
 \seealso{
-Other metrics: 
-\code{\link{confusion}()},
-\code{\link{evaluate}()},
-\code{\link{f1_score}()},
-\code{\link{false_omission_rate}()},
-\code{\link{fdr}()},
-\code{\link{g1_score}()},
-\code{\link{npv}()},
-\code{\link{precision}()},
-\code{\link{recall}()},
-\code{\link{specificity}()}
+Other metrics:
+\code{\link[=confusion]{confusion()}},
+\code{\link[=evaluate]{evaluate()}},
+\code{\link[=f1_score]{f1_score()}},
+\code{\link[=false_omission_rate]{false_omission_rate()}},
+\code{\link[=fdr]{fdr()}},
+\code{\link[=g1_score]{g1_score()}},
+\code{\link[=npv]{npv()}},
+\code{\link[=precision]{precision()}},
+\code{\link[=recall]{recall()}},
+\code{\link[=specificity]{specificity()}}
 }
 \concept{metrics}
 \keyword{internal}
@@ -27,6 +27,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{caugi}{\code{\link[caugi]{aid}}, \code{\link[caugi]{hd}}, \code{\link[caugi]{shd}}}
+  \item{caugi}{\code{\link[caugi:aid]{aid()}}, \code{\link[caugi:hd]{hd()}}, \code{\link[caugi:shd]{shd()}}}
 }}
 

@@ -30,28 +30,28 @@ plot(kn_converted)
 
 }
 \seealso{
-Other knowledge functions: 
-\code{\link{+.Knowledge}()},
-\code{\link{add_exogenous}()},
-\code{\link{add_tier}()},
-\code{\link{add_to_tier}()},
-\code{\link{add_vars}()},
-\code{\link{as_bnlearn_knowledge}()},
-\code{\link{as_pcalg_constraints}()},
-\code{\link{as_tetrad_knowledge}()},
-\code{\link{deparse_knowledge}()},
-\code{\link{forbid_edge}()},
-\code{\link{get_tiers}()},
-\code{\link{knowledge}()},
-\code{\link{knowledge_to_caugi}()},
-\code{\link{remove_edge}()},
-\code{\link{remove_tiers}()},
-\code{\link{remove_vars}()},
-\code{\link{reorder_tiers}()},
-\code{\link{reposition_tier}()},
-\code{\link{require_edge}()},
-\code{\link{seq_tiers}()},
-\code{\link{unfreeze}()}
+Other knowledge functions:
+\code{\link[=+.Knowledge]{+.Knowledge()}},
+\code{\link[=add_exogenous]{add_exogenous()}},
+\code{\link[=add_tier]{add_tier()}},
+\code{\link[=add_to_tier]{add_to_tier()}},
+\code{\link[=add_vars]{add_vars()}},
+\code{\link[=as_bnlearn_knowledge]{as_bnlearn_knowledge()}},
+\code{\link[=as_pcalg_constraints]{as_pcalg_constraints()}},
+\code{\link[=as_tetrad_knowledge]{as_tetrad_knowledge()}},
+\code{\link[=deparse_knowledge]{deparse_knowledge()}},
+\code{\link[=forbid_edge]{forbid_edge()}},
+\code{\link[=get_tiers]{get_tiers()}},
+\code{\link[=knowledge]{knowledge()}},
+\code{\link[=knowledge_to_caugi]{knowledge_to_caugi()}},
+\code{\link[=remove_edge]{remove_edge()}},
+\code{\link[=remove_tiers]{remove_tiers()}},
+\code{\link[=remove_vars]{remove_vars()}},
+\code{\link[=reorder_tiers]{reorder_tiers()}},
+\code{\link[=reposition_tier]{reposition_tier()}},
+\code{\link[=require_edge]{require_edge()}},
+\code{\link[=seq_tiers]{seq_tiers()}},
+\code{\link[=unfreeze]{unfreeze()}}
 }
 \concept{knowledge}
 \concept{knowledge functions}

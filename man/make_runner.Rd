@@ -41,13 +41,13 @@ Constructs a runner function for a specific causal discovery
 engine and algorithm. This allows users to support new algorithms.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{distribute_engine_args}()},
-\code{\link{list_registered_tetrad_algorithms}()},
-\code{\link{make_method}()},
-\code{\link{new_disco_method}()},
-\code{\link{register_tetrad_algorithm}()},
-\code{\link{reset_tetrad_alg_registry}()}
+Other Extending causalDisco:
+\code{\link[=distribute_engine_args]{distribute_engine_args()}},
+\code{\link[=list_registered_tetrad_algorithms]{list_registered_tetrad_algorithms()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=new_disco_method]{new_disco_method()}},
+\code{\link[=register_tetrad_algorithm]{register_tetrad_algorithm()}},
+\code{\link[=reset_tetrad_alg_registry]{reset_tetrad_alg_registry()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}
