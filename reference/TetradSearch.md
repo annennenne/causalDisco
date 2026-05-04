@@ -737,11 +737,11 @@ Sets the causal discovery algorithm to use in Tetrad.
 
   - `"boss_fci"` - BOSS-FCI algorithm.
 
-    - `depth = -1` - Maximum size of conditioning set, Set to -1 for
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
       unlimited,
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path, Set to -1 for unlimited,
+      discriminating path. Set to -1 for unlimited,
 
     - `use_bes = TRUE` - If TRUE, the algorithm uses the backward
       equivalence search from the GES algorithm as one of its steps,
@@ -759,14 +759,15 @@ Sets the causal discovery algorithm to use in Tetrad.
 
   - `"fci"` - FCI algorithm.
 
-    - `depth = -1` - Maximum size of conditioning set,
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
+      unlimited,
 
     - `stable_fas = TRUE` - If TRUE, the "stable" version of the PC
       adjacency search is used, which for k \> 0 fixes the graph for
       depth k + 1 to that of the previous depth k.
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path,
+      discriminating path. Set to -1 for unlimited,
 
     - `complete_rule_set_used = TRUE` - FALSE if the (simpler) final
       orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -799,7 +800,7 @@ Sets the causal discovery algorithm to use in Tetrad.
       to -1 for unlimited,
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path,
+      discriminating path. Set to -1 for unlimited,
 
     - `complete_rule_set_used = TRUE` - FALSE if the (simpler) final
       orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -838,14 +839,15 @@ Sets the causal discovery algorithm to use in Tetrad.
 
   - `"grasp_fci"` - GRaSP-FCI algorithm. Combines GRaSP and FCI.
 
-    - `depth = -1` - Maximum size of conditioning set,
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
+      unlimited,
 
     - `stable_fas = TRUE` - If TRUE, the "stable" version of the PC
       adjacency search is used, which for k \> 0 fixes the graph for
       depth k + 1 to that of the previous depth k.
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path,
+      discriminating path. Set to -1 for unlimited,
 
     - `complete_rule_set_used = TRUE` - FALSE if the (simpler) final
       orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -885,7 +887,8 @@ Sets the causal discovery algorithm to use in Tetrad.
       prioritized, while `3` means that existing colliders should be
       prioritized, ignoring subsequent conflicting information.
 
-    - `depth = -1` - Maximum size of conditioning set,
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
+      unlimited,
 
     - `stable_fas = TRUE` - If TRUE, the "stable" version of the PC
       adjacency search is used, which for k \> 0 fixes the graph for
@@ -896,14 +899,15 @@ Sets the causal discovery algorithm to use in Tetrad.
 
   - `"rfci"` - Restricted FCI algorithm
 
-    - `depth = -1` - Maximum size of conditioning set,
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
+      unlimited,
 
     - `stable_fas = TRUE` - If TRUE, the "stable" version of the PC
       adjacency search is used, which for k \> 0 fixes the graph for
       depth k + 1 to that of the previous depth k.
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path,
+      discriminating path. Set to -1 for unlimited,
 
     - `complete_rule_set_used = TRUE` - FALSE if the (simpler) final
       orientation rules set due to P. Spirtes, guaranteeing arrow
@@ -912,10 +916,11 @@ Sets the causal discovery algorithm to use in Tetrad.
 
   - `"sp_fci"` - Sparsest Permutation using FCI
 
-    - `depth = -1` - Maximum size of conditioning set,
+    - `depth = -1` - Maximum size of conditioning set. Set to -1 for
+      unlimited,
 
     - `max_disc_path_length = -1` - Maximum length for any
-      discriminating path,
+      discriminating path. Set to -1 for unlimited,
 
     - `complete_rule_set_used = TRUE` - FALSE if the (simpler) final
       orientation rules set due to P. Spirtes, guaranteeing arrow

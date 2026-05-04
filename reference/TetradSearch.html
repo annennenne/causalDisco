@@ -546,11 +546,10 @@ order should be used for the first initial permutation,</p></li>
 <li><p><code>output_cpdag = TRUE</code> - If TRUE, the DAG output of the
 algorithm is converted to a CPDAG.</p></li>
 </ul></li>
-<li><p><code>"boss_fci"</code> - BOSS-FCI algorithm.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,
+<li><p><code>"boss_fci"</code> - BOSS-FCI algorithm.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set.
 Set to -1 for unlimited,</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,
-Set to -1 for unlimited,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>use_bes = TRUE</code> - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,</p></li>
@@ -563,12 +562,13 @@ J. Zhang, should be used guaranteeing additional tail completeness,</p></li>
 <li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal PAG
 (where feasible).</p></li>
 </ul></li>
-<li><p><code>"fci"</code> - FCI algorithm.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
+<li><p><code>"fci"</code> - FCI algorithm.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set.
+Set to -1 for unlimited,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k &gt; 0 fixes the graph
 for depth k + 1 to that of the previous depth k.</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -590,7 +590,7 @@ be parallelized,</p></li>
 <li><p><code>max_degree = -1</code> - Maximum degree of any node in the
 graph. Set to -1 for unlimited,</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -620,12 +620,13 @@ should be started from different initializations. By default, the
 algorithm will be run through at least once using the initialized
 parameters.</p></li>
 </ul></li>
-<li><p><code>"grasp_fci"</code> - GRaSP-FCI algorithm. Combines GRaSP and FCI.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
+<li><p><code>"grasp_fci"</code> - GRaSP-FCI algorithm. Combines GRaSP and FCI.</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set.
+Set to -1 for unlimited,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k &gt; 0 fixes the graph
 for depth k + 1 to that of the previous depth k.</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -656,27 +657,30 @@ corresponds to the "overwrite" rule as introduced in the <span class="pkg">pcalg
 <code><a href="https://rdrr.io/pkg/pcalg/man/pc.html" class="external-link">pcalg::pc()</a></code>. <code>2</code> means that all collider conflicts using bidirected edges
 should be prioritized, while <code>3</code> means that existing colliders should be prioritized,
 ignoring subsequent conflicting information.</p></li>
-<li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
+<li><p><code>depth = -1</code> - Maximum size of conditioning set.
+Set to -1 for unlimited,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k &gt; 0 fixes the graph
 for depth k + 1 to that of the previous depth k.</p></li>
 <li><p><code>guarantee_cpdag = FALSE</code> - If TRUE, ensure the output is
 a legal CPDAG.</p></li>
 </ul></li>
-<li><p><code>"rfci"</code> - Restricted FCI algorithm</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
+<li><p><code>"rfci"</code> - Restricted FCI algorithm</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set. Set
+to -1 for unlimited,</p></li>
 <li><p><code>stable_fas = TRUE</code> - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k &gt; 0 fixes the graph
 for depth k + 1 to that of the previous depth k.</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
 </ul></li>
-<li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
+<li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set. Set
+to -1 for unlimited,</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
-discriminating path,</p></li>
+discriminating path. Set to -1 for unlimited,</p></li>
 <li><p><code>complete_rule_set_used = TRUE</code> - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
