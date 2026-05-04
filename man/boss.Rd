@@ -98,20 +98,21 @@ Advances in Neural Information Processing Systems, 36, 63945-63956.
 Epub 2024 May 30. PMID: 39280091; PMCID: PMC11393735.
 }
 \seealso{
-Other causal discovery algorithms: 
-\code{\link{boss_fci}()},
-\code{\link{fci}()},
-\code{\link{ges}()},
-\code{\link{gfci}()},
-\code{\link{grasp}()},
-\code{\link{grasp_fci}()},
-\code{\link{gs}()},
+Other causal discovery algorithms:
+\code{\link[=boss_fci]{boss_fci()}},
+\code{\link[=fci]{fci()}},
+\code{\link[=ges]{ges()}},
+\code{\link[=gfci]{gfci()}},
+\code{\link[=grasp]{grasp()}},
+\code{\link[=grasp_fci]{grasp_fci()}},
+\code{\link[=gs]{gs()}},
 \code{\link{iamb-family}},
-\code{\link{pc}()},
-\code{\link{sp_fci}()},
-\code{\link{tfci}()},
-\code{\link{tges}()},
-\code{\link{tpc}()}
+\code{\link[=pc]{pc()}},
+\code{\link[=rfci]{rfci()}},
+\code{\link[=sp_fci]{sp_fci()}},
+\code{\link[=tfci]{tfci()}},
+\code{\link[=tges]{tges()}},
+\code{\link[=tpc]{tpc()}}
 }
 \concept{causal discovery algorithms}
 \concept{cd_algorithms}

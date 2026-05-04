@@ -37,7 +37,7 @@ TetradSearch <- R6Class(
     #'   \itemize{
     #'      \item \code{"ebic"} - Extended BIC score.
     #'      \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-    #'      \item \code{"poisson_prior"} - Poisson prior score.'
+    #'      \item \code{"poisson_prior"} - Poisson prior score.
     #'      \item \code{"rank_bic"} - Rank-based BIC score.
     #'      \item \code{"sem_bic"} - SEM BIC score.
     #'      \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
@@ -1036,8 +1036,6 @@ TetradSearch <- R6Class(
     #'       final orientation rules set due to P. Spirtes, guaranteeing arrow
     #'       completeness, should be used; TRUE if the (fuller) set due to
     #'       J. Zhang, should be used guaranteeing additional tail completeness.
-    #'      \item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-    #'       PAG (where feasible).
     #'    }
     #    \item \code{"sp"} - Sparsest Permutation algorithm. No parameters.
     #'   \item \code{"sp_fci"} - Sparsest Permutation using FCI

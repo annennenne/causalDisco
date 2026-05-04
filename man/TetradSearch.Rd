@@ -50,14 +50,14 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{data}}{Java object that stores the (possibly converted) data set
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{data}}{Java object that stores the (possibly converted) data set
 used by \pkg{Tetrad}.}
 
-\item{\code{rdata}}{Original \strong{R} \code{data.frame} supplied by the user.}
+    \item{\code{rdata}}{Original \strong{R} \code{data.frame} supplied by the user.}
 
-\item{\code{score}}{Java object holding the scoring function selected with
+    \item{\code{score}}{Java object holding the scoring function selected with
 \code{set_score()}. Supply one of the method strings for
 \code{set_score()}. Recognised values are:
 
@@ -65,7 +65,7 @@ used by \pkg{Tetrad}.}
 \itemize{
 \item \code{"ebic"} - Extended BIC score.
 \item \code{"gic"} - Generalized Information Criterion (GIC) score.
-\item \code{"poisson_prior"} - Poisson prior score.'
+\item \code{"poisson_prior"} - Poisson prior score.
 \item \code{"rank_bic"} - Rank-based BIC score.
 \item \code{"sem_bic"} - SEM BIC score.
 \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
@@ -88,7 +88,7 @@ This is a generalization of the Degenerate Gaussian score.
 \item \code{"mag_degenerate_gaussian_bic"} - MAG Degenerate Gaussian BIC Score.
 }}
 
-\item{\code{test}}{Java object holding the independence test selected with
+    \item{\code{test}}{Java object holding the independence test selected with
 \code{set_test()}. Supply one of the method strings for
 \code{set_test()}. Recognised values are:
 
@@ -123,7 +123,7 @@ probabilistic conditional independence judgments.
 \item \code{"degenerate_gaussian"} - Degenerate Gaussian test as a likelihood ratio test.
 }}
 
-\item{\code{alg}}{Java object representing the search algorithm.
+    \item{\code{alg}}{Java object representing the search algorithm.
 Supply one of the method strings for \code{set_alg()}.
 Recognised values are:
 
@@ -131,7 +131,7 @@ Recognised values are:
 \itemize{
 \item \code{"fci"} - FCI algorithm. See \code{\link[=fci]{fci()}}.
 \item \code{"pc"} - Peter-Clark (PC) algorithm. See \code{\link[=pc]{pc()}}.
-\item \code{"rfci"} - Restricted FCI algorithm. See \code{\link[pcalg:rfci]{pcalg::rfci()}}.
+\item \code{"rfci"} - Restricted FCI algorithm. See \code{\link[=rfci]{rfci()}}.
 }
 
 \strong{Hybrid}
@@ -149,73 +149,76 @@ Recognised values are:
 \item \code{"grasp"} - GRaSP (Greedy Relations of Sparsest Permutation) algorithm. See \code{\link[=grasp]{grasp()}}.
 }}
 
-\item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
+    \item{\code{mc_test}}{Java independence-test object used by the Markov checker.}
 
-\item{\code{java}}{Java object returned by the search (typically a graph).}
+    \item{\code{java}}{Java object returned by the search (typically a graph).}
 
-\item{\code{result}}{Convenience alias for \code{java}; may store additional
+    \item{\code{result}}{Convenience alias for \code{java}; may store additional
 metadata depending on the search type.}
 
-\item{\code{knowledge}}{Java \code{Knowledge} object carrying background
+    \item{\code{knowledge}}{Java \code{Knowledge} object carrying background
 constraints (required/forbidden edges).}
 
-\item{\code{params}}{Java \code{Parameters} object holding algorithm settings.}
+    \item{\code{params}}{Java \code{Parameters} object holding algorithm settings.}
 
-\item{\code{bootstrap_graphs}}{Java \code{List} of graphs produced by bootstrap
+    \item{\code{bootstrap_graphs}}{Java \code{List} of graphs produced by bootstrap
 resampling, if that feature was requested.}
 
-\item{\code{mc_ind_results}}{Java \code{List} with Markov-checker test results.}
-}
-\if{html}{\out{</div>}}
+    \item{\code{mc_ind_results}}{Java \code{List} with Markov-checker test results.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-TetradSearch-new}{\code{TetradSearch$new()}}
-\item \href{#method-TetradSearch-set_test}{\code{TetradSearch$set_test()}}
-\item \href{#method-TetradSearch-set_score}{\code{TetradSearch$set_score()}}
-\item \href{#method-TetradSearch-set_alg}{\code{TetradSearch$set_alg()}}
-\item \href{#method-TetradSearch-set_knowledge}{\code{TetradSearch$set_knowledge()}}
-\item \href{#method-TetradSearch-set_params}{\code{TetradSearch$set_params()}}
-\item \href{#method-TetradSearch-get_parameters_for_function}{\code{TetradSearch$get_parameters_for_function()}}
-\item \href{#method-TetradSearch-run_search}{\code{TetradSearch$run_search()}}
-\item \href{#method-TetradSearch-set_bootstrapping}{\code{TetradSearch$set_bootstrapping()}}
-\item \href{#method-TetradSearch-set_data}{\code{TetradSearch$set_data()}}
-\item \href{#method-TetradSearch-set_verbose}{\code{TetradSearch$set_verbose()}}
-\item \href{#method-TetradSearch-set_time_lag}{\code{TetradSearch$set_time_lag()}}
-\item \href{#method-TetradSearch-get_data}{\code{TetradSearch$get_data()}}
-\item \href{#method-TetradSearch-get_knowledge}{\code{TetradSearch$get_knowledge()}}
-\item \href{#method-TetradSearch-get_java}{\code{TetradSearch$get_java()}}
-\item \href{#method-TetradSearch-get_string}{\code{TetradSearch$get_string()}}
-\item \href{#method-TetradSearch-get_dot}{\code{TetradSearch$get_dot()}}
-\item \href{#method-TetradSearch-get_amat}{\code{TetradSearch$get_amat()}}
-\item \href{#method-TetradSearch-clone}{\code{TetradSearch$clone()}}
-}
+  \itemize{
+    \item \href{#method-TetradSearch-initialize}{\code{TetradSearch$new()}}
+    \item \href{#method-TetradSearch-set_test}{\code{TetradSearch$set_test()}}
+    \item \href{#method-TetradSearch-set_score}{\code{TetradSearch$set_score()}}
+    \item \href{#method-TetradSearch-set_alg}{\code{TetradSearch$set_alg()}}
+    \item \href{#method-TetradSearch-set_knowledge}{\code{TetradSearch$set_knowledge()}}
+    \item \href{#method-TetradSearch-set_params}{\code{TetradSearch$set_params()}}
+    \item \href{#method-TetradSearch-get_parameters_for_function}{\code{TetradSearch$get_parameters_for_function()}}
+    \item \href{#method-TetradSearch-run_search}{\code{TetradSearch$run_search()}}
+    \item \href{#method-TetradSearch-set_bootstrapping}{\code{TetradSearch$set_bootstrapping()}}
+    \item \href{#method-TetradSearch-set_data}{\code{TetradSearch$set_data()}}
+    \item \href{#method-TetradSearch-set_verbose}{\code{TetradSearch$set_verbose()}}
+    \item \href{#method-TetradSearch-set_time_lag}{\code{TetradSearch$set_time_lag()}}
+    \item \href{#method-TetradSearch-get_data}{\code{TetradSearch$get_data()}}
+    \item \href{#method-TetradSearch-get_knowledge}{\code{TetradSearch$get_knowledge()}}
+    \item \href{#method-TetradSearch-get_java}{\code{TetradSearch$get_java()}}
+    \item \href{#method-TetradSearch-get_string}{\code{TetradSearch$get_string()}}
+    \item \href{#method-TetradSearch-get_dot}{\code{TetradSearch$get_dot()}}
+    \item \href{#method-TetradSearch-get_amat}{\code{TetradSearch$get_amat()}}
+    \item \href{#method-TetradSearch-clone}{\code{TetradSearch$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TetradSearch-new"></a>}}
-\if{latex}{\out{\hypertarget{method-TetradSearch-new}{}}}
-\subsection{Method \code{new()}}{
-Initializes the \code{TetradSearch} object, creating new Java objects for
+\if{html}{\out{<a id="method-TetradSearch-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-TetradSearch-initialize}{}}}
+\subsection{\code{TetradSearch$new()}}{
+  Initializes the \code{TetradSearch} object, creating new Java objects for
 \code{knowledge} and \code{params}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$new()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_test"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_test}{}}}
-\subsection{Method \code{set_test()}}{
-Sets the independence test to use in Tetrad.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_test(method, ..., use_for_mc = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{(character) Name of the test method (e.g., "chi_square", "fisher_z").
+\subsection{\code{TetradSearch$set_test()}}{
+  Sets the independence test to use in Tetrad.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_test(method, ..., use_for_mc = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{(character) Name of the test method (e.g., "chi_square", "fisher_z").
 \itemize{
 \item \code{"basis_function_blocks"} - Basis-function blocks test
 \item \code{"basis_function_lrt"} - basis-function likelihood-ratio
@@ -232,8 +235,7 @@ probabilistic conditional independence judgments.
 \item \code{"rank_independence"} - Rank-based independence test
 \item \code{"sem_bic"} - SEM BIC test
 }}
-
-\item{\code{...}}{Additional arguments passed to the private test-setting methods.
+      \item{\code{...}}{Additional arguments passed to the private test-setting methods.
 For the following tests, the following parameters are available:
 \itemize{
 \item \code{"basis_function_blocks"} - Basis-function blocks test.
@@ -397,28 +399,29 @@ weights are distributed according to a binomial distribution,
 lambda to the diagonal, < 0 Pseudoinverse.
 }
 }}
+      \item{\code{use_for_mc}}{(logical) If TRUE, sets this test for the Markov checker \code{mc_test}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisibly returns \code{self}, for chaining.
+  }
+}
 
-\item{\code{use_for_mc}}{(logical) If TRUE, sets this test for the Markov checker \code{mc_test}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns \code{self}, for chaining.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_score"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_score}{}}}
-\subsection{Method \code{set_score()}}{
-Sets the scoring function to use in Tetrad.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_score(method, ...)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
+\subsection{\code{TetradSearch$set_score()}}{
+  Sets the scoring function to use in Tetrad.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_score(method, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").
 \itemize{
 \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
 \item \code{"basis_function_bic"} - BIC score for basis-function models.
@@ -436,8 +439,7 @@ This is a generalization of the Degenerate Gaussian score.
 \item \code{"sem_bic"} - SEM BIC score.
 \item \code{"zhang_shen_bound"} - Zhang and Shen bound score.
 }}
-
-\item{\code{...}}{Additional arguments passed to the private score-setting methods.
+      \item{\code{...}}{Additional arguments passed to the private score-setting methods.
 For the following scores, the following parameters are available:
 \itemize{
 \item \code{"bdeu"} - Bayes Dirichlet Equivalent score with uniform priors.
@@ -583,29 +585,30 @@ the true model if a correct model is discovered. Could underfit.
 lambda to the diagonal, < 0 Pseudoinverse.
 }
 }}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisibly returns \code{self}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns \code{self}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_alg"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_alg}{}}}
-\subsection{Method \code{set_alg()}}{
-Sets the causal discovery algorithm to use in Tetrad.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_alg(method, ...)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{method}}{(character) Name of the algorithm (e.g., "fges", "pc",
+\subsection{\code{TetradSearch$set_alg()}}{
+  Sets the causal discovery algorithm to use in Tetrad.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_alg(method, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{method}}{(character) Name of the algorithm (e.g., "fges", "pc",
 "fci", etc.).}
-
-\item{\code{...}}{Additional parameters passed to the private algorithm-setting
+      \item{\code{...}}{Additional parameters passed to the private algorithm-setting
 methods.
 For the following algorithms, the following parameters are available:
 \itemize{
@@ -767,8 +770,6 @@ discriminating path,
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.
-\item \code{guarantee_pag = FALSE} - Ensure the output is a legal
-PAG (where feasible).
 }
 \item \code{"sp_fci"} - Sparsest Permutation using FCI
 \itemize{
@@ -784,313 +785,333 @@ PAG (where feasible),
 \item \code{use_heuristic = FALSE} - If TRUE, use the max p heuristic version.
 }
 }}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisibly returns \code{self}.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisibly returns \code{self}.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_knowledge}{}}}
-\subsection{Method \code{set_knowledge()}}{
-Sets the background \code{Knowledge} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_knowledge(knowledge_obj)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$set_knowledge()}}{
+  Sets the background \code{Knowledge} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_knowledge(knowledge_obj)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{knowledge_obj}}{An object containing \pkg{Tetrad} knowledge.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{knowledge_obj}}{An object containing \pkg{Tetrad} knowledge.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_params"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_params}{}}}
-\subsection{Method \code{set_params()}}{
-Sets parameters for the Tetrad search.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_params(...)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$set_params()}}{
+  Sets parameters for the Tetrad search.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_params(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Named arguments for the parameters to set.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Named arguments for the parameters to set.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_parameters_for_function"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_parameters_for_function}{}}}
-\subsection{Method \code{get_parameters_for_function()}}{
-Retrieves the argument names of a matching private function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_parameters_for_function(
+\subsection{\code{TetradSearch$get_parameters_for_function()}}{
+  Retrieves the argument names of a matching private function.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_parameters_for_function(
   fn_pattern,
   score = FALSE,
   test = FALSE,
   alg = FALSE
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{fn_pattern}}{(character) A pattern that should match a private method name.}
+      \item{\code{score}}{If TRUE, retrieves parameters for a scoring function.}
+      \item{\code{test}}{If TRUE, retrieves parameters for a test function.}
+      \item{\code{alg}}{If TRUE, retrieves parameters for an algorithm.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (character) The names of the parameters.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{fn_pattern}}{(character) A pattern that should match a private method name.}
-
-\item{\code{score}}{If TRUE, retrieves parameters for a scoring function.}
-
-\item{\code{test}}{If TRUE, retrieves parameters for a test function.}
-
-\item{\code{alg}}{If TRUE, retrieves parameters for an algorithm.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The names of the parameters.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-run_search"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-run_search}{}}}
-\subsection{Method \code{run_search()}}{
-Runs the chosen Tetrad algorithm on the data.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$run_search(
+\subsection{\code{TetradSearch$run_search()}}{
+  Runs the chosen Tetrad algorithm on the data.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$run_search(
   data = NULL,
   bootstrap = FALSE,
   int_cols_as_cont = TRUE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(optional) If provided, overrides the previously set data.}
-
-\item{\code{bootstrap}}{(logical) If TRUE, bootstrapped graphs will be
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(optional) If provided, overrides the previously set data.}
+      \item{\code{bootstrap}}{(logical) If TRUE, bootstrapped graphs will be
 generated.}
-
-\item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
+      \item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
 as continuous, since \pkg{Tetrad} does not support ordinal data, but only
 either continuous or nominal data. Default is \code{TRUE.}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{Disco} object (a list with a \code{caugi} and a \code{Knowledge} object).
 Also populates \code{self$java}.
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_bootstrapping"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_bootstrapping}{}}}
-\subsection{Method \code{set_bootstrapping()}}{
-Configures bootstrapping parameters for the Tetrad search.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_bootstrapping(
+\subsection{\code{TetradSearch$set_bootstrapping()}}{
+  Configures bootstrapping parameters for the Tetrad search.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_bootstrapping(
   number_resampling = 0,
   percent_resample_size = 100,
   add_original = TRUE,
   with_replacement = TRUE,
   resampling_ensemble = 1,
   seed = -1
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{number_resampling}}{(integer) Number of bootstrap samples.}
+      \item{\code{percent_resample_size}}{(numeric) Percentage of sample size for each bootstrap.}
+      \item{\code{add_original}}{(logical) If TRUE, add the original dataset to the bootstrap set.}
+      \item{\code{with_replacement}}{(logical) If TRUE, sampling is done with replacement.}
+      \item{\code{resampling_ensemble}}{(integer) How the resamples are used or aggregated.}
+      \item{\code{seed}}{(integer) Random seed, or -1 for none.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{number_resampling}}{(integer) Number of bootstrap samples.}
-
-\item{\code{percent_resample_size}}{(numeric) Percentage of sample size for each bootstrap.}
-
-\item{\code{add_original}}{(logical) If TRUE, add the original dataset to the bootstrap set.}
-
-\item{\code{with_replacement}}{(logical) If TRUE, sampling is done with replacement.}
-
-\item{\code{resampling_ensemble}}{(integer) How the resamples are used or aggregated.}
-
-\item{\code{seed}}{(integer) Random seed, or -1 for none.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_data"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_data}{}}}
-\subsection{Method \code{set_data()}}{
-Sets or overrides the data used by Tetrad.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_data(data, int_cols_as_cont = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(data.frame) The new data to load.}
-
-\item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
+\subsection{\code{TetradSearch$set_data()}}{
+  Sets or overrides the data used by Tetrad.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_data(data, int_cols_as_cont = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(data.frame) The new data to load.}
+      \item{\code{int_cols_as_cont}}{(logical) If \code{TRUE}, integer columns are treated
 as continuous, since Tetrad does not support ordinal data, but only
 either continuous or nominal data. Default is \code{TRUE.}}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_verbose"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_verbose}{}}}
-\subsection{Method \code{set_verbose()}}{
-Toggles the verbosity in Tetrad.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_verbose(verbose)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$set_verbose()}}{
+  Toggles the verbosity in Tetrad.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_verbose(verbose)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{verbose}}{(logical) TRUE to enable verbose logging, FALSE otherwise.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{verbose}}{(logical) TRUE to enable verbose logging, FALSE otherwise.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-set_time_lag"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-set_time_lag}{}}}
-\subsection{Method \code{set_time_lag()}}{
-Sets an integer time lag for time-series algorithms.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$set_time_lag(time_lag = 0)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$set_time_lag()}}{
+  Sets an integer time lag for time-series algorithms.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$set_time_lag(time_lag = 0)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{time_lag}}{(integer) The time lag to set.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{time_lag}}{(integer) The time lag to set.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_data"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_data}{}}}
-\subsection{Method \code{get_data()}}{
-Retrieves the current Java data object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_data()}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_data()}}{
+  Retrieves the current Java data object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_data()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (Java object) Tetrad dataset.
+  }
 }
 
-\subsection{Returns}{
-(Java object) Tetrad dataset.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_knowledge"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_knowledge}{}}}
-\subsection{Method \code{get_knowledge()}}{
-Returns the background \code{Knowledge} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_knowledge()}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_knowledge()}}{
+  Returns the background \code{Knowledge} object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_knowledge()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (Java object) Tetrad Knowledge.
+  }
 }
 
-\subsection{Returns}{
-(Java object) Tetrad Knowledge.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_java"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_java}{}}}
-\subsection{Method \code{get_java()}}{
-Gets the main Java result object (usually a graph) from the last search.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_java()}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_java()}}{
+  Gets the main Java result object (usually a graph) from the last search.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_java()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (Java object) The Tetrad result graph or model.
+  }
 }
 
-\subsection{Returns}{
-(Java object) The Tetrad result graph or model.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_string"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_string}{}}}
-\subsection{Method \code{get_string()}}{
-Returns the string representation of a given Java object or \code{self$java}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_string(java_obj = NULL)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_string()}}{
+  Returns the string representation of a given Java object or \code{self$java}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_string(java_obj = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (character) The \code{toString()} of that Java object.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The \code{toString()} of that Java object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_dot"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_dot}{}}}
-\subsection{Method \code{get_dot()}}{
-Produces a DOT (Graphviz) representation of the graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_dot(java_obj = NULL)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_dot()}}{
+  Produces a DOT (Graphviz) representation of the graph.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_dot(java_obj = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (character) The DOT-format string.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The DOT-format string.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-get_amat"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-get_amat}{}}}
-\subsection{Method \code{get_amat()}}{
-Produces an amat representation of the graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$get_amat(java_obj = NULL)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$get_amat()}}{
+  Produces an amat representation of the graph.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$get_amat(java_obj = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (character) The adjacency matrix.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{java_obj}}{(Java object, optional) If NULL, uses \code{self$java}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(character) The adjacency matrix.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TetradSearch-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-TetradSearch-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TetradSearch$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{TetradSearch$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TetradSearch$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

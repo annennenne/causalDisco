@@ -20,5 +20,5 @@ corresponding to the correlation matrix and number of observations.}
 A numeric, which is the p-value of the test.
 }
 \description{
-This function simply calls the \code{\link[pcalg:condIndFisherZ]{pcalg::gaussCItest()}} function from the \pkg{pcalg} package.
+This function simply calls the \code{\link[pcalg:gaussCItest]{pcalg::gaussCItest()}} function from the \pkg{pcalg} package.
 }

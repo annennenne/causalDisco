@@ -21,13 +21,13 @@ and distributes them appropriately to the search object. It ensures that the arg
 engine and algorithm, and then sets them on the search object.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{list_registered_tetrad_algorithms}()},
-\code{\link{make_method}()},
-\code{\link{make_runner}()},
-\code{\link{new_disco_method}()},
-\code{\link{register_tetrad_algorithm}()},
-\code{\link{reset_tetrad_alg_registry}()}
+Other Extending causalDisco:
+\code{\link[=list_registered_tetrad_algorithms]{list_registered_tetrad_algorithms()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=make_runner]{make_runner()}},
+\code{\link[=new_disco_method]{new_disco_method()}},
+\code{\link[=register_tetrad_algorithm]{register_tetrad_algorithm()}},
+\code{\link[=reset_tetrad_alg_registry]{reset_tetrad_alg_registry()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}

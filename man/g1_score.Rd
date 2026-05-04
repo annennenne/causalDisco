@@ -41,16 +41,16 @@ Petersen, Anne Helby, et al. "Causal discovery for observational sciences using
 supervised machine learning." arXiv preprint arXiv:2202.12813 (2022).
 }
 \seealso{
-Other metrics: 
-\code{\link{confusion}()},
-\code{\link{evaluate}()},
-\code{\link{f1_score}()},
-\code{\link{false_omission_rate}()},
-\code{\link{fdr}()},
-\code{\link{npv}()},
-\code{\link{precision}()},
-\code{\link{recall}()},
+Other metrics:
+\code{\link[=confusion]{confusion()}},
+\code{\link[=evaluate]{evaluate()}},
+\code{\link[=f1_score]{f1_score()}},
+\code{\link[=false_omission_rate]{false_omission_rate()}},
+\code{\link[=fdr]{fdr()}},
+\code{\link[=npv]{npv()}},
+\code{\link[=precision]{precision()}},
+\code{\link[=recall]{recall()}},
 \code{\link{reexports}},
-\code{\link{specificity}()}
+\code{\link[=specificity]{specificity()}}
 }
 \concept{metrics}

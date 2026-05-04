@@ -10,13 +10,13 @@ reset_tetrad_alg_registry()
 Clears all custom registered algorithms.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{distribute_engine_args}()},
-\code{\link{list_registered_tetrad_algorithms}()},
-\code{\link{make_method}()},
-\code{\link{make_runner}()},
-\code{\link{new_disco_method}()},
-\code{\link{register_tetrad_algorithm}()}
+Other Extending causalDisco:
+\code{\link[=distribute_engine_args]{distribute_engine_args()}},
+\code{\link[=list_registered_tetrad_algorithms]{list_registered_tetrad_algorithms()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=make_runner]{make_runner()}},
+\code{\link[=new_disco_method]{new_disco_method()}},
+\code{\link[=register_tetrad_algorithm]{register_tetrad_algorithm()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}

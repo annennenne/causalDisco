@@ -25,13 +25,13 @@ You provide a builder function that constructs a runner object, along with metad
 returns a closure that can be called with a data frame to perform causal discovery and return a \link[caugi:caugi]{caugi::caugi} object.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{distribute_engine_args}()},
-\code{\link{list_registered_tetrad_algorithms}()},
-\code{\link{make_method}()},
-\code{\link{make_runner}()},
-\code{\link{register_tetrad_algorithm}()},
-\code{\link{reset_tetrad_alg_registry}()}
+Other Extending causalDisco:
+\code{\link[=distribute_engine_args]{distribute_engine_args()}},
+\code{\link[=list_registered_tetrad_algorithms]{list_registered_tetrad_algorithms()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=make_runner]{make_runner()}},
+\code{\link[=register_tetrad_algorithm]{register_tetrad_algorithm()}},
+\code{\link[=reset_tetrad_alg_registry]{reset_tetrad_alg_registry()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}

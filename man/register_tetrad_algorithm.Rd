@@ -18,13 +18,13 @@ takes the same arguments as the runner function for the algorithm and sets up th
 This allows you to extend the set of Tetrad algorithms that can be used with causalDisco.
 }
 \seealso{
-Other Extending causalDisco: 
-\code{\link{distribute_engine_args}()},
-\code{\link{list_registered_tetrad_algorithms}()},
-\code{\link{make_method}()},
-\code{\link{make_runner}()},
-\code{\link{new_disco_method}()},
-\code{\link{reset_tetrad_alg_registry}()}
+Other Extending causalDisco:
+\code{\link[=distribute_engine_args]{distribute_engine_args()}},
+\code{\link[=list_registered_tetrad_algorithms]{list_registered_tetrad_algorithms()}},
+\code{\link[=make_method]{make_method()}},
+\code{\link[=make_runner]{make_runner()}},
+\code{\link[=new_disco_method]{new_disco_method()}},
+\code{\link[=reset_tetrad_alg_registry]{reset_tetrad_alg_registry()}}
 }
 \concept{Extending causalDisco}
 \concept{extending_causalDisco}
