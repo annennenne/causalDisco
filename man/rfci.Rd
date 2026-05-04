@@ -30,8 +30,6 @@ For specific details on the supported tests and parameters for each engine, see:
 \item \link{TetradSearch} for \pkg{Tetrad},
 \item \link{PcalgSearch} for \pkg{pcalg}.
 }
-RETURNS A RFCI-PAG, not a usual PAG. See definition 3.2 here
-https://arxiv.org/abs/1104.5617
 }
 \section{Recommendation}{
 
@@ -48,9 +46,11 @@ this function returns a list containing:
 \item \code{knowledge} A \code{Knowledge} object with the background knowledge
 used in the causal discovery algorithm. See \code{\link[=knowledge]{knowledge()}} for how to construct it.
 \item \code{caugi} A \code{\link[caugi:caugi]{caugi::caugi}} object representing the learned causal graph.
-This graph is a PAG (Partial Ancestral Graph), but since PAGs are not yet
+This graph is an RFCI-PAG (RFCI Partial Ancestral Graph), but since RFCI-PAGs are not yet
 natively supported in \pkg{caugi}, it is currently stored with class \code{UNKNOWN}.
 }
+Please see the definition 3.2 of the paper referenced for definition of an RFCI-PAG,
+and it's differences from a standard PAG.
 }
 
 \examples{

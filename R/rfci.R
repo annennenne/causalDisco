@@ -20,8 +20,6 @@
 #'  \item [TetradSearch] for \pkg{Tetrad},
 #'  \item [PcalgSearch] for \pkg{pcalg}.
 #' }
-#' RETURNS A RFCI-PAG, not a usual PAG. See definition 3.2 here
-#' https://arxiv.org/abs/1104.5617
 #'
 #' @example inst/roxygen-examples/rfci-example.R
 #' @references
@@ -29,9 +27,7 @@
 #' Learning high-dimensional directed acyclic graphs with latent and selection variables.
 #' The Annals of Statistics, 294-321.
 #' @inheritSection disco_note Recommendation
-#' @inheritSection disco_algs_return_doc_pag Value
-#'
-#'
+#' @inheritSection disco_algs_return_doc_rfci_pag Value
 #' @family causal discovery algorithms
 #' @concept cd_algorithms
 #' @export
