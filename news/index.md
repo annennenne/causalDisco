@@ -2,11 +2,27 @@
 
 ## causalDisco (development version)
 
+### New features
+
+- Added support for the RFCI algorithm via
+  [`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md),
+  interfacing with implementations from pcalg and Tetrad.
+
+### Improvements
+
+- Improved the documentation.
+
+- Reduced the number of package dependencies.
+
+### Other changes
+
+- Converted most vignettes to articles to reduce package size.
+
 ## causalDisco 1.1.0
 
 CRAN release: 2026-04-13
 
-### New Features
+### New features
 
 - Exports
   [`list_registered_tetrad_algorithms()`](https://disco-coders.github.io/causalDisco/reference/list_registered_tetrad_algorithms.md)
