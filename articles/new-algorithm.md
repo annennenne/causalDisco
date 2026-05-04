@@ -1,6 +1,7 @@
 # Extending causalDisco with new algorithms
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -34,6 +35,7 @@ arguments to the underlying algorithm and test.
 The code for the `hpc()` function is as follows:
 
 ``` r
+
 hpc <- function(
   engine = c("bnlearn"),
   test,
@@ -70,6 +72,7 @@ it to
 Here we demonstrate using the included `tpc_example` dataset:
 
 ``` r
+
 data(tpc_example)
 hpc_bnlearn <- hpc(engine = "bnlearn", test = "fisher_z", alpha = 0.05)
 hpc_bnlearn_result <- disco(tpc_example, hpc_bnlearn)
@@ -122,6 +125,7 @@ release. The relevant Java classes are located under:
 https://github.com/cmu-phil/tetrad/tree/development/tetrad-lib/src/main/java
 
 ``` r
+
 register_tetrad_algorithm(
   "my_boss_variant",
   function(
@@ -159,6 +163,7 @@ algorithm returns a PDAG, so we set the `graph_class` attribute to
 `"PDAG"`.
 
 ``` r
+
 my_boss_variant <- function(
   engine = "tetrad",
   score,
@@ -184,6 +189,7 @@ my_boss_variant <- function(
 We can now run `my_boss_variant()` like any other method in causalDisco.
 
 ``` r
+
 # Ensure Tetrad is installed and Java is working before running the algorithm
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   my_boss_variant_tetrad <- my_boss_variant(
@@ -205,6 +211,7 @@ constraint-based algorithm).
 Finally, we clean up the custom registered Tetrad algorithm
 
 ``` r
+
 reset_tetrad_alg_registry()
 ```
 

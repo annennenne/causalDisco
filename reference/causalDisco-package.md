@@ -41,6 +41,8 @@ Useful links:
 
 Authors:
 
+- Bjarke Hautop Kristensen <bjarke.kristensen@sund.ku.dk>
+
 - Frederik Fabricius-Bjerre <frederik@fabriciusbjerre.dk>
 
 - Anne Helby Petersen <ahpe@sund.ku.dk>

@@ -44,6 +44,8 @@ Core search algorithms implemented or wrapped by causalDisco.
   : IAMB Family of Causal Discovery Algorithms
 - [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md) :
   PC Algorithm for Causal Discovery
+- [`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md)
+  : RFCI Algorithm for Causal Discovery
 - [`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md)
   : SP-FCI Algorithm for Causal Discovery
 - [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md)

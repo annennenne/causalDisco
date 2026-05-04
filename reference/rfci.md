@@ -1,13 +1,12 @@
-# SP-FCI Algorithm for Causal Discovery
+# RFCI Algorithm for Causal Discovery
 
-Run the Sparsest Permutation–based Fast Causal Inference algorithm for
-causal discovery using one of several engines. Can be computationally
-intensive.
+Run the Really Fast Causal Inference algorithm for causal discovery
+using one of several engines.
 
 ## Usage
 
 ``` r
-sp_fci(engine = "tetrad", score, test, alpha = 0.05, ...)
+rfci(engine = c("tetrad", "pcalg"), test, alpha = 0.05, ...)
 ```
 
 ## Arguments
@@ -20,9 +19,9 @@ sp_fci(engine = "tetrad", score, test, alpha = 0.05, ...)
 
   :   Tetrad Java library.
 
-- score:
+  `"pcalg"`
 
-  Character; name of the scoring function to use.
+  :   pcalg R package.
 
 - test:
 
@@ -34,16 +33,19 @@ sp_fci(engine = "tetrad", score, test, alpha = 0.05, ...)
 
 - ...:
 
-  Additional arguments passed to the chosen engine (e.g. score and
+  Additional arguments passed to the chosen engine (e.g. test or
   algorithm parameters).
 
 ## Details
 
-For specific details on the supported scores, and parameters for each
+For specific details on the supported tests and parameters for each
 engine, see:
 
 - [TetradSearch](https://disco-coders.github.io/causalDisco/reference/TetradSearch.md)
-  for Tetrad.
+  for Tetrad,
+
+- [PcalgSearch](https://disco-coders.github.io/causalDisco/reference/PcalgSearch.md)
+  for pcalg.
 
 ## Recommendation
 
@@ -63,9 +65,19 @@ called, this function returns a list containing:
   for how to construct it.
 
 - `caugi` A [`caugi::caugi`](https://caugi.org/reference/caugi.html)
-  object representing the learned causal graph. This graph is a PAG
-  (Partial Ancestral Graph), but since PAGs are not yet natively
-  supported in caugi, it is currently stored with class `UNKNOWN`.
+  object representing the learned causal graph. This graph is an
+  RFCI-PAG (RFCI Partial Ancestral Graph), but since RFCI-PAGs are not
+  yet natively supported in caugi, it is currently stored with class
+  `UNKNOWN`.
+
+Please see the definition 3.2 of the paper referenced for definition of
+an RFCI-PAG, and it's differences from a standard PAG.
+
+## References
+
+Colombo, D., Maathuis, M. H., Kalisch, M., & Richardson, T. S. (2012).
+Learning high-dimensional directed acyclic graphs with latent and
+selection variables. The Annals of Statistics, 294-321.
 
 ## See also
 
@@ -80,7 +92,7 @@ Other causal discovery algorithms:
 [`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
 [`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
 [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
-[`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md),
+[`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
 [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
 [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),
 [`tpc()`](https://disco-coders.github.io/causalDisco/reference/tpc.md)
@@ -90,19 +102,9 @@ Other causal discovery algorithms:
 ``` r
 data(tpc_example)
 
-# Requires Tetrad to be installed
-if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
-  # Recommended path using disco()
-  boss_fci_tetrad <- boss_fci(
-    engine = "tetrad",
-    score = "sem_bic",
-    test = "fisher_z"
-  )
-  disco(tpc_example, boss_fci_tetrad)
-
-  # or using boss_fci_tetrad directly
-  boss_fci_tetrad(tpc_example)
-}
+# Recommended path using disco()
+rfci_pcalg <- rfci(engine = "pcalg", test = "fisher_z", alpha = 0.05)
+disco(tpc_example, rfci_pcalg)
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
 #> Graph class: UNKNOWN
@@ -129,7 +131,79 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 #> 6 oldage_x5
 #> ── Knowledge object ────────────────────────────────────────────────────────────
 
-#### With tier knowledge ####
+# or using rfci_pcalg directly
+rfci_pcalg(tpc_example)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+# With all algorithm arguments specified
+rfci_pcalg <- rfci(
+  engine = "pcalg",
+  test = "fisher_z",
+  alpha = 0.05,
+  skel.method = "original",
+  fixedGaps = NULL,
+  fixedEdges = NULL,
+  NAdelete = FALSE,
+  m.max = 10,
+  rules = c(rep(TRUE, 9), FALSE),
+  conservative = TRUE,
+  maj.rule = FALSE,
+  numCores = 1,
+  verbose = FALSE
+)
+disco(tpc_example, rfci_pcalg)
+#> 
+#> ── caugi graph ─────────────────────────────────────────────────────────────────
+#> Graph class: UNKNOWN
+#> 
+#> ── Edges ──
+#> 
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 child_x2  o-o   child_x1 
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
+#> ── Nodes ──
+#> 
+#>   name     
+#>   <chr>    
+#> 1 child_x2 
+#> 2 child_x1 
+#> 3 youth_x4 
+#> 4 youth_x3 
+#> 5 oldage_x6
+#> 6 oldage_x5
+#> ── Knowledge object ────────────────────────────────────────────────────────────
+
+#### Using tetrad engine with tier knowledge ####
+# Requires Tetrad to be installed
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   kn <- knowledge(
     tpc_example,
@@ -141,16 +215,12 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   )
 
   # Recommended path using disco()
-  boss_fci_tetrad <- boss_fci(
-    engine = "tetrad",
-    score = "sem_bic",
-    test = "fisher_z"
-  )
-  disco(tpc_example, boss_fci_tetrad, knowledge = kn)
+  rfci_tetrad <- rfci(engine = "tetrad", test = "fisher_z", alpha = 0.05)
+  disco(tpc_example, rfci_tetrad, knowledge = kn)
 
-  # or using boss_fci_tetrad directly
-  boss_fci_tetrad <- boss_fci_tetrad |> set_knowledge(kn)
-  boss_fci_tetrad(tpc_example)
+  # or using rfci_tetrad directly
+  rfci_tetrad <- rfci_tetrad |> set_knowledge(kn)
+  rfci_tetrad(tpc_example)
 }
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
@@ -180,18 +250,16 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 
 # With all algorithm arguments specified
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
-  boss_fci_tetrad <- boss_fci(
+  rfci_tetrad <- rfci(
     engine = "tetrad",
-    score = "poisson_prior",
-    test = "rank_independence",
-    depth = 3,
-    max_disc_path_length = 5,
-    use_bes = FALSE,
-    use_heuristic = FALSE,
-    complete_rule_set_used = FALSE,
-    guarantee_pag = TRUE
+    test = "fisher_z",
+    alpha = 0.05,
+    depth = 10,
+    stable_fas = FALSE,
+    max_disc_path_length = 2,
+    complete_rule_set_used = TRUE
   )
-  disco(tpc_example, boss_fci_tetrad)
+  disco(tpc_example, rfci_tetrad)
 }
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
@@ -202,7 +270,11 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 #>   from      edge  to       
 #>   <chr>     <chr> <chr>    
 #> 1 child_x2  o-o   child_x1 
-#> 2 oldage_x6 o-o   oldage_x5
+#> 2 child_x2  o->   oldage_x5
+#> 3 child_x2  o-o   youth_x4 
+#> 4 oldage_x5 -->   oldage_x6
+#> 5 youth_x3  o->   oldage_x5
+#> 6 youth_x4  -->   oldage_x6
 #> ── Nodes ──
 #> 
 #>   name     

@@ -59,7 +59,7 @@ in the respective sections below.</p>
 search object. Can be set with <code>set_data()</code>.</p></dd>
 
 
-<dt><code>score</code></dt>
+    <dt><code>score</code></dt>
 <dd><p>A function that will be used to build the score,
 when data is set. Can be set with <code>$set_score()</code>. Recognized values
 are:</p><ul><li><p><code>"sem_bic"</code> - BIC score for Gaussian observed data.
@@ -70,7 +70,7 @@ See <a href="https://rdrr.io/pkg/pcalg/man/GaussL0penIntScore-class.html" class=
 </ul></dd>
 
 
-<dt><code>test</code></dt>
+    <dt><code>test</code></dt>
 <dd><p>A function that will be used to test independence.
 Can be set with <code>$set_test()</code>. Recognized values are:</p><ul><li><p><code>"fisher_z"</code> - Fisher Z test for Gaussian data.
 See <code><a href="https://rdrr.io/pkg/pcalg/man/condIndFisherZ.html" class="external-link">pcalg::gaussCItest()</a></code>.</p></li>
@@ -95,44 +95,45 @@ See <code><a href="https://rdrr.io/pkg/micd/man/mixMItest.html" class="external-
 </ul></dd>
 
 
-<dt><code>alg</code></dt>
+    <dt><code>alg</code></dt>
 <dd><p>A function that will be used to run the search algorithm.
 Can be set with <code>$set_alg()</code>. Recognized values are:</p><ul><li><p><code>"fci"</code> - FCI algorithm. See <code><a href="fci.html">fci()</a></code> and the underlying <code><a href="https://rdrr.io/pkg/pcalg/man/fci.html" class="external-link">pcalg::fci()</a></code>.</p></li>
 <li><p><code>"ges"</code> - GES algorithm. See <code><a href="ges.html">ges()</a></code> and the underlying <code><a href="https://rdrr.io/pkg/pcalg/man/ges.html" class="external-link">pcalg::ges()</a></code>.</p></li>
 <li><p><code>"pc"</code> - PC algorithm. See <code><a href="pc.html">pc()</a></code> and the underlying <code><a href="https://rdrr.io/pkg/pcalg/man/pc.html" class="external-link">pcalg::pc()</a></code>.</p></li>
+<li><p><code>"rfci"</code> - RFCI algorithm. See <code><a href="rfci.html">rfci()</a></code> and the underlying <code><a href="https://rdrr.io/pkg/pcalg/man/rfci.html" class="external-link">pcalg::rfci()</a></code>.</p></li>
 </ul></dd>
 
 
-<dt><code>params</code></dt>
+    <dt><code>params</code></dt>
 <dd><p>A list of parameters for the test and algorithm.
 Can be set with <code>$set_params()</code>.
 The parameters are passed to the test and algorithm functions.</p></dd>
 
 
-<dt><code>suff_stat</code></dt>
+    <dt><code>suff_stat</code></dt>
 <dd><p>Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.</p></dd>
 
 
-<dt><code>continuous</code></dt>
+    <dt><code>continuous</code></dt>
 <dd><p>Logical; whether the sufficient statistic is for a
 continuous test. If both continuous and discrete are <code>TRUE</code>, the
 sufficient statistic is build for a mixed test.</p></dd>
 
 
-<dt><code>discrete</code></dt>
+    <dt><code>discrete</code></dt>
 <dd><p>Logical; whether the sufficient statistic is for a
 discrete test. If both continuous and discrete are <code>TRUE</code>, the sufficient
 statistic is build for a mixed test.</p></dd>
 
 
-<dt><code>knowledge</code></dt>
+    <dt><code>knowledge</code></dt>
 <dd><p>A list of fixed constraints for the search algorithm. Note, that
 pcalg only works with symmetric knowledge. Thus, the only allowed types of knowledge
 is forbidden edges in both directions.</p></dd>
 
 
-<dt><code>adapt_df</code></dt>
+    <dt><code>adapt_df</code></dt>
 <dd><p>Logical; whether to adapt the degrees of freedom
 for discrete tests.</p></dd>
 
@@ -144,8 +145,7 @@ for discrete tests.</p></dd>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-PcalgSearch-new"><code>PcalgSearch$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-PcalgSearch-initialize"><code>PcalgSearch$new()</code></a></p></li>
 <li><p><a href="#method-PcalgSearch-set_params"><code>PcalgSearch$set_params()</code></a></p></li>
 <li><p><a href="#method-PcalgSearch-set_data"><code>PcalgSearch$set_data()</code></a></p></li>
 <li><p><a href="#method-PcalgSearch-set_suff_stat"><code>PcalgSearch$set_suff_stat()</code></a></p></li>
@@ -155,22 +155,21 @@ for discrete tests.</p></dd>
 <li><p><a href="#method-PcalgSearch-set_knowledge"><code>PcalgSearch$set_knowledge()</code></a></p></li>
 <li><p><a href="#method-PcalgSearch-run_search"><code>PcalgSearch$run_search()</code></a></p></li>
 <li><p><a href="#method-PcalgSearch-clone"><code>PcalgSearch$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-PcalgSearch-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-PcalgSearch-initialize"></a><div class="section">
+<h3 id="pcalgsearch-new-"><code>PcalgSearch$new()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-new-"></a></h3>
 <p>Constructor for the <code>PcalgSearch</code> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/PcalgSearch.html">PcalgSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_params"></a><div class="section">
-<h3 id="method-set-params-">Method <code>set_params()</code><a class="anchor" aria-label="anchor" href="#method-set-params-"></a></h3>
+<p></p><hr><a id="method-PcalgSearch-set_params"></a><div class="section">
+<h3 id="pcalgsearch-set-params-"><code>PcalgSearch$set_params()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-params-"></a></h3>
 <p>Sets the parameters for the test and algorithm.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_params</span><span class="op">(</span><span class="va">params</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>params</code></dt>
 <dd><p>A list of parameters to set.</p></dd>
@@ -179,20 +178,19 @@ for discrete tests.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_data"></a><div class="section">
-<h3 id="method-set-data-">Method <code>set_data()</code><a class="anchor" aria-label="anchor" href="#method-set-data-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-set_data"></a><div class="section">
+<h3 id="pcalgsearch-set-data-"><code>PcalgSearch$set_data()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-data-"></a></h3>
 <p>Sets the data for the search algorithm.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">data</span>, set_suff_stat <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>A <code>data.frame</code> or a <code>matrix</code> containing the data.</p></dd>
 
-
-<dt><code>set_suff_stat</code></dt>
+      <dt><code>set_suff_stat</code></dt>
 <dd><p>Logical; whether to set the sufficient statistic.
 for the data.</p></dd>
 
@@ -200,22 +198,23 @@ for the data.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_suff_stat"></a><div class="section">
-<h3 id="method-set-suff-stat-">Method <code>set_suff_stat()</code><a class="anchor" aria-label="anchor" href="#method-set-suff-stat-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-set_suff_stat"></a><div class="section">
+<h3 id="pcalgsearch-set-suff-stat-"><code>PcalgSearch$set_suff_stat()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-suff-stat-"></a></h3>
 <p>Sets the sufficient statistic for the data.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_suff_stat</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_test"></a><div class="section">
-<h3 id="method-set-test-">Method <code>set_test()</code><a class="anchor" aria-label="anchor" href="#method-set-test-"></a></h3>
+<p></p><hr><a id="method-PcalgSearch-set_test"></a><div class="section">
+<h3 id="pcalgsearch-set-test-"><code>PcalgSearch$set_test()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-test-"></a></h3>
 <p>Sets the test for the search algorithm.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="va">method</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>, suff_stat_fun <span class="op">=</span> <span class="cn">NULL</span>, args <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
@@ -231,17 +230,14 @@ signature <code>function(x, y, conditioning_set, suff_stat, args)</code>, and th
 test function.</p>
 <p>EXPERIMENTAL: user-defined tests syntax are subject to change.</p></dd>
 
-
-<dt><code>alpha</code></dt>
+      <dt><code>alpha</code></dt>
 <dd><p>Significance level for the test.</p></dd>
 
-
-<dt><code>suff_stat_fun</code></dt>
+      <dt><code>suff_stat_fun</code></dt>
 <dd><p>A function that takes the data as input and returns a sufficient statistic for the test.
 Only needed if <code>method</code> is a user-defined function.</p></dd>
 
-
-<dt><code>args</code></dt>
+      <dt><code>args</code></dt>
 <dd><p>A list of additional arguments to pass to the test.
 Only needed if <code>method</code> is a user-defined function with an <code>args</code> parameter in its signature.</p></dd>
 
@@ -249,34 +245,33 @@ Only needed if <code>method</code> is a user-defined function with an <code>args
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_score"></a><div class="section">
-<h3 id="method-set-score-">Method <code>set_score()</code><a class="anchor" aria-label="anchor" href="#method-set-score-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-set_score"></a><div class="section">
+<h3 id="pcalgsearch-set-score-"><code>PcalgSearch$set_score()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-score-"></a></h3>
 <p>Sets the score for the search algorithm.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_score</span><span class="op">(</span><span class="va">method</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>A string specifying the type of score to use.</p></dd>
 
-
-<dt><code>params</code></dt>
+      <dt><code>params</code></dt>
 <dd><p>A list of parameters to pass to the score function.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_alg"></a><div class="section">
-<h3 id="method-set-alg-">Method <code>set_alg()</code><a class="anchor" aria-label="anchor" href="#method-set-alg-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-set_alg"></a><div class="section">
+<h3 id="pcalgsearch-set-alg-"><code>PcalgSearch$set_alg()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-alg-"></a></h3>
 <p>Sets the algorithm for the search.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="va">method</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>A string specifying the type of algorithm to use.</p></dd>
@@ -285,57 +280,55 @@ Only needed if <code>method</code> is a user-defined function with an <code>args
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-set_knowledge"></a><div class="section">
-<h3 id="method-set-knowledge-">Method <code><a href="set_knowledge.html">set_knowledge()</a></code><a class="anchor" aria-label="anchor" href="#method-set-knowledge-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-set_knowledge"></a><div class="section">
+<h3 id="pcalgsearch-set-knowledge-"><code>PcalgSearch$set_knowledge()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-set-knowledge-"></a></h3>
 <p>Sets the knowledge for the search algorithm. Due to the nature of pcalg,
 we cannot set knowledge before we run it on data. So we set the function
 that will be used to build the fixed constraints, but it can first be
 done when data is provided.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">knowledge_obj</span>, directed_as_undirected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>knowledge_obj</code></dt>
 <dd><p>A <code>Knowledge</code> object that contains the fixed constraints.</p></dd>
 
-
-<dt><code>directed_as_undirected</code></dt>
+      <dt><code>directed_as_undirected</code></dt>
 <dd><p>Logical; whether to treat directed edges as undirected.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-run_search"></a><div class="section">
-<h3 id="method-run-search-">Method <code>run_search()</code><a class="anchor" aria-label="anchor" href="#method-run-search-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-run_search"></a><div class="section">
+<h3 id="pcalgsearch-run-search-"><code>PcalgSearch$run_search()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-run-search-"></a></h3>
 <p>Runs the search algorithm on the data.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, set_suff_stat <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>A <code>data.frame</code> or a <code>matrix</code> containing the data.</p></dd>
 
-
-<dt><code>set_suff_stat</code></dt>
+      <dt><code>set_suff_stat</code></dt>
 <dd><p>Logical; whether to set the sufficient statistic</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PcalgSearch-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-PcalgSearch-clone"></a><div class="section">
+<h3 id="pcalgsearch-clone-"><code>PcalgSearch$clone()</code><a class="anchor" aria-label="anchor" href="#pcalgsearch-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PcalgSearch</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -345,6 +338,7 @@ done when data is provided.</p><div class="section">
 </div>
 
 </div>
+
 
     </div>
 

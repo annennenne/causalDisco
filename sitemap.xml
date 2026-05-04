@@ -42,6 +42,7 @@
 <url><loc>https://disco-coders.github.io/causalDisco/reference/disco_algs_return_doc_dag.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/disco_algs_return_doc_pag.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/disco_algs_return_doc_pdag.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/reference/disco_algs_return_doc_rfci_pag.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/disco_note.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/distribute_engine_args.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/evaluate.html</loc></url>
@@ -91,6 +92,7 @@
 <url><loc>https://disco-coders.github.io/causalDisco/reference/reposition_tier.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/require_edge.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/reset_tetrad_alg_registry.html</loc></url>
+<url><loc>https://disco-coders.github.io/causalDisco/reference/rfci.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/seq_tiers.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/set_knowledge.html</loc></url>
 <url><loc>https://disco-coders.github.io/causalDisco/reference/sim_dag.html</loc></url>

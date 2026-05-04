@@ -84,6 +84,11 @@ pcalg documentation, which we link to in the respective sections below.
     and the underlying
     [`pcalg::pc()`](https://rdrr.io/pkg/pcalg/man/pc.html).
 
+  - `"rfci"` - RFCI algorithm. See
+    [`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md)
+    and the underlying
+    [`pcalg::rfci()`](https://rdrr.io/pkg/pcalg/man/rfci.html).
+
 - `params`:
 
   A list of parameters for the test and algorithm. Can be set with
@@ -121,7 +126,7 @@ pcalg documentation, which we link to in the respective sections below.
 
 ### Public methods
 
-- [`PcalgSearch$new()`](#method-PcalgSearch-new)
+- [`PcalgSearch$new()`](#method-PcalgSearch-initialize)
 
 - [`PcalgSearch$set_params()`](#method-PcalgSearch-set_params)
 
@@ -143,7 +148,7 @@ pcalg documentation, which we link to in the respective sections below.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `PcalgSearch$new()`
 
 Constructor for the `PcalgSearch` class.
 
@@ -153,7 +158,7 @@ Constructor for the `PcalgSearch` class.
 
 ------------------------------------------------------------------------
 
-### Method `set_params()`
+### `PcalgSearch$set_params()`
 
 Sets the parameters for the test and algorithm.
 
@@ -169,7 +174,7 @@ Sets the parameters for the test and algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_data()`
+### `PcalgSearch$set_data()`
 
 Sets the data for the search algorithm.
 
@@ -189,7 +194,7 @@ Sets the data for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_suff_stat()`
+### `PcalgSearch$set_suff_stat()`
 
 Sets the sufficient statistic for the data.
 
@@ -199,7 +204,7 @@ Sets the sufficient statistic for the data.
 
 ------------------------------------------------------------------------
 
-### Method `set_test()`
+### `PcalgSearch$set_test()`
 
 Sets the test for the search algorithm.
 
@@ -249,7 +254,7 @@ Sets the test for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_score()`
+### `PcalgSearch$set_score()`
 
 Sets the score for the search algorithm.
 
@@ -269,7 +274,7 @@ Sets the score for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_alg()`
+### `PcalgSearch$set_alg()`
 
 Sets the algorithm for the search.
 
@@ -285,7 +290,7 @@ Sets the algorithm for the search.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+### `PcalgSearch$set_knowledge()`
 
 Sets the knowledge for the search algorithm. Due to the nature of pcalg,
 we cannot set knowledge before we run it on data. So we set the function
@@ -308,7 +313,7 @@ done when data is provided.
 
 ------------------------------------------------------------------------
 
-### Method `run_search()`
+### `PcalgSearch$run_search()`
 
 Runs the search algorithm on the data.
 
@@ -328,7 +333,7 @@ Runs the search algorithm on the data.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `PcalgSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

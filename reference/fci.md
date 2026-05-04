@@ -88,6 +88,7 @@ Other causal discovery algorithms:
 [`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
 [`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
 [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md),
 [`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
 [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
 [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),

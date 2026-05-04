@@ -84,6 +84,7 @@ Other causal discovery algorithms:
 [`gs()`](https://disco-coders.github.io/causalDisco/reference/gs.md),
 [`iamb-family`](https://disco-coders.github.io/causalDisco/reference/iamb-family.md),
 [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md),
+[`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md),
 [`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md),
 [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md),
 [`tges()`](https://disco-coders.github.io/causalDisco/reference/tges.md),
@@ -203,10 +204,9 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 #> 
 #> ── Edges ──
 #> 
-#>   from     edge  to       
-#>   <chr>    <chr> <chr>    
-#> 1 child_x2 o-o   youth_x4 
-#> 2 youth_x3 o-o   oldage_x5
+#>   from      edge  to       
+#>   <chr>     <chr> <chr>    
+#> 1 oldage_x6 o-o   oldage_x5
 #> ── Nodes ──
 #> 
 #>   name     

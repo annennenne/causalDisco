@@ -62,17 +62,17 @@ resulting graph or statistics.</p>
 used by <span class="pkg">Tetrad</span>.</p></dd>
 
 
-<dt><code>rdata</code></dt>
+    <dt><code>rdata</code></dt>
 <dd><p>Original <strong>R</strong> <code>data.frame</code> supplied by the user.</p></dd>
 
 
-<dt><code>score</code></dt>
+    <dt><code>score</code></dt>
 <dd><p>Java object holding the scoring function selected with
 <code>set_score()</code>. Supply one of the method strings for
 <code>set_score()</code>. Recognised values are:</p>
 <p><strong>Continuous - Gaussian</strong></p><ul><li><p><code>"ebic"</code> - Extended BIC score.</p></li>
 <li><p><code>"gic"</code> - Generalized Information Criterion (GIC) score.</p></li>
-<li><p><code>"poisson_prior"</code> - Poisson prior score.'</p></li>
+<li><p><code>"poisson_prior"</code> - Poisson prior score.</p></li>
 <li><p><code>"rank_bic"</code> - Rank-based BIC score.</p></li>
 <li><p><code>"sem_bic"</code> - SEM BIC score.</p></li>
 <li><p><code>"zhang_shen_bound"</code> - Zhang and Shen bound score.</p></li>
@@ -88,7 +88,7 @@ This is a generalization of the Degenerate Gaussian score.</p></li>
 </ul></dd>
 
 
-<dt><code>test</code></dt>
+    <dt><code>test</code></dt>
 <dd><p>Java object holding the independence test selected with
 <code>set_test()</code>. Supply one of the method strings for
 <code>set_test()</code>. Recognised values are:</p>
@@ -110,13 +110,13 @@ probabilistic conditional independence judgments.</p></li>
 </ul></dd>
 
 
-<dt><code>alg</code></dt>
+    <dt><code>alg</code></dt>
 <dd><p>Java object representing the search algorithm.
 Supply one of the method strings for <code>set_alg()</code>.
 Recognised values are:</p>
 <p><strong>Constraint-based</strong></p><ul><li><p><code>"fci"</code> - FCI algorithm. See <code><a href="fci.html">fci()</a></code>.</p></li>
 <li><p><code>"pc"</code> - Peter-Clark (PC) algorithm. See <code><a href="pc.html">pc()</a></code>.</p></li>
-<li><p><code>"rfci"</code> - Restricted FCI algorithm. See <code><a href="https://rdrr.io/pkg/pcalg/man/rfci.html" class="external-link">pcalg::rfci()</a></code>.</p></li>
+<li><p><code>"rfci"</code> - Restricted FCI algorithm. See <code><a href="rfci.html">rfci()</a></code>.</p></li>
 </ul><p><strong>Hybrid</strong></p><ul><li><p><code>"boss_fci"</code> - BOSS-FCI algorithm. See <code><a href="boss_fci.html">boss_fci()</a></code>.</p></li>
 <li><p><code>"gfci"</code> - GFCI algorithm. See <code><a href="gfci.html">gfci()</a></code>.</p></li>
 <li><p><code>"grasp_fci"</code> - GRaSP-FCI algorithm. See <code><a href="grasp_fci.html">grasp_fci()</a></code>.</p></li>
@@ -127,34 +127,34 @@ Recognised values are:</p>
 </ul></dd>
 
 
-<dt><code>mc_test</code></dt>
+    <dt><code>mc_test</code></dt>
 <dd><p>Java independence-test object used by the Markov checker.</p></dd>
 
 
-<dt><code>java</code></dt>
+    <dt><code>java</code></dt>
 <dd><p>Java object returned by the search (typically a graph).</p></dd>
 
 
-<dt><code>result</code></dt>
+    <dt><code>result</code></dt>
 <dd><p>Convenience alias for <code>java</code>; may store additional
 metadata depending on the search type.</p></dd>
 
 
-<dt><code>knowledge</code></dt>
+    <dt><code>knowledge</code></dt>
 <dd><p>Java <code>Knowledge</code> object carrying background
 constraints (required/forbidden edges).</p></dd>
 
 
-<dt><code>params</code></dt>
+    <dt><code>params</code></dt>
 <dd><p>Java <code>Parameters</code> object holding algorithm settings.</p></dd>
 
 
-<dt><code>bootstrap_graphs</code></dt>
+    <dt><code>bootstrap_graphs</code></dt>
 <dd><p>Java <code>List</code> of graphs produced by bootstrap
 resampling, if that feature was requested.</p></dd>
 
 
-<dt><code>mc_ind_results</code></dt>
+    <dt><code>mc_ind_results</code></dt>
 <dd><p>Java <code>List</code> with Markov-checker test results.</p></dd>
 
 
@@ -165,8 +165,7 @@ resampling, if that feature was requested.</p></dd>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-TetradSearch-new"><code>TetradSearch$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-TetradSearch-initialize"><code>TetradSearch$new()</code></a></p></li>
 <li><p><a href="#method-TetradSearch-set_test"><code>TetradSearch$set_test()</code></a></p></li>
 <li><p><a href="#method-TetradSearch-set_score"><code>TetradSearch$set_score()</code></a></p></li>
 <li><p><a href="#method-TetradSearch-set_alg"><code>TetradSearch$set_alg()</code></a></p></li>
@@ -185,23 +184,22 @@ resampling, if that feature was requested.</p></dd>
 <li><p><a href="#method-TetradSearch-get_dot"><code>TetradSearch$get_dot()</code></a></p></li>
 <li><p><a href="#method-TetradSearch-get_amat"><code>TetradSearch$get_amat()</code></a></p></li>
 <li><p><a href="#method-TetradSearch-clone"><code>TetradSearch$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-TetradSearch-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-TetradSearch-initialize"></a><div class="section">
+<h3 id="tetradsearch-new-"><code>TetradSearch$new()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-new-"></a></h3>
 <p>Initializes the <code>TetradSearch</code> object, creating new Java objects for
 <code>knowledge</code> and <code>params</code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/TetradSearch.html">TetradSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_test"></a><div class="section">
-<h3 id="method-set-test-">Method <code>set_test()</code><a class="anchor" aria-label="anchor" href="#method-set-test-"></a></h3>
+<p></p><hr><a id="method-TetradSearch-set_test"></a><div class="section">
+<h3 id="tetradsearch-set-test-"><code>TetradSearch$set_test()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-test-"></a></h3>
 <p>Sets the independence test to use in Tetrad.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span><span class="va">method</span>, <span class="va">...</span>, use_for_mc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>(character) Name of the test method (e.g., "chi_square", "fisher_z").</p><ul><li><p><code>"basis_function_blocks"</code> - Basis-function blocks test</p></li>
@@ -220,8 +218,7 @@ probabilistic conditional independence judgments.</p></li>
 <li><p><code>"sem_bic"</code> - SEM BIC test</p></li>
 </ul></dd>
 
-
-<dt><code>...</code></dt>
+      <dt><code>...</code></dt>
 <dd><p>Additional arguments passed to the private test-setting methods.
 For the following tests, the following parameters are available:</p><ul><li><p><code>"basis_function_blocks"</code> - Basis-function blocks test.</p><ul><li><p><code>alpha = 0.05</code> - Significance level for the
 independence test,</p></li>
@@ -359,26 +356,24 @@ lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 </ul></li>
 </ul></dd>
 
-
-<dt><code>use_for_mc</code></dt>
+      <dt><code>use_for_mc</code></dt>
 <dd><p>(logical) If TRUE, sets this test for the Markov checker <code>mc_test</code>.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>Invisibly returns <code>self</code>, for chaining.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_score"></a><div class="section">
-<h3 id="method-set-score-">Method <code>set_score()</code><a class="anchor" aria-label="anchor" href="#method-set-score-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_score"></a><div class="section">
+<h3 id="tetradsearch-set-score-"><code>TetradSearch$set_score()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-score-"></a></h3>
 <p>Sets the scoring function to use in Tetrad.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_score</span><span class="op">(</span><span class="va">method</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>(character) Name of the score (e.g., "sem_bic", "ebic", "bdeu").</p><ul><li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p></li>
@@ -398,8 +393,7 @@ This is a generalization of the Degenerate Gaussian score.</p></li>
 <li><p><code>"zhang_shen_bound"</code> - Zhang and Shen bound score.</p></li>
 </ul></dd>
 
-
-<dt><code>...</code></dt>
+      <dt><code>...</code></dt>
 <dd><p>Additional arguments passed to the private score-setting methods.
 For the following scores, the following parameters are available:</p><ul><li><p><code>"bdeu"</code> - Bayes Dirichlet Equivalent score with uniform priors.</p><ul><li><p><code>sample_prior = 10</code> - This sets the prior equivalent
 sample size. This number is added to the sample size for each
@@ -519,27 +513,25 @@ lambda to the diagonal, &lt; 0 Pseudoinverse.</p></li>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>Invisibly returns <code>self</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_alg"></a><div class="section">
-<h3 id="method-set-alg-">Method <code>set_alg()</code><a class="anchor" aria-label="anchor" href="#method-set-alg-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_alg"></a><div class="section">
+<h3 id="tetradsearch-set-alg-"><code>TetradSearch$set_alg()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-alg-"></a></h3>
 <p>Sets the causal discovery algorithm to use in Tetrad.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="va">method</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>(character) Name of the algorithm (e.g., "fges", "pc",
 "fci", etc.).</p></dd>
 
-
-<dt><code>...</code></dt>
+      <dt><code>...</code></dt>
 <dd><p>Additional parameters passed to the private algorithm-setting
 methods.
 For the following algorithms, the following parameters are available:</p><ul><li><p><code>"boss"</code> - BOSS algorithm.</p><ul><li><p><code>num_starts = 1</code> - The number of times the algorithm
@@ -681,8 +673,6 @@ discriminating path,</p></li>
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
 J. Zhang, should be used guaranteeing additional tail completeness.</p></li>
-<li><p><code>guarantee_pag = FALSE</code> - Ensure the output is a legal
-PAG (where feasible).</p></li>
 </ul></li>
 <li><p><code>"sp_fci"</code> - Sparsest Permutation using FCI</p><ul><li><p><code>depth = -1</code> - Maximum size of conditioning set,</p></li>
 <li><p><code>max_disc_path_length = -1</code> - Maximum length for any
@@ -699,20 +689,19 @@ PAG (where feasible),</p></li>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>Invisibly returns <code>self</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_knowledge"></a><div class="section">
-<h3 id="method-set-knowledge-">Method <code><a href="set_knowledge.html">set_knowledge()</a></code><a class="anchor" aria-label="anchor" href="#method-set-knowledge-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_knowledge"></a><div class="section">
+<h3 id="tetradsearch-set-knowledge-"><code>TetradSearch$set_knowledge()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-knowledge-"></a></h3>
 <p>Sets the background <code>Knowledge</code> object.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">knowledge_obj</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>knowledge_obj</code></dt>
 <dd><p>An object containing <span class="pkg">Tetrad</span> knowledge.</p></dd>
@@ -721,14 +710,14 @@ PAG (where feasible),</p></li>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_params"></a><div class="section">
-<h3 id="method-set-params-">Method <code>set_params()</code><a class="anchor" aria-label="anchor" href="#method-set-params-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_params"></a><div class="section">
+<h3 id="tetradsearch-set-params-"><code>TetradSearch$set_params()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-params-"></a></h3>
 <p>Sets parameters for the Tetrad search.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_params</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Named arguments for the parameters to set.</p></dd>
@@ -737,8 +726,10 @@ PAG (where feasible),</p></li>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_parameters_for_function"></a><div class="section">
-<h3 id="method-get-parameters-for-function-">Method <code>get_parameters_for_function()</code><a class="anchor" aria-label="anchor" href="#method-get-parameters-for-function-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_parameters_for_function"></a><div class="section">
+<h3 id="tetradsearch-get-parameters-for-function-"><code>TetradSearch$get_parameters_for_function()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-parameters-for-function-"></a></h3>
 <p>Retrieves the argument names of a matching private function.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_parameters_for_function</span><span class="op">(</span></span>
@@ -747,35 +738,31 @@ PAG (where feasible),</p></li>
 <span>  test <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alg <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>fn_pattern</code></dt>
 <dd><p>(character) A pattern that should match a private method name.</p></dd>
 
-
-<dt><code>score</code></dt>
+      <dt><code>score</code></dt>
 <dd><p>If TRUE, retrieves parameters for a scoring function.</p></dd>
 
-
-<dt><code>test</code></dt>
+      <dt><code>test</code></dt>
 <dd><p>If TRUE, retrieves parameters for a test function.</p></dd>
 
-
-<dt><code>alg</code></dt>
+      <dt><code>alg</code></dt>
 <dd><p>If TRUE, retrieves parameters for an algorithm.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>(character) The names of the parameters.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-run_search"></a><div class="section">
-<h3 id="method-run-search-">Method <code>run_search()</code><a class="anchor" aria-label="anchor" href="#method-run-search-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-run_search"></a><div class="section">
+<h3 id="tetradsearch-run-search-"><code>TetradSearch$run_search()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-run-search-"></a></h3>
 <p>Runs the chosen Tetrad algorithm on the data.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span></span>
@@ -783,35 +770,32 @@ PAG (where feasible),</p></li>
 <span>  bootstrap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  int_cols_as_cont <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>(optional) If provided, overrides the previously set data.</p></dd>
 
-
-<dt><code>bootstrap</code></dt>
+      <dt><code>bootstrap</code></dt>
 <dd><p>(logical) If TRUE, bootstrapped graphs will be
 generated.</p></dd>
 
-
-<dt><code>int_cols_as_cont</code></dt>
+      <dt><code>int_cols_as_cont</code></dt>
 <dd><p>(logical) If <code>TRUE</code>, integer columns are treated
 as continuous, since <span class="pkg">Tetrad</span> does not support ordinal data, but only
 either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>A <code>Disco</code> object (a list with a <code>caugi</code> and a <code>Knowledge</code> object).
 Also populates <code>self$java</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_bootstrapping"></a><div class="section">
-<h3 id="method-set-bootstrapping-">Method <code>set_bootstrapping()</code><a class="anchor" aria-label="anchor" href="#method-set-bootstrapping-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_bootstrapping"></a><div class="section">
+<h3 id="tetradsearch-set-bootstrapping-"><code>TetradSearch$set_bootstrapping()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-bootstrapping-"></a></h3>
 <p>Configures bootstrapping parameters for the Tetrad search.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_bootstrapping</span><span class="op">(</span></span>
@@ -822,51 +806,43 @@ Also populates <code>self$java</code>.</p>
 <span>  resampling_ensemble <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>number_resampling</code></dt>
 <dd><p>(integer) Number of bootstrap samples.</p></dd>
 
-
-<dt><code>percent_resample_size</code></dt>
+      <dt><code>percent_resample_size</code></dt>
 <dd><p>(numeric) Percentage of sample size for each bootstrap.</p></dd>
 
-
-<dt><code>add_original</code></dt>
+      <dt><code>add_original</code></dt>
 <dd><p>(logical) If TRUE, add the original dataset to the bootstrap set.</p></dd>
 
-
-<dt><code>with_replacement</code></dt>
+      <dt><code>with_replacement</code></dt>
 <dd><p>(logical) If TRUE, sampling is done with replacement.</p></dd>
 
-
-<dt><code>resampling_ensemble</code></dt>
+      <dt><code>resampling_ensemble</code></dt>
 <dd><p>(integer) How the resamples are used or aggregated.</p></dd>
 
-
-<dt><code>seed</code></dt>
+      <dt><code>seed</code></dt>
 <dd><p>(integer) Random seed, or -1 for none.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_data"></a><div class="section">
-<h3 id="method-set-data-">Method <code>set_data()</code><a class="anchor" aria-label="anchor" href="#method-set-data-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_data"></a><div class="section">
+<h3 id="tetradsearch-set-data-"><code>TetradSearch$set_data()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-data-"></a></h3>
 <p>Sets or overrides the data used by Tetrad.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">data</span>, int_cols_as_cont <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>(data.frame) The new data to load.</p></dd>
 
-
-<dt><code>int_cols_as_cont</code></dt>
+      <dt><code>int_cols_as_cont</code></dt>
 <dd><p>(logical) If <code>TRUE</code>, integer columns are treated
 as continuous, since Tetrad does not support ordinal data, but only
 either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
@@ -875,14 +851,14 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_verbose"></a><div class="section">
-<h3 id="method-set-verbose-">Method <code>set_verbose()</code><a class="anchor" aria-label="anchor" href="#method-set-verbose-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_verbose"></a><div class="section">
+<h3 id="tetradsearch-set-verbose-"><code>TetradSearch$set_verbose()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-verbose-"></a></h3>
 <p>Toggles the verbosity in Tetrad.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_verbose</span><span class="op">(</span><span class="va">verbose</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>verbose</code></dt>
 <dd><p>(logical) TRUE to enable verbose logging, FALSE otherwise.</p></dd>
@@ -891,14 +867,14 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-set_time_lag"></a><div class="section">
-<h3 id="method-set-time-lag-">Method <code>set_time_lag()</code><a class="anchor" aria-label="anchor" href="#method-set-time-lag-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-set_time_lag"></a><div class="section">
+<h3 id="tetradsearch-set-time-lag-"><code>TetradSearch$set_time_lag()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-set-time-lag-"></a></h3>
 <p>Sets an integer time lag for time-series algorithms.</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">set_time_lag</span><span class="op">(</span>time_lag <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>time_lag</code></dt>
 <dd><p>(integer) The time lag to set.</p></dd>
@@ -907,110 +883,107 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_data"></a><div class="section">
-<h3 id="method-get-data-">Method <code>get_data()</code><a class="anchor" aria-label="anchor" href="#method-get-data-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_data"></a><div class="section">
+<h3 id="tetradsearch-get-data-"><code>TetradSearch$get_data()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-data-"></a></h3>
 <p>Retrieves the current Java data object.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>(Java object) Tetrad dataset.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_knowledge"></a><div class="section">
-<h3 id="method-get-knowledge-">Method <code>get_knowledge()</code><a class="anchor" aria-label="anchor" href="#method-get-knowledge-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_knowledge"></a><div class="section">
+<h3 id="tetradsearch-get-knowledge-"><code>TetradSearch$get_knowledge()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-knowledge-"></a></h3>
 <p>Returns the background <code>Knowledge</code> object.</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_knowledge</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>(Java object) Tetrad Knowledge.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_java"></a><div class="section">
-<h3 id="method-get-java-">Method <code>get_java()</code><a class="anchor" aria-label="anchor" href="#method-get-java-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_java"></a><div class="section">
+<h3 id="tetradsearch-get-java-"><code>TetradSearch$get_java()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-java-"></a></h3>
 <p>Gets the main Java result object (usually a graph) from the last search.</p><div class="section">
 <h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_java</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>(Java object) The Tetrad result graph or model.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_string"></a><div class="section">
-<h3 id="method-get-string-">Method <code>get_string()</code><a class="anchor" aria-label="anchor" href="#method-get-string-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_string"></a><div class="section">
+<h3 id="tetradsearch-get-string-"><code>TetradSearch$get_string()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-string-"></a></h3>
 <p>Returns the string representation of a given Java object or <code>self$java</code>.</p><div class="section">
 <h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_string</span><span class="op">(</span>java_obj <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>java_obj</code></dt>
 <dd><p>(Java object, optional) If NULL, uses <code>self$java</code>.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p>(character) The <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> of that Java object.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_dot"></a><div class="section">
-<h3 id="method-get-dot-">Method <code>get_dot()</code><a class="anchor" aria-label="anchor" href="#method-get-dot-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_dot"></a><div class="section">
+<h3 id="tetradsearch-get-dot-"><code>TetradSearch$get_dot()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-dot-"></a></h3>
 <p>Produces a DOT (Graphviz) representation of the graph.</p><div class="section">
 <h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_dot</span><span class="op">(</span>java_obj <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>java_obj</code></dt>
 <dd><p>(Java object, optional) If NULL, uses <code>self$java</code>.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>(character) The DOT-format string.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-get_amat"></a><div class="section">
-<h3 id="method-get-amat-">Method <code>get_amat()</code><a class="anchor" aria-label="anchor" href="#method-get-amat-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-get_amat"></a><div class="section">
+<h3 id="tetradsearch-get-amat-"><code>TetradSearch$get_amat()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-get-amat-"></a></h3>
 <p>Produces an amat representation of the graph.</p><div class="section">
 <h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">get_amat</span><span class="op">(</span>java_obj <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>java_obj</code></dt>
 <dd><p>(Java object, optional) If NULL, uses <code>self$java</code>.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
 <p>(character) The adjacency matrix.</p>
 </div>
 
-</div><p></p><hr><a id="method-TetradSearch-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TetradSearch-clone"></a><div class="section">
+<h3 id="tetradsearch-clone-"><code>TetradSearch$clone()</code><a class="anchor" aria-label="anchor" href="#tetradsearch-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TetradSearch</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -1020,6 +993,7 @@ either continuous or nominal data. Default is <code>TRUE.</code></p></dd>
 </div>
 
 </div>
+
 
     </div>
 

@@ -104,7 +104,7 @@ algorithm.
 
 ### Public methods
 
-- [`CausalDiscoSearch$new()`](#method-CausalDiscoSearch-new)
+- [`CausalDiscoSearch$new()`](#method-CausalDiscoSearch-initialize)
 
 - [`CausalDiscoSearch$set_params()`](#method-CausalDiscoSearch-set_params)
 
@@ -126,7 +126,7 @@ algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `CausalDiscoSearch$new()`
 
 Constructor for the `CausalDiscoSearch` class.
 
@@ -136,7 +136,7 @@ Constructor for the `CausalDiscoSearch` class.
 
 ------------------------------------------------------------------------
 
-### Method `set_params()`
+### `CausalDiscoSearch$set_params()`
 
 Sets the parameters for the test and algorithm.
 
@@ -152,7 +152,7 @@ Sets the parameters for the test and algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_data()`
+### `CausalDiscoSearch$set_data()`
 
 Sets the data for the search algorithm.
 
@@ -172,7 +172,7 @@ Sets the data for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_suff_stat()`
+### `CausalDiscoSearch$set_suff_stat()`
 
 Sets the sufficient statistic for the data.
 
@@ -182,7 +182,7 @@ Sets the sufficient statistic for the data.
 
 ------------------------------------------------------------------------
 
-### Method `set_test()`
+### `CausalDiscoSearch$set_test()`
 
 Sets the test for the search algorithm.
 
@@ -237,7 +237,7 @@ Sets the test for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_score()`
+### `CausalDiscoSearch$set_score()`
 
 Sets the score for the search algorithm.
 
@@ -257,7 +257,7 @@ Sets the score for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_alg()`
+### `CausalDiscoSearch$set_alg()`
 
 Sets the algorithm for the search.
 
@@ -273,7 +273,7 @@ Sets the algorithm for the search.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+### `CausalDiscoSearch$set_knowledge()`
 
 Sets the background knowledge for the search with a `Knowledge` object.
 
@@ -300,7 +300,7 @@ Sets the background knowledge for the search with a `Knowledge` object.
 
 ------------------------------------------------------------------------
 
-### Method `run_search()`
+### `CausalDiscoSearch$run_search()`
 
 Runs the search algorithm on the data.
 
@@ -320,7 +320,7 @@ Runs the search algorithm on the data.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `CausalDiscoSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

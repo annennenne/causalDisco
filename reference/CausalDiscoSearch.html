@@ -63,7 +63,7 @@ It allows to set the data, sufficient statistics, test, score, and algorithm.</p
 search object. Can be set with <code>set_data()</code>.</p></dd>
 
 
-<dt><code>score</code></dt>
+    <dt><code>score</code></dt>
 <dd><p>A function that will be used to build the score,
 when data is set. Can be set with <code>$set_score()</code>. Recognized values
 are:</p><ul><li><p><code>"tbic"</code> - Temporal BIC score for Gaussian data.
@@ -73,7 +73,7 @@ See <a href="TemporalBDeu-class.html">TemporalBDeu</a>.</p></li>
 </ul></dd>
 
 
-<dt><code>test</code></dt>
+    <dt><code>test</code></dt>
 <dd><p>A function that will be used to test independence.
 Can be set with <code>$set_test()</code>. Recognized values are:</p><ul><li><p><code>"fisher_z"</code> - Fisher Z test for Gaussian data.
 See <code><a href="cor_test.html">cor_test()</a></code>.</p></li>
@@ -100,7 +100,7 @@ See <code><a href="https://rdrr.io/pkg/micd/man/mixMItest.html" class="external-
 </ul></dd>
 
 
-<dt><code>alg</code></dt>
+    <dt><code>alg</code></dt>
 <dd><p>A function that will be used to run the search algorithm.
 Can be set with <code>$set_alg()</code>. Recognized values are:</p><ul><li><p><code>"tfci"</code> - TFCI algorithm.
 See <code><a href="tfci.html">tfci()</a></code>.</p></li>
@@ -111,19 +111,19 @@ See <code><a href="tpc.html">tpc()</a></code>.</p></li>
 </ul></dd>
 
 
-<dt><code>params</code></dt>
+    <dt><code>params</code></dt>
 <dd><p>A list of parameters for the test and algorithm.
 Can be set with <code>$set_params()</code>.
 TODO: not secure yet in terms of distributing arguments.
 Use with caution.</p></dd>
 
 
-<dt><code>suff_stat</code></dt>
+    <dt><code>suff_stat</code></dt>
 <dd><p>Sufficient statistic. The format and contents of the
 sufficient statistic depends on which test is being used.</p></dd>
 
 
-<dt><code>knowledge</code></dt>
+    <dt><code>knowledge</code></dt>
 <dd><p>A <code>Knowledge</code> object holding background knowledge.</p></dd>
 
 
@@ -134,8 +134,7 @@ sufficient statistic depends on which test is being used.</p></dd>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-CausalDiscoSearch-new"><code>CausalDiscoSearch$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-CausalDiscoSearch-initialize"><code>CausalDiscoSearch$new()</code></a></p></li>
 <li><p><a href="#method-CausalDiscoSearch-set_params"><code>CausalDiscoSearch$set_params()</code></a></p></li>
 <li><p><a href="#method-CausalDiscoSearch-set_data"><code>CausalDiscoSearch$set_data()</code></a></p></li>
 <li><p><a href="#method-CausalDiscoSearch-set_suff_stat"><code>CausalDiscoSearch$set_suff_stat()</code></a></p></li>
@@ -145,22 +144,21 @@ sufficient statistic depends on which test is being used.</p></dd>
 <li><p><a href="#method-CausalDiscoSearch-set_knowledge"><code>CausalDiscoSearch$set_knowledge()</code></a></p></li>
 <li><p><a href="#method-CausalDiscoSearch-run_search"><code>CausalDiscoSearch$run_search()</code></a></p></li>
 <li><p><a href="#method-CausalDiscoSearch-clone"><code>CausalDiscoSearch$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-CausalDiscoSearch-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-CausalDiscoSearch-initialize"></a><div class="section">
+<h3 id="causaldiscosearch-new-"><code>CausalDiscoSearch$new()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-new-"></a></h3>
 <p>Constructor for the <code>CausalDiscoSearch</code> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/CausalDiscoSearch.html">CausalDiscoSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_params"></a><div class="section">
-<h3 id="method-set-params-">Method <code>set_params()</code><a class="anchor" aria-label="anchor" href="#method-set-params-"></a></h3>
+<p></p><hr><a id="method-CausalDiscoSearch-set_params"></a><div class="section">
+<h3 id="causaldiscosearch-set-params-"><code>CausalDiscoSearch$set_params()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-params-"></a></h3>
 <p>Sets the parameters for the test and algorithm.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_params</span><span class="op">(</span><span class="va">params</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>params</code></dt>
 <dd><p>A list of parameters to set.</p></dd>
@@ -169,36 +167,38 @@ sufficient statistic depends on which test is being used.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_data"></a><div class="section">
-<h3 id="method-set-data-">Method <code>set_data()</code><a class="anchor" aria-label="anchor" href="#method-set-data-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-set_data"></a><div class="section">
+<h3 id="causaldiscosearch-set-data-"><code>CausalDiscoSearch$set_data()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-data-"></a></h3>
 <p>Sets the data for the search algorithm.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_data</span><span class="op">(</span><span class="va">data</span>, set_suff_stat <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>A <code>data.frame</code> or a <code>matrix</code> containing the data.</p></dd>
 
-
-<dt><code>set_suff_stat</code></dt>
+      <dt><code>set_suff_stat</code></dt>
 <dd><p>Logical; whether to set the sufficient statistic.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_suff_stat"></a><div class="section">
-<h3 id="method-set-suff-stat-">Method <code>set_suff_stat()</code><a class="anchor" aria-label="anchor" href="#method-set-suff-stat-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-set_suff_stat"></a><div class="section">
+<h3 id="causaldiscosearch-set-suff-stat-"><code>CausalDiscoSearch$set_suff_stat()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-suff-stat-"></a></h3>
 <p>Sets the sufficient statistic for the data.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_suff_stat</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_test"></a><div class="section">
-<h3 id="method-set-test-">Method <code>set_test()</code><a class="anchor" aria-label="anchor" href="#method-set-test-"></a></h3>
+<p></p><hr><a id="method-CausalDiscoSearch-set_test"></a><div class="section">
+<h3 id="causaldiscosearch-set-test-"><code>CausalDiscoSearch$set_test()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-test-"></a></h3>
 <p>Sets the test for the search algorithm.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_test</span><span class="op">(</span></span>
@@ -207,9 +207,7 @@ sufficient statistic depends on which test is being used.</p></dd>
 <span>  suff_stat_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  args <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a></p>
@@ -225,17 +223,14 @@ signature <code>function(x, y, conditioning_set, suff_stat, args)</code>, and th
 test function.</p>
 <p>EXPERIMENTAL: user-defined tests syntax are subject to change.</p></dd>
 
-
-<dt><code>alpha</code></dt>
+      <dt><code>alpha</code></dt>
 <dd><p>Significance level for the test.</p></dd>
 
-
-<dt><code>suff_stat_fun</code></dt>
+      <dt><code>suff_stat_fun</code></dt>
 <dd><p>A function that takes the data as input and returns a sufficient statistic for the test.
 Only needed if <code>method</code> is a user-defined function.</p></dd>
 
-
-<dt><code>args</code></dt>
+      <dt><code>args</code></dt>
 <dd><p>A list of additional arguments to pass to the test.
 Only needed if <code>method</code> is a user-defined function with an <code>args</code> parameter in its signature.</p></dd>
 
@@ -243,34 +238,33 @@ Only needed if <code>method</code> is a user-defined function with an <code>args
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_score"></a><div class="section">
-<h3 id="method-set-score-">Method <code>set_score()</code><a class="anchor" aria-label="anchor" href="#method-set-score-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-set_score"></a><div class="section">
+<h3 id="causaldiscosearch-set-score-"><code>CausalDiscoSearch$set_score()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-score-"></a></h3>
 <p>Sets the score for the search algorithm.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_score</span><span class="op">(</span><span class="va">method</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>A string specifying the type of score to use.</p></dd>
 
-
-<dt><code>params</code></dt>
+      <dt><code>params</code></dt>
 <dd><p>A list of parameters to pass to the score function.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_alg"></a><div class="section">
-<h3 id="method-set-alg-">Method <code>set_alg()</code><a class="anchor" aria-label="anchor" href="#method-set-alg-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-set_alg"></a><div class="section">
+<h3 id="causaldiscosearch-set-alg-"><code>CausalDiscoSearch$set_alg()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-alg-"></a></h3>
 <p>Sets the algorithm for the search.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_alg</span><span class="op">(</span><span class="va">method</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>method</code></dt>
 <dd><p>A string specifying the type of algorithm to use.</p></dd>
@@ -279,20 +273,19 @@ Only needed if <code>method</code> is a user-defined function with an <code>args
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-set_knowledge"></a><div class="section">
-<h3 id="method-set-knowledge-">Method <code><a href="set_knowledge.html">set_knowledge()</a></code><a class="anchor" aria-label="anchor" href="#method-set-knowledge-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-set_knowledge"></a><div class="section">
+<h3 id="causaldiscosearch-set-knowledge-"><code>CausalDiscoSearch$set_knowledge()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-set-knowledge-"></a></h3>
 <p>Sets the background knowledge for the search with a <code>Knowledge</code> object.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">set_knowledge</span><span class="op">(</span><span class="va">kn</span>, directed_as_undirected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>kn</code></dt>
 <dd><p>A <code>Knowledge</code> object.</p></dd>
 
-
-<dt><code>directed_as_undirected</code></dt>
+      <dt><code>directed_as_undirected</code></dt>
 <dd><p>Logical; whether to treat directed edges in
 the knowledge as undirected. Default is <code>FALSE</code>. This is due to the
 nature of how <span class="pkg">pcalg</span> handles background knowledge when using
@@ -304,34 +297,33 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-run_search"></a><div class="section">
-<h3 id="method-run-search-">Method <code>run_search()</code><a class="anchor" aria-label="anchor" href="#method-run-search-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-run_search"></a><div class="section">
+<h3 id="causaldiscosearch-run-search-"><code>CausalDiscoSearch$run_search()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-run-search-"></a></h3>
 <p>Runs the search algorithm on the data.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">run_search</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, set_suff_stat <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>A <code>data.frame</code> or a <code>matrix</code> containing the data.</p></dd>
 
-
-<dt><code>set_suff_stat</code></dt>
+      <dt><code>set_suff_stat</code></dt>
 <dd><p>Logical; whether to set the sufficient statistic</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CausalDiscoSearch-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CausalDiscoSearch-clone"></a><div class="section">
+<h3 id="causaldiscosearch-clone-"><code>CausalDiscoSearch$clone()</code><a class="anchor" aria-label="anchor" href="#causaldiscosearch-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CausalDiscoSearch</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -341,6 +333,7 @@ nature of how <span class="pkg">pcalg</span> handles background knowledge when u
 </div>
 
 </div>
+
 
     </div>
 

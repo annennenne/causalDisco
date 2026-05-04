@@ -1,6 +1,7 @@
 # Causal Discovery
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -26,6 +27,7 @@ a set of observed variables using observational data.
 Suppose we have this DAG:
 
 ``` r
+
 cg <- caugi::caugi(
   Z %-->% X1,
   X3 %-->% X2,
@@ -38,6 +40,7 @@ We define a layout which we will use for plotting the graphs in this
 article:
 
 ``` r
+
 layout <- caugi::caugi_layout_sugiyama(cg)
 plot(cg, layout = layout, main = "True DAG")
 ```
@@ -54,6 +57,7 @@ deviation of the additive Gaussian noise at each node is sampled from a
 log-uniform distribution between 0.3 and 2.
 
 ``` r
+
 data_linear <- generate_dag_data(
   cg,
   n = 10000,
@@ -77,6 +81,7 @@ The R code used to generate the data is stored as an attribute of the
 data frame:
 
 ``` r
+
 attr(data_linear, "generating_model")
 #> $dgp
 #> $dgp$X3
@@ -114,6 +119,7 @@ function, and then pass it to the
 function along with the data.
 
 ``` r
+
 pc_pcalg <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 pc_result_pcalg <- disco(data = data_linear, method = pc_pcalg)
 ```
@@ -124,6 +130,7 @@ function, where we explicitly provide the layout defined above so graphs
 are easier to compare.
 
 ``` r
+
 plot(pc_result_pcalg, layout = layout, main = "PC (pcalg)")
 ```
 
@@ -148,6 +155,7 @@ data-generating process above and applying the PC algorithm to the
 resulting data set.
 
 ``` r
+
 cg_reverse <- caugi::caugi(
   Z %-->% X1,
   X2 %-->% X3,
@@ -180,6 +188,7 @@ assumptions of the PC algorithm. Suppose we have the following DAG with
 an unobserved confounder `U` between `X1` and `X2`:
 
 ``` r
+
 cg_unobserved <- caugi::caugi(
   Z %-->% X1,
   X3 %-->% X2,
@@ -193,6 +202,7 @@ We can visualize this DAG, marking the unobserved variable `U` in red
 and using dashed edges to indicate that it is unobserved:
 
 ``` r
+
 plot(
   cg_unobserved,
   edge_style = list(
@@ -217,6 +227,7 @@ and then afterwards remove the unobserved variable `U` from the data
 frame:
 
 ``` r
+
 data_unobserved <- generate_dag_data(
   cg_unobserved,
   n = 10000,
@@ -240,6 +251,7 @@ head(data_unobserved)
 We can then apply the PC algorithm as before:
 
 ``` r
+
 pc_pcalg_unobserved <- pc(engine = "pcalg", test = "fisher_z", alpha = 0.05)
 pc_result_unobserved <- disco(
   data = data_unobserved,

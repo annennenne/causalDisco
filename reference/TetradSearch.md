@@ -28,7 +28,7 @@ the resulting graph or statistics.
 
   - `"gic"` - Generalized Information Criterion (GIC) score.
 
-  - `"poisson_prior"` - Poisson prior score.'
+  - `"poisson_prior"` - Poisson prior score.
 
   - `"rank_bic"` - Rank-based BIC score.
 
@@ -118,7 +118,7 @@ the resulting graph or statistics.
     [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md).
 
   - `"rfci"` - Restricted FCI algorithm. See
-    [`pcalg::rfci()`](https://rdrr.io/pkg/pcalg/man/rfci.html).
+    [`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md).
 
   **Hybrid**
 
@@ -182,7 +182,7 @@ the resulting graph or statistics.
 
 ### Public methods
 
-- [`TetradSearch$new()`](#method-TetradSearch-new)
+- [`TetradSearch$new()`](#method-TetradSearch-initialize)
 
 - [`TetradSearch$set_test()`](#method-TetradSearch-set_test)
 
@@ -222,7 +222,7 @@ the resulting graph or statistics.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TetradSearch$new()`
 
 Initializes the `TetradSearch` object, creating new Java objects for
 `knowledge` and `params`.
@@ -233,7 +233,7 @@ Initializes the `TetradSearch` object, creating new Java objects for
 
 ------------------------------------------------------------------------
 
-### Method `set_test()`
+### `TetradSearch$set_test()`
 
 Sets the independence test to use in Tetrad.
 
@@ -476,7 +476,7 @@ Invisibly returns `self`, for chaining.
 
 ------------------------------------------------------------------------
 
-### Method `set_score()`
+### `TetradSearch$set_score()`
 
 Sets the scoring function to use in Tetrad.
 
@@ -700,7 +700,7 @@ Invisibly returns `self`.
 
 ------------------------------------------------------------------------
 
-### Method `set_alg()`
+### `TetradSearch$set_alg()`
 
 Sets the causal discovery algorithm to use in Tetrad.
 
@@ -910,9 +910,6 @@ Sets the causal discovery algorithm to use in Tetrad.
       completeness, should be used; TRUE if the (fuller) set due to J.
       Zhang, should be used guaranteeing additional tail completeness.
 
-    - `guarantee_pag = FALSE` - Ensure the output is a legal PAG (where
-      feasible).
-
   - `"sp_fci"` - Sparsest Permutation using FCI
 
     - `depth = -1` - Maximum size of conditioning set,
@@ -937,7 +934,7 @@ Invisibly returns `self`.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+### `TetradSearch$set_knowledge()`
 
 Sets the background `Knowledge` object.
 
@@ -953,7 +950,7 @@ Sets the background `Knowledge` object.
 
 ------------------------------------------------------------------------
 
-### Method `set_params()`
+### `TetradSearch$set_params()`
 
 Sets parameters for the Tetrad search.
 
@@ -969,7 +966,7 @@ Sets parameters for the Tetrad search.
 
 ------------------------------------------------------------------------
 
-### Method `get_parameters_for_function()`
+### `TetradSearch$get_parameters_for_function()`
 
 Retrieves the argument names of a matching private function.
 
@@ -1006,7 +1003,7 @@ Retrieves the argument names of a matching private function.
 
 ------------------------------------------------------------------------
 
-### Method `run_search()`
+### `TetradSearch$run_search()`
 
 Runs the chosen Tetrad algorithm on the data.
 
@@ -1041,7 +1038,7 @@ populates `self$java`.
 
 ------------------------------------------------------------------------
 
-### Method `set_bootstrapping()`
+### `TetradSearch$set_bootstrapping()`
 
 Configures bootstrapping parameters for the Tetrad search.
 
@@ -1084,7 +1081,7 @@ Configures bootstrapping parameters for the Tetrad search.
 
 ------------------------------------------------------------------------
 
-### Method `set_data()`
+### `TetradSearch$set_data()`
 
 Sets or overrides the data used by Tetrad.
 
@@ -1106,7 +1103,7 @@ Sets or overrides the data used by Tetrad.
 
 ------------------------------------------------------------------------
 
-### Method `set_verbose()`
+### `TetradSearch$set_verbose()`
 
 Toggles the verbosity in Tetrad.
 
@@ -1122,7 +1119,7 @@ Toggles the verbosity in Tetrad.
 
 ------------------------------------------------------------------------
 
-### Method `set_time_lag()`
+### `TetradSearch$set_time_lag()`
 
 Sets an integer time lag for time-series algorithms.
 
@@ -1138,7 +1135,7 @@ Sets an integer time lag for time-series algorithms.
 
 ------------------------------------------------------------------------
 
-### Method `get_data()`
+### `TetradSearch$get_data()`
 
 Retrieves the current Java data object.
 
@@ -1152,7 +1149,7 @@ Retrieves the current Java data object.
 
 ------------------------------------------------------------------------
 
-### Method `get_knowledge()`
+### `TetradSearch$get_knowledge()`
 
 Returns the background `Knowledge` object.
 
@@ -1166,7 +1163,7 @@ Returns the background `Knowledge` object.
 
 ------------------------------------------------------------------------
 
-### Method `get_java()`
+### `TetradSearch$get_java()`
 
 Gets the main Java result object (usually a graph) from the last search.
 
@@ -1180,7 +1177,7 @@ Gets the main Java result object (usually a graph) from the last search.
 
 ------------------------------------------------------------------------
 
-### Method `get_string()`
+### `TetradSearch$get_string()`
 
 Returns the string representation of a given Java object or `self$java`.
 
@@ -1201,7 +1198,7 @@ that Java object.
 
 ------------------------------------------------------------------------
 
-### Method `get_dot()`
+### `TetradSearch$get_dot()`
 
 Produces a DOT (Graphviz) representation of the graph.
 
@@ -1221,7 +1218,7 @@ Produces a DOT (Graphviz) representation of the graph.
 
 ------------------------------------------------------------------------
 
-### Method `get_amat()`
+### `TetradSearch$get_amat()`
 
 Produces an amat representation of the graph.
 
@@ -1241,7 +1238,7 @@ Produces an amat representation of the graph.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TetradSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

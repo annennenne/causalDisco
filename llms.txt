@@ -28,12 +28,14 @@ of caugi.
 You can install the stable version of causalDisco from CRAN with:
 
 ``` r
+
 install.packages("causalDisco")
 ```
 
 or the development version of causalDisco from GitHub using pak:
 
 ``` r
+
 pak::pak("disco-coders/causalDisco")
 ```
 
@@ -66,6 +68,7 @@ automatically for rJava. You can install Java using the
 `rJavaEnv::java_quick_install()` function:
 
 ``` r
+
 # Use the development version of rJavaEnv from GitHub
 # pak::pak("e-kotov/rJavaEnv")
 rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
@@ -75,6 +78,7 @@ Once you have Java JDK set up correctly, the current supported version
 of Tetrad can then be installed by calling
 
 ``` r
+
 causalDisco::install_tetrad()
 ```
 
@@ -82,6 +86,7 @@ To verify everything is set up correctly you can run
 [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md):
 
 ``` r
+
 causalDisco::verify_tetrad()
 #> $installed
 #> [1] TRUE
@@ -108,6 +113,7 @@ simple example of how to use these different backends with the same code
 structure. We also show how to incorporate tiered background knowledge.
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -133,6 +139,7 @@ each tier, but you can also use explicit variable names or regular
 expressions.
 
 ``` r
+
 kn <- knowledge(
   tpc_example,
   tier(
@@ -166,6 +173,7 @@ correctly as described in the installation instructions above. Then you
 can specify the Tetrad engine in the same way as for the other backends:
 
 ``` r
+
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   tetrad_pc <- pc(
     engine = "tetrad", # Use the Tetrad implementation
@@ -185,6 +193,7 @@ You can visualize the resulting causal graph using the
 function:
 
 ``` r
+
 plot(disco_cd_tpc)
 ```
 
@@ -248,6 +257,8 @@ Core search algorithms implemented or wrapped by causalDisco.
   : IAMB Family of Causal Discovery Algorithms
 - [`pc()`](https://disco-coders.github.io/causalDisco/reference/pc.md) :
   PC Algorithm for Causal Discovery
+- [`rfci()`](https://disco-coders.github.io/causalDisco/reference/rfci.md)
+  : RFCI Algorithm for Causal Discovery
 - [`sp_fci()`](https://disco-coders.github.io/causalDisco/reference/sp_fci.md)
   : SP-FCI Algorithm for Causal Discovery
 - [`tfci()`](https://disco-coders.github.io/causalDisco/reference/tfci.md)

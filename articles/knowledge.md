@@ -1,6 +1,7 @@
 # Incorporating Knowledge
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -50,6 +51,7 @@ Suppose we want to require an edge from A to B, from A to C, and forbid
 an edge from B to C:
 
 ``` r
+
 kn_1 <- knowledge(
   A %-->% c(B, C), # Require edges from A to B and A to C
   B %!-->% C # Forbid edge from B to C
@@ -59,6 +61,7 @@ kn_1 <- knowledge(
 This `Knowledge` object can be visualized:
 
 ``` r
+
 plot(kn_1)
 ```
 
@@ -74,6 +77,7 @@ function can be used. For example, to remove the required edge from A to
 B:
 
 ``` r
+
 kn_1_removed <- remove_edge(kn_1, from = A, to = B)
 plot(kn_1_removed)
 ```
@@ -86,6 +90,7 @@ We will use the `tpc_example` dataset available in the package for the
 following examples. The dataset contains 6 variables, as shown below:
 
 ``` r
+
 data(tpc_example)
 head(tpc_example)
 #>   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5
@@ -103,6 +108,7 @@ correctly. To do this, pass the dataset as the first argument to
 [`knowledge()`](https://disco-coders.github.io/causalDisco/reference/knowledge.md).
 
 ``` r
+
 kn_2 <- knowledge(
   tpc_example,
   child_x1 %-->% youth_x3, # Require edge from child_x1 to youth_x3
@@ -114,6 +120,7 @@ This `Knowledge` object can also be visualized (we manually adjust the
 layout for better appearance):
 
 ``` r
+
 cg <- knowledge_to_caugi(kn_2)$caugi
 layout <- caugi::caugi_layout_sugiyama(cg)
 layout[6, 2] <- layout[4, 2]
@@ -132,6 +139,7 @@ To make specifying variables easier, you can use tidyselect helpers such
 as `starts_with`:
 
 ``` r
+
 kn_3 <- knowledge(
   tpc_example,
   starts_with("child") %-->% starts_with("youth"),
@@ -145,6 +153,7 @@ starting with “oldage” can have edges to any variables starting with
 “youth”. We can visualize this:
 
 ``` r
+
 plot(kn_3)
 ```
 
@@ -184,6 +193,7 @@ appearance.
 The following specifications encode the same tier structure:
 
 ``` r
+
 kn <- knowledge(
   tier(
     1 ~ c(A1, A2),
@@ -232,6 +242,7 @@ kn_mixed <- knowledge(
 We can visualize the tiers:
 
 ``` r
+
 plot(kn)
 ```
 
@@ -245,6 +256,7 @@ forbidden edges using
 [`convert_tiers_to_forbidden()`](https://disco-coders.github.io/causalDisco/reference/convert_tiers_to_forbidden.md):
 
 ``` r
+
 kn_converted <- convert_tiers_to_forbidden(kn)
 print(kn_converted)
 #> 
@@ -286,6 +298,7 @@ object defines two tiers, “young” and “old”, by combining tidyselect
 helpers on the variables in the `tpc_example` dataset:
 
 ``` r
+
 kn_tier_tidyselect <- knowledge(
   tpc_example,
   tier(
@@ -312,6 +325,7 @@ The most natural usage is to supply the dataset so that the variables
 are checked for existence and selected correctly:
 
 ``` r
+
 kn_exo_1 <- knowledge(
   tpc_example,
   exogenous("child_x1")
@@ -322,6 +336,7 @@ Instead of `exogenous()`, you can also use the shorthand function
 `exo()`. This `Knowledge` object can be visualized:
 
 ``` r
+
 plot(kn_exo_1)
 ```
 
@@ -331,6 +346,7 @@ Below we add both `child_x1` and `child_x2` as exogenous variables using
 tidyselect helpers:
 
 ``` r
+
 kn_exo_2 <- knowledge(
   tpc_example,
   exo(starts_with("child"))
@@ -347,6 +363,7 @@ object. For example, we can combine tiered knowledge with required and
 forbidden edges:
 
 ``` r
+
 kn_combined <- knowledge(
   tpc_example,
   tier(
@@ -375,6 +392,7 @@ with engine “causalDisco” and temporal BIC (“tbic”) score, while
 providing tiered knowledge:
 
 ``` r
+
 kn <- knowledge(
   tpc_example,
   tier(
@@ -392,6 +410,7 @@ The causal discovery algorithms will then learn the causal graph from
 the data given the constraints specified in the `Knowledge` object.
 
 ``` r
+
 plot(disco_cd_tges)
 ```
 
@@ -414,6 +433,7 @@ v-structure (collider) from the data whose orientation conflicts with
 edges already oriented due to background knowledge.
 
 ``` r
+
 data(tpc_example)
 
 kn <- knowledge(
@@ -431,6 +451,7 @@ output <- disco(data = tpc_example, method = bnlearn_pc, knowledge = kn)
 The resulting causal graph will still respect the provided knowledge.
 
 ``` r
+
 plot(output)
 ```
 
@@ -450,6 +471,7 @@ directions. Such constraints can be specified using `%!-->%` in both
 directions, as illustrated below:
 
 ``` r
+
 data(tpc_example)
 kn <- knowledge(
   tpc_example,

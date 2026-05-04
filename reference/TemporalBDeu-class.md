@@ -50,6 +50,7 @@ All reference classes extend and inherit methods from `envRefClass`.
 
 ## Constructor
 
+
     new(
      "TemporalBdeu",
      data = matrix(1, 1, 1),

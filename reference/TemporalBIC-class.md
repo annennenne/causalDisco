@@ -62,6 +62,7 @@ All reference classes extend and inherit methods from `envRefClass`.
 
 ## Constructor
 
+
     new(
      "TemporalBIC",
      data = matrix(1, 1, 1),

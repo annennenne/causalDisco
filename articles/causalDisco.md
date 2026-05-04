@@ -1,6 +1,7 @@
 # causalDisco
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -22,6 +23,7 @@ package for demonstrating how to run causal discovery algorithms. It
 contains 5 numerical variables, `X1, X2, X3, Z`, and `Y`.
 
 ``` r
+
 data(num_data)
 head(num_data)
 #>         X1        X2       X3         Z        Y
@@ -37,6 +39,7 @@ To make the different causal graphs easier to interpret, we define a
 custom fixed layout for plotting the results:
 
 ``` r
+
 plot_layout <- data.frame(
   name = c("Z", "X3", "X1", "X2", "Y"),
   x = c(0.00, 0.50, 0.00, 0.50, 0.25),
@@ -51,6 +54,7 @@ function along with the data. Below we demonstrate this process using
 the Peter-Clark (PC) algorithm from bnlearn with Fisher’s Z test:
 
 ``` r
+
 pc_bnlearn <- pc(
   engine = "bnlearn", # Use the bnlearn implementation
   test = "fisher_z", # Use Fisher's Z test for conditional independence
@@ -63,6 +67,7 @@ We can visualize the results using
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):
 
 ``` r
+
 plot(pc_result_bnlearn, layout = plot_layout, main = "PC Fisher Z (bnlearn)")
 ```
 
@@ -84,6 +89,7 @@ using bnlearn, we can also use the PC implementation from the pcalg
 package with the same test:
 
 ``` r
+
 pc_pcalg <- pc(
   engine = "pcalg", # Use the pcalg implementation
   test = "fisher_z", # Use Fisher's Z test for conditional independence
@@ -121,6 +127,7 @@ environment automatically for rJava. You can install Java using the
 `rJavaEnv::java_quick_install()` function:
 
 ``` r
+
 # Use the development version of rJavaEnv from GitHub
 # pak::pak("e-kotov/rJavaEnv")
 rJavaEnv::java_quick_install(version = 25, distribution = "Temurin")
@@ -130,6 +137,7 @@ Once you have Java JDK set up correctly, the current supported version
 of Tetrad can then be installed by calling
 
 ``` r
+
 install_tetrad()
 ```
 
@@ -137,6 +145,7 @@ To verify everything is set up correctly you can run
 [`verify_tetrad()`](https://disco-coders.github.io/causalDisco/reference/verify_tetrad.md):
 
 ``` r
+
 verify_tetrad()
 #> $installed
 #> [1] TRUE
@@ -158,6 +167,7 @@ Now you should be able to use Tetrad as an engine for the GES algorithm
 as shown in the code chunk below.
 
 ``` r
+
 if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
   ges_tetrad <- ges(
     engine = "tetrad", # Use the Tetrad implementation
@@ -177,6 +187,7 @@ For example, to change the appearance of the nodes, you can use the
 `node_style` argument:
 
 ``` r
+
 plot(
   pc_result_bnlearn,
   layout = plot_layout,
@@ -204,6 +215,7 @@ another way to view and analyze the results is to use the
 [`summary()`](https://rdrr.io/r/base/summary.html) functions:
 
 ``` r
+
 print(pc_result_bnlearn)
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────
@@ -252,6 +264,7 @@ variables, which are measured at three different life stages: childhood,
 youth, and old age.
 
 ``` r
+
 data(tpc_example)
 head(tpc_example)
 #>   child_x2   child_x1    youth_x4 youth_x3  oldage_x6  oldage_x5
@@ -277,6 +290,7 @@ using the `tier()` function. Here, we illustrate this by creating a
 tiered knowledge structure based on life stages:
 
 ``` r
+
 kn <- knowledge(
   tpc_example,
   tier(
@@ -296,6 +310,7 @@ You can view the `Knowledge` object using
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):
 
 ``` r
+
 print(kn)
 #> 
 #> ── Knowledge object ────────────────────────────────────────────────────────────
@@ -342,6 +357,7 @@ function. Here we use the Temporal Peter-Clark (tpc) algorithm from
 causalDisco with the regression-based information loss test:
 
 ``` r
+
 tpc_method <- tpc(
   engine = "causalDisco", # Use the causalDisco implementation
   test = "reg" # Use the regression-based information loss test
@@ -355,6 +371,7 @@ Similarly, we can view the results using
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):
 
 ``` r
+
 print(tpc_result)
 #> 
 #> ── caugi graph ─────────────────────────────────────────────────────────────────

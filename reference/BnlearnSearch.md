@@ -191,7 +191,7 @@ An R6 object with the methods documented below.
 
 ### Public methods
 
-- [`BnlearnSearch$new()`](#method-BnlearnSearch-new)
+- [`BnlearnSearch$new()`](#method-BnlearnSearch-initialize)
 
 - [`BnlearnSearch$set_params()`](#method-BnlearnSearch-set_params)
 
@@ -211,7 +211,7 @@ An R6 object with the methods documented below.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `BnlearnSearch$new()`
 
 Constructor for the `BnlearnSearch` class.
 
@@ -221,7 +221,7 @@ Constructor for the `BnlearnSearch` class.
 
 ------------------------------------------------------------------------
 
-### Method `set_params()`
+### `BnlearnSearch$set_params()`
 
 Set the parameters for the search algorithm.
 
@@ -237,7 +237,7 @@ Set the parameters for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_data()`
+### `BnlearnSearch$set_data()`
 
 Set the data for the search algorithm.
 
@@ -253,7 +253,7 @@ Set the data for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_test()`
+### `BnlearnSearch$set_test()`
 
 Set the conditional-independence test to use in the search algorithm.
 
@@ -284,7 +284,7 @@ Set the conditional-independence test to use in the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_score()`
+### `BnlearnSearch$set_score()`
 
 Set the score function for the search algorithm.
 
@@ -300,7 +300,7 @@ Set the score function for the search algorithm.
 
 ------------------------------------------------------------------------
 
-### Method `set_alg()`
+### `BnlearnSearch$set_alg()`
 
 Set the causal discovery algorithm to use.
 
@@ -320,7 +320,7 @@ Set the causal discovery algorithm to use.
 
 ------------------------------------------------------------------------
 
-### Method [`set_knowledge()`](https://disco-coders.github.io/causalDisco/reference/set_knowledge.md)
+### `BnlearnSearch$set_knowledge()`
 
 Set the prior knowledge for the search algorithm using a `Knowledge`
 object.
@@ -337,7 +337,7 @@ object.
 
 ------------------------------------------------------------------------
 
-### Method `run_search()`
+### `BnlearnSearch$run_search()`
 
 Run the search algorithm on the currently set data.
 
@@ -354,7 +354,7 @@ Run the search algorithm on the currently set data.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `BnlearnSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

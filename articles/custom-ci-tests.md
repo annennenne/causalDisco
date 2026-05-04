@@ -1,6 +1,7 @@
 # Custom CI tests for causal discovery algorithms
 
 ``` r
+
 library(causalDisco)
 #> causalDisco startup:
 #>   Java heap size requested: 2 GB
@@ -49,6 +50,7 @@ An example of a custom CI test is a partial correlation test based on
 the Fisher Z-transform, which can be implemented as follows:
 
 ``` r
+
 my_test <- function(x, y, conditioning_set, suff_stat) {
   C <- suff_stat$C
   n <- suff_stat$n
@@ -77,6 +79,7 @@ my_suff_stat <- function(data) {
 This can then be used with the causalDisco engine as follows:
 
 ``` r
+
 data(num_data)
 
 my_tpc <- tpc(
@@ -94,6 +97,7 @@ plot(result)
 or the pcalg engine as follows:
 
 ``` r
+
 my_pc <- pc(
   engine = "pcalg",
   test = my_test,
@@ -134,6 +138,7 @@ used. If you return only the p-value, a dummy statistic will be
 automatically injected.
 
 ``` r
+
 my_test_bnlearn <- function(x, y, conditioning_set, suff_stat, args = list()) {
   not_used <- args$not_used
   C <- cor(suff_stat)

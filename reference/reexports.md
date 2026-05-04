@@ -5,9 +5,9 @@ to see their documentation.
 
 - caugi:
 
-  [`aid`](https://caugi.org/reference/aid.html),
-  [`hd`](https://caugi.org/reference/hd.html),
-  [`shd`](https://caugi.org/reference/shd.html)
+  [`aid()`](https://caugi.org/reference/aid.html),
+  [`hd()`](https://caugi.org/reference/hd.html),
+  [`shd()`](https://caugi.org/reference/shd.html)
 
 ## See also
 
