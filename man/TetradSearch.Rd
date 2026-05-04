@@ -628,11 +628,10 @@ algorithm is converted to a CPDAG.
 }
 \item \code{"boss_fci"} - BOSS-FCI algorithm.
 \itemize{
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set.
 Set to -1 for unlimited,
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
-Set to -1 for unlimited,
+discriminating path. Set to -1 for unlimited,
 \item \code{use_bes = TRUE} - If TRUE, the algorithm uses the
 backward equivalence search from the GES algorithm as one of its
 steps,
@@ -647,12 +646,13 @@ J. Zhang, should be used guaranteeing additional tail completeness,
 }
 \item \code{"fci"} - FCI algorithm.
 \itemize{
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set.
+Set to -1 for unlimited,
 \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
+discriminating path. Set to -1 for unlimited,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -678,7 +678,7 @@ be parallelized,
 \item \code{max_degree = -1} - Maximum degree of any node in the
 graph. Set to -1 for unlimited,
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
+discriminating path. Set to -1 for unlimited,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -712,12 +712,13 @@ parameters.
 }
 \item \code{"grasp_fci"} - GRaSP-FCI algorithm. Combines GRaSP and FCI.
 \itemize{
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set.
+Set to -1 for unlimited,
 \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
+discriminating path. Set to -1 for unlimited,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -751,7 +752,8 @@ corresponds to the "overwrite" rule as introduced in the \pkg{pcalg} package, se
 \code{\link[pcalg:pc]{pcalg::pc()}}. \code{2} means that all collider conflicts using bidirected edges
 should be prioritized, while \code{3} means that existing colliders should be prioritized,
 ignoring subsequent conflicting information.
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set.
+Set to -1 for unlimited,
 \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
@@ -760,12 +762,13 @@ a legal CPDAG.
 }
 \item \code{"rfci"} - Restricted FCI algorithm
 \itemize{
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set. Set
+to -1 for unlimited,
 \item \code{stable_fas = TRUE} - If TRUE, the "stable" version of
 the PC adjacency search is used, which for k > 0 fixes the graph
 for depth k + 1 to that of the previous depth k.
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
+discriminating path. Set to -1 for unlimited,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
@@ -773,9 +776,10 @@ J. Zhang, should be used guaranteeing additional tail completeness.
 }
 \item \code{"sp_fci"} - Sparsest Permutation using FCI
 \itemize{
-\item \code{depth = -1} - Maximum size of conditioning set,
+\item \code{depth = -1} - Maximum size of conditioning set. Set
+to -1 for unlimited,
 \item \code{max_disc_path_length = -1} - Maximum length for any
-discriminating path,
+discriminating path. Set to -1 for unlimited,
 \item \code{complete_rule_set_used = TRUE} - FALSE if the (simpler)
 final orientation rules set due to P. Spirtes, guaranteeing arrow
 completeness, should be used; TRUE if the (fuller) set due to
