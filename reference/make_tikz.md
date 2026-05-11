@@ -254,11 +254,11 @@ cat(tikz_snippet)
 #> \tikzset{every node/.style={fill=lightgray}, every path/.style={draw=blue}}
 #> \tikzset{arrows={[scale=3]}, arrow/.style={-{Stealth}, thick}}
 #> \begin{tikzpicture}
-#> \node[draw, circle] (X1) at (2.609,3.549) {X1};
-#> \node[draw, circle] (X2) at (7.431,3.545) {X2};
-#> \node[draw, circle] (X3) at (10,0) {X3};
-#> \node[draw, circle] (Z) at (0,0.013) {Z};
-#> \node[draw, circle] (Y) at (5.007,0.226) {Y};
+#> \node[draw, circle] (X1) at (7.401,3.504) {X1};
+#> \node[draw, circle] (X2) at (2.595,3.504) {X2};
+#> \node[draw, circle] (X3) at (0,0) {X3};
+#> \node[draw, circle] (Z) at (10,0.001) {Z};
+#> \node[draw, circle] (Y) at (4.999,0.188) {Y};
 #> \path (X1) edge[, -Latex] (X2)
 #>       (X1) edge[, -Latex] (Y)
 #>       (X1) edge[, -] (Z)
