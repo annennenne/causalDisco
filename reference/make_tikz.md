@@ -235,7 +235,7 @@ cat(tikz_tiered_kn)
 #> \end{tikzpicture}
 
 
-################# Convert disco to Tikz ################
+################# Convert Disco to Tikz ################
 
 data(num_data)
 kn <- knowledge(
