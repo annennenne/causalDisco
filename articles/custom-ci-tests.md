@@ -92,7 +92,7 @@ result <- disco(data = num_data, method = my_tpc)
 plot(result)
 ```
 
-![](custom-ci-tests_files/figure-html/using_my_custom_test_causalDisco-1.png)
+![](custom-ci-tests_files/figure-html/using-my-custom-test-causalDisco-1.png)
 
 or the pcalg engine as follows:
 
@@ -108,7 +108,7 @@ result <- disco(data = num_data, method = my_pc)
 plot(result)
 ```
 
-![](custom-ci-tests_files/figure-html/using_my_custom_test_pcalg-1.png)
+![](custom-ci-tests_files/figure-html/using-my-custom-test-pcalg-1.png)
 
 If the custom test requires additional arguments, then the function
 signature should include an `args` parameter, i.e. be
@@ -167,7 +167,7 @@ result <- disco(data = num_data, method = my_pc)
 plot(result)
 ```
 
-![](custom-ci-tests_files/figure-html/my_custom_test_bnlearn-1.png)
+![](custom-ci-tests_files/figure-html/my-custom-test-bnlearn-1.png)
 
 ## Custom Scores
 

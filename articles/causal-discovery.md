@@ -45,7 +45,7 @@ layout <- caugi::caugi_layout_sugiyama(cg)
 plot(cg, layout = layout, main = "True DAG")
 ```
 
-![](causal-discovery_files/figure-html/plot%20dag-1.png)
+![](causal-discovery_files/figure-html/plot-dag-1.png)
 
 We can create data from a linear Gaussian model corresponding to the
 above DAG using
@@ -134,7 +134,7 @@ are easier to compare.
 plot(pc_result_pcalg, layout = layout, main = "PC (pcalg)")
 ```
 
-![](causal-discovery_files/figure-html/plot%20pc%20results%20simple-1.png)
+![](causal-discovery_files/figure-html/plot-pc-results-simple-1.png)
 
 The PC algorithm recovers the correct causal structure up to Markov
 equivalence, represented as a CPDAG. A CPDAG represents the equivalence
@@ -175,7 +175,7 @@ pc_result_reverse <- disco(data = data_linear_reverse, method = pc_pcalg)
 plot(pc_result_reverse, layout = layout, main = "PC (pcalg) reversed")
 ```
 
-![](causal-discovery_files/figure-html/pc%20algorithm%20reversed-1.png)
+![](causal-discovery_files/figure-html/pc-algorithm-reversed-1.png)
 
 We learn the same causal structure as before, demonstrating that the
 direction of influence between `X2` and `X3` cannot be determined from
@@ -219,7 +219,7 @@ plot(
 )
 ```
 
-![](causal-discovery_files/figure-html/plot%20dag%20unobserved%20confounder-1.png)
+![](causal-discovery_files/figure-html/plot-dag-unobserved-confounder-1.png)
 
 We can generate data from this DAG using
 [`generate_dag_data()`](https://disco-coders.github.io/causalDisco/reference/generate_dag_data.md),
@@ -260,7 +260,7 @@ pc_result_unobserved <- disco(
 plot(pc_result_unobserved, layout = layout, main = "PC (pcalg)")
 ```
 
-![](causal-discovery_files/figure-html/pc%20algorithm%20unobserved%20confounder-1.png)
+![](causal-discovery_files/figure-html/pc-algorithm-unobserved-confounder-1.png)
 
 We see that the PC algorithm does not recover the correct causal
 structure due to the presence of the unobserved confounder. In

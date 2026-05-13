@@ -71,7 +71,7 @@ We can visualize the results using
 plot(pc_result_bnlearn, layout = plot_layout, main = "PC Fisher Z (bnlearn)")
 ```
 
-![](causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20bnlearn%20plot-1.png)
+![](causalDisco_files/figure-html/pc-algorithm-fisher-z-bnlearn-plot-1.png)
 
 The first notable feature of this plot is that some edges are directed,
 while others are undirected. For example, the edge from `X1` to `Y` is
@@ -99,7 +99,7 @@ pc_result_pcalg <- disco(data = num_data, method = pc_pcalg)
 plot(pc_result_pcalg, layout = plot_layout, main = "PC Fisher Z (pcalg)")
 ```
 
-![](causalDisco_files/figure-html/pc%20algorithm%20fisher%20z%20pcalg-1.png)
+![](causalDisco_files/figure-html/pc-algorithm-fisher-z-pcalg-1.png)
 
 We see that the results using the PC algorithm implemented in bnlearn
 and pcalg gives the same output on this dataset.
@@ -178,7 +178,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](causalDisco_files/figure-html/ges%20algorithm%20ebic%20tetrad-1.png)
+![](causalDisco_files/figure-html/ges-algorithm-ebic-tetrad-1.png)
 
 If you want to customize the plot appearance further, you can pass
 additional arguments to
@@ -202,7 +202,7 @@ plot(
 )
 ```
 
-![](causalDisco_files/figure-html/custom%20plot-1.png)
+![](causalDisco_files/figure-html/custom-plot-1.png)
 
 For more details on customizing plots and generating TikZ code for LaTeX
 documents, see the [visualization
@@ -345,7 +345,7 @@ summary(kn)
 plot(kn, main = "Temporal Knowledge")
 ```
 
-![](causalDisco_files/figure-html/view%20knowledge-1.png)
+![](causalDisco_files/figure-html/view-knowledge-1.png)
 
 The plot displays vertical tiers, each enclosed in a shaded rectangle
 and labeled with the corresponding tier name at the top.
@@ -433,7 +433,7 @@ summary(tpc_result)
 plot(tpc_result, main = "TPC reg_test with Temporal Knowledge (causalDisco)")
 ```
 
-![](causalDisco_files/figure-html/view%20tpc%20results-1.png)
+![](causalDisco_files/figure-html/view-tpc-results-1.png)
 
 Like before, the tiered knowledge is reflected in the plot layout, with
 variables grouped by life stage. Additionally, you can customize the

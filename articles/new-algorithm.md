@@ -79,7 +79,7 @@ hpc_bnlearn_result <- disco(tpc_example, hpc_bnlearn)
 plot(hpc_bnlearn_result)
 ```
 
-![](new-algorithm_files/figure-html/hpc%20example-1.png)
+![](new-algorithm_files/figure-html/hpc-example-1.png)
 
 To implement a **score-based** algorithm instead, the structure would
 remain the same. The main difference is that the method would accept a
@@ -201,7 +201,7 @@ if (verify_tetrad()$installed && verify_tetrad()$java_ok) {
 }
 ```
 
-![](new-algorithm_files/figure-html/my_boss_variant%20example-1.png)
+![](new-algorithm_files/figure-html/my_boss_variant-example-1.png)
 
 Once again, if using a hybrid or constraint-based algorithm rather than
 a score-based one, the structure would remain the same but the method

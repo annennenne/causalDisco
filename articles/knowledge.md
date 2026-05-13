@@ -65,7 +65,7 @@ This `Knowledge` object can be visualized:
 plot(kn_1)
 ```
 
-![](knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge-1.png)
+![](knowledge_files/figure-html/plot-required-and-forbidden-knowledge-1.png)
 
 The blue edge represents the required edge from A to B, while the red
 edge represents the forbidden edge from B to C.
@@ -82,7 +82,7 @@ kn_1_removed <- remove_edge(kn_1, from = A, to = B)
 plot(kn_1_removed)
 ```
 
-![](knowledge_files/figure-html/remove%20required%20edge-1.png)
+![](knowledge_files/figure-html/remove-required-edge-1.png)
 
 ### Specifying required and forbidden edges in a dataset
 
@@ -128,7 +128,7 @@ layout[6, 2] <- layout[4, 2]
 plot(kn_2, layout = layout)
 ```
 
-![](knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20data-1.png)
+![](knowledge_files/figure-html/plot-required-and-forbidden-knowledge-with-data-1.png)
 
 The plot then plots all variables in the dataset, with the required
 edges as blue edges and forbidden edges as red edges.
@@ -157,7 +157,7 @@ starting with “oldage” can have edges to any variables starting with
 plot(kn_3)
 ```
 
-![](knowledge_files/figure-html/plot%20required%20and%20forbidden%20knowledge%20with%20tidyselect-1.png)
+![](knowledge_files/figure-html/plot-required-and-forbidden-knowledge-with-tidyselect-1.png)
 
 For a list of all available tidyselect helpers we refer to the
 [tidyselect reference
@@ -246,7 +246,7 @@ We can visualize the tiers:
 plot(kn)
 ```
 
-![](knowledge_files/figure-html/plot%20tier%20knowledge-1.png)
+![](knowledge_files/figure-html/plot-tier-knowledge-1.png)
 
 The plot then shows the tiers as layers, with the earliest tiers to the
 left and latest to the right.
@@ -288,7 +288,7 @@ print(kn_converted)
 plot(kn_converted)
 ```
 
-![](knowledge_files/figure-html/convert%20tiers%20to%20forbidden-1.png)
+![](knowledge_files/figure-html/convert-tiers-to-forbidden-1.png)
 
 Tidyselect helpers such as `starts_with` can also be used to define
 tiers in a concise way, just as with required and forbidden edges.
@@ -309,7 +309,7 @@ kn_tier_tidyselect <- knowledge(
 plot(kn_tier_tidyselect)
 ```
 
-![](knowledge_files/figure-html/tier%20knowledge%20with%20tidyselect-1.png)
+![](knowledge_files/figure-html/tier-knowledge-with-tidyselect-1.png)
 
 ## Exogenous variables knowledge
 
@@ -340,7 +340,7 @@ Instead of `exogenous()`, you can also use the shorthand function
 plot(kn_exo_1)
 ```
 
-![](knowledge_files/figure-html/plot%20exogenous%20knowledge-1.png)
+![](knowledge_files/figure-html/plot-exogenous-knowledge-1.png)
 
 Below we add both `child_x1` and `child_x2` as exogenous variables using
 tidyselect helpers:
@@ -354,7 +354,7 @@ kn_exo_2 <- knowledge(
 plot(kn_exo_2, layout = "bipartite", orientation = "columns")
 ```
 
-![](knowledge_files/figure-html/exogenous%20knowledge%20with%20tidyselect-1.png)
+![](knowledge_files/figure-html/exogenous-knowledge-with-tidyselect-1.png)
 
 ## Combining different knowledge types
 
@@ -378,7 +378,7 @@ kn_combined <- knowledge(
 plot(kn_combined)
 ```
 
-![](knowledge_files/figure-html/combined%20knowledge-1.png)
+![](knowledge_files/figure-html/combined-knowledge-1.png)
 
 ## Using knowledge with causal discovery
 
@@ -414,7 +414,7 @@ the data given the constraints specified in the `Knowledge` object.
 plot(disco_cd_tges)
 ```
 
-![](knowledge_files/figure-html/plot%20causal%20discovery%20with%20tier%20knowledge-1.png)
+![](knowledge_files/figure-html/plot-causal-discovery-with-tier-knowledge-1.png)
 
 The black edges are those inferred from the data.
 
@@ -455,7 +455,7 @@ The resulting causal graph will still respect the provided knowledge.
 plot(output)
 ```
 
-![](knowledge_files/figure-html/plot%20bnlearn-1.png)
+![](knowledge_files/figure-html/plot-bnlearn-1.png)
 
 ### causalDisco
 

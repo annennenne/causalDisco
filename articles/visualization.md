@@ -46,7 +46,7 @@ kn <- knowledge(
 plot(kn)
 ```
 
-![](visualization_files/figure-html/knowledge%20plot-1.png)
+![](visualization_files/figure-html/knowledge-plot-1.png)
 
 By default, required edges are shown in blue and forbidden edges in red.
 You can customize these colors using the `required_col` and
@@ -57,7 +57,7 @@ You can customize these colors using the `required_col` and
 plot(kn, required_col = "skyblue", forbidden_col = "orange")
 ```
 
-![](visualization_files/figure-html/knowledge%20plot%20different%20colors-1.png)
+![](visualization_files/figure-html/knowledge-plot-different-colors-1.png)
 
 Different node layouts, node styles, and edge styles can be controlled
 via the `layout`, `node_style`, and `edge_style` parameters. We
@@ -96,7 +96,7 @@ plot(
 )
 ```
 
-![](visualization_files/figure-html/knowledge%20plot%20custom%20styles-1.png)
+![](visualization_files/figure-html/knowledge-plot-custom-styles-1.png)
 
 Note that to override the colors for required and forbidden edges only
 for a specific edge, the edge needs to be targeted explicitly in the
@@ -135,7 +135,7 @@ plot(
 )
 ```
 
-![](visualization_files/figure-html/knowledge%20plot%20edge%20by%20edge-1.png)
+![](visualization_files/figure-html/knowledge-plot-edge-by-edge-1.png)
 
 You can also pass a custom layout to
 [`plot()`](https://disco-coders.github.io/causalDisco/reference/plot.md):
@@ -150,7 +150,7 @@ my_layout <- data.frame(
 plot(kn, layout = my_layout)
 ```
 
-![](visualization_files/figure-html/knowledge%20plot%20custom%20layout-1.png)
+![](visualization_files/figure-html/knowledge-plot-custom-layout-1.png)
 
 #### Plotting Tiered Knowledge
 
@@ -173,7 +173,7 @@ kn_tiered <- knowledge(
 plot(kn_tiered)
 ```
 
-![](visualization_files/figure-html/tiered%20knowledge%20plot-1.png)
+![](visualization_files/figure-html/tiered-knowledge-plot-1.png)
 
 Variables are grouped by life stage, reflecting the tiered structure.
 This helps visually convey temporal or hierarchical relationships in the
@@ -202,7 +202,7 @@ pc_result <- disco(num_data, method = pc_bnlearn, knowledge = kn)
 plot(pc_result)
 ```
 
-![](visualization_files/figure-html/knowledgeable%20caugi%20plot-1.png)
+![](visualization_files/figure-html/knowledgeable-caugi-plot-1.png)
 
 Blue edges indicate required relationships from prior knowledge, black
 edges show those learned from the data, and forbidden edges are not
@@ -230,7 +230,7 @@ disco_cd_tges <- disco(
 plot(disco_cd_tges)
 ```
 
-![](visualization_files/figure-html/knowledgeable%20caugi%20tiered%20plot-1.png)
+![](visualization_files/figure-html/knowledgeable-caugi-tiered-plot-1.png)
 
 Where we can see the tiers reflected in the layout of the graph.
 
@@ -344,7 +344,7 @@ kn_tiered <- knowledge(
 plot(kn_tiered)
 ```
 
-![](visualization_files/figure-html/tikz%20bend%20edges-1.png)
+![](visualization_files/figure-html/tikz-bend-edges-1.png)
 
 ``` r
 
@@ -455,7 +455,7 @@ plot_obj <- caugi::plot(cg, node_style = list(fill = "red"))
 tikz_caugi_snippet <- make_tikz(plot_obj, scale = 10, full_doc = FALSE)
 ```
 
-![](visualization_files/figure-html/tikz%20export%20caugi-1.png)
+![](visualization_files/figure-html/tikz-export-caugi-1.png)
 
 ``` r
 
